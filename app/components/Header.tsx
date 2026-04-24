@@ -141,7 +141,7 @@ export default function Header({ onContactClick }: { onContactClick?: () => void
       label: "Resources",
       items: [
         { label: "Professional Resources", href: "/provider-resources" },
-        { label: "Patient Resources", href: "/#patient-resources" },
+        { label: "Patient Resources", href: "/patient-resources" },
       ],
     }),
     []

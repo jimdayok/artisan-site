@@ -128,11 +128,11 @@ export default function Home() {
 
       {/* FIXED BACKGROUND MEDIA */}
       <div className="pointer-events-none fixed inset-0 z-0">
-        <video className="h-full w-full bg-black object-cover object-center md:hidden" autoPlay loop muted playsInline>
-          <source src="/hero-vertical.mp4" type="video/mp4" />
+        <video className="h-full w-full bg-black object-cover object-center md:hidden" autoPlay loop muted playsInline poster="/backgroundimage.jpeg">
+          <source src="https://pub-92e180f20b704255b9a7625dd6a6cb0b.r2.dev/hero-vertical.mp4" type="video/mp4" />
         </video>
-        <video className="hidden h-full w-full bg-black object-contain object-top md:block" autoPlay loop muted playsInline>
-          <source src="/hero.mp4" type="video/mp4" />
+        <video className="hidden h-full w-full bg-black object-contain object-top md:block" autoPlay loop muted playsInline poster="/backgroundimage.jpeg">
+          <source src="https://pub-92e180f20b704255b9a7625dd6a6cb0b.r2.dev/hero.mp4" type="video/mp4" />
         </video>
       </div>
 
@@ -609,7 +609,7 @@ export default function Home() {
             <a href="#practice-resources" className="rounded-2xl bg-white/80 border border-black/10 p-6 shadow">
               Practice Resources →
             </a>
-            <a href="#patient-resources" className="rounded-2xl bg-white/80 border border-black/10 p-6 shadow">
+            <a href="/patient-resources" className="rounded-2xl bg-white/80 border border-black/10 p-6 shadow">
               Patient Resources →
             </a>
             <a href="#lab-resources" className="rounded-2xl bg-white/80 border border-black/10 p-6 shadow">

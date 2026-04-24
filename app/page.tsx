@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Header from "./components/Header";
 import LabsSection from "./components/LabsSection";
+import NetworkMap from "./components/NetworkMap";
 import Footer from "./components/Footer";
 
 const ACCOUNT_APPLICATION_URL = "https://form.typeform.com/to/quuPCSff";
@@ -310,6 +311,32 @@ export default function Home() {
             >
               Get Started
             </a>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="network-map"
+        data-theme="dark"
+        className="relative bg-black px-6 py-24 text-white md:py-28"
+      >
+        <div className="mx-auto max-w-7xl">
+          <div className="mx-auto max-w-3xl text-center">
+            <div className="text-xs uppercase tracking-[0.3em] text-[#d4c09a]">
+              Our Network
+            </div>
+
+            <h2 className="mt-4 text-4xl font-semibold md:text-5xl">
+              Three Labs. One Standard.
+            </h2>
+
+            <p className="mt-4 text-lg text-white/70">
+              Our connected lab network gives you flexibility, speed, and consistency across every order.
+            </p>
+          </div>
+
+          <div className="mt-12 rounded-2xl border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-md md:p-10">
+            <NetworkMap />
           </div>
         </div>
       </section>

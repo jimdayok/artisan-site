@@ -1,26 +1,37 @@
 const labLocations = [
   {
     city: "Portland, OR",
-    position: "left-[12%] top-[31%]",
+    x: 117,
+    y: 207,
+    labelX: 62,
+    labelY: 176,
   },
   {
     city: "Denver, CO",
-    position: "left-[42%] top-[52%]",
+    x: 426,
+    y: 315,
+    labelX: 383,
+    labelY: 355,
   },
   {
     city: "Indianapolis, IN",
-    position: "left-[66%] top-[47%]",
+    x: 662,
+    y: 276,
+    labelX: 686,
+    labelY: 246,
   },
 ];
 
 export default function NetworkMap() {
+  const [portland, denver, indianapolis] = labLocations;
+
   return (
     <section
       id="network-map"
       data-theme="dark"
       className="relative overflow-hidden border-y border-white/10 bg-[#0f0f0f] px-5 py-16 text-white md:px-8 md:py-20 lg:px-10"
     >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_32%_26%,rgba(212,192,154,0.13),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.035),transparent_42%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_32%_26%,rgba(212,192,154,0.12),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.035),transparent_42%)]" />
       <div className="relative mx-auto max-w-7xl">
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#d4c09a]">
@@ -35,68 +46,114 @@ export default function NetworkMap() {
           </p>
         </div>
 
-        <div className="relative mx-auto mt-10 aspect-[1.55/1] max-w-5xl overflow-hidden border border-white/10 bg-[#141414] shadow-[0_28px_90px_rgba(0,0,0,0.35)] md:mt-12">
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(180deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:72px_72px] opacity-25" />
+        <div className="relative mx-auto mt-10 aspect-[1.62/1] max-w-5xl overflow-hidden border border-white/10 bg-[#121212] shadow-[0_28px_90px_rgba(0,0,0,0.35)] md:mt-12">
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.026)_1px,transparent_1px),linear-gradient(180deg,rgba(255,255,255,0.026)_1px,transparent_1px)] bg-[size:76px_76px] opacity-30" />
 
           <svg
-            viewBox="0 0 900 560"
-            aria-hidden="true"
-            className="absolute inset-[8%] h-[84%] w-[84%] translate-x-[4%] text-white/10"
+            viewBox="0 0 1000 620"
+            role="img"
+            aria-label="United States map showing Artisan Lab Network locations in Portland, Denver, and Indianapolis"
+            className="absolute inset-0 h-full w-full"
           >
+            <defs>
+              <filter id="network-node-glow" x="-80%" y="-80%" width="260%" height="260%">
+                <feGaussianBlur stdDeviation="7" result="blur" />
+                <feColorMatrix
+                  in="blur"
+                  type="matrix"
+                  values="1 0 0 0 0.83 0 1 0 0 0.75 0 0 1 0 0.55 0 0 0 0.9 0"
+                />
+                <feMerge>
+                  <feMergeNode />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
             <path
-              d="M94 214 137 181l62 8 27-22 74 15 42-21 59 18 67-14 77 24 57-3 62 34 70 2 47 42-12 51 31 39-57 41-83 4-40 36-86-16-52 25-73-18-68 13-56-30-81 14-52-29-63 3-34-52 28-41-22-51z"
-              fill="currentColor"
+              d="M79 207 94 180 118 171 138 142 182 127 222 116 263 125 308 111 351 118 393 108 443 121 490 119 531 130 576 128 626 139 672 134 719 147 756 144 788 163 824 166 841 185 873 195 889 220 875 245 847 250 840 278 816 296 797 326 761 332 741 353 743 379 718 391 692 374 672 392 642 390 611 405 572 407 541 424 516 454 493 491 464 501 441 479 421 441 389 430 359 436 319 426 287 433 259 414 226 414 201 391 176 391 153 368 122 362 96 343 85 305 61 282 69 245 54 224 79 207Z"
+              fill="rgba(255,255,255,0.24)"
+              stroke="rgba(255,255,255,0.28)"
+              strokeWidth="2"
+              strokeLinejoin="round"
             />
             <path
-              d="M112 238 202 220l96 28 110-31 119 35 105-14 123 73"
+              d="M760 333 778 353 799 377 817 418 806 454 786 424 776 389 747 366Z"
+              fill="rgba(255,255,255,0.22)"
+              stroke="rgba(255,255,255,0.24)"
+              strokeWidth="1.6"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M827 158 851 139 881 129 910 132 923 148 908 166 881 167 855 174Z"
+              fill="rgba(255,255,255,0.18)"
+              stroke="rgba(255,255,255,0.22)"
+              strokeWidth="1.5"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M141 384 166 409 195 417 222 444 259 457 292 455 323 471 360 466 393 479"
               fill="none"
-              stroke="rgba(212,192,154,0.24)"
+              stroke="rgba(255,255,255,0.12)"
+              strokeWidth="1.5"
+            />
+
+            <path
+              d={`M${portland.x} ${portland.y} C250 226 300 278 ${denver.x} ${denver.y}`}
+              fill="none"
+              stroke="rgba(212,192,154,0.62)"
+              strokeLinecap="round"
               strokeWidth="2"
             />
             <path
-              d="M225 327 372 304l112 40 156-32"
-              fill="none"
-              stroke="rgba(255,255,255,0.08)"
-              strokeWidth="1.5"
-            />
-          </svg>
-
-          <svg
-            viewBox="0 0 100 100"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-            className="absolute inset-0 h-full w-full"
-          >
-            <path
-              d="M14 34 C25 42, 33 49, 43 55 S58 55, 68 50"
+              d={`M${denver.x} ${denver.y} C502 287 575 271 ${indianapolis.x} ${indianapolis.y}`}
               fill="none"
               stroke="rgba(212,192,154,0.62)"
-              strokeWidth="0.45"
-              vectorEffect="non-scaling-stroke"
+              strokeLinecap="round"
+              strokeWidth="2"
             />
-            <path
-              d="M43 55 C52 47, 59 45, 68 50"
-              fill="none"
-              stroke="rgba(255,255,255,0.22)"
-              strokeWidth="0.35"
-              vectorEffect="non-scaling-stroke"
-            />
-          </svg>
 
-          {labLocations.map((location) => (
-            <div
-              key={location.city}
-              className={`absolute ${location.position} z-10 -translate-x-1/2 -translate-y-1/2`}
-            >
-              <div className="group relative flex items-center gap-3">
-                <span className="aln-map-pulse absolute left-1/2 top-1/2 h-9 w-9 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#d4c09a]/50" />
-                <span className="relative h-4 w-4 rounded-full border border-[#fff3d7] bg-[#d4c09a] shadow-[0_0_26px_rgba(212,192,154,0.9)]" />
-                <span className="whitespace-nowrap border border-white/10 bg-black/50 px-3 py-1.5 text-xs font-semibold text-white/86 shadow-[0_10px_35px_rgba(0,0,0,0.28)] backdrop-blur-md transition group-hover:border-[#d4c09a]/50 group-hover:text-white">
+            {labLocations.map((location) => (
+              <g key={location.city}>
+                <circle
+                  className="aln-map-svg-pulse"
+                  cx={location.x}
+                  cy={location.y}
+                  r="18"
+                  fill="none"
+                  stroke="rgba(212,192,154,0.55)"
+                  strokeWidth="2"
+                />
+                <circle
+                  cx={location.x}
+                  cy={location.y}
+                  r="7"
+                  fill="#d4c09a"
+                  stroke="#fff3d7"
+                  strokeWidth="2"
+                  filter="url(#network-node-glow)"
+                />
+                <line
+                  x1={location.x}
+                  y1={location.y}
+                  x2={location.labelX}
+                  y2={location.labelY}
+                  stroke="rgba(255,255,255,0.22)"
+                  strokeWidth="1"
+                />
+                <text
+                  x={location.labelX}
+                  y={location.labelY}
+                  fill="rgba(255,255,255,0.86)"
+                  fontSize="16"
+                  fontWeight="700"
+                  textAnchor={location.labelX < location.x ? "end" : "start"}
+                >
                   {location.city}
-                </span>
-              </div>
-            </div>
-          ))}
+                </text>
+              </g>
+            ))}
+          </svg>
         </div>
 
         <div className="mx-auto mt-7 max-w-3xl text-center">

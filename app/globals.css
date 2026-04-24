@@ -25,6 +25,12 @@ body {
   animation: aln-map-pulse 2.8s ease-out infinite;
 }
 
+.aln-map-svg-pulse {
+  animation: aln-map-svg-pulse 2.8s ease-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
 @keyframes aln-map-pulse {
   0% {
     opacity: 0.7;
@@ -39,6 +45,23 @@ body {
   100% {
     opacity: 0;
     transform: translate(-50%, -50%) scale(1.55);
+  }
+}
+
+@keyframes aln-map-svg-pulse {
+  0% {
+    opacity: 0.72;
+    transform: scale(0.4);
+  }
+
+  70% {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.6);
   }
 }
 

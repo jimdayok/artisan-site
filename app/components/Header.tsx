@@ -158,6 +158,7 @@ export default function Header({ onContactClick }: { onContactClick?: () => void
       items: [
         { label: "Professional Resources", href: "/provider-resources" },
         { label: "Patient Resources", href: "/patient-resources" },
+        { label: "Lab Ownership & Partnership", href: "/artisan-model" },
       ],
     }),
     []
@@ -170,7 +171,6 @@ export default function Header({ onContactClick }: { onContactClick?: () => void
         { label: "Pacific Artisan Labs", href: "https://pacificartisanlabs.com" },
         { label: "Peak Artisan Labs", href: "https://peakartisanlabs.com" },
         { label: "Pike Artisan Labs", href: "https://pikeartisanlabs.com" },
-        { label: "The Artisan Model", href: "/artisan-model", dividerBefore: true },
       ],
     }),
     []
@@ -236,9 +236,6 @@ export default function Header({ onContactClick }: { onContactClick?: () => void
             <Capsule href="/about" theme={theme}>
               About Us
             </Capsule>
-            <Capsule href="/artisan-model" theme={theme}>
-              The Artisan Model
-            </Capsule>
 
             <DropdownMenu {...labs} theme={theme} onAnyClick={() => setMobileOpen(false)} />
 
@@ -302,13 +299,6 @@ export default function Header({ onContactClick }: { onContactClick?: () => void
                 onClick={() => setMobileOpen(false)}
               >
                 About Us
-              </Link>
-              <Link
-                className="block text-sm font-semibold"
-                href="/artisan-model"
-                onClick={() => setMobileOpen(false)}
-              >
-                The Artisan Model
               </Link>
 
               <div className="mt-3">

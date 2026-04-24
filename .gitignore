@@ -42,3 +42,4 @@ next-env.d.ts
 
 public/hero.mp4
 public/hero-vertical.mp4
+.env*.local

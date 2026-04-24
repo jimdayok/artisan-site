@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 type Theme = "dark" | "light";
 
-type NavItem = { label: string; href?: string };
+type NavItem = { label: string; href?: string; dividerBefore?: boolean };
 type Dropdown = { label: string; items: NavItem[] };
 
 function Capsule({
@@ -103,26 +103,42 @@ function DropdownMenu({
 
               if (href.startsWith("/")) {
                 return (
-                  <Link
-                    key={item.label}
+                  <div key={item.label}>
+                    {item.dividerBefore ? (
+                      <div
+                        className={`mx-4 my-1 border-t ${
+                          theme === "light" ? "border-black/10" : "border-white/12"
+                        }`}
+                      />
+                    ) : null}
+                    <Link
+                      href={href}
+                      className={itemCls}
+                      onClick={handleClick}
+                    >
+                      {item.label}
+                    </Link>
+                  </div>
+                );
+              }
+
+              return (
+                <div key={item.label}>
+                  {item.dividerBefore ? (
+                    <div
+                      className={`mx-4 my-1 border-t ${
+                        theme === "light" ? "border-black/10" : "border-white/12"
+                      }`}
+                    />
+                  ) : null}
+                  <a
                     href={href}
                     className={itemCls}
                     onClick={handleClick}
                   >
                     {item.label}
-                  </Link>
-                );
-              }
-
-              return (
-                <a
-                  key={item.label}
-                  href={href}
-                  className={itemCls}
-                  onClick={handleClick}
-                >
-                  {item.label}
-                </a>
+                  </a>
+                </div>
               );
             })}
           </motion.div>
@@ -154,6 +170,7 @@ export default function Header({ onContactClick }: { onContactClick?: () => void
         { label: "Pacific Artisan Labs", href: "https://pacificartisanlabs.com" },
         { label: "Peak Artisan Labs", href: "https://peakartisanlabs.com" },
         { label: "Pike Artisan Labs", href: "https://pikeartisanlabs.com" },
+        { label: "The Artisan Model", href: "/artisan-model", dividerBefore: true },
       ],
     }),
     []
@@ -219,6 +236,9 @@ export default function Header({ onContactClick }: { onContactClick?: () => void
             <Capsule href="/about" theme={theme}>
               About Us
             </Capsule>
+            <Capsule href="/artisan-model" theme={theme}>
+              The Artisan Model
+            </Capsule>
 
             <DropdownMenu {...labs} theme={theme} onAnyClick={() => setMobileOpen(false)} />
 
@@ -283,18 +303,43 @@ export default function Header({ onContactClick }: { onContactClick?: () => void
               >
                 About Us
               </Link>
+              <Link
+                className="block text-sm font-semibold"
+                href="/artisan-model"
+                onClick={() => setMobileOpen(false)}
+              >
+                The Artisan Model
+              </Link>
 
               <div className="mt-3">
                 <div className="text-xs uppercase tracking-[0.28em] opacity-60 mb-2">Our Labs</div>
                 {labs.items.map((item) => (
-                  <a
-                    key={item.label}
-                    className="block text-sm font-semibold mt-2"
-                    href={item.href}
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    {item.label}
-                  </a>
+                  <div key={item.label}>
+                    {item.dividerBefore ? (
+                      <div
+                        className={`my-3 border-t ${
+                          theme === "light" ? "border-black/10" : "border-white/12"
+                        }`}
+                      />
+                    ) : null}
+                    {item.href?.startsWith("/") ? (
+                      <Link
+                        className="block text-sm font-semibold mt-2"
+                        href={item.href}
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    ) : (
+                      <a
+                        className="block text-sm font-semibold mt-2"
+                        href={item.href}
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        {item.label}
+                      </a>
+                    )}
+                  </div>
                 ))}
               </div>
 

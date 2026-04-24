@@ -164,6 +164,9 @@ export default function Home() {
               <p className="mx-auto mt-4 max-w-4xl text-lg text-white/82 md:text-xl">
                 Independence means choice. We help practices win with better options, faster service, and real partnership.
               </p>
+              <p className="mx-auto mt-3 max-w-3xl text-sm font-medium text-[#d4c09a] md:text-base">
+                The largest independent doctor-owned lab network in the United States.
+              </p>
 
               <div className="mt-8 flex flex-wrap justify-center gap-3 md:gap-4">
                 <a
@@ -175,12 +178,19 @@ export default function Home() {
                   Get Started
                 </a>
                 <a
-                  href="#how-it-works"
+                  href="#better-model"
                   className="rounded-full border border-white/15 bg-white/10 px-5 py-3 text-sm font-semibold hover:border-white/25 hover:bg-white/15 md:px-6"
                 >
-                  See How It Works
+                  Upgrade Your Lab Experience
                 </a>
               </div>
+
+              <a
+                href="/artisan-model"
+                className="mt-4 inline-flex text-sm font-semibold text-white/68 underline decoration-[#d4c09a]/45 underline-offset-4 transition hover:text-[#d4c09a]"
+              >
+                Discover Ownership →
+              </a>
 
               <div className="mx-auto mt-6 max-w-[18rem] text-[10px] uppercase leading-5 tracking-[0.16em] text-[#d4c09a] sm:max-w-none sm:text-xs md:tracking-[0.35em]">
                 Independent. Anti-Corporate. Pro-Patient.
@@ -582,6 +592,13 @@ export default function Home() {
           <div className="mt-6 text-xs text-white/50">
             Ownership details are available only by invitation and subject to applicable requirements and regulations.
           </div>
+
+          <a
+            href="/artisan-model"
+            className="mt-5 inline-flex text-sm font-semibold text-[#d4c09a] transition hover:text-white"
+          >
+            Learn how the model works →
+          </a>
         </div>
       </section>
 
@@ -605,15 +622,30 @@ export default function Home() {
           <p className="mt-3 text-black/65 max-w-3xl">
             Practice resources, patient education, and tools to help your team run smoother.
           </p>
-          <div className="mt-6 grid gap-6 md:grid-cols-3">
-            <a href="#practice-resources" className="rounded-2xl bg-white/80 border border-black/10 p-6 shadow">
-              Practice Resources →
+          <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <a href="#practice-resources" className="rounded-2xl bg-white/80 border border-black/10 p-6 shadow transition hover:-translate-y-1 hover:bg-white">
+              <div className="text-lg font-semibold">Practice Resources</div>
+              <p className="mt-3 text-sm leading-6 text-black/60">
+                Tools and information for independent practice teams.
+              </p>
             </a>
-            <a href="/patient-resources" className="rounded-2xl bg-white/80 border border-black/10 p-6 shadow">
-              Patient Resources →
+            <a href="/patient-resources" className="rounded-2xl bg-white/80 border border-black/10 p-6 shadow transition hover:-translate-y-1 hover:bg-white">
+              <div className="text-lg font-semibold">Patient Resources</div>
+              <p className="mt-3 text-sm leading-6 text-black/60">
+                Education and support content for patient conversations.
+              </p>
             </a>
-            <a href="#lab-resources" className="rounded-2xl bg-white/80 border border-black/10 p-6 shadow">
-              Lab Resources →
+            <a href="#lab-resources" className="rounded-2xl bg-white/80 border border-black/10 p-6 shadow transition hover:-translate-y-1 hover:bg-white">
+              <div className="text-lg font-semibold">Lab Resources</div>
+              <p className="mt-3 text-sm leading-6 text-black/60">
+                Practical lab access, ordering, and product information.
+              </p>
+            </a>
+            <a href="/artisan-model" className="rounded-2xl bg-white/80 border border-[#d4c09a]/60 p-6 shadow transition hover:-translate-y-1 hover:bg-white">
+              <div className="text-lg font-semibold">Lab Ownership &amp; Partnership</div>
+              <p className="mt-3 text-sm leading-6 text-black/60">
+                Learn how some practices participate more deeply in the Artisan model.
+              </p>
             </a>
           </div>
         </div>

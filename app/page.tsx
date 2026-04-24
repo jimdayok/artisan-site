@@ -316,49 +316,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SOLUTION */}
+      {/* SOLUTION / HOW IT WORKS */}
       <section
-        id="better-model"
-        data-theme="light"
-        className="relative bg-[#f2eee7] px-6 py-16 text-black md:py-[72px]"
-      >
-        <div className="relative z-20 max-w-7xl mx-auto">
-          <motion.div {...fadeUp}>
-            <h2 className="text-4xl md:text-5xl font-semibold">The Better Model</h2>
-            <p className="mt-4 max-w-3xl text-lg text-black/72">
-              Artisan Lab Network gives you freedom of choice, real partnership, and a modern system that fits the way you run your practice.
-            </p>
-          </motion.div>
-
-          <motion.div
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="whileInView"
-            viewport={{ once: true, amount: 0.2 }}
-            className="mt-7 grid gap-4 md:grid-cols-2"
-          >
-            {[
-              { title: "Freedom to choose", body: "More lens options. Less forcing you into one path." },
-              { title: "Transparency", body: "You always know what to expect: service, timing, and cost." },
-              { title: "Flexibility", body: "Systems designed to support your process, not punish it." },
-              { title: "Outcomes first", body: "Better turnaround, better consistency, better patient experience." },
-            ].map((card) => (
-              <motion.div
-                key={card.title}
-                variants={cardReveal}
-                className="rounded-2xl border border-[#d6c3a1]/50 bg-[#fffaf2] p-6 shadow-[0_18px_45px_rgba(49,39,26,0.08)] transition hover:-translate-y-1 hover:border-[#c9b28b] hover:shadow-[0_24px_64px_rgba(49,39,26,0.13)]"
-              >
-                <div className="text-xs uppercase tracking-[0.24em] text-black/50 md:tracking-[0.28em]">{card.title}</div>
-                <div className="mt-2 text-xl font-semibold text-[#1f1718]">{card.body}</div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* OUR MODEL / HOW IT WORKS */}
-      <section
-        id="how-it-works"
         data-theme="light"
         className="relative px-6 py-16 text-black md:py-[72px]"
         style={{
@@ -370,51 +329,88 @@ export default function Home() {
       >
         <div className="pointer-events-none absolute inset-0 bg-white/70" />
         <div className="relative z-20 max-w-7xl mx-auto">
-          <motion.div {...fadeUp}>
-            <h2 className="text-4xl md:text-5xl font-semibold">How the Network Works</h2>
-            <p className="mt-4 text-lg text-black/75 max-w-3xl">
-              Multiple labs. Real systems. Simple control. Built for modern independent practices.
-            </p>
-          </motion.div>
+          <div id="better-model" className="scroll-mt-24">
+            <motion.div {...fadeUp}>
+              <h2 className="text-4xl md:text-5xl font-semibold">The Better Model</h2>
+              <p className="mt-4 max-w-3xl text-lg text-black/72">
+                Artisan Lab Network gives you freedom of choice, real partnership, and a modern system that fits the way you run your practice.
+              </p>
+            </motion.div>
 
-          <motion.div
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="whileInView"
-            viewport={{ once: true, amount: 0.2 }}
-            className="mt-8 grid gap-4 md:grid-cols-3"
-          >
-            {[
-              { title: "Multiple Labs", body: "Strength + flexibility across the network." },
-              { title: "In-House Production", body: "Quality you can rely on." },
-              { title: "Integrated Systems", body: "Ordering and updates without chaos." },
-            ].map((step) => (
-              <motion.div
-                key={step.title}
-                variants={cardReveal}
-                className="rounded-2xl bg-white/80 border border-black/10 p-5 shadow transition hover:-translate-y-1 hover:border-[#c9b28b] hover:bg-white hover:shadow-[0_24px_64px_rgba(49,39,26,0.12)] md:p-6"
+            <motion.div
+              variants={staggerContainer}
+              initial="initial"
+              whileInView="whileInView"
+              viewport={{ once: true, amount: 0.2 }}
+              className="mt-7 grid gap-4 md:grid-cols-2"
+            >
+              {[
+                { title: "Freedom to choose", body: "More lens options. Less forcing you into one path." },
+                { title: "Transparency", body: "You always know what to expect: service, timing, and cost." },
+                { title: "Flexibility", body: "Systems designed to support your process, not punish it." },
+                { title: "Outcomes first", body: "Better turnaround, better consistency, better patient experience." },
+              ].map((card) => (
+                <motion.div
+                  key={card.title}
+                  variants={cardReveal}
+                  className="rounded-2xl border border-[#d6c3a1]/50 bg-[#fffaf2]/85 p-6 shadow-[0_18px_45px_rgba(49,39,26,0.08)] backdrop-blur-md transition hover:-translate-y-1 hover:border-[#c9b28b] hover:bg-[#fffaf2] hover:shadow-[0_24px_64px_rgba(49,39,26,0.13)]"
+                >
+                  <div className="text-xs uppercase tracking-[0.24em] text-black/50 md:tracking-[0.28em]">{card.title}</div>
+                  <div className="mt-2 text-xl font-semibold text-[#1f1718]">{card.body}</div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+
+          <div className="my-20 h-px w-full bg-black/10" />
+
+          <div id="how-it-works" className="scroll-mt-24">
+            <motion.div {...fadeUp}>
+              <h2 className="text-4xl md:text-5xl font-semibold">How the Network Works</h2>
+              <p className="mt-4 text-lg text-black/75 max-w-3xl">
+                Multiple labs. Real systems. Simple control. Built for modern independent practices.
+              </p>
+            </motion.div>
+
+            <motion.div
+              variants={staggerContainer}
+              initial="initial"
+              whileInView="whileInView"
+              viewport={{ once: true, amount: 0.2 }}
+              className="mt-8 grid gap-4 md:grid-cols-3"
+            >
+              {[
+                { title: "Multiple Labs", body: "Strength + flexibility across the network." },
+                { title: "In-House Production", body: "Quality you can rely on." },
+                { title: "Integrated Systems", body: "Ordering and updates without chaos." },
+              ].map((step) => (
+                <motion.div
+                  key={step.title}
+                  variants={cardReveal}
+                  className="rounded-2xl bg-white/80 border border-black/10 p-5 shadow backdrop-blur-md transition hover:-translate-y-1 hover:border-[#c9b28b] hover:bg-white hover:shadow-[0_24px_64px_rgba(49,39,26,0.12)] md:p-6"
+                >
+                  <div className="text-xs uppercase tracking-[0.28em] text-black/50">{step.title}</div>
+                  <div className="mt-2 text-xl font-semibold text-[#1f1718]">{step.body}</div>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            <div className="mt-8 flex flex-wrap gap-4">
+              <a
+                href="#labs"
+                className="rounded-full border border-black/15 bg-white/70 px-6 py-3 text-sm font-semibold text-black hover:bg-white"
               >
-                <div className="text-xs uppercase tracking-[0.28em] text-black/50">{step.title}</div>
-                <div className="mt-2 text-xl font-semibold text-[#1f1718]">{step.body}</div>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          <div className="mt-8 flex flex-wrap gap-4">
-            <a
-              href="#labs"
-              className="rounded-full border border-black/15 bg-white/70 px-6 py-3 text-sm font-semibold text-black hover:bg-white"
-            >
-              Meet the Labs
-            </a>
-            <a
-              href={ACCOUNT_APPLICATION_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-full bg-[#d4c09a] px-6 py-3 text-sm font-semibold text-black hover:opacity-90 shadow"
-            >
-              Get Started
-            </a>
+                Meet the Labs
+              </a>
+              <a
+                href={ACCOUNT_APPLICATION_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full bg-[#d4c09a] px-6 py-3 text-sm font-semibold text-black hover:opacity-90 shadow"
+              >
+                Get Started
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -426,7 +422,7 @@ export default function Home() {
       <section
         id="capabilities"
         data-theme="dark"
-        className="relative overflow-hidden px-6 py-24 md:py-28 lg:min-h-screen"
+        className="relative px-6 py-24 md:py-28 lg:min-h-screen"
       >
         <div
           className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-[0.18]"

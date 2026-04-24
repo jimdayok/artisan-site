@@ -12,36 +12,39 @@ const labs = [
     city: "Portland",
     state: "OR",
     label: "Pacific Artisan Labs",
+    established: "2018",
     address: ["12302 NE Marx St.", "Portland, OR 97230"],
     phone: "877.390.6900",
     phoneHref: "8773906900",
     email: "customerservice@pacificartisanlabs.com",
     website: "https://pacificartisanlabs.com",
-    position: { left: "16%", top: "34%" },
+    position: { left: "19%", top: "33%" },
   },
   {
     id: "peak" as const,
     city: "Aurora",
     state: "CO",
     label: "Peak Artisan Labs",
+    established: "2023",
     address: ["3568 Peoria St., Suite 608", "Aurora, CO 80010"],
     phone: "833.690.4321",
     phoneHref: "8336904321",
     email: "customerservice@peakartisanlabs.com",
     website: "https://peakartisanlabs.com",
-    position: { left: "43%", top: "53%" },
+    position: { left: "44%", top: "51%" },
   },
   {
     id: "pike" as const,
     city: "Indianapolis",
     state: "IN",
     label: "Pike Artisan Labs",
+    established: "2025",
     address: ["8902 Vincennes Cir., Suite F", "Indianapolis, IN 46268"],
     phone: "888.239.0303",
     phoneHref: "8882390303",
     email: "customerservice@pikeartisanlabs.com",
     website: "https://pikeartisanlabs.com",
-    position: { left: "68%", top: "46%" },
+    position: { left: "67%", top: "43%" },
   },
 ];
 
@@ -94,21 +97,21 @@ export default function NetworkMap() {
                     onClick={() => setActiveLabId((current) => (current === lab.id ? null : lab.id))}
                     aria-pressed={isSelected}
                     aria-label={`Show details for ${lab.label}`}
-                    className={`absolute z-10 transition duration-300 ${
+                    className={`absolute z-10 -translate-x-1/2 -translate-y-1/2 group transition duration-300 ${
                       isDimmed ? "opacity-45" : "opacity-100"
                     }`}
                     style={lab.position}
                   >
-                    <span className={`absolute left-0 top-0 h-7 w-7 -translate-x-1/2 -translate-y-1/2 rounded-full border bg-[#d4c09a]/10 aln-map-pulse ${
-                      isSelected ? "border-[#fff3d7]/70" : "border-[#d4c09a]/45"
+                    <span className={`absolute left-1/2 top-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#d4c09a]/20 blur-lg opacity-80 transition group-hover:opacity-100 ${
+                      isSelected ? "scale-110 opacity-100" : "animate-pulse"
                     }`} />
-                    <span className={`absolute left-0 top-0 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#d4c09a] shadow-[0_0_18px_rgba(212,192,154,0.78)] transition ${
+                    <span className={`relative block h-3 w-3 rounded-full bg-[#d4c09a] shadow-[0_0_20px_rgba(212,192,154,0.9)] transition ${
                       isSelected ? "scale-125 ring-4 ring-[#d4c09a]/18" : ""
                     }`} />
-                    <span className={`absolute left-0 top-0 -translate-x-1/2 -translate-y-[calc(100%+0.7rem)] whitespace-nowrap rounded-full border px-2 py-1 text-[8px] font-semibold uppercase tracking-[0.1em] shadow-lg backdrop-blur-md transition sm:px-2.5 sm:text-[10px] md:text-[11px] ${
+                    <span className={`absolute left-5 top-1/2 -translate-y-1/2 whitespace-nowrap rounded-full border px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.14em] shadow-lg backdrop-blur-md transition sm:text-[10px] md:text-[11px] ${
                       isSelected
                         ? "border-[#d4c09a]/60 bg-[#d4c09a] text-black"
-                        : "border-white/12 bg-black/62 text-white/88 hover:border-[#d4c09a]/45 hover:text-white"
+                        : "border-white/10 bg-black/75 text-white hover:border-[#d4c09a]/45"
                     }`}>
                       {lab.label}
                     </span>
@@ -165,6 +168,9 @@ export default function NetworkMap() {
                           <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#d4c09a]">
                             {lab.city}, {lab.state}
                           </p>
+                          <p className="mt-1 text-xs font-semibold text-white/46">
+                            Established {lab.established}
+                          </p>
                           <h4 className="mt-1 text-lg font-semibold uppercase tracking-[0.04em] text-white">
                             {lab.label}
                           </h4>
@@ -190,22 +196,28 @@ export default function NetworkMap() {
                                 <div key={line}>{line}</div>
                               ))}
                             </div>
-                            <div className="flex flex-wrap gap-x-4 gap-y-2">
-                              <a href={`tel:${lab.phoneHref}`} className="font-semibold text-white transition hover:text-[#d4c09a]">
-                                {lab.phone}
+                            <div className="flex flex-wrap gap-2">
+                              <a
+                                href={`tel:${lab.phoneHref}`}
+                                className="inline-flex rounded-full border border-white/12 bg-white/8 px-3 py-2 text-xs font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-black"
+                              >
+                                Call Lab
                               </a>
-                              <a href={`mailto:${lab.email}`} className="break-words font-semibold text-white transition hover:text-[#d4c09a]">
-                                {lab.email}
+                              <a
+                                href={`mailto:${lab.email}`}
+                                className="inline-flex rounded-full border border-white/12 bg-white/8 px-3 py-2 text-xs font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-black"
+                              >
+                                Email Customer Service
+                              </a>
+                              <a
+                                href={lab.website}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex rounded-full border border-white/12 bg-white/8 px-3 py-2 text-xs font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-black"
+                              >
+                                Visit Website
                               </a>
                             </div>
-                            <a
-                              href={lab.website}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="inline-flex rounded-full border border-white/12 bg-white/8 px-4 py-2 text-sm font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-black"
-                            >
-                              {lab.website}
-                            </a>
                           </div>
                         </motion.div>
                       )}

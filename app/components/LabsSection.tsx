@@ -57,12 +57,11 @@ export default function LabsSection() {
     <section
       id="labs"
       data-theme="dark"
-      className="relative px-6 py-20"
+      className="relative px-6 py-16 md:py-[72px]"
       style={{
         backgroundImage: "url('/backgroundimage.jpeg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundAttachment: "fixed",
       }}
     >
       <div className="pointer-events-none absolute inset-0 bg-black/55" />
@@ -84,7 +83,7 @@ export default function LabsSection() {
           </div>
         </div>
 
-        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
           {labs.map((lab) => {
             const isActive = activeId === lab.id;
             const isDimmed = activeId !== null && !isActive;

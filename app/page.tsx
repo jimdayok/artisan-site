@@ -140,13 +140,13 @@ export default function Home() {
       <section
         id="top"
         data-theme="dark"
-        className="relative z-20 min-h-[720px] overflow-hidden md:min-h-[820px] lg:min-h-screen"
+        className="relative z-20 min-h-[500px] overflow-hidden md:min-h-[560px] lg:min-h-[620px]"
       >
-        {showHeroMessage ? <div className="pointer-events-none absolute inset-0 bg-black/55" /> : null}
+        {showHeroMessage ? <div className="pointer-events-none absolute inset-0 bg-black/68" /> : null}
 
         {showHeroMessage ? (
-          <div className="relative z-20 flex min-h-[720px] items-center justify-center px-5 pt-20 text-center md:min-h-[820px] md:px-6 md:pt-24 lg:min-h-screen">
-            <div className="relative max-w-5xl rounded-2xl border border-white/15 bg-black/35 px-5 py-8 shadow-2xl backdrop-blur-md md:px-8 md:py-10 lg:px-10">
+          <div className="relative z-20 flex min-h-[500px] items-center justify-center px-5 pt-16 text-center md:min-h-[560px] md:px-6 md:pt-[72px] lg:min-h-[620px]">
+            <div className="relative max-w-5xl rounded-2xl border border-white/15 bg-black/42 px-5 py-6 shadow-2xl backdrop-blur-md md:px-8 md:py-8 lg:px-9">
               <button
                 type="button"
                 onClick={() => setShowHeroMessage(false)}
@@ -161,14 +161,14 @@ export default function Home() {
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight">
                 Take Control of Your Lab Relationship.
               </h1>
-              <p className="mx-auto mt-4 max-w-4xl text-lg text-white/82 md:text-xl">
+              <p className="mx-auto mt-3 max-w-4xl text-lg text-white/82 md:text-xl">
                 Independence means choice. We help practices win with better options, faster service, and real partnership.
               </p>
-              <p className="mx-auto mt-3 max-w-3xl text-sm font-medium text-[#d4c09a] md:text-base">
+              <p className="mx-auto mt-2 max-w-3xl text-sm font-medium text-[#d4c09a] md:text-base">
                 The largest independent doctor-owned lab network in the United States.
               </p>
 
-              <div className="mt-8 flex flex-wrap justify-center gap-3 md:gap-4">
+              <div className="mt-6 flex flex-wrap justify-center gap-3 md:gap-4">
                 <a
                   href={ACCOUNT_APPLICATION_URL}
                   target="_blank"
@@ -187,12 +187,12 @@ export default function Home() {
 
               <a
                 href="/artisan-model"
-                className="mt-4 inline-flex text-sm font-semibold text-white/68 underline decoration-[#d4c09a]/45 underline-offset-4 transition hover:text-[#d4c09a]"
+                className="mt-3 inline-flex text-sm font-semibold text-white/68 underline decoration-[#d4c09a]/45 underline-offset-4 transition hover:text-[#d4c09a]"
               >
                 Discover Ownership →
               </a>
 
-              <div className="mx-auto mt-6 max-w-[18rem] text-[10px] uppercase leading-5 tracking-[0.16em] text-[#d4c09a] sm:max-w-none sm:text-xs md:tracking-[0.35em]">
+              <div className="mx-auto mt-5 max-w-[18rem] text-[10px] uppercase leading-5 tracking-[0.16em] text-[#d4c09a] sm:max-w-none sm:text-xs md:tracking-[0.35em]">
                 Independent. Anti-Corporate. Pro-Patient.
               </div>
             </div>
@@ -203,12 +203,11 @@ export default function Home() {
       {/* PROBLEM */}
       <section
         data-theme="dark"
-        className="relative py-28 px-6"
+        className="relative px-6 py-[72px] md:py-20"
         style={{
           backgroundImage: "url('/backgroundwithglasses2.jpeg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          backgroundAttachment: "fixed",
         }}
       >
         <div className="pointer-events-none absolute inset-0 bg-black/75" />
@@ -220,7 +219,7 @@ export default function Home() {
             Corporate labs look safe, until you realize they’re designed to limit your control, limit your choices, and limit your margins.
           </p>
 
-          <div className="mt-8 grid gap-6 md:grid-cols-2">
+          <div className="mt-7 grid gap-4 md:grid-cols-2">
             {[
               "Restricted product choice",
               "Pricing pressure, always pushing down",
@@ -228,7 +227,7 @@ export default function Home() {
               "Poor communication and surprise delays",
               "Policies that make you feel boxed in",
             ].map((item) => (
-              <div key={item} className="rounded-2xl bg-white/5 border border-white/15 backdrop-blur-md p-6">
+              <div key={item} className="rounded-2xl bg-white/5 border border-white/15 backdrop-blur-md p-5 md:p-6">
                 <div className="text-[#d4c09a] text-xs uppercase tracking-[0.28em]">YOU FEEL IT</div>
                 <div className="mt-3 text-lg text-white">{item}</div>
               </div>
@@ -241,7 +240,7 @@ export default function Home() {
       <section
         id="better-model"
         data-theme="light"
-        className="relative bg-[#f2eee7] px-6 py-20 text-black md:py-28"
+        className="relative bg-[#f2eee7] px-6 py-16 text-black md:py-[72px]"
       >
         <div className="relative z-20 max-w-7xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-semibold">The Better Model</h2>
@@ -249,7 +248,7 @@ export default function Home() {
             Artisan Lab Network gives you freedom of choice, real partnership, and a modern system that fits the way you run your practice.
           </p>
 
-          <div className="mt-8 grid gap-6 md:grid-cols-2">
+          <div className="mt-7 grid gap-4 md:grid-cols-2">
             {[
               { title: "Freedom to choose", body: "More lens options. Less forcing you into one path." },
               { title: "Transparency", body: "You always know what to expect: service, timing, and cost." },
@@ -269,12 +268,11 @@ export default function Home() {
       <section
         id="how-it-works"
         data-theme="light"
-        className="relative py-28 px-6 text-black"
+        className="relative px-6 py-16 text-black md:py-[72px]"
         style={{
           backgroundImage: "url('/backgroundwithglasses2.jpeg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          backgroundAttachment: "fixed",
         }}
       >
         <div className="pointer-events-none absolute inset-0 bg-white/70" />
@@ -284,20 +282,20 @@ export default function Home() {
             Multiple labs. Real systems. Simple control. Built for modern independent practices.
           </p>
 
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
             {[
               { title: "Multiple Labs", body: "Strength + flexibility across the network." },
               { title: "In-House Production", body: "Quality you can rely on." },
               { title: "Integrated Systems", body: "Ordering and updates without chaos." },
             ].map((step) => (
-              <div key={step.title} className="rounded-2xl bg-white/80 border border-black/10 p-6 shadow">
+              <div key={step.title} className="rounded-2xl bg-white/80 border border-black/10 p-5 shadow md:p-6">
                 <div className="text-xs uppercase tracking-[0.28em] text-black/50">{step.title}</div>
                 <div className="mt-2 text-xl font-semibold text-[#1f1718]">{step.body}</div>
               </div>
             ))}
           </div>
 
-          <div className="mt-10 flex flex-wrap gap-4">
+          <div className="mt-8 flex flex-wrap gap-4">
             <a
               href="#labs"
               className="rounded-full border border-black/15 bg-white/70 px-6 py-3 text-sm font-semibold text-black hover:bg-white"
@@ -323,15 +321,17 @@ export default function Home() {
       <section
         id="capabilities"
         data-theme="dark"
-        className="relative px-6 py-24 md:py-28 lg:min-h-screen"
-        style={{
-          backgroundImage: "url('/backgroundwithglasses2.jpeg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundAttachment: "fixed",
-        }}
+        className="relative overflow-hidden px-6 py-[60px] md:py-16"
       >
-        <div className="pointer-events-none absolute inset-0 bg-black/78" />
+        <div className="pointer-events-none absolute inset-0 bg-black/90" />
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-full bg-no-repeat opacity-[0.13]"
+          style={{
+            backgroundImage: "url('/backgroundwithglasses2.jpeg')",
+            backgroundSize: "50% auto",
+            backgroundPosition: "bottom center",
+          }}
+        />
         <div className="relative z-20 max-w-7xl mx-auto">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
@@ -348,7 +348,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-7 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
             {capabilities.map((cap) => {
               const isActive = activeCapability === cap.title;
               const isDimmed = activeCapability !== null && !isActive;
@@ -358,7 +358,7 @@ export default function Home() {
                   key={cap.title}
                   layout
                   className={`
-                    pointer-events-auto group min-h-[176px] overflow-hidden rounded-[18px] border text-left
+                    pointer-events-auto group min-h-[150px] overflow-hidden rounded-[18px] border text-left
                     backdrop-blur-md transition-all duration-300
                     ${isActive ? "bg-white/12 border-[#d4c09a] shadow-2xl lg:col-span-2" : "bg-white/6 border-white/15"}
                     ${isDimmed ? "scale-[0.99] opacity-55 blur-[0.2px]" : "scale-100 opacity-100"}
@@ -370,7 +370,7 @@ export default function Home() {
                     onClick={() =>
                       setActiveCapability((prev) => (prev === cap.title ? null : cap.title))
                     }
-                    className="block w-full cursor-pointer px-6 py-5 text-left"
+                    className="block w-full cursor-pointer px-5 py-5 text-left"
                     aria-expanded={isActive}
                   >
                     <div className="flex items-start justify-between gap-4">
@@ -378,7 +378,7 @@ export default function Home() {
                         <div className="text-xs uppercase tracking-[0.28em] text-[#d4c09a]">
                           Capability
                         </div>
-                        <div className="mt-3 text-xl font-semibold leading-snug text-white">
+                        <div className="mt-3 text-lg font-semibold leading-snug text-white md:text-xl">
                           {cap.title}
                         </div>
                       </div>
@@ -396,7 +396,7 @@ export default function Home() {
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.22 }}
-                        className="pointer-events-auto mx-6 mb-5 border-t border-white/10 pt-5"
+                        className="pointer-events-auto mx-5 mb-5 border-t border-white/10 pt-4"
                       >
                         <p className="text-sm leading-6 text-white/78 md:text-base">
                           {cap.detail}
@@ -426,15 +426,14 @@ export default function Home() {
       <section
         id="proof"
         data-theme="dark"
-        className="relative px-6 py-24 text-white md:py-28 lg:min-h-screen"
+        className="relative px-6 py-16 text-white md:py-[72px]"
         style={{
           backgroundImage: "url('/backgroundimage.jpeg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          backgroundAttachment: "fixed",
         }}
       >
-        <div className="pointer-events-none absolute inset-0 bg-black/76" />
+        <div className="pointer-events-none absolute inset-0 bg-black/84" />
         <div className="relative z-20 max-w-7xl mx-auto">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
@@ -451,8 +450,8 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="mt-10 grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-stretch">
-            <div className="overflow-hidden rounded-[22px] border border-white/15 bg-white/8 p-6 shadow-2xl backdrop-blur-xl md:p-8">
+          <div className="mt-6 grid gap-4 lg:grid-cols-[1.1fr_0.9fr] lg:items-stretch">
+            <div className="overflow-hidden rounded-[22px] border border-white/15 bg-white/8 p-5 shadow-2xl backdrop-blur-xl md:p-6">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeProofQuote.label}
@@ -460,9 +459,9 @@ export default function Home() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -24 }}
                   transition={{ duration: 0.28 }}
-                  className="grid gap-8 md:grid-cols-[160px_1fr] md:items-center"
+                  className="grid gap-6 md:grid-cols-[140px_1fr] md:items-center"
                 >
-                  <div className="mx-auto grid h-36 w-36 place-items-center rounded-full border border-[#d4c09a]/45 bg-black/35 shadow-inner md:h-40 md:w-40">
+                  <div className="mx-auto grid h-32 w-32 place-items-center rounded-full border border-[#d4c09a]/45 bg-black/35 shadow-inner md:h-36 md:w-36">
                     <div className="text-center">
                       <div className="text-3xl font-semibold text-[#d4c09a]">
                         {activeProofQuote.initials}
@@ -477,17 +476,17 @@ export default function Home() {
                     <div className="text-xs uppercase tracking-[0.28em] text-[#d4c09a]">
                       {activeProofQuote.label}
                     </div>
-                    <blockquote className="mt-5 text-3xl font-semibold leading-tight text-white md:text-4xl">
+                    <blockquote className="mt-4 text-3xl font-semibold leading-tight text-white md:text-4xl">
                       &ldquo;{activeProofQuote.quote}&rdquo;
                     </blockquote>
-                    <p className="mt-5 max-w-xl text-sm leading-6 text-white/62">
+                    <p className="mt-4 max-w-xl text-sm leading-6 text-white/62">
                       Placeholder testimonial copy for layout review only. Final quotes and headshots should be added before publish.
                     </p>
                   </div>
                 </motion.div>
               </AnimatePresence>
 
-              <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6">
+              <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-5">
                 <div className="flex gap-2">
                   {proofQuotes.map((quote, index) => (
                     <button
@@ -523,13 +522,13 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="grid gap-4">
+            <div className="grid gap-3">
               {proofQuotes.map((quote, index) => (
                 <button
                   key={quote.label}
                   type="button"
                   onClick={() => setActiveProof(index)}
-                  className={`rounded-[18px] border p-5 text-left backdrop-blur-md transition-all ${
+                  className={`rounded-[18px] border p-4 text-left backdrop-blur-md transition-all ${
                     index === activeProof
                       ? "border-[#d4c09a] bg-white/12 shadow-xl"
                       : "border-white/15 bg-white/6 opacity-70 hover:opacity-100"
@@ -551,12 +550,11 @@ export default function Home() {
       {/* OWNERSHIP / PARTNERSHIP */}
       <section
         data-theme="dark"
-        className="relative py-28 px-6"
+        className="relative px-6 py-16 md:py-[72px]"
         style={{
           backgroundImage: "url('/backgroundimage.jpeg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          backgroundAttachment: "fixed",
         }}
       >
         <div className="pointer-events-none absolute inset-0 bg-black/80" />
@@ -566,20 +564,20 @@ export default function Home() {
             In some cases, qualified practices can participate in ownership by invitation. It creates deeper alignment and a stronger long-term relationship.
           </p>
 
-          <div className="mt-8 grid gap-6 md:grid-cols-3">
+          <div className="mt-7 grid gap-4 md:grid-cols-3">
             {[
               "More alignment",
               "More loyalty",
               "More control over your experience",
             ].map((x) => (
-              <div key={x} className="rounded-2xl bg-white/5 border border-white/15 backdrop-blur-md p-6">
+              <div key={x} className="rounded-2xl bg-white/5 border border-white/15 backdrop-blur-md p-5 md:p-6">
                 <div className="text-[#d4c09a] text-xs uppercase tracking-[0.28em]">OUTCOME</div>
                 <div className="mt-3 text-xl text-white">{x}</div>
               </div>
             ))}
           </div>
 
-          <div className="mt-10">
+          <div className="mt-8">
             <button
               type="button"
               onClick={openContactModal}
@@ -589,7 +587,7 @@ export default function Home() {
             </button>
           </div>
 
-          <div className="mt-6 text-xs text-white/50">
+          <div className="mt-5 text-xs text-white/50">
             Ownership details are available only by invitation and subject to applicable requirements and regulations.
           </div>
 
@@ -608,12 +606,11 @@ export default function Home() {
       <section
         id="resources"
         data-theme="light"
-        className="relative py-20 px-6 text-black"
+        className="relative px-6 py-14 text-black md:py-16"
         style={{
           backgroundImage: "url('/backgroundwithglasses1.jpeg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          backgroundAttachment: "fixed",
         }}
       >
         <div className="pointer-events-none absolute inset-0 bg-white/70" />
@@ -622,26 +619,26 @@ export default function Home() {
           <p className="mt-3 text-black/65 max-w-3xl">
             Practice resources, patient education, and tools to help your team run smoother.
           </p>
-          <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            <a href="#practice-resources" className="rounded-2xl bg-white/80 border border-black/10 p-6 shadow transition hover:-translate-y-1 hover:bg-white">
+          <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <a href="#practice-resources" className="flex min-h-[174px] flex-col rounded-2xl bg-white/80 border border-black/10 p-5 shadow transition hover:-translate-y-1 hover:bg-white md:p-6">
               <div className="text-lg font-semibold">Practice Resources</div>
               <p className="mt-3 text-sm leading-6 text-black/60">
                 Tools and information for independent practice teams.
               </p>
             </a>
-            <a href="/patient-resources" className="rounded-2xl bg-white/80 border border-black/10 p-6 shadow transition hover:-translate-y-1 hover:bg-white">
+            <a href="/patient-resources" className="flex min-h-[174px] flex-col rounded-2xl bg-white/80 border border-black/10 p-5 shadow transition hover:-translate-y-1 hover:bg-white md:p-6">
               <div className="text-lg font-semibold">Patient Resources</div>
               <p className="mt-3 text-sm leading-6 text-black/60">
                 Education and support content for patient conversations.
               </p>
             </a>
-            <a href="#lab-resources" className="rounded-2xl bg-white/80 border border-black/10 p-6 shadow transition hover:-translate-y-1 hover:bg-white">
+            <a href="#lab-resources" className="flex min-h-[174px] flex-col rounded-2xl bg-white/80 border border-black/10 p-5 shadow transition hover:-translate-y-1 hover:bg-white md:p-6">
               <div className="text-lg font-semibold">Lab Resources</div>
               <p className="mt-3 text-sm leading-6 text-black/60">
                 Practical lab access, ordering, and product information.
               </p>
             </a>
-            <a href="/artisan-model" className="rounded-2xl bg-white/80 border border-[#d4c09a]/60 p-6 shadow transition hover:-translate-y-1 hover:bg-white">
+            <a href="/artisan-model" className="flex min-h-[174px] flex-col rounded-2xl bg-white/80 border border-[#d4c09a]/60 p-5 shadow transition hover:-translate-y-1 hover:bg-white md:p-6">
               <div className="text-lg font-semibold">Lab Ownership &amp; Partnership</div>
               <p className="mt-3 text-sm leading-6 text-black/60">
                 Learn how some practices participate more deeply in the Artisan model.
@@ -652,9 +649,9 @@ export default function Home() {
       </section>
 
       {/* FINAL CTA */}
-      <section data-theme="dark" className="relative overflow-hidden py-28 px-6">
+      <section data-theme="dark" className="relative overflow-hidden px-6 py-16 md:py-[72px]">
         <div className="pointer-events-none absolute inset-0 bg-black/70" />
-        <div className="relative z-20 max-w-7xl mx-auto text-center">
+        <div className="relative z-20 max-w-4xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-semibold">Ready to Get Control Back?</h2>
           <p className="mt-4 text-lg text-white/75 max-w-3xl mx-auto">
             If you’re tired of feeling boxed in by corporate labs, we’ll show you a better path—fast.
@@ -688,11 +685,10 @@ export default function Home() {
           backgroundImage: "url('/backgroundwithglasses2.jpeg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          backgroundAttachment: "fixed",
         }}
       >
         <div className="pointer-events-none absolute inset-0 bg-white/70" />
-        <div className="relative z-20 mx-auto max-w-[1600px] px-6 py-20 md:px-10">
+        <div className="relative z-20 mx-auto max-w-[1600px] px-6 py-16 md:px-10">
           <div className="mx-auto max-w-3xl text-center">
             <p className="text-sm uppercase tracking-[0.28em] text-[#8b8177]">
               Contact

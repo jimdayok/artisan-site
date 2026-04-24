@@ -17,7 +17,7 @@ export default function Footer({ onContactClick, signUpHref }: FooterProps) {
   return (
     <footer id="site-footer" className="relative z-20 bg-[#171311] text-[#f7f1e8]">
       <div className="border-y border-white/10 bg-[linear-gradient(180deg,#241d18_0%,#1d1814_100%)]">
-        <div className="mx-auto flex max-w-7xl flex-col gap-5 px-6 py-8 md:flex-row md:items-center md:justify-between md:px-10">
+        <div className="mx-auto flex max-w-7xl flex-col gap-5 px-6 py-6 md:flex-row md:items-center md:justify-between md:px-10">
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-[#c9b28b]">
               Artisan Lab Network
@@ -37,7 +37,7 @@ export default function Footer({ onContactClick, signUpHref }: FooterProps) {
         </div>
       </div>
 
-      <div className="mx-auto grid max-w-7xl gap-12 px-6 py-16 md:grid-cols-12 md:px-10">
+      <div className="mx-auto grid max-w-7xl gap-10 px-6 py-12 md:grid-cols-12 md:px-10">
         <div className="md:col-span-5">
           <div className="flex items-center gap-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -53,13 +53,13 @@ export default function Footer({ onContactClick, signUpHref }: FooterProps) {
               </div>
             </div>
           </div>
-          <p className="mt-6 max-w-md text-sm leading-7 text-white/68">
+          <p className="mt-5 max-w-md text-sm leading-7 text-white/68">
             Artisan Lab Network is the parent organization supporting Pacific
             Artisan Labs, Peak Artisan Labs, and Pike Artisan Labs, built to
             serve independent eye care with more choice, more control, and
             better partnership.
           </p>
-          <div className="mt-8 flex gap-3">
+          <div className="mt-6 flex gap-3">
             {socialLinks.map((social) => (
               <a
                 key={social.label}
@@ -80,7 +80,6 @@ export default function Footer({ onContactClick, signUpHref }: FooterProps) {
           <ul className="mt-5 space-y-3.5 text-sm text-white/72">
             <li><Link href="/" className="transition hover:text-white">Home</Link></li>
             <li><Link href="/about" className="transition hover:text-white">About Us</Link></li>
-            <li><Link href="/artisan-model" className="transition hover:text-white">The Artisan Model</Link></li>
             <li><Link href="/#labs" className="transition hover:text-white">Our Labs</Link></li>
             <li><Link href="/provider-resources" className="transition hover:text-white">Resources</Link></li>
             <li>

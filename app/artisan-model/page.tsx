@@ -186,7 +186,7 @@ function SectionShell({
     <section
       id={id}
       data-theme={theme}
-      className={`relative scroll-mt-24 border-b px-5 py-14 md:px-8 md:py-18 lg:px-10 ${
+      className={`relative scroll-mt-24 border-b px-5 py-14 md:px-8 md:py-[72px] lg:px-10 ${
         theme === "dark" ? "border-white/10" : "border-[#d8c6a8]/35"
       } ${themeClass} ${className}`}
     >

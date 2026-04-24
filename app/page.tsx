@@ -4,13 +4,49 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Header from "./components/Header";
 import LabsSection from "./components/LabsSection";
-import NetworkMap from "./components/NetworkMap";
 import Footer from "./components/Footer";
 
 const ACCOUNT_APPLICATION_URL = "https://form.typeform.com/to/quuPCSff";
 const CONTACT_FORM_URL = "https://form.typeform.com/to/m0lQ9zjD";
 const CAPABILITY_AUTO_COLLAPSE_MS = 9000;
 const PROOF_ROTATION_MS = 5500;
+
+const heroPaths = [
+  {
+    title: "I’m learning about the Artisan Lab Network",
+    body: "See how our connected labs support independent practices with more choice, better service, and stronger partnership.",
+    cta: "Explore the Network",
+    href: "#better-model",
+  },
+  {
+    title: "I’m an Artisan Partner looking for resources",
+    body: "Find product guides, training, ordering tools, patient resources, and support materials.",
+    cta: "Visit Partner Resources",
+    href: "/provider-resources",
+  },
+];
+
+const fadeUp = {
+  initial: { opacity: 0, y: 28 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: 0.2 },
+  transition: { duration: 0.55, ease: "easeOut" },
+} as const;
+
+const staggerContainer = {
+  initial: {},
+  whileInView: {
+    transition: {
+      staggerChildren: 0.08,
+    },
+  },
+} as const;
+
+const cardReveal = {
+  initial: { opacity: 0, y: 22 },
+  whileInView: { opacity: 1, y: 0 },
+  transition: { duration: 0.48, ease: "easeOut" },
+} as const;
 
 const capabilities = [
   {
@@ -77,7 +113,7 @@ const proofQuotes = [
 ];
 
 export default function Home() {
-  const [showHeroMessage, setShowHeroMessage] = useState(true);
+  const [showHeroBox, setShowHeroBox] = useState(true);
   const [activeCapability, setActiveCapability] = useState<string | null>(null);
   const [activeProof, setActiveProof] = useState(0);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
@@ -128,77 +164,107 @@ export default function Home() {
       <Header onContactClick={openContactModal} />
 
       {/* FIXED BACKGROUND MEDIA */}
-      <div className="pointer-events-none fixed inset-0 z-0">
-        <video className="h-full w-full bg-black object-cover object-center md:hidden" autoPlay loop muted playsInline poster="/backgroundimage.jpeg">
+      <div
+        className="pointer-events-none fixed inset-0 z-0 bg-black bg-cover bg-center"
+        style={{ backgroundImage: "url('/backgroundimage.jpeg')" }}
+      >
+        <video className="h-full w-full bg-black/80 object-contain object-center md:hidden" autoPlay loop muted playsInline preload="metadata" poster="/backgroundimage.jpeg">
           <source src="https://pub-92e180f20b704255b9a7625dd6a6cb0b.r2.dev/hero-vertical.mp4" type="video/mp4" />
         </video>
-        <video className="hidden h-full w-full bg-black object-contain object-top md:block" autoPlay loop muted playsInline poster="/backgroundimage.jpeg">
+        <video className="hidden h-full w-full bg-black/80 object-contain object-center md:block" autoPlay loop muted playsInline preload="metadata" poster="/backgroundimage.jpeg">
           <source src="https://pub-92e180f20b704255b9a7625dd6a6cb0b.r2.dev/hero.mp4" type="video/mp4" />
         </video>
+        <div className="absolute inset-0 bg-black/20" />
       </div>
 
       {/* HERO */}
       <section
         id="top"
         data-theme="dark"
-        className="relative z-20 min-h-[500px] overflow-hidden md:min-h-[560px] lg:min-h-[620px]"
+        className="relative z-20 min-h-[100svh] overflow-hidden"
       >
-        {showHeroMessage ? <div className="pointer-events-none absolute inset-0 bg-black/68" /> : null}
+        <div className={`pointer-events-none absolute inset-0 transition-colors duration-500 ${showHeroBox ? "bg-black/54" : "bg-black/18"}`} />
 
-        {showHeroMessage ? (
-          <div className="relative z-20 flex min-h-[500px] items-center justify-center px-5 pt-16 text-center md:min-h-[560px] md:px-6 md:pt-[72px] lg:min-h-[620px]">
-            <div className="relative max-w-5xl rounded-2xl border border-white/15 bg-black/42 px-5 py-6 shadow-2xl backdrop-blur-md md:px-8 md:py-8 lg:px-9">
-              <button
-                type="button"
-                onClick={() => setShowHeroMessage(false)}
-                aria-label="Hide intro message"
-                className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full border border-white/15 bg-white/10 text-white/75 transition hover:border-white/30 hover:bg-white/20 hover:text-white"
+        <div className="relative z-20 flex min-h-[100svh] items-center justify-center px-5 pb-12 pt-24 text-center md:px-6 md:pt-28">
+          <AnimatePresence>
+            {showHeroBox && (
+              <motion.div
+                initial={{ opacity: 0, y: 18, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.98 }}
+                transition={{ duration: 0.45, ease: "easeOut" }}
+                className="relative w-full max-w-5xl rounded-2xl border border-white/15 bg-black/46 px-5 py-6 text-center shadow-[0_28px_90px_rgba(0,0,0,0.42)] backdrop-blur-xl md:px-7 md:py-7"
               >
-                <span aria-hidden="true" className="text-xl leading-none">
-                  X
-                </span>
-              </button>
-
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight">
-                Take Control of Your Lab Relationship.
-              </h1>
-              <p className="mx-auto mt-3 max-w-4xl text-lg text-white/82 md:text-xl">
-                Independence means choice. We help practices win with better options, faster service, and real partnership.
-              </p>
-              <p className="mx-auto mt-2 max-w-3xl text-sm font-medium text-[#d4c09a] md:text-base">
-                The largest independent doctor-owned lab network in the United States.
-              </p>
-
-              <div className="mt-6 flex flex-wrap justify-center gap-3 md:gap-4">
-                <a
-                  href={ACCOUNT_APPLICATION_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full bg-[#d4c09a] px-5 py-3 text-sm font-semibold text-black shadow hover:opacity-90 md:px-6"
+                <button
+                  type="button"
+                  onClick={() => setShowHeroBox(false)}
+                  aria-label="Close hero message and watch the video"
+                  className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full border border-white/15 bg-white/10 text-white/72 transition hover:border-white/30 hover:bg-white/18 hover:text-white"
                 >
-                  Get Started
-                </a>
-                <a
-                  href="#better-model"
-                  className="rounded-full border border-white/15 bg-white/10 px-5 py-3 text-sm font-semibold hover:border-white/25 hover:bg-white/15 md:px-6"
+                  <span aria-hidden="true" className="text-xl leading-none">
+                    ×
+                  </span>
+                </button>
+
+                <div className="mx-auto max-w-3xl">
+                  <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#d4c09a]">
+                    Artisan Lab Network
+                  </p>
+                  <h1 className="mt-4 text-4xl font-semibold leading-tight md:text-6xl">
+                    What brought you to Artisan?
+                  </h1>
+                  <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-white/74 md:text-lg">
+                    Choose the path that fits you best and we’ll help you find the right next step.
+                  </p>
+                </div>
+
+                <motion.div
+                  variants={staggerContainer}
+                  initial="initial"
+                  animate="whileInView"
+                  className="mt-7 grid gap-3 md:grid-cols-2"
                 >
-                  Upgrade Your Lab Experience
-                </a>
-              </div>
+                  {heroPaths.map((path) => (
+                    <motion.a
+                      key={path.title}
+                      href={path.href}
+                      variants={cardReveal}
+                      className="group flex min-h-[172px] flex-col rounded-xl border border-white/12 bg-white/[0.075] p-5 text-left shadow-[0_14px_44px_rgba(0,0,0,0.20)] transition duration-300 hover:-translate-y-1 hover:border-[#d4c09a]/55 hover:bg-white/[0.105]"
+                    >
+                      <h2 className="text-xl font-semibold leading-tight text-white md:text-2xl">
+                        {path.title}
+                      </h2>
+                      <p className="mt-3 flex-1 text-sm leading-6 text-white/66">
+                        {path.body}
+                      </p>
+                      <div className="mt-5 inline-flex w-fit items-center rounded-full border border-[#d4c09a]/35 bg-[#d4c09a] px-4 py-2.5 text-sm font-semibold text-black transition group-hover:bg-[#e2cca2]">
+                        {path.cta}
+                        <span className="ml-2 transition group-hover:translate-x-0.5">→</span>
+                      </div>
+                    </motion.a>
+                  ))}
+                </motion.div>
 
-              <a
-                href="/artisan-model"
-                className="mt-3 inline-flex text-sm font-semibold text-white/68 underline decoration-[#d4c09a]/45 underline-offset-4 transition hover:text-[#d4c09a]"
-              >
-                Discover Ownership →
-              </a>
-
-              <div className="mx-auto mt-5 max-w-[18rem] text-[10px] uppercase leading-5 tracking-[0.16em] text-[#d4c09a] sm:max-w-none sm:text-xs md:tracking-[0.35em]">
-                Independent. Anti-Corporate. Pro-Patient.
-              </div>
-            </div>
-          </div>
-        ) : null}
+                <div className="mt-6 flex flex-col items-center justify-center gap-3 border-t border-white/10 pt-5 sm:flex-row sm:flex-wrap">
+                  <a
+                    href={ACCOUNT_APPLICATION_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#d4c09a] px-6 py-3 text-sm font-semibold text-black shadow-[0_12px_34px_rgba(212,192,154,0.18)] transition hover:-translate-y-0.5 hover:bg-[#e2cca2]"
+                  >
+                    Get Started With Us
+                  </a>
+                  <p className="text-sm leading-6 text-white/58">
+                    Are you a doctor interested in deeper partnership?{" "}
+                    <a href="/artisan-model" className="font-semibold text-[#d4c09a] underline decoration-[#d4c09a]/45 underline-offset-4 transition hover:text-white">
+                      Learn about the Artisan model.
+                    </a>
+                  </p>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </section>
 
       {/* PROBLEM */}
@@ -209,18 +275,27 @@ export default function Home() {
           backgroundImage: "url('/backgroundwithglasses2.jpeg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
+          backgroundAttachment: "fixed",
         }}
       >
         <div className="pointer-events-none absolute inset-0 bg-black/75" />
         <div className="relative z-20 max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-semibold text-white">
+          <motion.div {...fadeUp}>
+            <h2 className="text-4xl md:text-5xl font-semibold text-white">
             The Corporate Lab Problem
-          </h2>
-          <p className="mt-4 text-lg text-white/75 max-w-3xl">
-            Corporate labs look safe, until you realize they’re designed to limit your control, limit your choices, and limit your margins.
-          </p>
+            </h2>
+            <p className="mt-4 text-lg text-white/75 max-w-3xl">
+              Corporate labs look safe, until you realize they’re designed to limit your control, limit your choices, and limit your margins.
+            </p>
+          </motion.div>
 
-          <div className="mt-7 grid gap-4 md:grid-cols-2">
+          <motion.div
+            variants={staggerContainer}
+            initial="initial"
+            whileInView="whileInView"
+            viewport={{ once: true, amount: 0.2 }}
+            className="mt-7 grid gap-4 md:grid-cols-2"
+          >
             {[
               "Restricted product choice",
               "Pricing pressure, always pushing down",
@@ -228,12 +303,16 @@ export default function Home() {
               "Poor communication and surprise delays",
               "Policies that make you feel boxed in",
             ].map((item) => (
-              <div key={item} className="rounded-2xl bg-white/5 border border-white/15 backdrop-blur-md p-5 md:p-6">
+              <motion.div
+                key={item}
+                variants={cardReveal}
+                className="rounded-2xl bg-white/5 border border-white/15 backdrop-blur-md p-5 shadow-[0_14px_45px_rgba(0,0,0,0.12)] transition hover:-translate-y-1 hover:border-[#d4c09a]/45 hover:bg-white/[0.075] md:p-6"
+              >
                 <div className="text-[#d4c09a] text-xs uppercase tracking-[0.28em]">YOU FEEL IT</div>
                 <div className="mt-3 text-lg text-white">{item}</div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -244,24 +323,36 @@ export default function Home() {
         className="relative bg-[#f2eee7] px-6 py-16 text-black md:py-[72px]"
       >
         <div className="relative z-20 max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-semibold">The Better Model</h2>
-          <p className="mt-4 max-w-3xl text-lg text-black/72">
-            Artisan Lab Network gives you freedom of choice, real partnership, and a modern system that fits the way you run your practice.
-          </p>
+          <motion.div {...fadeUp}>
+            <h2 className="text-4xl md:text-5xl font-semibold">The Better Model</h2>
+            <p className="mt-4 max-w-3xl text-lg text-black/72">
+              Artisan Lab Network gives you freedom of choice, real partnership, and a modern system that fits the way you run your practice.
+            </p>
+          </motion.div>
 
-          <div className="mt-7 grid gap-4 md:grid-cols-2">
+          <motion.div
+            variants={staggerContainer}
+            initial="initial"
+            whileInView="whileInView"
+            viewport={{ once: true, amount: 0.2 }}
+            className="mt-7 grid gap-4 md:grid-cols-2"
+          >
             {[
               { title: "Freedom to choose", body: "More lens options. Less forcing you into one path." },
               { title: "Transparency", body: "You always know what to expect: service, timing, and cost." },
               { title: "Flexibility", body: "Systems designed to support your process, not punish it." },
               { title: "Outcomes first", body: "Better turnaround, better consistency, better patient experience." },
             ].map((card) => (
-              <div key={card.title} className="rounded-2xl border border-[#d6c3a1]/50 bg-[#fffaf2] p-6 shadow-[0_18px_45px_rgba(49,39,26,0.08)]">
+              <motion.div
+                key={card.title}
+                variants={cardReveal}
+                className="rounded-2xl border border-[#d6c3a1]/50 bg-[#fffaf2] p-6 shadow-[0_18px_45px_rgba(49,39,26,0.08)] transition hover:-translate-y-1 hover:border-[#c9b28b] hover:shadow-[0_24px_64px_rgba(49,39,26,0.13)]"
+              >
                 <div className="text-xs uppercase tracking-[0.24em] text-black/50 md:tracking-[0.28em]">{card.title}</div>
                 <div className="mt-2 text-xl font-semibold text-[#1f1718]">{card.body}</div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -274,27 +365,40 @@ export default function Home() {
           backgroundImage: "url('/backgroundwithglasses2.jpeg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
+          backgroundAttachment: "fixed",
         }}
       >
         <div className="pointer-events-none absolute inset-0 bg-white/70" />
         <div className="relative z-20 max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-semibold">How the Network Works</h2>
-          <p className="mt-4 text-lg text-black/75 max-w-3xl">
-            Multiple labs. Real systems. Simple control. Built for modern independent practices.
-          </p>
+          <motion.div {...fadeUp}>
+            <h2 className="text-4xl md:text-5xl font-semibold">How the Network Works</h2>
+            <p className="mt-4 text-lg text-black/75 max-w-3xl">
+              Multiple labs. Real systems. Simple control. Built for modern independent practices.
+            </p>
+          </motion.div>
 
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
+          <motion.div
+            variants={staggerContainer}
+            initial="initial"
+            whileInView="whileInView"
+            viewport={{ once: true, amount: 0.2 }}
+            className="mt-8 grid gap-4 md:grid-cols-3"
+          >
             {[
               { title: "Multiple Labs", body: "Strength + flexibility across the network." },
               { title: "In-House Production", body: "Quality you can rely on." },
               { title: "Integrated Systems", body: "Ordering and updates without chaos." },
             ].map((step) => (
-              <div key={step.title} className="rounded-2xl bg-white/80 border border-black/10 p-5 shadow md:p-6">
+              <motion.div
+                key={step.title}
+                variants={cardReveal}
+                className="rounded-2xl bg-white/80 border border-black/10 p-5 shadow transition hover:-translate-y-1 hover:border-[#c9b28b] hover:bg-white hover:shadow-[0_24px_64px_rgba(49,39,26,0.12)] md:p-6"
+              >
                 <div className="text-xs uppercase tracking-[0.28em] text-black/50">{step.title}</div>
                 <div className="mt-2 text-xl font-semibold text-[#1f1718]">{step.body}</div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
 
           <div className="mt-8 flex flex-wrap gap-4">
             <a
@@ -315,32 +419,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section
-        id="network-map"
-        data-theme="dark"
-        className="relative bg-black px-6 py-24 text-white md:py-28"
-      >
-        <div className="mx-auto max-w-7xl">
-          <div className="mx-auto max-w-3xl text-center">
-            <div className="text-xs uppercase tracking-[0.3em] text-[#d4c09a]">
-              Our Network
-            </div>
-
-            <h2 className="mt-4 text-4xl font-semibold md:text-5xl">
-              Three Labs. One Standard.
-            </h2>
-
-            <p className="mt-4 text-lg text-white/70">
-              Our connected lab network gives you flexibility, speed, and consistency across every order.
-            </p>
-          </div>
-
-          <div className="mt-12 rounded-2xl border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-md md:p-10">
-            <NetworkMap />
-          </div>
-        </div>
-      </section>
-
       {/* OUR LABS */}
       <LabsSection />
 
@@ -348,19 +426,20 @@ export default function Home() {
       <section
         id="capabilities"
         data-theme="dark"
-        className="relative overflow-hidden px-6 py-[60px] md:py-16"
+        className="relative overflow-hidden px-6 py-24 md:py-28 lg:min-h-screen"
       >
-        <div className="pointer-events-none absolute inset-0 bg-black/90" />
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-full bg-no-repeat opacity-[0.13]"
+          className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-[0.18]"
           style={{
             backgroundImage: "url('/backgroundwithglasses2.jpeg')",
-            backgroundSize: "50% auto",
-            backgroundPosition: "bottom center",
           }}
         />
-        <div className="relative z-20 max-w-7xl mx-auto">
-          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div className="pointer-events-none absolute inset-0 bg-black/88" />
+        <div className="relative z-20 mx-auto max-w-7xl">
+          <motion.div
+            {...fadeUp}
+            className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
+          >
             <div>
               <div className="text-xs uppercase tracking-[0.3em] text-[#d6c09a]">
                 Capabilities
@@ -373,9 +452,9 @@ export default function Home() {
             <p className="max-w-md text-sm text-white/65">
               Click a capability to expand details. The selected capability comes forward while the rest stay in view.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="mt-7 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {capabilities.map((cap) => {
               const isActive = activeCapability === cap.title;
               const isDimmed = activeCapability !== null && !isActive;
@@ -384,6 +463,10 @@ export default function Home() {
                 <motion.div
                   key={cap.title}
                   layout
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.45, ease: "easeOut" }}
                   className={`
                     pointer-events-auto group min-h-[150px] overflow-hidden rounded-[18px] border text-left
                     backdrop-blur-md transition-all duration-300
@@ -458,10 +541,14 @@ export default function Home() {
           backgroundImage: "url('/backgroundimage.jpeg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
+          backgroundAttachment: "fixed",
         }}
       >
         <div className="pointer-events-none absolute inset-0 bg-black/84" />
-        <div className="relative z-20 max-w-7xl mx-auto">
+        <motion.div
+          {...fadeUp}
+          className="relative z-20 max-w-7xl mx-auto"
+        >
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <div className="text-xs uppercase tracking-[0.3em] text-[#d6c09a]">
@@ -571,7 +658,7 @@ export default function Home() {
               ))}
             </div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* OWNERSHIP / PARTNERSHIP */}
@@ -582,14 +669,17 @@ export default function Home() {
           backgroundImage: "url('/backgroundimage.jpeg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
+          backgroundAttachment: "fixed",
         }}
       >
         <div className="pointer-events-none absolute inset-0 bg-black/80" />
         <div className="relative z-20 max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-semibold">Partnership, Not Pitches</h2>
-          <p className="mt-4 text-lg text-white/75 max-w-3xl">
-            In some cases, qualified practices can participate in ownership by invitation. It creates deeper alignment and a stronger long-term relationship.
-          </p>
+          <motion.div {...fadeUp}>
+            <h2 className="text-4xl md:text-5xl font-semibold">Partnership, Not Pitches</h2>
+            <p className="mt-4 text-lg text-white/75 max-w-3xl">
+              In some cases, qualified practices can participate in ownership by invitation. It creates deeper alignment and a stronger long-term relationship.
+            </p>
+          </motion.div>
 
           <div className="mt-7 grid gap-4 md:grid-cols-3">
             {[
@@ -597,10 +687,17 @@ export default function Home() {
               "More loyalty",
               "More control over your experience",
             ].map((x) => (
-              <div key={x} className="rounded-2xl bg-white/5 border border-white/15 backdrop-blur-md p-5 md:p-6">
+              <motion.div
+                key={x}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.42, ease: "easeOut" }}
+                className="rounded-2xl bg-white/5 border border-white/15 backdrop-blur-md p-5 md:p-6"
+              >
                 <div className="text-[#d4c09a] text-xs uppercase tracking-[0.28em]">OUTCOME</div>
                 <div className="mt-3 text-xl text-white">{x}</div>
-              </div>
+              </motion.div>
             ))}
           </div>
 
@@ -638,39 +735,70 @@ export default function Home() {
           backgroundImage: "url('/backgroundwithglasses1.jpeg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
+          backgroundAttachment: "fixed",
         }}
       >
         <div className="pointer-events-none absolute inset-0 bg-white/70" />
         <div className="relative z-20 max-w-7xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-semibold">Resources</h2>
-          <p className="mt-3 text-black/65 max-w-3xl">
-            Practice resources, patient education, and tools to help your team run smoother.
-          </p>
+          <motion.div {...fadeUp}>
+            <h2 className="text-3xl md:text-4xl font-semibold">Resources</h2>
+            <p className="mt-3 text-black/65 max-w-3xl">
+              Practice resources, patient education, and tools to help your team run smoother.
+            </p>
+          </motion.div>
           <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <a href="#practice-resources" className="flex min-h-[174px] flex-col rounded-2xl bg-white/80 border border-black/10 p-5 shadow transition hover:-translate-y-1 hover:bg-white md:p-6">
+            <motion.a
+              href="/provider-resources"
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.42, ease: "easeOut" }}
+              className="flex min-h-[174px] flex-col rounded-2xl bg-white/80 border border-black/10 p-5 shadow transition hover:-translate-y-1 hover:bg-white md:p-6"
+            >
               <div className="text-lg font-semibold">Practice Resources</div>
               <p className="mt-3 text-sm leading-6 text-black/60">
                 Tools and information for independent practice teams.
               </p>
-            </a>
-            <a href="/patient-resources" className="flex min-h-[174px] flex-col rounded-2xl bg-white/80 border border-black/10 p-5 shadow transition hover:-translate-y-1 hover:bg-white md:p-6">
+            </motion.a>
+            <motion.a
+              href="/patient-resources"
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.42, delay: 0.04, ease: "easeOut" }}
+              className="flex min-h-[174px] flex-col rounded-2xl bg-white/80 border border-black/10 p-5 shadow transition hover:-translate-y-1 hover:bg-white md:p-6"
+            >
               <div className="text-lg font-semibold">Patient Resources</div>
               <p className="mt-3 text-sm leading-6 text-black/60">
                 Education and support content for patient conversations.
               </p>
-            </a>
-            <a href="#lab-resources" className="flex min-h-[174px] flex-col rounded-2xl bg-white/80 border border-black/10 p-5 shadow transition hover:-translate-y-1 hover:bg-white md:p-6">
+            </motion.a>
+            <motion.a
+              href="#labs"
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.42, delay: 0.08, ease: "easeOut" }}
+              className="flex min-h-[174px] flex-col rounded-2xl bg-white/80 border border-black/10 p-5 shadow transition hover:-translate-y-1 hover:bg-white md:p-6"
+            >
               <div className="text-lg font-semibold">Lab Resources</div>
               <p className="mt-3 text-sm leading-6 text-black/60">
                 Practical lab access, ordering, and product information.
               </p>
-            </a>
-            <a href="/artisan-model" className="flex min-h-[174px] flex-col rounded-2xl bg-white/80 border border-[#d4c09a]/60 p-5 shadow transition hover:-translate-y-1 hover:bg-white md:p-6">
+            </motion.a>
+            <motion.a
+              href="/artisan-model"
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.42, delay: 0.12, ease: "easeOut" }}
+              className="flex min-h-[174px] flex-col rounded-2xl bg-white/80 border border-[#d4c09a]/60 p-5 shadow transition hover:-translate-y-1 hover:bg-white md:p-6"
+            >
               <div className="text-lg font-semibold">Lab Ownership &amp; Partnership</div>
               <p className="mt-3 text-sm leading-6 text-black/60">
                 Learn how some practices participate more deeply in the Artisan model.
               </p>
-            </a>
+            </motion.a>
           </div>
         </div>
       </section>
@@ -678,7 +806,10 @@ export default function Home() {
       {/* FINAL CTA */}
       <section data-theme="dark" className="relative overflow-hidden px-6 py-16 md:py-[72px]">
         <div className="pointer-events-none absolute inset-0 bg-black/70" />
-        <div className="relative z-20 max-w-4xl mx-auto text-center">
+        <motion.div
+          {...fadeUp}
+          className="relative z-20 max-w-4xl mx-auto text-center"
+        >
           <h2 className="text-4xl md:text-5xl font-semibold">Ready to Get Control Back?</h2>
           <p className="mt-4 text-lg text-white/75 max-w-3xl mx-auto">
             If you’re tired of feeling boxed in by corporate labs, we’ll show you a better path—fast.
@@ -691,7 +822,7 @@ export default function Home() {
               rel="noreferrer"
               className="rounded-full bg-[#d4c09a] px-6 py-3 text-sm font-semibold text-black hover:opacity-90 shadow"
             >
-              Get Started
+              Get Started With Us
             </a>
             <button
               type="button"
@@ -701,7 +832,7 @@ export default function Home() {
               Contact Us
             </button>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       <section
@@ -712,6 +843,7 @@ export default function Home() {
           backgroundImage: "url('/backgroundwithglasses2.jpeg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
+          backgroundAttachment: "fixed",
         }}
       >
         <div className="pointer-events-none absolute inset-0 bg-white/70" />

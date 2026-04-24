@@ -11,6 +11,15 @@ const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
 const CONTACT_FORM_URL = "https://form.typeform.com/to/m0lQ9zjD";
 const SALES_EMAIL = "mailto:sales@artisanlabnetwork.com";
 
+const aboutJumpLinks = [
+  { label: "Who We Are", href: "#about" },
+  { label: "Leadership", href: "#leadership" },
+  { label: "Timeline", href: "#timeline" },
+  { label: "Press Releases", href: "#press-releases" },
+  { label: "Community Involvement", href: "#community-involvement" },
+  { label: "Our Labs", href: "#our-labs" },
+];
+
 const beliefs = [
   {
     title: "Choice over restriction",
@@ -315,7 +324,27 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section id="about" data-theme="light" className="bg-[#f2eee7] px-6 py-24 md:px-10">
+      <section
+        aria-label="About page navigation"
+        data-theme="light"
+        className="border-y border-[#d8c6a8]/45 bg-[#f8f3eb] px-6 py-5 md:px-10"
+      >
+        <div className="mx-auto max-w-7xl">
+          <div className="flex gap-3 overflow-x-auto pb-1 [scrollbar-width:thin]">
+            {aboutJumpLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="shrink-0 rounded-full border border-[#d8c6a8]/70 bg-white/75 px-4 py-2.5 text-sm font-semibold text-[#1f1a17] shadow-sm transition hover:-translate-y-0.5 hover:border-[#c9b28b] hover:bg-white"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="about" data-theme="light" className="scroll-mt-24 bg-[#f2eee7] px-6 py-24 md:px-10">
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.85fr_1.15fr]">
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-black/45">
@@ -349,7 +378,11 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section data-theme="light" className="bg-[#fbf8f2] px-6 py-24 text-[#1f1a17] md:px-10">
+      <section
+        id="press-releases"
+        data-theme="light"
+        className="scroll-mt-24 bg-[#fbf8f2] px-6 py-24 text-[#1f1a17] md:px-10"
+      >
         <div className="mx-auto max-w-7xl">
           <div className="mx-auto max-w-4xl text-center">
             <p className="text-xs uppercase tracking-[0.3em] text-black/45">
@@ -397,7 +430,11 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section data-theme="light" className="bg-[#f2eee7] px-6 py-24 md:px-10">
+      <section
+        id="our-labs"
+        data-theme="light"
+        className="scroll-mt-24 bg-[#f2eee7] px-6 py-24 md:px-10"
+      >
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-black/45">
@@ -429,7 +466,11 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section data-theme="light" className="border-t border-[#e7ddd0] bg-[#fbf8f3]">
+      <section
+        id="timeline"
+        data-theme="light"
+        className="scroll-mt-24 border-t border-[#e7ddd0] bg-[#fbf8f3]"
+      >
         <div className="mx-auto max-w-6xl px-6 py-16 md:px-10 md:py-20">
           <div className="max-w-3xl">
             <p className="text-sm font-medium uppercase tracking-[0.28em] text-[#8c7d68]">
@@ -512,7 +553,11 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section data-theme="light" className="bg-[#eee5d7] px-6 py-24 md:px-10">
+      <section
+        id="leadership"
+        data-theme="light"
+        className="scroll-mt-24 bg-[#eee5d7] px-6 py-24 md:px-10"
+      >
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
             <div className="max-w-3xl">
@@ -668,7 +713,11 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section data-theme="light" className="bg-[#ece7dc] px-6 py-20 md:px-10">
+      <section
+        id="community-involvement"
+        data-theme="light"
+        className="scroll-mt-24 bg-[#ece7dc] px-6 py-20 md:px-10"
+      >
         <div className="mx-auto grid max-w-7xl gap-10 border-t border-[#d6c3a1]/60 pt-14 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-black/45">

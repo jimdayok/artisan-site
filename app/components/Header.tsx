@@ -256,7 +256,7 @@ export default function Header({ onContactClick }: { onContactClick?: () => void
           </nav>
 
           <button
-            className="lg:hidden p-2"
+            className="flex flex-col items-center justify-center lg:hidden p-2"
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Toggle menu"
           >
@@ -265,9 +265,14 @@ export default function Header({ onContactClick }: { onContactClick?: () => void
               alt="Menu"
               width={260}
               height={260}
-              className="h-9 w-9"
+              className="h-7 w-7 object-contain"
               style={{ filter: iconFilter }}
             />
+            <span className="mt-1 flex flex-col items-center gap-[3px]" aria-hidden="true">
+              <span className="block h-[2px] w-7 rounded-full bg-[#d4c09a]" />
+              <span className="block h-[2px] w-7 rounded-full bg-[#d4c09a]" />
+              <span className="block h-[2px] w-7 rounded-full bg-[#d4c09a]" />
+            </span>
           </button>
         </div>
       </div>

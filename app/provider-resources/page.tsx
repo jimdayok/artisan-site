@@ -158,8 +158,8 @@ const accountTools: ResourceItem[] = [
 
 const practicePrograms = [
   {
-    title: "Artisan AR Treatments",
-    body: "Premium AR options built to give your practice more choice and stronger presentation tools.",
+    title: "Artisan Designs & Treatments",
+    body: "Premium Artisan lens designs and AR treatment resources in one practical place for your team.",
   },
   {
     title: "Frame Systems",
@@ -181,54 +181,33 @@ const practicePrograms = [
 
 const lensBrands: BrandPanel[] = [
   {
-    label: "Artisan Designs",
+    label: "Artisan Designs & Treatments",
     intro:
-      "Artisan Designs are built to support independent practices with premium performance, flexibility, and practical options for real world dispensing.",
+      "Artisan Designs and Treatments are built to support independent practices with premium performance, flexible product choice, and practical tools for real world dispensing.",
     websiteHref: "#",
     featuredCta: {
-      title: "Artisan Design Overview",
+      title: "Artisan Portfolio Overview",
       type: "Download",
-      description: "A quick way to review Artisan design options with your team.",
+      description: "A quick way to review Artisan design and treatment options with your team.",
       cta: "View Overview",
       href: "#",
     },
     resources: [
-      "Mini Catalog",
+      "Design Mini Catalog",
       "Endless Steady",
       "Essential Steady",
       "Endless Office",
       "Endless Plus",
       "Occupational Chart",
-      "Brand Comparison Sheet",
-    ].map((title) => ({
-      title,
-      type: "Download" as const,
-      description: "Curated resource for presenting and dispensing Artisan design options.",
-      cta: "View Resource",
-      href: "#",
-    })),
-  },
-  {
-    label: "Artisan AR Treatments",
-    intro:
-      "Artisan AR Treatments are produced on site and designed to deliver strong clarity, durability, and value for independent practices.",
-    websiteHref: "#",
-    featuredCta: {
-      title: "Artisan AR Overview",
-      type: "Download",
-      description: "A fast overview of Artisan AR options for day to day team use.",
-      cta: "View Overview",
-      href: "#",
-    },
-    resources: [
+      "Design Brand Comparison Sheet",
       "Treatment Guide",
-      "Comparison Sheet",
-      "Care Guide",
-      "Training Video",
+      "Treatment Comparison Sheet",
+      "Treatment Care Guide",
+      "Treatment Training Video",
     ].map((title) => ({
       title,
       type: title.includes("Video") ? ("Video" as const) : ("Download" as const),
-      description: "Resource for explaining, positioning, and supporting Artisan AR treatments.",
+      description: "Curated resource for presenting and dispensing Artisan design and treatment options.",
       cta: "View Resource",
       href: "#",
     })),

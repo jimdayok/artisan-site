@@ -92,6 +92,31 @@ const outcomes = [
   "Stronger long-term position",
 ];
 
+const labCustomerServiceContacts = [
+  {
+    name: "Pacific Artisan Labs",
+    phone: "877.390.6900",
+    email: "customerservice@pacificartisanlabs.com",
+    website: "https://pacificartisanlabs.com",
+  },
+  {
+    name: "Peak Artisan Labs",
+    phone: "833.690.4321",
+    email: "customerservice@peakartisanlabs.com",
+    website: "https://peakartisanlabs.com",
+  },
+  {
+    name: "Pike Artisan Labs",
+    phone: "888.239.0303",
+    email: "customerservice@pikeartisanlabs.com",
+    website: "https://pikeartisanlabs.com",
+  },
+];
+
+function phoneHref(phone: string) {
+  return `tel:${phone.replace(/\D/g, "")}`;
+}
+
 function ContactModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   useEffect(() => {
     if (!open) return;
@@ -251,7 +276,10 @@ export default function ArtisanModelPage() {
       >
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/backgroundwithglasses2.jpeg')" }}
+          style={{
+            backgroundImage: "url('/backgroundwithglasses2.jpeg')",
+            backgroundAttachment: "fixed",
+          }}
         />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(18,14,12,0.94),rgba(18,14,12,0.78)_46%,rgba(18,14,12,0.5))]" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#171311] to-transparent" />
@@ -421,7 +449,10 @@ export default function ArtisanModelPage() {
         <div className="absolute inset-0 opacity-30">
           <div
             className="h-full w-full bg-cover bg-center"
-            style={{ backgroundImage: "url('/glassesbackground.jpeg')" }}
+            style={{
+              backgroundImage: "url('/glassesbackground.jpeg')",
+              backgroundAttachment: "fixed",
+            }}
           />
         </div>
         <div className="absolute inset-0 bg-[#171311]/88" />
@@ -453,6 +484,9 @@ export default function ArtisanModelPage() {
           title="Built With Intention. Proven Through Participation."
           body="Growth is measured by the practices that choose to be part of the model."
         />
+        <p className="mt-5 text-sm font-semibold text-[#8a7654]">
+          Scroll left to explore the timeline.
+        </p>
         <div className="relative mt-8">
           <div className="absolute left-0 right-0 top-[3.25rem] hidden h-px bg-[#d8c6a8] md:block" />
           <div className="flex snap-x gap-3 overflow-x-auto pb-3 [scrollbar-width:thin]">
@@ -525,10 +559,64 @@ export default function ArtisanModelPage() {
         </div>
       </SectionShell>
 
+      <SectionShell id="lab-customer-service" theme="dark">
+        <div className="flex flex-col gap-8">
+          <SectionHeader
+            eyebrow="Customer Service"
+            title="Lab Customer Service Contacts"
+            body="For practical order support, contact the lab team closest to your account."
+            light
+          />
+          <div className="grid gap-4 md:grid-cols-3">
+            {labCustomerServiceContacts.map((lab, index) => (
+              <motion.article
+                key={lab.name}
+                initial={{ opacity: 0, y: 22 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{ duration: 0.45, delay: index * 0.06, ease: "easeOut" }}
+                className="rounded-2xl border border-white/12 bg-white/[0.055] p-5 shadow-[0_18px_55px_rgba(0,0,0,0.18)] backdrop-blur-md transition hover:-translate-y-1 hover:border-[#d4c09a]/45 hover:bg-white/[0.075] md:p-6"
+              >
+                <h3 className="text-xl font-semibold text-white">{lab.name}</h3>
+                <div className="mt-5 space-y-3 text-sm leading-6 text-white/72">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d4c09a]">
+                      Phone
+                    </p>
+                    <a href={phoneHref(lab.phone)} className="font-semibold text-white transition hover:text-[#d4c09a]">
+                      {lab.phone}
+                    </a>
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d4c09a]">
+                      Customer Service
+                    </p>
+                    <a href={`mailto:${lab.email}`} className="break-words font-semibold text-white transition hover:text-[#d4c09a]">
+                      {lab.email}
+                    </a>
+                  </div>
+                  <a
+                    href={lab.website}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex rounded-full border border-white/12 bg-white/8 px-4 py-2 text-sm font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-[#171311]"
+                  >
+                    Website
+                  </a>
+                </div>
+              </motion.article>
+            ))}
+          </div>
+        </div>
+      </SectionShell>
+
       <section data-theme="dark" className="relative overflow-hidden px-5 py-16 text-white md:px-8 md:py-20 lg:px-10">
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/backgroundimage.jpeg')" }}
+          style={{
+            backgroundImage: "url('/backgroundimage.jpeg')",
+            backgroundAttachment: "fixed",
+          }}
         />
         <div className="absolute inset-0 bg-[#171311]/84" />
         <div className="relative mx-auto max-w-4xl text-center">

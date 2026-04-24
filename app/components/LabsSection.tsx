@@ -15,6 +15,7 @@ const labs = [
     address: "12302 NE Marx St.",
     address2: "Portland, OR 97230",
     phone: "877.390.6900",
+    email: "customerservice@pacificartisanlabs.com",
     website: "https://pacificartisanlabs.com",
   },
   {
@@ -24,6 +25,7 @@ const labs = [
     address: "3568 Peoria St., Suite 608",
     address2: "Aurora, CO 80010",
     phone: "833.690.4321",
+    email: "customerservice@peakartisanlabs.com",
     website: "https://peakartisanlabs.com",
   },
   {
@@ -33,6 +35,7 @@ const labs = [
     address: "8902 Vincennes Cir., Suite F",
     address2: "Indianapolis, IN 46268",
     phone: "888.239.0303",
+    email: "customerservice@pikeartisanlabs.com",
     website: "https://pikeartisanlabs.com",
   },
 ];
@@ -62,6 +65,7 @@ export default function LabsSection() {
         backgroundImage: "url('/backgroundimage.jpeg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
+        backgroundAttachment: "fixed",
       }}
     >
       <div className="pointer-events-none absolute inset-0 bg-black/55" />
@@ -84,7 +88,7 @@ export default function LabsSection() {
         </div>
 
         <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
-          {labs.map((lab) => {
+          {labs.map((lab, index) => {
             const isActive = activeId === lab.id;
             const isDimmed = activeId !== null && !isActive;
 
@@ -92,6 +96,10 @@ export default function LabsSection() {
               <motion.div
                 key={lab.id}
                 layout
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.42, delay: index * 0.06, ease: "easeOut" }}
                 className={`
                   pointer-events-auto overflow-hidden rounded-[18px] border
                   backdrop-blur-md transition-all duration-300
@@ -137,7 +145,21 @@ export default function LabsSection() {
                           <div className="font-semibold text-white">Contact</div>
                           <div>{lab.address}</div>
                           <div>{lab.address2}</div>
-                          <div className="pt-2 font-semibold">{lab.phone}</div>
+                          <a
+                            href={`tel:${lab.phone.replace(/\D/g, "")}`}
+                            className="block pt-2 font-semibold text-white transition hover:text-[#d4c09a]"
+                          >
+                            {lab.phone}
+                          </a>
+                          <div className="pt-3 text-xs uppercase tracking-[0.22em] text-[#d4c09a]">
+                            Customer Service
+                          </div>
+                          <a
+                            href={`mailto:${lab.email}`}
+                            className="block break-words text-sm font-semibold text-white/85 transition hover:text-[#d4c09a]"
+                          >
+                            {lab.email}
+                          </a>
                         </div>
 
                         <div className="space-y-1 text-sm text-white/85">

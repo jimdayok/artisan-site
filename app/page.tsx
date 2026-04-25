@@ -218,7 +218,9 @@ function BetterModelCard({
   return (
     <motion.article
       variants={cardReveal}
-      className="rounded-2xl border border-[#d6c3a1]/50 bg-[#fffaf2]/85 p-6 shadow-[0_18px_45px_rgba(49,39,26,0.08)] backdrop-blur-md transition hover:-translate-y-1 hover:border-[#c9b28b] hover:bg-[#fffaf2] hover:shadow-[0_24px_64px_rgba(49,39,26,0.13)]"
+      className={`rounded-2xl border border-[#d6c3a1]/50 bg-[#fffaf2]/85 p-6 shadow-[0_18px_45px_rgba(49,39,26,0.08)] backdrop-blur-md transition hover:-translate-y-1 hover:border-[#c9b28b] hover:bg-[#fffaf2] hover:shadow-[0_24px_64px_rgba(49,39,26,0.13)] ${
+        isOpen ? "" : "min-h-[156px]"
+      }`}
     >
       <button
         type="button"
@@ -252,14 +254,18 @@ function BetterModelCard({
             className="overflow-hidden"
           >
             <div className="mt-5 border-t border-[#d6c3a1]/45 pt-5">
-              {card.expandedTitle ? (
-                <h3 className="text-lg font-semibold text-[#1f1718]">
-                  {card.expandedTitle}
-                </h3>
+              {card.id !== "transparency" ? (
+                <>
+                  {card.expandedTitle ? (
+                    <h3 className="text-lg font-semibold text-[#1f1718]">
+                      {card.expandedTitle}
+                    </h3>
+                  ) : null}
+                  <p className="mt-2 text-sm leading-7 text-black/66">
+                    {card.expandedBody}
+                  </p>
+                </>
               ) : null}
-              <p className="mt-2 text-sm leading-7 text-black/66">
-                {card.expandedBody}
-              </p>
 
               {card.id === "freedom" ? (
                 <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
@@ -286,6 +292,37 @@ function BetterModelCard({
                       ) : null}
                     </Link>
                   ))}
+                </div>
+              ) : null}
+
+              {card.id === "transparency" ? (
+                <div className="transparency-expanded-content mt-5 rounded-2xl border border-[#d6c3a1]/45 bg-white/72 p-4 shadow-[0_18px_44px_rgba(49,39,26,0.08)] md:p-5">
+                  <div className="transparency-dashboard-header">
+                    <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">
+                      Transparency
+                    </p>
+                    <h3 className="mt-3 text-2xl font-semibold leading-tight text-[#1f1718] md:text-3xl">
+                      Real numbers. Clear expectations. No surprises.
+                    </h3>
+                    <p className="mt-3 text-sm leading-7 text-[#625b53] md:text-base">
+                      Simple reporting, easy to understand pricing, and service standards your team can track.
+                    </p>
+                  </div>
+
+                  <div className="mt-5 rounded-2xl border border-[#e2d4bf] bg-[#fffaf2] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] md:p-4">
+                    <p className="transparency-performance-label text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8a7654]">
+                      Performance Overview
+                    </p>
+                    <img
+                      src="/transparency-icons.png"
+                      alt="Transparency performance overview showing turnaround time, service levels, hold time, and tariff fee metrics"
+                      className="transparency-dashboard-image mt-4 h-auto max-h-[360px] w-full max-w-full rounded-xl object-contain"
+                    />
+                  </div>
+
+                  <p className="transparency-footer-line mt-4 text-center text-sm font-semibold leading-6 text-[#625b53]">
+                    Clear reports. Simple pricing. No tariff passthrough fees.
+                  </p>
                 </div>
               ) : null}
             </div>
@@ -318,6 +355,24 @@ export default function Home() {
   }, []);
 
   const activeProofQuote = proofQuotes[activeProof];
+  const activeBetterModelCardData =
+    betterModelCards.find((card) => card.id === activeBetterModelCard) ?? null;
+  const freedomBetterModelCard = betterModelCards.find((card) => card.id === "freedom");
+  const supportingBetterModelCards = betterModelCards.filter((card) => card.id !== "freedom");
+
+  const renderBetterModelCard = (card: (typeof betterModelCards)[number]) => (
+    <BetterModelCard
+      key={card.id}
+      card={card}
+      isOpen={activeBetterModelCard === card.id}
+      onToggle={() =>
+        setActiveBetterModelCard((current) =>
+          current === card.id ? null : card.id
+        )
+      }
+    />
+  );
+
   const goToProof = (direction: "prev" | "next") => {
     setActiveProof((prev) => {
       if (direction === "prev") return (prev - 1 + proofQuotes.length) % proofQuotes.length;
@@ -527,41 +582,23 @@ export default function Home() {
               initial="initial"
               whileInView="whileInView"
               viewport={{ once: true, amount: 0.2 }}
-              className="mt-7 grid items-start gap-6 lg:grid-cols-2"
+              className={`mt-7 grid items-start gap-6 ${
+                activeBetterModelCardData ? "lg:grid-cols-2" : "md:grid-cols-2"
+              }`}
             >
-              <div className="min-w-0">
-                {betterModelCards
-                  .filter((card) => card.id === "freedom")
-                  .map((card) => (
-                    <BetterModelCard
-                      key={card.id}
-                      card={card}
-                      isOpen={activeBetterModelCard === card.id}
-                      onToggle={() =>
-                        setActiveBetterModelCard((current) =>
-                          current === card.id ? null : card.id
-                        )
-                      }
-                    />
-                  ))}
-              </div>
+              {activeBetterModelCardData ? (
+                <>
+                  <div className="min-w-0">
+                    {freedomBetterModelCard ? renderBetterModelCard(freedomBetterModelCard) : null}
+                  </div>
 
-              <div className="flex min-w-0 flex-col gap-6">
-                {betterModelCards
-                  .filter((card) => card.id !== "freedom")
-                  .map((card) => (
-                    <BetterModelCard
-                      key={card.id}
-                      card={card}
-                      isOpen={activeBetterModelCard === card.id}
-                      onToggle={() =>
-                        setActiveBetterModelCard((current) =>
-                          current === card.id ? null : card.id
-                        )
-                      }
-                    />
-                  ))}
-              </div>
+                  <div className="flex min-w-0 flex-col gap-6">
+                    {supportingBetterModelCards.map(renderBetterModelCard)}
+                  </div>
+                </>
+              ) : (
+                betterModelCards.map(renderBetterModelCard)
+              )}
             </motion.div>
           </div>
 

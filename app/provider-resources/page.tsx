@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import Header from "../components/Header";
@@ -28,7 +29,11 @@ type FeaturedCard = {
 };
 
 type BrandPanel = {
+  id: string;
   label: string;
+  logo: string;
+  logoAlt: string;
+  logoClass: string;
   intro: string;
   websiteHref: string;
   featuredCta?: ResourceItem;
@@ -181,7 +186,11 @@ const practicePrograms = [
 
 const lensBrands: BrandPanel[] = [
   {
+    id: "artisan",
     label: "Artisan Designs & Treatments",
+    logo: "/aln-icon.png",
+    logoAlt: "Artisan Lab Network icon",
+    logoClass: "h-14 w-14",
     intro:
       "Artisan Designs and Treatments are built to support independent practices with premium performance, flexible product choice, and practical tools for real world dispensing.",
     websiteHref: "#",
@@ -213,7 +222,11 @@ const lensBrands: BrandPanel[] = [
     })),
   },
   {
+    id: "iot",
     label: "IOT",
+    logo: "/iot-logo.png",
+    logoAlt: "IOT logo",
+    logoClass: "max-h-16 max-w-[210px]",
     intro:
       "IOT is a global optical technology company known for advanced digital lens design and flexible modern lens platforms.",
     websiteHref: "#",
@@ -238,7 +251,11 @@ const lensBrands: BrandPanel[] = [
     })),
   },
   {
+    id: "tokai",
     label: "Tokai",
+    logo: "/tokai-logo.png",
+    logoAlt: "Tokai logo",
+    logoClass: "max-h-16 max-w-[210px]",
     intro: "Premium Japanese optics focused on clarity and advanced materials.",
     websiteHref: "#",
     resources: ["Select", "Bi-AS", "Rest", "Largo", "Training", "Practice Locator", "Tints Guide"].map(
@@ -252,7 +269,11 @@ const lensBrands: BrandPanel[] = [
     ),
   },
   {
+    id: "hoya",
     label: "Hoya",
+    logo: "/hoya-logo.png",
+    logoAlt: "Hoya logo",
+    logoClass: "max-h-16 max-w-[220px]",
     intro: "Widely recognized lens portfolio with strong brand awareness.",
     websiteHref: "#",
     resources: ["Product Guide", "Centration Chart"].map((title) => ({
@@ -264,7 +285,11 @@ const lensBrands: BrandPanel[] = [
     })),
   },
   {
+    id: "varilux",
     label: "Varilux / Essilor",
+    logo: "/varilux-logo.png",
+    logoAlt: "Varilux logo",
+    logoClass: "max-h-14 max-w-[240px]",
     intro: "Recognized premium progressive designs with consumer awareness.",
     websiteHref: "#",
     resources: ["Product Range Guide", "Transitions"].map((title) => ({
@@ -276,7 +301,11 @@ const lensBrands: BrandPanel[] = [
     })),
   },
   {
+    id: "shamir",
     label: "Shamir",
+    logo: "/shamir-logo.png",
+    logoAlt: "Shamir logo",
+    logoClass: "max-h-16 max-w-[210px]",
     intro: "Design-driven progressive lenses with strong customization.",
     websiteHref: "#",
     resources: ["Quick Reference Guide", "Dispensing Guide"].map((title) => ({
@@ -288,7 +317,11 @@ const lensBrands: BrandPanel[] = [
     })),
   },
   {
+    id: "unity",
     label: "Unity",
+    logo: "/unity-logo.png",
+    logoAlt: "Unity logo",
+    logoClass: "max-h-16 max-w-[210px]",
     intro: "VSP-aligned designs built for coverage and consistency.",
     websiteHref: "#",
     resources: ["V3 Sales Flyer", "Whitepaper"].map((title) => ({
@@ -300,7 +333,11 @@ const lensBrands: BrandPanel[] = [
     })),
   },
   {
-    label: "Newton",
+    id: "newton",
+    label: "Newton / Neurolens",
+    logo: "/neurolens-logo.png",
+    logoAlt: "Neurolens logo",
+    logoClass: "max-h-16 max-w-[230px]",
     intro:
       "Newton offers specialty lens solutions designed to support modern visual needs and differentiated practice offerings.",
     websiteHref: "#",
@@ -308,6 +345,23 @@ const lensBrands: BrandPanel[] = [
       title,
       type: "Download",
       description: "Placeholder Newton resource card ready for mapped files and training assets.",
+      cta: "View Resource",
+      href: "#",
+    })),
+  },
+  {
+    id: "younger-optics",
+    label: "Younger Optics",
+    logo: "/younger-optics-logo.png",
+    logoAlt: "Younger Optics logo",
+    logoClass: "max-h-16 max-w-[230px]",
+    intro:
+      "Younger Optics resources support teams with specialty lens options and practical patient conversations.",
+    websiteHref: "#",
+    resources: ["Product Overview", "Polarized Lens Guide", "Practice Reference Sheet"].map((title) => ({
+      title,
+      type: "Download",
+      description: "Younger Optics resource for product positioning, dispensing support, and patient education.",
       cta: "View Resource",
       href: "#",
     })),
@@ -534,6 +588,24 @@ function BrandWebsiteLink({ href }: { href: string }) {
   );
 }
 
+function BrandLogo({ brand, compact = false }: { brand: BrandPanel; compact?: boolean }) {
+  return (
+    <div
+      className={`flex items-center justify-center rounded-2xl border border-[#e4d7c6] bg-white shadow-[0_10px_26px_rgba(24,18,13,0.05)] ${
+        compact ? "h-16 w-24 p-3" : "h-[76px] w-fit min-w-[132px] px-5 py-3"
+      }`}
+    >
+      <Image
+        src={brand.logo}
+        alt={brand.logoAlt}
+        width={240}
+        height={90}
+        className={`${brand.logoClass} max-w-full object-contain`}
+      />
+    </div>
+  );
+}
+
 function ContactModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   return (
     <AnimatePresence>
@@ -585,6 +657,29 @@ export default function ProviderResourcesPage() {
 
   const selectedBrand =
     lensBrands.find((brand) => brand.label === activeBrand) ?? lensBrands[0];
+
+  useEffect(() => {
+    const selectBrandFromHash = () => {
+      const brandId = window.location.hash.replace("#", "");
+      const brand = lensBrands.find((item) => item.id === brandId);
+
+      if (!brand) return;
+
+      setActiveBrand(brand.label);
+      setOpenMobileBrand(brand.label);
+
+      window.setTimeout(() => {
+        document
+          .getElementById(brand.id)
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 80);
+    };
+
+    selectBrandFromHash();
+    window.addEventListener("hashchange", selectBrandFromHash);
+
+    return () => window.removeEventListener("hashchange", selectBrandFromHash);
+  }, []);
 
   return (
     <main className="min-h-screen bg-[#f5f1eb] text-[#1f1a17]">
@@ -791,70 +886,83 @@ export default function ProviderResourcesPage() {
             ))}
           </div>
 
-          <div className="mt-8 hidden rounded-[34px] border border-black/10 bg-white p-6 shadow-[0_24px_64px_rgba(24,18,13,0.08)] md:block md:p-8">
-            <div className="grid gap-8 lg:grid-cols-[0.78fr_1.22fr]">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#8a7654]">
-                  Selected Brand
-                </p>
-                <h3 className="mt-4 text-4xl font-semibold tracking-tight">{selectedBrand.label}</h3>
-                <p className="mt-5 text-lg leading-8 text-[#625b53]">{selectedBrand.intro}</p>
-                <BrandWebsiteLink href={selectedBrand.websiteHref} />
-                {selectedBrand.featuredCta && (
-                  <div className="mt-8">
-                    <ResourceCard item={selectedBrand.featuredCta} compact premium />
+          <div id={selectedBrand.id} className="scroll-mt-28">
+            <div className="mt-8 hidden rounded-[34px] border border-black/10 bg-white p-6 shadow-[0_24px_64px_rgba(24,18,13,0.08)] md:block md:p-8">
+              <div className="grid gap-8 lg:grid-cols-[0.78fr_1.22fr]">
+                <div>
+                  <div className="flex flex-col items-start gap-5">
+                    <BrandLogo brand={selectedBrand} />
+                    <div>
+                      <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#8a7654]">
+                        Selected Brand
+                      </p>
+                      <h3 className="mt-4 text-4xl font-semibold tracking-tight">{selectedBrand.label}</h3>
+                    </div>
                   </div>
-                )}
-              </div>
-              <div className="grid gap-4 sm:grid-cols-2">
-                {selectedBrand.resources.map((item) => (
-                  <ResourceCard key={`${selectedBrand.label}-${item.title}`} item={item} compact />
-                ))}
+                  <p className="mt-5 text-lg leading-8 text-[#625b53]">{selectedBrand.intro}</p>
+                  <BrandWebsiteLink href={selectedBrand.websiteHref} />
+                  {selectedBrand.featuredCta && (
+                    <div className="mt-8">
+                      <ResourceCard item={selectedBrand.featuredCta} compact premium />
+                    </div>
+                  )}
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {selectedBrand.resources.map((item) => (
+                    <ResourceCard key={`${selectedBrand.label}-${item.title}`} item={item} compact />
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="mt-8 space-y-4 md:hidden">
-            {lensBrands.map((brand) => {
-              const isOpen = openMobileBrand === brand.label;
-              return (
-                <div
-                  key={brand.label}
-                  className="overflow-hidden rounded-[26px] border border-black/10 bg-white shadow-[0_14px_36px_rgba(24,18,13,0.06)]"
-                >
-                  <button
-                    type="button"
-                    onClick={() => setOpenMobileBrand(isOpen ? "" : brand.label)}
-                    className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left"
-                    aria-expanded={isOpen}
+            <div className="mt-8 space-y-4 md:hidden">
+              {lensBrands.map((brand) => {
+                const isOpen = openMobileBrand === brand.label;
+                return (
+                  <div
+                    key={brand.label}
+                    className="overflow-hidden rounded-[26px] border border-black/10 bg-white shadow-[0_14px_36px_rgba(24,18,13,0.06)]"
                   >
-                    <span className="text-lg font-semibold">{brand.label}</span>
-                    <span className="text-2xl leading-none text-[#8a7654]">{isOpen ? "−" : "+"}</span>
-                  </button>
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.24 }}
-                        className="overflow-hidden"
-                      >
-                        <div className="border-t border-black/10 px-5 pb-5 pt-4">
-                          <p className="text-sm leading-7 text-[#625b53]">{brand.intro}</p>
-                          <BrandWebsiteLink href={brand.websiteHref} />
-                          <div className="mt-5 grid gap-4">
-                            {brand.resources.map((item) => (
-                              <ResourceCard key={`${brand.label}-mobile-${item.title}`} item={item} compact />
-                            ))}
+                    <button
+                      type="button"
+                      onClick={() => setOpenMobileBrand(isOpen ? "" : brand.label)}
+                      className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left"
+                      aria-expanded={isOpen}
+                    >
+                      <span className="text-lg font-semibold">{brand.label}</span>
+                      <span className="text-2xl leading-none text-[#8a7654]">{isOpen ? "−" : "+"}</span>
+                    </button>
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.24 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="border-t border-black/10 px-5 pb-5 pt-4">
+                            <div className="mb-4 flex items-center gap-4">
+                              <BrandLogo brand={brand} compact />
+                              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#8a7654]">
+                                Brand Resources
+                              </p>
+                            </div>
+                            <p className="text-sm leading-7 text-[#625b53]">{brand.intro}</p>
+                            <BrandWebsiteLink href={brand.websiteHref} />
+                            <div className="mt-5 grid gap-4">
+                              {brand.resources.map((item) => (
+                                <ResourceCard key={`${brand.label}-mobile-${item.title}`} item={item} compact />
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              );
-            })}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>

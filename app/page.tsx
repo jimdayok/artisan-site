@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import Header from "./components/Header";
 import LabsSection from "./components/LabsSection";
@@ -47,6 +49,96 @@ const cardReveal = {
   whileInView: { opacity: 1, y: 0 },
   transition: { duration: 0.48, ease: "easeOut" },
 } as const;
+
+const partnerBrands = [
+  {
+    name: "Artisan Designs & Treatments",
+    logo: "/aln-icon.png",
+    href: "/provider-resources/professional-resources#artisan",
+    logoClass: "max-h-14 w-14",
+    cardLabel: "Artisan Design Series",
+  },
+  {
+    name: "IOT",
+    logo: "/iot-logo.png",
+    href: "/provider-resources/professional-resources#iot",
+    logoClass: "max-h-16 w-[78%]",
+  },
+  {
+    name: "Tokai",
+    logo: "/tokai-logo.png",
+    href: "/provider-resources/professional-resources#tokai",
+    logoClass: "max-h-16 w-[80%]",
+  },
+  {
+    name: "Hoya",
+    logo: "/hoya-logo.png",
+    href: "/provider-resources/professional-resources#hoya",
+    logoClass: "max-h-[62px] w-[90%]",
+  },
+  {
+    name: "Varilux / Essilor",
+    logo: "/varilux-logo.png",
+    href: "/provider-resources/professional-resources#varilux",
+    logoClass: "max-h-[56px] w-[96%]",
+  },
+  {
+    name: "Shamir",
+    logo: "/shamir-logo.png",
+    href: "/provider-resources/professional-resources#shamir",
+    logoClass: "max-h-16 w-[82%]",
+  },
+  {
+    name: "Unity",
+    logo: "/unity-logo.png",
+    href: "/provider-resources/professional-resources#unity",
+    logoClass: "max-h-[60px] w-[80%]",
+  },
+  {
+    name: "Newton / Neurolens",
+    logo: "/neurolens-logo.png",
+    href: "/provider-resources/professional-resources#newton",
+    logoClass: "max-h-[62px] w-[88%]",
+  },
+  {
+    name: "Younger Optics",
+    logo: "/younger-optics-logo.png",
+    href: "/provider-resources/professional-resources#younger-optics",
+    logoClass: "max-h-[62px] w-[92%]",
+  },
+];
+
+const betterModelCards = [
+  {
+    id: "freedom",
+    title: "Freedom to Choose",
+    body: "More lens options. Less forcing you into one path.",
+    expandedTitle: "Partner Brands",
+    expandedBody:
+      "Access the lens brands your practice knows and trusts, with the freedom to choose what fits each patient best.",
+  },
+  {
+    id: "transparency",
+    title: "Transparency",
+    body: "You always know what to expect: service, timing, and cost.",
+    expandedBody:
+      "Clear expectations matter. Artisan Lab Network is built to give practices better visibility into service, timing, communication, and cost so teams can plan with confidence.",
+  },
+  {
+    id: "flexibility",
+    title: "Flexibility",
+    body: "Systems designed to support your process, not punish it.",
+    expandedBody:
+      "Your practice should not have to change everything to work with your lab. Our systems are designed to support different workflows, ordering methods, product preferences, and practice needs.",
+  },
+  {
+    id: "outcomes",
+    title: "Outcomes First",
+    body: "Better turnaround, better consistency, better patient experience.",
+    expandedBody:
+      "Better lab relationships should lead to better results. Our network is focused on dependable turnaround, consistent quality, stronger communication, and a better patient experience.",
+  },
+];
 
 const capabilities = [
   {
@@ -112,8 +204,101 @@ const proofQuotes = [
   },
 ];
 
+function BetterModelCard({
+  card,
+  isOpen,
+  onToggle,
+}: {
+  card: (typeof betterModelCards)[number];
+  isOpen: boolean;
+  onToggle: () => void;
+}) {
+  const panelId = `better-model-${card.id}-panel`;
+
+  return (
+    <motion.article
+      variants={cardReveal}
+      className="rounded-2xl border border-[#d6c3a1]/50 bg-[#fffaf2]/85 p-6 shadow-[0_18px_45px_rgba(49,39,26,0.08)] backdrop-blur-md transition hover:-translate-y-1 hover:border-[#c9b28b] hover:bg-[#fffaf2] hover:shadow-[0_24px_64px_rgba(49,39,26,0.13)]"
+    >
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        aria-controls={panelId}
+        className="flex w-full items-start justify-between gap-4 text-left"
+      >
+        <span>
+          <span className="block text-xs uppercase tracking-[0.24em] text-black/50 md:tracking-[0.28em]">
+            {card.title}
+          </span>
+          <span className="mt-2 block text-xl font-semibold text-[#1f1718]">
+            {card.body}
+          </span>
+        </span>
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[#d6c3a1]/70 bg-white/75 text-2xl leading-none text-[#7d6746] shadow-sm transition">
+          {isOpen ? "−" : "+"}
+        </span>
+      </button>
+
+      <AnimatePresence initial={false}>
+        {isOpen ? (
+          <motion.div
+            id={panelId}
+            key="expanded"
+            initial={{ opacity: 0, height: 0, y: -4 }}
+            animate={{ opacity: 1, height: "auto", y: 0 }}
+            exit={{ opacity: 0, height: 0, y: -4 }}
+            transition={{ duration: 0.28, ease: "easeOut" }}
+            className="overflow-hidden"
+          >
+            <div className="mt-5 border-t border-[#d6c3a1]/45 pt-5">
+              {card.expandedTitle ? (
+                <h3 className="text-lg font-semibold text-[#1f1718]">
+                  {card.expandedTitle}
+                </h3>
+              ) : null}
+              <p className="mt-2 text-sm leading-7 text-black/66">
+                {card.expandedBody}
+              </p>
+
+              {card.id === "freedom" ? (
+                <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
+                  {partnerBrands.map((brand) => (
+                    <Link
+                      key={brand.name}
+                      href={brand.href}
+                      className={`group flex h-24 items-center justify-center rounded-xl border border-[#dfd2bf] bg-white px-4 py-4 shadow-[0_10px_28px_rgba(49,39,26,0.06)] transition hover:-translate-y-0.5 hover:border-[#bca37a] hover:shadow-[0_16px_38px_rgba(49,39,26,0.12)] ${
+                        brand.cardLabel ? "flex-col" : ""
+                      }`}
+                      aria-label={`View ${brand.name} resources`}
+                    >
+                      <Image
+                        src={brand.logo}
+                        alt={`${brand.name} logo`}
+                        width={220}
+                        height={80}
+                        className={`${brand.logoClass} object-contain transition group-hover:scale-[1.02]`}
+                      />
+                      {brand.cardLabel ? (
+                        <span className="mt-2 text-center text-[12.5px] font-semibold leading-[1.2] text-[#1f1718]">
+                          {brand.cardLabel}
+                        </span>
+                      ) : null}
+                    </Link>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </motion.article>
+  );
+}
+
 export default function Home() {
   const [showHeroBox, setShowHeroBox] = useState(true);
+  const [activeBetterModelCard, setActiveBetterModelCard] = useState<string | null>(null);
   const [activeCapability, setActiveCapability] = useState<string | null>(null);
   const [activeProof, setActiveProof] = useState(0);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
@@ -342,23 +527,41 @@ export default function Home() {
               initial="initial"
               whileInView="whileInView"
               viewport={{ once: true, amount: 0.2 }}
-              className="mt-7 grid gap-4 md:grid-cols-2"
+              className="mt-7 grid items-start gap-6 lg:grid-cols-2"
             >
-              {[
-                { title: "Freedom to choose", body: "More lens options. Less forcing you into one path." },
-                { title: "Transparency", body: "You always know what to expect: service, timing, and cost." },
-                { title: "Flexibility", body: "Systems designed to support your process, not punish it." },
-                { title: "Outcomes first", body: "Better turnaround, better consistency, better patient experience." },
-              ].map((card) => (
-                <motion.div
-                  key={card.title}
-                  variants={cardReveal}
-                  className="rounded-2xl border border-[#d6c3a1]/50 bg-[#fffaf2]/85 p-6 shadow-[0_18px_45px_rgba(49,39,26,0.08)] backdrop-blur-md transition hover:-translate-y-1 hover:border-[#c9b28b] hover:bg-[#fffaf2] hover:shadow-[0_24px_64px_rgba(49,39,26,0.13)]"
-                >
-                  <div className="text-xs uppercase tracking-[0.24em] text-black/50 md:tracking-[0.28em]">{card.title}</div>
-                  <div className="mt-2 text-xl font-semibold text-[#1f1718]">{card.body}</div>
-                </motion.div>
-              ))}
+              <div className="min-w-0">
+                {betterModelCards
+                  .filter((card) => card.id === "freedom")
+                  .map((card) => (
+                    <BetterModelCard
+                      key={card.id}
+                      card={card}
+                      isOpen={activeBetterModelCard === card.id}
+                      onToggle={() =>
+                        setActiveBetterModelCard((current) =>
+                          current === card.id ? null : card.id
+                        )
+                      }
+                    />
+                  ))}
+              </div>
+
+              <div className="flex min-w-0 flex-col gap-6">
+                {betterModelCards
+                  .filter((card) => card.id !== "freedom")
+                  .map((card) => (
+                    <BetterModelCard
+                      key={card.id}
+                      card={card}
+                      isOpen={activeBetterModelCard === card.id}
+                      onToggle={() =>
+                        setActiveBetterModelCard((current) =>
+                          current === card.id ? null : card.id
+                        )
+                      }
+                    />
+                  ))}
+              </div>
             </motion.div>
           </div>
 

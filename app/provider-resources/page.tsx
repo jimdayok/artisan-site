@@ -826,7 +826,7 @@ type ProviderResourcesPageProps = {
 };
 
 export default function ProviderResourcesPage({
-  showProfessionalEnhancements = false,
+  showProfessionalEnhancements = true,
 }: ProviderResourcesPageProps = {}) {
   const [activeBrand, setActiveBrand] = useState(lensBrands[0].label);
   const [openMobileBrand, setOpenMobileBrand] = useState(lensBrands[0].label);

@@ -203,11 +203,6 @@ const lensBrands: BrandPanel[] = [
     },
     resources: [
       "Design Mini Catalog",
-      "Endless Steady",
-      "Essential Steady",
-      "Endless Office",
-      "Endless Plus",
-      "Occupational Chart",
       "Design Brand Comparison Sheet",
       "Treatment Guide",
       "Treatment Comparison Sheet",
@@ -238,6 +233,11 @@ const lensBrands: BrandPanel[] = [
       href: "#",
     },
     resources: [
+      "Endless Steady",
+      "Essential Steady",
+      "Endless Office",
+      "Endless Plus",
+      "Occupational Chart",
       "Centration Charts",
       "Camber Guide",
       "Camber Availability",
@@ -258,10 +258,10 @@ const lensBrands: BrandPanel[] = [
     logoClass: "max-h-16 max-w-[210px]",
     intro: "Premium Japanese optics focused on clarity and advanced materials.",
     websiteHref: "#",
-    resources: ["Select", "Bi-AS", "Rest", "Largo", "Training", "Practice Locator", "Tints Guide"].map(
+    resources: ["Tokai Select", "Tokai Rest", "Tokai Largo", "Tokai Bi-AS"].map(
       (title) => ({
         title,
-        type: title === "Practice Locator" ? ("Tool" as const) : title === "Training" ? ("Video" as const) : ("Download" as const),
+        type: "Download",
         description: "Tokai resource for product selection, positioning, and patient conversations.",
         cta: "View Resource",
         href: "#",
@@ -363,6 +363,28 @@ const lensBrands: BrandPanel[] = [
       type: "Download",
       description: "Younger Optics resource for product positioning, dispensing support, and patient education.",
       cta: "View Resource",
+      href: "#",
+    })),
+  },
+  {
+    id: "chemistrie",
+    label: "Chemistrie",
+    logo: "/chemistrie-logo.png",
+    logoAlt: "Chemistrie logo",
+    logoClass: "max-h-16 max-w-[220px]",
+    intro:
+      "Chemistrie resources support magnetic clip lens ordering, fitting, demos, and clean patient conversations.",
+    websiteHref: "#",
+    resources: [
+      "Chemistrie Order Form",
+      "Chemistrie Demo Kit Request",
+      "Chemistrie Product Overview",
+      "Chemistrie Fitting Guide",
+    ].map((title) => ({
+      title,
+      type: title.includes("Order Form") || title.includes("Request") ? ("Form" as const) : ("Download" as const),
+      description: "Chemistrie placeholder resource ready for order forms, fitting support, and product education.",
+      cta: title.includes("Request") ? "Request Kit" : title.includes("Order Form") ? "Open Form" : "View Resource",
       href: "#",
     })),
   },
@@ -885,6 +907,9 @@ export default function ProviderResourcesPage() {
               </button>
             ))}
           </div>
+          <p className="mt-3 hidden text-center text-sm font-medium text-[#8a7654]/80 md:block">
+            Scroll for more →
+          </p>
 
           <div id={selectedBrand.id} className="scroll-mt-28">
             <div className="mt-8 hidden rounded-[34px] border border-black/10 bg-white p-6 shadow-[0_24px_64px_rgba(24,18,13,0.08)] md:block md:p-8">

@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import Header from "./components/Header";
-import LabsSection from "./components/LabsSection";
+import NetworkMap from "./components/NetworkMap";
 import Footer from "./components/Footer";
 
 const ACCOUNT_APPLICATION_URL = "https://form.typeform.com/to/quuPCSff";
@@ -105,6 +105,12 @@ const partnerBrands = [
     logo: "/younger-optics-logo.png",
     href: "/provider-resources/professional-resources#younger-optics",
     logoClass: "max-h-[62px] w-[92%]",
+  },
+  {
+    name: "Chemistrie",
+    logo: "/chemistrie-logo.png",
+    href: "/provider-resources#chemistrie",
+    logoClass: "max-h-[62px] w-[90%]",
   },
 ];
 
@@ -247,11 +253,10 @@ function BetterModelCard({
           <motion.div
             id={panelId}
             key="expanded"
-            initial={{ opacity: 0, height: 0, y: -4 }}
-            animate={{ opacity: 1, height: "auto", y: 0 }}
-            exit={{ opacity: 0, height: 0, y: -4 }}
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.28, ease: "easeOut" }}
-            className="overflow-hidden"
           >
             <div className="mt-5 border-t border-[#d6c3a1]/45 pt-5">
               {card.id !== "transparency" ? (
@@ -309,20 +314,53 @@ function BetterModelCard({
                     </p>
                   </div>
 
-                  <div className="mt-5 rounded-2xl border border-[#e2d4bf] bg-[#fffaf2] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] md:p-4">
+                  <div className="mt-10">
                     <p className="transparency-performance-label text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8a7654]">
                       Performance Overview
                     </p>
-                    <img
-                      src="/transparency-icons.png"
-                      alt="Transparency performance overview showing turnaround time, service levels, hold time, and tariff fee metrics"
-                      className="transparency-dashboard-image mt-4 h-auto max-h-[360px] w-full max-w-full rounded-xl object-contain"
-                    />
-                  </div>
 
-                  <p className="transparency-footer-line mt-4 text-center text-sm font-semibold leading-6 text-[#625b53]">
-                    Clear reports. Simple pricing. No tariff passthrough fees.
-                  </p>
+                    <div className="mt-10 grid gap-6 md:grid-cols-2 md:gap-8">
+                      {[
+                        {
+                          title: "Days Per Order",
+                          icon: "/turntime-icon.png",
+                          alt: "3.5 Days Per Order. Average turnaround time across completed orders.",
+                        },
+                        {
+                          title: "Service Levels",
+                          icon: "/service-icon.png",
+                          alt: "98%+ Service Levels. Reliable performance your practice can track.",
+                        },
+                        {
+                          title: "Minute Hold Time",
+                          icon: "/holdtime-icon.png",
+                          alt: "Less than 1 Minute Hold Time. Average hold time to customer service.",
+                        },
+                        {
+                          title: "Tariff Fees",
+                          icon: "/tariff-icon.png",
+                          alt: "$0 Tariff Fees. No tariff passthrough fees. Clear pricing from the start.",
+                        },
+                      ].map((metric) => (
+                        <div
+                          key={metric.title}
+                          className="rounded-2xl border border-black/10 bg-white p-3 shadow-[0_20px_50px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_25px_60px_rgba(0,0,0,0.12)]"
+                        >
+                          <img
+                            src={metric.icon}
+                            alt={metric.alt}
+                            className="h-auto w-full rounded-xl object-contain"
+                          />
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="mt-8 h-1 w-full rounded-full bg-[#e5ddd2]" />
+
+                    <p className="transparency-footer-line mt-3 text-center text-sm text-[#6b6259]">
+                      Clear reports. Simple pricing. No tariff passthrough fees.
+                    </p>
+                  </div>
                 </div>
               ) : null}
             </div>
@@ -355,10 +393,6 @@ export default function Home() {
   }, []);
 
   const activeProofQuote = proofQuotes[activeProof];
-  const activeBetterModelCardData =
-    betterModelCards.find((card) => card.id === activeBetterModelCard) ?? null;
-  const freedomBetterModelCard = betterModelCards.find((card) => card.id === "freedom");
-  const supportingBetterModelCards = betterModelCards.filter((card) => card.id !== "freedom");
 
   const renderBetterModelCard = (card: (typeof betterModelCards)[number]) => (
     <BetterModelCard
@@ -492,7 +526,7 @@ export default function Home() {
                     rel="noreferrer"
                     className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#d4c09a] px-6 py-3 text-sm font-semibold text-black shadow-[0_12px_34px_rgba(212,192,154,0.18)] transition hover:-translate-y-0.5 hover:bg-[#e2cca2]"
                   >
-                    Get Started With Us
+                    Open An Account
                   </a>
                   <p className="text-sm leading-6 text-white/58">
                     Are you a doctor interested in deeper partnership?{" "}
@@ -582,23 +616,9 @@ export default function Home() {
               initial="initial"
               whileInView="whileInView"
               viewport={{ once: true, amount: 0.2 }}
-              className={`mt-7 grid items-start gap-6 ${
-                activeBetterModelCardData ? "lg:grid-cols-2" : "md:grid-cols-2"
-              }`}
+              className="mt-7 grid items-start gap-6 md:grid-cols-2"
             >
-              {activeBetterModelCardData ? (
-                <>
-                  <div className="min-w-0">
-                    {freedomBetterModelCard ? renderBetterModelCard(freedomBetterModelCard) : null}
-                  </div>
-
-                  <div className="flex min-w-0 flex-col gap-6">
-                    {supportingBetterModelCards.map(renderBetterModelCard)}
-                  </div>
-                </>
-              ) : (
-                betterModelCards.map(renderBetterModelCard)
-              )}
+              {betterModelCards.map(renderBetterModelCard)}
             </motion.div>
           </div>
 
@@ -656,7 +676,16 @@ export default function Home() {
       </section>
 
       {/* OUR LABS */}
-      <LabsSection />
+      <NetworkMap
+        layout="stacked"
+        sectionId="labs"
+        eyebrow="Our Labs"
+        title="Three Labs. One Standard."
+        description="Click a lab on the map or choose a location below to view contact details, customer service, and website links."
+        panelEyebrow="Explore Our Network"
+        panelTitle="Lab Locations"
+        panelDescription="Start small, then open a lab when you need the details."
+      />
 
       {/* CAPABILITIES */}
       <section

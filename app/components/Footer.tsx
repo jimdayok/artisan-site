@@ -95,7 +95,7 @@ export default function Footer({ onContactClick, signUpHref }: FooterProps) {
             Company
           </h3>
           <ul className="mt-5 space-y-3.5 text-sm text-white/72">
-            <li><a href="#" className="transition hover:text-white">Careers</a></li>
+            <li><Link href="/careers" className="transition hover:text-white">Careers</Link></li>
             <li><a href="#" className="transition hover:text-white">Press Releases</a></li>
             <li><a href="#" className="transition hover:text-white">Newsletter</a></li>
           </ul>

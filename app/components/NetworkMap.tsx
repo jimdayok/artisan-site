@@ -6,6 +6,17 @@ import { AnimatePresence, motion } from "framer-motion";
 
 type LabId = "pacific" | "peak" | "pike";
 
+type NetworkMapProps = {
+  layout?: "side" | "stacked";
+  sectionId?: string;
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+  panelEyebrow?: string;
+  panelTitle?: string;
+  panelDescription?: string;
+};
+
 const labs = [
   {
     id: "pacific" as const,
@@ -48,12 +59,22 @@ const labs = [
   },
 ];
 
-export default function NetworkMap() {
+export default function NetworkMap({
+  layout = "side",
+  sectionId = "network-map",
+  eyebrow = "Network Footprint",
+  title = "Three Labs. One Connected Standard.",
+  description = "Select a lab on the map to view customer service contacts, phone, and website details.",
+  panelEyebrow = "Explore Our Network",
+  panelTitle = "Lab Locations",
+  panelDescription = "Click a lab on the map to learn more about each location.",
+}: NetworkMapProps) {
   const [activeLabId, setActiveLabId] = useState<LabId | null>(null);
+  const isStacked = layout === "stacked";
 
   return (
     <motion.section
-      id="network-map"
+      id={sectionId}
       data-theme="dark"
       className="relative overflow-hidden border-y border-white/10 bg-[#171311] px-5 py-14 text-white md:px-8 md:py-16 lg:px-10"
       initial={{ opacity: 0, y: 28 }}
@@ -65,17 +86,23 @@ export default function NetworkMap() {
       <div className="relative z-10 mx-auto max-w-7xl">
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#d4c09a]">
-            Network Footprint
+            {eyebrow}
           </p>
           <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">
-            Three Labs. One Connected Standard.
+            {title}
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-white/68 md:text-lg">
-            Select a lab on the map to view customer service contacts, phone, and website details.
+            {description}
           </p>
         </div>
 
-        <div className="mx-auto mt-8 grid max-w-6xl gap-5 lg:grid-cols-[minmax(0,1.2fr)_minmax(340px,0.8fr)] lg:items-stretch">
+        <div
+          className={`mx-auto mt-8 grid max-w-6xl gap-5 ${
+            isStacked
+              ? ""
+              : "lg:grid-cols-[minmax(0,1.2fr)_minmax(340px,0.8fr)] lg:items-stretch"
+          }`}
+        >
           <div className="rounded-2xl border border-white/10 bg-white/[0.055] p-4 shadow-[0_28px_90px_rgba(0,0,0,0.34)] backdrop-blur-md md:p-6">
             <div className="relative mx-auto max-w-3xl">
               <Image
@@ -102,13 +129,13 @@ export default function NetworkMap() {
                     }`}
                     style={lab.position}
                   >
-                    <span className={`absolute left-1/2 top-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#d4c09a]/20 blur-lg opacity-80 transition group-hover:opacity-100 ${
+                    <span className={`absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#d4c09a]/22 blur-xl opacity-80 transition group-hover:opacity-100 ${
                       isSelected ? "scale-110 opacity-100" : "animate-pulse"
                     }`} />
-                    <span className={`relative block h-3 w-3 rounded-full bg-[#d4c09a] shadow-[0_0_20px_rgba(212,192,154,0.9)] transition ${
-                      isSelected ? "scale-125 ring-4 ring-[#d4c09a]/18" : ""
+                    <span className={`relative block h-5 w-5 rounded-full bg-[#d4c09a] shadow-[0_0_28px_rgba(212,192,154,0.95)] transition ${
+                      isSelected ? "scale-110 ring-8 ring-[#d4c09a]/18" : ""
                     }`} />
-                    <span className={`absolute left-5 top-1/2 -translate-y-1/2 whitespace-nowrap rounded-full border px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.14em] shadow-lg backdrop-blur-md transition sm:text-[10px] md:text-[11px] ${
+                    <span className={`absolute left-7 top-1/2 -translate-y-1/2 whitespace-nowrap rounded-full border px-3 py-1 text-[9px] font-semibold uppercase tracking-[0.14em] shadow-lg backdrop-blur-md transition sm:text-[10px] md:text-[11px] ${
                       isSelected
                         ? "border-[#d4c09a]/60 bg-[#d4c09a] text-black"
                         : "border-white/10 bg-black/75 text-white hover:border-[#d4c09a]/45"
@@ -124,17 +151,17 @@ export default function NetworkMap() {
           <div className="rounded-2xl border border-white/10 bg-white/[0.055] p-5 shadow-[0_28px_90px_rgba(0,0,0,0.28)] backdrop-blur-xl md:p-6">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#d4c09a]">
-                Explore Our Network
+                {panelEyebrow}
               </p>
               <h3 className="mt-3 text-2xl font-semibold text-white md:text-3xl">
-                Lab Locations
+                {panelTitle}
               </h3>
               <p className="mt-3 text-sm leading-6 text-white/64">
-                Click a lab on the map to learn more about each location.
+                {panelDescription}
               </p>
             </div>
 
-            <div className="mt-5 grid gap-3">
+            <div className={`mt-5 grid gap-3 ${isStacked ? "md:grid-cols-3" : ""}`}>
               {labs.map((lab, index) => {
                 const isSelected = activeLabId === lab.id;
                 const hasSelection = activeLabId !== null;
@@ -182,7 +209,7 @@ export default function NetworkMap() {
                     </button>
 
                     <AnimatePresence initial={false}>
-                      {(isSelected || !hasSelection) && (
+                      {isSelected && (
                         <motion.div
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: "auto" }}
@@ -201,7 +228,7 @@ export default function NetworkMap() {
                                 href={`tel:${lab.phoneHref}`}
                                 className="inline-flex rounded-full border border-white/12 bg-white/8 px-3 py-2 text-xs font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-black"
                               >
-                                Call Lab
+                                {lab.phone}
                               </a>
                               <a
                                 href={`mailto:${lab.email}`}

@@ -223,16 +223,18 @@ export default function NetworkMap({
                                 <div key={line}>{line}</div>
                               ))}
                             </div>
-                            <div className="flex flex-wrap gap-2">
+                            <div>
                               <a
                                 href={`tel:${lab.phoneHref}`}
-                                className="inline-flex rounded-full border border-white/12 bg-white/8 px-3 py-2 text-xs font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-black"
+                                className="inline-flex text-base font-semibold text-white transition hover:text-[#d4c09a]"
                               >
                                 {lab.phone}
                               </a>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2">
                               <a
                                 href={`mailto:${lab.email}`}
-                                className="inline-flex rounded-full border border-white/12 bg-white/8 px-3 py-2 text-xs font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-black"
+                                className="inline-flex min-h-10 items-center justify-center rounded-full border border-white/12 bg-white/8 px-3 py-2 text-center text-xs font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-black"
                               >
                                 Email Customer Service
                               </a>
@@ -240,7 +242,7 @@ export default function NetworkMap({
                                 href={lab.website}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="inline-flex rounded-full border border-white/12 bg-white/8 px-3 py-2 text-xs font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-black"
+                                className="inline-flex min-h-10 items-center justify-center rounded-full border border-white/12 bg-white/8 px-3 py-2 text-center text-xs font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-black"
                               >
                                 Visit Website
                               </a>

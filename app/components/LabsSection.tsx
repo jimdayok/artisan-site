@@ -151,15 +151,22 @@ export default function LabsSection() {
                           >
                             {lab.phone}
                           </a>
-                          <div className="pt-3 text-xs uppercase tracking-[0.22em] text-[#d4c09a]">
-                            Customer Service
+                          <div className="grid grid-cols-2 gap-2 pt-3">
+                            <a
+                              href={`mailto:${lab.email}`}
+                              className="inline-flex min-h-10 items-center justify-center rounded-full border border-white/12 bg-white/8 px-3 py-2 text-center text-xs font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-[#171311]"
+                            >
+                              Email Customer Service
+                            </a>
+                            <a
+                              href={lab.website}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex min-h-10 items-center justify-center rounded-full border border-white/12 bg-white/8 px-3 py-2 text-center text-xs font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-[#171311]"
+                            >
+                              Visit Website
+                            </a>
                           </div>
-                          <a
-                            href={`mailto:${lab.email}`}
-                            className="block break-words text-sm font-semibold text-white/85 transition hover:text-[#d4c09a]"
-                          >
-                            {lab.email}
-                          </a>
                         </div>
 
                         <div className="space-y-1 text-sm text-white/85">
@@ -168,15 +175,6 @@ export default function LabsSection() {
                             Built to support independent practices with speed,
                             transparency, and choice.
                           </p>
-
-                          <a
-                            href={lab.website}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-block mt-2 text-[#d4c09a] hover:underline"
-                          >
-                            Visit Website →
-                          </a>
                         </div>
                       </div>
                     </motion.div>

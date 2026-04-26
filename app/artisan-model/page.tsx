@@ -92,31 +92,6 @@ const outcomes = [
   "Stronger long-term position",
 ];
 
-const labCustomerServiceContacts = [
-  {
-    name: "Pacific Artisan Labs",
-    phone: "877.390.6900",
-    email: "customerservice@pacificartisanlabs.com",
-    website: "https://pacificartisanlabs.com",
-  },
-  {
-    name: "Peak Artisan Labs",
-    phone: "833.690.4321",
-    email: "customerservice@peakartisanlabs.com",
-    website: "https://peakartisanlabs.com",
-  },
-  {
-    name: "Pike Artisan Labs",
-    phone: "888.239.0303",
-    email: "customerservice@pikeartisanlabs.com",
-    website: "https://pikeartisanlabs.com",
-  },
-];
-
-function phoneHref(phone: string) {
-  return `tel:${phone.replace(/\D/g, "")}`;
-}
-
 function ContactModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   useEffect(() => {
     if (!open) return;
@@ -554,57 +529,6 @@ export default function ArtisanModelPage() {
                   {outcome}
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </SectionShell>
-
-      <SectionShell id="lab-customer-service" theme="dark">
-        <div className="flex flex-col gap-8">
-          <SectionHeader
-            eyebrow="Customer Service"
-            title="Lab Customer Service Contacts"
-            body="For practical order support, contact the lab team closest to your account."
-            light
-          />
-          <div className="grid gap-4 md:grid-cols-3">
-            {labCustomerServiceContacts.map((lab, index) => (
-              <motion.article
-                key={lab.name}
-                initial={{ opacity: 0, y: 22 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.25 }}
-                transition={{ duration: 0.45, delay: index * 0.06, ease: "easeOut" }}
-                className="rounded-2xl border border-white/12 bg-white/[0.055] p-5 shadow-[0_18px_55px_rgba(0,0,0,0.18)] backdrop-blur-md transition hover:-translate-y-1 hover:border-[#d4c09a]/45 hover:bg-white/[0.075] md:p-6"
-              >
-                <h3 className="text-xl font-semibold text-white">{lab.name}</h3>
-                <div className="mt-5 space-y-3 text-sm leading-6 text-white/72">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d4c09a]">
-                      Phone
-                    </p>
-                    <a href={phoneHref(lab.phone)} className="font-semibold text-white transition hover:text-[#d4c09a]">
-                      {lab.phone}
-                    </a>
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d4c09a]">
-                      Customer Service
-                    </p>
-                    <a href={`mailto:${lab.email}`} className="break-words font-semibold text-white transition hover:text-[#d4c09a]">
-                      {lab.email}
-                    </a>
-                  </div>
-                  <a
-                    href={lab.website}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex rounded-full border border-white/12 bg-white/8 px-4 py-2 text-sm font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-[#171311]"
-                  >
-                    Website
-                  </a>
-                </div>
-              </motion.article>
             ))}
           </div>
         </div>

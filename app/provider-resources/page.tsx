@@ -9,6 +9,14 @@ import Footer from "../components/Footer";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
 const CONTACT_FORM_URL = "https://form.typeform.com/to/m0lQ9zjD";
+const EXPERIENCE_FORM_URL = "https://form.typeform.com/to/iGoDcWlY";
+
+const fadeInSection = {
+  initial: { opacity: 0, y: 40 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: 0.18 },
+  transition: { duration: 0.5, ease: "easeOut" },
+} as const;
 
 type ResourceType = "Form" | "Download" | "Tool" | "Video" | "External";
 
@@ -181,6 +189,34 @@ const practicePrograms = [
   {
     title: "ROI Frames",
     body: "Support for practices focused on better profitability and smarter retail execution.",
+  },
+];
+
+const exclusivePrograms = [
+  {
+    title: "Special Programs Invitation",
+    cta: "Explore Program",
+    href: "https://form.typeform.com/to/WCU5ReWQ",
+  },
+  {
+    title: "Mirror & Tint Kit",
+    cta: "Order Kit",
+    href: "https://form.typeform.com/to/dE49qRpc",
+  },
+  {
+    title: "Chemistrie Clip Kit",
+    cta: "Order Kit",
+    href: "https://form.typeform.com/to/XlZhJX5K",
+  },
+  {
+    title: "Artisan Intel Reports",
+    cta: "Get Reports",
+    href: "https://form.typeform.com/to/NjtJJdFA",
+  },
+  {
+    title: "Artisan Safety Systems Kits",
+    cta: "Request Access",
+    href: "https://form.typeform.com/to/rDUQssNn",
   },
 ];
 
@@ -672,10 +708,105 @@ function ContactModal({ open, onClose }: { open: boolean; onClose: () => void })
   );
 }
 
-export default function ProviderResourcesPage() {
+function ExperienceModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  useEffect(() => {
+    if (!open) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open, onClose]);
+
+  return (
+    <AnimatePresence>
+      {open ? (
+        <motion.div
+          className="fixed inset-0 z-[2100] flex items-center justify-center bg-black/70 px-4 py-6 backdrop-blur-md"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="artisan-experience-title"
+        >
+          <button
+            type="button"
+            className="absolute inset-0 cursor-default"
+            aria-label="Close Artisan Experience modal"
+            onClick={onClose}
+          />
+          <motion.div
+            className="relative z-10 w-full max-w-2xl rounded-[28px] border border-white/15 bg-[#f7f2ea] p-6 text-[#1f1a17] shadow-[0_28px_90px_rgba(0,0,0,0.42)] md:p-8"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.28, ease: "easeOut" }}
+          >
+            <button
+              type="button"
+              onClick={onClose}
+              className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full border border-black/10 bg-white/70 text-xl leading-none text-black/65 transition hover:bg-[#1f1a17] hover:text-white"
+              aria-label="Close Artisan Experience modal"
+            >
+              X
+            </button>
+            <div className="pr-10">
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">
+                Recognition
+              </p>
+              <h2
+                id="artisan-experience-title"
+                className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl"
+              >
+                Your Artisan Experience
+              </h2>
+            </div>
+            <div className="mt-6 space-y-4 text-base leading-8 text-[#625b53]">
+              <p>
+                Behind every great patient experience is a team working together. Your opticians lead the way, and our team supports by crafting lenses and helping solve vision challenges.
+              </p>
+              <p>
+                When someone on our team makes your job easier or improves a patient’s experience, we want to recognize them.
+              </p>
+              <p>
+                Share your Artisan Experience with our leadership team so we can celebrate great work and continue delivering exceptional outcomes.
+              </p>
+            </div>
+            <a
+              href={EXPERIENCE_FORM_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-7 inline-flex min-h-12 items-center justify-center rounded-full bg-[#1f1a17] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-[#d4c09a] hover:text-[#1f1a17]"
+            >
+              Share Your Experience
+            </a>
+          </motion.div>
+        </motion.div>
+      ) : null}
+    </AnimatePresence>
+  );
+}
+
+type ProviderResourcesPageProps = {
+  showProfessionalEnhancements?: boolean;
+};
+
+export default function ProviderResourcesPage({
+  showProfessionalEnhancements = false,
+}: ProviderResourcesPageProps = {}) {
   const [activeBrand, setActiveBrand] = useState(lensBrands[0].label);
   const [openMobileBrand, setOpenMobileBrand] = useState(lensBrands[0].label);
   const [contactOpen, setContactOpen] = useState(false);
+  const [showExperienceModal, setShowExperienceModal] = useState(showProfessionalEnhancements);
 
   const selectedBrand =
     lensBrands.find((brand) => brand.label === activeBrand) ?? lensBrands[0];
@@ -773,6 +904,48 @@ export default function ProviderResourcesPage() {
           </div>
         </div>
       </section>
+
+      {showProfessionalEnhancements ? (
+        <motion.section
+          {...fadeInSection}
+          data-theme="light"
+          className="border-b border-[#e7ddd0] bg-[#fbf8f3] px-6 py-16 md:px-10 md:py-20"
+        >
+          <div className="mx-auto max-w-7xl">
+            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <SectionHeader
+                eyebrow="Professional Resources"
+                title="Exclusive Programs & Resources"
+                description="Quick access to the programs, kits, and reports that help your team keep moving."
+              />
+              <p className="max-w-md text-sm leading-7 text-[#625b53]">
+                Built for practices that need a clear next step, not another maze of links.
+              </p>
+            </div>
+
+            <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {exclusivePrograms.map((program) => (
+                <a
+                  key={program.title}
+                  href={program.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group rounded-[28px] border border-black/10 bg-white p-6 shadow-[0_18px_48px_rgba(24,18,13,0.07)] transition duration-300 hover:-translate-y-1.5 hover:border-[#d4c09a] hover:shadow-[0_28px_64px_rgba(24,18,13,0.12)]"
+                >
+                  <div className="mb-5 h-[2px] w-12 rounded-full bg-[#d4c09a]" />
+                  <h3 className="text-2xl font-semibold leading-tight text-[#1f1a17]">
+                    {program.title}
+                  </h3>
+                  <div className="mt-7 inline-flex items-center gap-2 rounded-full border border-[#e1d4c2] bg-[#fbf8f3] px-4 py-2.5 text-sm font-semibold text-[#1f1a17] transition group-hover:border-[#d4c09a] group-hover:bg-[#d4c09a]">
+                    {program.cta}
+                    <span>→</span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        </motion.section>
+      ) : null}
 
       <section id="practice-tools" className="bg-[#f6f1e9] px-6 py-20 md:px-10 md:py-24">
         <div className="mx-auto max-w-7xl">
@@ -1062,6 +1235,10 @@ export default function ProviderResourcesPage() {
       </section>
 
       <Footer onContactClick={() => setContactOpen(true)} signUpHref={SIGNUP_URL} />
+      <ExperienceModal
+        open={showExperienceModal}
+        onClose={() => setShowExperienceModal(false)}
+      />
       <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
     </main>
   );

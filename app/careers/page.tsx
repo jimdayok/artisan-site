@@ -7,6 +7,14 @@ import Footer from "../components/Footer";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
 const CONTACT_FORM_URL = "https://form.typeform.com/to/m0lQ9zjD";
+const CAREERS_APPLICATION_URL = "https://form.typeform.com/to/Xxi9JSWD";
+
+const sectionFade = {
+  initial: { opacity: 0, y: 40 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: 0.18 },
+  transition: { duration: 0.5, ease: "easeOut" },
+} as const;
 
 const benefits = [
   "Health Insurance",
@@ -296,17 +304,19 @@ export default function CareersPage() {
                 View Open Positions
               </a>
               <a
-                href="#apply"
+                href={CAREERS_APPLICATION_URL}
+                target="_blank"
+                rel="noreferrer"
                 className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/18 bg-white/8 px-7 py-3 text-sm font-semibold text-white backdrop-blur-md transition hover:-translate-y-0.5 hover:border-white/30 hover:bg-white/12"
               >
-                Apply Today
+                Apply Now
               </a>
             </div>
           </div>
         </div>
       </section>
 
-      <section data-theme="light" className="px-6 py-24 md:px-10 md:py-28">
+      <motion.section {...sectionFade} data-theme="light" className="px-6 py-24 md:px-10 md:py-28">
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
           <SectionHeader eyebrow="Careers" title="We’re Looking for Real Artisans" />
           <div className="rounded-[28px] border border-[#d8c6a8]/60 bg-[#fffaf2]/85 p-7 shadow-[0_24px_70px_rgba(49,39,26,0.08)] md:p-9">
@@ -323,9 +333,9 @@ export default function CareersPage() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <section data-theme="dark" className="bg-[#171311] px-6 py-24 text-white md:px-10 md:py-28">
+      <motion.section {...sectionFade} data-theme="dark" className="bg-[#171311] px-6 py-24 text-white md:px-10 md:py-28">
         <div className="mx-auto max-w-7xl">
           <SectionHeader eyebrow="Benefits" title="What You Can Expect" light />
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -340,9 +350,9 @@ export default function CareersPage() {
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <section data-theme="light" className="px-6 py-24 md:px-10 md:py-28">
+      <motion.section {...sectionFade} data-theme="light" className="px-6 py-24 md:px-10 md:py-28">
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
           <SectionHeader
             eyebrow="A Path Forward"
@@ -361,9 +371,9 @@ export default function CareersPage() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <section data-theme="light" className="bg-[#fbf8f3] px-6 py-24 md:px-10 md:py-28">
+      <motion.section {...sectionFade} data-theme="light" className="bg-[#fbf8f3] px-6 py-24 md:px-10 md:py-28">
         <div className="mx-auto max-w-7xl">
           <SectionHeader eyebrow="Fit" title="Who Thrives Here" />
           <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
@@ -380,9 +390,10 @@ export default function CareersPage() {
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <section
+      <motion.section
+        {...sectionFade}
         id="open-positions"
         data-theme="dark"
         className="scroll-mt-24 bg-[#171311] px-6 py-24 text-white md:px-10 md:py-28"
@@ -436,7 +447,9 @@ export default function CareersPage() {
                         {isOpen ? "Hide Details" : "View Details"}
                       </button>
                       <a
-                        href="#apply"
+                        href={CAREERS_APPLICATION_URL}
+                        target="_blank"
+                        rel="noreferrer"
                         className="inline-flex rounded-full bg-[#d4c09a] px-4 py-2 text-sm font-semibold text-[#171311] transition hover:bg-[#e2cca2]"
                       >
                         Apply Now
@@ -490,9 +503,9 @@ export default function CareersPage() {
             })}
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <section id="apply" data-theme="light" className="scroll-mt-24 px-6 py-24 md:px-10 md:py-28">
+      <motion.section {...sectionFade} id="apply" data-theme="light" className="scroll-mt-24 px-6 py-24 md:px-10 md:py-28">
         <div className="mx-auto max-w-5xl rounded-[34px] border border-[#d8c6a8]/60 bg-white p-8 text-center shadow-[0_24px_70px_rgba(49,39,26,0.08)] md:p-12">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#9a8564]">
             Apply
@@ -505,10 +518,12 @@ export default function CareersPage() {
           </p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <a
-              href="#apply"
+              href={CAREERS_APPLICATION_URL}
+              target="_blank"
+              rel="noreferrer"
               className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#1f1a17] px-7 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-[#d4c09a] hover:text-[#171311]"
             >
-              Apply Today
+              Apply Now
             </a>
             <button
               type="button"
@@ -519,7 +534,7 @@ export default function CareersPage() {
             </button>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       <Footer onContactClick={() => setContactOpen(true)} signUpHref={SIGNUP_URL} />
       <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />

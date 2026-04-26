@@ -967,6 +967,22 @@ export default function ProviderResourcesPage({
                   </div>
                 </a>
               ))}
+              <Link
+                href="/policies"
+                className="group rounded-[28px] border border-black/10 bg-white p-6 shadow-[0_18px_48px_rgba(24,18,13,0.07)] transition duration-300 hover:-translate-y-1.5 hover:border-[#d4c09a] hover:shadow-[0_28px_64px_rgba(24,18,13,0.12)]"
+              >
+                <div className="mb-5 h-[2px] w-12 rounded-full bg-[#d4c09a]" />
+                <h3 className="text-2xl font-semibold leading-tight text-[#1f1a17]">
+                  Lab Remake, Redo and Warranty Policies
+                </h3>
+                <p className="mt-3 text-sm leading-7 text-[#625b53]">
+                  Review policy coverage, redo procedures, frame rules, shipping, and specialty job requirements.
+                </p>
+                <div className="mt-7 inline-flex items-center gap-2 rounded-full border border-[#e1d4c2] bg-[#fbf8f3] px-4 py-2.5 text-sm font-semibold text-[#1f1a17] transition group-hover:border-[#d4c09a] group-hover:bg-[#d4c09a]">
+                  Review Policies
+                  <span>→</span>
+                </div>
+              </Link>
             </div>
           </div>
         </motion.section>

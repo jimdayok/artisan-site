@@ -65,6 +65,16 @@ body {
   }
 }
 
+@keyframes shine {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 /* Remove old Geist references */
 @theme inline {
   --color-background: var(--background);

@@ -16,12 +16,29 @@ type TeamMember = {
 };
 
 type LabKey = "pacific" | "peak" | "pike";
+type DepartmentKey = "surfacing" | "coating" | "finishing" | "customerService";
 
 type LabDetail = {
   key: LabKey;
   name: string;
   shortName: string;
   description: string;
+};
+
+type DepartmentContent = {
+  eyebrow: string;
+  title: string;
+  description: string;
+};
+
+type Hotspot = {
+  id: string;
+  lab: LabKey;
+  department: DepartmentKey;
+  label: string;
+  tooltip: string;
+  left: string;
+  top: string;
 };
 
 const salesTeam: TeamMember[] = [
@@ -85,6 +102,161 @@ const labs: LabDetail[] = [
     shortName: "Pike",
     description:
       "Our Indianapolis lab adds speed and central U.S. flexibility to the Artisan network.",
+  },
+];
+
+const labNames: Record<LabKey, string> = {
+  pacific: "Pacific Artisan Labs",
+  peak: "Peak Artisan Labs",
+  pike: "Pike Artisan Labs",
+};
+
+const departmentLabels: Record<DepartmentKey, string> = {
+  surfacing: "Surfacing",
+  coating: "Coating",
+  finishing: "Finishing",
+  customerService: "Customer Service",
+};
+
+const departmentContent: Record<
+  LabKey,
+  Partial<Record<DepartmentKey, DepartmentContent>>
+> = {
+  pacific: {
+    finishing: {
+      eyebrow: "Pacific Artisan Labs / Finishing",
+      title: "Finishing - Pacific Artisan Labs",
+      description:
+        "Our finishing team works tirelessly to make it right the first time. Every lens is edged, assembled, and inspected with care so practices can trust what goes out the door and minimize remakes.",
+    },
+    surfacing: {
+      eyebrow: "Pacific Artisan Labs / Surfacing",
+      title: "Surfacing - Pacific Artisan Labs",
+      description:
+        "This is where lenses meet our state of the art generators and polishers. Our fully automated systems operate with precision to create consistent, high quality lenses from the very start of the process.",
+    },
+    coating: {
+      eyebrow: "Pacific Artisan Labs / Coating",
+      title: "Coating - Pacific Artisan Labs",
+      description:
+        "Our coating area adds the finishing touch that patients notice every day. This is where clarity, durability, and appearance come together through careful process control and attention to detail.",
+    },
+    customerService: {
+      eyebrow: "Pacific Artisan Labs / Customer Service",
+      title: "Customer Service - Pacific Artisan Labs",
+      description:
+        "Our customer service team helps keep practices informed, supported, and confident. They help answer questions, solve problems, and keep the work moving with a personal touch.",
+    },
+  },
+  peak: {
+    finishing: {
+      eyebrow: "Peak Artisan Labs / Finishing",
+      title: "Finishing - Peak Artisan Labs",
+      description:
+        "Peak's finishing team combines precision with reliability. Each order is handled with attention to detail to ensure a smooth experience for both the practice and the patient.",
+    },
+    customerService: {
+      eyebrow: "Peak Artisan Labs / Customer Service",
+      title: "Customer Service - Peak Artisan Labs",
+      description:
+        "Peak's customer service team brings practical answers and steady communication to the practices they support. Their goal is to make the lab relationship easier every day.",
+    },
+  },
+  pike: {
+    finishing: {
+      eyebrow: "Pike Artisan Labs / Finishing",
+      title: "Finishing - Pike Artisan Labs",
+      description:
+        "At Pike, finishing is built for efficiency and consistency. Our team focuses on clean execution and dependable turnaround so practices can stay on schedule and deliver confidently.",
+    },
+    customerService: {
+      eyebrow: "Pike Artisan Labs / Customer Service",
+      title: "Customer Service - Pike Artisan Labs",
+      description:
+        "Pike's customer service team gives practices a responsive point of contact in the central U.S. They help support speed, flexibility, and clear communication across the Artisan network.",
+    },
+  },
+};
+
+const labGalleryImages = [
+  "/meet-the-artisans/labs/shared/blue-plastic-trays-2024-1.jpg",
+  "/meet-the-artisans/labs/shared/factory-conveyor-trays-2024-1.jpg",
+  "/meet-the-artisans/labs/shared/factory-machines-2024-1.jpg",
+  "/meet-the-artisans/labs/shared/factory-machines-2024-2.jpg",
+];
+
+const hotspots: Hotspot[] = [
+  {
+    id: "pacific-surfacing",
+    lab: "pacific",
+    department: "surfacing",
+    label: "Surfacing",
+    tooltip: "Pacific Artisan Labs - Surfacing",
+    left: "29%",
+    top: "33%",
+  },
+  {
+    id: "pacific-finishing",
+    lab: "pacific",
+    department: "finishing",
+    label: "Finishing",
+    tooltip: "Pacific Artisan Labs - Finishing",
+    left: "43%",
+    top: "45%",
+  },
+  {
+    id: "pacific-coating",
+    lab: "pacific",
+    department: "coating",
+    label: "Coating",
+    tooltip: "Pacific Artisan Labs - Coating",
+    left: "18%",
+    top: "46%",
+  },
+  {
+    id: "pacific-customer",
+    lab: "pacific",
+    department: "customerService",
+    label: "Customer Service",
+    tooltip: "Pacific Artisan Labs - Customer Service",
+    left: "38%",
+    top: "65%",
+  },
+  {
+    id: "peak-finishing",
+    lab: "peak",
+    department: "finishing",
+    label: "Finishing",
+    tooltip: "Peak Artisan Labs - Finishing",
+    left: "38%",
+    top: "78%",
+  },
+  {
+    id: "peak-customer",
+    lab: "peak",
+    department: "customerService",
+    label: "Customer Service",
+    tooltip: "Peak Artisan Labs - Customer Service",
+    left: "39%",
+    top: "88%",
+  },
+  {
+    id: "pike-finishing",
+    lab: "pike",
+    department: "finishing",
+    label: "Finishing",
+    tooltip: "Pike Artisan Labs - Finishing",
+    left: "76%",
+    top: "46%",
+  },
+  {
+    id: "pike-customer",
+    lab: "pike",
+    department: "customerService",
+    label: "Customer Service",
+    tooltip: "Pike Artisan Labs - Customer Service",
+    left: "76%",
+    top: "65%",
   },
 ];
 
@@ -229,17 +401,32 @@ function CreamDivider() {
 
 export default function MeetTheArtisansPage() {
   const [contactOpen, setContactOpen] = useState(false);
+  const [activeServiceLab, setActiveServiceLab] = useState<LabKey>("pacific");
   const [activeLab, setActiveLab] = useState<LabKey>("pacific");
-  const [selectedLab, setSelectedLab] = useState<LabKey>("pacific");
+  const [activeDepartment, setActiveDepartment] =
+    useState<DepartmentKey>("finishing");
+  const [hoveredHotspot, setHoveredHotspot] = useState<string | null>(null);
 
-  const activeServiceTeam = serviceTeams[activeLab];
-  const activeLabDetail = useMemo(
-    () => labs.find((lab) => lab.key === selectedLab) ?? labs[0],
-    [selectedLab]
+  const activeServiceTeam = serviceTeams[activeServiceLab];
+  const availableDepartments = useMemo(
+    () => Object.keys(departmentContent[activeLab]) as DepartmentKey[],
+    [activeLab]
+  );
+  const activeDepartmentContent = useMemo(
+    () =>
+      departmentContent[activeLab][activeDepartment] ??
+      departmentContent[activeLab].finishing,
+    [activeDepartment, activeLab]
   );
 
+  useEffect(() => {
+    if (!availableDepartments.includes(activeDepartment)) {
+      setActiveDepartment("finishing");
+    }
+  }, [activeDepartment, availableDepartments]);
+
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="min-h-screen overflow-x-hidden bg-black text-white">
       <Header onContactClick={() => setContactOpen(true)} />
 
       <section
@@ -361,12 +548,12 @@ export default function MeetTheArtisansPage() {
 
           <div className="mt-10 flex flex-wrap justify-center gap-3">
             {labs.map((lab) => {
-              const active = activeLab === lab.key;
+              const active = activeServiceLab === lab.key;
               return (
                 <button
                   key={lab.key}
                   type="button"
-                  onClick={() => setActiveLab(lab.key)}
+                  onClick={() => setActiveServiceLab(lab.key)}
                   className={`rounded-full border px-6 py-3 text-sm font-semibold transition hover:scale-[1.02] hover:bg-white/10 ${
                     active
                       ? "border-[#d4c09a] bg-[#d4c09a] text-black"
@@ -381,7 +568,7 @@ export default function MeetTheArtisansPage() {
 
           <AnimatePresence mode="wait">
             <motion.div
-              key={activeLab}
+              key={activeServiceLab}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
@@ -389,7 +576,7 @@ export default function MeetTheArtisansPage() {
               className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
             >
               {activeServiceTeam.map((member) => (
-                <TeamCard key={`${activeLab}-${member.name}`} member={member} />
+                <TeamCard key={`${activeServiceLab}-${member.name}`} member={member} />
               ))}
             </motion.div>
           </AnimatePresence>
@@ -401,81 +588,206 @@ export default function MeetTheArtisansPage() {
       <section
         id="labs"
         data-theme="dark"
-        className="bg-black px-6 py-20 md:px-10 md:py-28"
+        className="relative overflow-hidden bg-black py-24 text-white"
       >
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-[1400px] px-6">
           <SectionIntro
             eyebrow="Lab Experience"
             title="Step Inside the Labs"
-            copy="A simple preview space for lab layouts, galleries, and richer location details when photography is ready."
+            copy="Explore the connected work happening across the Artisan network, from surfacing and coating to finishing and customer support."
           />
 
-          <div className="mt-14 grid gap-8 lg:grid-cols-[1fr_0.92fr] lg:items-start">
+          <div className="mt-14 grid grid-cols-1 gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
             <motion.div
               {...fadeUp}
-              className="w-full h-[400px] rounded-xl bg-white/5 flex items-center justify-center text-white/40 border border-white/10"
+              className="relative min-w-0 overflow-hidden rounded-[28px] border border-white/12 bg-black/40 p-4 shadow-2xl backdrop-blur-xl"
             >
-              Lab Layout Graphic Coming Soon
-            </motion.div>
+              <div className="relative">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/meet-the-artisans/labs/shared/lab-layout-map.png"
+                  alt="Artisan lab layout map"
+                  className="h-auto w-full rounded-[22px] object-contain opacity-95"
+                />
 
-            <div className="space-y-5">
-              <div className="grid gap-3">
-                {labs.map((lab) => {
-                  const active = selectedLab === lab.key;
+                <div
+                  className="pointer-events-none absolute inset-0 animate-[shine_6s_linear_infinite] bg-gradient-to-r from-transparent via-[#d4c09a]/10 to-transparent opacity-30"
+                  aria-hidden="true"
+                />
+
+                {[
+                  "left-[28%] top-[58%] w-[28%] rotate-[58deg]",
+                  "left-[49%] top-[51%] w-[28%] rotate-[-8deg]",
+                  "left-[53%] top-[66%] w-[26%] rotate-[-34deg]",
+                ].map((lineClass, index) => (
+                  <motion.div
+                    key={lineClass}
+                    className={`pointer-events-none absolute h-px bg-gradient-to-r from-transparent via-[#d4c09a]/35 to-transparent opacity-40 ${lineClass}`}
+                    animate={{ opacity: [0.15, 0.5, 0.15] }}
+                    transition={{
+                      duration: 3 + index * 0.35,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: index * 0.4,
+                    }}
+                    aria-hidden="true"
+                  />
+                ))}
+
+                {hotspots.map((hotspot) => {
+                  const selected =
+                    activeLab === hotspot.lab &&
+                    activeDepartment === hotspot.department;
+
                   return (
-                    <button
-                      key={lab.key}
+                    <motion.button
+                      key={hotspot.id}
                       type="button"
-                      onClick={() => setSelectedLab(lab.key)}
-                      className={`rounded-2xl border p-5 text-left transition hover:scale-[1.02] hover:bg-white/10 ${
-                        active
-                          ? "border-[#d4c09a]/70 bg-[#d4c09a]/12"
-                          : "border-white/12 bg-white/[0.055]"
+                      onMouseEnter={() => setHoveredHotspot(hotspot.id)}
+                      onMouseLeave={() => setHoveredHotspot(null)}
+                      onFocus={() => setHoveredHotspot(hotspot.id)}
+                      onBlur={() => setHoveredHotspot(null)}
+                      onClick={() => {
+                        setActiveLab(hotspot.lab);
+                        setActiveDepartment(hotspot.department);
+                      }}
+                      className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full border px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-[#d4c09a] hover:bg-[#d4c09a]/15 hover:text-white sm:px-4 sm:py-2 sm:text-[11px] sm:tracking-[0.22em] ${
+                        selected
+                          ? "border-[#d4c09a] bg-[#d4c09a] text-black shadow-[0_0_28px_rgba(212,192,154,0.45)]"
+                          : "border-[#d4c09a]/35 bg-black/55 text-white/80"
                       }`}
+                      style={{ left: hotspot.left, top: hotspot.top }}
+                      animate={
+                        selected
+                          ? { scale: [1, 1.035, 1], opacity: [1, 0.92, 1] }
+                          : { scale: 1, opacity: 1 }
+                      }
+                      transition={{
+                        duration: 2.4,
+                        repeat: selected ? Infinity : 0,
+                        ease: "easeInOut",
+                      }}
                     >
-                      <span className="text-sm font-semibold uppercase tracking-[0.2em] text-[#d4c09a]">
-                        {lab.shortName}
-                      </span>
-                      <span className="mt-2 block text-xl font-semibold text-white">
-                        {lab.name}
-                      </span>
-                    </button>
+                      {hotspot.label}
+                      <AnimatePresence>
+                        {hoveredHotspot === hotspot.id ? (
+                          <motion.span
+                            initial={{ opacity: 0, y: 4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 4 }}
+                            transition={{ duration: 0.16 }}
+                            className="pointer-events-none absolute bottom-full left-1/2 mb-2 hidden -translate-x-1/2 whitespace-nowrap rounded-full border border-[#d4c09a]/40 bg-black/85 px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-[#d4c09a] shadow-xl sm:block"
+                          >
+                            {hotspot.tooltip}
+                          </motion.span>
+                        ) : null}
+                      </AnimatePresence>
+                    </motion.button>
                   );
                 })}
               </div>
+            </motion.div>
 
+            <div className="min-w-0 overflow-hidden rounded-[28px] border border-white/12 bg-white/[0.055] p-5 shadow-[0_28px_90px_rgba(0,0,0,0.28)] backdrop-blur-xl md:p-6">
+              <div className="flex flex-wrap gap-2">
+                {labs.map((lab) => (
+                  <button
+                    key={lab.key}
+                    type="button"
+                    onClick={() => setActiveLab(lab.key)}
+                    className={`rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] transition hover:scale-[1.02] hover:bg-white/10 ${
+                      activeLab === lab.key
+                        ? "border-[#d4c09a] bg-[#d4c09a] text-black"
+                        : "border-white/12 bg-white/[0.055] text-white/72"
+                    }`}
+                  >
+                    {lab.shortName}
+                  </button>
+                ))}
+              </div>
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={activeLabDetail.key}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.28, ease: "easeOut" }}
-                  className="rounded-2xl border border-white/12 bg-white/[0.055] p-5 backdrop-blur-xl"
+                  key={`${activeLab}-${activeDepartment}`}
+                  initial={{ opacity: 0, x: 28 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -18 }}
+                  transition={{ duration: 0.34, ease: "easeOut" }}
+                  className="mt-7"
                 >
-                  <h3 className="text-2xl font-semibold tracking-tight text-white">
-                    {activeLabDetail.name}
-                  </h3>
-                  <p className="mt-3 text-sm leading-7 text-white/68">
-                    {activeLabDetail.description}
+                  <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#d4c09a]">
+                    {activeDepartmentContent?.eyebrow}
                   </p>
-                  <div className="mt-6 aspect-[16/9] w-full rounded-xl bg-white/5 flex items-center justify-center text-white/40 text-sm">
-                    Lab Photo Coming Soon
-                  </div>
-                  <div className="mt-4 grid grid-cols-3 gap-3">
-                    {[1, 2, 3].map((item) => (
-                      <div
-                        key={item}
-                        className="aspect-square rounded-xl bg-white/5 flex items-center justify-center text-center text-[11px] leading-4 text-white/35"
-                      >
-                        Gallery Coming Soon
-                      </div>
+                  <h3 className="text-2xl font-semibold tracking-tight text-white">
+                    {activeDepartmentContent?.title}
+                  </h3>
+                  <p className="mt-4 text-sm leading-7 text-white/68 md:text-base md:leading-8">
+                    {activeDepartmentContent?.description}
+                  </p>
+
+                  <div className="mt-8 flex max-w-full gap-4 overflow-x-auto pb-3 [scrollbar-width:thin] [scrollbar-color:#d4c09a_rgba(255,255,255,0.08)]">
+                    {labGalleryImages.map((src, index) => (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        key={src}
+                        src={src}
+                        alt={`Artisan lab production image ${index + 1}`}
+                        className="h-48 w-[260px] shrink-0 rounded-[18px] border border-white/10 object-cover shadow-xl transition duration-300 hover:scale-[1.03] sm:h-56 sm:w-[320px]"
+                      />
                     ))}
+                  </div>
+
+                  <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                    {availableDepartments.map((department) => {
+                      const active = activeDepartment === department;
+
+                      return (
+                        <button
+                          key={department}
+                          type="button"
+                          onClick={() => setActiveDepartment(department)}
+                          className={`rounded-xl border px-3 py-3 text-left text-xs font-semibold transition hover:scale-[1.02] hover:bg-white/10 ${
+                            active
+                              ? "border-[#d4c09a]/70 bg-[#d4c09a]/14 text-white"
+                              : "border-white/10 bg-white/[0.045] text-white/62"
+                          }`}
+                        >
+                          {departmentLabels[department]}
+                        </button>
+                      );
+                    })}
                   </div>
                 </motion.div>
               </AnimatePresence>
             </div>
           </div>
+
+          <motion.div
+            {...fadeUp}
+            className="mt-8 grid gap-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur-xl md:grid-cols-3"
+          >
+            {labs.map((lab) => (
+              <button
+                key={`${lab.key}-summary`}
+                type="button"
+                onClick={() => setActiveLab(lab.key)}
+                className={`rounded-xl border p-4 text-left transition hover:scale-[1.02] hover:bg-white/10 ${
+                  activeLab === lab.key
+                    ? "border-[#d4c09a]/70 bg-[#d4c09a]/12"
+                    : "border-white/10 bg-black/20"
+                }`}
+              >
+                <span className="text-xs font-semibold uppercase tracking-[0.22em] text-[#d4c09a]">
+                  {lab.shortName}
+                </span>
+                <span className="mt-2 block text-lg font-semibold text-white">
+                  {lab.name}
+                </span>
+                <span className="mt-2 block text-sm leading-6 text-white/58">
+                  {lab.description}
+                </span>
+              </button>
+            ))}
+          </motion.div>
         </div>
       </section>
 

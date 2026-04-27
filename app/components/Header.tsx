@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type MouseEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,6 +9,8 @@ type Theme = "dark" | "light";
 
 type NavItem = { label: string; href?: string; dividerBefore?: boolean };
 type Dropdown = { label: string; items: NavItem[] };
+
+const LOGO_EASTER_EGG_STORAGE_KEY = "artisanLogoBreakTheSystemClicks";
 
 function Capsule({
   children,
@@ -151,6 +153,7 @@ function DropdownMenu({
 export default function Header({ onContactClick }: { onContactClick?: () => void }) {
   const [theme, setTheme] = useState<Theme>("dark");
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [logoClicks, setLogoClicks] = useState(0);
 
   const resources: Dropdown = useMemo(
     () => ({
@@ -208,13 +211,33 @@ export default function Header({ onContactClick }: { onContactClick?: () => void
       ? "brightness(0) saturate(100%) drop-shadow(0 1px 0 rgba(255,255,255,0.2))"
       : "drop-shadow(0 0 10px rgba(0,0,0,0.55))";
 
+  const handleLogoClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    const storedClicks = Number(window.localStorage.getItem(LOGO_EASTER_EGG_STORAGE_KEY) ?? logoClicks);
+    const nextClicks = Number.isFinite(storedClicks) ? storedClicks + 1 : 1;
+
+    setLogoClicks(nextClicks);
+    window.localStorage.setItem(LOGO_EASTER_EGG_STORAGE_KEY, String(nextClicks));
+
+    if (nextClicks >= 5) {
+      event.preventDefault();
+      window.localStorage.removeItem(LOGO_EASTER_EGG_STORAGE_KEY);
+      setLogoClicks(0);
+      window.location.href = "/break-the-system";
+    }
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-[1000]">
       <div className={`pointer-events-none absolute inset-0 -z-10 ${headerBg} backdrop-blur-xl`} />
 
       <div className="mx-auto max-w-7xl px-5 md:px-8 lg:px-10">
         <div className="flex h-[72px] items-center justify-between gap-4 md:h-[76px]">
-          <Link href="/" className="shrink-0 flex items-center" aria-label="Home">
+          <Link
+            href="/"
+            className="shrink-0 flex items-center"
+            aria-label="Home"
+            onClick={handleLogoClick}
+          >
             <Image
               src="/aln-white-logo.png"
               alt="Artisan Lab Network"

@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import RingsAccent from "../components/RingsAccent";
+import SiteIcon from "../components/SiteIcon";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
 const CONTACT_FORM_URL = "https://form.typeform.com/to/m0lQ9zjD";
@@ -53,6 +55,7 @@ type ExampleCard = {
   title: string;
   result: string;
   href: string;
+  icon: string;
 };
 
 const commonQuestions = [
@@ -61,28 +64,28 @@ const commonQuestions = [
     title: "How long is coverage?",
     body: "Most Artisan lenses are covered for 2 years with up to 2 remakes, depending on product type.",
     href: "#warranty-coverage",
-    icon: "shield" as IconName,
+    icon: "/icons/site/shield.svg",
   },
   {
     label: "Redo",
     title: "What about patient changes?",
     body: "Patient non-adapt changes may qualify for a one-time redo within the first year.",
     href: "#doctor-redos",
-    icon: "refresh" as IconName,
+    icon: "/icons/site/repeat.svg",
   },
   {
     label: "Frames",
     title: "Are patient-owned frames covered?",
     body: "Patient-owned frames are handled with care but cannot be guaranteed due to variability in condition.",
     href: "#frame-policies",
-    icon: "frame" as IconName,
+    icon: "/icons/site/file-check.svg",
   },
   {
     label: "Shipping",
     title: "How does shipping work?",
     body: "Inbound shipping is covered. Outbound shipping is structured per job or per box.",
     href: "#shipping-policies",
-    icon: "truck" as IconName,
+    icon: "/icons/site/truck.svg",
   },
 ];
 
@@ -91,31 +94,37 @@ const realWorldExamples: ExampleCard[] = [
     title: "Patient cannot adapt to a progressive after 3 weeks",
     result: "May qualify for a one-time non-adapt redo within 1 year.",
     href: "#doctor-redos",
+    icon: "/icons/site/repeat.svg",
   },
   {
     title: "Power change requested after delivery",
     result: "May qualify under doctor redo depending on timing and eligibility.",
     href: "#doctor-redos",
+    icon: "/icons/site/repeat.svg",
   },
   {
     title: "Patient-owned frame breaks during processing",
     result: "Frames are handled with care but are not guaranteed due to condition variability.",
     href: "#frame-policies",
+    icon: "/icons/site/alert-circle.svg",
   },
   {
     title: "VSP Unity non-adapt",
     result: "Requires a new VSP authorization for reimbursement.",
     href: "#vsp-unity",
+    icon: "/icons/site/file-check.svg",
   },
   {
     title: "Mirror coating issue",
     result: "Mirror-only coverage follows a 1 year, 1 time policy.",
     href: "#warranty-coverage",
+    icon: "/icons/site/shield.svg",
   },
   {
     title: "Specialty lab job",
     result: "Specialty lab pricing and policies may override standard policies.",
     href: "#specialty-outsourced",
+    icon: "/icons/site/alert-circle.svg",
   },
 ];
 
@@ -466,15 +475,15 @@ const policySections: PolicySection[] = [
 ];
 
 const quickNav = [
-  { label: "Warranty", href: "#warranty-coverage", icon: "shield" as IconName },
-  { label: "Doctor Redos", href: "#doctor-redos", icon: "refresh" as IconName },
-  { label: "Lab Errors", href: "#lab-error-remake", icon: "lab" as IconName },
-  { label: "AR & Scratch", href: "#ar-policies", icon: "spark" as IconName },
-  { label: "VSP & Unity", href: "#vsp-unity", icon: "card" as IconName },
-  { label: "Frames", href: "#frame-policies", icon: "frame" as IconName },
-  { label: "Shipping", href: "#shipping-policies", icon: "truck" as IconName },
-  { label: "Specialty", href: "#specialty-outsourced", icon: "star" as IconName },
-  { label: "Examples", href: "#real-world-examples", icon: "example" as IconName },
+  { label: "Warranty", href: "#warranty-coverage", icon: "/icons/site/shield.svg" },
+  { label: "Doctor Redos", href: "#doctor-redos", icon: "/icons/site/repeat.svg" },
+  { label: "Lab Errors", href: "#lab-error-remake", icon: "/icons/site/shield-check.svg" },
+  { label: "AR & Scratch", href: "#ar-policies", icon: "/icons/site/shield.svg" },
+  { label: "VSP & Unity", href: "#vsp-unity", icon: "/icons/site/file-check.svg" },
+  { label: "Frames", href: "#frame-policies", icon: "/icons/site/file-check.svg" },
+  { label: "Shipping", href: "#shipping-policies", icon: "/icons/site/truck.svg" },
+  { label: "Specialty", href: "#specialty-outsourced", icon: "/icons/site/alert-circle.svg" },
+  { label: "Examples", href: "#real-world-examples", icon: "/icons/site/handshake.svg" },
 ];
 
 function LineIcon({ name, className = "" }: { name: IconName; className?: string }) {
@@ -703,11 +712,7 @@ function PolicyPanel({
       variants={fadeUp}
       className="scroll-mt-40 rounded-[30px] border border-black/10 bg-white p-5 shadow-[0_18px_54px_rgba(24,18,13,0.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(24,18,13,0.1)] md:p-6"
     >
-      <div className="grid gap-5 lg:grid-cols-[auto_1fr_auto] lg:items-start">
-        <div className="grid h-13 w-13 place-items-center rounded-2xl border border-[#e1d4c2] bg-[#fbf8f3] text-[#8a7654]">
-          <LineIcon name={section.icon} className="h-6 w-6" />
-        </div>
-
+      <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-start">
         <div>
           <div className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8a7654]">
             {section.navLabel}
@@ -847,10 +852,15 @@ export default function LabPoliciesPage() {
         </div>
       </section>
 
-      <section data-theme="dark" className="bg-[#171311] px-6 pb-16 text-white md:px-10 md:pb-20">
+      <section data-theme="dark" className="relative overflow-hidden bg-[#171311] px-6 pb-16 text-white md:px-10 md:pb-20">
+        <div
+          className="pointer-events-none absolute -left-28 -top-24 h-[430px] w-[430px] bg-contain bg-center bg-no-repeat opacity-[0.08]"
+          style={{ backgroundImage: "url('/Rings.png')" }}
+          aria-hidden="true"
+        />
         <motion.div
           {...fadeUp}
-          className="mx-auto max-w-7xl rounded-[34px] border border-white/12 bg-white/[0.06] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.22)] backdrop-blur-md md:p-8"
+          className="relative z-10 mx-auto max-w-7xl rounded-[34px] border border-white/12 bg-white/[0.06] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.22)] backdrop-blur-md md:p-8"
         >
           <div className="grid gap-6 lg:grid-cols-[0.7fr_1.3fr] lg:items-start">
             <div>
@@ -880,10 +890,7 @@ export default function LabPoliciesPage() {
       >
         <div className="mx-auto max-w-5xl text-center">
           <motion.div {...fadeUp}>
-            <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl border border-[#e1d4c2] bg-white text-[#8a7654] shadow-[0_16px_40px_rgba(24,18,13,0.07)]">
-              <LineIcon name="search" className="h-7 w-7" />
-            </div>
-            <h2 className="mt-5 text-3xl font-semibold tracking-tight md:text-5xl">
+            <h2 className="text-3xl font-semibold tracking-tight md:text-5xl">
               Search the policy guide.
             </h2>
             <p className="mx-auto mt-4 max-w-3xl text-base leading-8 text-[#625b53]">
@@ -938,7 +945,12 @@ export default function LabPoliciesPage() {
               href={item.href}
               className="inline-flex shrink-0 items-center gap-2 rounded-full border border-black/10 bg-white/78 px-4 py-2 text-sm font-semibold text-[#1f1a17] shadow-sm transition hover:-translate-y-0.5 hover:border-[#d4c09a] hover:bg-[#d4c09a]"
             >
-              <LineIcon name={item.icon} className="h-4 w-4 text-[#8a7654]" />
+              <SiteIcon
+                src={item.icon}
+                size="sm"
+                className="h-8 w-8 rounded-xl border-[#e1d4c2] bg-[#fbf8f3]"
+                imgClassName="h-4 w-4"
+              />
               {item.label}
             </a>
           ))}
@@ -980,7 +992,12 @@ export default function LabPoliciesPage() {
                     {card.label}
                   </span>
                   <span className="grid h-11 w-11 place-items-center rounded-2xl border border-[#e1d4c2] bg-[#fbf8f3] text-[#8a7654] transition group-hover:border-[#d4c09a] group-hover:bg-[#d4c09a] group-hover:text-[#171311]">
-                    <LineIcon name={card.icon} className="h-5 w-5" />
+                    <SiteIcon
+                      src={card.icon}
+                      size="sm"
+                      className="h-11 w-11 border-transparent bg-transparent"
+                      imgClassName="h-5 w-5"
+                    />
                   </span>
                 </div>
                 <h3 className="text-xl font-semibold leading-tight text-[#1f1a17]">
@@ -993,8 +1010,9 @@ export default function LabPoliciesPage() {
         </div>
       </section>
 
-      <section data-theme="light" className="bg-[#fbf8f3] px-6 py-16 md:px-10 md:py-20">
-        <div className="mx-auto max-w-7xl">
+      <section data-theme="light" className="relative overflow-hidden bg-[#fbf8f3] px-6 py-16 md:px-10 md:py-20">
+        <RingsAccent position="top-right" size="md" opacity="opacity-[0.04]" />
+        <div className="relative z-10 mx-auto max-w-7xl">
           <motion.div {...fadeUp} className="grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">
@@ -1026,8 +1044,9 @@ export default function LabPoliciesPage() {
         </div>
       </section>
 
-      <section data-theme="light" className="px-6 py-16 md:px-10 md:py-20">
-        <div className="mx-auto max-w-7xl">
+      <section data-theme="light" className="relative overflow-hidden px-6 py-16 md:px-10 md:py-20">
+        <RingsAccent position="bottom-left" size="lg" opacity="opacity-[0.035]" />
+        <div className="relative z-10 mx-auto max-w-7xl">
           <motion.div {...fadeUp} className="max-w-3xl">
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">
               Policy Sections
@@ -1103,9 +1122,13 @@ export default function LabPoliciesPage() {
                 variants={fadeUp}
                 className="group rounded-[28px] border border-white/12 bg-white/[0.07] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.2)] backdrop-blur-md transition duration-300 hover:-translate-y-1 hover:border-[#d4c09a]/70 hover:bg-white/[0.1]"
               >
-                <div className="grid h-11 w-11 place-items-center rounded-2xl border border-[#d4c09a]/30 bg-[#d4c09a]/12 text-[#d4c09a]">
-                  <LineIcon name="example" className="h-5 w-5" />
-                </div>
+                <SiteIcon
+                  src={example.icon}
+                  tone="cream"
+                  size="sm"
+                  className="h-11 w-11 border-[#d4c09a]/30 bg-[#d4c09a]/12"
+                  imgClassName="h-5 w-5"
+                />
                 <h3 className="mt-5 text-xl font-semibold leading-tight text-white">
                   {example.title}
                 </h3>
@@ -1119,8 +1142,13 @@ export default function LabPoliciesPage() {
         </div>
       </section>
 
-      <section data-theme="light" className="px-6 py-20 md:px-10 md:py-24">
-        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+      <section data-theme="light" className="relative overflow-hidden px-6 py-20 md:px-10 md:py-24">
+        <div
+          className="pointer-events-none absolute -bottom-40 right-0 h-[500px] w-[500px] bg-contain bg-center bg-no-repeat opacity-[0.06]"
+          style={{ backgroundImage: "url('/Rings.png')" }}
+          aria-hidden="true"
+        />
+        <div className="relative z-10 mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <motion.div {...fadeUp}>
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">
               Need Help?
@@ -1136,10 +1164,7 @@ export default function LabPoliciesPage() {
             {...fadeUp}
             className="rounded-[30px] border border-black/10 bg-white p-6 shadow-[0_24px_80px_rgba(24,18,13,0.1)] md:p-8"
           >
-            <div className="grid h-13 w-13 place-items-center rounded-2xl border border-[#e1d4c2] bg-[#fbf8f3] text-[#8a7654]">
-              <LineIcon name="chat" className="h-6 w-6" />
-            </div>
-            <h3 className="mt-5 text-2xl font-semibold">Contact Customer Service</h3>
+            <h3 className="text-2xl font-semibold">Contact Customer Service</h3>
             <p className="mt-3 text-sm leading-7 text-[#625b53]">
               If a policy depends on product, vendor, specialty lab rules, or account program terms, customer service can help confirm the right path.
             </p>

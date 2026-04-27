@@ -6,6 +6,8 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import RingsAccent from "../components/RingsAccent";
+import SiteIcon from "../components/SiteIcon";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
 const CONTACT_FORM_URL = "https://form.typeform.com/to/m0lQ9zjD";
@@ -23,18 +25,22 @@ const aboutJumpLinks = [
 const beliefs = [
   {
     title: "Choice over restriction",
+    icon: "/icons/site/network.svg",
     body: "Independent practices need options, not a single forced path. We build around access, flexibility, and the freedom to choose what is right for each patient.",
   },
   {
     title: "Partnership over transactions",
+    icon: "/icons/site/handshake.svg",
     body: "A lab relationship should not feel like a ticket number. It should feel like people who know your practice, answer clearly, and stay accountable.",
   },
   {
     title: "Control over dependency",
+    icon: "/icons/site/factory.svg",
     body: "Corporate systems often make practices adapt to the lab. We believe the lab should support the way the practice actually works.",
   },
   {
     title: "Performance that holds up",
+    icon: "/icons/site/shield-check.svg",
     body: "Quality, turnaround, communication, and service all matter. The model only works if it performs when the work gets busy.",
   },
 ];
@@ -469,9 +475,10 @@ export default function AboutPage() {
       <section
         id="timeline"
         data-theme="light"
-        className="scroll-mt-24 border-t border-[#e7ddd0] bg-[#fbf8f3]"
+        className="relative scroll-mt-24 overflow-hidden border-t border-[#e7ddd0] bg-[#fbf8f3]"
       >
-        <div className="mx-auto max-w-6xl px-6 py-16 md:px-10 md:py-20">
+        <RingsAccent position="top-right" size="lg" opacity="opacity-[0.055]" />
+        <div className="relative z-10 mx-auto max-w-6xl px-6 py-16 md:px-10 md:py-20">
           <div className="max-w-3xl">
             <p className="text-sm font-medium uppercase tracking-[0.28em] text-[#8c7d68]">
               Growth Timeline
@@ -527,8 +534,9 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section data-theme="light" className="bg-[#f5f1eb] px-6 py-24 md:px-10">
-        <div className="mx-auto max-w-7xl">
+      <section data-theme="light" className="relative overflow-hidden bg-[#f5f1eb] px-6 py-24 md:px-10">
+        <RingsAccent position="bottom-left" size="md" opacity="opacity-[0.045]" />
+        <div className="relative z-10 mx-auto max-w-7xl">
           <div className="max-w-3xl">
             <p className="text-xs uppercase tracking-[0.3em] text-black/45">
               What We Believe
@@ -541,8 +549,12 @@ export default function AboutPage() {
             {beliefs.map((belief) => (
               <div
                 key={belief.title}
-                className="rounded-[22px] border border-black/10 bg-white/72 p-6 shadow-[0_18px_45px_rgba(49,39,26,0.08)]"
+                className="group rounded-[22px] border border-black/10 bg-white/72 p-6 shadow-[0_18px_45px_rgba(49,39,26,0.08)]"
               >
+                <SiteIcon
+                  src={belief.icon}
+                  className="mb-5 h-14 w-14 border-[#d6c3a1]/55 bg-[#fffaf2]/75"
+                />
                 <h3 className="text-xl font-semibold">{belief.title}</h3>
                 <p className="mt-4 text-sm leading-7 text-black/62">
                   {belief.body}
@@ -716,9 +728,10 @@ export default function AboutPage() {
       <section
         id="community-involvement"
         data-theme="light"
-        className="scroll-mt-24 bg-[#ece7dc] px-6 py-20 md:px-10"
+        className="relative scroll-mt-24 overflow-hidden bg-[#ece7dc] px-6 py-20 md:px-10"
       >
-        <div className="mx-auto grid max-w-7xl gap-10 border-t border-[#d6c3a1]/60 pt-14 lg:grid-cols-[0.8fr_1.2fr]">
+        <RingsAccent position="center-right" size="md" opacity="opacity-[0.04]" />
+        <div className="relative z-10 mx-auto grid max-w-7xl gap-10 border-t border-[#d6c3a1]/60 pt-14 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-black/45">
               Community Impact

@@ -6,10 +6,14 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import RingsAccent from "../components/RingsAccent";
+import SiteIcon from "../components/SiteIcon";
+import VideoGallery, { type VideoGalleryItem } from "../components/video-gallery";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
 const CONTACT_FORM_URL = "https://form.typeform.com/to/m0lQ9zjD";
 const EXPERIENCE_FORM_URL = "https://form.typeform.com/to/iGoDcWlY";
+const EXPERIENCE_POPUP_STORAGE_KEY = "artisanExperiencePopupDismissed";
 
 const fadeInSection = {
   initial: { opacity: 0, y: 40 },
@@ -26,6 +30,13 @@ type ResourceItem = {
   description: string;
   cta: string;
   href: string;
+  icon?: string;
+};
+
+type ProductVisual = {
+  src: string;
+  alt: string;
+  label: string;
 };
 
 type FeaturedCard = {
@@ -34,6 +45,7 @@ type FeaturedCard = {
   cta: string;
   href: string;
   type: ResourceType;
+  icon?: string;
 };
 
 type BrandPanel = {
@@ -45,12 +57,15 @@ type BrandPanel = {
   intro: string;
   websiteHref: string;
   featuredCta?: ResourceItem;
+  visualTitle?: string;
+  visualAssets?: ProductVisual[];
   resources: ResourceItem[];
 };
 
 const featuredCards: FeaturedCard[] = [
   {
     title: "Pricing & Policies",
+    icon: "/icons/site/file-text.svg",
     body: "Get current price guides, policy details, and program support without waiting.",
     cta: "Request Pricing",
     href: "mailto:sales@artisanlabnetwork.com?subject=Pricing%20Guide%20Request",
@@ -58,6 +73,7 @@ const featuredCards: FeaturedCard[] = [
   },
   {
     title: "Training & Account Review",
+    icon: "/icons/site/users.svg",
     body: "Book onboarding, team training, or a focused account review.",
     cta: "Schedule Training",
     href: "mailto:sales@artisanlabnetwork.com?subject=Training%20Request",
@@ -65,6 +81,7 @@ const featuredCards: FeaturedCard[] = [
   },
   {
     title: "Shipping & Logistics",
+    icon: "/icons/site/wrench.svg",
     body: "Order shipping labels, track flow, and manage returns.",
     cta: "Request Labels",
     href: "mailto:customerservice@artisanlabnetwork.com?subject=Shipping%20Label%20Request",
@@ -72,6 +89,7 @@ const featuredCards: FeaturedCard[] = [
   },
   {
     title: "Billing & Payments",
+    icon: "/icons/site/monitor.svg",
     body: "Use lab payment tools and keep account tasks moving cleanly.",
     cta: "Go to Lab Pay",
     href: "https://speccheckrx.com",
@@ -82,6 +100,7 @@ const featuredCards: FeaturedCard[] = [
 const mostUsedResources: ResourceItem[] = [
   {
     title: "Request Pricing Guide",
+    icon: "/icons/site/file-text.svg",
     type: "Form",
     description: "Get the current pricing guide and program details for your account.",
     cta: "Request Guide",
@@ -89,6 +108,7 @@ const mostUsedResources: ResourceItem[] = [
   },
   {
     title: "Schedule Training",
+    icon: "/icons/site/users.svg",
     type: "Form",
     description: "Set up team training, onboarding, or a focused account review.",
     cta: "Schedule",
@@ -96,6 +116,7 @@ const mostUsedResources: ResourceItem[] = [
   },
   {
     title: "SpecCheck Lab Pay",
+    icon: "/icons/site/monitor.svg",
     type: "Tool",
     description: "Access SpecCheck tools for account payment and lab workflow support.",
     cta: "Open Tool",
@@ -103,6 +124,7 @@ const mostUsedResources: ResourceItem[] = [
   },
   {
     title: "IOT Comparison Sheet",
+    icon: "/icons/site/library.svg",
     type: "Download",
     description: "Compare Artisan Series options for daily dispensing conversations.",
     cta: "View Resource",
@@ -110,6 +132,7 @@ const mostUsedResources: ResourceItem[] = [
   },
   {
     title: "Shipping Label Request",
+    icon: "/icons/site/wrench.svg",
     type: "Form",
     description: "Request the labels and logistics support your practice needs.",
     cta: "Request Labels",
@@ -120,6 +143,7 @@ const mostUsedResources: ResourceItem[] = [
 const accountTools: ResourceItem[] = [
   {
     title: "Request Pricing Guide",
+    icon: "/icons/site/file-text.svg",
     type: "Form",
     description: "Ask for current pricing, program details, and policy guidance.",
     cta: "Request Pricing",
@@ -127,6 +151,7 @@ const accountTools: ResourceItem[] = [
   },
   {
     title: "Training Scheduler",
+    icon: "/icons/site/users.svg",
     type: "Form",
     description: "Book onboarding, product training, or an account performance review.",
     cta: "Schedule Training",
@@ -134,6 +159,7 @@ const accountTools: ResourceItem[] = [
   },
   {
     title: "Shipping Label Request",
+    icon: "/icons/site/wrench.svg",
     type: "Form",
     description: "Request shipping labels and return support from the lab team.",
     cta: "Request Labels",
@@ -141,6 +167,7 @@ const accountTools: ResourceItem[] = [
   },
   {
     title: "Merch Shop",
+    icon: "/icons/site/library.svg",
     type: "External",
     description: "Access branded practice and team materials when available.",
     cta: "Open Shop",
@@ -148,6 +175,7 @@ const accountTools: ResourceItem[] = [
   },
   {
     title: "Chemistrie Order Form",
+    icon: "/icons/site/file-text.svg",
     type: "Form",
     description: "Submit Chemistrie orders with the details needed for clean processing.",
     cta: "Open Form",
@@ -155,6 +183,7 @@ const accountTools: ResourceItem[] = [
   },
   {
     title: "Chemistrie Demo Kit Request",
+    icon: "/icons/site/wrench.svg",
     type: "Form",
     description: "Request a kit to support in-office demonstrations and patient education.",
     cta: "Request Kit",
@@ -162,6 +191,7 @@ const accountTools: ResourceItem[] = [
   },
   {
     title: "SpecCheck Lab Pay",
+    icon: "/icons/site/monitor.svg",
     type: "Tool",
     description: "Use SpecCheck for payment tools and account workflow support.",
     cta: "Go to Lab Pay",
@@ -172,22 +202,29 @@ const accountTools: ResourceItem[] = [
 const practicePrograms = [
   {
     title: "Artisan Designs & Treatments",
+    icon: "/icons/site/library.svg",
     body: "Premium Artisan lens designs and AR treatment resources in one practical place for your team.",
   },
   {
     title: "Frame Systems",
+    icon: "/icons/site/wrench.svg",
     body: "Resources for practices that want cleaner frame workflows and better patient handoffs.",
   },
   {
     title: "Safety Systems",
+    icon: "/icons/site/badge-check.svg",
+    image: "/wiley-x.png",
+    imageAlt: "Wiley X",
     body: "Program support for practices managing safety eyewear and employer-driven needs.",
   },
   {
     title: "Modern Frame",
+    icon: "/icons/site/monitor.svg",
     body: "Tools for practices building a more intentional frame and lens buying experience.",
   },
   {
     title: "ROI Frames",
+    icon: "/icons/site/badge-check.svg",
     body: "Support for practices focused on better profitability and smarter retail execution.",
   },
 ];
@@ -195,26 +232,31 @@ const practicePrograms = [
 const exclusivePrograms = [
   {
     title: "Special Programs Invitation",
+    icon: "/icons/site/badge-check.svg",
     cta: "Explore Program",
     href: "https://form.typeform.com/to/WCU5ReWQ",
   },
   {
     title: "Mirror & Tint Kit",
+    icon: "/icons/site/wrench.svg",
     cta: "Order Kit",
     href: "https://form.typeform.com/to/dE49qRpc",
   },
   {
     title: "Chemistrie Clip Kit",
+    icon: "/icons/site/wrench.svg",
     cta: "Order Kit",
     href: "https://form.typeform.com/to/XlZhJX5K",
   },
   {
     title: "Artisan Intel Reports",
+    icon: "/icons/site/monitor.svg",
     cta: "Get Reports",
     href: "https://form.typeform.com/to/NjtJJdFA",
   },
   {
     title: "Artisan Safety Systems Kits",
+    icon: "/icons/site/badge-check.svg",
     cta: "Request Access",
     href: "https://form.typeform.com/to/rDUQssNn",
   },
@@ -262,6 +304,12 @@ const lensBrands: BrandPanel[] = [
       cta: "View Overview",
       href: "#",
     },
+    visualTitle: "Artisan Lens Products",
+    visualAssets: [
+      { src: "/gold.png", alt: "Gold AR treatment", label: "Gold" },
+      { src: "/platinum.png", alt: "Platinum AR treatment", label: "Platinum" },
+      { src: "/diamond.png", alt: "Diamond AR treatment", label: "Diamond" },
+    ],
     resources: [
       "Design Mini Catalog",
       "Design Brand Comparison Sheet",
@@ -369,6 +417,11 @@ const lensBrands: BrandPanel[] = [
     logoClass: "max-h-16 max-w-[210px]",
     intro: "Design-driven progressive lenses with strong customization.",
     websiteHref: "#",
+    visualTitle: "Shamir Design Resources",
+    visualAssets: [
+      { src: "/sd-concept.png", alt: "Shamir Design Concept", label: "Design Concept" },
+      { src: "/sd-digital.png", alt: "Shamir Design Digital", label: "Design Digital" },
+    ],
     resources: ["Quick Reference Guide", "Dispensing Guide"].map((title) => ({
       title,
       type: "Download",
@@ -451,72 +504,34 @@ const lensBrands: BrandPanel[] = [
   },
 ];
 
-const trainingVideos: ResourceItem[] = [
+const youtubeVideos: VideoGalleryItem[] = [
   {
-    title: "Training Video 1",
-    type: "Video",
-    description: "A concise training session for optical teams and day to day product conversations.",
-    cta: "Watch Video",
-    href: "https://youtu.be/eFw7BzI1SZY",
+    id: "eFw7BzI1SZY",
+    title: "ALN | Camber Pure Training Webinar",
+    category: "Training",
+    description:
+      "A practical lens training session built to help independent practices understand positioning, fitting, and patient conversations.",
   },
   {
-    title: "Training Video 2",
-    type: "Video",
-    description: "Short product training video for optical teams and day to day practice use.",
-    cta: "Watch Video",
-    href: "https://youtu.be/cLhLfThS7Gs",
+    id: "phvH3ahy2e4",
+    title: "ALN | IOT Product Training Webinar",
+    category: "Product",
+    description:
+      "IOT product education for teams comparing modern lens platforms and recommending options with confidence.",
   },
   {
-    title: "Training Video 3",
-    type: "Video",
-    description: "Short product training video for optical teams and day to day practice use.",
-    cta: "Watch Video",
-    href: "https://youtu.be/9P7VEmI0ZwY",
+    id: "Rown4Yp9U4c",
+    title: "ALN | Chemistrie Product Training Webinar",
+    category: "Training",
+    description:
+      "A guided training resource for Chemistrie conversations, clip options, and practical dispensing support.",
   },
   {
-    title: "Training Video 4",
-    type: "Video",
-    description: "Short product training video for optical teams and day to day practice use.",
-    cta: "Watch Video",
-    href: "https://youtu.be/phvH3ahy2e4",
-  },
-  {
-    title: "Training Video 5",
-    type: "Video",
-    description: "Short product training video for optical teams and day to day practice use.",
-    cta: "Watch Video",
-    href: "https://youtu.be/Rown4Yp9U4c",
-  },
-];
-
-const trainingCards: ResourceItem[] = [
-  {
-    title: "Product Training Videos",
-    type: "Video",
-    description: "Short training resources to help your team speak clearly about products.",
-    cta: "View Videos",
-    href: "#",
-  },
-  {
-    title: "Dispensing Guides",
-    type: "Download",
-    description: "Practical fitting and dispensing references for the optical team.",
-    cta: "View Guides",
-    href: "#",
-  },
-  {
-    title: "Webinars",
-    type: "Video",
-    description: "Education sessions for product knowledge, workflow, and practice growth.",
-    cta: "Browse Webinars",
-    href: "#",
-  },
-  {
-    title: "In-Office Training Request",
-    type: "Form",
-    description: "Ask for hands-on training support built around your team and goals.",
-    cta: "Request Training",
-    href: "mailto:sales@artisanlabnetwork.com?subject=In-Office%20Training%20Request",
+    id: "9P7VEmI0ZwY",
+    title: "Tokai | ALN Product Training Webinar",
+    category: "Education",
+    description:
+      "Product education for premium lens conversations, advanced materials, and practical patient explanations.",
   },
 ];
 
@@ -606,7 +621,16 @@ function ResourceCard({
     >
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(201,178,139,0.7),transparent)]" />
       <div className="flex items-start justify-between gap-4">
-        <ResourceLabel type={item.type} />
+        <div className="flex items-start gap-3">
+          {item.icon ? (
+            <SiteIcon
+              src={item.icon}
+              size="sm"
+              className="h-11 w-11 border-[#e1d4c2] bg-[#fbf8f3]"
+            />
+          ) : null}
+          <ResourceLabel type={item.type} />
+        </div>
         <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#eadfce] bg-[#fbf8f3] text-base text-[#b39766] transition group-hover:translate-x-0.5 group-hover:border-[#d8c095] group-hover:bg-[#f3eadb]">
           →
         </span>
@@ -625,38 +649,6 @@ function ResourceCard({
         <span className="text-[#8a7654]">→</span>
       </ResourceLink>
     </article>
-  );
-}
-
-function VideoCard({ item }: { item: ResourceItem }) {
-  return (
-    <ResourceLink
-      href={item.href}
-      className="group block h-full overflow-hidden rounded-[30px] border border-black/10 bg-white shadow-[0_18px_48px_rgba(24,18,13,0.08)] transition duration-300 hover:-translate-y-1.5 hover:shadow-[0_28px_64px_rgba(24,18,13,0.14)]"
-    >
-      <div className="relative overflow-hidden border-b border-black/8 bg-[radial-gradient(circle_at_top_left,rgba(201,178,139,0.5),transparent_36%),linear-gradient(135deg,#211b17,#3b3028_55%,#6b5746)] px-6 py-10 text-white">
-        <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:30px_30px]" />
-        <div className="relative flex items-center justify-between gap-4">
-          <ResourceLabel type="Video" />
-          <div className="grid h-14 w-14 place-items-center rounded-full border border-white/20 bg-white/10 backdrop-blur">
-            <span className="ml-1 text-xl">▶</span>
-          </div>
-        </div>
-        <div className="relative mt-12 max-w-sm">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/60">
-            Training Video
-          </p>
-          <h3 className="mt-3 text-2xl font-semibold leading-tight">{item.title}</h3>
-        </div>
-      </div>
-      <div className="p-6">
-        <p className="text-sm leading-7 text-[#625b53]">{item.description}</p>
-        <div className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#1f1a17]">
-          Watch Video
-          <span className="text-[#8a7654] transition group-hover:translate-x-0.5">→</span>
-        </div>
-      </div>
-    </ResourceLink>
   );
 }
 
@@ -685,6 +677,37 @@ function BrandLogo({ brand, compact = false }: { brand: BrandPanel; compact?: bo
         height={90}
         className={`${brand.logoClass} max-w-full object-contain`}
       />
+    </div>
+  );
+}
+
+function ProductVisualStrip({ title, assets }: { title: string; assets: ProductVisual[] }) {
+  if (assets.length === 0) return null;
+
+  return (
+    <div className="mt-7 rounded-[24px] border border-[#e4d7c6] bg-[#fbf8f3] p-4 shadow-[0_12px_32px_rgba(24,18,13,0.05)]">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8a7654]">
+        {title}
+      </p>
+      <div className={`mt-4 grid gap-3 ${assets.length === 2 ? "sm:grid-cols-2" : "sm:grid-cols-3"}`}>
+        {assets.map((asset) => (
+          <div
+            key={asset.src}
+            className="flex min-h-[96px] flex-col items-center justify-center rounded-2xl border border-black/10 bg-white px-4 py-3 text-center shadow-[0_8px_20px_rgba(24,18,13,0.04)]"
+          >
+            <Image
+              src={asset.src}
+              alt={asset.alt}
+              width={220}
+              height={120}
+              className="max-h-[64px] w-auto max-w-full object-contain"
+            />
+            <span className="mt-2 text-xs font-semibold text-[#625b53]">
+              {asset.label}
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -733,7 +756,35 @@ function ContactModal({ open, onClose }: { open: boolean; onClose: () => void })
   );
 }
 
-function ExperienceModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+function hasDismissedExperiencePopup() {
+  if (typeof window === "undefined") return true;
+
+  try {
+    return window.localStorage.getItem(EXPERIENCE_POPUP_STORAGE_KEY) === "true";
+  } catch {
+    return true;
+  }
+}
+
+function markExperiencePopupDismissed() {
+  if (typeof window === "undefined") return;
+
+  try {
+    window.localStorage.setItem(EXPERIENCE_POPUP_STORAGE_KEY, "true");
+  } catch {
+    // If storage is unavailable, still let the visitor continue without interruption.
+  }
+}
+
+function ExperienceModal({
+  open,
+  onClose,
+  onShare,
+}: {
+  open: boolean;
+  onClose: () => void;
+  onShare: () => void;
+}) {
   useEffect(() => {
     if (!open) return;
 
@@ -810,6 +861,7 @@ function ExperienceModal({ open, onClose }: { open: boolean; onClose: () => void
               href={EXPERIENCE_FORM_URL}
               target="_blank"
               rel="noreferrer"
+              onClick={onShare}
               className="mt-7 inline-flex min-h-12 items-center justify-center rounded-full bg-[#1f1a17] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-[#d4c09a] hover:text-[#1f1a17]"
             >
               Share Your Experience
@@ -831,10 +883,24 @@ export default function ProviderResourcesPage({
   const [activeBrand, setActiveBrand] = useState(lensBrands[0].label);
   const [openMobileBrand, setOpenMobileBrand] = useState(lensBrands[0].label);
   const [contactOpen, setContactOpen] = useState(false);
-  const [showExperienceModal, setShowExperienceModal] = useState(showProfessionalEnhancements);
+  const [showExperienceModal, setShowExperienceModal] = useState(false);
 
   const selectedBrand =
     lensBrands.find((brand) => brand.label === activeBrand) ?? lensBrands[0];
+
+  useEffect(() => {
+    if (!showProfessionalEnhancements || hasDismissedExperiencePopup()) {
+      setShowExperienceModal(false);
+      return;
+    }
+
+    setShowExperienceModal(true);
+  }, [showProfessionalEnhancements]);
+
+  const dismissExperienceModal = () => {
+    markExperiencePopupDismissed();
+    setShowExperienceModal(false);
+  };
 
   useEffect(() => {
     const selectBrandFromHash = () => {
@@ -934,14 +1000,19 @@ export default function ProviderResourcesPage({
         <motion.section
           {...fadeInSection}
           data-theme="light"
-          className="border-b border-[#e7ddd0] bg-[#fbf8f3] px-6 py-16 md:px-10 md:py-20"
+          className="relative overflow-hidden border-b border-[#e7ddd0] bg-[#fbf8f3] px-6 py-16 md:px-10 md:py-20"
         >
-          <div className="mx-auto max-w-7xl">
+          <div
+            className="pointer-events-none absolute -right-28 -top-28 h-[420px] w-[420px] bg-contain bg-center bg-no-repeat opacity-[0.06]"
+            style={{ backgroundImage: "url('/Rings.png')" }}
+            aria-hidden="true"
+          />
+          <div className="relative z-10 mx-auto max-w-7xl">
             <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <SectionHeader
                 eyebrow="Professional Resources"
                 title="Exclusive Programs & Resources"
-                description="Quick access to the programs, kits, and reports that help your team keep moving."
+                  description="Quick access to the programs, kits, and reports that help your team keep moving."
               />
               <p className="max-w-md text-sm leading-7 text-[#625b53]">
                 Built for practices that need a clear next step, not another maze of links.
@@ -957,7 +1028,14 @@ export default function ProviderResourcesPage({
                   rel="noreferrer"
                   className="group rounded-[28px] border border-black/10 bg-white p-6 shadow-[0_18px_48px_rgba(24,18,13,0.07)] transition duration-300 hover:-translate-y-1.5 hover:border-[#d4c09a] hover:shadow-[0_28px_64px_rgba(24,18,13,0.12)]"
                 >
-                  <div className="mb-5 h-[2px] w-12 rounded-full bg-[#d4c09a]" />
+                  <div className="mb-5 flex items-center gap-4">
+                    <SiteIcon
+                      src={program.icon}
+                      size="sm"
+                      className="h-11 w-11 border-[#e1d4c2] bg-[#fbf8f3]"
+                    />
+                    <div className="h-[2px] w-12 rounded-full bg-[#d4c09a]" />
+                  </div>
                   <h3 className="text-2xl font-semibold leading-tight text-[#1f1a17]">
                     {program.title}
                   </h3>
@@ -971,7 +1049,14 @@ export default function ProviderResourcesPage({
                 href="/policies"
                 className="group rounded-[28px] border border-black/10 bg-white p-6 shadow-[0_18px_48px_rgba(24,18,13,0.07)] transition duration-300 hover:-translate-y-1.5 hover:border-[#d4c09a] hover:shadow-[0_28px_64px_rgba(24,18,13,0.12)]"
               >
-                <div className="mb-5 h-[2px] w-12 rounded-full bg-[#d4c09a]" />
+                <div className="mb-5 flex items-center gap-4">
+                  <SiteIcon
+                    src="/icons/site/file-check.svg"
+                    size="sm"
+                    className="h-11 w-11 border-[#e1d4c2] bg-[#fbf8f3]"
+                  />
+                  <div className="h-[2px] w-12 rounded-full bg-[#d4c09a]" />
+                </div>
                 <h3 className="text-2xl font-semibold leading-tight text-[#1f1a17]">
                   Lab Remake, Redo and Warranty Policies
                 </h3>
@@ -1012,6 +1097,7 @@ export default function ProviderResourcesPage({
                   description: card.body,
                   cta: card.cta,
                   href: card.href,
+                  icon: card.icon,
                 }}
               />
             ))}
@@ -1035,9 +1121,16 @@ export default function ProviderResourcesPage({
                   href={item.href}
                   className="group grid gap-4 rounded-[28px] border border-black/10 bg-[linear-gradient(180deg,#fff,#f8f4ee)] p-6 shadow-[0_16px_40px_rgba(24,18,13,0.07)] transition hover:-translate-y-1 hover:shadow-[0_24px_56px_rgba(24,18,13,0.12)] md:grid-cols-[64px_1fr_auto] md:items-center"
                 >
-                  <div className="grid h-14 w-14 place-items-center rounded-full border border-[#e6d9c8] bg-[#f0e5d5] text-sm font-semibold text-[#8a7654] shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
-                    {String(index + 1).padStart(2, "0")}
-                  </div>
+                  {item.icon ? (
+                    <SiteIcon
+                      src={item.icon}
+                      className="h-14 w-14 rounded-full border-[#e6d9c8] bg-[#f0e5d5] shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]"
+                    />
+                  ) : (
+                    <div className="grid h-14 w-14 place-items-center rounded-full border border-[#e6d9c8] bg-[#f0e5d5] text-sm font-semibold text-[#8a7654] shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
+                      {String(index + 1).padStart(2, "0")}
+                    </div>
+                  )}
                   <div>
                     <ResourceLabel type={item.type} />
                     <h3 className="mt-3 text-[1.35rem] font-semibold leading-tight">{item.title}</h3>
@@ -1054,8 +1147,13 @@ export default function ProviderResourcesPage({
         </div>
       </section>
 
-      <section className="bg-[#f5f1eb] px-6 py-20 md:px-10 md:py-24">
-        <div className="mx-auto max-w-7xl">
+      <section className="relative overflow-hidden bg-[#f5f1eb] px-6 py-20 md:px-10 md:py-24">
+        <div
+          className="pointer-events-none absolute -bottom-36 -left-32 h-[480px] w-[480px] bg-contain bg-center bg-no-repeat opacity-[0.055]"
+          style={{ backgroundImage: "url('/Rings.png')" }}
+          aria-hidden="true"
+        />
+        <div className="relative z-10 mx-auto max-w-7xl">
           <SectionHeader
             eyebrow="Account Tools"
             title="Forms and tools for everyday account work."
@@ -1086,6 +1184,23 @@ export default function ProviderResourcesPage({
                 key={program.title}
                 className="group rounded-[28px] border border-white/10 bg-white/[0.06] p-6 shadow-[0_12px_30px_rgba(0,0,0,0.12)] backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-[#c9b28b]/50 hover:bg-white/[0.1] hover:shadow-[0_22px_48px_rgba(0,0,0,0.18)]"
               >
+                <SiteIcon
+                  src={program.icon}
+                  tone="cream"
+                  size="sm"
+                  className="mb-5 h-12 w-12 border-white/12 bg-white/[0.08]"
+                />
+                {"image" in program && program.image ? (
+                  <div className="mb-5 flex min-h-[70px] items-center justify-center rounded-2xl border border-white/10 bg-white p-3">
+                    <Image
+                      src={program.image}
+                      alt={program.imageAlt}
+                      width={220}
+                      height={90}
+                      className="max-h-[52px] w-auto max-w-full object-contain"
+                    />
+                  </div>
+                ) : null}
                 <h3 className="text-xl font-semibold leading-tight">{program.title}</h3>
                 <p className="mt-4 text-sm leading-7 text-white/68">{program.body}</p>
                 <a href="#" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#c9b28b] transition group-hover:translate-x-1">
@@ -1139,7 +1254,15 @@ export default function ProviderResourcesPage({
                     </div>
                   </div>
                   <p className="mt-5 text-lg leading-8 text-[#625b53]">{selectedBrand.intro}</p>
-                  <BrandWebsiteLink href={selectedBrand.websiteHref} />
+                  {selectedBrand.id !== "artisan" ? (
+                    <BrandWebsiteLink href={selectedBrand.websiteHref} />
+                  ) : null}
+                  {selectedBrand.visualAssets ? (
+                    <ProductVisualStrip
+                      title={selectedBrand.visualTitle ?? "Product Resources"}
+                      assets={selectedBrand.visualAssets}
+                    />
+                  ) : null}
                   {selectedBrand.featuredCta && (
                     <div className="mt-8">
                       <ResourceCard item={selectedBrand.featuredCta} compact premium />
@@ -1188,7 +1311,15 @@ export default function ProviderResourcesPage({
                               </p>
                             </div>
                             <p className="text-sm leading-7 text-[#625b53]">{brand.intro}</p>
-                            <BrandWebsiteLink href={brand.websiteHref} />
+                            {brand.id !== "artisan" ? (
+                              <BrandWebsiteLink href={brand.websiteHref} />
+                            ) : null}
+                            {brand.visualAssets ? (
+                              <ProductVisualStrip
+                                title={brand.visualTitle ?? "Product Resources"}
+                                assets={brand.visualAssets}
+                              />
+                            ) : null}
                             <div className="mt-5 grid gap-4">
                               {brand.resources.map((item) => (
                                 <ResourceCard key={`${brand.label}-mobile-${item.title}`} item={item} compact />
@@ -1206,47 +1337,17 @@ export default function ProviderResourcesPage({
         </div>
       </section>
 
-      <section id="training-education" className="bg-[#f5f1eb] px-6 py-20 md:px-10 md:py-24">
-        <div className="mx-auto max-w-7xl">
-          <SectionHeader
-            eyebrow="Training & Education"
-            title="Help your team sell, fit, and communicate better."
-            description="Training should feel like a usable media library, not a pile of links."
-          />
-          <div className="mt-10">
-            <div className="flex items-center justify-between gap-4">
-              <h3 className="text-2xl font-semibold tracking-tight text-[#1f1a17]">
-                Featured Training Videos
-              </h3>
-              <a
-                href="mailto:sales@artisanlabnetwork.com?subject=Training%20Video%20Questions"
-                className="hidden text-sm font-semibold text-[#8a7654] underline decoration-[#c9b28b] underline-offset-4 transition hover:text-[#1f1a17] md:inline-flex"
-              >
-                Request guided training
-              </a>
-            </div>
-            <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-              {trainingVideos.map((item) => (
-                <VideoCard key={item.href} item={item} />
-              ))}
-            </div>
-          </div>
-          <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            {trainingCards.map((item) => (
-              <ResourceCard key={item.title} item={item} compact />
-            ))}
-          </div>
-        </div>
-      </section>
+      <VideoGallery videos={youtubeVideos} />
 
       {showProfessionalEnhancements ? (
         <motion.section
           {...fadeInSection}
           id="lab-customer-service"
           data-theme="dark"
-          className="bg-[#171311] px-6 py-20 text-white md:px-10 md:py-24"
+          className="relative overflow-hidden bg-[#171311] px-6 py-20 text-white md:px-10 md:py-24"
         >
-          <div className="mx-auto max-w-7xl">
+          <RingsAccent position="top-right" size="lg" opacity="opacity-[0.045]" />
+          <div className="relative z-10 mx-auto max-w-7xl">
             <SectionHeader
               eyebrow="Customer Service"
               title="Lab Customer Service Contacts"
@@ -1300,8 +1401,9 @@ export default function ProviderResourcesPage({
         </motion.section>
       ) : null}
 
-      <section className="border-t border-[#e7ddd0] bg-[linear-gradient(180deg,#fbf8f3_0%,#f5f1eb_100%)] px-6 py-20 md:px-10 md:py-24">
-        <div className="mx-auto max-w-5xl rounded-[36px] border border-[#e1d4c2] bg-white p-8 text-center shadow-[0_24px_60px_rgba(24,18,13,0.08)] md:p-12">
+      <section className="relative overflow-hidden border-t border-[#e7ddd0] bg-[linear-gradient(180deg,#fbf8f3_0%,#f5f1eb_100%)] px-6 py-20 md:px-10 md:py-24">
+        <RingsAccent position="bottom-left" size="md" opacity="opacity-[0.045]" />
+        <div className="relative z-10 mx-auto max-w-5xl rounded-[36px] border border-[#e1d4c2] bg-white p-8 text-center shadow-[0_24px_60px_rgba(24,18,13,0.08)] md:p-12">
           <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[#8a7654]">
             Support
           </p>
@@ -1339,7 +1441,8 @@ export default function ProviderResourcesPage({
       <Footer onContactClick={() => setContactOpen(true)} signUpHref={SIGNUP_URL} />
       <ExperienceModal
         open={showExperienceModal}
-        onClose={() => setShowExperienceModal(false)}
+        onClose={dismissExperienceModal}
+        onShare={dismissExperienceModal}
       />
       <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
     </main>

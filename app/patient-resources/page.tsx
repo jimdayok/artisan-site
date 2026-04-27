@@ -5,6 +5,8 @@ import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import RingsAccent from "../components/RingsAccent";
+import SiteIcon from "../components/SiteIcon";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
 
@@ -31,17 +33,17 @@ const practices = [
 
 const concerns = [
   {
-    icon: "GL",
+    icon: "/icons/site/sun.svg",
     title: "Tired of glare while driving at night?",
     description: "Light scatter can make headlights feel sharp, hazy, and distracting.",
   },
   {
-    icon: "SC",
+    icon: "/icons/site/eye.svg",
     title: "Eye strain from screens all day?",
     description: "Modern work asks your eyes to shift focus for hours at a time.",
   },
   {
-    icon: "TH",
+    icon: "/icons/site/book-open.svg",
     title: "Thick, heavy glasses that don't look right?",
     description: "The right lens material can change both comfort and appearance.",
   },
@@ -50,12 +52,14 @@ const concerns = [
 const lensCards = [
   {
     eyebrow: "Progressives",
+    icon: "/icons/site/eye.svg",
     title: "See Near and Far Without Lines",
     description:
       "Progressive lenses allow you to see clearly at all distances without visible lines.",
   },
   {
     eyebrow: "Clarity",
+    icon: "/icons/site/sun.svg",
     title: "Reduce Glare and Improve Clarity",
     description:
       "Anti-reflective coatings allow more light through your lenses and reduce glare, especially at night.",
@@ -63,6 +67,7 @@ const lensCards = [
   },
   {
     eyebrow: "Materials",
+    icon: "/icons/site/book-open.svg",
     title: "Why Lens Material Matters",
     description:
       "High-index materials bend light more efficiently, creating thinner and lighter lenses.",
@@ -72,6 +77,7 @@ const lensCards = [
 const trustedResources = [
   {
     group: "Understanding Your Vision",
+    icon: "/icons/site/eye.svg",
     href: "https://www.aoa.org/healthy-eyes/eye-and-vision-conditions/myopia",
     title: "Myopia and Vision Correction",
     description:
@@ -80,6 +86,7 @@ const trustedResources = [
   },
   {
     group: "Choosing the Right Glasses",
+    icon: "/icons/site/sun.svg",
     href: "https://www.aoa.org/news/clinical-eye-care/health-and-wellness/protecting-patients-eye-summer",
     title: "Lens Protection and Glare Reduction",
     description:
@@ -88,6 +95,7 @@ const trustedResources = [
   },
   {
     group: "Eye Health and Vision Care",
+    icon: "/icons/site/heart.svg",
     href: "https://www.nei.nih.gov/learn-about-eye-health",
     title: "Learn About Eye Health",
     description:
@@ -201,9 +209,11 @@ export default function PatientResources() {
                 key={concern.title}
                 className="group rounded-[28px] border border-[#d9c8ac] bg-white/72 p-7 shadow-[0_18px_60px_rgba(73,48,28,0.10)] transition duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-[0_22px_70px_rgba(73,48,28,0.16)]"
               >
-                <div className="grid h-14 w-14 place-items-center rounded-2xl bg-[#2a201c] text-sm font-semibold text-[#d4c09a] shadow-inner">
-                  {concern.icon}
-                </div>
+                <SiteIcon
+                  src={concern.icon}
+                  tone="cream"
+                  className="h-14 w-14 border-[#2a201c] bg-[#2a201c] shadow-inner"
+                />
                 <h3 className="mt-7 text-2xl font-semibold leading-tight text-[#221915]">
                   {concern.title}
                 </h3>
@@ -344,9 +354,10 @@ export default function PatientResources() {
                 key={card.title}
                 className="rounded-[28px] border border-[#d9c8ac] bg-white p-7 shadow-[0_18px_60px_rgba(73,48,28,0.10)]"
               >
-                <div className="grid h-14 w-14 place-items-center rounded-2xl bg-[#efe4d3] text-xs font-semibold uppercase tracking-[0.12em] text-[#8d5d38]">
-                  {card.eyebrow.slice(0, 2)}
-                </div>
+                <SiteIcon
+                  src={card.icon}
+                  className="h-14 w-14 border-[#d9c8ac] bg-[#efe4d3]"
+                />
                 <h3 className="mt-7 text-2xl font-semibold leading-tight">{card.title}</h3>
                 <p className="mt-4 leading-7 text-[#665449]">{card.description}</p>
                 {card.source ? (
@@ -388,8 +399,9 @@ export default function PatientResources() {
       </section>
 
       {/* 8. FIND A PRACTICE */}
-      <section id="find-a-practice" data-theme="light" className="px-6 py-24 md:py-32">
-        <div className="mx-auto max-w-7xl">
+      <section id="find-a-practice" data-theme="light" className="relative overflow-hidden px-6 py-24 md:py-32">
+        <RingsAccent position="top-right" size="lg" opacity="opacity-[0.04]" />
+        <div className="relative z-10 mx-auto max-w-7xl">
           <SectionIntro eyebrow="Take Action" title="Find an Independent Eye Care Provider" align="center">
             <p>
               Search by city, ZIP, practice name, or state to find an
@@ -481,8 +493,9 @@ export default function PatientResources() {
       </section>
 
       {/* 9. TRUSTED VISION RESOURCES */}
-      <section data-theme="light" className="bg-[#efe4d3] px-6 py-24 md:py-32">
-        <div className="mx-auto max-w-7xl">
+      <section data-theme="light" className="relative overflow-hidden bg-[#efe4d3] px-6 py-24 md:py-32">
+        <RingsAccent position="bottom-left" size="md" opacity="opacity-[0.045]" />
+        <div className="relative z-10 mx-auto max-w-7xl">
           <SectionIntro eyebrow="Trusted Sources" title="Trusted Vision Resources" align="center">
             <p>
               Want to learn more about your vision and your glasses? These
@@ -500,6 +513,10 @@ export default function PatientResources() {
                 rel="noreferrer"
                 className="group rounded-[28px] border border-[#d9c8ac] bg-white p-7 shadow-[0_18px_60px_rgba(73,48,28,0.10)] transition hover:-translate-y-1 hover:shadow-[0_22px_70px_rgba(73,48,28,0.16)]"
               >
+                <SiteIcon
+                  src={resource.icon}
+                  className="mb-5 h-14 w-14 border-[#d9c8ac] bg-[#efe4d3]"
+                />
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a97548]">
                   {resource.group}
                 </p>

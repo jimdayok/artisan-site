@@ -9,9 +9,9 @@ type FooterProps = {
 
 export default function Footer({ onContactClick, signUpHref }: FooterProps) {
   const socialLinks = [
-    { label: "Facebook", short: "Fb", href: "#" },
-    { label: "Instagram", short: "Ig", href: "#" },
-    { label: "LinkedIn", short: "In", href: "#" },
+    { label: "Facebook", icon: "/social/facebook.svg", href: "#" },
+    { label: "Instagram", icon: "/social/instagram.svg", href: "#" },
+    { label: "LinkedIn", icon: "/social/linkedin.svg", href: "#" },
   ];
 
   return (
@@ -65,9 +65,14 @@ export default function Footer({ onContactClick, signUpHref }: FooterProps) {
                 key={social.label}
                 href={social.href}
                 aria-label={social.label}
-                className="grid h-10 w-10 place-items-center rounded-full border border-white/12 bg-white/[0.04] text-xs font-semibold text-white/75 transition hover:border-[#c9b28b]/70 hover:bg-[#c9b28b] hover:text-[#171311]"
+                className="group grid h-10 w-10 place-items-center rounded-full border border-white/12 bg-white/[0.04] text-white/75 transition hover:border-[#c9b28b]/70 hover:bg-[#c9b28b]"
               >
-                {social.short}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={social.icon}
+                  alt=""
+                  className="h-5 w-5 object-contain opacity-80 [filter:brightness(0)_invert(1)] transition group-hover:opacity-100 group-hover:[filter:brightness(0)_saturate(100%)_invert(8%)_sepia(8%)_saturate(652%)_hue-rotate(337deg)_brightness(95%)_contrast(92%)]"
+                />
               </a>
             ))}
           </div>
@@ -96,7 +101,7 @@ export default function Footer({ onContactClick, signUpHref }: FooterProps) {
           </h3>
           <ul className="mt-5 space-y-3.5 text-sm text-white/72">
             <li><Link href="/careers" className="transition hover:text-white">Careers</Link></li>
-            <li><a href="#" className="transition hover:text-white">Press Releases</a></li>
+            <li><Link href="/about#press-releases" className="transition hover:text-white">Press Releases</Link></li>
             <li><a href="#" className="transition hover:text-white">Newsletter</a></li>
           </ul>
         </div>
@@ -141,6 +146,13 @@ export default function Footer({ onContactClick, signUpHref }: FooterProps) {
           </div>
         </div>
       </div>
+
+      <Link
+        href="/break-the-system"
+        className="block bg-[#14110f] pb-5 text-center text-[10px] text-white/10 transition hover:text-[#d4c09a]"
+      >
+        Keep control.
+      </Link>
     </footer>
   );
 }

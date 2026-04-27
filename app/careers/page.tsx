@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import RingsAccent from "../components/RingsAccent";
+import SiteIcon from "../components/SiteIcon";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
 const CONTACT_FORM_URL = "https://form.typeform.com/to/m0lQ9zjD";
@@ -32,6 +34,24 @@ const thriveCards = [
   "People who want to learn",
   "People who care about customers",
   "People who support their team",
+];
+
+const benefitIcons = [
+  "/icons/site/heart.svg",
+  "/icons/site/heart.svg",
+  "/icons/site/briefcase.svg",
+  "/icons/site/users.svg",
+  "/icons/site/heart.svg",
+  "/icons/site/users.svg",
+  "/icons/site/users.svg",
+  "/icons/site/rocket.svg",
+];
+
+const thriveIcons = [
+  "/icons/site/heart.svg",
+  "/icons/site/rocket.svg",
+  "/icons/site/heart.svg",
+  "/icons/site/users.svg",
 ];
 
 const jobs = [
@@ -320,6 +340,10 @@ export default function CareersPage() {
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
           <SectionHeader eyebrow="Careers" title="We’re Looking for Real Artisans" />
           <div className="rounded-[28px] border border-[#d8c6a8]/60 bg-[#fffaf2]/85 p-7 shadow-[0_24px_70px_rgba(49,39,26,0.08)] md:p-9">
+            <SiteIcon
+              src="/icons/site/heart.svg"
+              className="mb-7 h-14 w-14 border-[#d8c6a8]/70 bg-white"
+            />
             <p className="text-2xl font-semibold leading-snug text-[#1f1a17]">
               We’re looking for people who take pride in their work.
             </p>
@@ -339,12 +363,20 @@ export default function CareersPage() {
         <div className="mx-auto max-w-7xl">
           <SectionHeader eyebrow="Benefits" title="What You Can Expect" light />
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {benefits.map((benefit) => (
+            {benefits.map((benefit, index) => (
               <div
                 key={benefit}
-                className="rounded-xl border border-white/12 bg-white/[0.055] p-6 shadow-[0_18px_50px_rgba(0,0,0,0.16)] backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-[#d4c09a]/55 hover:bg-white/[0.08] hover:shadow-[0_24px_65px_rgba(0,0,0,0.22)]"
+                className="group rounded-xl border border-white/12 bg-white/[0.055] p-6 shadow-[0_18px_50px_rgba(0,0,0,0.16)] backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-[#d4c09a]/55 hover:bg-white/[0.08] hover:shadow-[0_24px_65px_rgba(0,0,0,0.22)]"
               >
-                <div className="mb-5 h-[2px] w-10 rounded-full bg-[#d4c09a]" />
+                <div className="mb-5 flex items-center gap-4">
+                  <SiteIcon
+                    src={benefitIcons[index]}
+                    tone="cream"
+                    size="sm"
+                    className="h-10 w-10 rounded-xl border-white/12 bg-white/[0.08]"
+                  />
+                  <div className="h-[2px] w-10 rounded-full bg-[#d4c09a]" />
+                </div>
                 <h3 className="text-xl font-semibold leading-tight text-white">{benefit}</h3>
               </div>
             ))}
@@ -352,8 +384,9 @@ export default function CareersPage() {
         </div>
       </motion.section>
 
-      <motion.section {...sectionFade} data-theme="light" className="px-6 py-24 md:px-10 md:py-28">
-        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
+      <motion.section {...sectionFade} data-theme="light" className="relative overflow-hidden px-6 py-24 md:px-10 md:py-28">
+        <RingsAccent position="bottom-left" size="md" opacity="opacity-[0.045]" />
+        <div className="relative z-10 mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
           <SectionHeader
             eyebrow="A Path Forward"
             title="We Believe People Deserve a Path Forward"
@@ -373,17 +406,25 @@ export default function CareersPage() {
         </div>
       </motion.section>
 
-      <motion.section {...sectionFade} data-theme="light" className="bg-[#fbf8f3] px-6 py-24 md:px-10 md:py-28">
-        <div className="mx-auto max-w-7xl">
+      <motion.section {...sectionFade} data-theme="light" className="relative overflow-hidden bg-[#fbf8f3] px-6 py-24 md:px-10 md:py-28">
+        <RingsAccent position="top-right" size="md" opacity="opacity-[0.045]" />
+        <div className="relative z-10 mx-auto max-w-7xl">
           <SectionHeader eyebrow="Fit" title="Who Thrives Here" />
           <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
             {thriveCards.map((item, index) => (
               <div
                 key={item}
-                className="rounded-2xl border border-[#d8c6a8]/55 bg-white p-6 shadow-[0_18px_48px_rgba(49,39,26,0.07)] transition duration-300 hover:-translate-y-1 hover:border-[#c9b28b] hover:shadow-[0_24px_64px_rgba(49,39,26,0.12)]"
+                className="group rounded-2xl border border-[#d8c6a8]/55 bg-white p-6 shadow-[0_18px_48px_rgba(49,39,26,0.07)] transition duration-300 hover:-translate-y-1 hover:border-[#c9b28b] hover:shadow-[0_24px_64px_rgba(49,39,26,0.12)]"
               >
-                <div className="text-xs font-semibold uppercase tracking-[0.24em] text-[#9a8564]">
-                  {String(index + 1).padStart(2, "0")}
+                <div className="flex items-center gap-3">
+                  <SiteIcon
+                    src={thriveIcons[index]}
+                    size="sm"
+                    className="h-10 w-10 rounded-xl border-[#d8c6a8]/70 bg-[#fffaf2]"
+                  />
+                  <div className="text-xs font-semibold uppercase tracking-[0.24em] text-[#9a8564]">
+                    {String(index + 1).padStart(2, "0")}
+                  </div>
                 </div>
                 <h3 className="mt-5 text-xl font-semibold leading-snug text-[#1f1a17]">{item}</h3>
               </div>
@@ -396,9 +437,10 @@ export default function CareersPage() {
         {...sectionFade}
         id="open-positions"
         data-theme="dark"
-        className="scroll-mt-24 bg-[#171311] px-6 py-24 text-white md:px-10 md:py-28"
+        className="relative scroll-mt-24 overflow-hidden bg-[#171311] px-6 py-24 text-white md:px-10 md:py-28"
       >
-        <div className="mx-auto max-w-7xl">
+        <RingsAccent position="center-right" size="lg" opacity="opacity-[0.045]" />
+        <div className="relative z-10 mx-auto max-w-7xl">
           <SectionHeader
             eyebrow="Open Positions"
             title="Open Positions"
@@ -426,14 +468,22 @@ export default function CareersPage() {
                       aria-expanded={isOpen}
                       aria-controls={`${job.id}-details`}
                     >
-                      <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#d4c09a]">
-                          {job.location}
-                        </p>
-                        <h3 className="mt-2 text-2xl font-semibold text-white">{job.title}</h3>
-                        <p className="mt-3 max-w-3xl text-sm leading-7 text-white/66">
-                          {job.description}
-                        </p>
+                      <div className="flex gap-4">
+                        <SiteIcon
+                          src="/icons/site/briefcase.svg"
+                          tone="cream"
+                          size="sm"
+                          className="mt-1 hidden h-11 w-11 rounded-xl border-white/12 bg-white/[0.08] sm:grid"
+                        />
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#d4c09a]">
+                            {job.location}
+                          </p>
+                          <h3 className="mt-2 text-2xl font-semibold text-white">{job.title}</h3>
+                          <p className="mt-3 max-w-3xl text-sm leading-7 text-white/66">
+                            {job.description}
+                          </p>
+                        </div>
                       </div>
                     </button>
                     <div className="flex flex-wrap gap-3 md:justify-end">
@@ -505,8 +555,9 @@ export default function CareersPage() {
         </div>
       </motion.section>
 
-      <motion.section {...sectionFade} id="apply" data-theme="light" className="scroll-mt-24 px-6 py-24 md:px-10 md:py-28">
-        <div className="mx-auto max-w-5xl rounded-[34px] border border-[#d8c6a8]/60 bg-white p-8 text-center shadow-[0_24px_70px_rgba(49,39,26,0.08)] md:p-12">
+      <motion.section {...sectionFade} id="apply" data-theme="light" className="relative scroll-mt-24 overflow-hidden px-6 py-24 md:px-10 md:py-28">
+        <RingsAccent position="top-left" size="md" opacity="opacity-[0.04]" />
+        <div className="relative z-10 mx-auto max-w-5xl rounded-[34px] border border-[#d8c6a8]/60 bg-white p-8 text-center shadow-[0_24px_70px_rgba(49,39,26,0.08)] md:p-12">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#9a8564]">
             Apply
           </p>

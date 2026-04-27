@@ -28,6 +28,27 @@ const heroPaths = [
   },
 ];
 
+const eventCards = [
+  {
+    name: "OAO Convention",
+    date: "May 1–2, 2026",
+    location: "Sunriver, OR",
+    description:
+      "Opticians from across Oregon gather for education, networking, and collaboration with industry partners.",
+    logo: "/oao-logo.jpg",
+    logoAlt: "OAO Convention logo",
+  },
+  {
+    name: "UOA Leadership Conference",
+    date: "June 25–27, 2026",
+    location: "Chicago, IL",
+    description:
+      "Opticians and industry leaders gather to explore innovation, leadership, and the future of opticianry.",
+    logo: "/uoa-logo.jpg",
+    logoAlt: "UOA Leadership Conference logo",
+  },
+];
+
 const fadeUp = {
   initial: { opacity: 0, y: 28 },
   whileInView: { opacity: 1, y: 0 },
@@ -118,6 +139,7 @@ const betterModelCards = [
   {
     id: "freedom",
     title: "Freedom to Choose",
+    icon: "/icons/artisan/freedom-to-choose.svg",
     body: "More lens options. Less forcing you into one path.",
     expandedTitle: "Partner Brands",
     expandedBody:
@@ -126,6 +148,7 @@ const betterModelCards = [
   {
     id: "transparency",
     title: "Transparency",
+    icon: "/icons/artisan/transparency.svg",
     body: "You always know what to expect: service, timing, and cost.",
     expandedBody:
       "Clear expectations matter. Artisan Lab Network is built to give practices better visibility into service, timing, communication, and cost so teams can plan with confidence.",
@@ -133,6 +156,7 @@ const betterModelCards = [
   {
     id: "flexibility",
     title: "Flexibility",
+    icon: "/icons/artisan/flexibility.svg",
     body: "Systems designed to support your process, not punish it.",
     expandedBody:
       "Your practice should not have to change everything to work with your lab. Our systems are designed to support different workflows, ordering methods, product preferences, and practice needs.",
@@ -140,6 +164,7 @@ const betterModelCards = [
   {
     id: "outcomes",
     title: "Outcomes First",
+    icon: "/icons/artisan/outcomes-first.svg",
     body: "Better turnaround, better consistency, better patient experience.",
     expandedBody:
       "Better lab relationships should lead to better results. Our network is focused on dependable turnaround, consistent quality, stronger communication, and a better patient experience.",
@@ -149,44 +174,52 @@ const betterModelCards = [
 const capabilities = [
   {
     title: "Freeform lens options",
+    icon: "/icons/artisan/freedom-to-choose.svg",
     detail:
       "We carry products from major lens vendors and give practices more freedom of choice.",
     link: { label: "Jump to vendor partners", href: "#vendor-partners" },
   },
   {
     title: "AR treatments",
+    icon: "/icons/artisan/transparency.svg",
     detail:
       "Artisan AR treatments and TechShield AR treatments are produced on site. Additional access is available to Hoya, Shamir, Glacier, and Tokai AR options.",
   },
   {
     title: "Fast turnaround",
+    icon: "/icons/artisan/fast-turnaround.svg",
     detail:
       "Connected production across the network helps improve turnaround, consistency, and confidence for practices and patients.",
   },
   {
     title: "Open platform ordering",
+    icon: "/icons/artisan/integrated-systems.svg",
     detail:
       "We accept orders from SpecCheck, DVI Rx Wizard, VisionWeb, and Eyefinity.",
     link: { label: "Learn more about SpecCheck", href: "https://speccheckrx.com" },
   },
   {
     title: "Clear communication",
+    icon: "/icons/artisan/clear-communication.svg",
     detail:
       "We provide clear and transparent WIP reports, access to real-time order information, and chat features with the lab.",
   },
   {
     title: "Quality control you can count on",
+    icon: "/icons/artisan/quality-control.svg",
     // Claim is supported by internal/source data; keep verification package ready before final publish.
     detail:
       "We maintain a satisfaction rate above 98% and rank in the top third of DVI labs for low remake rates according to published data.",
   },
   {
     title: "Support that scales with you",
+    icon: "/icons/artisan/practice-control.svg",
     detail:
       "Comprehensive Artisan Intel reports, regular training programs, and strong resources for opticians and staff.",
   },
   {
     title: "A partner mindset",
+    icon: "/icons/artisan/partner-mindset.svg",
     detail:
       "We are the largest doctor-owned lab network in the United States. That means we do not just support optometry. We are optometry.",
   },
@@ -210,6 +243,40 @@ const proofQuotes = [
   },
 ];
 
+function ArtisanIcon({
+  src,
+  tone = "gold",
+  size = "md",
+  className = "",
+}: {
+  src: string;
+  tone?: "gold" | "cream";
+  size?: "sm" | "md" | "lg";
+  className?: string;
+}) {
+  const sizeClass =
+    size === "lg" ? "h-9 w-9" : size === "sm" ? "h-7 w-7" : "h-8 w-8";
+  const toneClass =
+    tone === "cream"
+      ? "[filter:brightness(0)_saturate(100%)_invert(86%)_sepia(15%)_saturate(545%)_hue-rotate(356deg)_brightness(91%)_contrast(89%)]"
+      : "[filter:brightness(0)_saturate(100%)_invert(53%)_sepia(17%)_saturate(815%)_hue-rotate(358deg)_brightness(90%)_contrast(88%)]";
+
+  return (
+    <span
+      aria-hidden="true"
+      className={`grid shrink-0 place-items-center rounded-2xl border transition duration-300 ${className}`}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={src}
+        alt=""
+        aria-hidden="true"
+        className={`${sizeClass} object-contain opacity-90 transition duration-300 group-hover:scale-105 ${toneClass}`}
+      />
+    </span>
+  );
+}
+
 function BetterModelCard({
   card,
   isOpen,
@@ -224,7 +291,7 @@ function BetterModelCard({
   return (
     <motion.article
       variants={cardReveal}
-      className={`rounded-2xl border border-[#d6c3a1]/50 bg-[#fffaf2]/85 p-6 shadow-[0_18px_45px_rgba(49,39,26,0.08)] backdrop-blur-md transition hover:-translate-y-1 hover:border-[#c9b28b] hover:bg-[#fffaf2] hover:shadow-[0_24px_64px_rgba(49,39,26,0.13)] ${
+      className={`group rounded-2xl border border-[#d6c3a1]/50 bg-[#fffaf2]/85 p-6 shadow-[0_18px_45px_rgba(49,39,26,0.08)] backdrop-blur-md transition hover:-translate-y-1 hover:border-[#c9b28b] hover:bg-[#fffaf2] hover:shadow-[0_24px_64px_rgba(49,39,26,0.13)] ${
         isOpen ? "" : "min-h-[156px]"
       }`}
     >
@@ -235,12 +302,19 @@ function BetterModelCard({
         aria-controls={panelId}
         className="flex w-full items-start justify-between gap-4 text-left"
       >
-        <span>
-          <span className="block text-xs uppercase tracking-[0.24em] text-black/50 md:tracking-[0.28em]">
-            {card.title}
-          </span>
-          <span className="mt-2 block text-xl font-semibold text-[#1f1718]">
-            {card.body}
+        <span className="flex items-start gap-4">
+          <ArtisanIcon
+            src={card.icon}
+            size="sm"
+            className="h-12 w-12 border-[#d6c3a1]/55 bg-white/70 shadow-[0_10px_24px_rgba(49,39,26,0.06)]"
+          />
+          <span>
+            <span className="block text-xs uppercase tracking-[0.24em] text-black/50 md:tracking-[0.28em]">
+              {card.title}
+            </span>
+            <span className="mt-2 block text-xl font-semibold text-[#1f1718]">
+              {card.body}
+            </span>
           </span>
         </span>
         <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[#d6c3a1]/70 bg-white/75 text-2xl leading-none text-[#7d6746] shadow-sm transition">
@@ -342,16 +416,31 @@ function BetterModelCard({
                           alt: "$0 Tariff Fees. No tariff passthrough fees. Clear pricing from the start.",
                         },
                       ].map((metric) => (
+                        metric.title === "Service Levels" ? (
+                          <Link
+                            key={metric.title}
+                            href="/break-the-system"
+                            aria-label="Break the System"
+                            className="block rounded-2xl border border-black/10 bg-white p-3 shadow-[0_20px_50px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_25px_60px_rgba(0,0,0,0.12)]"
+                          >
+                            <img
+                              src={metric.icon}
+                              alt={metric.alt}
+                              className="h-auto w-full rounded-xl object-contain"
+                            />
+                          </Link>
+                        ) : (
                         <div
-                          key={metric.title}
-                          className="rounded-2xl border border-black/10 bg-white p-3 shadow-[0_20px_50px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_25px_60px_rgba(0,0,0,0.12)]"
-                        >
+                            key={metric.title}
+                            className="rounded-2xl border border-black/10 bg-white p-3 shadow-[0_20px_50px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_25px_60px_rgba(0,0,0,0.12)]"
+                          >
                           <img
                             src={metric.icon}
                             alt={metric.alt}
                             className="h-auto w-full rounded-xl object-contain"
                           />
                         </div>
+                        )
                       ))}
                     </div>
 
@@ -602,6 +691,11 @@ export default function Home() {
         }}
       >
         <div className="pointer-events-none absolute inset-0 bg-white/70" />
+        <div
+          className="pointer-events-none absolute -bottom-32 -right-24 h-[420px] w-[420px] bg-contain bg-center bg-no-repeat opacity-[0.07]"
+          style={{ backgroundImage: "url('/Rings.png')" }}
+          aria-hidden="true"
+        />
         <div className="relative z-20 max-w-7xl mx-auto">
           <div id="better-model" className="scroll-mt-24">
             <motion.div {...fadeUp}>
@@ -640,15 +734,31 @@ export default function Home() {
               className="mt-8 grid gap-4 md:grid-cols-3"
             >
               {[
-                { title: "Multiple Labs", body: "Strength + flexibility across the network." },
-                { title: "In-House Production", body: "Quality you can rely on." },
-                { title: "Integrated Systems", body: "Ordering and updates without chaos." },
+                {
+                  title: "Multiple Labs",
+                  body: "Strength + flexibility across the network.",
+                  icon: "/icons/artisan/multiple-labs.svg",
+                },
+                {
+                  title: "In-House Production",
+                  body: "Quality you can rely on.",
+                  icon: "/icons/artisan/in-house-production.svg",
+                },
+                {
+                  title: "Integrated Systems",
+                  body: "Ordering and updates without chaos.",
+                  icon: "/icons/artisan/integrated-systems.svg",
+                },
               ].map((step) => (
                 <motion.div
                   key={step.title}
                   variants={cardReveal}
-                  className="rounded-2xl bg-white/80 border border-black/10 p-5 shadow backdrop-blur-md transition hover:-translate-y-1 hover:border-[#c9b28b] hover:bg-white hover:shadow-[0_24px_64px_rgba(49,39,26,0.12)] md:p-6"
+                  className="group rounded-2xl bg-white/80 border border-black/10 p-5 shadow backdrop-blur-md transition hover:-translate-y-1 hover:border-[#c9b28b] hover:bg-white hover:shadow-[0_24px_64px_rgba(49,39,26,0.12)] md:p-6"
                 >
+                  <ArtisanIcon
+                    src={step.icon}
+                    className="mb-5 h-14 w-14 border-[#d6c3a1]/55 bg-[#fffaf2]/75"
+                  />
                   <div className="text-xs uppercase tracking-[0.28em] text-black/50">{step.title}</div>
                   <div className="mt-2 text-xl font-semibold text-[#1f1718]">{step.body}</div>
                 </motion.div>
@@ -691,7 +801,7 @@ export default function Home() {
       <section
         id="capabilities"
         data-theme="dark"
-        className="relative px-6 py-24 md:py-28 lg:min-h-screen"
+        className="relative px-6 pb-14 pt-24 md:pb-16 md:pt-28 lg:pb-20"
       >
         <div
           className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-[0.18]"
@@ -733,7 +843,7 @@ export default function Home() {
                   viewport={{ once: true, amount: 0.2 }}
                   transition={{ duration: 0.45, ease: "easeOut" }}
                   className={`
-                    pointer-events-auto group min-h-[150px] overflow-hidden rounded-[18px] border text-left
+                    pointer-events-auto group min-h-[166px] overflow-hidden rounded-[18px] border text-left
                     backdrop-blur-md transition-all duration-300
                     ${isActive ? "bg-white/12 border-[#d4c09a] shadow-2xl lg:col-span-2" : "bg-white/6 border-white/15"}
                     ${isDimmed ? "scale-[0.99] opacity-55 blur-[0.2px]" : "scale-100 opacity-100"}
@@ -749,12 +859,20 @@ export default function Home() {
                     aria-expanded={isActive}
                   >
                     <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <div className="text-xs uppercase tracking-[0.28em] text-[#d4c09a]">
-                          Capability
-                        </div>
-                        <div className="mt-3 text-lg font-semibold leading-snug text-white md:text-xl">
-                          {cap.title}
+                      <div className="flex items-start gap-3">
+                        <ArtisanIcon
+                          src={cap.icon}
+                          tone="cream"
+                          size="sm"
+                          className="h-12 w-12 border-[#d4c09a]/18 bg-[#d4c09a]/10"
+                        />
+                        <div>
+                          <div className="text-xs uppercase tracking-[0.28em] text-[#d4c09a]">
+                            Capability
+                          </div>
+                          <div className="mt-3 text-lg font-semibold leading-snug text-white md:text-xl">
+                            {cap.title}
+                          </div>
                         </div>
                       </div>
                       <div className="shrink-0 text-xs text-white/55">
@@ -1018,8 +1136,12 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.42, ease: "easeOut" }}
-              className="flex min-h-[174px] flex-col rounded-2xl bg-white/80 border border-black/10 p-5 shadow transition hover:-translate-y-1 hover:bg-white md:p-6"
+              className="group flex min-h-[174px] flex-col rounded-2xl bg-white/80 border border-black/10 p-5 shadow transition hover:-translate-y-1 hover:bg-white md:p-6"
             >
+              <ArtisanIcon
+                src="/icons/artisan/resources.svg"
+                className="mb-5 h-14 w-14 border-[#d6c3a1]/55 bg-[#fffaf2]/75"
+              />
               <div className="text-lg font-semibold">Practice Resources</div>
               <p className="mt-3 text-sm leading-6 text-black/60">
                 Tools and information for independent practice teams.
@@ -1031,8 +1153,12 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.42, delay: 0.04, ease: "easeOut" }}
-              className="flex min-h-[174px] flex-col rounded-2xl bg-white/80 border border-black/10 p-5 shadow transition hover:-translate-y-1 hover:bg-white md:p-6"
+              className="group flex min-h-[174px] flex-col rounded-2xl bg-white/80 border border-black/10 p-5 shadow transition hover:-translate-y-1 hover:bg-white md:p-6"
             >
+              <ArtisanIcon
+                src="/icons/artisan/patient-resources.svg"
+                className="mb-5 h-14 w-14 border-[#d6c3a1]/55 bg-[#fffaf2]/75"
+              />
               <div className="text-lg font-semibold">Patient Resources</div>
               <p className="mt-3 text-sm leading-6 text-black/60">
                 Education and support content for patient conversations.
@@ -1044,8 +1170,12 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.42, delay: 0.08, ease: "easeOut" }}
-              className="flex min-h-[174px] flex-col rounded-2xl bg-white/80 border border-black/10 p-5 shadow transition hover:-translate-y-1 hover:bg-white md:p-6"
+              className="group flex min-h-[174px] flex-col rounded-2xl bg-white/80 border border-black/10 p-5 shadow transition hover:-translate-y-1 hover:bg-white md:p-6"
             >
+              <ArtisanIcon
+                src="/icons/artisan/integrated-systems.svg"
+                className="mb-5 h-14 w-14 border-[#d6c3a1]/55 bg-[#fffaf2]/75"
+              />
               <div className="text-lg font-semibold">Lab Resources</div>
               <p className="mt-3 text-sm leading-6 text-black/60">
                 Practical lab access, ordering, and product information.
@@ -1057,8 +1187,12 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.42, delay: 0.12, ease: "easeOut" }}
-              className="flex min-h-[174px] flex-col rounded-2xl bg-white/80 border border-[#d4c09a]/60 p-5 shadow transition hover:-translate-y-1 hover:bg-white md:p-6"
+              className="group flex min-h-[174px] flex-col rounded-2xl bg-white/80 border border-[#d4c09a]/60 p-5 shadow transition hover:-translate-y-1 hover:bg-white md:p-6"
             >
+              <ArtisanIcon
+                src="/icons/artisan/partner-mindset.svg"
+                className="mb-5 h-14 w-14 border-[#d4c09a]/70 bg-[#fffaf2]/75"
+              />
               <div className="text-lg font-semibold">Lab Ownership &amp; Partnership</div>
               <p className="mt-3 text-sm leading-6 text-black/60">
                 Learn how some practices participate more deeply in the Artisan model.
@@ -1068,8 +1202,98 @@ export default function Home() {
         </div>
       </section>
 
+      <section
+        id="where-well-be"
+        data-theme="light"
+        className="relative overflow-hidden bg-[#f5f1eb] px-6 py-16 text-[#1f1a17] md:py-20"
+      >
+        <div
+          className="pointer-events-none absolute -left-28 top-8 h-[460px] w-[460px] bg-contain bg-center bg-no-repeat opacity-[0.08]"
+          style={{ backgroundImage: "url('/Rings.png')" }}
+          aria-hidden="true"
+        />
+        <div
+          className="pointer-events-none absolute -bottom-40 right-0 h-[520px] w-[520px] bg-contain bg-center bg-no-repeat opacity-[0.045]"
+          style={{ backgroundImage: "url('/Rings.png')" }}
+          aria-hidden="true"
+        />
+
+        <div className="relative z-10 mx-auto max-w-7xl">
+          <motion.div
+            {...fadeUp}
+            className="grid gap-5 md:grid-cols-[0.85fr_1.15fr] md:items-end"
+          >
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#9a8564]">
+                Industry Events
+              </p>
+              <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">
+                Where We&apos;ll Be
+              </h2>
+            </div>
+            <p className="max-w-3xl text-base leading-8 text-[#625b53] md:text-lg">
+              Meet with our team at upcoming industry events and shows where we connect with customers, partners, and independent eye care professionals.
+            </p>
+          </motion.div>
+
+          <motion.div
+            variants={staggerContainer}
+            initial="initial"
+            whileInView="whileInView"
+            viewport={{ once: true, amount: 0.16 }}
+            className="mt-10 grid gap-5 lg:grid-cols-2"
+          >
+            {eventCards.map((event) => (
+              <motion.article
+                key={event.name}
+                variants={cardReveal}
+                className="group rounded-[28px] border border-[#d8c6a8]/70 bg-white/86 p-6 shadow-[0_18px_55px_rgba(49,39,26,0.08)] backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-[#c9b28b] hover:bg-white hover:shadow-[0_26px_70px_rgba(49,39,26,0.13)] md:p-7"
+              >
+                <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
+                  <div className="flex h-24 w-32 shrink-0 items-center justify-center rounded-2xl border border-black/10 bg-white p-4 shadow-[0_10px_28px_rgba(49,39,26,0.07)]">
+                    <Image
+                      src={event.logo}
+                      alt={event.logoAlt}
+                      width={220}
+                      height={120}
+                      className="max-h-16 w-auto max-w-full object-contain"
+                    />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#9a8564]">
+                      {event.date}
+                    </p>
+                    <h3 className="mt-3 text-2xl font-semibold leading-tight text-[#1f1a17]">
+                      {event.name}
+                    </h3>
+                    <p className="mt-2 text-sm font-semibold text-[#7a6b5b]">
+                      {event.location}
+                    </p>
+                  </div>
+                </div>
+                <p className="mt-5 text-sm leading-7 text-[#625b53] md:text-base">
+                  {event.description}
+                </p>
+                <button
+                  type="button"
+                  onClick={openContactModal}
+                  className="mt-6 inline-flex min-h-11 items-center justify-center rounded-full border border-[#d8c6a8] bg-[#fbf8f3] px-5 py-2.5 text-sm font-semibold text-[#1f1a17] shadow-sm transition hover:-translate-y-0.5 hover:border-[#d4c09a] hover:bg-[#d4c09a]"
+                >
+                  Schedule a Meeting
+                </button>
+              </motion.article>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
       {/* FINAL CTA */}
       <section data-theme="dark" className="relative overflow-hidden px-6 py-16 md:py-[72px]">
+        <div
+          className="pointer-events-none absolute -right-24 -top-32 h-[520px] w-[520px] bg-contain bg-center bg-no-repeat opacity-[0.07]"
+          style={{ backgroundImage: "url('/Rings.png')" }}
+          aria-hidden="true"
+        />
         <div className="pointer-events-none absolute inset-0 bg-black/70" />
         <motion.div
           {...fadeUp}

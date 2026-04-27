@@ -5,6 +5,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import NetworkMap from "../components/NetworkMap";
+import RingsAccent from "../components/RingsAccent";
+import SiteIcon from "../components/SiteIcon";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
 const CONTACT_FORM_URL = "https://form.typeform.com/to/m0lQ9zjD";
@@ -35,36 +37,42 @@ const problemItems = [
 const networkPillars = [
   {
     title: "Group Buying Leverage",
+    icon: "/icons/site/layers.svg",
     items: ["Better pricing access", "Vendor leverage", "Scale advantage"],
   },
   {
     title: "Expanded Access",
+    icon: "/icons/site/badge-check.svg",
     items: ["Broader lens portfolios", "Multiple lab capabilities", "Flexibility in product choice"],
   },
   {
     title: "Shared Intelligence",
+    icon: "/icons/site/chart-line.svg",
     items: ["Best practices", "Peer insights", "Operational knowledge"],
   },
 ];
 
 const controlItems = [
-  "Better turnaround",
-  "More predictability",
-  "Direct communication",
-  "Reduced dependency",
+  { title: "Better turnaround", icon: "/icons/site/chart-line.svg" },
+  { title: "More predictability", icon: "/icons/site/badge-check.svg" },
+  { title: "Direct communication", icon: "/icons/site/handshake.svg" },
+  { title: "Reduced dependency", icon: "/icons/site/lock.svg" },
 ];
 
 const partnershipItems = [
   {
     title: "Real support",
+    icon: "/icons/site/handshake.svg",
     body: "People who know the work, understand the stakes, and help resolve issues without making the practice chase answers.",
   },
   {
     title: "Accountability",
+    icon: "/icons/site/badge-check.svg",
     body: "A lab relationship should be clear about what is happening, why it matters, and what comes next.",
   },
   {
     title: "Human communication",
+    icon: "/icons/site/handshake.svg",
     body: "The model works best when practices can reach people who can make decisions and help move work forward.",
   },
 ];
@@ -79,17 +87,17 @@ const timeline = [
 ];
 
 const fitItems = [
-  "Practices that value independence",
-  "Practices seeking more control",
-  "Practices focused on long-term improvement",
-  "Practices that care about operational efficiency",
+  { title: "Practices that value independence", icon: "/icons/site/lock.svg" },
+  { title: "Practices seeking more control", icon: "/icons/site/layers.svg" },
+  { title: "Practices focused on long-term improvement", icon: "/icons/site/chart-line.svg" },
+  { title: "Practices that care about operational efficiency", icon: "/icons/site/badge-check.svg" },
 ];
 
 const outcomes = [
-  "More control",
-  "Better alignment",
-  "More flexibility",
-  "Stronger long-term position",
+  { title: "More control", icon: "/icons/site/layers.svg" },
+  { title: "Better alignment", icon: "/icons/site/handshake.svg" },
+  { title: "More flexibility", icon: "/icons/site/badge-check.svg" },
+  { title: "Stronger long-term position", icon: "/icons/site/chart-line.svg" },
 ];
 
 function ContactModal({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -170,11 +178,13 @@ function SectionShell({
   id,
   theme = "light",
   className = "",
+  accent,
   children,
 }: {
   id?: string;
   theme?: "light" | "dark";
   className?: string;
+  accent?: React.ReactNode;
   children: React.ReactNode;
 }) {
   const themeClass =
@@ -190,7 +200,8 @@ function SectionShell({
         theme === "dark" ? "border-white/10" : "border-[#d8c6a8]/35"
       } ${themeClass} ${className}`}
     >
-      <div className="mx-auto max-w-7xl">{children}</div>
+      {accent}
+      <div className="relative z-10 mx-auto max-w-7xl">{children}</div>
     </section>
   );
 }
@@ -356,8 +367,14 @@ export default function ArtisanModelPage() {
             {networkPillars.map((pillar) => (
               <div
                 key={pillar.title}
-                className="border border-[#d8c6a8]/50 bg-[#171311] p-5 text-white shadow-[0_20px_70px_rgba(49,39,26,0.12)] transition hover:-translate-y-1 hover:border-[#d4c09a]/75 md:p-6"
+                className="group border border-[#d8c6a8]/50 bg-[#171311] p-5 text-white shadow-[0_20px_70px_rgba(49,39,26,0.12)] transition hover:-translate-y-1 hover:border-[#d4c09a]/75 md:p-6"
               >
+                <SiteIcon
+                  src={pillar.icon}
+                  tone="cream"
+                  size="sm"
+                  className="mb-5 h-12 w-12 border-white/12 bg-white/[0.08]"
+                />
                 <h3 className="text-2xl font-semibold">{pillar.title}</h3>
                 <ul className="mt-7 space-y-4">
                   {pillar.items.map((item) => (
@@ -384,14 +401,22 @@ export default function ArtisanModelPage() {
           <div className="grid grid-cols-2 gap-3 sm:gap-4">
             {controlItems.map((item) => (
               <div
-                key={item}
-                className="min-h-32 border border-white/12 bg-white/[0.045] p-5 transition hover:-translate-y-1 hover:border-[#d4c09a]/50 hover:bg-white/[0.065]"
+                key={item.title}
+                className="group min-h-32 border border-white/12 bg-white/[0.045] p-5 transition hover:-translate-y-1 hover:border-[#d4c09a]/50 hover:bg-white/[0.065]"
               >
-                <div className="text-xs uppercase tracking-[0.22em] text-[#d4c09a]">
-                  Control
+                <div className="flex items-center gap-3">
+                  <SiteIcon
+                    src={item.icon}
+                    tone="cream"
+                    size="sm"
+                    className="h-10 w-10 rounded-xl border-white/12 bg-white/[0.08]"
+                  />
+                  <div className="text-xs uppercase tracking-[0.22em] text-[#d4c09a]">
+                    Control
+                  </div>
                 </div>
                 <div className="mt-4 text-lg font-semibold leading-snug text-white md:text-xl">
-                  {item}
+                  {item.title}
                 </div>
               </div>
             ))}
@@ -410,9 +435,16 @@ export default function ArtisanModelPage() {
             {partnershipItems.map((item) => (
               <div
                 key={item.title}
-                className="border-l-2 border-[#d4c09a] bg-white/55 p-5 shadow-[0_16px_55px_rgba(49,39,26,0.08)] transition hover:bg-white/80 md:p-6"
+                className="group border-l-2 border-[#d4c09a] bg-white/55 p-5 shadow-[0_16px_55px_rgba(49,39,26,0.08)] transition hover:bg-white/80 md:p-6"
               >
-                <h3 className="text-xl font-semibold text-[#1f1a17]">{item.title}</h3>
+                <div className="flex items-center gap-4">
+                  <SiteIcon
+                    src={item.icon}
+                    size="sm"
+                    className="h-10 w-10 rounded-xl border-[#d8c6a8]/70 bg-[#fffaf2]"
+                  />
+                  <h3 className="text-xl font-semibold text-[#1f1a17]">{item.title}</h3>
+                </div>
                 <p className="mt-3 text-sm leading-7 text-[#5f5750]">{item.body}</p>
               </div>
             ))}
@@ -434,6 +466,11 @@ export default function ArtisanModelPage() {
         <div className="relative mx-auto max-w-4xl">
           <SectionHeader eyebrow="Ownership" title="Going Deeper" light />
           <div className="mt-7 space-y-5 border border-white/12 bg-black/22 p-6 text-base leading-8 text-white/72 shadow-[0_24px_90px_rgba(0,0,0,0.22)] backdrop-blur-md md:p-8 md:text-lg">
+            <SiteIcon
+              src="/icons/site/lock.svg"
+              tone="cream"
+              className="h-14 w-14 border-white/12 bg-white/[0.08]"
+            />
             <p>Some practices choose to go beyond a standard lab relationship.</p>
             <p>
               In certain cases, qualified practices may be invited to participate
@@ -453,7 +490,11 @@ export default function ArtisanModelPage() {
         </div>
       </SectionShell>
 
-      <SectionShell id="timeline">
+      <SectionShell
+        id="timeline"
+        className="overflow-hidden"
+        accent={<RingsAccent position="top-right" size="lg" opacity="opacity-[0.055]" />}
+      >
         <SectionHeader
           eyebrow="Timeline"
           title="Built With Intention. Proven Through Participation."
@@ -485,7 +526,12 @@ export default function ArtisanModelPage() {
 
       <NetworkMap />
 
-      <SectionShell id="fit" theme="dark">
+      <SectionShell
+        id="fit"
+        theme="dark"
+        className="overflow-hidden"
+        accent={<RingsAccent position="center-right" size="md" opacity="opacity-[0.04]" />}
+      >
         <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
           <SectionHeader
             eyebrow="Fit"
@@ -496,12 +542,17 @@ export default function ArtisanModelPage() {
           <div className="grid gap-3 sm:grid-cols-2">
             {fitItems.map((item) => (
               <div
-                key={item}
-                className="flex min-h-24 items-center gap-4 border border-white/12 bg-white/[0.045] p-5 transition hover:-translate-y-1 hover:border-[#d4c09a]/50"
+                key={item.title}
+                className="group flex min-h-24 items-center gap-4 border border-white/12 bg-white/[0.045] p-5 transition hover:-translate-y-1 hover:border-[#d4c09a]/50"
               >
-                <span className="h-2 w-2 shrink-0 rounded-full bg-[#d4c09a]" />
+                <SiteIcon
+                  src={item.icon}
+                  tone="cream"
+                  size="sm"
+                  className="h-10 w-10 rounded-xl border-white/12 bg-white/[0.08]"
+                />
                 <span className="text-base font-semibold leading-snug text-white">
-                  {item}
+                  {item.title}
                 </span>
               </div>
             ))}
@@ -509,7 +560,11 @@ export default function ArtisanModelPage() {
         </div>
       </SectionShell>
 
-      <SectionShell id="outcomes">
+      <SectionShell
+        id="outcomes"
+        className="overflow-hidden"
+        accent={<RingsAccent position="bottom-left" size="md" opacity="opacity-[0.045]" />}
+      >
         <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:items-center">
           <SectionHeader
             eyebrow="Outcomes"
@@ -519,14 +574,21 @@ export default function ArtisanModelPage() {
           <div className="grid gap-4 sm:grid-cols-2">
             {outcomes.map((outcome) => (
               <div
-                key={outcome}
-                className="border border-[#d8c6a8]/55 bg-white/60 p-6 shadow-[0_16px_55px_rgba(49,39,26,0.08)] transition hover:-translate-y-1 hover:bg-white/85"
+                key={outcome.title}
+                className="group border border-[#d8c6a8]/55 bg-white/60 p-6 shadow-[0_16px_55px_rgba(49,39,26,0.08)] transition hover:-translate-y-1 hover:bg-white/85"
               >
-                <div className="text-xs uppercase tracking-[0.22em] text-[#9a8564]">
-                  Outcome
+                <div className="flex items-center gap-3">
+                  <SiteIcon
+                    src={outcome.icon}
+                    size="sm"
+                    className="h-10 w-10 rounded-xl border-[#d8c6a8]/70 bg-[#fffaf2]"
+                  />
+                  <div className="text-xs uppercase tracking-[0.22em] text-[#9a8564]">
+                    Outcome
+                  </div>
                 </div>
                 <div className="mt-4 text-2xl font-semibold text-[#1f1a17]">
-                  {outcome}
+                  {outcome.title}
                 </div>
               </div>
             ))}

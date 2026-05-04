@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
@@ -8,6 +8,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import RingsAccent from "../components/RingsAccent";
 import SiteIcon from "../components/SiteIcon";
+import ArTransitionLink from "../components/ArTransitionLink";
 import VideoGallery, { type VideoGalleryItem } from "../components/video-gallery";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
@@ -31,12 +32,15 @@ type ResourceItem = {
   cta: string;
   href: string;
   icon?: string;
+  logo?: string;
+  logoAlt?: string;
 };
 
 type ProductVisual = {
   src: string;
   alt: string;
   label: string;
+  href?: string;
 };
 
 type FeaturedCard = {
@@ -61,6 +65,135 @@ type BrandPanel = {
   visualAssets?: ProductVisual[];
   resources: ResourceItem[];
 };
+
+type PracticeProgram = {
+  title: string;
+  icon: string;
+  body: string;
+  image?: string;
+  imageAlt?: string;
+  logos?: {
+    src: string;
+    alt: string;
+  }[];
+};
+
+type LogoCard = {
+  title: string;
+  body: string;
+  href: string;
+  logo?: string;
+  logoAlt?: string;
+  logoText?: string;
+  logoSize?: "wide" | "small" | "tall";
+  logoScale?: "scale-100" | "scale-[1.15]" | "scale-[1.25]" | "scale-[1.35]" | "scale-[1.5]" | "scale-[1.7]" | "scale-[1.8]";
+  detail?: string;
+  actions?: {
+    label: string;
+    href: string;
+  }[];
+  logos?: {
+    src: string;
+    alt: string;
+  }[];
+};
+
+type SingleLogoCard = LogoCard & {
+  logo: string;
+  logoAlt: string;
+};
+
+const systems: LogoCard[] = [
+  {
+    title: "Artisan Lens Systems",
+    body: "Best-practice lens bundles with premium technology and cleaner pricing paths.",
+    detail:
+      "Artisan Lens Systems capture best-practice bundles using premium lens technologies, premium AR treatments, premium materials, and bundled pricing advantages. They are designed to help teams recommend with confidence and protect value without turning every sale into a custom spreadsheet.",
+    href: "#iot",
+    logo: "/aln-icon.png",
+    logoAlt: "Artisan Lab Network",
+    logoSize: "small",
+    logoScale: "scale-[1.25]",
+    actions: [
+      { label: "Learn More About IOT Lens System and Technologies", href: "#iot" },
+    ],
+  },
+  {
+    title: "Frame Systems",
+    body: "Simpler complete-pair pricing and easier patient product paths.",
+    detail:
+      "Frame systems help practices simplify complete pair pricing and create easy product paths for patients. Modern Optical is one example of a frame system that can support a clearer retail experience.",
+    href: "#tools-ordering",
+    logo: "/images/framesystems.png",
+    logoAlt: "Frame Systems",
+    logoScale: "scale-[1.7]",
+  },
+  {
+    title: "Safety Systems",
+    body: "A more complete path for practices serving employer-driven and occupational safety needs.",
+    detail:
+      "Safety Systems helps practices support employers, workers, and occupational eyewear programs with clearer ordering, demonstration materials, approved product paths, and program guidance.",
+    href: "#tools-ordering",
+    logo: "/logos/safetysystems.png",
+    logoAlt: "Safety Systems",
+    logoScale: "scale-[1.8]",
+    actions: [
+      { label: "Order Your Free Safety Kit", href: "https://form.typeform.com/to/rDUQssNn" },
+      { label: "Download Brochures", href: "#product-information" },
+      { label: "Request Current Program Pricing", href: "https://form.typeform.com/to/quuPCSff" },
+    ],
+  },
+];
+
+const orderingTools: LogoCard[] = [
+  {
+    title: "SpecCheck",
+    body: "Account payment and lab workflow support.",
+    href: "https://www.speccheckrx.com/",
+    logo: "/logos/speccheck.png",
+    logoAlt: "SpecCheck",
+    logoScale: "scale-[1.35]",
+  },
+  {
+    title: "Rx Wizard",
+    body: "Ordering support for cleaner prescription workflows.",
+    href: "https://www.dvirx.com/",
+    logo: "/RXWizard-logo-color.png",
+    logoAlt: "Rx Wizard",
+    logoScale: "scale-[1.25]",
+  },
+  {
+    title: "GoStock",
+    body: "Search and source stock lenses through GoStock.",
+    href: "https://www.globalopticsinc.com/gostock",
+    logo: "/logos/gostock_logo.png",
+    logoAlt: "GoStock",
+    logoScale: "scale-100",
+  },
+  {
+    title: "Safety Demonstration Frames",
+    body: "Safety Systems, ArmourRx, and SafeVision support for practice demonstrations.",
+    href: "https://form.typeform.com/to/rDUQssNn?typeform-source=www.artisanlabnetwork.com",
+    logo: "/logos/safetysystems.png",
+    logoAlt: "Safety Systems",
+    logoScale: "scale-[1.5]",
+  },
+];
+
+const vspSetupSteps = [
+  {
+    title: "Tell customer service first",
+    body: "Practices should inform customer service they want to use Artisan Lab Network for VSP so the lab can set their account up.",
+  },
+  {
+    title: "Add the lab in VSP",
+    body: "After setup, add the lab inside VSP. In all instances, add Pacific Artisan Labs, even if you are using Pike Artisan Labs.",
+  },
+  {
+    title: "Orders still route correctly",
+    body: "VSP lists the Artisan labs under Pacific Artisan Labs. Orders will still route to the correct Artisan lab just like private pay orders.",
+  },
+];
 
 const featuredCards: FeaturedCard[] = [
   {
@@ -92,7 +225,7 @@ const featuredCards: FeaturedCard[] = [
     icon: "/icons/site/monitor.svg",
     body: "Use lab payment tools and keep account tasks moving cleanly.",
     cta: "Go to Lab Pay",
-    href: "https://speccheckrx.com",
+    href: "https://www.speccheckrx.com/",
     type: "Tool",
   },
 ];
@@ -120,7 +253,7 @@ const mostUsedResources: ResourceItem[] = [
     type: "Tool",
     description: "Access SpecCheck tools for account payment and lab workflow support.",
     cta: "Open Tool",
-    href: "https://speccheckrx.com",
+    href: "https://www.speccheckrx.com/",
   },
   {
     title: "IOT Comparison Sheet",
@@ -195,11 +328,20 @@ const accountTools: ResourceItem[] = [
     type: "Tool",
     description: "Use SpecCheck for payment tools and account workflow support.",
     cta: "Go to Lab Pay",
-    href: "https://speccheckrx.com",
+    href: "https://www.speccheckrx.com/",
+  },
+  {
+    title: "GoStock Lenses",
+    logo: "/logos/gostock_logo.png",
+    logoAlt: "GoStock",
+    type: "Tool",
+    description: "Search and source stock lenses through the GoStock lens marketplace.",
+    cta: "Open GoStock",
+    href: "https://www.gostocklenses.com/",
   },
 ];
 
-const practicePrograms = [
+const practicePrograms: PracticeProgram[] = [
   {
     title: "Artisan Designs & Treatments",
     icon: "/icons/site/library.svg",
@@ -213,19 +355,17 @@ const practicePrograms = [
   {
     title: "Safety Systems",
     icon: "/icons/site/badge-check.svg",
-    image: "/wiley-x.png",
-    imageAlt: "Wiley X",
+    logos: [
+      { src: "/logos/safetysystems.png", alt: "Safety Systems" },
+      { src: "/logos/armourrx.png", alt: "ArmourRx" },
+      { src: "/logos/safevision.png", alt: "SafeVision" },
+    ],
     body: "Program support for practices managing safety eyewear and employer-driven needs.",
   },
   {
     title: "Modern Frame",
     icon: "/icons/site/monitor.svg",
     body: "Tools for practices building a more intentional frame and lens buying experience.",
-  },
-  {
-    title: "ROI Frames",
-    icon: "/icons/site/badge-check.svg",
-    body: "Support for practices focused on better profitability and smarter retail execution.",
   },
 ];
 
@@ -268,20 +408,169 @@ const labCustomerServiceContacts = [
     phone: "877.390.6900",
     email: "customerservice@pacificartisanlabs.com",
     website: "https://pacificartisanlabs.com",
+    meetHref: "/meet-the-artisans#pacific",
   },
   {
     name: "Peak Artisan Labs",
     phone: "833.690.4321",
     email: "customerservice@peakartisanlabs.com",
     website: "https://peakartisanlabs.com",
+    meetHref: "/meet-the-artisans#peak",
   },
   {
     name: "Pike Artisan Labs",
     phone: "888.239.0303",
     email: "customerservice@pikeartisanlabs.com",
     website: "https://pikeartisanlabs.com",
+    meetHref: "/meet-the-artisans#pike",
   },
 ];
+
+const practiceLookupRows = [
+  ["Eyecare Associates Of Lebanon", "100 Mullins Dr Suite B3, Lebanon, OR 97355", "541-451-5808", "No", "Inactive Neurolens"],
+  ["Peg - Kirkwood", "101 W Kirkwood Ave Suite 12, Bloomington, IN 47404", "812-954-4565", "No", "Active Neurolens"],
+  ["Zionsville Eyecare", "1120 W. Oak St. Suite 100, Zionsville, IN 46077", "317-873-3000", "No", "Inactive Neurolens"],
+  ["Eyecare Professionals P.C", "113 3Rd Ave Nw, Mandan, ND 58554", "701-663-2020", "No", "Inactive Neurolens"],
+  ["Downeast 20/20", "113 Main Rd Suite 5, Holden, ME 4429", "207-393-2020", "No", "Inactive Neurolens"],
+  ["Downeast 20/20", "113 Maine Rd Suite 5, Holden, ME", "207-393-2020", "No", "Inactive Neurolens"],
+  ["Vail Vision", "1140 Edwards Village Blvd, Edwards, CO 81632", "970-926-8474", "No", "Inactive Neurolens"],
+  ["Vqec - Geist", "13840 East 96Th St, Mccordsville, IN 46055", "317-720-2020", "No", "Active Neurolens"],
+  ["Youth Vision Of Denver", "1400 Grove St, Denver, CO 80204", "303-825-2295", "No", "Inactive Neurolens"],
+  ["Youth Vision Denver", "1400 Grove St, Denver, CO 80204", "303-825-2295", "No", "Inactive Neurolens"],
+  ["Peg - Columbus", "1413 Washington St, Columbus, IN 47201", "812-372-1919", "No", "Inactive Neurolens"],
+  ["Youth Vision Of Aurora", "14251 E 6Th Ave, Aurora, CO 80011", "303-343-3133", "No", "Inactive Neurolens"],
+  ["Youth Vision Aurora", "14251 E. 6Th Ave, Aurora, CO 80011", "303-343-3133", "No", "Inactive Neurolens"],
+  ["Carmel Eyecare", "14560 River Rd Suite 120, Carmel, IN 46033", "317-843-2020", "No", "Inactive Neurolens"],
+  ["Acadia Eye Center", "15 Dirigo Drive, Brewer, ME 4412", "207-945-5891", "No", "Inactive Neurolens"],
+  ["Ecotn - Crossville", "15 Iris Lane, Crossville, TN 38555", "931-456-2728", "No", "Inactive Neurolens"],
+  ["Ecotn - Finish Lab", "15 Iris Lane, Crossville, TN 38555", "931-456-2728", "No", "Inactive Neurolens"],
+  ["Williston Basin Eyecare Assoc", "1500 14Th St. W Suite 100, Williston, ND 58801", "701-577-3937", "No", "Inactive Neurolens"],
+  ["Johnson Eyecare Pc", "1525 31St Ave Sw Ste E, Minot, ND 58701", "701-857-6050", "No", "Inactive Neurolens"],
+  ["Johnson Eyecare Pc", "1525 31St Ave Sw Ste E, Minot, ND 58701", "701-857-6050", "No", "Active Neurolens"],
+  ["Wind City Eye Care", "1526 Centennial Court, Casper, WY 82609", "307-237-6025", "No", "Inactive Neurolens"],
+  ["Wind City Eye Care", "1526 Centennial Court, Casper, WY 82609", "307-237-6025", "No", "Active Neurolens"],
+  ["Ridgeview Eyecare - Olathe", "18208 W 119Th St, Olathe, KS 66061", "913-261-8327", "No", "Active Neurolens"],
+  ["White Spruce Optometry", "1900 Division St. W Suite 5, Bemidji, MN 56601", "218-759-1430", "No", "Inactive Neurolens"],
+  ["Oregon Eye Phys & Surgeons", "20015 Sw Pacific Hwy Ste 150, Sherwood, OR 97140", "503-610-1025", "No", "Inactive Neurolens"],
+  ["Prairie Vision Moorhead", "202 8Th St S, Moorhead, MN 56560", "218-233-2650", "No", "Active Neurolens"],
+  ["20/20 Eyecare", "211 4Th St Ne Suite #1, Devils Lake, ND 58301", "701-662-2817", "No", "Inactive Neurolens"],
+  ["20/20 Eyecare", "211 4Th St Ne Suite #1, Devils Lake, ND 58301", "701-662-2817", "No", "Inactive Neurolens"],
+  ["Eyecare Associates Of Albany", "2119 Pacific Blvd Sw Ste 101, Albany, OR 97322", "541-926-5848", "No", "Inactive Neurolens"],
+  ["Eyecare Associates Custom Eyes", "2119 Pacific Blvd Sw Ste 101, Albany, OR 97322", "541-928-2020", "No", "Inactive Neurolens"],
+  ["Caec - Specs Eyewear", "2228 Union Lake Rd, Commerce Twp, MI 48382", "248-366-8600", "No", "Inactive Neurolens"],
+  ["Caec - Vision Plus", "22371 Pontiac Trail, South Lyon, MI 48178", "248-437-7600", "No", "Inactive Neurolens"],
+  ["Eyecare Associates Cvc", "227 Nw 3Rd St, Corvallis, OR 97330", "541-757-1120", "No", "Inactive Neurolens"],
+  ["Eyecare Associates Nw", "2400 Nw Century Drive, Corvallis, OR 97330", "541-752-4622", "No", "Inactive Neurolens"],
+  ["Denver Vision", "2535 S Lewis Way Suite 209, Lakewood, CO 80227", "303-937-8655", "No", "Inactive Neurolens"],
+  ["Caec - Visions Optical", "2615 Orchard Lake Rd, Sylvan Lake, MI 48320", "248-682-6448", "No", "Inactive Neurolens"],
+  ["Vqec - Greenwood", "2887 S St Rd 135, Greenwood, IN 46143", "317-865-6829", "No", "Active Neurolens"],
+  ["Eyecare Associates Of Lc", "2930 Ne West Devils Lake Rd, Lincoln City, OR 97367", "541-614-0946", "No", "Inactive Neurolens"],
+  ["Prairie Vision Wahpeton", "315 11Th Street N Suite E, Wahpeton, ND 58075", "701-642-4090", "No", "Active Neurolens"],
+  ["Peg - Woodscrest", "322 S Woodscrest Dr, Bloomington, IN 47401", "812-332-2020", "No", "Active Neurolens"],
+  ["Peg - Bedford", "3343 Michael Ave, Bedford, IN 47421", "812-279-3466", "No", "Inactive Neurolens"],
+  ["Roaring Fork Vision", "341 Market St, Basalt, CO 81621", "970-927-2020", "No", "Inactive Neurolens"],
+  ["Family Eye Center-Ontario", "350 E Lane South, Ontario, OR 97914", "541-889-2020", "No", "Inactive Neurolens"],
+  ["20/20 Eyecare", "404 Hwy 2 E, Devils Lake, ND 58301", "701-662-4085", "No", "Inactive Neurolens"],
+  ["The Eye Clinic", "404 Hwy 2 East, Devils Lake, ND 58301", "701-662-4085", "No", "Inactive Neurolens"],
+  ["20/20 Eyecare", "404 Hwy 2 East, Devils Lake, ND 58301", "701-662-4085", "No", "Inactive Neurolens"],
+  ["The Eye Clinic", "404 Hwy 2 East, Devils Lake, ND 58301", "701-662-4085", "Yes", "Active Neurolens"],
+  ["Limestone Eye Care", "4320 W 6Th St, Lawrence, KS 66049", "785-842-1242", "No", "Inactive Neurolens"],
+  ["Eyestyles Woodstock", "4441 Se Woodstock Blvd, Portland, OR 97206", "503-775-4550", "No", "Inactive Neurolens"],
+  ["Peg - Richland Plaza", "4619 W Richland Plaza Dr, Bloomington, IN 47404", "812-332-3937", "No", "Inactive Neurolens"],
+  ["Fvc - Ashman", "4801 W Bethel, Muncie, IN 47304", "765-288-7744", "No", "Active Neurolens"],
+  ["Fvc - Gard", "4801 W Bethel, Muncie, IN 47304", "765-288-7744", "No", "Inactive Neurolens"],
+  ["Fvc - Greenlee", "4801 W Bethel, Muncie, IN 47304", "765-288-7744", "No", "Active Neurolens"],
+  ["Fvc - Mccaslin", "4801 W Bethel, Muncie, IN 47304", "765-288-7744", "Yes", "Inactive Neurolens"],
+  ["Fvc - Nowakowski", "4801 W Bethel, Muncie, IN 47304", "765-288-7744", "No", "Inactive Neurolens"],
+  ["Fvc - Wink Gallery", "4801 W Bethel, Muncie, IN 47304", "765-288-7744", "No", "Inactive Neurolens"],
+  ["Fvc - Zgunda", "4801 W Bethel, Muncie, IN 47304", "765-288-7744", "No", "Active Neurolens"],
+  ["Complete Family Vision Care", "5075 Ruffin Rd #B, San Diego, CA 92123", "858-278-4720", "No", "Active Neurolens"],
+  ["Caec - Oakland Vision Wl", "519 N Pontiac Trail, Walled Lake, MI 48390", "248-624-1707", "No", "Inactive Neurolens"],
+  ["Caec - Forest Place Optical", "550 Forest Ave Suite 12, Plymouth, MI 48170", "734-455-3340", "No", "Inactive Neurolens"],
+  ["Carbon Valley Eye Care", "5900 Keyes St Suite 101, Frederick, CO 80504", "303-833-1056", "No", "Inactive Neurolens"],
+  ["Eye Care Of Blackfoot", "593 W Bridge, Blackfoot, ID 83221", "208-782-3422", "No", "Active Neurolens"],
+  ["Caec - Oakland Vision Of Sl", "608 N Lafayette St, South Lyon, MI 48178", "248-437-3351", "No", "Inactive Neurolens"],
+  ["Caec - Eye Contact Vision Ctr", "7074 Highland Rd. Suite A, Waterford, MI 48327", "248-698-2000", "No", "Inactive Neurolens"],
+  ["Eye Care Of Rigby", "711 Rigby Lake Dr Suite 301, Rigby, ID 83442", "208-745-0181", "No", "Active Neurolens"],
+  ["Eyestyles Bridgeport", "7144 Sw Hazel Fern Rd, Portland, OR 97224", "503-372-5013", "No", "Inactive Neurolens"],
+  ["Downeast 20/20", "766 Stillwater Ave Suite 1, Bangor, ME 4401", "207-393-2020", "No", "Inactive Neurolens"],
+  ["Acadia Eye Center", "766 Stillwater Ave Suite 1, Bangor, ME 4401", "207-945-5891", "No", "Inactive Neurolens"],
+  ["Acadia Eye Center", "766 Stillwater Avenue Ste 1, Bangor, ME 4401", "207-945-5891", "No", "Inactive Neurolens"],
+  ["Drs. Dobbins & Letourneau Eye", "831 Vermont St, Lawrence, KS 66049", "785-843-5665", "No", "Active Neurolens"],
+  ["Caec - Walton & Becker Oxford", "89 S Washington St, Oxford, MI 48371", "248-628-3441", "No", "Inactive Neurolens"],
+  ["Hampden Youth Vision", "8964 E Hampden Ave Ste A, Denver, CO 80231", "720-866-9906", "No", "Inactive Neurolens"],
+  ["Youth Vision Hampden", "8964 East Hampden Ave Unit A, Denver, CO 80231", "720-866-9906", "No", "Inactive Neurolens"],
+  ["Valley Vision", "904 Pitkin Ave, Glenwood Springs, CO 81601", "970-945-6011", "No", "Inactive Neurolens"],
+  ["Ridgeview Eyecare - Lenexa", "9479 Meadow View Dr, Lenexa, KS 66227", "913-261-8327", "No", "Active Neurolens"],
+  ["Thornton Youth Vision", "9674 Washington St, Thornton, CO 80229", "303-450-0184", "No", "Inactive Neurolens"],
+  ["Youth Vision Thornton", "9674 Washington St, Thornton, CO 80229", "303-953-8801", "No", "Inactive Neurolens"],
+  ["Caec - Clarity Birmingham", "970 S. Old Woodward Ave., Birmingham, MI 48009", "248-369-3300", "No", "Inactive Neurolens"],
+  ["Ecotn - Cookeville", "999 Guardian Way, Cookeville, TN 38501", "931-650-4100", "No", "Inactive Neurolens"],
+  ["Pine Creek Vision Clinic", "Suite 200, Colorado Springs, CO 80920", "719-594-2020", "No", "Inactive Neurolens"],
+] as const;
+
+const practiceLookupData = practiceLookupRows.map(
+  ([name, address, phone, tokaiUsage, neurolensStatus]) => ({
+    name,
+    address,
+    phone,
+    tokaiUsage,
+    neurolensStatus,
+    website: "",
+  })
+);
+
+const featuredPracticeNames = new Set([
+  "Peg - Kirkwood",
+  "The Eye Clinic",
+  "Fvc - Mccaslin",
+  "Complete Family Vision Care",
+  "Ridgeview Eyecare - Lenexa",
+]);
+
+const practiceMapPositions: Record<string, { left: string; top: string }> = {
+  CA: { left: "13%", top: "63%" },
+  CO: { left: "40%", top: "54%" },
+  ID: { left: "26%", top: "34%" },
+  IN: { left: "66%", top: "49%" },
+  KS: { left: "51%", top: "58%" },
+  ME: { left: "88%", top: "23%" },
+  MI: { left: "69%", top: "36%" },
+  MN: { left: "55%", top: "26%" },
+  ND: { left: "47%", top: "24%" },
+  OR: { left: "15%", top: "37%" },
+  TN: { left: "65%", top: "66%" },
+  WY: { left: "35%", top: "43%" },
+};
+
+const stateNames: Record<string, string> = {
+  CA: "California",
+  CO: "Colorado",
+  ID: "Idaho",
+  IN: "Indiana",
+  KS: "Kansas",
+  ME: "Maine",
+  MI: "Michigan",
+  MN: "Minnesota",
+  ND: "North Dakota",
+  OR: "Oregon",
+  TN: "Tennessee",
+  WY: "Wyoming",
+};
+
+function getPracticeState(address: string) {
+  return address.match(/,\s*([A-Z]{2})(?:\s+\d{4,5})?\s*$/)?.[1] ?? "";
+}
+
+function getPracticeZip(address: string) {
+  return address.match(/\b\d{4,5}\b(?:-\d{4})?$/)?.[0] ?? "";
+}
+
+function getPracticeCity(address: string) {
+  const parts = address.split(",").map((part) => part.trim()).filter(Boolean);
+  if (parts.length < 2) return "";
+  return parts[parts.length - 2];
+}
 
 function phoneHref(phone: string) {
   return `tel:${phone.replace(/\D/g, "")}`;
@@ -304,11 +593,12 @@ const lensBrands: BrandPanel[] = [
       cta: "View Overview",
       href: "#",
     },
-    visualTitle: "Artisan Lens Products",
+    visualTitle: "Artisan AR Treatments",
     visualAssets: [
-      { src: "/gold.png", alt: "Gold AR treatment", label: "Gold" },
-      { src: "/platinum.png", alt: "Platinum AR treatment", label: "Platinum" },
-      { src: "/diamond.png", alt: "Diamond AR treatment", label: "Diamond" },
+      { src: "/ar/armour.png", alt: "Armour AR treatment", label: "Armour", href: "/artisan-ar/armour" },
+      { src: "/ar/azure.png", alt: "Azure AR treatment", label: "Azure", href: "/artisan-ar/azure" },
+      { src: "/ar/emerald.png", alt: "Emerald AR treatment", label: "Emerald", href: "/artisan-ar/emerald" },
+      { src: "/ar/nytopia.png", alt: "Nytopia AR treatment", label: "Nytopia", href: "/artisan-ar/nytopia" },
     ],
     resources: [
       "Design Mini Catalog",
@@ -358,24 +648,6 @@ const lensBrands: BrandPanel[] = [
       cta: "View Resource",
       href: "#",
     })),
-  },
-  {
-    id: "tokai",
-    label: "Tokai",
-    logo: "/tokai-logo.png",
-    logoAlt: "Tokai logo",
-    logoClass: "max-h-16 max-w-[210px]",
-    intro: "Premium Japanese optics focused on clarity and advanced materials.",
-    websiteHref: "#",
-    resources: ["Tokai Select", "Tokai Rest", "Tokai Largo", "Tokai Bi-AS"].map(
-      (title) => ({
-        title,
-        type: "Download",
-        description: "Tokai resource for product selection, positioning, and patient conversations.",
-        cta: "View Resource",
-        href: "#",
-      })
-    ),
   },
   {
     id: "hoya",
@@ -509,29 +781,33 @@ const youtubeVideos: VideoGalleryItem[] = [
     id: "eFw7BzI1SZY",
     title: "ALN | Camber Pure Training Webinar",
     category: "Training",
+    href: "https://youtu.be/eFw7BzI1SZY",
     description:
       "A practical lens training session built to help independent practices understand positioning, fitting, and patient conversations.",
   },
   {
-    id: "phvH3ahy2e4",
+    id: "cLhLfThS7Gs",
     title: "ALN | IOT Product Training Webinar",
     category: "Product",
+    href: "https://youtu.be/cLhLfThS7Gs",
     description:
       "IOT product education for teams comparing modern lens platforms and recommending options with confidence.",
   },
   {
-    id: "Rown4Yp9U4c",
+    id: "9P7VEmI0ZwY",
     title: "ALN | Chemistrie Product Training Webinar",
     category: "Training",
+    href: "https://youtu.be/9P7VEmI0ZwY",
     description:
       "A guided training resource for Chemistrie conversations, clip options, and practical dispensing support.",
   },
   {
-    id: "9P7VEmI0ZwY",
-    title: "Tokai | ALN Product Training Webinar",
-    category: "Education",
+    id: "Rown4Yp9U4c",
+    title: "ALN | Additional Training",
+    category: "Training",
+    href: "https://youtu.be/Rown4Yp9U4c",
     description:
-      "Product education for premium lens conversations, advanced materials, and practical patient explanations.",
+      "Additional training for teams looking for more practical support from Artisan Lab Network.",
   },
 ];
 
@@ -622,7 +898,17 @@ function ResourceCard({
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(201,178,139,0.7),transparent)]" />
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-start gap-3">
-          {item.icon ? (
+          {item.logo ? (
+            <div className="flex h-11 min-w-28 items-center justify-center rounded-2xl border border-[#e1d4c2] bg-white px-3 shadow-[0_10px_26px_rgba(24,18,13,0.05)]">
+              <Image
+                src={item.logo}
+                alt={item.logoAlt ?? item.title}
+                width={180}
+                height={70}
+                className="max-h-7 w-auto max-w-[96px] object-contain"
+              />
+            </div>
+          ) : item.icon ? (
             <SiteIcon
               src={item.icon}
               size="sm"
@@ -689,26 +975,496 @@ function ProductVisualStrip({ title, assets }: { title: string; assets: ProductV
       <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8a7654]">
         {title}
       </p>
-      <div className={`mt-4 grid gap-3 ${assets.length === 2 ? "sm:grid-cols-2" : "sm:grid-cols-3"}`}>
+      <div
+        className={`mt-4 grid gap-3 ${
+          assets.length === 2
+            ? "sm:grid-cols-2"
+            : assets.length === 4
+              ? "sm:grid-cols-2 lg:grid-cols-4"
+              : "sm:grid-cols-3"
+        }`}
+      >
         {assets.map((asset) => (
-          <div
-            key={asset.src}
-            className="flex min-h-[96px] flex-col items-center justify-center rounded-2xl border border-black/10 bg-white px-4 py-3 text-center shadow-[0_8px_20px_rgba(24,18,13,0.04)]"
-          >
+          asset.href?.startsWith("/artisan-ar/") ? (
+            <ArTransitionLink
+              key={asset.src}
+              href={asset.href}
+              logoSrc={asset.src}
+              label={asset.label}
+              className="flex min-h-[112px] flex-col items-center justify-center rounded-2xl border border-black/10 bg-white px-4 py-3 text-center shadow-[0_8px_20px_rgba(24,18,13,0.04)] transition hover:-translate-y-0.5 hover:border-[#d4c09a]"
+            >
+              <Image
+                src={asset.src}
+                alt={asset.alt}
+                width={240}
+                height={120}
+                className="max-h-[78px] w-auto max-w-full object-contain"
+              />
+              <span className="mt-2 text-xs font-semibold text-[#625b53]">
+                {asset.label}
+              </span>
+            </ArTransitionLink>
+          ) : (
+            <ResourceLink
+              key={asset.src}
+              href={asset.href ?? "#"}
+              className="flex min-h-[112px] flex-col items-center justify-center rounded-2xl border border-black/10 bg-white px-4 py-3 text-center shadow-[0_8px_20px_rgba(24,18,13,0.04)]"
+            >
             <Image
               src={asset.src}
               alt={asset.alt}
               width={220}
               height={120}
-              className="max-h-[64px] w-auto max-w-full object-contain"
+              className="max-h-[78px] w-auto max-w-full object-contain"
             />
             <span className="mt-2 text-xs font-semibold text-[#625b53]">
               {asset.label}
             </span>
-          </div>
+            </ResourceLink>
+          )
         ))}
       </div>
     </div>
+  );
+}
+
+function OrderingToolCard({ tool }: { tool: LogoCard }) {
+  const isSafety = tool.title === "Safety Demonstration Frames";
+  const imageScale =
+    tool.title === "SpecCheck"
+      ? "scale-110"
+      : tool.title === "Rx Wizard"
+        ? "scale-125"
+        : tool.title === "GoStock"
+          ? "scale-95"
+        : isSafety
+          ? "scale-[1.35]"
+          : "scale-100";
+
+  return (
+    <a
+      href={tool.href}
+      target="_blank"
+      rel="noreferrer"
+      className="group flex h-full min-h-[330px] flex-col rounded-[24px] border border-white/10 bg-white/[0.06] p-6 shadow-[0_18px_54px_rgba(0,0,0,0.22)] transition hover:-translate-y-1.5 hover:border-[#d4c09a]/60 hover:bg-white/[0.09]"
+    >
+      <div className="flex h-32 w-full items-center justify-center rounded-2xl bg-white px-6">
+        {tool.logo ? (
+          <Image
+            src={tool.logo}
+            alt={tool.logoAlt ?? tool.title}
+            width={420}
+            height={150}
+            className={`${imageScale} w-auto object-contain ${
+              isSafety ? "max-h-28 max-w-[88%]" : "max-h-20 max-w-[82%]"
+            }`}
+          />
+        ) : (
+          <span className="text-center text-2xl font-semibold text-[#1f1a17]">
+            {tool.title}
+          </span>
+        )}
+      </div>
+
+      <h3 className="mt-6 text-xl font-semibold leading-tight text-white">
+        {tool.title}
+      </h3>
+      <p className="mt-3 flex-1 text-sm leading-7 text-white/68">
+        {tool.body}
+      </p>
+      <span className="mt-7 inline-flex w-fit items-center rounded-full border border-white/12 bg-white/8 px-5 py-2.5 text-sm font-semibold text-white transition group-hover:border-[#d4c09a] group-hover:bg-[#d4c09a] group-hover:text-[#171311]">
+        {isSafety ? "Order Demo Frames" : "Open"}
+      </span>
+    </a>
+  );
+}
+
+function SystemAccordion({
+  system,
+  open,
+  onToggle,
+}: {
+  system: LogoCard;
+  open: boolean;
+  onToggle: () => void;
+}) {
+  const featured = system.title === "Safety Systems";
+
+  return (
+    <article className={`overflow-hidden rounded-[28px] border bg-white shadow-[0_18px_48px_rgba(24,18,13,0.07)] transition hover:-translate-y-1 ${
+      featured ? "border-[#c9b28b] md:col-span-3" : "border-black/10"
+    }`}>
+      <button
+        type="button"
+        onClick={onToggle}
+        className={`grid w-full gap-5 p-6 text-left md:p-7 ${
+          featured ? "md:grid-cols-[260px_1fr_auto] md:items-center" : ""
+        }`}
+        aria-expanded={open}
+      >
+        <div className="flex h-24 items-center justify-center rounded-2xl border border-[#e4d7c6] bg-[#fbf8f3] px-5">
+          {system.logo ? (
+            <Image
+              src={system.logo}
+              alt={system.logoAlt ?? system.title}
+              width={320}
+              height={120}
+              className={`${system.logoScale ?? ""} max-h-16 w-auto max-w-full object-contain`}
+            />
+          ) : (
+            <span className="text-2xl font-semibold">{system.logoText ?? system.title}</span>
+          )}
+        </div>
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8a7654]">
+            Practice System
+          </p>
+          <h3 className="mt-3 text-2xl font-semibold text-[#1f1a17] md:text-3xl">
+            {system.title}
+          </h3>
+          <p className="mt-3 text-sm leading-7 text-[#625b53] md:text-base">
+            {system.body}
+          </p>
+        </div>
+        <span className="grid h-11 w-11 place-items-center rounded-full border border-[#d8c6a8] bg-[#fbf8f3] text-2xl text-[#8a7654]">
+          {open ? "−" : "+"}
+        </span>
+      </button>
+      <AnimatePresence initial={false}>
+        {open ? (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.24 }}
+            className="overflow-hidden"
+          >
+            <div className="border-t border-black/10 px-6 pb-6 pt-5 md:px-7">
+              <p className="max-w-4xl text-base leading-8 text-[#625b53]">
+                {system.detail}
+              </p>
+              {system.actions ? (
+                <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                  {system.actions.map((action) => (
+                    <ResourceLink
+                      key={action.label}
+                      href={action.href}
+                      className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#d8c6a8] bg-[#1f1a17] px-5 py-2.5 text-center text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#c9b28b] hover:text-[#1f1a17]"
+                    >
+                      {action.label}
+                    </ResourceLink>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </article>
+  );
+}
+
+export function PracticeLookupMap() {
+  const [practiceSearch, setPracticeSearch] = useState("");
+  const [activeState, setActiveState] = useState("");
+  const [visibleCount, setVisibleCount] = useState(5);
+  const normalizedSearch = practiceSearch.trim().toLowerCase();
+  const featuredPractices = useMemo(
+    () => practiceLookupData.filter((practice) => featuredPracticeNames.has(practice.name)).slice(0, 5),
+    []
+  );
+  const practiceResults = useMemo(() => {
+    const source = !normalizedSearch && !activeState ? featuredPractices : practiceLookupData;
+
+    return source.filter((practice) => {
+      const hasTokai = practice.tokaiUsage === "Yes";
+      const hasNeurolens = practice.neurolensStatus === "Active Neurolens";
+      const state = getPracticeState(practice.address);
+      const matchesState = !activeState || state === activeState;
+      if (!matchesState) return false;
+      if (!normalizedSearch) return true;
+
+      return [
+        practice.name,
+        practice.address,
+        getPracticeCity(practice.address),
+        state,
+        stateNames[state] ?? "",
+        getPracticeZip(practice.address),
+        practice.phone,
+        practice.website,
+        hasTokai ? "tokai" : "",
+        hasNeurolens ? "neurolens active neurolens" : "",
+        "artisan partner",
+      ]
+        .join(" ")
+        .toLowerCase()
+        .includes(normalizedSearch);
+    });
+  }, [activeState, featuredPractices, normalizedSearch]);
+
+  useEffect(() => {
+    setVisibleCount(5);
+  }, [activeState, normalizedSearch]);
+
+  const activeMapDots = useMemo(() => {
+    const counts = new Map<string, number>();
+
+    practiceResults.forEach((practice) => {
+      const state = getPracticeState(practice.address);
+      if (!state || !practiceMapPositions[state]) return;
+      counts.set(state, (counts.get(state) ?? 0) + 1);
+    });
+
+    const maxCount = Math.max(1, ...counts.values());
+
+    return Array.from(counts.entries()).map(([state, count]) => {
+      const size = 22 + Math.round((count / maxCount) * 34);
+      return {
+        state,
+        count,
+        size,
+        ...practiceMapPositions[state],
+      };
+    });
+  }, [practiceResults]);
+
+  const visiblePractices = practiceResults.slice(0, visibleCount);
+  const canShowMore = visibleCount < practiceResults.length;
+  const canCollapse = visibleCount > 5;
+
+  return (
+    <section id="find-a-practice" data-theme="light" className="bg-[#f2eee7] px-6 py-20 md:px-10 md:py-24">
+      <div className="mx-auto max-w-7xl">
+        <div className="grid gap-6 lg:grid-cols-[0.82fr_1.18fr] lg:items-end">
+          <SectionHeader
+            eyebrow="Practice Lookup"
+            title="Find a practice in the Artisan network"
+            description="Search the lookup data by practice name, city, state, ZIP code, address, Tokai, or Neurolens. Start with a few featured examples, then search or select a map circle to reveal more."
+          />
+          <div className="rounded-[26px] border border-[#d8c6a8]/70 bg-white p-5 shadow-[0_18px_48px_rgba(24,18,13,0.08)]">
+            <label className="block">
+              <span className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8a7654]">
+                Practice name, city, state, ZIP, address, Tokai, or Neurolens
+              </span>
+              <input
+                type="search"
+                value={practiceSearch}
+                onChange={(event) => setPracticeSearch(event.target.value)}
+                placeholder="Search practices, locations, or programs"
+                className="mt-3 h-12 w-full rounded-2xl border border-[#d8c6a8] bg-[#fbf8f3] px-4 text-base font-semibold text-[#1f1a17] outline-none transition placeholder:text-[#8d8274] focus:border-[#8a7654] focus:bg-white"
+              />
+            </label>
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm text-[#625b53]">
+              <span>
+                {normalizedSearch
+                  ? `Showing ${practiceResults.length} matching practices`
+                  : activeState
+                    ? `Showing ${practiceResults.length} practices in ${stateNames[activeState] ?? activeState}`
+                    : `Showing ${practiceResults.length} featured examples. Search to reveal more.`}
+              </span>
+              {activeState ? (
+                <button
+                  type="button"
+                  onClick={() => setActiveState("")}
+                  className="font-semibold text-[#8a7654] underline decoration-[#8a7654]/35 underline-offset-4 transition hover:text-[#1f1a17]"
+                >
+                  Clear {activeState}
+                </button>
+              ) : null}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8 grid gap-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">
+          <div className="overflow-hidden rounded-[30px] border border-[#d8c6a8]/70 bg-[#1f1a17] p-5 text-white shadow-[0_24px_64px_rgba(24,18,13,0.15)] md:p-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#d4c09a]">
+                  Practice Heat Map
+                </p>
+                <p className="mt-2 text-sm leading-6 text-white/65">
+                  Circles are grouped by state and sized by result count.
+                </p>
+              </div>
+              <p className="text-sm font-semibold text-white/72">
+                {activeMapDots.reduce((total, dot) => total + dot.count, 0)} shown
+              </p>
+            </div>
+            <div className="relative mt-5 aspect-[16/9] overflow-hidden rounded-[22px] border border-white/10 bg-[#0f0c0b]">
+              <Image
+                src="/network-map.png"
+                alt="United States practice result map"
+                fill
+                sizes="(min-width: 1024px) 46vw, 100vw"
+                className="object-contain opacity-55 saturate-0"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_52%_45%,rgba(212,192,154,0.14),transparent_34%)]" />
+              {activeMapDots.map((dot) => (
+                <button
+                  type="button"
+                  key={dot.state}
+                  onClick={() => setActiveState((current) => (current === dot.state ? "" : dot.state))}
+                  className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full transition hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
+                  style={{ left: dot.left, top: dot.top }}
+                  aria-label={`Filter practices in ${stateNames[dot.state] ?? dot.state}`}
+                >
+                  <span
+                    className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full blur-lg ${
+                      activeState === dot.state ? "bg-[#d4c09a]/34" : "bg-[#d4c09a]/20"
+                    }`}
+                    style={{ width: dot.size + 18, height: dot.size + 18 }}
+                  />
+                  <span
+                    className={`relative block rounded-full border shadow-[0_0_30px_rgba(212,192,154,0.45)] ${
+                      activeState === dot.state ? "border-white/70 bg-[#ead7af]/90" : "border-[#fff4d6]/35 bg-[#d4c09a]/72"
+                    }`}
+                    style={{ width: dot.size, height: dot.size }}
+                  />
+                  <span className="absolute left-1/2 top-full mt-1 -translate-x-1/2 rounded-full bg-black/45 px-2 py-0.5 text-[10px] font-semibold text-white/82 backdrop-blur-sm">
+                    {dot.state}
+                  </span>
+                </button>
+              ))}
+            </div>
+            {activeState ? (
+              <button
+                type="button"
+                onClick={() => setActiveState("")}
+                className="mt-4 text-sm font-semibold text-[#d4c09a] underline decoration-[#d4c09a]/40 underline-offset-4 transition hover:text-white"
+              >
+                Clear {activeState} map filter
+              </button>
+            ) : null}
+          </div>
+          <div className="rounded-[30px] border border-[#d8c6a8]/70 bg-white p-5 shadow-[0_24px_64px_rgba(24,18,13,0.09)] md:p-6">
+            <div className="mb-5 flex items-center justify-between gap-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8a7654]">
+                Practice Results
+              </p>
+              <p className="text-sm text-[#625b53]">
+                {Math.min(visibleCount, practiceResults.length)} of {practiceResults.length}
+              </p>
+            </div>
+            <div className="grid max-h-[760px] gap-4 overflow-y-auto pr-1 [scrollbar-width:thin]">
+            {practiceResults.length > 0 ? (
+              visiblePractices.map((practice, index) => {
+                const hasTokai = practice.tokaiUsage === "Yes";
+                const hasNeurolens = practice.neurolensStatus === "Active Neurolens";
+
+                return (
+                <article
+                  key={`${practice.name}-${practice.phone}-${index}`}
+                  className="rounded-[24px] border border-[#d8c6a8]/70 bg-[#fbf8f3] p-5 shadow-[0_14px_34px_rgba(24,18,13,0.06)] transition hover:-translate-y-0.5 hover:border-[#c9b28b] hover:bg-white md:p-6"
+                >
+                  <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                    <div className="min-w-0">
+                      <h3 className="text-xl font-semibold leading-tight text-[#1f1a17]">
+                        {practice.name}
+                      </h3>
+                      <p className="mt-2 max-w-2xl text-sm leading-6 text-[#625b53]">
+                        {practice.address}
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap gap-2 lg:justify-end">
+                      <span className="inline-flex w-fit items-center rounded-full border border-[#d8c6a8] bg-white px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[#8a7654]">
+                        Artisan Partner
+                      </span>
+                      {hasTokai ? (
+                        <span className="inline-flex w-fit items-center gap-2 rounded-full border border-[#d8c6a8] bg-white px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[#8a7654]">
+                          <Image src="/tokai-logo.png" alt="" width={52} height={18} className="h-4 w-auto object-contain" />
+                          Tokai
+                        </span>
+                      ) : null}
+                      {hasNeurolens ? (
+                        <span className="inline-flex w-fit items-center gap-2 rounded-full border border-[#d8c6a8] bg-white px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[#8a7654]">
+                          <Image src="/neurolens-logo.png" alt="" width={54} height={18} className="h-4 w-auto object-contain" />
+                          Neurolens
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+
+                  <div className="mt-5 grid gap-3 border-t border-[#d8c6a8]/55 pt-4 sm:grid-cols-2">
+                    <div>
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9a8564]">
+                        Phone
+                      </p>
+                      <a
+                        href={phoneHref(practice.phone)}
+                        className="mt-1 block text-sm font-semibold text-[#1f1a17] transition hover:text-[#8a7654]"
+                      >
+                        {practice.phone}
+                      </a>
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9a8564]">
+                        Website
+                      </p>
+                      {practice.website ? (
+                        <a
+                          href={practice.website}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="mt-1 block text-sm font-semibold text-[#1f1a17] transition hover:text-[#8a7654]"
+                        >
+                          {practice.website}
+                        </a>
+                      ) : (
+                        <p className="mt-1 text-sm font-semibold text-[#625b53]">
+                          Website not listed
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </article>
+                );
+              })
+            ) : (
+              <div className="rounded-[22px] border border-dashed border-[#d8c6a8] bg-[#fbf8f3] p-6 text-sm leading-7 text-[#625b53]">
+                Results will appear here. Try a different practice name, city, state, address, Tokai, or Neurolens.
+              </div>
+            )}
+            </div>
+
+            {practiceResults.length > 5 ? (
+              <div className="mt-5 flex flex-wrap gap-3 border-t border-[#d8c6a8]/55 pt-5">
+                {canShowMore ? (
+                  <button
+                    type="button"
+                    onClick={() => setVisibleCount((count) => Math.min(count + 5, practiceResults.length))}
+                    className="inline-flex min-h-10 items-center justify-center rounded-full bg-[#1f1a17] px-5 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#d4c09a] hover:text-[#1f1a17]"
+                  >
+                    Show more ↓
+                  </button>
+                ) : null}
+                {canCollapse ? (
+                  <button
+                    type="button"
+                    onClick={() => setVisibleCount(5)}
+                    className="inline-flex min-h-10 items-center justify-center rounded-full border border-[#d8c6a8] bg-[#fbf8f3] px-5 py-2 text-sm font-semibold text-[#1f1a17] transition hover:-translate-y-0.5 hover:bg-white"
+                  >
+                    Collapse ↑
+                  </button>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+        </div>
+
+          <div className="mt-6 rounded-[24px] border border-[#c9b28b] bg-[#1f1a17] p-5 text-white shadow-[0_18px_48px_rgba(24,18,13,0.15)]">
+            <p className="text-sm leading-7 text-white/72">
+              Need help finding a practice? Contact support.
+            </p>
+            <a
+              href="mailto:customerservice@artisanlabnetwork.com?subject=Practice%20Lookup%20Support"
+              className="mt-5 inline-flex rounded-full bg-[#d4c09a] px-5 py-2.5 text-sm font-semibold text-[#171311]"
+            >
+              Need help finding a practice? Contact support
+            </a>
+          </div>
+      </div>
+    </section>
   );
 }
 
@@ -937,51 +1693,34 @@ export default function ProviderResourcesPage({
         <div className="pointer-events-none absolute -right-32 top-24 h-96 w-96 rounded-full border border-[#e6d9c8]/80" />
         <div className="pointer-events-none absolute -left-24 bottom-4 h-80 w-80 rounded-full border border-[#e6d9c8]/80" />
 
-        <div className="relative z-10 mx-auto max-w-7xl">
+        <div className="relative z-10 mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1fr_0.82fr] lg:items-center">
           <div className="max-w-5xl">
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#8a7654]">
               Provider Resources
             </p>
             <h1 className="mt-5 max-w-5xl text-5xl font-semibold leading-[1.02] tracking-tight md:text-7xl">
-              Practice Resources That Actually Help You Move Faster
+              Practice resources that are easy to use.
             </h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-[#625b53] md:text-2xl md:leading-10">
-              Pricing, ordering, shipping, training, and product information built
-              to help independent practices move faster and stay in control.
+              Clean access to practice systems, ordering tools, training, and support.
             </p>
 
-            <div className="mt-10 max-w-6xl rounded-[30px] border border-black/10 bg-white/65 p-3 shadow-[0_20px_50px_rgba(24,18,13,0.07)] backdrop-blur">
-              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
-                <a
-                  href="mailto:sales@artisanlabnetwork.com?subject=Pricing%20Guide%20Request"
-                  className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-[#d7c8b1] bg-[#efe3cf] px-6 py-3 text-center text-sm font-semibold text-[#1f1a17] shadow-sm transition hover:-translate-y-0.5 hover:bg-[#ead9bd]"
-                >
-                  Request Pricing Guide
-                </a>
-                <a
-                  href="mailto:customerservice@artisanlabnetwork.com?subject=Shipping%20Label%20Request"
-                  className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-[#e4d7c6] bg-[#fbf8f3] px-6 py-3 text-center text-sm font-semibold text-[#1f1a17] shadow-sm transition hover:-translate-y-0.5 hover:border-[#d8c095] hover:bg-white"
-                >
-                  Request Shipping Labels
-                </a>
-                <a
-                  href="#practice-tools"
-                  className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-[#e4d7c6] bg-[#fbf8f3] px-6 py-3 text-center text-sm font-semibold text-[#1f1a17] shadow-sm transition hover:-translate-y-0.5 hover:border-[#d8c095] hover:bg-white"
-                >
-                  Practice Tools
-                </a>
-                <a
-                  href="#product-information"
-                  className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-[#e4d7c6] bg-[#fbf8f3] px-6 py-3 text-center text-sm font-semibold text-[#1f1a17] shadow-sm transition hover:-translate-y-0.5 hover:border-[#d8c095] hover:bg-white"
-                >
-                  Product Information
-                </a>
-                <a
-                  href="#training-education"
-                  className="inline-flex min-h-[56px] items-center justify-center rounded-full border border-[#e4d7c6] bg-[#fbf8f3] px-6 py-3 text-center text-sm font-semibold text-[#1f1a17] shadow-sm transition hover:-translate-y-0.5 hover:border-[#d8c095] hover:bg-white"
-                >
-                  Training &amp; Education
-                </a>
+            <div className="mt-10 rounded-[28px] border border-[#d8c6a8]/80 bg-[#fbf8f3]/82 p-2 shadow-[0_20px_50px_rgba(24,18,13,0.07)] backdrop-blur">
+              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+                {[
+                  ["Systems", "#systems"],
+                  ["Ordering Tools", "#tools-ordering"],
+                  ["Training", "#training-education"],
+                  ["Customer Service", "#lab-customer-service"],
+                ].map(([label, href]) => (
+                  <a
+                    key={href}
+                    href={href}
+                    className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#e1d4c2] bg-white/70 px-4 py-2 text-center text-sm font-semibold text-[#1f1a17] transition hover:-translate-y-0.5 hover:border-[#c9b28b] hover:bg-white"
+                  >
+                    {label}
+                  </a>
+                ))}
               </div>
             </div>
 
@@ -993,10 +1732,144 @@ export default function ProviderResourcesPage({
               Need help finding something? Contact support
             </button>
           </div>
+          <motion.div
+            {...fadeInSection}
+            className="relative min-h-[320px] overflow-hidden rounded-2xl shadow-[0_26px_70px_rgba(24,18,13,0.16)] lg:min-h-[430px]"
+          >
+            <Image
+              src="/images/eyewear-brochure-meeting-2022-1.jpg"
+              alt="Eyewear brochure meeting for practice education and support"
+              fill
+              sizes="(min-width: 1024px) 38vw, 100vw"
+              className="object-cover"
+            />
+          </motion.div>
         </div>
       </section>
 
-      {showProfessionalEnhancements ? (
+      <section id="systems" data-theme="light" className="bg-[#fbf8f3] px-6 py-20 md:px-10 md:py-24">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeader
+            eyebrow="Systems"
+            title="Three balanced systems for practice support."
+            description="Each system has a clear role, clear next step, and enough context for your team to use it confidently."
+          />
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
+            {systems.map((system) => (
+              <article
+                key={system.title}
+                className="flex h-full min-h-[440px] flex-col rounded-[28px] border border-black/10 bg-white p-7 shadow-[0_18px_48px_rgba(24,18,13,0.07)]"
+              >
+                <div className="flex h-36 w-full items-center justify-center rounded-2xl border border-[#e4d7c6] bg-[#fbf8f3] px-6">
+                  {system.logo ? (
+                    <Image
+                      src={system.logo}
+                      alt={system.logoAlt ?? system.title}
+                      width={420}
+                      height={170}
+                      className={`${system.logoScale ?? ""} ${
+                        system.title === "Artisan Lens Systems" ? "max-h-20" : "max-h-24"
+                      } w-auto max-w-[86%] object-contain`}
+                    />
+                  ) : (
+                    <span className="text-center text-2xl font-semibold">
+                      {system.logoText ?? system.title}
+                    </span>
+                  )}
+                </div>
+                <h3 className="mt-7 text-2xl font-semibold">{system.title}</h3>
+                <div className="flex-1">
+                  <p className="mt-3 text-sm leading-7 text-[#625b53]">
+                    {system.body}
+                  </p>
+                  <p className="mt-2 text-sm leading-7 text-[#75664e]">
+                    {system.detail}
+                  </p>
+                </div>
+                <ResourceLink
+                  href={system.href}
+                  className="mt-6 inline-flex w-fit rounded-full border border-[#d8c6a8] bg-[#fbf8f3] px-5 py-2.5 text-sm font-semibold text-[#1f1a17] transition hover:bg-[#d4c09a]"
+                >
+                  {system.actions?.[0]?.label ?? "View Resources"}
+                </ResourceLink>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="tools-ordering" data-theme="dark" className="bg-[#1f1a17] px-6 py-20 text-white md:px-10 md:py-24">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeader
+            eyebrow="Tools and Ordering"
+            title="Ordering tools without the clutter."
+            description="Quick access to the tools practices use most often."
+            tone="dark"
+          />
+          <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+            {orderingTools.map((tool) => (
+              <OrderingToolCard key={tool.title} tool={tool} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="downloads-training" data-theme="light" className="bg-[#f6f1e9] px-6 py-20 md:px-10 md:py-24">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeader
+            eyebrow="VSP Setup"
+            title="How to connect Artisan for VSP orders."
+            description="VSP setup has one important naming detail. Follow these steps so orders route correctly."
+          />
+          <div className="mt-10 grid gap-5 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
+            <div className="rounded-[28px] border border-[#d8c6a8]/70 bg-white p-8 text-center shadow-[0_18px_48px_rgba(24,18,13,0.07)]">
+              <Image
+                src="/logos/VSP_Vision_Logotype_RGB_Blk.png"
+                alt="VSP Vision"
+                width={360}
+                height={140}
+                className="mx-auto max-h-24 w-auto max-w-full object-contain"
+              />
+              <Image
+                src="/logos/VSP_V_Heart_Symbol_RGB_2x.png"
+                alt="VSP heart icon"
+                width={120}
+                height={120}
+                className="mx-auto mt-6 h-16 w-16 object-contain"
+              />
+            </div>
+            <div className="grid gap-4">
+              {vspSetupSteps.map((step, index) => (
+                <article key={step.title} className="rounded-[24px] border border-black/10 bg-white p-6 shadow-[0_16px_42px_rgba(24,18,13,0.06)]">
+                  <div className="flex items-start gap-4">
+                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#1f1a17] text-sm font-semibold text-white">
+                      {index + 1}
+                    </span>
+                    <div>
+                      <h3 className="text-xl font-semibold">{step.title}</h3>
+                      <p className="mt-2 text-sm leading-7 text-[#625b53]">
+                        {index === 0 ? (
+                          <>
+                            Practices should{" "}
+                            <a href="#lab-customer-service" className="font-semibold text-[#8a7654] underline underline-offset-4">
+                              inform customer service
+                            </a>{" "}
+                            they want to use Artisan Lab Network for VSP so the lab can set their account up.
+                          </>
+                        ) : (
+                          step.body
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {false && showProfessionalEnhancements ? (
         <motion.section
           {...fadeInSection}
           data-theme="light"
@@ -1004,7 +1877,7 @@ export default function ProviderResourcesPage({
         >
           <div
             className="pointer-events-none absolute -right-28 -top-28 h-[420px] w-[420px] bg-contain bg-center bg-no-repeat opacity-[0.06]"
-            style={{ backgroundImage: "url('/Rings.png')" }}
+            style={{ backgroundImage: "url('/rings.png')" }}
             aria-hidden="true"
           />
           <div className="relative z-10 mx-auto max-w-7xl">
@@ -1073,7 +1946,7 @@ export default function ProviderResourcesPage({
         </motion.section>
       ) : null}
 
-      <section id="practice-tools" className="bg-[#f6f1e9] px-6 py-20 md:px-10 md:py-24">
+      <section id="practice-tools" className="hidden bg-[#f6f1e9] px-6 py-20 md:px-10 md:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <SectionHeader
@@ -1105,7 +1978,7 @@ export default function ProviderResourcesPage({
         </div>
       </section>
 
-      <section className="border-y border-[#e7ddd0] bg-[#fbf8f3] px-6 py-20 md:px-10 md:py-24">
+      <section className="hidden border-y border-[#e7ddd0] bg-[#fbf8f3] px-6 py-20 md:px-10 md:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
             <SectionHeader
@@ -1147,10 +2020,10 @@ export default function ProviderResourcesPage({
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-[#f5f1eb] px-6 py-20 md:px-10 md:py-24">
+      <section className="hidden relative overflow-hidden bg-[#f5f1eb] px-6 py-20 md:px-10 md:py-24">
         <div
           className="pointer-events-none absolute -bottom-36 -left-32 h-[480px] w-[480px] bg-contain bg-center bg-no-repeat opacity-[0.055]"
-          style={{ backgroundImage: "url('/Rings.png')" }}
+          style={{ backgroundImage: "url('/rings.png')" }}
           aria-hidden="true"
         />
         <div className="relative z-10 mx-auto max-w-7xl">
@@ -1167,7 +2040,7 @@ export default function ProviderResourcesPage({
         </div>
       </section>
 
-      <section className="bg-[#1f1a17] px-6 py-20 text-white md:px-10 md:py-24">
+      <section className="hidden bg-[#1f1a17] px-6 py-20 text-white md:px-10 md:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <SectionHeader
@@ -1190,11 +2063,25 @@ export default function ProviderResourcesPage({
                   size="sm"
                   className="mb-5 h-12 w-12 border-white/12 bg-white/[0.08]"
                 />
-                {"image" in program && program.image ? (
+                {program.logos ? (
+                  <div className="mb-5 grid min-h-[104px] grid-cols-1 gap-2 rounded-2xl border border-white/10 bg-white p-3">
+                    {program.logos.map((logo) => (
+                      <div key={logo.src} className="flex min-h-7 items-center justify-center">
+                        <Image
+                          src={logo.src}
+                          alt={logo.alt}
+                          width={220}
+                          height={80}
+                          className="max-h-8 w-auto max-w-full object-contain"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ) : program.image ? (
                   <div className="mb-5 flex min-h-[70px] items-center justify-center rounded-2xl border border-white/10 bg-white p-3">
                     <Image
                       src={program.image}
-                      alt={program.imageAlt}
+                      alt={program.imageAlt ?? program.title}
                       width={220}
                       height={90}
                       className="max-h-[52px] w-auto max-w-full object-contain"
@@ -1392,6 +2279,12 @@ export default function ProviderResourcesPage({
                       >
                         Visit Website
                       </a>
+                      <Link
+                        href={lab.meetHref}
+                        className="col-span-2 inline-flex min-h-10 items-center justify-center rounded-full border border-[#d4c09a]/45 bg-[#d4c09a] px-3 py-2 text-center text-xs font-semibold text-[#171311] transition hover:bg-[#e2cca2]"
+                      >
+                        Meet Your Lab
+                      </Link>
                     </div>
                   </div>
                 </motion.article>

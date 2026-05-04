@@ -10,7 +10,7 @@ type Theme = "dark" | "light";
 type NavItem = { label: string; href?: string; dividerBefore?: boolean };
 type Dropdown = { label: string; items: NavItem[] };
 
-const LOGO_EASTER_EGG_STORAGE_KEY = "artisanLogoBreakTheSystemClicks";
+const LOGO_EASTER_EGG_STORAGE_KEY = "artisanLogoProgramClicks";
 
 function Capsule({
   children,
@@ -150,7 +150,13 @@ function DropdownMenu({
   );
 }
 
-export default function Header({ onContactClick }: { onContactClick?: () => void }) {
+export default function Header({
+  onContactClick,
+  signUpHref = "https://form.typeform.com/to/quuPCSff",
+}: {
+  onContactClick?: () => void;
+  signUpHref?: string;
+}) {
   const [theme, setTheme] = useState<Theme>("dark");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [logoClicks, setLogoClicks] = useState(0);
@@ -226,6 +232,23 @@ export default function Header({ onContactClick }: { onContactClick?: () => void
     }
   };
 
+  const handleMobileIconClick = () => {
+    const storedClicks = Number(window.localStorage.getItem(LOGO_EASTER_EGG_STORAGE_KEY) ?? logoClicks);
+    const nextClicks = Number.isFinite(storedClicks) ? storedClicks + 1 : 1;
+
+    setLogoClicks(nextClicks);
+    window.localStorage.setItem(LOGO_EASTER_EGG_STORAGE_KEY, String(nextClicks));
+
+    if (nextClicks >= 5) {
+      window.localStorage.removeItem(LOGO_EASTER_EGG_STORAGE_KEY);
+      setLogoClicks(0);
+      window.location.href = "/break-the-system";
+      return;
+    }
+
+    setMobileOpen((v) => !v);
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-[1000]">
       <div className={`pointer-events-none absolute inset-0 -z-10 ${headerBg} backdrop-blur-xl`} />
@@ -269,7 +292,7 @@ export default function Header({ onContactClick }: { onContactClick?: () => void
             </Capsule>
 
             <a
-              href="https://form.typeform.com/to/quuPCSff"
+              href={signUpHref}
               target="_blank"
               rel="noreferrer"
               className="ml-1 px-6 py-2 text-sm font-semibold rounded-full bg-[#d4c09a] text-black border border-[#d4c09a] shadow hover:opacity-90"
@@ -280,7 +303,7 @@ export default function Header({ onContactClick }: { onContactClick?: () => void
 
           <button
             className="flex flex-col items-center justify-center lg:hidden p-2"
-            onClick={() => setMobileOpen((v) => !v)}
+            onClick={handleMobileIconClick}
             aria-label="Toggle menu"
           >
             <Image
@@ -405,7 +428,7 @@ export default function Header({ onContactClick }: { onContactClick?: () => void
               </button>
 
               <a
-                href="https://form.typeform.com/to/quuPCSff"
+                href={signUpHref}
                 target="_blank"
                 rel="noreferrer"
                 className={`mt-4 inline-flex rounded-full px-6 py-2 text-sm font-semibold ${

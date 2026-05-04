@@ -7,42 +7,19 @@ import { AnimatePresence, motion } from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import RingsAccent from "../components/RingsAccent";
-import SiteIcon from "../components/SiteIcon";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
 const CONTACT_FORM_URL = "https://form.typeform.com/to/m0lQ9zjD";
 const SALES_EMAIL = "mailto:sales@artisanlabnetwork.com";
 
 const aboutJumpLinks = [
-  { label: "Who We Are", href: "#about" },
+  { label: "Independence", href: "#our-labs" },
   { label: "Leadership", href: "#leadership" },
   { label: "Timeline", href: "#timeline" },
-  { label: "Press Releases", href: "#press-releases" },
-  { label: "Community Involvement", href: "#community-involvement" },
-  { label: "Our Labs", href: "#our-labs" },
-];
-
-const beliefs = [
-  {
-    title: "Choice over restriction",
-    icon: "/icons/site/network.svg",
-    body: "Independent practices need options, not a single forced path. We build around access, flexibility, and the freedom to choose what is right for each patient.",
-  },
-  {
-    title: "Partnership over transactions",
-    icon: "/icons/site/handshake.svg",
-    body: "A lab relationship should not feel like a ticket number. It should feel like people who know your practice, answer clearly, and stay accountable.",
-  },
-  {
-    title: "Control over dependency",
-    icon: "/icons/site/factory.svg",
-    body: "Corporate systems often make practices adapt to the lab. We believe the lab should support the way the practice actually works.",
-  },
-  {
-    title: "Performance that holds up",
-    icon: "/icons/site/shield-check.svg",
-    body: "Quality, turnaround, communication, and service all matter. The model only works if it performs when the work gets busy.",
-  },
+  { label: "Recognition", href: "#industry-recognition" },
+  { label: "Tokai Partnership", href: "#tokai-partnership" },
+  { label: "Advocacy", href: "#advocacy-leadership" },
+  { label: "News & Press", href: "#press-releases" },
 ];
 
 const leaders = [
@@ -80,30 +57,14 @@ const leaders = [
   },
 ];
 
-const contactCards = [
-  {
-    title: "Sales",
-    body: "For growth conversations, lab relationship strategy, and whether Artisan is the right fit.",
-    href: "mailto:sales@artisanlabnetwork.com",
-  },
-  {
-    title: "Customer Service",
-    body: "For order support, communication questions, service workflows, and help from the lab team.",
-    href: "mailto:customerservice@artisanlabnetwork.com",
-  },
-  {
-    title: "Employment",
-    body: "For career opportunities, hiring questions, and joining the Artisan Lab Network team.",
-    href: "mailto:careers@artisanlabnetwork.com",
-  },
-  {
-    title: "Lab Ownership",
-    body: "For ownership alignment, network direction, and high-level partnership conversations.",
-    href: "mailto:info@artisanlabnetwork.com",
-  },
-];
-
 const pressArticles = [
+  {
+    title: "Pacific Artisan Labs Featured by Jails to Jobs",
+    date: "2025",
+    source: "Jails to Jobs",
+    href: "https://jailstojobs.org/resources/second-chance-employers-network/pacific-artisan-labs/",
+    body: "A profile of Pacific Artisan Labs as a second-chance employer and community partner supporting meaningful work and reentry opportunity.",
+  },
   {
     title: "Artisan Lab Network Hosts First PAL Shareholder Conference",
     date: "2025",
@@ -144,43 +105,104 @@ const pressArticles = [
 const timelineEvents = [
   {
     year: "2018",
-    title: "Pacific Artisan Labs launches",
-    body: "The first lab in the model begins with a different idea: align the lab relationship around independent practices and long term value.",
+    title: "Pacific Artisan Labs",
+    body: "Foundation of the Artisan model and independent lab vision.",
+    logos: [{ src: "/logos/PAL_2CTan.png", alt: "Pacific Artisan Labs" }],
   },
   {
     year: "2019",
-    title: "Launches Artisan AR Portfolio",
-    body: "The Artisan AR portfolio expands in house coating capabilities and gives practices more premium treatment options.",
+    title: "IOT Launch",
+    body: "Artisan begins partnership with IOT and launches Artisan lens technologies.",
+    logos: [{ src: "/iot-logo.png", alt: "IOT" }],
   },
   {
-    year: "2021",
-    title: "Launches Artisan Design Series powered by IOT",
-    body: "The Artisan Design Series portfolio is introduced, bringing advanced lens designs powered by IOT to independent practices.",
-  },
-  {
-    year: "2022",
-    title: "Releases Artisan Nytopia AR",
-    body: "Artisan Nytopia AR is released as part of the growing portfolio of premium treatment options.",
-  },
-  {
-    year: "2024",
-    title: "Launches Tokai as first U.S. distributor",
-    body: "Artisan expands its product access by becoming the first U.S. distributor for Tokai.",
-  },
-  {
-    year: "2024",
-    title: "Becomes VSP contract lab",
-    body: "The network strengthens its position with independent practices through contract lab access tied to VSP programs.",
+    year: "2023",
+    title: "Peak Artisan Labs",
+    body: "Expansion into Colorado strengthens the Artisan model across another regional lab relationship.",
+    logos: [{ src: "/logos/Peak_Artisan_Logo 9-1-23_FINAL.png", alt: "Peak Artisan Labs" }],
   },
   {
     year: "2025",
-    title: "Becomes Varilux distributor",
-    body: "Artisan adds Varilux distribution, expanding access to major premium lens offerings.",
+    title: "Pike Artisan Labs",
+    body: "Expansion into Indianapolis adds another Artisan lab serving independent practices.",
+    logos: [{ src: "/logos/Pike_Labs_Logo-4C.png", alt: "Pike Artisan Labs" }],
+  },
+];
+
+const editorialSections = [
+  {
+    id: "industry-recognition",
+    eyebrow: "Industry Recognition",
+    title: "Recognized leadership for independent optical.",
+    image: "/images/brandon-mike.jpg",
+    imageAlt: "Brandon Butler with Mike Vitale",
+    body:
+      "Artisan Lab Network's leadership is active in the broader optical conversation, building relationships with organizations and leaders who shape the future of independent eye care. Recognition from respected industry voices reflects a model built around service, ownership, and practical support for practices.",
+    detail:
+      "That involvement keeps Artisan close to the issues that matter most: lab performance, independent practice choice, and the long-term health of the optical channel.",
   },
   {
-    year: "2025",
-    title: "The network grows across regions",
-    body: "Peak expands its ownership group, Pike launches in the central U.S., and ALN brings the 3 PAL labs together for its first shareholder conference.",
+    id: "tokai-partnership",
+    eyebrow: "Exclusive Tokai Partnership",
+    title: "A stronger U.S. relationship with Tokai.",
+    image: "/images/group-office-photo-2023-1.jpg",
+    imageAlt: "Brandon Butler with Hideyuki Hayashi",
+    body:
+      "Artisan's relationship with Hideyuki Hayashi and Tokai gives independent practices access to a differentiated lens technology partner with a deep commitment to optical performance. It is a credibility point, but also a practical advantage for practices looking for better product stories.",
+    detail:
+      "The partnership supports premium lens conversations, advanced progressive technology, and a more intentional path for practices that want something beyond commodity choices.",
+  },
+  {
+    id: "advocacy-leadership",
+    eyebrow: "Advocacy & Leadership",
+    title: "Advocating for independent ECPs where policy is shaped.",
+    image: "/images/hallway-portrait-2025-1.jpg",
+    imageAlt: "Brandon Butler at the White House",
+    imageClassName: "object-cover object-[50%_32%]",
+    caption: "Brandon Butler at the White House advocating for independent optical laboratories and independent ECPs.",
+    body:
+      "Artisan's leadership extends beyond lab operations into advocacy for independent eye care professionals. The goal is to make sure independent practices, labs, and the patients they serve are represented in conversations that influence policy and access.",
+    detail:
+      "That perspective matters in an industry where consolidation can narrow choices. Artisan shows up to keep independence visible, credible, and part of the larger policy conversation.",
+  },
+  {
+    id: "industry-leadership",
+    eyebrow: "Industry Leadership",
+    title: "Thought leadership from the lab side of independent care.",
+    image: "/images/panel-discussion-2025-1.jpg",
+    imageAlt: "Brandon Butler leading an optical industry panel",
+    imageClassName: "object-cover object-top",
+    body:
+      "Panels, forums, and industry events give Artisan a platform to speak plainly about the realities facing labs and practices. That visibility helps move the conversation from generic growth language toward the operating decisions that actually protect independence.",
+    detail:
+      "The result is a leadership posture rooted in real production, customer service, ownership alignment, and the daily work of helping practices compete.",
+  },
+];
+
+const communityImpactCards = [
+  {
+    title: "Jails to Jobs",
+    eyebrow: "Second Chance Employment",
+    image: "/logos/jails2jobs.jpeg",
+    imageAlt: "Jails to Jobs",
+    body: "Pacific Artisan Labs has been recognized as a second-chance employer, creating hiring opportunities that help people rebuild through meaningful work.",
+    href: "https://jailstojobs.org/resources/second-chance-employers-network/pacific-artisan-labs/",
+    cta: "Read the Profile",
+    logo: true,
+  },
+  {
+    title: "Training Pathways",
+    eyebrow: "Workforce Development",
+    image: "/images/about/coffee-creek.jpg",
+    imageAlt: "Coffee Creek program training and workforce development",
+    body: "Artisan supports practical training, respectful mentorship, and skill-building pathways that create stronger teams and more resilient communities.",
+  },
+  {
+    title: "Local Visibility",
+    eyebrow: "Community Engagement",
+    image: "/images/race-car-driver-unknown-year-1.jpg",
+    imageAlt: "Pike Artisan Labs sponsored race car",
+    body: "Our labs show up locally through community relationships, regional events, and visibility that keeps independent optical connected to the people it serves.",
   },
 ];
 
@@ -333,103 +355,17 @@ export default function AboutPage() {
       <section
         aria-label="About page navigation"
         data-theme="light"
-        className="border-y border-[#d8c6a8]/45 bg-[#f8f3eb] px-6 py-5 md:px-10"
+        className="sticky top-[72px] z-40 border-y border-[#d8c6a8]/45 bg-[#f8f3eb]/92 px-6 py-4 backdrop-blur-md md:px-10"
       >
         <div className="mx-auto max-w-7xl">
-          <div className="flex gap-3 overflow-x-auto pb-1 [scrollbar-width:thin]">
+          <div className="flex gap-7 overflow-x-auto pb-1 [scrollbar-width:thin]">
             {aboutJumpLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className="shrink-0 rounded-full border border-[#d8c6a8]/70 bg-white/75 px-4 py-2.5 text-sm font-semibold text-[#1f1a17] shadow-sm transition hover:-translate-y-0.5 hover:border-[#c9b28b] hover:bg-white"
+                className="shrink-0 border-b border-transparent py-2 text-sm font-semibold uppercase tracking-[0.16em] text-[#625b53] transition hover:border-[#8a7654] hover:text-[#1f1a17]"
               >
                 {link.label}
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="about" data-theme="light" className="scroll-mt-24 bg-[#f2eee7] px-6 py-24 md:px-10">
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.85fr_1.15fr]">
-          <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-black/45">
-              Our Story
-            </p>
-            <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">
-              A different answer to consolidation.
-            </h2>
-          </div>
-          <div className="space-y-6 text-lg leading-8 text-black/70">
-            <p>
-              Independent practices should not have to depend on lab systems
-              designed around corporate priorities. They need quality they can
-              trust, service they can reach, and choices that fit the way they
-              practice.
-            </p>
-            <p>
-              Brandon Butler saw the effects of consolidation firsthand. Too
-              many practices were losing flexibility, margin, and direct
-              accountability. In 2018, Pacific Artisan Labs launched with a
-              different vision: build a lab model around the needs of independent
-              eye care, not around forcing every practice into the same box.
-            </p>
-            <p>
-              That idea became Artisan Lab Network. Today ALN supports Pacific
-              Artisan Labs, Peak Artisan Labs, and Pike Artisan Labs, with a
-              shared commitment to independence, quality, service, accountability,
-              and freedom of choice.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="press-releases"
-        data-theme="light"
-        className="scroll-mt-24 bg-[#fbf8f2] px-6 py-24 text-[#1f1a17] md:px-10"
-      >
-        <div className="mx-auto max-w-7xl">
-          <div className="mx-auto max-w-4xl text-center">
-            <p className="text-xs uppercase tracking-[0.3em] text-black/45">
-              Press & Recognition
-            </p>
-            <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-6xl">
-              Recognized across the industry.
-            </h2>
-            <p className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-black/65">
-              Our work is being recognized across the optical industry as we
-              build a model focused on independence, ownership, and long-term
-              growth.
-            </p>
-          </div>
-
-          <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {pressArticles.map((article) => (
-              <a
-                key={article.title}
-                href={article.href}
-                target="_blank"
-                rel="noreferrer"
-                className="group flex min-h-full flex-col rounded-[24px] border border-black/10 bg-white/78 p-6 text-left shadow-[0_18px_45px_rgba(49,39,26,0.08)] transition hover:-translate-y-1 hover:bg-white hover:shadow-[0_26px_65px_rgba(49,39,26,0.13)]"
-              >
-                <div className="mb-7 flex items-center justify-between gap-4">
-                  <div className="grid h-12 w-12 place-items-center rounded-full border border-[#d6c3a1]/70 bg-[#f2eee7] text-xs font-bold tracking-[0.18em] text-[#7b6647]">
-                    VM
-                  </div>
-                  <div className="text-xs uppercase tracking-[0.22em] text-black/42">
-                    {article.source} / {article.date}
-                  </div>
-                </div>
-                <h3 className="text-xl font-semibold leading-snug">
-                  {article.title}
-                </h3>
-                <p className="mt-4 flex-1 text-sm leading-7 text-black/62">
-                  {article.body}
-                </p>
-                <div className="mt-6 text-sm font-semibold text-[#8b7656] transition group-hover:text-black">
-                  Read Article
-                </div>
               </a>
             ))}
           </div>
@@ -473,105 +409,12 @@ export default function AboutPage() {
       </section>
 
       <section
-        id="timeline"
-        data-theme="light"
-        className="relative scroll-mt-24 overflow-hidden border-t border-[#e7ddd0] bg-[#fbf8f3]"
-      >
-        <RingsAccent position="top-right" size="lg" opacity="opacity-[0.055]" />
-        <div className="relative z-10 mx-auto max-w-6xl px-6 py-16 md:px-10 md:py-20">
-          <div className="max-w-3xl">
-            <p className="text-sm font-medium uppercase tracking-[0.28em] text-[#8c7d68]">
-              Growth Timeline
-            </p>
-            <h2 className="mt-4 text-4xl font-semibold leading-tight text-[#1f1a17] md:text-5xl">
-              From a different lab vision to a growing independent network.
-            </h2>
-            <p className="mt-5 text-lg leading-8 text-[#5c544d]">
-              Key milestones that show how the network has grown while staying focused on independent practices.
-            </p>
-          </div>
-
-          <div className="relative mt-14">
-            <div className="absolute left-1/2 top-0 hidden h-full w-px -translate-x-1/2 bg-[#dccfbf] md:block" />
-
-            <div className="space-y-6 md:space-y-8">
-              {timelineEvents.map((event, index) => (
-                <div
-                  key={`${event.year}-${event.title}-${index}`}
-                  className="relative md:grid md:grid-cols-2 md:gap-10"
-                >
-                  <div
-                    className={`${
-                      index % 2 === 0 ? "md:pr-10" : "md:col-start-2 md:pl-10"
-                    }`}
-                  >
-                    <article className="relative rounded-[20px] border border-[#e7ddd0] bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_45px_rgba(49,39,26,0.10)]">
-                      <div className="mb-4 inline-flex items-center justify-center rounded-full bg-[#c9b28b] px-4 py-1.5 text-sm font-semibold text-[#1f1a17]">
-                        {event.year}
-                      </div>
-
-                      <h3 className="text-xl font-semibold leading-snug text-[#1f1a17]">
-                        {event.title}
-                      </h3>
-
-                      <p className="mt-3 text-base leading-7 text-[#5c544d]">
-                        {event.body}
-                      </p>
-
-                      <div
-                        className={`absolute top-8 hidden h-4 w-4 rounded-full border-4 border-[#fbf8f3] bg-[#c9b28b] md:block ${
-                          index % 2 === 0
-                            ? "right-[-2.85rem]"
-                            : "left-[-2.85rem]"
-                        }`}
-                      />
-                    </article>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section data-theme="light" className="relative overflow-hidden bg-[#f5f1eb] px-6 py-24 md:px-10">
-        <RingsAccent position="bottom-left" size="md" opacity="opacity-[0.045]" />
-        <div className="relative z-10 mx-auto max-w-7xl">
-          <div className="max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.3em] text-black/45">
-              What We Believe
-            </p>
-            <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">
-              Simple principles. Hard to fake.
-            </h2>
-          </div>
-          <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {beliefs.map((belief) => (
-              <div
-                key={belief.title}
-                className="group rounded-[22px] border border-black/10 bg-white/72 p-6 shadow-[0_18px_45px_rgba(49,39,26,0.08)]"
-              >
-                <SiteIcon
-                  src={belief.icon}
-                  className="mb-5 h-14 w-14 border-[#d6c3a1]/55 bg-[#fffaf2]/75"
-                />
-                <h3 className="text-xl font-semibold">{belief.title}</h3>
-                <p className="mt-4 text-sm leading-7 text-black/62">
-                  {belief.body}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section
         id="leadership"
         data-theme="light"
-        className="scroll-mt-24 bg-[#eee5d7] px-6 py-24 md:px-10"
+        className="scroll-mt-24 bg-[#eee5d7] px-6 py-18 md:px-10 md:py-20"
       >
         <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div className="max-w-3xl">
               <p className="text-xs uppercase tracking-[0.3em] text-black/45">
                 Leadership
@@ -586,13 +429,13 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
             {leaders.map((leader) => (
               <article
                 key={leader.name}
-                className="flex min-h-full flex-col overflow-hidden rounded-[24px] border border-black/10 bg-[#fbf8f2] shadow-[0_20px_55px_rgba(49,39,26,0.10)]"
+                className="flex min-h-full flex-col overflow-hidden rounded-[22px] border border-black/10 bg-[#fbf8f2] shadow-[0_18px_48px_rgba(49,39,26,0.09)]"
               >
-                <div className="relative aspect-[4/3] bg-[#ded2c1]">
+                <div className="relative aspect-[5/4] bg-[#ded2c1]">
                   <Image
                     src={leader.image}
                     alt={leader.name}
@@ -601,29 +444,143 @@ export default function AboutPage() {
                     className="object-cover"
                   />
                 </div>
-                <div className="flex flex-1 flex-col p-6">
+                <div className="flex flex-1 flex-col p-5">
                   <h3 className="text-2xl font-semibold">{leader.name}</h3>
-                  <p className="mt-1 text-sm font-semibold uppercase tracking-[0.18em] text-[#8b7656]">
+                  <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#8b7656]">
                     {leader.role}
                   </p>
-                  <p className="mt-5 flex-1 text-sm leading-7 text-black/62">
+                  <p className="mt-4 flex-1 text-sm leading-7 text-black/62">
                     {leader.bio}
                   </p>
-                  <div className="mt-6 flex flex-wrap gap-3">
-                    <a
-                      href={leader.email}
-                      className="rounded-full bg-[#1f1a17] px-4 py-2 text-sm font-semibold text-white transition hover:bg-black"
-                    >
+                  <div className="mt-5 flex flex-wrap gap-3">
+                    <a href={leader.email} className="rounded-full bg-[#1f1a17] px-4 py-2 text-sm font-semibold text-white transition hover:bg-black">
                       Email
                     </a>
-                    <a
-                      href={leader.linkedin}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-full border border-black/15 px-4 py-2 text-sm font-semibold text-[#1f1a17] transition hover:bg-white"
-                    >
+                    <a href={leader.linkedin} target="_blank" rel="noreferrer" className="rounded-full border border-black/15 px-4 py-2 text-sm font-semibold text-[#1f1a17] transition hover:bg-white">
                       LinkedIn
                     </a>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
+      <section
+        id="timeline"
+        data-theme="light"
+        className="relative scroll-mt-24 overflow-hidden border-b border-[#d8c6a8]/35 bg-[#f5f1eb] px-5 py-14 md:px-8 md:py-[72px] lg:px-10"
+      >
+        <RingsAccent position="top-right" size="lg" opacity="opacity-[0.055]" />
+        <div className="relative z-10 mx-auto max-w-7xl">
+          <div className="max-w-3xl">
+            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[#8c7d68]">
+              Timeline
+            </p>
+            <h2 className="mt-4 text-4xl font-semibold leading-tight text-[#1f1a17] md:text-5xl">
+              Built With Intention. Proven Through Growth.
+            </h2>
+            <p className="mt-5 text-lg leading-8 text-[#5c544d]">
+              Growth is measured by the labs and practices that choose to build a stronger independent model together.
+            </p>
+          </div>
+          <p className="mt-5 text-sm font-semibold text-[#8a7654]">
+            Scroll left to explore the timeline.
+          </p>
+          <div className="relative mt-8">
+            <div className="absolute left-0 right-0 top-[3.25rem] hidden h-px bg-[#d8c6a8] md:block" />
+            <div
+              data-about-timeline-scroll
+              className="flex snap-x gap-3 overflow-x-auto pb-3 [scrollbar-width:thin]"
+            >
+              {timelineEvents.map((event) => (
+                <div
+                  key={`${event.year}-${event.title}`}
+                  className="group relative min-w-[278px] snap-start border border-[#d8c6a8]/65 bg-[#fffaf2]/82 p-5 shadow-[0_12px_36px_rgba(49,39,26,0.07)] transition duration-200 hover:scale-[1.015] hover:border-[#c9b28b] hover:bg-white hover:shadow-[0_20px_55px_rgba(49,39,26,0.13)] md:min-w-[360px]"
+                >
+                  <div className="mb-4 h-2 w-2 rounded-full bg-[#d4c09a] shadow-[0_0_18px_rgba(212,192,154,0.85)]" />
+                  <div className="text-4xl font-semibold leading-none tracking-tight text-[#9a8564]">
+                    {event.year}
+                  </div>
+                  <div className="mt-5 flex h-20 items-center justify-center rounded-2xl border border-[#e7ddd0] bg-white px-4">
+                    {event.logos?.map((logo) => (
+                      <Image
+                        key={logo.src}
+                        src={logo.src}
+                        alt={logo.alt}
+                        width={240}
+                        height={100}
+                        className="max-h-14 w-auto max-w-full object-contain"
+                      />
+                    ))}
+                  </div>
+                  <div className="mt-4 text-lg font-semibold leading-6 text-[#1f1a17]">
+                    {event.title}
+                  </div>
+                  <p className="mt-3 text-sm leading-6 text-[#5c544d]">
+                    {event.body}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        data-theme="light"
+        className="relative overflow-hidden bg-[#ece7dc] px-6 py-20 md:px-10 md:py-24"
+      >
+        <RingsAccent position="center-right" size="md" opacity="opacity-[0.04]" />
+        <div className="relative z-10 mx-auto max-w-7xl">
+          <div className="mx-auto max-w-4xl text-center">
+            <p className="text-xs uppercase tracking-[0.3em] text-[#8a7654]">
+              Credibility
+            </p>
+            <h2 className="mt-4 text-4xl font-semibold tracking-tight text-[#1f1a17] md:text-5xl">
+              Leadership with a visible role in the industry.
+            </h2>
+          </div>
+
+          <div className="mt-12 grid gap-8">
+            {editorialSections.map((section, index) => (
+              <article
+                key={section.id}
+                id={section.id}
+                className="scroll-mt-28 overflow-hidden rounded-[30px] border border-[#d6c3a1]/70 bg-[#fbf8f2] shadow-[0_24px_64px_rgba(49,39,26,0.10)]"
+              >
+                <div className={`grid gap-0 lg:grid-cols-2 ${index % 2 === 1 ? "lg:[&>div:first-child]:order-2" : ""}`}>
+                  <div className="relative min-h-[320px] lg:min-h-[430px]">
+                    <Image
+                      src={section.image}
+                      alt={section.imageAlt}
+                      fill
+                      sizes="(min-width: 1024px) 50vw, 100vw"
+                      className={section.imageClassName ?? "object-cover"}
+                    />
+                    {section.caption ? (
+                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/72 to-transparent px-5 pb-5 pt-14">
+                        <p className="text-sm font-medium leading-6 text-white/86">
+                          {section.caption}
+                        </p>
+                      </div>
+                    ) : null}
+                  </div>
+                  <div className="flex flex-col justify-center p-7 md:p-10">
+                    <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[#8a7654]">
+                      {section.eyebrow}
+                    </p>
+                    <h3 className="mt-4 text-3xl font-semibold leading-tight tracking-tight text-[#1f1a17] md:text-4xl">
+                      {section.title}
+                    </h3>
+                    <p className="mt-5 text-base leading-8 text-[#625b53] md:text-lg">
+                      {section.body}
+                    </p>
+                    <p className="mt-4 text-sm leading-7 text-[#75664e]">
+                      {section.detail}
+                    </p>
                   </div>
                 </div>
               </article>
@@ -633,146 +590,109 @@ export default function AboutPage() {
       </section>
 
       <section
-        data-theme="dark"
-        className="relative overflow-hidden px-6 py-24 text-white md:px-10"
-        style={{
-          backgroundImage: "url('/backgroundimage.jpeg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundAttachment: "fixed",
-        }}
+        id="community-involvement"
+        data-theme="light"
+        className="relative scroll-mt-24 overflow-hidden bg-[#f5f1eb] px-6 py-20 md:px-10 md:py-24"
       >
-        <div className="pointer-events-none absolute inset-0 bg-black/82" />
-        <div className="relative z-20 mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-          <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-[#d4c09a]">
-              Our Approach
-            </p>
-            <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">
-              Clear conversations beat canned pitches.
-            </h2>
-          </div>
-          <div className="rounded-[28px] border border-white/12 bg-white/8 p-7 shadow-2xl backdrop-blur-md md:p-9">
-            <div className="space-y-5 text-lg leading-8 text-white/76">
-              <p>
-                Our approach starts with the truth about what is happening
-                inside the practice. Where is friction showing up? Where is margin
-                getting squeezed? Where are communication, turnaround, or limited
-                choices making the day harder than it needs to be?
+        <RingsAccent position="bottom-left" size="md" opacity="opacity-[0.04]" />
+        <div className="relative z-10 mx-auto max-w-7xl">
+          <div className="grid gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-end">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">
+                Community Involvement
               </p>
-              <p>
-                We do not push products for the sake of pushing products. We help
-                practices make better decisions. No canned pitch. No pressure
-                tactics. Just clarity, honest questions, and useful advice.
-              </p>
-              <p>
-                If there is a fit, we show why. If there is not, we do not force
-                it. The goal is a better lab relationship, not a quick sale.
-              </p>
+              <h2 className="mt-4 text-4xl font-semibold tracking-tight text-[#1f1a17] md:text-5xl">
+                Showing up beyond the lab floor.
+              </h2>
             </div>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <a
-                href={SALES_EMAIL}
-                className="rounded-full bg-[#d4c09a] px-6 py-3 text-sm font-semibold text-black transition hover:bg-[#e2cca2]"
-              >
-                Email Sales
-              </a>
-              <a
-                href={SIGNUP_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-full border border-white/18 bg-white/10 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/15"
-              >
-                Get Started
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section data-theme="light" className="bg-[#f5f1eb] px-6 py-24 md:px-10">
-        <div className="mx-auto max-w-7xl">
-          <div className="max-w-3xl">
-            <p className="text-xs uppercase tracking-[0.3em] text-black/45">
-              Talk To The Right Person
-            </p>
-            <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">
-              Get to the conversation that matters.
-            </h2>
-            <p className="mt-5 text-lg leading-8 text-black/65">
-              Whether you are thinking about service, operations, growth, or the
-              bigger network model, start with the person closest to the question.
+            <p className="text-lg leading-8 text-[#625b53]">
+              Artisan's community work is rooted in practical opportunity, workforce development, and local relationships. These commitments are distinct from production, but connected to the same belief: people and independent businesses deserve a stronger path forward.
             </p>
           </div>
 
-          <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {contactCards.map((card) => (
-              <a
+          <div className="mt-12 grid gap-6 lg:grid-cols-3">
+            {communityImpactCards.map((card) => (
+              <article
                 key={card.title}
-                href={card.href}
-                className="group rounded-[22px] border border-black/10 bg-white/75 p-6 shadow-[0_18px_45px_rgba(49,39,26,0.08)] transition hover:-translate-y-1 hover:bg-white hover:shadow-[0_24px_60px_rgba(49,39,26,0.12)]"
+                className="flex min-h-full flex-col overflow-hidden rounded-[28px] border border-[#d6c3a1]/70 bg-[#fbf8f2] shadow-[0_18px_48px_rgba(49,39,26,0.09)]"
               >
-                <h3 className="text-xl font-semibold">{card.title}</h3>
-                <p className="mt-4 text-sm leading-7 text-black/62">
-                  {card.body}
-                </p>
-                <div className="mt-6 text-sm font-semibold text-[#8b7656] transition group-hover:text-black">
-                  Send email
+                <div className="relative flex h-60 items-center justify-center bg-white">
+                  {card.logo ? (
+                    <Image
+                      src={card.image}
+                      alt={card.imageAlt}
+                      width={300}
+                      height={170}
+                      className="max-h-36 w-auto max-w-[82%] object-contain"
+                    />
+                  ) : (
+                    <Image
+                      src={card.image}
+                      alt={card.imageAlt}
+                      fill
+                      sizes="(min-width: 1024px) 33vw, 100vw"
+                      className="object-cover"
+                    />
+                  )}
                 </div>
-              </a>
+                <div className="flex flex-1 flex-col p-6">
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8a7654]">
+                    {card.eyebrow}
+                  </p>
+                  <h3 className="mt-3 text-2xl font-semibold leading-tight text-[#1f1a17]">
+                    {card.title}
+                  </h3>
+                  <p className="mt-4 flex-1 text-sm leading-7 text-[#625b53]">
+                    {card.body}
+                  </p>
+                  {card.href ? (
+                    <a
+                      href={card.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-6 inline-flex w-fit rounded-full bg-[#1f1a17] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#d4c09a] hover:text-[#1f1a17]"
+                    >
+                      {card.cta}
+                    </a>
+                  ) : null}
+                </div>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section
-        id="community-involvement"
-        data-theme="light"
-        className="relative scroll-mt-24 overflow-hidden bg-[#ece7dc] px-6 py-20 md:px-10"
-      >
-        <RingsAccent position="center-right" size="md" opacity="opacity-[0.04]" />
-        <div className="relative z-10 mx-auto grid max-w-7xl gap-10 border-t border-[#d6c3a1]/60 pt-14 lg:grid-cols-[0.8fr_1.2fr]">
-          <div>
+      <section id="press-releases" data-theme="light" className="scroll-mt-24 bg-[#f2eee7] px-6 py-24 text-[#1f1a17] md:px-10">
+        <div className="mx-auto max-w-7xl">
+          <div className="mx-auto max-w-4xl text-center">
             <p className="text-xs uppercase tracking-[0.3em] text-black/45">
-              Community Impact
+              Press / News
             </p>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">
-              Our commitment to people.
+            <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-6xl">
+              Artisan in the News and Press Releases
             </h2>
+            <p className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-black/65">
+              News, announcements, and milestones from Artisan Lab Network and our labs.
+            </p>
           </div>
-          <div className="grid gap-8 md:grid-cols-[1fr_0.85fr]">
-            <div className="space-y-4 text-base leading-8 text-black/68">
-              <p>
-                We believe independence means creating opportunity for others.
-                That value shows up in second-chance hiring and volunteer work
-                connected to Coffee Creek Correctional Facility&apos;s
-                paraoptometric program.
-              </p>
-              <p>
-                Brandon Butler has volunteered with the Coffee Creek program for
-                years, and public recognition has also highlighted Rachel Ahlson
-                and Heather Branderhorst for supporting this work. The goal is
-                practical: help people build skills, find meaningful work, and
-                move forward with dignity.
-              </p>
-              <p>
-                This is part of who we are. Strong businesses should build
-                strong communities.
-              </p>
-            </div>
-            <div className="rounded-[24px] border border-[#d6c3a1]/70 bg-[#fbf8f2]/75 p-6 shadow-[0_18px_45px_rgba(49,39,26,0.08)]">
-              <p className="text-xl font-semibold leading-snug">
-                “We believe independence means creating opportunity for others,
-                not just for ourselves.”
-              </p>
-              <button
-                type="button"
-                onClick={() => setContactOpen(true)}
-                className="mt-6 rounded-full bg-[#1f1a17] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-black"
-              >
-                Contact Us
-              </button>
-            </div>
+          <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {pressArticles.map((article) => (
+              <a key={article.title} href={article.href} target="_blank" rel="noreferrer" className="group flex min-h-[360px] flex-col rounded-[24px] border border-black/10 bg-white/78 p-6 text-left shadow-[0_18px_45px_rgba(49,39,26,0.08)] transition hover:-translate-y-1 hover:bg-white hover:shadow-[0_26px_65px_rgba(49,39,26,0.13)]">
+                <div className="mb-7 flex items-center justify-between gap-4">
+                  <div className="grid h-12 w-12 place-items-center rounded-full border border-[#d6c3a1]/70 bg-[#f2eee7] text-xs font-bold tracking-[0.18em] text-[#7b6647]">
+                    {article.source === "Jails to Jobs" ? "JJ" : "VM"}
+                  </div>
+                  <div className="text-xs uppercase tracking-[0.22em] text-black/42">
+                    {article.source} / {article.date}
+                  </div>
+                </div>
+                <h3 className="text-xl font-semibold leading-snug">{article.title}</h3>
+                <p className="mt-4 flex-1 text-sm leading-7 text-black/62">{article.body}</p>
+                <div className="mt-6 text-sm font-semibold text-[#8b7656] transition group-hover:text-black">
+                  Read Article
+                </div>
+              </a>
+            ))}
           </div>
         </div>
       </section>

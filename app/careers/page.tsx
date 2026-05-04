@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -56,8 +57,49 @@ const thriveIcons = [
 
 const jobs = [
   {
+    id: "sales-representative",
+    title: "Sales Representative",
+    type: "Salaried",
+    location: "All Regions",
+    description:
+      "We are looking for experienced optical sales professionals who want to help independent practices grow with better lab partnerships, stronger support, and more product choice.",
+    responsibilities: [
+      "Prospect and develop relationships with independent practices.",
+      "Represent Artisan Lab Network programs, products, and service advantages.",
+      "Support new customer onboarding with clear communication.",
+      "Coordinate with internal teams to help accounts succeed.",
+    ],
+    requirements: [
+      "Optical industry sales experience.",
+      "Professional account management and follow-through.",
+      "Ability to explain lab value clearly and respectfully.",
+    ],
+  },
+  {
+    id: "independent-sales-representative",
+    title: "Independent Sales Representative",
+    type: "1099 Contractor",
+    location: "All Regions",
+    description:
+      "We are seeking independent sales representatives with optical industry experience who can prospect new business, support assigned accounts, help onboard customers, and represent Artisan Lab Network with professionalism.",
+    note:
+      "This role is structured as an independent contractor opportunity. Territory, account assignments, and commission details are subject to agreement.",
+    responsibilities: [
+      "Prospect new business and develop assigned accounts.",
+      "Support customer onboarding and ongoing account needs.",
+      "Represent Artisan Lab Network professionally in the market.",
+      "Communicate field opportunities and account feedback clearly.",
+    ],
+    requirements: [
+      "Optical industry experience.",
+      "Independent sales discipline and territory ownership.",
+      "Strong communication with customers and internal teams.",
+    ],
+  },
+  {
     id: "surface-technician",
     title: "Surface Technician",
+    type: "Full Time",
     location: "Artisan Lab Network",
     description: "Shape lens work with care, consistency, and respect for the craft.",
     responsibilities: [
@@ -75,6 +117,7 @@ const jobs = [
   {
     id: "surface-manager",
     title: "Surface Department Manager",
+    type: "Full Time",
     location: "Artisan Lab Network",
     description: "Lead a skilled production team with clarity, standards, and calm follow-through.",
     responsibilities: [
@@ -92,6 +135,7 @@ const jobs = [
   {
     id: "customer-service",
     title: "Customer Service Representative",
+    type: "Full Time",
     location: "Artisan Lab Network",
     description: "Help practices get clear answers from people who know the work.",
     responsibilities: [
@@ -109,6 +153,7 @@ const jobs = [
   {
     id: "optical-lab-technician",
     title: "Optical Lab Technician",
+    type: "Full Time",
     location: "Artisan Lab Network",
     description: "Work across lab processes where quality and consistency matter every day.",
     responsibilities: [
@@ -126,6 +171,7 @@ const jobs = [
   {
     id: "finishing-technician",
     title: "Finishing Technician",
+    type: "Full Time",
     location: "Artisan Lab Network",
     description: "Finish eyewear with the kind of care patients can feel.",
     responsibilities: [
@@ -143,6 +189,7 @@ const jobs = [
   {
     id: "ar-coating-technician",
     title: "AR Coating Technician",
+    type: "Full Time",
     location: "Artisan Lab Network",
     description: "Support coating work where clean process and discipline matter.",
     responsibilities: [
@@ -160,6 +207,7 @@ const jobs = [
   {
     id: "shipping-receiving",
     title: "Shipping and Receiving Associate",
+    type: "Full Time",
     location: "Artisan Lab Network",
     description: "Keep orders moving in and out with accuracy and care.",
     responsibilities: [
@@ -384,6 +432,27 @@ export default function CareersPage() {
         </div>
       </motion.section>
 
+      <motion.section {...sectionFade} data-theme="light" className="bg-[#fbf8f3] px-6 py-24 md:px-10 md:py-28">
+        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+          <div className="relative min-h-[360px] overflow-hidden rounded-2xl shadow-[0_24px_70px_rgba(49,39,26,0.13)]">
+            <Image
+              src="/images/tent-food-gathering-2022-1.jpg"
+              alt="Artisan team gathering around food and community"
+              fill
+              sizes="(min-width: 1024px) 45vw, 100vw"
+              className="object-cover"
+            />
+          </div>
+          <div>
+            <SectionHeader
+              eyebrow="Culture"
+              title="A Supportive Environment With Real People"
+              body="The best teams are built through shared work, steady support, and time together beyond the bench. We want people to feel part of something they can be proud of."
+            />
+          </div>
+        </div>
+      </motion.section>
+
       <motion.section {...sectionFade} data-theme="light" className="relative overflow-hidden px-6 py-24 md:px-10 md:py-28">
         <RingsAccent position="bottom-left" size="md" opacity="opacity-[0.045]" />
         <div className="relative z-10 mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
@@ -477,12 +546,17 @@ export default function CareersPage() {
                         />
                         <div>
                           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#d4c09a]">
-                            {job.location}
+                            {job.type} · {job.location}
                           </p>
                           <h3 className="mt-2 text-2xl font-semibold text-white">{job.title}</h3>
                           <p className="mt-3 max-w-3xl text-sm leading-7 text-white/66">
                             {job.description}
                           </p>
+                          {"note" in job && job.note ? (
+                            <p className="mt-3 max-w-3xl rounded-2xl border border-[#d4c09a]/25 bg-[#d4c09a]/10 p-3 text-sm leading-6 text-white/72">
+                              {job.note}
+                            </p>
+                          ) : null}
                         </div>
                       </div>
                     </button>

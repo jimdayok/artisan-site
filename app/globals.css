@@ -75,6 +75,22 @@ body {
   }
 }
 
+@keyframes ar-sweep {
+  0% {
+    transform: translateX(-28%) translateY(-50%) rotate(-14deg);
+    opacity: 0;
+  }
+
+  24% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(28%) translateY(-50%) rotate(-14deg);
+    opacity: 0;
+  }
+}
+
 /* Remove old Geist references */
 @theme inline {
   --color-background: var(--background);

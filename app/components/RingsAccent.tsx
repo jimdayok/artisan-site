@@ -28,7 +28,7 @@ export default function RingsAccent({
   return (
     <div
       className={`pointer-events-none absolute bg-contain bg-center bg-no-repeat ${positionClass} ${sizeClass} ${opacity} ${className}`}
-      style={{ backgroundImage: "url('/Rings.png')" }}
+      style={{ backgroundImage: "url('/rings.png')" }}
       aria-hidden="true"
     />
   );

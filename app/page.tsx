@@ -1,24 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import Header from "./components/Header";
-import NetworkMap from "./components/NetworkMap";
 import Footer from "./components/Footer";
 
 const ACCOUNT_APPLICATION_URL = "https://form.typeform.com/to/quuPCSff";
 const CONTACT_FORM_URL = "https://form.typeform.com/to/m0lQ9zjD";
 const CAPABILITY_AUTO_COLLAPSE_MS = 9000;
-const PROOF_ROTATION_MS = 5500;
+const PROOF_STAT_ROTATION_MS = 4200;
 
 const heroPaths = [
   {
     title: "I’m learning about the Artisan Lab Network",
     body: "See how our connected labs support independent practices with more choice, better service, and stronger partnership.",
     cta: "Explore the Network",
-    href: "#better-model",
+    href: "#proof",
   },
   {
     title: "I’m an Artisan Partner looking for resources",
@@ -30,15 +29,6 @@ const heroPaths = [
 
 const eventCards = [
   {
-    name: "OAO Convention",
-    date: "May 1–2, 2026",
-    location: "Sunriver, OR",
-    description:
-      "Opticians from across Oregon gather for education, networking, and collaboration with industry partners.",
-    logo: "/oao-logo.jpg",
-    logoAlt: "OAO Convention logo",
-  },
-  {
     name: "UOA Leadership Conference",
     date: "June 25–27, 2026",
     location: "Chicago, IL",
@@ -46,6 +36,79 @@ const eventCards = [
       "Opticians and industry leaders gather to explore innovation, leadership, and the future of opticianry.",
     logo: "/uoa-logo.jpg",
     logoAlt: "UOA Leadership Conference logo",
+    href: "https://www.uoaleadership.org/",
+  },
+  {
+    name: "Vision Council 2026 Lab Leadership Forum",
+    date: "Sept. 16 to 18, 2026",
+    location: "M Resort Spa Casino, Henderson, NV",
+    description:
+      "Tailored educational sessions, networking, and industry insights for optical lab professionals.",
+    logo: "/logos/TheVisionCouncil-logo-IAPB-Member.png",
+    logoAlt: "The Vision Council logo",
+    href: "https://thevisioncouncil.org/lab-leadership-forum-2026",
+  },
+];
+
+const industryConnectionLogos = [
+  { src: "/logos/VSP_Vision_Logotype_RGB_Blk.png", alt: "VSP Vision", href: "https://vspvision.com/" },
+  { src: "/logos/nbn-logo.png", alt: "Northwest Administrators", href: "https://www.nwadmin.com/" },
+  { src: "/logos/acquios-alliance.png", alt: "Acquios Alliance", href: "https://acquios.com/services/acquios-alliance/" },
+  { src: "/logos/TheVisionCouncil-logo-IAPB-Member.png", alt: "The Vision Council", href: "https://thevisioncouncil.org/" },
+  { src: "/logos/ultimate-partners.png", alt: "Vision Monday Ultimate Partners", href: "https://visionmonday.com" },
+];
+
+const systemsIntegrationLogos = [
+  { src: "/logos/crystal", alt: "Crystal Practice Management" },
+  { src: "/logos/officemate.png", alt: "OfficeMate" },
+  { src: "/logos/compulink.png", alt: "Compulink" },
+  { src: "/logos/eyefinitypm.png", alt: "Eyefinity Practice Management" },
+  { src: "/logos/revolution.png", alt: "RevolutionEHR" },
+  { src: "/logos/barti.png", alt: "Barti" },
+  { src: "/logos/eyecloudpro.png", alt: "Eye Cloud Pro" },
+];
+
+const proofStats = [
+  {
+    id: "turnaround",
+    value: 3.5,
+    start: 9.9,
+    suffix: "",
+    decimals: 1,
+    label: "Average Turnaround",
+    hover: "3.5 business day average turnaround across the entire network - April 2026",
+  },
+  {
+    id: "fourth-day",
+    value: 84,
+    start: 50,
+    suffix: "%",
+    decimals: 0,
+    label: "Orders Shipped by the 4th Day",
+    hover: "84% of all orders shipped by the fourth business day - April 2026",
+  },
+  {
+    id: "remake",
+    value: 98.5,
+    start: 75,
+    suffix: "%",
+    decimals: 1,
+    label: "Quality Standard",
+    hover: "1.5% lab remake rate, approximately half of typical labs - YTD 2026",
+  },
+  {
+    id: "service",
+    value: "4.9/5.0",
+    label: "Customer Service",
+    hover: "Based on 2024-2025 customer feedback survey",
+    rating: true,
+  },
+  {
+    id: "production",
+    value: "U.S.",
+    label: "U.S. Production Focus",
+    hover: "Core production is handled in the United States with a focus on quality, service, and control.",
+    flagIcon: true,
   },
 ];
 
@@ -147,11 +210,11 @@ const betterModelCards = [
   },
   {
     id: "transparency",
-    title: "Transparency",
+    title: "Transparent Outcomes",
     icon: "/icons/artisan/transparency.svg",
-    body: "You always know what to expect: service, timing, and cost.",
+    body: "Clear reporting, timing, cost, and performance expectations.",
     expandedBody:
-      "Clear expectations matter. Artisan Lab Network is built to give practices better visibility into service, timing, communication, and cost so teams can plan with confidence.",
+      "Clear expectations matter. Artisan Lab Network is built to give practices better visibility into service, timing, communication, cost, quality, and patient-impacting outcomes so teams can plan with confidence.",
   },
   {
     id: "flexibility",
@@ -160,14 +223,6 @@ const betterModelCards = [
     body: "Systems designed to support your process, not punish it.",
     expandedBody:
       "Your practice should not have to change everything to work with your lab. Our systems are designed to support different workflows, ordering methods, product preferences, and practice needs.",
-  },
-  {
-    id: "outcomes",
-    title: "Outcomes First",
-    icon: "/icons/artisan/outcomes-first.svg",
-    body: "Better turnaround, better consistency, better patient experience.",
-    expandedBody:
-      "Better lab relationships should lead to better results. Our network is focused on dependable turnaround, consistent quality, stronger communication, and a better patient experience.",
   },
 ];
 
@@ -192,11 +247,11 @@ const capabilities = [
       "Connected production across the network helps improve turnaround, consistency, and confidence for practices and patients.",
   },
   {
-    title: "Open platform ordering",
+    title: "Systems integrations",
     icon: "/icons/artisan/integrated-systems.svg",
     detail:
-      "We accept orders from SpecCheck, DVI Rx Wizard, VisionWeb, and Eyefinity.",
-    link: { label: "Learn more about SpecCheck", href: "https://speccheckrx.com" },
+      "ALN supports practical ordering paths across common practice systems, open ordering tools, and custom workflows.",
+    integrations: systemsIntegrationLogos,
   },
   {
     title: "Clear communication",
@@ -225,21 +280,84 @@ const capabilities = [
   },
 ];
 
-const proofQuotes = [
+const homeLabs = [
   {
-    quote: "We finally feel like we have options again.",
-    label: "Doctor testimonial placeholder",
-    initials: "DR",
+    id: "pacific",
+    city: "Portland",
+    state: "OR",
+    label: "Pacific Artisan Labs",
+    logo: "/logos/PAL_2C_White_Black.png",
+    logoAlt: "Pacific Artisan Labs logo",
+    logoPanel: "dark",
+    description:
+      "The original Artisan lab, serving independent practices with full-service production, responsive customer service, and strong regional relationships.",
+    address: ["12302 NE Marx St.", "Portland, OR 97230"],
+    meetHref: "/meet-the-artisans#pacific",
+    phone: "877.390.6900",
+    phoneHref: "8773906900",
+    email: "customerservice@pacificartisanlabs.com",
+    position: { left: "19%", top: "33%" },
   },
   {
-    quote: "Turnaround feels more predictable, and my team has fewer headaches.",
-    label: "Optician testimonial placeholder",
-    initials: "OP",
+    id: "peak",
+    city: "Aurora",
+    state: "CO",
+    label: "Peak Artisan Labs",
+    logo: "/logos/Peak_Artisan_Logo 9-1-23_FINAL.png",
+    logoAlt: "Peak Artisan Labs logo",
+    logoPanel: "light",
+    description:
+      "A Colorado-based Artisan lab bringing local support, finishing expertise, and practical service to independent practices across the mountain region.",
+    address: ["3568 Peoria St., Suite 608", "Aurora, CO 80010"],
+    meetHref: "/meet-the-artisans#peak",
+    phone: "833.690.4321",
+    phoneHref: "8336904321",
+    email: "customerservice@peakartisanlabs.com",
+    position: { left: "44%", top: "51%" },
   },
   {
-    quote: "The difference is not just service. It is control.",
-    label: "Practice owner testimonial placeholder",
-    initials: "PO",
+    id: "pike",
+    city: "Indianapolis",
+    state: "IN",
+    label: "Pike Artisan Labs",
+    logo: "/logos/Pike_Labs_Logo-4C.png",
+    logoAlt: "Pike Artisan Labs logo",
+    logoPanel: "light",
+    description:
+      "The central U.S. Artisan lab, built to add speed, flexibility, and personal support for practices that want a better lab relationship.",
+    address: ["8902 Vincennes Cir., Suite F", "Indianapolis, IN 46268"],
+    meetHref: "/meet-the-artisans#pike",
+    phone: "888.239.0303",
+    phoneHref: "8882390303",
+    email: "customerservice@pikeartisanlabs.com",
+    position: { left: "67%", top: "43%" },
+  },
+];
+
+const resourceLinks = [
+  {
+    title: "Product Resources",
+    body: "Lens systems, AR treatments, vendor libraries, and program details.",
+    href: "/provider-resources#product-information",
+    icon: "/icons/artisan/resources.svg",
+  },
+  {
+    title: "Partner Resources",
+    body: "Pricing requests, account tools, shipping, and ordering support.",
+    href: "/provider-resources",
+    icon: "/icons/site/briefcase.svg",
+  },
+  {
+    title: "Training and Education",
+    body: "Webinars, product training, and team education materials.",
+    href: "/provider-resources#training-education",
+    icon: "/icons/site/book-open.svg",
+  },
+  {
+    title: "Customer Service Support",
+    body: "Find the right lab team for order support and customer service.",
+    href: "/provider-resources#lab-customer-service",
+    icon: "/icons/artisan/clear-communication.svg",
   },
 ];
 
@@ -277,30 +395,179 @@ function ArtisanIcon({
   );
 }
 
+function RatingStars() {
+  return (
+    <div className="flex items-center justify-center gap-1 text-[#d4c09a]/90" aria-label="4.5 out of 5 stars">
+      {[0, 1, 2, 3].map((star) => (
+        <svg key={star} viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 drop-shadow-[0_1px_6px_rgba(212,192,154,0.18)]">
+          <path
+            fill="currentColor"
+            d="m12 2.8 2.72 5.52 6.09.88-4.4 4.29 1.04 6.06L12 16.68l-5.45 2.87 1.04-6.06-4.4-4.29 6.09-.88L12 2.8Z"
+          />
+        </svg>
+      ))}
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 drop-shadow-[0_1px_6px_rgba(212,192,154,0.18)]">
+        <defs>
+          <linearGradient id="service-rating-half-star">
+            <stop offset="50%" stopColor="currentColor" />
+            <stop offset="50%" stopColor="rgba(212,192,154,0.22)" />
+          </linearGradient>
+        </defs>
+        <path
+          fill="url(#service-rating-half-star)"
+          d="m12 2.8 2.72 5.52 6.09.88-4.4 4.29 1.04 6.06L12 16.68l-5.45 2.87 1.04-6.06-4.4-4.29 6.09-.88L12 2.8Z"
+        />
+      </svg>
+    </div>
+  );
+}
+
+function ProductionFlagIcon() {
+  return (
+    <svg
+      viewBox="0 0 56 38"
+      aria-hidden="true"
+      className="h-10 w-14 text-[#d4c09a] drop-shadow-[0_10px_22px_rgba(212,192,154,0.12)]"
+    >
+      <path
+        fill="currentColor"
+        d="M6 5.5c0-.55.45-1 1-1h42c.55 0 1 .45 1 1v27c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1v-27Z"
+        opacity="0.16"
+      />
+      <path
+        fill="currentColor"
+        d="M8 7h40v3H8V7Zm0 6h40v3H8v-3Zm0 6h40v3H8v-3Zm0 6h40v3H8v-3Zm0 6h40v2H8v-2Z"
+        opacity="0.82"
+      />
+      <path fill="currentColor" d="M8 7h18v14H8V7Z" opacity="0.95" />
+      <path
+        fill="#171311"
+        d="m12 10.2.62 1.25 1.38.2-1 .97.24 1.37L12 13.35l-1.24.64.24-1.37-1-.97 1.38-.2L12 10.2Zm6 0 .62 1.25 1.38.2-1 .97.24 1.37-1.24-.64-1.24.64.24-1.37-1-.97 1.38-.2L18 10.2Zm-3 5 .62 1.25 1.38.2-1 .97.24 1.37L15 18.35l-1.24.64.24-1.37-1-.97 1.38-.2L15 15.2Zm6 0 .62 1.25 1.38.2-1 .97.24 1.37-1.24-.64-1.24.64.24-1.37-1-.97 1.38-.2L21 15.2Z"
+        opacity="0.8"
+      />
+    </svg>
+  );
+}
+
+function AnimatedStatValue({
+  stat,
+  active,
+}: {
+  stat: (typeof proofStats)[number];
+  active: boolean;
+}) {
+  const [display, setDisplay] = useState(
+    typeof stat.value === "number" ? stat.start : stat.value
+  );
+
+  useEffect(() => {
+    if (typeof stat.value !== "number" || !active) return;
+
+    let frame = 0;
+    let raf = 0;
+    const frames = 102;
+    const start = stat.start ?? stat.value;
+    const end = stat.value;
+
+    const tick = () => {
+      frame += 1;
+      const progress = Math.min(frame / frames, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplay(start + (end - start) * eased);
+      if (progress < 1) raf = requestAnimationFrame(tick);
+    };
+
+    setDisplay(start);
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [active, stat]);
+
+  if ("flagIcon" in stat && stat.flagIcon) {
+    return <ProductionFlagIcon />;
+  }
+
+  if (typeof stat.value !== "number") {
+    return (
+      <div className="text-3xl font-semibold tracking-tight text-[#d4c09a] md:text-[2.35rem]">
+        <span className="whitespace-nowrap">{stat.value}</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="text-3xl font-semibold tracking-tight text-[#d4c09a] md:text-[2.35rem]">
+      <span className="whitespace-nowrap">
+        {Number(display).toFixed(stat.decimals)}
+        {stat.suffix}
+      </span>
+    </div>
+  );
+}
+
+function ProofStatCard({
+  stat,
+  active,
+  selected,
+  onActivate,
+}: {
+  stat: (typeof proofStats)[number];
+  active: boolean;
+  selected: boolean;
+  onActivate: () => void;
+}) {
+  return (
+    <article
+      tabIndex={0}
+      onMouseEnter={onActivate}
+      onFocus={onActivate}
+      onClick={onActivate}
+      className={`relative flex h-[180px] min-h-[180px] flex-col items-center justify-center overflow-hidden rounded-[24px] border bg-[linear-gradient(145deg,rgba(255,255,255,0.12),rgba(255,255,255,0.045))] p-5 text-center shadow-[0_22px_58px_rgba(0,0,0,0.28)] outline-none backdrop-blur-md transition duration-300 hover:-translate-y-1 focus-visible:ring-2 focus-visible:ring-[#d4c09a]/50 ${
+        selected ? "border-[#d4c09a]/60 bg-white/[0.09]" : "border-white/10 hover:border-[#d4c09a]/55 focus-visible:border-[#d4c09a]"
+      }`}
+      aria-label={`${stat.value} ${stat.label}. ${stat.hover}`}
+    >
+      <div className="pointer-events-none absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-white/35 to-transparent" />
+      <div className="flex h-12 items-end justify-center">
+        <AnimatedStatValue stat={stat} active={active} />
+      </div>
+      <div className="mt-3 h-5">
+        {"rating" in stat && stat.rating ? <RatingStars /> : null}
+      </div>
+      <p className="mt-4 max-w-full text-center text-xs font-semibold uppercase leading-5 tracking-[0.14em] text-white/68">
+        {stat.label}
+      </p>
+    </article>
+  );
+}
+
 function BetterModelCard({
   card,
   isOpen,
   onToggle,
+  compact = false,
 }: {
   card: (typeof betterModelCards)[number];
   isOpen: boolean;
   onToggle: () => void;
+  compact?: boolean;
 }) {
   const panelId = `better-model-${card.id}-panel`;
 
   return (
     <motion.article
+      layout
       variants={cardReveal}
-      className={`group rounded-2xl border border-[#d6c3a1]/50 bg-[#fffaf2]/85 p-6 shadow-[0_18px_45px_rgba(49,39,26,0.08)] backdrop-blur-md transition hover:-translate-y-1 hover:border-[#c9b28b] hover:bg-[#fffaf2] hover:shadow-[0_24px_64px_rgba(49,39,26,0.13)] ${
-        isOpen ? "" : "min-h-[156px]"
-      }`}
+      transition={{ layout: { duration: 0.42, ease: "easeInOut" } }}
+      className="group overflow-hidden rounded-2xl border border-[#d6c3a1]/50 bg-[#fffaf2]/88 shadow-[0_18px_45px_rgba(49,39,26,0.08)] backdrop-blur-md transition-colors duration-300 hover:border-[#c9b28b] hover:bg-[#fffaf2] hover:shadow-[0_24px_64px_rgba(49,39,26,0.13)]"
     >
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={isOpen}
         aria-controls={panelId}
-        className="flex w-full items-start justify-between gap-4 text-left"
+        className={`flex w-full items-start justify-between gap-4 p-5 text-left outline-none transition focus-visible:ring-2 focus-visible:ring-[#8a7654]/45 md:p-6 ${
+          isOpen ? "min-h-[156px]" : compact ? "min-h-[152px]" : "min-h-[176px]"
+        }`}
       >
         <span className="flex items-start gap-4">
           <ArtisanIcon
@@ -332,7 +599,7 @@ function BetterModelCard({
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.28, ease: "easeOut" }}
           >
-            <div className="mt-5 border-t border-[#d6c3a1]/45 pt-5">
+            <div className="mx-5 mb-5 border-t border-[#d6c3a1]/45 pt-5 md:mx-6 md:mb-6">
               {card.id !== "transparency" ? (
                 <>
                   {card.expandedTitle ? (
@@ -344,6 +611,28 @@ function BetterModelCard({
                     {card.expandedBody}
                   </p>
                 </>
+              ) : null}
+
+              {card.id === "flexibility" ? (
+                <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
+                  {systemsIntegrationLogos.map((logo) => (
+                    <div
+                      key={logo.alt}
+                      className="flex h-24 items-center justify-center rounded-2xl border border-[#dfd2bf] bg-white px-4 py-4 shadow-[0_10px_28px_rgba(49,39,26,0.06)]"
+                    >
+                      <Image
+                        src={logo.src}
+                        alt={logo.alt}
+                        width={240}
+                        height={100}
+                        className="max-h-14 w-auto max-w-full object-contain"
+                      />
+                    </div>
+                  ))}
+                  <div className="flex h-24 items-center justify-center rounded-2xl border border-[#d4c09a]/60 bg-[#171311] px-4 text-center text-sm font-semibold text-[#d4c09a]">
+                    and many more
+                  </div>
+                </div>
               ) : null}
 
               {card.id === "freedom" ? (
@@ -460,12 +749,171 @@ function BetterModelCard({
   );
 }
 
+function HomeNetworkMap() {
+  const [activeLabId, setActiveLabId] = useState<string | null>(null);
+  const activeLab = activeLabId ? homeLabs.find((lab) => lab.id === activeLabId) ?? null : null;
+
+  return (
+    <section
+      id="labs"
+      data-theme="dark"
+      className="relative overflow-hidden border-y border-white/10 bg-[#171311] px-6 py-16 text-white md:px-10 md:py-20"
+    >
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_25%,rgba(212,192,154,0.16),transparent_34%)]" />
+      <div className="relative z-10 mx-auto max-w-7xl">
+        <motion.div {...fadeUp} className="mx-auto max-w-3xl text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#d4c09a]">
+            Our Labs
+          </p>
+          <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">
+            Three Labs. One Connected Standard.
+          </h2>
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-white/68 md:text-lg">
+            View the full network, then choose a lab for local contact details and team information.
+          </p>
+        </motion.div>
+
+        <div className="mt-10 grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(360px,0.85fr)] lg:items-stretch">
+          <div className="rounded-[28px] border border-white/10 bg-white/[0.055] p-4 shadow-[0_28px_90px_rgba(0,0,0,0.30)] backdrop-blur-md md:p-6">
+            <div className="relative mx-auto max-w-4xl">
+              <Image
+                src="/network-map.png"
+                alt="Artisan Lab Network map"
+                width={1600}
+                height={875}
+                className="mx-auto h-auto w-full object-contain"
+              />
+              {homeLabs.map((lab) => {
+                const selected = activeLab?.id === lab.id;
+                return (
+                  <button
+                    key={lab.id}
+                    type="button"
+                    onClick={() => setActiveLabId(lab.id)}
+                    className={`absolute -translate-x-1/2 -translate-y-1/2 transition ${selected ? "z-20" : "z-10 opacity-80 hover:opacity-100"}`}
+                    style={lab.position}
+                    aria-label={`Show ${lab.label}`}
+                  >
+                    <span className={`absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#d4c09a]/20 blur-xl ${selected ? "opacity-100" : "opacity-70"}`} />
+                    <span className={`relative block h-5 w-5 rounded-full bg-[#d4c09a] shadow-[0_0_28px_rgba(212,192,154,0.95)] ${selected ? "ring-8 ring-[#d4c09a]/18" : ""}`} />
+                    <span className={`absolute left-7 top-1/2 hidden -translate-y-1/2 whitespace-nowrap rounded-full border px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] shadow-lg backdrop-blur-md sm:block ${
+                      selected ? "border-[#d4c09a]/60 bg-[#d4c09a] text-black" : "border-white/10 bg-black/75 text-white"
+                    }`}>
+                      {lab.label}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <motion.article
+            key={activeLab?.id ?? "all-labs"}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.28, ease: "easeOut" }}
+            className={`rounded-[28px] border p-5 shadow-[0_28px_90px_rgba(0,0,0,0.28)] backdrop-blur-xl md:p-6 ${
+              activeLab ? "border-white/10 bg-white/[0.065] text-white" : "border-white/10 bg-white/[0.065] text-white"
+            }`}
+          >
+            {activeLab ? (
+              <>
+                <div className="flex h-32 items-center justify-center rounded-2xl border border-[#e6d9c8] bg-[#fbf8f3] px-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.75),0_18px_44px_rgba(0,0,0,0.22)]">
+                  <Image
+                    src={activeLab.id === "pacific" ? "/logos/PAL_2CTan.png" : activeLab.logo}
+                    alt={activeLab.logoAlt}
+                    width={360}
+                    height={150}
+                    className="max-h-20 w-auto max-w-full object-contain"
+                  />
+                </div>
+                <p className="mt-6 text-xs font-semibold uppercase tracking-[0.26em] text-[#d4c09a]">
+                  {activeLab.city}, {activeLab.state}
+                </p>
+                <h3 className="mt-3 text-3xl font-semibold tracking-tight">
+                  {activeLab.label}
+                </h3>
+                <p className="mt-4 text-sm leading-7 text-white/70">
+                  {activeLab.description}
+                </p>
+                <div className="mt-6 grid gap-2 text-sm leading-6 text-white/72">
+                  {activeLab.address.map((line) => (
+                    <div key={line}>{line}</div>
+                  ))}
+                  <a href={`tel:${activeLab.phoneHref}`} className="font-semibold text-white transition hover:text-[#d4c09a]">
+                    {activeLab.phone}
+                  </a>
+                  <a href={`mailto:${activeLab.email}`} className="break-words font-semibold text-white transition hover:text-[#d4c09a]">
+                    {activeLab.email}
+                  </a>
+                </div>
+                <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                  <a
+                    href={activeLab.meetHref}
+                    className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#d4c09a] px-5 py-2.5 text-sm font-semibold text-[#171311] transition hover:bg-[#e2cca2]"
+                  >
+                    Meet Your Lab
+                  </a>
+                  <a
+                    href={`mailto:${activeLab.email}`}
+                    className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/12 bg-white/8 px-5 py-2.5 text-sm font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-[#171311]"
+                  >
+                    Email Customer Service
+                  </a>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setActiveLabId(null)}
+                  className="mt-4 inline-flex min-h-10 items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-4 py-2 text-sm font-semibold text-white/72 transition hover:border-[#d4c09a]/55 hover:bg-white/[0.08] hover:text-white"
+                >
+                  View All Labs
+                </button>
+              </>
+            ) : (
+              <>
+                <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[#d4c09a]">
+                  Network View
+                </p>
+                <h3 className="mt-3 text-3xl font-semibold tracking-tight">
+                  All Artisan Labs
+                </h3>
+                <p className="mt-4 text-sm leading-7 text-white/70">
+                  Three regional labs operate with one connected standard for service, quality, and independent practice support.
+                </p>
+                <div className="mt-6 grid gap-3">
+                  {homeLabs.map((lab) => (
+                    <button
+                      key={lab.id}
+                      type="button"
+                      onClick={() => setActiveLabId(lab.id)}
+                      className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.055] px-4 py-4 text-left transition hover:border-[#d4c09a]/55 hover:bg-white/[0.09]"
+                    >
+                      <span>
+                        <span className="block font-semibold text-white">{lab.label}</span>
+                        <span className="mt-1 block text-sm text-white/58">{lab.city}, {lab.state}</span>
+                      </span>
+                      <span className="text-[#d4c09a]" aria-hidden="true">→</span>
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </motion.article>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Home() {
   const [showHeroBox, setShowHeroBox] = useState(true);
   const [activeBetterModelCard, setActiveBetterModelCard] = useState<string | null>(null);
   const [activeCapability, setActiveCapability] = useState<string | null>(null);
-  const [activeProof, setActiveProof] = useState(0);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const proofRef = useRef<HTMLElement | null>(null);
+  const [proofInView, setProofInView] = useState(false);
+  const [activeProofStatId, setActiveProofStatId] = useState(proofStats[0].id);
+  const [isProofStatHovering, setIsProofStatHovering] = useState(false);
 
   useEffect(() => {
     if (activeCapability === null) return;
@@ -474,20 +922,56 @@ export default function Home() {
   }, [activeCapability]);
 
   useEffect(() => {
-    const timer = setInterval(
-      () => setActiveProof((prev) => (prev + 1) % proofQuotes.length),
-      PROOF_ROTATION_MS
+    const section = proofRef.current;
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setProofInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.35 }
     );
-    return () => clearInterval(timer);
+
+    observer.observe(section);
+    return () => observer.disconnect();
   }, []);
 
-  const activeProofQuote = proofQuotes[activeProof];
+  useEffect(() => {
+    if (!proofInView || isProofStatHovering) return;
 
-  const renderBetterModelCard = (card: (typeof betterModelCards)[number]) => (
+    const timer = window.setInterval(() => {
+      setActiveProofStatId((currentId) => {
+        const currentIndex = proofStats.findIndex((stat) => stat.id === currentId);
+        const nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % proofStats.length;
+        return proofStats[nextIndex].id;
+      });
+    }, PROOF_STAT_ROTATION_MS);
+
+    return () => window.clearInterval(timer);
+  }, [proofInView, isProofStatHovering]);
+
+  const activeProofStat =
+    proofStats.find((stat) => stat.id === activeProofStatId) ?? proofStats[0];
+
+  const selectedBetterModelCard = activeBetterModelCard
+    ? betterModelCards.find((card) => card.id === activeBetterModelCard) ?? null
+    : null;
+  const secondaryBetterModelCards = selectedBetterModelCard
+    ? betterModelCards.filter((card) => card.id !== selectedBetterModelCard.id)
+    : [];
+
+  const renderBetterModelCard = (
+    card: (typeof betterModelCards)[number],
+    options?: { compact?: boolean }
+  ) => (
     <BetterModelCard
       key={card.id}
       card={card}
       isOpen={activeBetterModelCard === card.id}
+      compact={options?.compact}
       onToggle={() =>
         setActiveBetterModelCard((current) =>
           current === card.id ? null : card.id
@@ -496,12 +980,6 @@ export default function Home() {
     />
   );
 
-  const goToProof = (direction: "prev" | "next") => {
-    setActiveProof((prev) => {
-      if (direction === "prev") return (prev - 1 + proofQuotes.length) % proofQuotes.length;
-      return (prev + 1) % proofQuotes.length;
-    });
-  };
   const openContactModal = () => {
     setIsContactModalOpen(true);
   };
@@ -526,37 +1004,32 @@ export default function Home() {
     <main className="relative min-h-screen overflow-x-hidden bg-black text-white">
       <Header onContactClick={openContactModal} />
 
-      {/* FIXED BACKGROUND MEDIA */}
-      <div
-        className="pointer-events-none fixed inset-0 z-0 bg-black bg-cover bg-center"
-        style={{ backgroundImage: "url('/backgroundimage.jpeg')" }}
-      >
-        <video className="h-full w-full bg-black/80 object-contain object-center md:hidden" autoPlay loop muted playsInline preload="metadata" poster="/backgroundimage.jpeg">
-          <source src="https://pub-92e180f20b704255b9a7625dd6a6cb0b.r2.dev/hero-vertical.mp4" type="video/mp4" />
-        </video>
-        <video className="hidden h-full w-full bg-black/80 object-contain object-center md:block" autoPlay loop muted playsInline preload="metadata" poster="/backgroundimage.jpeg">
-          <source src="https://pub-92e180f20b704255b9a7625dd6a6cb0b.r2.dev/hero.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-black/20" />
-      </div>
-
       {/* HERO */}
       <section
         id="top"
         data-theme="dark"
-        className="relative z-20 min-h-[100svh] overflow-hidden"
+        className="relative z-20 min-h-[100svh] overflow-hidden bg-black"
       >
-        <div className={`pointer-events-none absolute inset-0 transition-colors duration-500 ${showHeroBox ? "bg-black/54" : "bg-black/18"}`} />
+        <div className="absolute inset-0">
+          <video className="h-full w-full object-cover object-center md:hidden" autoPlay loop muted playsInline preload="metadata" poster="/backgroundimage.jpeg">
+            <source src="https://pub-92e180f20b704255b9a7625dd6a6cb0b.r2.dev/hero-vertical.mp4" type="video/mp4" />
+          </video>
+          <video className="hidden h-full w-full object-cover object-center md:block" autoPlay loop muted playsInline preload="metadata" poster="/backgroundimage.jpeg">
+            <source src="https://pub-92e180f20b704255b9a7625dd6a6cb0b.r2.dev/hero.mp4" type="video/mp4" />
+          </video>
+        </div>
+        <div className={`pointer-events-none absolute inset-0 transition-colors duration-500 ${showHeroBox ? "bg-black/54" : "bg-transparent"}`} />
 
-        <div className="relative z-20 flex min-h-[100svh] items-center justify-center px-5 pb-12 pt-24 text-center md:px-6 md:pt-28">
-          <AnimatePresence>
-            {showHeroBox && (
+        <div className="relative z-20 flex min-h-[100svh] items-center justify-center px-5 pb-20 pt-24 text-center md:px-6 md:pb-24 md:pt-28">
+          <AnimatePresence mode="wait">
+            {showHeroBox ? (
               <motion.div
+                key="hero-question"
                 initial={{ opacity: 0, y: 18, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -10, scale: 0.98 }}
                 transition={{ duration: 0.45, ease: "easeOut" }}
-                className="relative w-full max-w-5xl rounded-2xl border border-white/15 bg-black/46 px-5 py-6 text-center shadow-[0_28px_90px_rgba(0,0,0,0.42)] backdrop-blur-xl md:px-7 md:py-7"
+                className="relative w-full max-w-5xl rounded-[28px] border border-white/15 bg-black/48 px-5 py-5 text-center shadow-[0_28px_90px_rgba(0,0,0,0.42)] backdrop-blur-xl md:px-7 md:py-7"
               >
                 <button
                   type="button"
@@ -573,11 +1046,11 @@ export default function Home() {
                   <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#d4c09a]">
                     Artisan Lab Network
                   </p>
-                  <h1 className="mt-4 text-4xl font-semibold leading-tight md:text-6xl">
+                  <h1 className="mt-3 text-3xl font-semibold leading-tight md:mt-4 md:text-6xl">
                     What brought you to Artisan?
                   </h1>
-                  <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-white/74 md:text-lg">
-                    Choose the path that fits you best and we’ll help you find the right next step.
+                  <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-white/74 md:mt-4 md:text-lg md:leading-7">
+                    Choose the path that fits you best and we&apos;ll help you find the right next step.
                   </p>
                 </div>
 
@@ -585,22 +1058,22 @@ export default function Home() {
                   variants={staggerContainer}
                   initial="initial"
                   animate="whileInView"
-                  className="mt-7 grid gap-3 md:grid-cols-2"
+                  className="mt-5 grid gap-3 md:mt-7 md:grid-cols-2"
                 >
                   {heroPaths.map((path) => (
                     <motion.a
                       key={path.title}
                       href={path.href}
                       variants={cardReveal}
-                      className="group flex min-h-[172px] flex-col rounded-xl border border-white/12 bg-white/[0.075] p-5 text-left shadow-[0_14px_44px_rgba(0,0,0,0.20)] transition duration-300 hover:-translate-y-1 hover:border-[#d4c09a]/55 hover:bg-white/[0.105]"
+                      className="group flex min-h-0 flex-col rounded-xl border border-white/12 bg-white/[0.075] p-4 text-left shadow-[0_14px_44px_rgba(0,0,0,0.20)] transition duration-300 hover:-translate-y-1 hover:border-[#d4c09a]/55 hover:bg-white/[0.105] md:min-h-[172px] md:p-5"
                     >
-                      <h2 className="text-xl font-semibold leading-tight text-white md:text-2xl">
+                      <h2 className="text-lg font-semibold leading-tight text-white md:text-2xl">
                         {path.title}
                       </h2>
-                      <p className="mt-3 flex-1 text-sm leading-6 text-white/66">
+                      <p className="mt-2 hidden flex-1 text-sm leading-6 text-white/66 sm:block md:mt-3">
                         {path.body}
                       </p>
-                      <div className="mt-5 inline-flex w-fit items-center rounded-full border border-[#d4c09a]/35 bg-[#d4c09a] px-4 py-2.5 text-sm font-semibold text-black transition group-hover:bg-[#e2cca2]">
+                      <div className="mt-4 inline-flex w-fit items-center rounded-full border border-[#d4c09a]/35 bg-[#d4c09a] px-4 py-2.5 text-sm font-semibold text-black transition group-hover:bg-[#e2cca2] md:mt-5">
                         {path.cta}
                         <span className="ml-2 transition group-hover:translate-x-0.5">→</span>
                       </div>
@@ -608,7 +1081,7 @@ export default function Home() {
                   ))}
                 </motion.div>
 
-                <div className="mt-6 flex flex-col items-center justify-center gap-3 border-t border-white/10 pt-5 sm:flex-row sm:flex-wrap">
+                <div className="mt-5 flex flex-col items-center justify-center gap-3 border-t border-white/10 pt-4 sm:flex-row sm:flex-wrap md:mt-6 md:pt-5">
                   <a
                     href={ACCOUNT_APPLICATION_URL}
                     target="_blank"
@@ -619,36 +1092,161 @@ export default function Home() {
                   </a>
                   <p className="text-sm leading-6 text-white/58">
                     Are you a doctor interested in deeper partnership?{" "}
-                    <a href="/artisan-model" className="font-semibold text-[#d4c09a] underline decoration-[#d4c09a]/45 underline-offset-4 transition hover:text-white">
-                      Learn about the Artisan model.
-                    </a>
+                    <Link
+                      href="/artisan-model"
+                      className="font-semibold text-[#d4c09a] underline decoration-[#d4c09a]/45 underline-offset-4 transition hover:text-white"
+                    >
+                      Learn About Lab Ownership.
+                    </Link>
                   </p>
                 </div>
               </motion.div>
-            )}
+            ) : null}
           </AnimatePresence>
+        </div>
+        <a
+          href="#proof"
+          className="absolute bottom-4 left-1/2 z-30 inline-flex -translate-x-1/2 items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/55 transition hover:text-[#d4c09a]"
+          aria-label="Scroll to Why We Win section"
+        >
+          <span className="h-px w-10 bg-white/28" />
+          <span>Scroll</span>
+          <span className="h-px w-10 bg-white/28" />
+        </a>
+      </section>
+
+      <AnimatePresence initial={false}>
+        {!showHeroBox ? (
+          <motion.section
+            key="hero-note"
+            data-theme="light"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+            className="relative z-10 border-b border-[#d6c3a1]/35 bg-[#f5f1eb] px-5 py-5 text-[#1f1a17] md:px-8 md:py-6"
+          >
+            <div className="mx-auto flex max-w-4xl flex-col gap-4 rounded-lg border border-black/10 bg-white/62 px-5 py-4 shadow-[0_14px_36px_rgba(31,26,23,0.07)] backdrop-blur-md sm:flex-row sm:items-center sm:gap-5 md:px-6">
+              <div className="flex shrink-0 items-center sm:w-28 sm:justify-center">
+                <Image
+                  src="/iot-logo.png"
+                  alt="IOT"
+                  width={160}
+                  height={74}
+                  className="h-auto w-20 object-contain sm:w-24"
+                />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h2 className="text-base font-semibold leading-snug tracking-normal text-[#1f1a17] md:text-lg">
+                  Discover Camber Pure from IOT
+                </h2>
+                <p className="mt-1.5 text-sm leading-6 text-[#625b53]">
+                  Camber Pure is an advanced progressive lens technology designed to improve the visual experience for patients who need more from their lenses.
+                </p>
+              </div>
+              <div className="shrink-0 sm:text-right">
+                <Link
+                  href="/provider-resources#iot"
+                  className="inline-flex min-h-10 items-center justify-center rounded-full border border-[#d6c3a1]/65 bg-[#fffaf2]/80 px-4 py-2 text-sm font-semibold text-[#8a7654] shadow-[0_8px_22px_rgba(31,26,23,0.05)] transition hover:border-[#8a7654]/45 hover:bg-white hover:text-[#1f1a17]"
+                >
+                  Learn more in Practice Resources
+                </Link>
+              </div>
+            </div>
+          </motion.section>
+        ) : null}
+      </AnimatePresence>
+
+      <section
+        id="proof"
+        ref={proofRef}
+        data-theme="dark"
+        className="relative scroll-mt-24 border-y border-white/10 bg-[#171311] px-6 py-14 text-white md:px-10 md:py-18"
+      >
+        <div className="mx-auto max-w-7xl">
+          <motion.div {...fadeUp} className="grid gap-9 lg:grid-cols-[0.72fr_1.28fr] lg:items-center">
+            <div className="max-w-xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#d4c09a]">
+                Why We Win
+              </p>
+              <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-[3.4rem]">
+                Why We Win.
+              </h2>
+              <p className="mt-4 text-base leading-8 text-white/68">
+                Practices need a lab relationship they can feel in turnaround, communication, quality, and control.
+              </p>
+            </div>
+            <div
+              className="grid gap-4"
+              onMouseEnter={() => setIsProofStatHovering(true)}
+              onMouseLeave={() => setIsProofStatHovering(false)}
+            >
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+                {proofStats.map((stat) => (
+                  <ProofStatCard
+                    key={stat.id}
+                    stat={stat}
+                    active={proofInView}
+                    selected={activeProofStatId === stat.id}
+                    onActivate={() => setActiveProofStatId(stat.id)}
+                  />
+                ))}
+              </div>
+              <div className="min-h-[72px] rounded-[18px] border border-white/10 bg-white/[0.055] px-5 py-4 shadow-[0_18px_48px_rgba(0,0,0,0.18)] backdrop-blur-md">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeProofStat.id}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.22, ease: "easeOut" }}
+                  >
+                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#d4c09a]">
+                      {activeProofStat.label}
+                    </p>
+                    <p className="mt-1.5 text-sm leading-6 text-white/72">
+                      {activeProofStat.hover}
+                    </p>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
       {/* PROBLEM */}
       <section
         data-theme="dark"
-        className="relative px-6 py-[72px] md:py-20"
-        style={{
-          backgroundImage: "url('/backgroundwithglasses2.jpeg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundAttachment: "fixed",
-        }}
+        className="relative overflow-hidden bg-[#0f0c0b] px-6 py-16 md:px-10 md:py-20"
       >
-        <div className="pointer-events-none absolute inset-0 bg-black/75" />
-        <div className="relative z-20 max-w-7xl mx-auto">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(212,192,154,0.15),transparent_30%),linear-gradient(135deg,rgba(255,255,255,0.045),transparent_42%)]" />
+        <div
+          className="pointer-events-none absolute -right-28 top-2 h-[460px] w-[460px] rounded-full opacity-[0.16] blur-[0.2px]"
+          style={{
+            backgroundImage:
+              "repeating-radial-gradient(circle at center, transparent 0 48px, rgba(212,192,154,0.28) 49px 51px, transparent 52px 86px)",
+            maskImage: "radial-gradient(circle at center, black 0 58%, transparent 76%)",
+          }}
+          aria-hidden="true"
+        />
+        <div
+          className="pointer-events-none absolute right-20 top-24 h-[260px] w-[260px] rounded-full border border-[#d4c09a]/10 opacity-50"
+          style={{
+            boxShadow: "0 0 0 42px rgba(212,192,154,0.035), 0 0 0 86px rgba(212,192,154,0.025)",
+          }}
+          aria-hidden="true"
+        />
+        <div className="relative z-20 mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
           <motion.div {...fadeUp}>
-            <h2 className="text-4xl md:text-5xl font-semibold text-white">
-            The Corporate Lab Problem
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#d4c09a]">
+              Corporate Lab Problem
+            </p>
+            <h2 className="mt-4 text-4xl font-semibold tracking-tight text-white md:text-5xl">
+              Corporate systems were never built for your independence.
             </h2>
-            <p className="mt-4 text-lg text-white/75 max-w-3xl">
-              Corporate labs look safe, until you realize they’re designed to limit your control, limit your choices, and limit your margins.
+            <p className="mt-5 max-w-3xl text-lg leading-8 text-white/68">
+              Corporate labs can look safe from the outside. But many are owned by multinational corporations built to protect their own systems, not your independence.
             </p>
           </motion.div>
 
@@ -657,22 +1255,22 @@ export default function Home() {
             initial="initial"
             whileInView="whileInView"
             viewport={{ once: true, amount: 0.2 }}
-            className="mt-7 grid gap-4 md:grid-cols-2"
+            className="grid gap-3 sm:grid-cols-2"
           >
             {[
               "Restricted product choice",
-              "Pricing pressure, always pushing down",
+              "Pricing pressure that keeps pushing down",
               "Slow or inconsistent turnaround",
               "Poor communication and surprise delays",
-              "Policies that make you feel boxed in",
+              "Policies that make your team feel boxed in",
             ].map((item) => (
               <motion.div
                 key={item}
                 variants={cardReveal}
-                className="rounded-2xl bg-white/5 border border-white/15 backdrop-blur-md p-5 shadow-[0_14px_45px_rgba(0,0,0,0.12)] transition hover:-translate-y-1 hover:border-[#d4c09a]/45 hover:bg-white/[0.075] md:p-6"
+                className="min-h-[154px] rounded-[24px] border border-white/10 bg-white/[0.06] p-5 shadow-[0_18px_48px_rgba(0,0,0,0.18)] backdrop-blur-md transition hover:-translate-y-1 hover:border-[#d4c09a]/45 hover:bg-white/[0.08]"
               >
-                <div className="text-[#d4c09a] text-xs uppercase tracking-[0.28em]">YOU FEEL IT</div>
-                <div className="mt-3 text-lg text-white">{item}</div>
+                <div className="text-xs font-semibold uppercase tracking-[0.24em] text-[#d4c09a]">You feel it</div>
+                <div className="mt-4 text-xl font-semibold leading-snug text-white">{item}</div>
               </motion.div>
             ))}
           </motion.div>
@@ -682,7 +1280,7 @@ export default function Home() {
       {/* SOLUTION / HOW IT WORKS */}
       <section
         data-theme="light"
-        className="relative px-6 py-16 text-black md:py-[72px]"
+        className="relative overflow-hidden px-6 py-16 text-black md:px-10 md:py-20"
         style={{
           backgroundImage: "url('/backgroundwithglasses2.jpeg')",
           backgroundSize: "cover",
@@ -693,115 +1291,102 @@ export default function Home() {
         <div className="pointer-events-none absolute inset-0 bg-white/70" />
         <div
           className="pointer-events-none absolute -bottom-32 -right-24 h-[420px] w-[420px] bg-contain bg-center bg-no-repeat opacity-[0.07]"
-          style={{ backgroundImage: "url('/Rings.png')" }}
+          style={{ backgroundImage: "url('/rings.png')" }}
           aria-hidden="true"
         />
-        <div className="relative z-20 max-w-7xl mx-auto">
+        <div className="relative z-20 mx-auto max-w-7xl">
           <div id="better-model" className="scroll-mt-24">
-            <motion.div {...fadeUp}>
-              <h2 className="text-4xl md:text-5xl font-semibold">The Better Model</h2>
-              <p className="mt-4 max-w-3xl text-lg text-black/72">
-                Artisan Lab Network gives you freedom of choice, real partnership, and a modern system that fits the way you run your practice.
-              </p>
-            </motion.div>
-
-            <motion.div
-              variants={staggerContainer}
-              initial="initial"
-              whileInView="whileInView"
-              viewport={{ once: true, amount: 0.2 }}
-              className="mt-7 grid items-start gap-6 md:grid-cols-2"
-            >
-              {betterModelCards.map(renderBetterModelCard)}
-            </motion.div>
-          </div>
-
-          <div className="my-20 h-px w-full bg-black/10" />
-
-          <div id="how-it-works" className="scroll-mt-24">
-            <motion.div {...fadeUp}>
-              <h2 className="text-4xl md:text-5xl font-semibold">How the Network Works</h2>
-              <p className="mt-4 text-lg text-black/75 max-w-3xl">
-                Multiple labs. Real systems. Simple control. Built for modern independent practices.
-              </p>
-            </motion.div>
-
-            <motion.div
-              variants={staggerContainer}
-              initial="initial"
-              whileInView="whileInView"
-              viewport={{ once: true, amount: 0.2 }}
-              className="mt-8 grid gap-4 md:grid-cols-3"
-            >
-              {[
-                {
-                  title: "Multiple Labs",
-                  body: "Strength + flexibility across the network.",
-                  icon: "/icons/artisan/multiple-labs.svg",
-                },
-                {
-                  title: "In-House Production",
-                  body: "Quality you can rely on.",
-                  icon: "/icons/artisan/in-house-production.svg",
-                },
-                {
-                  title: "Integrated Systems",
-                  body: "Ordering and updates without chaos.",
-                  icon: "/icons/artisan/integrated-systems.svg",
-                },
-              ].map((step) => (
-                <motion.div
-                  key={step.title}
-                  variants={cardReveal}
-                  className="group rounded-2xl bg-white/80 border border-black/10 p-5 shadow backdrop-blur-md transition hover:-translate-y-1 hover:border-[#c9b28b] hover:bg-white hover:shadow-[0_24px_64px_rgba(49,39,26,0.12)] md:p-6"
-                >
-                  <ArtisanIcon
-                    src={step.icon}
-                    className="mb-5 h-14 w-14 border-[#d6c3a1]/55 bg-[#fffaf2]/75"
-                  />
-                  <div className="text-xs uppercase tracking-[0.28em] text-black/50">{step.title}</div>
-                  <div className="mt-2 text-xl font-semibold text-[#1f1718]">{step.body}</div>
-                </motion.div>
-              ))}
-            </motion.div>
-
-            <div className="mt-8 flex flex-wrap gap-4">
-              <a
-                href="#labs"
-                className="rounded-full border border-black/15 bg-white/70 px-6 py-3 text-sm font-semibold text-black hover:bg-white"
+            <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+              <motion.div {...fadeUp}>
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#8a7654]">
+                  The Better Model
+                </p>
+                <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">Built for practices that want control back.</h2>
+                <p className="mt-5 max-w-3xl text-lg leading-8 text-black/72">
+                  Artisan Lab Network gives you freedom of choice, real partnership, and a modern system that fits the way you run your practice.
+                </p>
+              </motion.div>
+              <motion.div
+                {...fadeUp}
+                className="relative min-h-[340px] overflow-hidden rounded-[28px] shadow-[0_24px_70px_rgba(49,39,26,0.16)]"
               >
-                Meet the Labs
-              </a>
-              <a
-                href={ACCOUNT_APPLICATION_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-full bg-[#d4c09a] px-6 py-3 text-sm font-semibold text-black hover:opacity-90 shadow"
-              >
-                Get Started
-              </a>
+                <Image
+                  src="/images/business-meeting-discussion-2022-1.jpg"
+                  alt="Independent practice partnership discussion"
+                  fill
+                  sizes="(min-width: 1024px) 48vw, 100vw"
+                  className="object-cover"
+                />
+              </motion.div>
             </div>
+
+            <motion.div
+              {...fadeUp}
+              className="mt-8 grid overflow-hidden rounded-[28px] border border-[#d6c3a1]/70 bg-white/82 shadow-[0_24px_64px_rgba(49,39,26,0.10)] backdrop-blur-md lg:grid-cols-[260px_1fr]"
+            >
+              <div className="flex items-center justify-center border-b border-[#d6c3a1]/55 bg-[#171311] p-8 text-center text-white lg:border-b-0 lg:border-r">
+                <div className="flex flex-col items-center">
+                  <Image
+                    src="/icons/us-flag.svg"
+                    alt=""
+                    width={176}
+                    height={118}
+                    className="h-auto w-32 rounded-sm shadow-[0_16px_34px_rgba(0,0,0,0.24)] md:w-36"
+                    aria-hidden="true"
+                  />
+                  <p className="mt-4 text-xs font-semibold uppercase tracking-[0.24em] text-[#d4c09a]">
+                    U.S. Based
+                  </p>
+                </div>
+              </div>
+              <div className="p-6 md:p-8">
+                <h3 className="text-2xl font-semibold tracking-tight text-[#1f1718] md:text-3xl">
+                  Made Here. Built for Independent Practices.
+                </h3>
+                <p className="mt-4 text-base leading-8 text-[#625b53] md:text-lg">
+                  Artisan Lab Network is based in the United States and focused on producing as much work as possible through U.S. labs. We are not chasing cheap offshore labor at the expense of quality, service, or the people who make great optical work possible.
+                </p>
+              </div>
+            </motion.div>
+
+            <motion.div
+              id="vendor-partners"
+              variants={staggerContainer}
+              initial="initial"
+              whileInView="whileInView"
+              viewport={{ once: true, amount: 0.2 }}
+              layout
+              className={`mt-8 grid scroll-mt-24 items-start gap-5 ${
+                selectedBetterModelCard ? "lg:grid-cols-[minmax(0,1.6fr)_minmax(320px,0.74fr)]" : "lg:grid-cols-3"
+              }`}
+            >
+              {selectedBetterModelCard ? (
+                <>
+                  {renderBetterModelCard(selectedBetterModelCard)}
+                  <motion.div
+                    key={`${selectedBetterModelCard.id}-stack`}
+                    layout
+                    className="grid gap-5"
+                    transition={{ layout: { duration: 0.42, ease: "easeInOut" } }}
+                  >
+                    {secondaryBetterModelCards.map((card) =>
+                      renderBetterModelCard(card, { compact: true })
+                    )}
+                  </motion.div>
+                </>
+              ) : (
+                betterModelCards.map((card) => renderBetterModelCard(card))
+              )}
+            </motion.div>
           </div>
         </div>
       </section>
-
-      {/* OUR LABS */}
-      <NetworkMap
-        layout="stacked"
-        sectionId="labs"
-        eyebrow="Our Labs"
-        title="Three Labs. One Standard."
-        description="Click a lab on the map or choose a location below to view contact details, customer service, and website links."
-        panelEyebrow="Explore Our Network"
-        panelTitle="Lab Locations"
-        panelDescription="Start small, then open a lab when you need the details."
-      />
 
       {/* CAPABILITIES */}
       <section
         id="capabilities"
         data-theme="dark"
-        className="relative px-6 pb-14 pt-24 md:pb-16 md:pt-28 lg:pb-20"
+        className="relative px-6 py-16 md:px-10 md:py-20"
       >
         <div
           className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-[0.18]"
@@ -829,7 +1414,7 @@ export default function Home() {
             </p>
           </motion.div>
 
-          <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-9 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {capabilities.map((cap) => {
               const isActive = activeCapability === cap.title;
               const isDimmed = activeCapability !== null && !isActive;
@@ -895,7 +1480,29 @@ export default function Home() {
                           {cap.detail}
                         </p>
 
-                        {cap.link ? (
+                        {"integrations" in cap && cap.integrations ? (
+                          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                            {cap.integrations.map((logo) => (
+                              <div
+                                key={logo.alt}
+                                className="flex h-20 items-center justify-center rounded-2xl border border-white/10 bg-white px-3 shadow-[0_12px_30px_rgba(0,0,0,0.14)]"
+                              >
+                                <Image
+                                  src={logo.src}
+                                  alt={logo.alt}
+                                  width={210}
+                                  height={90}
+                                  className="max-h-11 w-auto max-w-full object-contain"
+                                />
+                              </div>
+                            ))}
+                            <div className="flex h-20 items-center justify-center rounded-2xl border border-[#d4c09a]/35 bg-[#d4c09a]/12 px-3 text-center text-sm font-semibold text-[#d4c09a]">
+                              and many more
+                            </div>
+                          </div>
+                        ) : null}
+
+                        {"link" in cap && cap.link ? (
                           <a
                             href={cap.link.href}
                             target={cap.link.href.startsWith("http") ? "_blank" : undefined}
@@ -915,292 +1522,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SOCIAL PROOF */}
-      <section
-        id="proof"
-        data-theme="dark"
-        className="relative px-6 py-16 text-white md:py-[72px]"
-        style={{
-          backgroundImage: "url('/backgroundimage.jpeg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundAttachment: "fixed",
-        }}
-      >
-        <div className="pointer-events-none absolute inset-0 bg-black/84" />
-        <motion.div
-          {...fadeUp}
-          className="relative z-20 max-w-7xl mx-auto"
-        >
-          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div>
-              <div className="text-xs uppercase tracking-[0.3em] text-[#d6c09a]">
-                Proof
-              </div>
-              <h2 className="mt-2 text-4xl font-semibold md:text-5xl">
-                Placeholder Stories, Built to Swap.
-              </h2>
-            </div>
-
-            <p className="max-w-md text-sm text-white/65">
-              These cards show the final testimonial format. Replace the placeholder quotes and photo areas before publish.
-            </p>
-          </div>
-
-          <div className="mt-6 grid gap-4 lg:grid-cols-[1.1fr_0.9fr] lg:items-stretch">
-            <div className="overflow-hidden rounded-[22px] border border-white/15 bg-white/8 p-5 shadow-2xl backdrop-blur-xl md:p-6">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeProofQuote.label}
-                  initial={{ opacity: 0, x: 24 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -24 }}
-                  transition={{ duration: 0.28 }}
-                  className="grid gap-6 md:grid-cols-[140px_1fr] md:items-center"
-                >
-                  <div className="mx-auto grid h-32 w-32 place-items-center rounded-full border border-[#d4c09a]/45 bg-black/35 shadow-inner md:h-36 md:w-36">
-                    <div className="text-center">
-                      <div className="text-3xl font-semibold text-[#d4c09a]">
-                        {activeProofQuote.initials}
-                      </div>
-                      <div className="mt-2 text-[10px] uppercase tracking-[0.22em] text-white/45">
-                        Photo placeholder
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="text-xs uppercase tracking-[0.28em] text-[#d4c09a]">
-                      {activeProofQuote.label}
-                    </div>
-                    <blockquote className="mt-4 text-3xl font-semibold leading-tight text-white md:text-4xl">
-                      &ldquo;{activeProofQuote.quote}&rdquo;
-                    </blockquote>
-                    <p className="mt-4 max-w-xl text-sm leading-6 text-white/62">
-                      Placeholder testimonial copy for layout review only. Final quotes and headshots should be added before publish.
-                    </p>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-
-              <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-5">
-                <div className="flex gap-2">
-                  {proofQuotes.map((quote, index) => (
-                    <button
-                      key={quote.label}
-                      type="button"
-                      aria-label={`Show ${quote.label}`}
-                      onClick={() => setActiveProof(index)}
-                      className={`h-2.5 rounded-full transition-all ${
-                        index === activeProof ? "w-9 bg-[#d4c09a]" : "w-2.5 bg-white/25 hover:bg-white/45"
-                      }`}
-                    />
-                  ))}
-                </div>
-
-                <div className="flex gap-3">
-                  <button
-                    type="button"
-                    aria-label="Previous testimonial"
-                    onClick={() => goToProof("prev")}
-                    className="grid h-11 w-11 place-items-center rounded-full border border-white/15 bg-white/8 text-lg text-white transition hover:bg-white/14"
-                  >
-                    &lt;
-                  </button>
-                  <button
-                    type="button"
-                    aria-label="Next testimonial"
-                    onClick={() => goToProof("next")}
-                    className="grid h-11 w-11 place-items-center rounded-full border border-white/15 bg-white/8 text-lg text-white transition hover:bg-white/14"
-                  >
-                    &gt;
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid gap-3">
-              {proofQuotes.map((quote, index) => (
-                <button
-                  key={quote.label}
-                  type="button"
-                  onClick={() => setActiveProof(index)}
-                  className={`rounded-[18px] border p-4 text-left backdrop-blur-md transition-all ${
-                    index === activeProof
-                      ? "border-[#d4c09a] bg-white/12 shadow-xl"
-                      : "border-white/15 bg-white/6 opacity-70 hover:opacity-100"
-                  }`}
-                >
-                  <div className="text-xs uppercase tracking-[0.24em] text-[#d4c09a]">
-                    {quote.label}
-                  </div>
-                  <div className="mt-3 text-lg font-semibold text-white">
-                    &ldquo;{quote.quote}&rdquo;
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* OWNERSHIP / PARTNERSHIP */}
-      <section
-        data-theme="dark"
-        className="relative px-6 py-16 md:py-[72px]"
-        style={{
-          backgroundImage: "url('/backgroundimage.jpeg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundAttachment: "fixed",
-        }}
-      >
-        <div className="pointer-events-none absolute inset-0 bg-black/80" />
-        <div className="relative z-20 max-w-7xl mx-auto">
-          <motion.div {...fadeUp}>
-            <h2 className="text-4xl md:text-5xl font-semibold">Partnership, Not Pitches</h2>
-            <p className="mt-4 text-lg text-white/75 max-w-3xl">
-              In some cases, qualified practices can participate in ownership by invitation. It creates deeper alignment and a stronger long-term relationship.
-            </p>
-          </motion.div>
-
-          <div className="mt-7 grid gap-4 md:grid-cols-3">
-            {[
-              "More alignment",
-              "More loyalty",
-              "More control over your experience",
-            ].map((x) => (
-              <motion.div
-                key={x}
-                initial={{ opacity: 0, y: 18 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.42, ease: "easeOut" }}
-                className="rounded-2xl bg-white/5 border border-white/15 backdrop-blur-md p-5 md:p-6"
-              >
-                <div className="text-[#d4c09a] text-xs uppercase tracking-[0.28em]">OUTCOME</div>
-                <div className="mt-3 text-xl text-white">{x}</div>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="mt-8">
-            <button
-              type="button"
-              onClick={openContactModal}
-              className="rounded-full bg-[#d4c09a] px-6 py-3 text-sm font-semibold text-black hover:opacity-90 shadow"
-            >
-              Contact Us
-            </button>
-          </div>
-
-          <div className="mt-5 text-xs text-white/50">
-            Ownership details are available only by invitation and subject to applicable requirements and regulations.
-          </div>
-
-          <a
-            href="/artisan-model"
-            className="mt-5 inline-flex text-sm font-semibold text-[#d4c09a] transition hover:text-white"
-          >
-            Learn how the model works →
-          </a>
-        </div>
-      </section>
-
-      <span id="vendor-partners" className="block scroll-mt-24" aria-hidden="true" />
-
-      {/* RESOURCES (placeholder) */}
-      <section
-        id="resources"
-        data-theme="light"
-        className="relative px-6 py-14 text-black md:py-16"
-        style={{
-          backgroundImage: "url('/backgroundwithglasses1.jpeg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundAttachment: "fixed",
-        }}
-      >
-        <div className="pointer-events-none absolute inset-0 bg-white/70" />
-        <div className="relative z-20 max-w-7xl mx-auto">
-          <motion.div {...fadeUp}>
-            <h2 className="text-3xl md:text-4xl font-semibold">Resources</h2>
-            <p className="mt-3 text-black/65 max-w-3xl">
-              Practice resources, patient education, and tools to help your team run smoother.
-            </p>
-          </motion.div>
-          <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <motion.a
-              href="/provider-resources"
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.42, ease: "easeOut" }}
-              className="group flex min-h-[174px] flex-col rounded-2xl bg-white/80 border border-black/10 p-5 shadow transition hover:-translate-y-1 hover:bg-white md:p-6"
-            >
-              <ArtisanIcon
-                src="/icons/artisan/resources.svg"
-                className="mb-5 h-14 w-14 border-[#d6c3a1]/55 bg-[#fffaf2]/75"
-              />
-              <div className="text-lg font-semibold">Practice Resources</div>
-              <p className="mt-3 text-sm leading-6 text-black/60">
-                Tools and information for independent practice teams.
-              </p>
-            </motion.a>
-            <motion.a
-              href="/patient-resources"
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.42, delay: 0.04, ease: "easeOut" }}
-              className="group flex min-h-[174px] flex-col rounded-2xl bg-white/80 border border-black/10 p-5 shadow transition hover:-translate-y-1 hover:bg-white md:p-6"
-            >
-              <ArtisanIcon
-                src="/icons/artisan/patient-resources.svg"
-                className="mb-5 h-14 w-14 border-[#d6c3a1]/55 bg-[#fffaf2]/75"
-              />
-              <div className="text-lg font-semibold">Patient Resources</div>
-              <p className="mt-3 text-sm leading-6 text-black/60">
-                Education and support content for patient conversations.
-              </p>
-            </motion.a>
-            <motion.a
-              href="#labs"
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.42, delay: 0.08, ease: "easeOut" }}
-              className="group flex min-h-[174px] flex-col rounded-2xl bg-white/80 border border-black/10 p-5 shadow transition hover:-translate-y-1 hover:bg-white md:p-6"
-            >
-              <ArtisanIcon
-                src="/icons/artisan/integrated-systems.svg"
-                className="mb-5 h-14 w-14 border-[#d6c3a1]/55 bg-[#fffaf2]/75"
-              />
-              <div className="text-lg font-semibold">Lab Resources</div>
-              <p className="mt-3 text-sm leading-6 text-black/60">
-                Practical lab access, ordering, and product information.
-              </p>
-            </motion.a>
-            <motion.a
-              href="/artisan-model"
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.42, delay: 0.12, ease: "easeOut" }}
-              className="group flex min-h-[174px] flex-col rounded-2xl bg-white/80 border border-[#d4c09a]/60 p-5 shadow transition hover:-translate-y-1 hover:bg-white md:p-6"
-            >
-              <ArtisanIcon
-                src="/icons/artisan/partner-mindset.svg"
-                className="mb-5 h-14 w-14 border-[#d4c09a]/70 bg-[#fffaf2]/75"
-              />
-              <div className="text-lg font-semibold">Lab Ownership &amp; Partnership</div>
-              <p className="mt-3 text-sm leading-6 text-black/60">
-                Learn how some practices participate more deeply in the Artisan model.
-              </p>
-            </motion.a>
-          </div>
-        </div>
-      </section>
+      {/* OUR LABS */}
+      <HomeNetworkMap />
 
       <section
         id="where-well-be"
@@ -1209,12 +1532,12 @@ export default function Home() {
       >
         <div
           className="pointer-events-none absolute -left-28 top-8 h-[460px] w-[460px] bg-contain bg-center bg-no-repeat opacity-[0.08]"
-          style={{ backgroundImage: "url('/Rings.png')" }}
+          style={{ backgroundImage: "url('/rings.png')" }}
           aria-hidden="true"
         />
         <div
           className="pointer-events-none absolute -bottom-40 right-0 h-[520px] w-[520px] bg-contain bg-center bg-no-repeat opacity-[0.045]"
-          style={{ backgroundImage: "url('/Rings.png')" }}
+          style={{ backgroundImage: "url('/rings.png')" }}
           aria-hidden="true"
         />
 
@@ -1247,19 +1570,19 @@ export default function Home() {
               <motion.article
                 key={event.name}
                 variants={cardReveal}
-                className="group rounded-[28px] border border-[#d8c6a8]/70 bg-white/86 p-6 shadow-[0_18px_55px_rgba(49,39,26,0.08)] backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-[#c9b28b] hover:bg-white hover:shadow-[0_26px_70px_rgba(49,39,26,0.13)] md:p-7"
+                className="group flex h-full flex-col rounded-[28px] border border-[#d8c6a8]/70 bg-white/86 p-6 shadow-[0_18px_55px_rgba(49,39,26,0.08)] backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-[#c9b28b] hover:bg-white hover:shadow-[0_26px_70px_rgba(49,39,26,0.13)] md:p-7"
               >
                 <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
-                  <div className="flex h-24 w-32 shrink-0 items-center justify-center rounded-2xl border border-black/10 bg-white p-4 shadow-[0_10px_28px_rgba(49,39,26,0.07)]">
+                  <div className="flex h-24 w-36 shrink-0 items-center justify-center rounded-2xl border border-black/10 bg-white p-4 shadow-[0_10px_28px_rgba(49,39,26,0.07)]">
                     <Image
                       src={event.logo}
                       alt={event.logoAlt}
                       width={220}
                       height={120}
-                      className="max-h-16 w-auto max-w-full object-contain"
+                      className="max-h-14 w-auto max-w-full object-contain"
                     />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#9a8564]">
                       {event.date}
                     </p>
@@ -1271,57 +1594,65 @@ export default function Home() {
                     </p>
                   </div>
                 </div>
-                <p className="mt-5 text-sm leading-7 text-[#625b53] md:text-base">
+                <p className="mt-5 flex-1 text-sm leading-7 text-[#625b53] md:text-base">
                   {event.description}
                 </p>
-                <button
-                  type="button"
-                  onClick={openContactModal}
-                  className="mt-6 inline-flex min-h-11 items-center justify-center rounded-full border border-[#d8c6a8] bg-[#fbf8f3] px-5 py-2.5 text-sm font-semibold text-[#1f1a17] shadow-sm transition hover:-translate-y-0.5 hover:border-[#d4c09a] hover:bg-[#d4c09a]"
-                >
-                  Schedule a Meeting
-                </button>
+                <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                  <a
+                    href={event.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#1f1a17] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-[#2d2520]"
+                  >
+                    Learn More
+                  </a>
+                  <button
+                    type="button"
+                    onClick={openContactModal}
+                    className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#d8c6a8] bg-[#fbf8f3] px-5 py-2.5 text-sm font-semibold text-[#1f1a17] shadow-sm transition hover:-translate-y-0.5 hover:border-[#d4c09a] hover:bg-[#d4c09a]"
+                  >
+                    Schedule a Meeting
+                  </button>
+                </div>
               </motion.article>
             ))}
           </motion.div>
         </div>
       </section>
 
-      {/* FINAL CTA */}
-      <section data-theme="dark" className="relative overflow-hidden px-6 py-16 md:py-[72px]">
-        <div
-          className="pointer-events-none absolute -right-24 -top-32 h-[520px] w-[520px] bg-contain bg-center bg-no-repeat opacity-[0.07]"
-          style={{ backgroundImage: "url('/Rings.png')" }}
-          aria-hidden="true"
-        />
-        <div className="pointer-events-none absolute inset-0 bg-black/70" />
-        <motion.div
-          {...fadeUp}
-          className="relative z-20 max-w-4xl mx-auto text-center"
-        >
-          <h2 className="text-4xl md:text-5xl font-semibold">Ready to Get Control Back?</h2>
-          <p className="mt-4 text-lg text-white/75 max-w-3xl mx-auto">
-            If you’re tired of feeling boxed in by corporate labs, we’ll show you a better path—fast.
-          </p>
-
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <a
-              href={ACCOUNT_APPLICATION_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-full bg-[#d4c09a] px-6 py-3 text-sm font-semibold text-black hover:opacity-90 shadow"
-            >
-              Get Started With Us
-            </a>
-            <button
-              type="button"
-              onClick={openContactModal}
-              className="rounded-full border border-white/15 bg-white/10 px-6 py-3 text-sm font-semibold hover:bg-white/15 hover:border-white/25"
-            >
-              Contact Us
-            </button>
+      <section data-theme="dark" className="relative overflow-hidden bg-[#171311] px-6 py-16 text-white md:px-10 md:py-20">
+        <div className="mx-auto max-w-7xl">
+          <motion.div {...fadeUp} className="mx-auto max-w-3xl text-center">
+            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[#d4c09a]">
+              Industry Connections
+            </p>
+            <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">
+              Connected Across the Industry
+            </h2>
+            <p className="mt-5 text-lg leading-8 text-white/68">
+              Our network works with organizations that help independent practices compete, grow, and stay in control.
+            </p>
+          </motion.div>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            {industryConnectionLogos.map((logo) => (
+              <a
+                key={logo.src}
+                href={logo.href}
+                target="_blank"
+                rel="noreferrer"
+                className="group flex h-36 items-center justify-center rounded-[24px] border border-white/10 bg-white px-6 shadow-[0_18px_48px_rgba(0,0,0,0.16)] transition hover:-translate-y-1 hover:border-[#d4c09a]"
+              >
+                <Image
+                  src={logo.src}
+                  alt={logo.alt}
+                  width={300}
+                  height={120}
+                  className="max-h-28 w-auto max-w-full object-contain transition group-hover:scale-[1.03]"
+                />
+              </a>
+            ))}
           </div>
-        </motion.div>
+        </div>
       </section>
 
       <section

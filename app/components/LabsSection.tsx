@@ -14,6 +14,8 @@ const labs = [
     name: "Pacific Artisan Labs",
     address: "12302 NE Marx St.",
     address2: "Portland, OR 97230",
+    mapsHref:
+      "https://www.google.com/maps/search/?api=1&query=12302%20NE%20Marx%20St%20Portland%20OR%2097230",
     phone: "877.390.6900",
     email: "customerservice@pacificartisanlabs.com",
     website: "https://pacificartisanlabs.com",
@@ -24,6 +26,8 @@ const labs = [
     name: "Peak Artisan Labs",
     address: "3568 Peoria St., Suite 608",
     address2: "Aurora, CO 80010",
+    mapsHref:
+      "https://www.google.com/maps/search/?api=1&query=3568%20Peoria%20St%20Suite%20608%20Aurora%20CO%2080010",
     phone: "833.690.4321",
     email: "customerservice@peakartisanlabs.com",
     website: "https://peakartisanlabs.com",
@@ -34,6 +38,8 @@ const labs = [
     name: "Pike Artisan Labs",
     address: "8902 Vincennes Cir., Suite F",
     address2: "Indianapolis, IN 46268",
+    mapsHref:
+      "https://www.google.com/maps/search/?api=1&query=8902%20Vincennes%20Cir%20Suite%20F%20Indianapolis%20IN%2046268",
     phone: "888.239.0303",
     email: "customerservice@pikeartisanlabs.com",
     website: "https://pikeartisanlabs.com",
@@ -143,8 +149,23 @@ export default function LabsSection() {
                       <div className="grid gap-6">
                         <div className="space-y-1 text-sm text-white/85">
                           <div className="font-semibold text-white">Contact</div>
-                          <div>{lab.address}</div>
-                          <div>{lab.address2}</div>
+                          <a
+                            href={lab.mapsHref}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="block transition hover:text-[#d4c09a]"
+                          >
+                            {lab.address}<br />
+                            {lab.address2}
+                          </a>
+                          <a
+                            href={lab.mapsHref}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="block text-xs font-semibold text-[#d4c09a] transition hover:text-white"
+                          >
+                            Open in Maps
+                          </a>
                           <a
                             href={`tel:${lab.phone.replace(/\D/g, "")}`}
                             className="block pt-2 font-semibold text-white transition hover:text-[#d4c09a]"

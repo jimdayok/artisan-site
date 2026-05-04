@@ -855,7 +855,7 @@ export default function LabPoliciesPage() {
       <section data-theme="dark" className="relative overflow-hidden bg-[#171311] px-6 pb-16 text-white md:px-10 md:pb-20">
         <div
           className="pointer-events-none absolute -left-28 -top-24 h-[430px] w-[430px] bg-contain bg-center bg-no-repeat opacity-[0.08]"
-          style={{ backgroundImage: "url('/Rings.png')" }}
+          style={{ backgroundImage: "url('/rings.png')" }}
           aria-hidden="true"
         />
         <motion.div
@@ -1145,7 +1145,7 @@ export default function LabPoliciesPage() {
       <section data-theme="light" className="relative overflow-hidden px-6 py-20 md:px-10 md:py-24">
         <div
           className="pointer-events-none absolute -bottom-40 right-0 h-[500px] w-[500px] bg-contain bg-center bg-no-repeat opacity-[0.06]"
-          style={{ backgroundImage: "url('/Rings.png')" }}
+          style={{ backgroundImage: "url('/rings.png')" }}
           aria-hidden="true"
         />
         <div className="relative z-10 mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">

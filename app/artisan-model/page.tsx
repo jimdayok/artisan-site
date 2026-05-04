@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -98,6 +99,21 @@ const outcomes = [
   { title: "Better alignment", icon: "/icons/site/handshake.svg" },
   { title: "More flexibility", icon: "/icons/site/badge-check.svg" },
   { title: "Stronger long-term position", icon: "/icons/site/chart-line.svg" },
+];
+
+const shareholderPhotos = [
+  {
+    src: "/images/conference-room-presentation-2025-2.jpg",
+    alt: "Annual shareholder meeting presentation",
+  },
+  {
+    src: "/images/conference-speaker-2025-1.jpg",
+    alt: "Annual shareholder meeting education session",
+  },
+  {
+    src: "/images/meeting-table-setup-2025-1.jpg",
+    alt: "Annual shareholder meeting table setup",
+  },
 ];
 
 function ContactModal({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -387,6 +403,22 @@ export default function ArtisanModelPage() {
               </div>
             ))}
           </div>
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="mx-auto mt-8 max-w-4xl rounded-[28px] border border-black/10 bg-white/80 p-4 shadow-xl"
+          >
+            <Image
+              src="/images/conference-presentation-screen-2025-2.jpg"
+              alt="Together We Win presentation"
+              width={1400}
+              height={900}
+              sizes="(min-width: 1024px) 900px, 100vw"
+              className="h-auto max-h-[420px] w-full rounded-[20px] object-contain"
+            />
+          </motion.div>
         </div>
       </SectionShell>
 
@@ -525,6 +557,45 @@ export default function ArtisanModelPage() {
       </SectionShell>
 
       <NetworkMap />
+
+      <SectionShell
+        id="annual-shareholder-meeting"
+        theme="light"
+        accent={<RingsAccent position="bottom-left" size="md" opacity="opacity-[0.045]" />}
+      >
+        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+          <SectionHeader
+            eyebrow="Annual Shareholder Meeting"
+            title="Partners aligned around the future of independent lab ownership."
+            body="The annual shareholder meeting brings Artisan partners together for education, collaboration, strategic updates, and relationship building across the network."
+          />
+          <div className="rounded-[28px] border border-[#d8c6a8]/55 bg-white p-5 shadow-[0_22px_70px_rgba(49,39,26,0.1)]">
+            <Image
+              src="/graphics/palsc25.png"
+              alt="Annual Shareholder Meeting"
+              width={1200}
+              height={800}
+              className="h-auto max-h-[420px] w-full rounded-[20px] object-contain"
+            />
+          </div>
+        </div>
+        <div className="mt-8 grid gap-4 md:grid-cols-3">
+          {shareholderPhotos.map((photo) => (
+            <div
+              key={photo.src}
+              className="group relative aspect-[16/9] overflow-hidden rounded-xl border border-[#d8c6a8]/55 bg-white shadow-[0_18px_55px_rgba(49,39,26,0.1)]"
+            >
+              <Image
+                src={photo.src}
+                alt={photo.alt}
+                fill
+                sizes="(min-width: 768px) 33vw, 100vw"
+                className="object-cover object-center transition duration-500 group-hover:scale-105"
+              />
+            </div>
+          ))}
+        </div>
+      </SectionShell>
 
       <SectionShell
         id="fit"

@@ -23,8 +23,15 @@ const labs = [
     city: "Portland",
     state: "OR",
     label: "Pacific Artisan Labs",
+    logo: "/logos/PAL_2C_White_Black.png",
+    logoAlt: "Pacific Artisan Labs logo",
+    description:
+      "The original Artisan lab, serving independent practices with full-service production, responsive customer service, and strong regional relationships.",
+    meetHref: "/meet-the-artisans#pacific",
     established: "2018",
     address: ["12302 NE Marx St.", "Portland, OR 97230"],
+    mapsHref:
+      "https://www.google.com/maps/search/?api=1&query=12302%20NE%20Marx%20St%20Portland%20OR%2097230",
     phone: "877.390.6900",
     phoneHref: "8773906900",
     email: "customerservice@pacificartisanlabs.com",
@@ -36,8 +43,15 @@ const labs = [
     city: "Aurora",
     state: "CO",
     label: "Peak Artisan Labs",
+    logo: "/logos/Peak_Artisan_Logo 9-1-23_FINAL.png",
+    logoAlt: "Peak Artisan Labs logo",
+    description:
+      "A Colorado-based Artisan lab bringing local support, finishing expertise, and practical service to independent practices across the mountain region.",
+    meetHref: "/meet-the-artisans#peak",
     established: "2023",
     address: ["3568 Peoria St., Suite 608", "Aurora, CO 80010"],
+    mapsHref:
+      "https://www.google.com/maps/search/?api=1&query=3568%20Peoria%20St%20Suite%20608%20Aurora%20CO%2080010",
     phone: "833.690.4321",
     phoneHref: "8336904321",
     email: "customerservice@peakartisanlabs.com",
@@ -49,8 +63,15 @@ const labs = [
     city: "Indianapolis",
     state: "IN",
     label: "Pike Artisan Labs",
+    logo: "/logos/Pike_Labs_Logo-4C.png",
+    logoAlt: "Pike Artisan Labs logo",
+    description:
+      "The central U.S. Artisan lab, built to add speed, flexibility, and personal support for practices that want a better lab relationship.",
+    meetHref: "/meet-the-artisans#pike",
     established: "2025",
     address: ["8902 Vincennes Cir., Suite F", "Indianapolis, IN 46268"],
+    mapsHref:
+      "https://www.google.com/maps/search/?api=1&query=8902%20Vincennes%20Cir%20Suite%20F%20Indianapolis%20IN%2046268",
     phone: "888.239.0303",
     phoneHref: "8882390303",
     email: "customerservice@pikeartisanlabs.com",
@@ -195,9 +216,6 @@ export default function NetworkMap({
                           <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#d4c09a]">
                             {lab.city}, {lab.state}
                           </p>
-                          <p className="mt-1 text-xs font-semibold text-white/46">
-                            Established {lab.established}
-                          </p>
                           <h4 className="mt-1 text-lg font-semibold uppercase tracking-[0.04em] text-white">
                             {lab.label}
                           </h4>
@@ -218,11 +236,31 @@ export default function NetworkMap({
                           className="overflow-hidden"
                         >
                           <div className="mt-4 space-y-3 border-t border-white/10 pt-4 text-sm leading-6 text-white/72">
-                            <div>
+                            <div className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white p-3">
+                              <Image
+                                src={lab.logo}
+                                alt={lab.logoAlt}
+                                width={220}
+                                height={90}
+                                className="max-h-16 w-auto max-w-full object-contain"
+                              />
+                            </div>
+                            <p className="text-sm leading-6 text-white/72">
+                              {lab.description}
+                            </p>
+                            <a
+                              href={lab.mapsHref}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="block transition hover:text-[#d4c09a]"
+                            >
                               {lab.address.map((line) => (
                                 <div key={line}>{line}</div>
                               ))}
-                            </div>
+                              <span className="mt-1 block text-xs font-semibold text-[#d4c09a]">
+                                Open in Maps
+                              </span>
+                            </a>
                             <div>
                               <a
                                 href={`tel:${lab.phoneHref}`}
@@ -245,6 +283,12 @@ export default function NetworkMap({
                                 className="inline-flex min-h-10 items-center justify-center rounded-full border border-white/12 bg-white/8 px-3 py-2 text-center text-xs font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-black"
                               >
                                 Visit Website
+                              </a>
+                              <a
+                                href={lab.meetHref}
+                                className="col-span-2 inline-flex min-h-10 items-center justify-center rounded-full border border-[#d4c09a]/45 bg-[#d4c09a] px-3 py-2 text-center text-xs font-semibold text-[#171311] transition hover:bg-[#e2cca2]"
+                              >
+                                Meet Your Lab
                               </a>
                             </div>
                           </div>

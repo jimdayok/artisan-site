@@ -2,34 +2,13 @@
 
 import Image from "next/image";
 import type { ReactNode } from "react";
-import { useMemo, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import RingsAccent from "../components/RingsAccent";
 import SiteIcon from "../components/SiteIcon";
+import { PracticeLookupMap } from "../provider-resources/page";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
-
-const practices = [
-  {
-    name: "Sample Eye Care",
-    address: "123 Main St, Dallas, TX 75001",
-    phone: "214-555-1234",
-    state: "TX",
-  },
-  {
-    name: "Vision Center Example",
-    address: "456 Oak Ave, Denver, CO 80014",
-    phone: "303-555-5678",
-    state: "CO",
-  },
-  {
-    name: "Pacific Artisan Partner Practice",
-    address: "12302 NE Marx St, Portland, OR 97230",
-    phone: "877-390-6900",
-    state: "OR",
-  },
-];
 
 const concerns = [
   {
@@ -133,27 +112,6 @@ function SectionIntro({
 }
 
 export default function PatientResources() {
-  const [search, setSearch] = useState("");
-  const [stateFilter, setStateFilter] = useState("");
-
-  const states = useMemo(
-    () => Array.from(new Set(practices.map((practice) => practice.state))).sort(),
-    []
-  );
-
-  const filtered = practices.filter((practice) => {
-    const query = search.trim().toLowerCase();
-    const matchesSearch =
-      query === "" ||
-      practice.name.toLowerCase().includes(query) ||
-      practice.address.toLowerCase().includes(query) ||
-      practice.state.toLowerCase().includes(query);
-
-    const matchesState = stateFilter === "" || practice.state === stateFilter;
-
-    return matchesSearch && matchesState;
-  });
-
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#f7f1e8] text-[#221915]">
       <Header />
@@ -229,7 +187,7 @@ export default function PatientResources() {
         <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[0.95fr_1.05fr]">
           <div className="relative min-h-[430px] overflow-hidden rounded-[32px] shadow-[0_30px_90px_rgba(73,48,28,0.22)]">
             <Image
-              src="/backgroundwithglasses1.jpeg"
+              src="/images/art-gallery-visit-2022-1.jpg"
               alt="A warm independent eye care setting with eyewear on display"
               fill
               sizes="(min-width: 1024px) 45vw, 100vw"
@@ -399,98 +357,7 @@ export default function PatientResources() {
       </section>
 
       {/* 8. FIND A PRACTICE */}
-      <section id="find-a-practice" data-theme="light" className="relative overflow-hidden px-6 py-24 md:py-32">
-        <RingsAccent position="top-right" size="lg" opacity="opacity-[0.04]" />
-        <div className="relative z-10 mx-auto max-w-7xl">
-          <SectionIntro eyebrow="Take Action" title="Find an Independent Eye Care Provider" align="center">
-            <p>
-              Search by city, ZIP, practice name, or state to find an
-              independent provider connected to better lens choices.
-            </p>
-          </SectionIntro>
-
-          <div className="mt-10 rounded-[32px] border border-[#d9c8ac] bg-white/82 p-5 shadow-[0_22px_75px_rgba(73,48,28,0.13)] md:p-7">
-            <div className="grid gap-4 md:grid-cols-[1fr_220px]">
-              <label className="sr-only" htmlFor="practice-search">
-                Search by city or ZIP
-              </label>
-              <input
-                id="practice-search"
-                value={search}
-                placeholder="Search by city, ZIP, or practice name"
-                className="min-h-[52px] w-full rounded-2xl border border-[#d9c8ac] bg-[#fbf7f0] px-4 text-base text-[#221915] outline-none transition placeholder:text-[#8d7a69] focus:border-[#a97548] focus:bg-white"
-                onChange={(event) => setSearch(event.target.value)}
-              />
-
-              <label className="sr-only" htmlFor="state-filter">
-                Filter by state
-              </label>
-              <select
-                id="state-filter"
-                value={stateFilter}
-                className="min-h-[52px] rounded-2xl border border-[#d9c8ac] bg-[#fbf7f0] px-4 text-base text-[#221915] outline-none transition focus:border-[#a97548] focus:bg-white"
-                onChange={(event) => setStateFilter(event.target.value)}
-              >
-                <option value="">All States</option>
-                {states.map((state) => (
-                  <option key={state} value={state}>
-                    {state}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="mt-7 grid gap-4 lg:grid-cols-3">
-              {filtered.map((practice) => (
-                <article
-                  key={practice.name}
-                  className="rounded-[24px] border border-[#eadcc6] bg-white p-6 shadow-[0_12px_35px_rgba(73,48,28,0.08)]"
-                >
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#a97548]">
-                    {practice.state}
-                  </p>
-                  <h3 className="mt-3 text-xl font-semibold">{practice.name}</h3>
-                  <p className="mt-3 min-h-12 leading-6 text-[#665449]">{practice.address}</p>
-                  <div className="mt-6 flex flex-wrap gap-3">
-                    <a
-                      href={`tel:${practice.phone.replaceAll("-", "")}`}
-                      className="inline-flex items-center justify-center rounded-full bg-[#221915] px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#3a2a22]"
-                    >
-                      Call
-                    </a>
-                    <a
-                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(practice.address)}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center justify-center rounded-full border border-[#d9c8ac] px-5 py-3 text-sm font-semibold text-[#221915] transition hover:-translate-y-0.5 hover:bg-[#f7f1e8]"
-                    >
-                      Get Directions
-                    </a>
-                  </div>
-                </article>
-              ))}
-            </div>
-
-            {filtered.length === 0 ? (
-              <div className="mt-8 rounded-3xl bg-[#f7f1e8] p-8 text-center">
-                <h3 className="text-2xl font-semibold">No matching practices yet</h3>
-                <p className="mx-auto mt-3 max-w-xl text-[#665449]">
-                  Try a nearby city or clear the state filter. Our network can
-                  still help connect you with an independent provider.
-                </p>
-                <a
-                  href={SIGNUP_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-6 inline-flex rounded-full bg-[#d4c09a] px-6 py-3 text-sm font-semibold text-[#221915] transition hover:bg-[#e4cfa6]"
-                >
-                  Help Me Find a Provider
-                </a>
-              </div>
-            ) : null}
-          </div>
-        </div>
-      </section>
+      <PracticeLookupMap />
 
       {/* 9. TRUSTED VISION RESOURCES */}
       <section data-theme="light" className="relative overflow-hidden bg-[#efe4d3] px-6 py-24 md:py-32">

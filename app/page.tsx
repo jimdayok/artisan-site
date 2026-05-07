@@ -204,6 +204,7 @@ const betterModelCards = [
     title: "Freedom to Choose",
     icon: "/icons/artisan/freedom-to-choose.svg",
     body: "More lens options. Less forcing you into one path.",
+    helper: "Expand to see our brand choices.",
     expandedTitle: "Partner Brands",
     expandedBody:
       "Access the lens brands your practice knows and trusts, with the freedom to choose what fits each patient best.",
@@ -213,6 +214,7 @@ const betterModelCards = [
     title: "Transparent Outcomes",
     icon: "/icons/artisan/transparency.svg",
     body: "Clear reporting, timing, cost, and performance expectations.",
+    helper: "Expand to see the supporting data.",
     expandedBody:
       "Clear expectations matter. Artisan Lab Network is built to give practices better visibility into service, timing, communication, cost, quality, and patient-impacting outcomes so teams can plan with confidence.",
   },
@@ -221,6 +223,7 @@ const betterModelCards = [
     title: "Flexibility",
     icon: "/icons/artisan/flexibility.svg",
     body: "Systems designed to support your process, not punish it.",
+    helper: "Expand to see how this works.",
     expandedBody:
       "Your practice should not have to change everything to work with your lab. Our systems are designed to support different workflows, ordering methods, product preferences, and practice needs.",
   },
@@ -558,29 +561,34 @@ function BetterModelCard({
       layout
       variants={cardReveal}
       transition={{ layout: { duration: 0.42, ease: "easeInOut" } }}
-      className="group overflow-hidden rounded-2xl border border-[#d6c3a1]/50 bg-[#fffaf2]/88 shadow-[0_18px_45px_rgba(49,39,26,0.08)] backdrop-blur-md transition-colors duration-300 hover:border-[#c9b28b] hover:bg-[#fffaf2] hover:shadow-[0_24px_64px_rgba(49,39,26,0.13)]"
+      className={`group flex h-full flex-col overflow-hidden rounded-2xl border border-[#d6c3a1]/50 bg-[#fffaf2]/88 shadow-[0_18px_45px_rgba(49,39,26,0.08)] backdrop-blur-md transition-colors duration-300 hover:border-[#c9b28b] hover:bg-[#fffaf2] hover:shadow-[0_24px_64px_rgba(49,39,26,0.13)] ${
+        isOpen ? "lg:col-span-3" : ""
+      }`}
     >
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={isOpen}
         aria-controls={panelId}
-        className={`flex w-full items-start justify-between gap-4 p-5 text-left outline-none transition focus-visible:ring-2 focus-visible:ring-[#8a7654]/45 md:p-6 ${
-          isOpen ? "min-h-[156px]" : compact ? "min-h-[152px]" : "min-h-[176px]"
+        className={`flex w-full flex-1 items-stretch justify-between gap-4 p-5 text-left outline-none transition focus-visible:ring-2 focus-visible:ring-[#8a7654]/45 md:p-6 ${
+          isOpen ? "min-h-[132px]" : compact ? "min-h-[152px]" : "min-h-[176px]"
         }`}
       >
-        <span className="flex items-start gap-4">
+        <span className="flex min-w-0 items-start gap-4">
           <ArtisanIcon
             src={card.icon}
             size="sm"
             className="h-12 w-12 border-[#d6c3a1]/55 bg-white/70 shadow-[0_10px_24px_rgba(49,39,26,0.06)]"
           />
-          <span>
+          <span className="flex min-h-full min-w-0 flex-col">
             <span className="block text-xs uppercase tracking-[0.24em] text-black/50 md:tracking-[0.28em]">
               {card.title}
             </span>
             <span className="mt-2 block text-xl font-semibold text-[#1f1718]">
               {card.body}
+            </span>
+            <span className="mt-auto block pt-3 text-xs font-medium leading-5 text-[#625b53]/70">
+              {card.helper}
             </span>
           </span>
         </span>
@@ -955,13 +963,6 @@ export default function Home() {
 
   const activeProofStat =
     proofStats.find((stat) => stat.id === activeProofStatId) ?? proofStats[0];
-
-  const selectedBetterModelCard = activeBetterModelCard
-    ? betterModelCards.find((card) => card.id === activeBetterModelCard) ?? null
-    : null;
-  const secondaryBetterModelCards = selectedBetterModelCard
-    ? betterModelCards.filter((card) => card.id !== selectedBetterModelCard.id)
-    : [];
 
   const renderBetterModelCard = (
     card: (typeof betterModelCards)[number],
@@ -1356,27 +1357,9 @@ export default function Home() {
               whileInView="whileInView"
               viewport={{ once: true, amount: 0.2 }}
               layout
-              className={`mt-8 grid scroll-mt-24 items-start gap-5 ${
-                selectedBetterModelCard ? "lg:grid-cols-[minmax(0,1.6fr)_minmax(320px,0.74fr)]" : "lg:grid-cols-3"
-              }`}
+              className="mt-8 grid scroll-mt-24 items-stretch gap-5 lg:grid-cols-3"
             >
-              {selectedBetterModelCard ? (
-                <>
-                  {renderBetterModelCard(selectedBetterModelCard)}
-                  <motion.div
-                    key={`${selectedBetterModelCard.id}-stack`}
-                    layout
-                    className="grid gap-5"
-                    transition={{ layout: { duration: 0.42, ease: "easeInOut" } }}
-                  >
-                    {secondaryBetterModelCards.map((card) =>
-                      renderBetterModelCard(card, { compact: true })
-                    )}
-                  </motion.div>
-                </>
-              ) : (
-                betterModelCards.map((card) => renderBetterModelCard(card))
-              )}
+              {betterModelCards.map((card) => renderBetterModelCard(card))}
             </motion.div>
           </div>
         </div>

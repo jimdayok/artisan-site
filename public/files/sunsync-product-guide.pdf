@@ -1,0 +1,1157 @@
+  
+  
+
+
+    
+
+
+
+  
+
+      
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+ 
+ 
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html xml:lang="en" lang="enS" class="no-js">
+    <head>
+    <!-- vspoptics-default  -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+        <meta name="Description" content="Base Site" />
+
+        <link rel="shortcut icon" href="/dam/jcr:8c8259a3-ea0b-40ba-9450-7b36ea3d67c8/favicon-32x32.png">
+
+        <title>Page Not Found</title>
+
+        <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push(
+        {'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})
+        (window,document,'script','dataLayer','GTM-KX63BXR');
+        </script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+        </script>
+        <!-- End Google Tag Manager -->
+
+        <script data-cfasync="false" src=https://transcend-cdn.com/cm-test/843a2eb4-77c8-4184-9136-71d50fe29864/airgap.js onload="window.airgapLoadEvent=event"></script>
+<script>
+try {
+
+      if (!self?.transcend?.ready) {
+
+        self.transcend = {
+
+          readyQueue: [],
+
+          ready(callback) {
+
+            this.readyQueue.push(callback);
+
+          },
+
+          ...self.transcend,
+
+        };
+
+      }
+
+ 
+
+      self.transcend.ready((transcend) => {
+
+        transcend.setUiVariables({
+
+          privacyPolicy: '<a target="_blank" href="https://www.vsp.com/legal/privacy-statement">Privacy Policy</a>',
+
+          termsOfUse: '<a target="_blank" href="https://www.vsp.com/legal/terms-and-conditions">Terms of Use</a>',
+
+          classActionWaiver: '<a target="_blank" href="https://www.vsp.com/legal/terms-and-conditions?anchor=dispute-resolution">Class Action Waiver</a>',
+
+          mandatoryArbitration: '<a target="_blank" href="https://www.vsp.com/legal/terms-and-conditions?anchor=dispute-resolution">Mandatory Arbitration</a>'
+
+        });
+
+      });
+
+    } catch (e) {
+
+      console.log('transcend exception: ', e);
+
+    } 
+</script>
+
+        <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,800&display=swap'>
+
+        <!-- Site-specific CSS-->
+        <link rel="stylesheet" type="text/css" href="/.resources/vspoptics/webresources/css/vspoptics-css-vars~2022-12-08-22-18-47-217~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/foundation-6-4-2.min~2022-02-15-03-26-40-384~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="https://cloud.typography.com/7660092/723684/css/fonts.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/myFontsKit~2022-02-15-03-26-40-359~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/MyFontsWebfontsKit~2022-02-15-03-26-40-449~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/base-format~2025-05-15-03-57-00-580~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/ckeditor-table~2022-06-24-01-56-59-753~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/font-styles~2022-02-15-03-26-40-404~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/grid~2025-03-22-05-32-57-936~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/buttons-links~2025-09-04-01-18-02-177~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/venobox/2.1.6/venobox.min.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/foundation-based-modal~2022-06-10-01-42-45-993~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/nav~2025-09-04-01-18-36-394~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/footer~2022-08-18-20-23-24-355~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/social-icons~2022-02-15-03-26-40-322~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/hero-marquee2~2022-02-15-03-26-40-300~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/hero-marquee3~2024-01-10-23-07-31-151~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/highlight-marquee~2022-02-15-03-26-40-372~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/testimonial~2022-02-15-03-26-40-318~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/columns-module~2025-05-20-21-17-53-270~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/media-component~2022-08-18-20-43-36-666~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/notification-bar~2022-08-26-01-32-04-452~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/left-right-spread~2025-03-24-20-49-08-319~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/sliderContent~2024-03-19-21-09-01-363~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/article~2024-03-21-17-01-06-079~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/quote-component~2022-02-15-03-26-40-288~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/airlock-files-component~2022-02-15-03-26-40-253~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/base-site21/webresources/css/utility~2026-01-09-18-27-42-387~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/vspoptics/webresources/css/vspoptics~2024-04-18-02-36-10-526~cache.css" media="all" />
+        <link rel="stylesheet" type="text/css" href="/.resources/vspoptics/webresources/css/vspoptics-print~2022-12-08-21-22-01-872~cache.css" media="print" />
+
+        
+
+        <script src="https://kit.fontawesome.com/98090357a7.js" crossorigin="anonymous"></script>
+
+        <!-- Typekit -->
+        <script src="https://use.typekit.net/hrv8yhb.js"></script>
+        <script>try{Typekit.load({ async: false });}catch(e){}</script>
+
+    </head>
+    <body>
+        <!-- Google Tag Manager -->
+        <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-KX63BXR" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <!--End Google Tag Manager -->
+
+
+
+<nav class="small-24 column quickLinks ">
+
+    <a href="#skipToMain" class="skipLink">Skip to main content</a>
+    <div class="row">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <a id=globalnavigation-1 class="standardLink external" href="https://www.vspproviderhub.com/" target="_blank" >Provider Hub</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <a id=globalnavigation-2 class="standardLink external" href="https://www.eyefinity.com/" target="_blank" >Eyefinity</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <a id=globalnavigation-3 class="standardLink external" href="https://www.eyefinity.com/goto/vsponline" target="_blank" >VSPOnline</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <a id=globalnavigation-4 class="standardLink external" href="https://www.marchon.com/" target="_blank" >Marchon</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <a id=globalnavigation-5 class="standardLink external" href="https://www.altaireyewear.com/" target="_blank" >Altair</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <a id=globalnavigation-6 class="standardLink selected" href="/" >Optics</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <a id=globalnavigation-7 class="standardLink external" href="https://www.vspventures.com/" target="_blank" >Ventures</a>
+
+
+
+<div class="adminLinks"></div>
+    </div>
+
+</nav>
+
+            <div class="off-canvas-wrapper">
+                <div class="off-canvas-wrapper-inner" data-off-canvas-wrapper >
+
+
+                      <div id="offCanvasLeft" class="off-canvas position-left" data-off-canvas >
+
+                                <div class="mobile-nav-logo ear">
+                                </div>
+                            <!-- Site-specific Header for non-megamenu headers -->
+
+    
+
+
+
+
+  
+  
+
+
+
+
+  
+
+
+
+      <div class="navOverlay"></div>
+      <nav class="small-24 topNavContainer navWithSearch">
+          <div class="small-24 mobileNavControl">
+              <div class="mobile-nav-logo">
+                <a href="/">
+                    <img class="navLogo-mobile" alt="VSP Optics" src="/dam/jcr:6e535cfe-2300-499a-9447-f667542b709b/vspopticsLogo.png" />
+                </a>
+              </div>
+              <div class="mobileCls"><i class="fal fa-times"></i></div>
+          </div>
+
+          <div class="headerRow">
+                <div class="small-24 large-6 navLogoContainer">
+
+    
+
+
+
+
+  
+  
+
+
+
+
+  
+
+
+<a href="/"><img style="visibility: hidden;" class="siteroot-node" alt="VSP Optics"  data-interchange="[/dam/jcr:6e535cfe-2300-499a-9447-f667542b709b/vspopticsLogo.png, default],[/dam/jcr:6e535cfe-2300-499a-9447-f667542b709b/vspopticsLogo.png, small],[/dam/jcr:6e535cfe-2300-499a-9447-f667542b709b/vspopticsLogo.png, medium],[/dam/jcr:6e535cfe-2300-499a-9447-f667542b709b/vspopticsLogo.png, large]"  />
+        </a>
+                </div>
+
+               
+                <div class="small-24 large-18 navLinkContainer">
+
+    
+
+
+
+
+  
+  
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+          <a  class="standardLink" href="/products.html"  >PRODUCTS</a>
+
+
+
+
+
+
+          <a  class="standardLink" href="/education.html"  >EDUCATION</a>
+
+
+
+
+
+
+          <a  class="standardLink" href="/unity-rewards.html"  >UNITY REWARDS</a>
+
+                </div>
+          </div>
+
+         
+      </nav>
+
+                      </div><!--END #offCanvasLeft -->
+                      <div class="small-24 off-canvas-content float-left" data-off-canvas-content>
+
+                            <!-- target structure for dynamic quicklinks generation jquery -->
+                                <nav class="small-24 column mobileQuickLinksDYN hide-for-medium ">
+                                        <div class="small-24">
+                                            <label for="linkNestList" class="visuallyhidden">Select Site</label>
+                                            <select class="linkNest" id="linkNestList">
+
+                                            </select>
+                                        </div>
+                                </nav>
+
+
+
+
+    <div class="small-24 notification-bar
+                ">
+    	<div class="row">
+    			<div class="notification-txt">
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="headerBlock noHoverColor noCurtain">
+
+
+
+
+<div class="paragraphBlock
+ column noHoverColor noCurtain">
+<div class="cms paragraphContainer noHoverColor noCurtain ">
+
+
+                
+                    <span class="small-24 medium-24 large-24 paragraphCopy"><p><strong>Expanded Access:</strong> Order Unity, SunSync, and TechShield through the nationwide Unity Distributor Lab Network. <a href="https://www.unitylenses.com/lab-network.html" target="_blank">Get Started &gt;</a></p>
+</span>
+
+            </div> 
+
+
+
+        </div>  
+      </div> <!-- End of headerBlock  -->
+
+
+     			</div>
+    					<div class="dismiss"><a href="#" class="dismiss-link"><i class="fas fa-window-close"></i></a></div>
+    	</div>
+    </div>
+
+                            <!-- mobile nav -->
+                            <div class="title-bar">
+                                  <div class="small-4 title-bar-left">
+                                    <button class="menu-icon" type="button" data-open="offCanvasLeft"></button>
+
+                                  </div>
+                                  <div class="small-14 title-bar-title text-center">
+
+                                  </div>
+
+                                  <div class="small-6 title-bar-right">
+                                        <a href="/">
+                                            <img class="navLogo-mobile" src="/dam/jcr:6e535cfe-2300-499a-9447-f667542b709b/vspopticsLogo.png" />
+                                        </a>
+                                    
+                                  </div>
+                            </div><!--END .title-bar -->
+                            <header class="small-24">
+                            <!-- Site-specific Header for non-megamenu headers -->
+
+    
+
+
+
+
+  
+  
+
+
+
+
+  
+
+
+
+      <div class="navOverlay"></div>
+      <nav class="small-24 topNavContainer navWithSearch">
+          <div class="small-24 mobileNavControl">
+              <div class="mobile-nav-logo">
+                <a href="/">
+                    <img class="navLogo-mobile" alt="VSP Optics" src="/dam/jcr:6e535cfe-2300-499a-9447-f667542b709b/vspopticsLogo.png" />
+                </a>
+              </div>
+              <div class="mobileCls"><i class="fal fa-times"></i></div>
+          </div>
+
+          <div class="headerRow">
+                <div class="small-24 large-6 navLogoContainer">
+
+    
+
+
+
+
+  
+  
+
+
+
+
+  
+
+
+<a href="/"><img style="visibility: hidden;" class="siteroot-node" alt="VSP Optics"  data-interchange="[/dam/jcr:6e535cfe-2300-499a-9447-f667542b709b/vspopticsLogo.png, default],[/dam/jcr:6e535cfe-2300-499a-9447-f667542b709b/vspopticsLogo.png, small],[/dam/jcr:6e535cfe-2300-499a-9447-f667542b709b/vspopticsLogo.png, medium],[/dam/jcr:6e535cfe-2300-499a-9447-f667542b709b/vspopticsLogo.png, large]"  />
+        </a>
+                </div>
+
+               
+                <div class="small-24 large-18 navLinkContainer">
+
+    
+
+
+
+
+  
+  
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+          <a  class="standardLink" href="/products.html"  >PRODUCTS</a>
+
+
+
+
+
+
+          <a  class="standardLink" href="/education.html"  >EDUCATION</a>
+
+
+
+
+
+
+          <a  class="standardLink" href="/unity-rewards.html"  >UNITY REWARDS</a>
+
+                </div>
+          </div>
+
+         
+      </nav>
+                            </header>
+
+
+                        <main>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+
+
+
+
+    <section
+class="spread largePadding section-margin selectBkgd">
+          
+
+          <div class="row">
+<div class=" container                  
+ column">
+
+                <div class="small-24 medium-12 large-10
+ column
+
+spreadCol spreadCol1                    ">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="image caption-bottom-left standardCaption">
+<img class=""
+              src="https://www.vspoptics.com/dam/jcr:ca45ea30-b79d-4c5f-9ac3-2a2fdc2c0a7f/optics-not-found.jpeg" alt="" >
+
+
+  </div> 
+
+                 </div>
+
+                <div class="small-24 medium-12 large-14
+ column
+
+spreadCol spreadCol2                    ">
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="headerBlock">
+
+
+
+
+<div class="paragraphBlock
+ column">
+<div class="cms paragraphContainer ">
+
+
+                <h1 style="text-align:left"><strong><strong>Broken Link / Page Not Found</strong></strong></h1>
+
+                    <span class="small-24 medium-24 large-24 paragraphCopy"><p>Sorry, we couldn&#39;t find the page you were looking for. Maybe it has moved or the URL is incorrect.<br />
+<br />
+Things to try:</p>
+
+<ul>
+	<li>Check that the URL you entered is correct.</li>
+	<li>Try searching our site for the topic you were looking for.</li>
+	<li>Return to our&nbsp;<a href="https://www.vspoptics.com/" style="color:inherit; text-decoration:underline; font-weight:600; transition:opacity 300ms ease-in-out 0s">home page</a>&nbsp;or use the navigation menu to find what<br />
+	you need.</li>
+</ul>
+</span>
+
+            </div> 
+
+<div class="small-24 linkList1 linkContainer  ">
+                </div>
+
+
+        </div>  
+      </div> <!-- End of headerBlock  -->
+
+
+                 </div>
+              </div> 
+
+            </div>
+                </section>
+
+ 
+
+                        </main>
+
+                            <!-- Site-specific Footer-->
+
+    
+
+
+
+
+  
+  
+
+
+
+
+  
+
+
+
+<footer class="small-24 fatFooterRow">
+    <div class="row">
+        <div class="small-24 medium-4 column footerLogo">
+            <a href="/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="image caption-bottom-left standardCaption">
+<img class=""
+              src="https://www.vspoptics.com/dam/jcr:da641bf2-83c8-43cf-bfb3-f0fa72655197/vspopticsLogo.png" alt="VSP Optics" >
+
+
+  </div> 
+
+             </a>
+        </div>
+        <div class="small-24 medium-12 column footerBlock">
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="headerBlock">
+
+
+
+
+<div class="paragraphBlock
+ twoCols">
+
+<div class="small-24 linkList1 medium-12 linkContainer twoCols   ">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <a  class="standardLink" href="/privacy-practices.html" >Privacy Practices</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <a  class="standardLink" href="/accessibility.html" >Accessibility</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <a  class="standardLink" href="/services.html" >Services</a>
+
+
+
+                </div>
+<div class="small-24 end linkList2 linkContainer2 twoCols    ">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <a  class="standardLink external" href="https://www.unitylenses.com/" target="_blank" >Unity Lenses</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <a  class="standardLink external" href="https://www.sunsynclenses.com" target="_blank" >SunSync Light-Reactive Lenses</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <a  class="standardLink external" href="https://www.techshieldar.com" target="_blank" >TechShield Anti-Reflective Coatings</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <a  class="standardLink external" href="https://www.myuuniversity.com" target="_blank" >UUniversity</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <a  class="standardLink external" href="http://www.vspone.com" target="_blank" >VSPOne</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <a  class="standardLink external" href="http://www.vsp.com" target="_blank" >VSP Vision Care</a>
+
+
+
+                </div>
+
+
+        </div>  
+      </div> <!-- End of headerBlock  -->
+
+
+         </div>
+        <div class="small-24 medium-4 small-pull-24 column end footerLinkContainer">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <a  class="selectFormat external" href="https://www.facebook.com/VSPOpticsGroup/" target="_blank" aria-label="Vsp Optics Group Facebook profile"><i style="color:black;" class="fab fa-facebook-f icon-scale-2p0"></i></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <a  class="selectFormat external" href="https://www.linkedin.com/company/vsp-optics/" target="_blank" aria-label="Vsp Optics LinkedIn"><i style="color:black;" class="fab fa-linkedin icon-scale-4p0"></i></a>
+
+
+
+
+        </div>
+        <div class="small-24 medium-4 small-pull-24 column end footerLinkContainer">
+        </div>
+        <div class="small-24 column footerLegal show-for-medium">
+                <small> &copy; 2026 Plexus Optix, Inc. All rights reserved.&nbsp;<br />
+Unity, SunSync, TechShield, and Ethos are registered trademarks, and UUniversity is a trademark of Plexus Optix, Inc. All other brands or marks are the property of their respective owners.<br />
+​Use of these marks, names, logos, and/or brands does not imply endorsement.&nbsp;</small>
+        </div>
+        <div class="small-24 medium-12 column footerLegal show-for-small-only">
+                <small> &copy; 2026 Plexus Optix, Inc. All rights reserved.&nbsp;<br />
+Unity, SunSync, TechShield, and Ethos are registered trademarks, and UUniversity is a trademark of Plexus Optix, Inc. All other brands or marks are the property of their respective owners.<br />
+​Use of these marks, names, logos, and/or brands does not imply endorsement.&nbsp;</small>
+        </div>
+    </div>
+</footer>
+
+                      </div><!--END .small-24 off-canvas-content float-left -->
+                </div><!--END .off-canvas-wrapper-inner -->
+            </div><!--END .off-canvas-wrapper -->
+
+            <!-- Site-specific JS-->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" type="text/javascript" language="JavaScript"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.5.3/js/foundation.min.js" type="text/javascript" language="JavaScript"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.min.js" type="text/javascript" language="JavaScript"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/additional-methods.min.js" type="text/javascript" language="JavaScript"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.11/iframeResizer.min.js" type="text/javascript" language="JavaScript"></script>
+            <script src="/.resources/base-site21/webresources/js/additional-methods-vsp~2022-01-11-19-33-26-403~cache.js" type="text/javascript" language="JavaScript"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/venobox/2.1.6/venobox.min.js" type="text/javascript" language="JavaScript"></script>
+            <script src="/.resources/base-site21/webresources/js/foundation-based-modal~2025-01-29-23-18-19-102~cache.js" type="text/javascript" language="JavaScript"></script>
+            <script src="/.resources/base-site21/webresources/js/dynamic-based-modal~2025-07-09-23-04-56-069~cache.js" type="text/javascript" language="JavaScript"></script>
+            <script src="/.resources/base-site21/webresources/js/devScripts~2022-01-11-19-33-26-390~cache.js" type="text/javascript" language="JavaScript"></script>
+            <script src="/.resources/base-site21/webresources/js/ckeditor-table~2024-06-28-20-46-14-133~cache.js" type="text/javascript" language="JavaScript"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js" type="text/javascript" language="JavaScript"></script>
+            <script src="/.resources/base-site21/webresources/js/password-protection~2024-04-04-16-43-20-510~cache.js" type="text/javascript" language="JavaScript"></script>
+            <script src="/.resources/base-site21/webresources/js/easing~2022-01-11-19-33-26-370~cache.js" type="text/javascript" language="JavaScript"></script>
+            <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js" type="text/javascript" language="JavaScript"></script>
+            <script src="/.resources/base-site21/webresources/js/base~2024-05-16-21-08-46-169~cache.js" type="text/javascript" language="JavaScript"></script>
+            <script src="/.resources/base-site21/webresources/js/formstack-recaptcha~2024-03-20-15-06-59-503~cache.js" type="text/javascript" language="JavaScript"></script>
+            <script src="/.resources/vspoptics/webresources/js/vspoptics~2024-10-08-21-24-46-912~cache.js" type="text/javascript" language="JavaScript"></script>
+            <script src="/.resources/base-site21/webresources/js/heroSlider~2025-10-24-04-01-37-242~cache.js" type="text/javascript" language="JavaScript"></script>
+            
+
+        <div style="text-align:center; margin-top:4px; margin-bottom:4px;">
+<a style="margin-right:10px" href="#" onClick="airgap.optOut(window.airgapLoadEvent); airgap.optOut(event); transcend.showConsentManager({viewState:'NoticeAndDoNotSell'})">Do Not Sell or Share My Personal Information</a>
+
+<a id="cpra_button" style="display:inline-block;">Your Cookie Choices</a>
+</div>
+
+<script>
+if (window.airgap) {
+
+  const cpraButton = document.getElementById('cpra_button');
+
+  cpraButton.onclick = () => {
+
+transcend.showConsentManager({ viewState: 'AcceptOrRejectAll' });
+  };
+
+}
+</script>
+
+    </body>
+</html>

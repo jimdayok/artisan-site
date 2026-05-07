@@ -62,7 +62,7 @@ ${items
   .map(
     (item, index) => `    <item>
       <title>${escapeXml(item.title)}</title>
-      <link>${siteUrl}/newsletter#past-issues</link>
+      <link>${siteUrl}/${index === 0 ? "newsletters/practice-matters/issue-001" : "newsletter#upcoming"}</link>
       <guid isPermaLink="false">artisan-newsletter-${index + 1}</guid>
       <description>${escapeXml(item.description)}</description>
       <category>${escapeXml(item.date)}</category>

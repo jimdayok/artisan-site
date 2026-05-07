@@ -1,0 +1,2555 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    
+    <style>
+      /* Grid Escape for Header & Announcement Bar - Prevents narrow-to-wide flicker on page load */
+      .chemistrie-header,
+      .announcement-bar {
+        grid-column: 1 / -1 !important;
+        width: 100% !important;
+        min-width: 100% !important;
+      }
+    </style>
+
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap"></noscript>
+
+    
+    <style data-shopify>
+  
+  @font-face {
+  font-family: "Work Sans";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("//chemistrie.com/cdn/fonts/work_sans/worksans_n4.b7973b3d07d0ace13de1b1bea9c45759cdbe12cf.woff2") format("woff2"),
+       url("//chemistrie.com/cdn/fonts/work_sans/worksans_n4.cf5ceb1e6d373a9505e637c1aff0a71d0959556d.woff") format("woff");
+}
+
+  @font-face {
+  font-family: "Work Sans";
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url("//chemistrie.com/cdn/fonts/work_sans/worksans_n7.e2cf5bd8f2c7e9d30c030f9ea8eafc69f5a92f7b.woff2") format("woff2"),
+       url("//chemistrie.com/cdn/fonts/work_sans/worksans_n7.20f1c80359e7f7b4327b81543e1acb5c32cd03cd.woff") format("woff");
+}
+
+  @font-face {
+  font-family: "Work Sans";
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+  src: url("//chemistrie.com/cdn/fonts/work_sans/worksans_i7.7cdba6320b03c03dcaa365743a4e0e729fe97e54.woff2") format("woff2"),
+       url("//chemistrie.com/cdn/fonts/work_sans/worksans_i7.42a9f4016982495f4c0b0fb3dc64cf8f2d0c3eaa.woff") format("woff");
+}
+
+  @font-face {
+  font-family: "Work Sans";
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  src: url("//chemistrie.com/cdn/fonts/work_sans/worksans_i4.16ff51e3e71fc1d09ff97b9ff9ccacbeeb384ec4.woff2") format("woff2"),
+       url("//chemistrie.com/cdn/fonts/work_sans/worksans_i4.ed4a1418cba5b7f04f79e4d5c8a5f1a6bd34f23b.woff") format("woff");
+}
+
+
+  :root {
+    --font-primary--family: "Work Sans", sans-serif;
+    --font-primary--style: normal;
+    --font-primary--weight: 400;
+    --page-width: 90rem;
+    --page-margin: 20px;
+    --color-background: #FFFFFF;
+    --color-foreground: #333333;
+    --style-border-radius-inputs: 4px;
+  }
+</style>
+
+
+    
+    <link href="//chemistrie.com/cdn/shop/t/15/assets/critical.css?v=168080851212746058391777386117" rel="stylesheet" type="text/css" media="all" />
+
+    
+    <link href="//chemistrie.com/cdn/shop/t/15/assets/chemistrie-base.css?v=96955803973238768671771043914" rel="stylesheet" type="text/css" media="all" />
+
+    
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<meta
+  property="og:site_name"
+  content="Chemistrie"
+>
+<meta
+  property="og:url"
+  content="https://chemistrie.com/404"
+>
+<meta
+  property="og:title"
+  content="404 Not Found"
+>
+<meta
+  property="og:type"
+  content="website"
+>
+<meta
+  property="og:description"
+  content="Chemistrie creates custom magnetic clip-on lenses designed to fit your existing glasses perfectly. One pair of glasses, endless possibilities. "
+><meta
+    property="og:image"
+    content="https://chemistrie.com/cdn/shop/files/clip-on_sunglasses.png?v=1775569073"
+  >
+  <meta
+    property="og:image:secure_url"
+    content="https://chemistrie.com/cdn/shop/files/clip-on_sunglasses.png?v=1775569073"
+  >
+  <meta
+    property="og:image:width"
+    content="1200"
+  >
+  <meta
+    property="og:image:height"
+    content="628"
+  ><meta
+  name="twitter:card"
+  content="summary_large_image"
+>
+<meta
+  name="twitter:title"
+  content="404 Not Found"
+>
+<meta
+  name="twitter:description"
+  content="Chemistrie creates custom magnetic clip-on lenses designed to fit your existing glasses perfectly. One pair of glasses, endless possibilities. "
+>
+
+<title>
+  404 Not Found
+ &ndash; Chemistrie</title>
+
+<link
+  rel="canonical"
+  href="https://chemistrie.com/404"
+>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Chemistrie",
+  "url": "https:\/\/chemistrie.com",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://chemistrie.com/search?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Chemistrie",
+  "url": "https:\/\/chemistrie.com","logo": "https:\/\/chemistrie.com\/cdn\/shop\/files\/Chemistrie-App-Logo-Square-512px.svg?v=1777418780\u0026width=600","contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "4124562736",
+    "contactType": "customer service"
+  },"sameAs": ["https:\/\/www.facebook.com\/chemistrieclips","https:\/\/www.instagram.com\/chemistrieclips\/","https:\/\/www.linkedin.com\/company\/eyenavision-inc-\/","https:\/\/www.youtube.com\/@eyenavisioninc.3019"]
+}
+</script>
+
+    
+    <link rel="icon" href="//chemistrie.com/cdn/shop/t/15/assets/favicon.ico?v=118715080133728415721771043997" type="image/x-icon">
+    <link rel="icon" type="image/png" sizes="16x16" href="//chemistrie.com/cdn/shop/t/15/assets/favicon-16x16.png?v=116303340597174119061771043995">
+    <link rel="icon" type="image/png" sizes="32x32" href="//chemistrie.com/cdn/shop/t/15/assets/favicon-32x32.png?v=49945937939744715141771043995">
+    <link rel="apple-touch-icon" sizes="180x180" href="//chemistrie.com/cdn/shop/t/15/assets/favicon-apple-touch-icon.png?v=105351867526494598601771043997">
+    <link rel="icon" type="image/png" sizes="192x192" href="//chemistrie.com/cdn/shop/t/15/assets/favicon-android-chrome-192x192.png?v=111231986033040666731771043996">
+    <link rel="icon" type="image/png" sizes="512x512" href="//chemistrie.com/cdn/shop/t/15/assets/favicon-android-chrome-512x512.png?v=44948087105428392381771043996">
+
+    
+    <script src="//chemistrie.com/cdn/shop/t/15/assets/gsap.min.js?v=98399229928229536421771044003" defer></script>
+
+    <script>window.performance && window.performance.mark && window.performance.mark('shopify.content_for_header.start');</script><meta name="google-site-verification" content="H8XXjqIIJBRfkYa3OLOnQWKxjlnLHZFxzam6JLfiBZE">
+<meta id="shopify-digital-wallet" name="shopify-digital-wallet" content="/68132307105/digital_wallets/dialog">
+<meta name="shopify-checkout-api-token" content="6a4bd5abda2cb10d5f01a2d99017e817">
+<meta id="in-context-paypal-metadata" data-shop-id="68132307105" data-venmo-supported="false" data-environment="production" data-locale="en_US" data-paypal-v4="true" data-currency="USD">
+<script async="async" src="/checkouts/internal/preloads.js?locale=en-US"></script>
+<link rel="preconnect" href="https://shop.app" crossorigin="anonymous">
+<script async="async" src="https://shop.app/checkouts/internal/preloads.js?locale=en-US&shop_id=68132307105" crossorigin="anonymous"></script>
+<script id="apple-pay-shop-capabilities" type="application/json">{"shopId":68132307105,"countryCode":"US","currencyCode":"USD","merchantCapabilities":["supports3DS"],"merchantId":"gid:\/\/shopify\/Shop\/68132307105","merchantName":"Chemistrie","requiredBillingContactFields":["postalAddress","email"],"requiredShippingContactFields":["postalAddress","email"],"shippingType":"shipping","supportedNetworks":["visa","masterCard","amex","discover","elo","jcb"],"total":{"type":"pending","label":"Chemistrie","amount":"1.00"},"shopifyPaymentsEnabled":true,"supportsSubscriptions":true}</script>
+<script id="shopify-features" type="application/json">{"accessToken":"6a4bd5abda2cb10d5f01a2d99017e817","betas":["rich-media-storefront-analytics"],"domain":"chemistrie.com","predictiveSearch":true,"shopId":68132307105,"locale":"en"}</script>
+<script>var Shopify = Shopify || {};
+Shopify.shop = "x8rjsw-v7.myshopify.com";
+Shopify.locale = "en";
+Shopify.currency = {"active":"USD","rate":"1.0"};
+Shopify.country = "US";
+Shopify.theme = {"name":"[LIVE] Chemistrie v1.21 | 2026-04-28_accb151","id":146522865825,"schema_name":"Chemistrie Client Testing","schema_version":"1.0.0-testing.20251017","theme_store_id":null,"role":"main"};
+Shopify.theme.handle = "null";
+Shopify.theme.style = {"id":null,"handle":null};
+Shopify.cdnHost = "chemistrie.com/cdn";
+Shopify.routes = Shopify.routes || {};
+Shopify.routes.root = "/";
+Shopify.shopJsCdnBaseUrl = "https://cdn.shopify.com/shopifycloud/shop-js";</script>
+<script type="module">!function(o){(o.Shopify=o.Shopify||{}).modules=!0}(window);</script>
+<script>!function(o){function n(){var o=[];function n(){o.push(Array.prototype.slice.apply(arguments))}return n.q=o,n}var t=o.Shopify=o.Shopify||{};t.loadFeatures=n(),t.autoloadFeatures=n()}(window);</script>
+<script>
+  window.ShopifyPay = window.ShopifyPay || {};
+  window.ShopifyPay.apiHost = "shop.app\/pay";
+  window.ShopifyPay.redirectState = null;
+</script>
+<script>
+  window.Shopify = window.Shopify || {};
+  window.Shopify.SignInWithShop = window.Shopify.SignInWithShop || {};
+  window.Shopify.SignInWithShop.eligible = true;
+</script>
+<script id="shop-js-analytics" type="application/json">{"pageType":"404"}</script>
+<script defer="defer" async type="module" src="//chemistrie.com/cdn/shopifycloud/shop-js/modules/v2/loader.init-shop-cart-sync.en.esm.js"></script>
+<script type="module">
+  await import("//chemistrie.com/cdn/shopifycloud/shop-js/modules/v2/loader.init-shop-cart-sync.en.esm.js");
+
+  window.Shopify.SignInWithShop?.initShopCartSync?.({"fedCMEnabled":true,"windoidEnabled":true});
+
+</script>
+<script>
+  window.Shopify = window.Shopify || {};
+  if (!window.Shopify.featureAssets) window.Shopify.featureAssets = {};
+  window.Shopify.featureAssets['shop-js'] = {"shop-toast-manager":["modules/v2/loader.shop-toast-manager.en.esm.js"],"shop-button":["modules/v2/loader.shop-button.en.esm.js"],"init-shop-user-recognition":["modules/v2/loader.init-shop-user-recognition.en.esm.js"],"shop-cash-offers":["modules/v2/loader.shop-cash-offers.en.esm.js"],"avatar":["modules/v2/loader.avatar.en.esm.js"],"init-fed-cm":["modules/v2/loader.init-fed-cm.en.esm.js"],"init-windoid":["modules/v2/loader.init-windoid.en.esm.js"],"init-shop-email-lookup-coordinator":["modules/v2/loader.init-shop-email-lookup-coordinator.en.esm.js"],"init-shop-cart-sync":["modules/v2/loader.init-shop-cart-sync.en.esm.js"],"init-customer-accounts-sign-up":["modules/v2/loader.init-customer-accounts-sign-up.en.esm.js"],"shop-cart-sync":["modules/v2/loader.shop-cart-sync.en.esm.js"],"shop-login-button":["modules/v2/loader.shop-login-button.en.esm.js"],"checkout-modal":["modules/v2/loader.checkout-modal.en.esm.js"],"pay-button":["modules/v2/loader.pay-button.en.esm.js"],"init-shop-for-new-customer-accounts":["modules/v2/loader.init-shop-for-new-customer-accounts.en.esm.js"],"shop-user-recognition":["modules/v2/loader.shop-user-recognition.en.esm.js"],"init-customer-accounts":["modules/v2/loader.init-customer-accounts.en.esm.js"],"shop-login":["modules/v2/loader.shop-login.en.esm.js"],"shop-follow-button":["modules/v2/loader.shop-follow-button.en.esm.js"],"lead-capture":["modules/v2/loader.lead-capture.en.esm.js"],"payment-terms":["modules/v2/loader.payment-terms.en.esm.js"]};
+</script>
+<script>(function() {
+  var isLoaded = false;
+  function asyncLoad() {
+    if (isLoaded) return;
+    isLoaded = true;
+    var urls = ["\/\/cdn.shopify.com\/proxy\/c5ace9b6d21863010453925f059369da4743b5d5a98685a560da1ed92c7c5fd1\/d1639lhkj5l89m.cloudfront.net\/js\/storefront\/uppromote.js?shop=x8rjsw-v7.myshopify.com\u0026sp-cache-control=cHVibGljLCBtYXgtYWdlPTkwMA"];
+    for (var i = 0; i < urls.length; i++) {
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = urls[i];
+      var x = document.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+    }
+  };
+  if(window.attachEvent) {
+    window.attachEvent('onload', asyncLoad);
+  } else {
+    window.addEventListener('load', asyncLoad, false);
+  }
+})();</script>
+<script id="__st">var __st={"a":68132307105,"offset":-14400,"reqid":"b7619d3e-777a-4d1f-8a7f-315689e851bd-1777941811","pageurl":"chemistrie.com\/404","u":"c8685d6ed911"};</script>
+<script>window.ShopifyPaypalV4VisibilityTracking = true;</script>
+<script id="captcha-bootstrap">!function(){'use strict';const t='contact',e='account',n='new_comment',o=[[t,t],['blogs',n],['comments',n],[t,'customer']],c=[[e,'customer_login'],[e,'guest_login'],[e,'recover_customer_password'],[e,'create_customer']],r=t=>t.map((([t,e])=>`form[action*='/${t}']:not([data-nocaptcha='true']) input[name='form_type'][value='${e}']`)).join(','),a=t=>()=>t?[...document.querySelectorAll(t)].map((t=>t.form)):[];function s(){const t=[...o],e=r(t);return a(e)}const i='password',u='form_key',d=['recaptcha-v3-token','g-recaptcha-response','h-captcha-response',i],f=()=>{try{return window.sessionStorage}catch{return}},m='__shopify_v',_=t=>t.elements[u];function p(t,e,n=!1){try{const o=window.sessionStorage,c=JSON.parse(o.getItem(e)),{data:r}=function(t){const{data:e,action:n}=t;return t[m]||n?{data:e,action:n}:{data:t,action:n}}(c);for(const[e,n]of Object.entries(r))t.elements[e]&&(t.elements[e].value=n);n&&o.removeItem(e)}catch(o){console.error('form repopulation failed',{error:o})}}const l='form_type',E='cptcha';function T(t){t.dataset[E]=!0}const w=window,h=w.document,L='Shopify',v='ce_forms',y='captcha';let A=!1;((t,e)=>{const n=(g='f06e6c50-85a8-45c8-87d0-21a2b65856fe',I='https://cdn.shopify.com/shopifycloud/storefront-forms-hcaptcha/ce_storefront_forms_captcha_hcaptcha.v1.5.2.iife.js',D={infoText:'Protected by hCaptcha',privacyText:'Privacy',termsText:'Terms'},(t,e,n)=>{const o=w[L][v],c=o.bindForm;if(c)return c(t,g,e,D).then(n);var r;o.q.push([[t,g,e,D],n]),r=I,A||(h.body.append(Object.assign(h.createElement('script'),{id:'captcha-provider',async:!0,src:r})),A=!0)});var g,I,D;w[L]=w[L]||{},w[L][v]=w[L][v]||{},w[L][v].q=[],w[L][y]=w[L][y]||{},w[L][y].protect=function(t,e){n(t,void 0,e),T(t)},Object.freeze(w[L][y]),function(t,e,n,w,h,L){const[v,y,A,g]=function(t,e,n){const i=e?o:[],u=t?c:[],d=[...i,...u],f=r(d),m=r(i),_=r(d.filter((([t,e])=>n.includes(e))));return[a(f),a(m),a(_),s()]}(w,h,L),I=t=>{const e=t.target;return e instanceof HTMLFormElement?e:e&&e.form},D=t=>v().includes(t);t.addEventListener('submit',(t=>{const e=I(t);if(!e)return;const n=D(e)&&!e.dataset.hcaptchaBound&&!e.dataset.recaptchaBound,o=_(e),c=g().includes(e)&&(!o||!o.value);(n||c)&&t.preventDefault(),c&&!n&&(function(t){try{if(!f())return;!function(t){const e=f();if(!e)return;const n=_(t);if(!n)return;const o=n.value;o&&e.removeItem(o)}(t);const e=Array.from(Array(32),(()=>Math.random().toString(36)[2])).join('');!function(t,e){_(t)||t.append(Object.assign(document.createElement('input'),{type:'hidden',name:u})),t.elements[u].value=e}(t,e),function(t,e){const n=f();if(!n)return;const o=[...t.querySelectorAll(`input[type='${i}']`)].map((({name:t})=>t)),c=[...d,...o],r={};for(const[a,s]of new FormData(t).entries())c.includes(a)||(r[a]=s);n.setItem(e,JSON.stringify({[m]:1,action:t.action,data:r}))}(t,e)}catch(e){console.error('failed to persist form',e)}}(e),e.submit())}));const S=(t,e)=>{t&&!t.dataset[E]&&(n(t,e.some((e=>e===t))),T(t))};for(const o of['focusin','change'])t.addEventListener(o,(t=>{const e=I(t);D(e)&&S(e,y())}));const B=e.get('form_key'),M=e.get(l),P=B&&M;t.addEventListener('DOMContentLoaded',(()=>{const t=y();if(P)for(const e of t)e.elements[l].value===M&&p(e,B);[...new Set([...A(),...v().filter((t=>'true'===t.dataset.shopifyCaptcha))])].forEach((e=>S(e,t)))}))}(h,new URLSearchParams(w.location.search),n,t,e,['guest_login'])})(!0,!0)}();</script>
+<script integrity="sha256-JjoPp5ZfB1sSAs5SQaol1x1GgvveM+BgmRzyDexInEQ=" data-source-attribution="shopify.loadfeatures" defer="defer" src="//chemistrie.com/cdn/shopifycloud/storefront/assets/storefront/load_feature-1bd60354.js" crossorigin="anonymous"></script>
+<script crossorigin="anonymous" defer="defer" src="//chemistrie.com/cdn/shopifycloud/storefront/assets/shopify_pay/storefront-bf1cdb70.js?v=20250812"></script>
+<script data-source-attribution="shopify.dynamic_checkout.dynamic.init">var Shopify=Shopify||{};Shopify.PaymentButton=Shopify.PaymentButton||{isStorefrontPortableWallets:!0,init:function(){window.Shopify.PaymentButton.init=function(){};var t=document.createElement("script");t.src="https://chemistrie.com/cdn/shopifycloud/portable-wallets/latest/portable-wallets.en.js",t.type="module",document.head.appendChild(t)}};
+</script>
+<script data-source-attribution="shopify.dynamic_checkout.buyer_consent">
+  function portableWalletsHideBuyerConsent(e){var t=document.getElementById("shopify-buyer-consent"),n=document.getElementById("shopify-subscription-policy-button");t&&n&&(t.classList.add("hidden"),t.setAttribute("aria-hidden","true"),n.removeEventListener("click",e))}function portableWalletsShowBuyerConsent(e){var t=document.getElementById("shopify-buyer-consent"),n=document.getElementById("shopify-subscription-policy-button");t&&n&&(t.classList.remove("hidden"),t.removeAttribute("aria-hidden"),n.addEventListener("click",e))}window.Shopify?.PaymentButton&&(window.Shopify.PaymentButton.hideBuyerConsent=portableWalletsHideBuyerConsent,window.Shopify.PaymentButton.showBuyerConsent=portableWalletsShowBuyerConsent);
+</script>
+<script data-source-attribution="shopify.dynamic_checkout.cart.bootstrap">document.addEventListener("DOMContentLoaded",(function(){function t(){return document.querySelector("shopify-accelerated-checkout-cart, shopify-accelerated-checkout")}if(t())Shopify.PaymentButton.init();else{new MutationObserver((function(e,n){t()&&(Shopify.PaymentButton.init(),n.disconnect())})).observe(document.body,{childList:!0,subtree:!0})}}));
+</script>
+<script id='scb4127' type='text/javascript' async='' src='https://chemistrie.com/cdn/shopifycloud/privacy-banner/storefront-banner.js'></script><link id="shopify-accelerated-checkout-styles" rel="stylesheet" media="screen" href="https://chemistrie.com/cdn/shopifycloud/portable-wallets/latest/accelerated-checkout-backwards-compat.css" crossorigin="anonymous">
+<style id="shopify-accelerated-checkout-cart">
+        #shopify-buyer-consent {
+  margin-top: 1em;
+  display: inline-block;
+  width: 100%;
+}
+
+#shopify-buyer-consent.hidden {
+  display: none;
+}
+
+#shopify-subscription-policy-button {
+  background: none;
+  border: none;
+  padding: 0;
+  text-decoration: underline;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+#shopify-subscription-policy-button::before {
+  box-shadow: none;
+}
+
+      </style>
+<link rel="stylesheet" media="screen" href="//chemistrie.com/cdn/shop/t/15/compiled_assets/styles.css?v=84967360922059171001777662025">
+<script id="sections-script" data-sections="main-404,announcement-bar,header-chemistrie,footer" defer="defer" src="//chemistrie.com/cdn/shop/t/15/compiled_assets/scripts.js?v=73560248235086821561776278090"></script>
+<script>window.performance && window.performance.mark && window.performance.mark('shopify.content_for_header.end');</script>
+
+    
+<script>
+(function() {
+  'use strict';
+
+  // Defer everything until idle so we never block the configurator.
+  var run = function() {
+    if (!document || !document.addEventListener) return;
+
+    // Queue calls if clarity() isn't defined yet (snippet may load
+    // before the Clarity app's async script hydrates).
+    var q = [];
+    var flush = function() {
+      if (typeof window.clarity !== 'function') return;
+      while (q.length) {
+        try { window.clarity.apply(null, q.shift()); } catch (e) {}
+      }
+    };
+    var call = function() {
+      var args = Array.prototype.slice.call(arguments);
+      if (typeof window.clarity === 'function') {
+        try { window.clarity.apply(null, args); } catch (e) {}
+      } else {
+        q.push(args);
+      }
+    };
+
+    // Periodically retry the queue until clarity() is ready (up to 30s).
+    var tries = 0;
+    var iv = setInterval(function() {
+      tries++;
+      if (typeof window.clarity === 'function') { flush(); clearInterval(iv); }
+      if (tries > 60) clearInterval(iv);
+    }, 500);
+
+    // ---- Step transitions: each step gets its own virtual page URL ----
+    document.addEventListener('configurator:step', function(e) {
+      var d = (e && e.detail) || {};
+      if (d.step) {
+        // Virtual page URL → Clarity treats each step as a separate
+        // page in heatmaps & funnels, even though the real URL never changes.
+        call('set', 'page', '/order-flow/step-' + d.step);
+        call('event', 'configurator_step_' + d.step);
+      }
+      if (d.variant)  call('set', 'variant',   d.variant);
+      if (d.lensType) call('set', 'lens_type', d.lensType);
+      if (d.clipType) call('set', 'clip_type', d.clipType);
+    });
+
+    // ---- Step 2 substeps (variant B/C lens sub-flow) ----
+    document.addEventListener('configurator:substep', function(e) {
+      var d = (e && e.detail) || {};
+      if (d.substep && d.stage) {
+        call('set', 'page', '/order-flow/step-2/' + d.stage);
+        call('event', 'configurator_substep_' + d.stage);
+      }
+    });
+
+    // ---- Selection events (segmentation tags) ----
+    document.addEventListener('configurator:variant_chosen', function(e) {
+      var d = (e && e.detail) || {};
+      if (d.variant) {
+        call('set', 'variant', d.variant);
+        call('event', 'variant_chosen_' + d.variant);
+      }
+    });
+
+    document.addEventListener('configurator:clip_type_chosen', function(e) {
+      var d = (e && e.detail) || {};
+      if (d.clipType) {
+        call('set', 'clip_type', d.clipType);
+        call('event', 'clip_chosen_' + d.clipType);
+      }
+    });
+
+    document.addEventListener('configurator:add_to_cart', function() {
+      // Funnel completion event — what we care about most.
+      call('event', 'add_to_cart');
+      call('upgrade', 'add_to_cart'); // tells Clarity to prioritize this session for replay
+    });
+  };
+
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(run, { timeout: 3000 });
+  } else {
+    setTimeout(run, 1500);
+  }
+})();
+</script>
+  <!-- BEGIN app block: shopify://apps/klaviyo-email-marketing-sms/blocks/klaviyo-onsite-embed/2632fe16-c075-4321-a88b-50b567f42507 -->
+
+
+
+
+
+
+
+
+
+
+
+
+  <script async src="https://static.klaviyo.com/onsite/js/UWNvSK/klaviyo.js?company_id=UWNvSK"></script>
+  <script>!function(){if(!window.klaviyo){window._klOnsite=window._klOnsite||[];try{window.klaviyo=new Proxy({},{get:function(n,i){return"push"===i?function(){var n;(n=window._klOnsite).push.apply(n,arguments)}:function(){for(var n=arguments.length,o=new Array(n),w=0;w<n;w++)o[w]=arguments[w];var t="function"==typeof o[o.length-1]?o.pop():void 0,e=new Promise((function(n){window._klOnsite.push([i].concat(o,[function(i){t&&t(i),n(i)}]))}));return e}}})}catch(n){window.klaviyo=window.klaviyo||[],window.klaviyo.push=function(){var n;(n=window._klOnsite).push.apply(n,arguments)}}}}();</script>
+
+  
+
+
+
+
+  <script>
+    window.klaviyoReviewsProductDesignMode = false
+  </script>
+
+
+
+
+
+
+
+
+
+<!-- END app block --><!-- BEGIN app block: shopify://apps/uppromote-affiliate/blocks/core-script/64c32457-930d-4cb9-9641-e24c0d9cf1f4 --><!-- BEGIN app snippet: core-metafields-setting --><!--suppress ES6ConvertVarToLetConst -->
+<script type="application/json" id="core-uppromote-settings">{"app_env":{"env":"production"}}</script>
+<script type="application/json" id="core-uppromote-cart">{"note":null,"attributes":{},"original_total_price":0,"total_price":0,"total_discount":0,"total_weight":0.0,"item_count":0,"items":[],"requires_shipping":false,"currency":"USD","items_subtotal_price":0,"cart_level_discount_applications":[],"checkout_charge_amount":0}</script>
+<script id="core-uppromote-quick-store-tracking-vars">
+    function getDocumentContext(){const{href:a,hash:b,host:c,hostname:d,origin:e,pathname:f,port:g,protocol:h,search:i}=window.location,j=document.referrer,k=document.characterSet,l=document.title;return{location:{href:a,hash:b,host:c,hostname:d,origin:e,pathname:f,port:g,protocol:h,search:i},referrer:j||document.location.href,characterSet:k,title:l}}function getNavigatorContext(){const{language:a,cookieEnabled:b,languages:c,userAgent:d}=navigator;return{language:a,cookieEnabled:b,languages:c,userAgent:d}}function getWindowContext(){const{innerHeight:a,innerWidth:b,outerHeight:c,outerWidth:d,origin:e,screen:{height:j,width:k},screenX:f,screenY:g,scrollX:h,scrollY:i}=window;return{innerHeight:a,innerWidth:b,outerHeight:c,outerWidth:d,origin:e,screen:{screenHeight:j,screenWidth:k},screenX:f,screenY:g,scrollX:h,scrollY:i,location:getDocumentContext().location}}function getContext(){return{document:getDocumentContext(),navigator:getNavigatorContext(),window:getWindowContext()}}
+    if (window.location.href.includes('?sca_ref=')) {
+        localStorage.setItem('__up_lastViewedPageContext', JSON.stringify({
+            context: getContext(),
+            timestamp: new Date().toISOString(),
+        }))
+    }
+</script>
+
+<script id="core-uppromote-setting-booster">
+    var UpPromoteCoreSettings = JSON.parse(document.getElementById('core-uppromote-settings').textContent)
+    UpPromoteCoreSettings.currentCart = JSON.parse(document.getElementById('core-uppromote-cart')?.textContent || '{}')
+    const idToClean = ['core-uppromote-settings', 'core-uppromote-cart', 'core-uppromote-setting-booster', 'core-uppromote-quick-store-tracking-vars']
+    idToClean.forEach(id => {
+        document.getElementById(id)?.remove()
+    })
+</script>
+<!-- END app snippet -->
+
+
+<!-- END app block --><!-- BEGIN app block: shopify://apps/okendo/blocks/theme-settings/bb689e69-ea70-4661-8fb7-ad24a2e23c29 --><!-- BEGIN app snippet: header-metafields -->
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        <style data-oke-reviews-version="0.91.4" type="text/css" data-href="https://cdn-static.okendo.io/reviews-widget-plus/css/okendo-reviews-styles.6dbb2446.css"></style><style data-oke-reviews-version="0.91.4" type="text/css" data-href="https://cdn-static.okendo.io/reviews-widget-plus/css/modules/okendo-star-rating.4cb378a8.css"></style><style data-oke-reviews-version="0.91.4" type="text/css" data-href="https://cdn-static.okendo.io/reviews-widget-plus/css/modules/okendo-reviews-summary.a0c9d7d6.css"></style><style type="text/css">.okeReviews[data-oke-container],div.okeReviews{font-size:14px;font-size:var(--oke-text-regular);font-weight:400;font-family:var(--oke-text-fontFamily);line-height:1.6}.okeReviews[data-oke-container] *,.okeReviews[data-oke-container] :after,.okeReviews[data-oke-container] :before,div.okeReviews *,div.okeReviews :after,div.okeReviews :before{box-sizing:border-box}.okeReviews[data-oke-container] h1,.okeReviews[data-oke-container] h2,.okeReviews[data-oke-container] h3,.okeReviews[data-oke-container] h4,.okeReviews[data-oke-container] h5,.okeReviews[data-oke-container] h6,div.okeReviews h1,div.okeReviews h2,div.okeReviews h3,div.okeReviews h4,div.okeReviews h5,div.okeReviews h6{font-size:1em;font-weight:400;line-height:1.4;margin:0}.okeReviews[data-oke-container] ul,div.okeReviews ul{padding:0;margin:0}.okeReviews[data-oke-container] li,div.okeReviews li{list-style-type:none;padding:0}.okeReviews[data-oke-container] p,div.okeReviews p{line-height:1.8;margin:0 0 4px}.okeReviews[data-oke-container] p:last-child,div.okeReviews p:last-child{margin-bottom:0}.okeReviews[data-oke-container] a,div.okeReviews a{text-decoration:none;color:inherit}.okeReviews[data-oke-container] button,div.okeReviews button{border-radius:0;border:0;box-shadow:none;margin:0;width:auto;min-width:auto;padding:0;background-color:transparent;min-height:auto}.okeReviews[data-oke-container] button,.okeReviews[data-oke-container] input,.okeReviews[data-oke-container] select,.okeReviews[data-oke-container] textarea,div.okeReviews button,div.okeReviews input,div.okeReviews select,div.okeReviews textarea{font-family:inherit;font-size:1em}.okeReviews[data-oke-container] label,.okeReviews[data-oke-container] select,div.okeReviews label,div.okeReviews select{display:inline}.okeReviews[data-oke-container] select,div.okeReviews select{width:auto}.okeReviews[data-oke-container] article,.okeReviews[data-oke-container] aside,div.okeReviews article,div.okeReviews aside{margin:0}.okeReviews[data-oke-container] table,div.okeReviews table{background:transparent;border:0;border-collapse:collapse;border-spacing:0;font-family:inherit;font-size:1em;table-layout:auto}.okeReviews[data-oke-container] table td,.okeReviews[data-oke-container] table th,.okeReviews[data-oke-container] table tr,div.okeReviews table td,div.okeReviews table th,div.okeReviews table tr{border:0;font-family:inherit;font-size:1em}.okeReviews[data-oke-container] table td,.okeReviews[data-oke-container] table th,div.okeReviews table td,div.okeReviews table th{background:transparent;font-weight:400;letter-spacing:normal;padding:0;text-align:left;text-transform:none;vertical-align:middle}.okeReviews[data-oke-container] table tr:hover td,.okeReviews[data-oke-container] table tr:hover th,div.okeReviews table tr:hover td,div.okeReviews table tr:hover th{background:transparent}.okeReviews[data-oke-container] fieldset,div.okeReviews fieldset{border:0;padding:0;margin:0;min-width:0}.okeReviews[data-oke-container] img,.okeReviews[data-oke-container] svg,div.okeReviews img,div.okeReviews svg{max-width:none}.okeReviews[data-oke-container] div:empty,div.okeReviews div:empty{display:block}.okeReviews[data-oke-container] .oke-icon:before,div.okeReviews .oke-icon:before{font-family:oke-widget-icons!important;font-style:normal;font-weight:400;font-variant:normal;text-transform:none;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;color:inherit}.okeReviews[data-oke-container] .oke-icon--select-arrow:before,div.okeReviews .oke-icon--select-arrow:before{content:""}.okeReviews[data-oke-container] .oke-icon--loading:before,div.okeReviews .oke-icon--loading:before{content:""}.okeReviews[data-oke-container] .oke-icon--pencil:before,div.okeReviews .oke-icon--pencil:before{content:""}.okeReviews[data-oke-container] .oke-icon--filter:before,div.okeReviews .oke-icon--filter:before{content:""}.okeReviews[data-oke-container] .oke-icon--play:before,div.okeReviews .oke-icon--play:before{content:""}.okeReviews[data-oke-container] .oke-icon--tick-circle:before,div.okeReviews .oke-icon--tick-circle:before{content:""}.okeReviews[data-oke-container] .oke-icon--chevron-left:before,div.okeReviews .oke-icon--chevron-left:before{content:""}.okeReviews[data-oke-container] .oke-icon--chevron-right:before,div.okeReviews .oke-icon--chevron-right:before{content:""}.okeReviews[data-oke-container] .oke-icon--thumbs-down:before,div.okeReviews .oke-icon--thumbs-down:before{content:""}.okeReviews[data-oke-container] .oke-icon--thumbs-up:before,div.okeReviews .oke-icon--thumbs-up:before{content:""}.okeReviews[data-oke-container] .oke-icon--close:before,div.okeReviews .oke-icon--close:before{content:""}.okeReviews[data-oke-container] .oke-icon--chevron-up:before,div.okeReviews .oke-icon--chevron-up:before{content:""}.okeReviews[data-oke-container] .oke-icon--chevron-down:before,div.okeReviews .oke-icon--chevron-down:before{content:""}.okeReviews[data-oke-container] .oke-icon--star:before,div.okeReviews .oke-icon--star:before{content:""}.okeReviews[data-oke-container] .oke-icon--magnifying-glass:before,div.okeReviews .oke-icon--magnifying-glass:before{content:""}@font-face{font-family:oke-widget-icons;src:url(https://cdn-static.okendo.io/reviews-widget-plus/fonts/oke-widget-icons.ttf) format("truetype"),url(https://cdn-static.okendo.io/reviews-widget-plus/fonts/oke-widget-icons.woff) format("woff"),url(https://cdn-static.okendo.io/reviews-widget-plus/img/oke-widget-icons.bc0d6b0a.svg) format("svg");font-weight:400;font-style:normal;font-display:swap}.okeReviews[data-oke-container] .oke-button,div.okeReviews .oke-button{display:inline-block;border-style:solid;border-color:var(--oke-button-borderColor);border-width:var(--oke-button-borderWidth);background-color:var(--oke-button-backgroundColor);line-height:1;padding:12px 24px;margin:0;border-radius:var(--oke-button-borderRadius);color:var(--oke-button-textColor);text-align:center;position:relative;font-weight:var(--oke-button-fontWeight);font-size:var(--oke-button-fontSize);font-family:var(--oke-button-fontFamily);outline:0}.okeReviews[data-oke-container] .oke-button-text,.okeReviews[data-oke-container] .oke-button .oke-icon,div.okeReviews .oke-button-text,div.okeReviews .oke-button .oke-icon{line-height:1}.okeReviews[data-oke-container] .oke-button.oke-is-loading,div.okeReviews .oke-button.oke-is-loading{position:relative}.okeReviews[data-oke-container] .oke-button.oke-is-loading:before,div.okeReviews .oke-button.oke-is-loading:before{font-family:oke-widget-icons!important;font-style:normal;font-weight:400;font-variant:normal;text-transform:none;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;content:"";color:undefined;font-size:12px;display:inline-block;animation:oke-spin 1s linear infinite;position:absolute;width:12px;height:12px;top:0;left:0;bottom:0;right:0;margin:auto}.okeReviews[data-oke-container] .oke-button.oke-is-loading>*,div.okeReviews .oke-button.oke-is-loading>*{opacity:0}.okeReviews[data-oke-container] .oke-button.oke-is-active,div.okeReviews .oke-button.oke-is-active{background-color:var(--oke-button-backgroundColorActive);color:var(--oke-button-textColorActive);border-color:var(--oke-button-borderColorActive)}.okeReviews[data-oke-container] .oke-button:not(.oke-is-loading),div.okeReviews .oke-button:not(.oke-is-loading){cursor:pointer}.okeReviews[data-oke-container] .oke-button:not(.oke-is-loading):not(.oke-is-active):hover,div.okeReviews .oke-button:not(.oke-is-loading):not(.oke-is-active):hover{background-color:var(--oke-button-backgroundColorHover);color:var(--oke-button-textColorHover);border-color:var(--oke-button-borderColorHover);box-shadow:0 0 0 2px var(--oke-button-backgroundColorHover)}.okeReviews[data-oke-container] .oke-button:not(.oke-is-loading):not(.oke-is-active):active,.okeReviews[data-oke-container] .oke-button:not(.oke-is-loading):not(.oke-is-active):hover:active,div.okeReviews .oke-button:not(.oke-is-loading):not(.oke-is-active):active,div.okeReviews .oke-button:not(.oke-is-loading):not(.oke-is-active):hover:active{background-color:var(--oke-button-backgroundColorActive);color:var(--oke-button-textColorActive);border-color:var(--oke-button-borderColorActive)}.okeReviews[data-oke-container] .oke-title,div.okeReviews .oke-title{font-weight:var(--oke-title-fontWeight);font-size:var(--oke-title-fontSize);font-family:var(--oke-title-fontFamily)}.okeReviews[data-oke-container] .oke-bodyText,div.okeReviews .oke-bodyText{font-weight:var(--oke-bodyText-fontWeight);font-size:var(--oke-bodyText-fontSize);font-family:var(--oke-bodyText-fontFamily)}.okeReviews[data-oke-container] .oke-linkButton,div.okeReviews .oke-linkButton{cursor:pointer;font-weight:700;pointer-events:auto;text-decoration:underline}.okeReviews[data-oke-container] .oke-linkButton:hover,div.okeReviews .oke-linkButton:hover{text-decoration:none}.okeReviews[data-oke-container] .oke-readMore,div.okeReviews .oke-readMore{cursor:pointer;color:inherit;text-decoration:underline}.okeReviews[data-oke-container] .oke-select,div.okeReviews .oke-select{cursor:pointer;background-repeat:no-repeat;background-position-x:100%;background-position-y:50%;border:none;padding:0 24px 0 12px;-moz-appearance:none;appearance:none;color:inherit;-webkit-appearance:none;background-color:transparent;background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg fill='currentColor' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E");outline-offset:4px}.okeReviews[data-oke-container] .oke-select:disabled,div.okeReviews .oke-select:disabled{background-color:transparent;background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg fill='%239a9db1' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E")}.okeReviews[data-oke-container] .oke-loader,div.okeReviews .oke-loader{position:relative}.okeReviews[data-oke-container] .oke-loader:before,div.okeReviews .oke-loader:before{font-family:oke-widget-icons!important;font-style:normal;font-weight:400;font-variant:normal;text-transform:none;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;content:"";color:var(--oke-text-secondaryColor);font-size:12px;display:inline-block;animation:oke-spin 1s linear infinite;position:absolute;width:12px;height:12px;top:0;left:0;bottom:0;right:0;margin:auto}.okeReviews[data-oke-container] .oke-a11yText,div.okeReviews .oke-a11yText{border:0;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}.okeReviews[data-oke-container] .oke-hidden,div.okeReviews .oke-hidden{display:none}.okeReviews[data-oke-container] .oke-modal,div.okeReviews .oke-modal{bottom:0;left:0;overflow:auto;position:fixed;right:0;top:0;z-index:2147483647;max-height:100%;background-color:rgba(0,0,0,.5);padding:40px 0 12px}@media only screen and (min-width:1024px){.okeReviews[data-oke-container] .oke-modal,div.okeReviews .oke-modal{display:flex;align-items:center;padding:48px 0}}.okeReviews[data-oke-container] .oke-modal ::-moz-selection,div.okeReviews .oke-modal ::-moz-selection{background-color:rgba(39,45,69,.2)}.okeReviews[data-oke-container] .oke-modal ::selection,div.okeReviews .oke-modal ::selection{background-color:rgba(39,45,69,.2)}.okeReviews[data-oke-container] .oke-modal,.okeReviews[data-oke-container] .oke-modal p,div.okeReviews .oke-modal,div.okeReviews .oke-modal p{color:#272d45}.okeReviews[data-oke-container] .oke-modal-content,div.okeReviews .oke-modal-content{background-color:#fff;margin:auto;position:relative;will-change:transform,opacity;width:calc(100% - 24px)}@media only screen and (min-width:1024px){.okeReviews[data-oke-container] .oke-modal-content,div.okeReviews .oke-modal-content{max-width:1000px}}.okeReviews[data-oke-container] .oke-modal-close,div.okeReviews .oke-modal-close{cursor:pointer;position:absolute;width:32px;height:32px;top:-32px;padding:4px;right:-4px;line-height:1}.okeReviews[data-oke-container] .oke-modal-close:before,div.okeReviews .oke-modal-close:before{font-family:oke-widget-icons!important;font-style:normal;font-weight:400;font-variant:normal;text-transform:none;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;content:"";color:#fff;font-size:24px;display:inline-block;width:24px;height:24px}.okeReviews[data-oke-container] .oke-modal-overlay,div.okeReviews .oke-modal-overlay{background-color:rgba(43,46,56,.9)}@media only screen and (min-width:1024px){.okeReviews[data-oke-container] .oke-modal--large .oke-modal-content,div.okeReviews .oke-modal--large .oke-modal-content{max-width:1200px}}.okeReviews[data-oke-container] .oke-modal .oke-helpful,.okeReviews[data-oke-container] .oke-modal .oke-helpful-vote-button,.okeReviews[data-oke-container] .oke-modal .oke-reviewContent-date,div.okeReviews .oke-modal .oke-helpful,div.okeReviews .oke-modal .oke-helpful-vote-button,div.okeReviews .oke-modal .oke-reviewContent-date{color:#676986}.oke-modal .okeReviews[data-oke-container].oke-w,.oke-modal div.okeReviews.oke-w{color:#272d45}.okeReviews[data-oke-container] .oke-tag,div.okeReviews .oke-tag{align-items:center;color:#272d45;display:flex;font-size:var(--oke-text-small);font-weight:600;text-align:left;position:relative;z-index:2;background-color:#f4f4f6;padding:4px 6px;border:none;border-radius:4px;gap:6px;line-height:1}.okeReviews[data-oke-container] .oke-tag svg,div.okeReviews .oke-tag svg{fill:currentColor;height:1rem}.okeReviews[data-oke-container] .hooper,div.okeReviews .hooper{height:auto}.okeReviews--left{text-align:left}.okeReviews--right{text-align:right}.okeReviews--center{text-align:center}.okeReviews :not([tabindex="-1"]):focus-visible{outline:5px auto highlight;outline:5px auto -webkit-focus-ring-color}.is-oke-modalOpen{overflow:hidden!important}img.oke-is-error{background-color:var(--oke-shadingColor);background-size:cover;background-position:50% 50%;box-shadow:inset 0 0 0 1px var(--oke-border-color)}@keyframes oke-spin{0%{transform:rotate(0deg)}to{transform:rotate(1turn)}}@keyframes oke-fade-in{0%{opacity:0}to{opacity:1}}.layout-panel-flex>div:has([data-oke-container]){width:100%}
+.oke-stars{line-height:1;position:relative;display:inline-block}.oke-stars-background svg{overflow:visible}.oke-stars-foreground{overflow:hidden;position:absolute;top:0;left:0}.oke-sr{display:inline-block;padding-top:var(--oke-starRating-spaceAbove);padding-bottom:var(--oke-starRating-spaceBelow)}.oke-sr .oke-is-clickable{cursor:pointer}.oke-sr--hidden{display:none}.oke-sr-count,.oke-sr-rating,.oke-sr-stars{display:inline-block;vertical-align:middle}.oke-sr-stars{line-height:1;margin-right:8px}.oke-sr-rating{display:none}.oke-sr-count--brackets:before{content:"("}.oke-sr-count--brackets:after{content:")"}
+.oke-rs{display:block}.oke-rs .oke-reviewsSummary.oke-is-preRender .oke-reviewsSummary-summary{-webkit-mask:linear-gradient(180deg,#000 0,#000 40%,transparent 95%,transparent 0) 100% 50%/100% 100% repeat-x;mask:linear-gradient(180deg,#000 0,#000 40%,transparent 95%,transparent 0) 100% 50%/100% 100% repeat-x;max-height:150px}.okeReviews[data-oke-container] .oke-reviewsSummary .oke-tooltip,div.okeReviews .oke-reviewsSummary .oke-tooltip{display:inline-block;font-weight:400}.okeReviews[data-oke-container] .oke-reviewsSummary .oke-tooltip-trigger,div.okeReviews .oke-reviewsSummary .oke-tooltip-trigger{height:15px;width:15px;overflow:hidden;transform:translateY(-10%)}.okeReviews[data-oke-container] .oke-reviewsSummary-heading,div.okeReviews .oke-reviewsSummary-heading{align-items:center;-moz-column-gap:4px;column-gap:4px;display:inline-flex;font-weight:700;margin-bottom:8px}.okeReviews[data-oke-container] .oke-reviewsSummary-heading-skeleton,div.okeReviews .oke-reviewsSummary-heading-skeleton{height:calc(var(--oke-button-fontSize) + 4px);width:150px}.okeReviews[data-oke-container] .oke-reviewsSummary-icon,div.okeReviews .oke-reviewsSummary-icon{fill:currentColor;font-size:14px}.okeReviews[data-oke-container] .oke-reviewsSummary-icon svg,div.okeReviews .oke-reviewsSummary-icon svg{vertical-align:baseline}.okeReviews[data-oke-container] .oke-reviewsSummary-summary.oke-is-truncated,div.okeReviews .oke-reviewsSummary-summary.oke-is-truncated{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis}</style>
+    
+    <script type="application/json" id="oke-reviews-settings">{"subscriberId":"73349ae9-a435-41fc-afb7-91c996f7e522","analyticsSettings":{"isWidgetOnScreenTrackingEnabled":true,"provider":"none"},"localeAndVariant":{"code":"en"},"widgetSettings":{"global":{"dateSettings":{"format":{"type":"relative"}},"hideOkendoBranding":true,"reviewTranslationsMode":"off","showIncentiveIndicator":false,"searchEnginePaginationEnabled":false,"stars":{"backgroundColor":"#E5E5E5","foregroundColor":"#E83525","interspace":2,"shape":{"type":"default"},"showBorder":false},"font":{"fontType":"inherit-from-page"}},"homepageCarousel":{"slidesPerPage":{"large":3,"medium":2},"totalSlides":12,"scrollBehaviour":"slide","style":{"showDates":true,"border":{"color":"#E5E5EB","width":{"value":1,"unit":"px"}},"bodyFont":{"hasCustomFontSettings":false},"headingFont":{"fontSize":{"value":16,"unit":"px"},"fontType":"custom","fontFamily":"\"Atkinson Hyperlegible\", sans-serif","fontWeight":600,"hasCustomFontSettings":true},"arrows":{"color":"#676986","size":{"value":24,"unit":"px"},"enabled":true},"avatar":{"backgroundColor":"#E5E5EB","placeholderTextColor":"#2C3E50","size":{"value":48,"unit":"px"},"enabled":true},"media":{"size":{"value":80,"unit":"px"},"imageGap":{"value":4,"unit":"px"},"enabled":true},"stars":{"height":{"value":18,"unit":"px"}},"productImageSize":{"value":48,"unit":"px"},"layout":{"name":"default","reviewDetailsPosition":"below","showProductName":false,"showAttributeBars":false,"showProductDetails":"always"},"highlightColor":"#E83525","spaceAbove":{"value":65,"unit":"px"},"text":{"primaryColor":"#2C3E50","fontSizeRegular":{"value":14,"unit":"px"},"fontSizeSmall":{"value":12,"unit":"px"},"secondaryColor":"#676986"},"spaceBelow":{"value":20,"unit":"px"}},"defaultSort":"date desc","autoPlay":false,"truncation":{"bodyMaxLines":4,"truncateAll":true,"enabled":true}},"mediaCarousel":{"minimumImages":1,"linkText":"Read More","autoPlay":false,"slideSize":"medium","arrowPosition":"outside"},"mediaGrid":{"gridStyleDesktop":{"layout":"default-desktop"},"gridStyleMobile":{"layout":"default-mobile"},"showMoreArrow":{"arrowColor":"#676986","enabled":true,"backgroundColor":"#f4f4f6"},"linkText":"Read More","infiniteScroll":false,"gapSize":{"value":10,"unit":"px"}},"questions":{"initialPageSize":6,"loadMorePageSize":6},"reviewsBadge":{"layout":"large","colorScheme":"dark"},"reviewsTab":{"enabled":false},"reviewsWidget":{"tabs":{"reviews":true,"questions":false},"header":{"columnDistribution":"space-between","verticalAlignment":"top","blocks":[{"columnWidth":"one-third","modules":[{"name":"rating-average","layout":"one-line"},{"name":"rating-breakdown","backgroundColor":"#F4F4F6","shadingColor":"#9A9DB1","stretchMode":"contain"}],"textAlignment":"left"},{"columnWidth":"two-thirds","modules":[{"name":"recommended"},{"name":"media-carousel","imageGap":{"value":4,"unit":"px"},"imageHeight":{"value":120,"unit":"px"}}],"textAlignment":"left"}]},"style":{"showDates":true,"border":{"color":"#E5E5EB","width":{"value":1,"unit":"px"}},"headingFont":{"hasCustomFontSettings":false},"bodyFont":{"hasCustomFontSettings":false},"filters":{"backgroundColorActive":"#676986","backgroundColor":"#FFFFFF","borderColor":"#DBDDE4","borderRadius":{"value":100,"unit":"px"},"borderColorActive":"#676986","textColorActive":"#FFFFFF","textColor":"#000000","searchHighlightColor":"#f7ada7"},"avatar":{"backgroundColor":"#E5E5EB","placeholderTextColor":"#000000","size":{"value":48,"unit":"px"},"enabled":true},"stars":{"foregroundColor":"#Ea3224","height":{"value":18,"unit":"px"}},"shadingColor":"#F7F7F8","productImageSize":{"value":48,"unit":"px"},"button":{"backgroundColorActive":"#Ea3224","borderColorHover":"#DBDDE4","backgroundColor":"#Ea3224","borderColor":"#DBDDE4","backgroundColorHover":"#ce2c20","textColorHover":"#272D45","borderRadius":{"value":4,"unit":"px"},"borderWidth":{"value":1,"unit":"px"},"borderColorActive":"#Ea3224","textColorActive":"#FFFFFF","textColor":"#FFFFFF","font":{"hasCustomFontSettings":false}},"highlightColor":"#Ea3224","spaceAbove":{"value":20,"unit":"px"},"text":{"primaryColor":"#000000","fontSizeRegular":{"value":14,"unit":"px"},"fontSizeLarge":{"value":20,"unit":"px"},"fontSizeSmall":{"value":12,"unit":"px"},"secondaryColor":"#3b3c40"},"spaceBelow":{"value":20,"unit":"px"},"attributeBar":{"style":"default","borderColor":"#9A9DB1","backgroundColor":"#D3D4DD","shadingColor":"#9A9DB1","markerColor":"#Ea3224"}},"showWhenEmpty":true,"reviews":{"list":{"layout":{"name":"default","showAttributeBars":false,"borderStyle":"full","collapseReviewerDetails":false,"showProductVariantName":false,"showProductDetails":"only-when-grouped"},"loyalty":{"showVipTiers":false,"showAchievements":false},"initialPageSize":5,"replyTruncation":{"bodyMaxLines":4,"enabled":true},"media":{"layout":"featured","size":{"value":200,"unit":"px"},"imageGap":{"value":4,"unit":"px"}},"truncation":{"bodyMaxLines":4,"enabled":true,"truncateAll":false},"loadMorePageSize":5},"controls":{"filterMode":"closed","writeReviewButtonEnabled":true,"defaultSort":"has_media desc","freeTextSearchEnabled":false}}},"starRatings":{"showWhenEmpty":false,"clickBehavior":"scroll-to-widget","style":{"text":{"content":"review-count","style":"number-and-text","brackets":false},"spaceAbove":{"value":0,"unit":"px"},"singleStar":false,"spaceBelow":{"value":0,"unit":"px"},"height":{"value":18,"unit":"px"}}}},"features":{"recorderPlusEnabled":true,"recorderQandaPlusEnabled":true}}</script>
+            <style id="oke-css-vars">:root{--oke-widget-spaceAbove:20px;--oke-widget-spaceBelow:20px;--oke-starRating-spaceAbove:0;--oke-starRating-spaceBelow:0;--oke-button-backgroundColor:#ea3224;--oke-button-backgroundColorHover:#ce2c20;--oke-button-backgroundColorActive:#ea3224;--oke-button-textColor:#fff;--oke-button-textColorHover:#272d45;--oke-button-textColorActive:#fff;--oke-button-borderColor:#dbdde4;--oke-button-borderColorHover:#dbdde4;--oke-button-borderColorActive:#ea3224;--oke-button-borderRadius:4px;--oke-button-borderWidth:1px;--oke-button-fontWeight:700;--oke-button-fontSize:var(--oke-text-regular,14px);--oke-button-fontFamily:inherit;--oke-border-color:#e5e5eb;--oke-border-width:1px;--oke-text-primaryColor:#000;--oke-text-secondaryColor:#3b3c40;--oke-text-small:12px;--oke-text-regular:14px;--oke-text-large:20px;--oke-text-fontFamily:inherit;--oke-avatar-size:48px;--oke-avatar-backgroundColor:#e5e5eb;--oke-avatar-placeholderTextColor:#000;--oke-highlightColor:#ea3224;--oke-shadingColor:#f7f7f8;--oke-productImageSize:48px;--oke-attributeBar-shadingColor:#9a9db1;--oke-attributeBar-borderColor:#9a9db1;--oke-attributeBar-backgroundColor:#d3d4dd;--oke-attributeBar-markerColor:#ea3224;--oke-filter-backgroundColor:#fff;--oke-filter-backgroundColorActive:#676986;--oke-filter-borderColor:#dbdde4;--oke-filter-borderColorActive:#676986;--oke-filter-textColor:#000;--oke-filter-textColorActive:#fff;--oke-filter-borderRadius:100px;--oke-filter-searchHighlightColor:#f7ada7;--oke-mediaGrid-chevronColor:#676986;--oke-stars-foregroundColor:#e83525;--oke-stars-backgroundColor:#e5e5e5;--oke-stars-borderWidth:0}.oke-w,.oke-modal{--oke-title-fontWeight:600;--oke-title-fontSize:var(--oke-text-regular,14px);--oke-title-fontFamily:inherit;--oke-bodyText-fontWeight:400;--oke-bodyText-fontSize:var(--oke-text-regular,14px);--oke-bodyText-fontFamily:inherit}</style>
+            <style id="oke-reviews-custom-css">.oke-reviewCarousel .oke-reviewCarousel-header-title.oke-title{--oke-title-fontSize:32px !important;font-size:32px !important;font-weight:700 !important;line-height:1.25 !important}@media(max-width:749px){.oke-reviewCarousel .oke-reviewCarousel-header-title.oke-title{max-width:200px;margin-left:auto;margin-right:auto}}@media(max-width:749px){.oke-reviewCarousel .oke-reviewCarousel-header-title.oke-title{max-width:250px;margin-left:auto;margin-right:auto}}</style>
+            <template id="oke-reviews-body-template"><svg id="oke-star-symbols" style="display:none!important" data-oke-id="oke-star-symbols"><symbol id="oke-star-empty" style="overflow:visible;"><path id="star-default--empty" fill="var(--oke-stars-backgroundColor)" stroke="var(--oke-stars-borderColor)" stroke-width="var(--oke-stars-borderWidth)" d="M3.34 13.86c-.48.3-.76.1-.63-.44l1.08-4.56L.26 5.82c-.42-.36-.32-.7.24-.74l4.63-.37L6.92.39c.2-.52.55-.52.76 0l1.8 4.32 4.62.37c.56.05.67.37.24.74l-3.53 3.04 1.08 4.56c.13.54-.14.74-.63.44L7.3 11.43l-3.96 2.43z"/></symbol><symbol id="oke-star-filled" style="overflow:visible;"><path id="star-default--filled" fill="var(--oke-stars-foregroundColor)" stroke="var(--oke-stars-borderColor)" stroke-width="var(--oke-stars-borderWidth)" d="M3.34 13.86c-.48.3-.76.1-.63-.44l1.08-4.56L.26 5.82c-.42-.36-.32-.7.24-.74l4.63-.37L6.92.39c.2-.52.55-.52.76 0l1.8 4.32 4.62.37c.56.05.67.37.24.74l-3.53 3.04 1.08 4.56c.13.54-.14.74-.63.44L7.3 11.43l-3.96 2.43z"/></symbol></svg></template><script>document.addEventListener('readystatechange',() =>{Array.from(document.getElementById('oke-reviews-body-template')?.content.children)?.forEach(function(child){if(!Array.from(document.body.querySelectorAll('[data-oke-id='.concat(child.getAttribute('data-oke-id'),']'))).length){document.body.prepend(child)}})},{once:true});</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- END app snippet -->
+
+    <!-- BEGIN app snippet: okendo-reviews-json-ld -->
+<!-- END app snippet -->
+
+<!-- BEGIN app snippet: widget-plus-initialisation-script -->
+
+
+
+
+    <script async id="okendo-reviews-script" src="https://cdn-static.okendo.io/reviews-widget-plus/js/okendo-reviews.js"></script>
+
+<!-- END app snippet -->
+
+
+<!-- END app block --><!-- BEGIN app block: shopify://apps/microsoft-clarity/blocks/clarity_js/31c3d126-8116-4b4a-8ba1-baeda7c4aeea -->
+<script type="text/javascript">
+  (function (c, l, a, r, i, t, y) {
+    c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+    t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i + "?ref=shopify";
+    y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+
+    c.Shopify.loadFeatures([{ name: "consent-tracking-api", version: "0.1" }], error => {
+      if (error) {
+        console.error("Error loading Shopify features:", error);
+        return;
+      }
+
+      c[a]('consentv2', {
+        ad_Storage: c.Shopify.customerPrivacy.marketingAllowed() ? "granted" : "denied",
+        analytics_Storage: c.Shopify.customerPrivacy.analyticsProcessingAllowed() ? "granted" : "denied",
+        source: 101,
+      });
+    });
+
+    l.addEventListener("visitorConsentCollected", function (e) {
+      c[a]('consentv2', {
+        ad_Storage: e.detail.marketingAllowed ? "granted" : "denied",
+        analytics_Storage: e.detail.analyticsAllowed ? "granted" : "denied",
+        source: 101,
+      });
+    });
+  })(window, document, "clarity", "script", "u4hr8ergot");
+</script>
+
+
+
+<!-- END app block --><script src="https://cdn.shopify.com/extensions/019dd854-eacc-7d28-b8ef-23ba0eb1dd49/affliate-by-secomapp-114/assets/core.min.js" type="text/javascript" defer="defer"></script>
+<link href="https://monorail-edge.shopifysvc.com" rel="dns-prefetch">
+<script>(function(){if ("sendBeacon" in navigator && "performance" in window) {try {var session_token_from_headers = performance.getEntriesByType('navigation')[0].serverTiming.find(x => x.name == '_s').description;} catch {var session_token_from_headers = undefined;}var session_cookie_matches = document.cookie.match(/_shopify_s=([^;]*)/);var session_token_from_cookie = session_cookie_matches && session_cookie_matches.length === 2 ? session_cookie_matches[1] : "";var session_token = session_token_from_headers || session_token_from_cookie || "";function handle_abandonment_event(e) {var entries = performance.getEntries().filter(function(entry) {return /monorail-edge.shopifysvc.com/.test(entry.name);});if (!window.abandonment_tracked && entries.length === 0) {window.abandonment_tracked = true;var currentMs = Date.now();var navigation_start = performance.timing.navigationStart;var payload = {shop_id: 68132307105,url: window.location.href,navigation_start,duration: currentMs - navigation_start,session_token,page_type: "404"};window.navigator.sendBeacon("https://monorail-edge.shopifysvc.com/v1/produce", JSON.stringify({schema_id: "online_store_buyer_site_abandonment/1.1",payload: payload,metadata: {event_created_at_ms: currentMs,event_sent_at_ms: currentMs}}));}}window.addEventListener('pagehide', handle_abandonment_event);}}());</script>
+<script>
+  window.__TREKKIE_SHIM_QUEUE = window.__TREKKIE_SHIM_QUEUE || [];
+</script>
+<script id="web-pixels-manager-setup">(function(){var wpmLoader=function(){"use strict";return function(e,d,r,n){var o=arguments.length>4&&void 0!==arguments[4]?arguments[4]:{};if(!Boolean(null==(i=null==(a=window.Shopify)?void 0:a.analytics)?void 0:i.replayQueue)){var a,i;window.Shopify=window.Shopify||{};var t=window.Shopify;t.analytics=t.analytics||{};var s=t.analytics;s.replayQueue=[],s.publish=function(e,d,r){return s.replayQueue.push([e,d,r]),!0};try{self.performance.mark("wpm:start")}catch(e){}var l,u,c,m,p,f,h,g,y,w,v,b,S,P=(u=(l={modern:/Edge?\/(1{2}[4-9]|1[2-9]\d|[2-9]\d{2}|\d{4,})\.\d+(\.\d+|)|Firefox\/(1{2}[4-9]|1[2-9]\d|[2-9]\d{2}|\d{4,})\.\d+(\.\d+|)|Chrom(ium|e)\/(9{2}|\d{3,})\.\d+(\.\d+|)|(Maci|X1{2}).+ Version\/(15\.\d+|(1[6-9]|[2-9]\d|\d{3,})\.\d+)([,.]\d+|)( \(\w+\)|)( Mobile\/\w+|) Safari\/|Chrome.+OPR\/(9{2}|\d{3,})\.\d+\.\d+|(CPU[ +]OS|iPhone[ +]OS|CPU[ +]iPhone|CPU IPhone OS|CPU iPad OS)[ +]+(15[._]\d+|(1[6-9]|[2-9]\d|\d{3,})[._]\d+)([._]\d+|)|Android:?[ /-](13[3-9]|1[4-9]\d|[2-9]\d{2}|\d{4,})(\.\d+|)(\.\d+|)|Android.+Firefox\/(13[5-9]|1[4-9]\d|[2-9]\d{2}|\d{4,})\.\d+(\.\d+|)|Android.+Chrom(ium|e)\/(13[3-9]|1[4-9]\d|[2-9]\d{2}|\d{4,})\.\d+(\.\d+|)|SamsungBrowser\/([2-9]\d|\d{3,})\.\d+/,legacy:/Edge?\/(1[6-9]|[2-9]\d|\d{3,})\.\d+(\.\d+|)|Firefox\/(5[4-9]|[6-9]\d|\d{3,})\.\d+(\.\d+|)|Chrom(ium|e)\/(5[1-9]|[6-9]\d|\d{3,})\.\d+(\.\d+|)([\d.]+$|.*Safari\/(?![\d.]+ Edge\/[\d.]+$))|(Maci|X1{2}).+ Version\/(10\.\d+|(1[1-9]|[2-9]\d|\d{3,})\.\d+)([,.]\d+|)( \(\w+\)|)( Mobile\/\w+|) Safari\/|Chrome.+OPR\/(3[89]|[4-9]\d|\d{3,})\.\d+\.\d+|(CPU[ +]OS|iPhone[ +]OS|CPU[ +]iPhone|CPU IPhone OS|CPU iPad OS)[ +]+(10[._]\d+|(1[1-9]|[2-9]\d|\d{3,})[._]\d+)([._]\d+|)|Android:?[ /-](13[3-9]|1[4-9]\d|[2-9]\d{2}|\d{4,})(\.\d+|)(\.\d+|)|Mobile Safari.+OPR\/([89]\d|\d{3,})\.\d+\.\d+|Android.+Firefox\/(13[5-9]|1[4-9]\d|[2-9]\d{2}|\d{4,})\.\d+(\.\d+|)|Android.+Chrom(ium|e)\/(13[3-9]|1[4-9]\d|[2-9]\d{2}|\d{4,})\.\d+(\.\d+|)|Android.+(UC? ?Browser|UCWEB|U3)[ /]?(15\.([5-9]|\d{2,})|(1[6-9]|[2-9]\d|\d{3,})\.\d+)\.\d+|SamsungBrowser\/(5\.\d+|([6-9]|\d{2,})\.\d+)|Android.+MQ{2}Browser\/(14(\.(9|\d{2,})|)|(1[5-9]|[2-9]\d|\d{3,})(\.\d+|))(\.\d+|)|K[Aa][Ii]OS\/(3\.\d+|([4-9]|\d{2,})\.\d+)(\.\d+|)/}).modern,c=l.legacy,(m=navigator.userAgent).match(u)?"modern":m.match(c)?"legacy":"unknown"),C="modern"===P?"modern":"legacy",_=(null!=n?n:{modern:"",legacy:""})[C],O=[(p={baseUrl:d,hashVersion:r,buildTarget:C}).baseUrl,"/wpm","/b",p.hashVersion,"modern"===p.buildTarget?"m":"l",".js"].join(""),U=(f={version:r,bundleTarget:P,surface:e.surface,pageUrl:self.location.href,monorailEndpoint:e.monorailEndpoint},h=f.version,g=f.bundleTarget,y=f.surface,w=f.pageUrl,v=f.monorailEndpoint,{emit:function(e){var d=e.status,r=e.errorMsg,n=(new Date).getTime(),o=JSON.stringify({metadata:{event_sent_at_ms:n},events:[{schema_id:"web_pixels_manager_load/3.1",payload:{version:h,bundle_target:g,page_url:w,status:d,surface:y,error_msg:r},metadata:{event_created_at_ms:n}}]});if(!v)return console&&console.warn&&console.warn("[Web Pixels Manager] No Monorail endpoint provided, skipping logging."),!1;try{return self.navigator.sendBeacon.bind(self.navigator)(v,o)}catch(e){}var a=new XMLHttpRequest;try{return a.open("POST",v,!0),a.setRequestHeader("Content-Type","text/plain"),a.send(o),!0}catch(e){return console&&console.warn&&console.warn("[Web Pixels Manager] Got an unhandled error while logging to Monorail."),!1}}});try{o.browserTarget=P,function(e){var d=e.src,r=e.async,n=void 0===r||r,o=e.onload,a=e.onerror,i=e.sri,t=e.scriptDataAttributes,s=void 0===t?{}:t,l=document.createElement("script"),u=document.querySelector("head"),c=document.querySelector("body");if(l.async=n,l.src=d,i&&(l.integrity=i,l.crossOrigin="anonymous"),s)for(var m in s)if(Object.prototype.hasOwnProperty.call(s,m))try{l.dataset[m]=s[m]}catch(e){}if(o&&l.addEventListener("load",o),a&&l.addEventListener("error",a),u)u.appendChild(l);else{if(!c)throw new Error("Did not find a head or body element to append the script");c.appendChild(l)}}({src:O,async:!0,onload:function(){if(!function(){var e,d;return Boolean(null==(d=null==(e=window.Shopify)?void 0:e.analytics)?void 0:d.initialized)}()){var d=window.webPixelsManager.init(e)||void 0;if(d){var r=window.Shopify.analytics;r.replayQueue.forEach(function(e){var r=e[0],n=e[1],o=e[2];d.publishCustomEvent(r,n,o)}),r.replayQueue=[],r.publish=d.publishCustomEvent,r.visitor=d.visitor,r.initialized=!0}}},onerror:function(){return U.emit({status:"failed",errorMsg:"".concat(O," has failed to load")})},sri:(b=_,S=/^sha384-[A-Za-z0-9+/=]+$/,"string"==typeof b&&S.test(b)?_:""),scriptDataAttributes:o}),U.emit({status:"loading"})}catch(e){U.emit({status:"failed",errorMsg:(null==e?void 0:e.message)||"Unknown error"})}}}}();wpmLoader({shopId: 68132307105,storefrontBaseUrl: "https://chemistrie.com",extensionsBaseUrl: "https://extensions.shopifycdn.com/cdn/shopifycloud/web-pixels-manager",monorailEndpoint: "https://monorail-edge.shopifysvc.com/unstable/produce_batch",surface: "storefront-renderer",enabledBetaFlags: ["72028870","2dca8a86","d5bdd5d0","5476ea20","5acaffe6"],webPixelsConfigList: [{"id":"2007236769","configuration":"{\"shopId\":\"261287\",\"env\":\"production\",\"metaData\":\"[]\"}","eventPayloadVersion":"v1","runtimeContext":"STRICT","scriptVersion":"c5d4d7bbb4a4a4292a8a7b5334af7e3d","type":"APP","apiClientId":2773553,"privacyPurposes":[],"dataSharingAdjustments":{"protectedCustomerApprovalScopes":["read_customer_address","read_customer_email","read_customer_name","read_customer_personal_data","read_customer_phone"],"dataSharingControls":["share_all_events"]},"dataSharingState":"unrestricted"},{"id":"1865973921","configuration":"{\"myshopifyDomain\":\"x8rjsw-v7.myshopify.com\"}","eventPayloadVersion":"v1","runtimeContext":"STRICT","scriptVersion":"23b97d18e2aa74363140dc29c9284e87","type":"APP","apiClientId":2775569,"privacyPurposes":["ANALYTICS","MARKETING","SALE_OF_DATA"],"dataSharingAdjustments":{"protectedCustomerApprovalScopes":["read_customer_address","read_customer_email","read_customer_name","read_customer_phone","read_customer_personal_data"],"dataSharingControls":["share_all_events"]},"dataSharingState":"optimized"},{"id":"1790312609","configuration":"{\"config\":\"{\\\"google_tag_ids\\\":[\\\"GT-NCH3ND48\\\",\\\"AW-17507673470\\\",\\\"GT-NB376Q9D\\\"],\\\"target_country\\\":\\\"ZZ\\\",\\\"gtag_events\\\":[{\\\"type\\\":\\\"search\\\",\\\"action_label\\\":[\\\"G-FRB78K79NE\\\",\\\"AW-17507673470\\\/HTHnCLqD4-8bEP7Kp5xB\\\",\\\"MC-9HHS9YDR36\\\"]},{\\\"type\\\":\\\"begin_checkout\\\",\\\"action_label\\\":[\\\"G-FRB78K79NE\\\",\\\"AW-17507673470\\\/vhbUCK6D4-8bEP7Kp5xB\\\",\\\"MC-9HHS9YDR36\\\"]},{\\\"type\\\":\\\"view_item\\\",\\\"action_label\\\":[\\\"G-FRB78K79NE\\\",\\\"AW-17507673470\\\/Ci0XCLeD4-8bEP7Kp5xB\\\",\\\"MC-CGTLW9VKVG\\\",\\\"MC-9HHS9YDR36\\\"]},{\\\"type\\\":\\\"purchase\\\",\\\"action_label\\\":[\\\"G-FRB78K79NE\\\",\\\"AW-17507673470\\\/woanCKuD4-8bEP7Kp5xB\\\",\\\"MC-CGTLW9VKVG\\\",\\\"MC-9HHS9YDR36\\\"]},{\\\"type\\\":\\\"page_view\\\",\\\"action_label\\\":[\\\"G-FRB78K79NE\\\",\\\"AW-17507673470\\\/9U37CLSD4-8bEP7Kp5xB\\\",\\\"MC-CGTLW9VKVG\\\",\\\"MC-9HHS9YDR36\\\"]},{\\\"type\\\":\\\"add_payment_info\\\",\\\"action_label\\\":[\\\"G-FRB78K79NE\\\",\\\"AW-17507673470\\\/W3bLCL2D4-8bEP7Kp5xB\\\",\\\"MC-9HHS9YDR36\\\"]},{\\\"type\\\":\\\"add_to_cart\\\",\\\"action_label\\\":[\\\"G-FRB78K79NE\\\",\\\"AW-17507673470\\\/HGPVCLGD4-8bEP7Kp5xB\\\",\\\"MC-9HHS9YDR36\\\"]}],\\\"enable_monitoring_mode\\\":false}\"}","eventPayloadVersion":"v1","runtimeContext":"OPEN","scriptVersion":"5a723296a9ab7d2cddda5d574ded9c79","type":"APP","apiClientId":1780363,"privacyPurposes":[],"dataSharingAdjustments":{"protectedCustomerApprovalScopes":["read_customer_address","read_customer_email","read_customer_name","read_customer_personal_data","read_customer_phone"],"dataSharingControls":["share_all_events"]},"dataSharingState":"optimized","enabledFlags":["9a3ed68a"]},{"id":"1477378209","configuration":"{\"projectId\":\"u4hr8ergot\"}","eventPayloadVersion":"v1","runtimeContext":"STRICT","scriptVersion":"ee6b6e3b9753873d6a9bf4fb40951aba","type":"APP","apiClientId":240074326017,"privacyPurposes":[],"capabilities":["advanced_dom_events"],"dataSharingAdjustments":{"protectedCustomerApprovalScopes":["read_customer_personal_data"],"dataSharingControls":["share_all_events"]},"dataSharingState":"unrestricted"},{"id":"1453883553","configuration":"{\"pixel_id\":\"831014893008680\",\"pixel_type\":\"facebook_pixel\"}","eventPayloadVersion":"v1","runtimeContext":"OPEN","scriptVersion":"d72ab942028ee4f6bccc581083be605e","type":"APP","apiClientId":2329312,"privacyPurposes":["ANALYTICS","MARKETING","SALE_OF_DATA"],"dataSharingAdjustments":{"protectedCustomerApprovalScopes":["read_customer_address","read_customer_email","read_customer_name","read_customer_personal_data","read_customer_phone"],"dataSharingControls":["share_all_events"]},"dataSharingState":"optimized","enabledFlags":["9a3ed68a"]},{"id":"1399095457","configuration":"{\"accountID\":\"UWNvSK\",\"webPixelConfig\":\"eyJlbmFibGVBZGRlZFRvQ2FydEV2ZW50cyI6IHRydWV9\"}","eventPayloadVersion":"v1","runtimeContext":"STRICT","scriptVersion":"524f6c1ee37bacdca7657a665bdca589","type":"APP","apiClientId":123074,"privacyPurposes":["ANALYTICS","MARKETING"],"dataSharingAdjustments":{"protectedCustomerApprovalScopes":["read_customer_address","read_customer_email","read_customer_name","read_customer_personal_data","read_customer_phone"],"dataSharingControls":["share_all_events"]},"dataSharingState":"optimized","enabledFlags":["9a3ed68a"]},{"id":"shopify-app-pixel","configuration":"{}","eventPayloadVersion":"v1","runtimeContext":"STRICT","scriptVersion":"0460","apiClientId":"shopify-pixel","type":"APP","privacyPurposes":["ANALYTICS","MARKETING"]},{"id":"shopify-custom-pixel","eventPayloadVersion":"v1","runtimeContext":"LAX","scriptVersion":"0460","apiClientId":"shopify-pixel","type":"CUSTOM","privacyPurposes":["ANALYTICS","MARKETING"]}],isMerchantRequest: false,initData: {"shop":{"name":"Chemistrie","paymentSettings":{"currencyCode":"USD"},"myshopifyDomain":"x8rjsw-v7.myshopify.com","countryCode":"US","storefrontUrl":"https:\/\/chemistrie.com"},"customer":null,"cart":null,"checkout":null,"productVariants":[],"products":null,"purchasingCompany":null,"page":null},},"https://chemistrie.com/cdn","b4bef654wc6c72d5fp5f8150a3m49669a12",{"modern":"","legacy":""},{"trekkieShim":true,"shopId":"68132307105","storefrontBaseUrl":"https:\/\/chemistrie.com","extensionBaseUrl":"https:\/\/extensions.shopifycdn.com\/cdn\/shopifycloud\/web-pixels-manager","surface":"storefront-renderer","enabledBetaFlags":"[\"72028870\", \"2dca8a86\", \"d5bdd5d0\", \"5476ea20\", \"5acaffe6\"]","isMerchantRequest":"false","hashVersion":"b4bef654wc6c72d5fp5f8150a3m49669a12","publish":"custom","events":"[[\"page_viewed\",{}]]"});})();</script><script>
+  window.ShopifyAnalytics = window.ShopifyAnalytics || {};
+  window.ShopifyAnalytics.meta = window.ShopifyAnalytics.meta || {};
+  window.ShopifyAnalytics.meta.currency = 'USD';
+  var meta = {"page":{"requestId":"b7619d3e-777a-4d1f-8a7f-315689e851bd-1777941811"}};
+  for (var attr in meta) {
+    window.ShopifyAnalytics.meta[attr] = meta[attr];
+  }
+</script>
+<script class="analytics">
+  (function () {
+    var customDocumentWrite = function(content) {
+      var jquery = null;
+
+      if (window.jQuery) {
+        jquery = window.jQuery;
+      } else if (window.Checkout && window.Checkout.$) {
+        jquery = window.Checkout.$;
+      }
+
+      if (jquery) {
+        jquery('body').append(content);
+      }
+    };
+
+    var hasLoggedConversion = function(token) {
+      if (token) {
+        return document.cookie.indexOf('loggedConversion=' + token) !== -1;
+      }
+      return false;
+    }
+
+    var setCookieIfConversion = function(token) {
+      if (token) {
+        var twoMonthsFromNow = new Date(Date.now());
+        twoMonthsFromNow.setMonth(twoMonthsFromNow.getMonth() + 2);
+
+        document.cookie = 'loggedConversion=' + token + '; expires=' + twoMonthsFromNow;
+      }
+    }
+
+    var trekkie = window.ShopifyAnalytics.lib = window.trekkie = window.trekkie || [];
+    window.ShopifyAnalytics.lib.trekkie = window.trekkie;
+    if (trekkie.integrations) {
+      return;
+    }
+    trekkie.methods = [
+      'identify',
+      'page',
+      'ready',
+      'track',
+      'trackForm',
+      'trackLink'
+    ];
+    trekkie.factory = function(method) {
+      return function() {
+        var args = Array.prototype.slice.call(arguments);
+        args.unshift(method);
+        trekkie.push(args);
+        if (window.__TREKKIE_SHIM_QUEUE && (method == 'track' || method == 'page')) {
+          try {
+            window.__TREKKIE_SHIM_QUEUE.push({
+              from: 'trekkie-stub',
+              method: method,
+              args: args.slice(1)
+            });
+          } catch (e) {
+            // no-op
+          }
+        }
+        return trekkie;
+      };
+    };
+    for (var i = 0; i < trekkie.methods.length; i++) {
+      var key = trekkie.methods[i];
+      trekkie[key] = trekkie.factory(key);
+    }
+    trekkie.load = function(config) {
+      trekkie.config = config || {};
+      trekkie.config.initialDocumentCookie = document.cookie;
+      var first = document.getElementsByTagName('script')[0];
+var script = document.createElement('script');
+script.type = 'text/javascript';
+script.onerror = function(e) {
+  var scriptFallback = document.createElement('script');
+  scriptFallback.type = 'text/javascript';
+  scriptFallback.onerror = function(error) {
+          var Monorail = {
+      produce: function produce(monorailDomain, schemaId, payload) {
+        var currentMs = new Date().getTime();
+        var event = {
+          schema_id: schemaId,
+          payload: payload,
+          metadata: {
+            event_created_at_ms: currentMs,
+            event_sent_at_ms: currentMs
+          }
+        };
+        return Monorail.sendRequest("https://" + monorailDomain + "/v1/produce", JSON.stringify(event));
+      },
+      sendRequest: function sendRequest(endpointUrl, payload) {
+        // Try the sendBeacon API
+        if (window && window.navigator && typeof window.navigator.sendBeacon === 'function' && typeof window.Blob === 'function' && !Monorail.isIos12()) {
+          var blobData = new window.Blob([payload], {
+            type: 'text/plain'
+          });
+
+          if (window.navigator.sendBeacon(endpointUrl, blobData)) {
+            return true;
+          } // sendBeacon was not successful
+
+        } // XHR beacon
+
+        var xhr = new XMLHttpRequest();
+
+        try {
+          xhr.open('POST', endpointUrl);
+          xhr.setRequestHeader('Content-Type', 'text/plain');
+          xhr.send(payload);
+        } catch (e) {
+          console.log(e);
+        }
+
+        return false;
+      },
+      isIos12: function isIos12() {
+        return window.navigator.userAgent.lastIndexOf('iPhone; CPU iPhone OS 12_') !== -1 || window.navigator.userAgent.lastIndexOf('iPad; CPU OS 12_') !== -1;
+      }
+    };
+    Monorail.produce('monorail-edge.shopifysvc.com',
+      'trekkie_storefront_load_errors/1.1',
+      {shop_id: 68132307105,
+      theme_id: 146522865825,
+      app_name: "storefront",
+      context_url: window.location.href,
+      source_url: "//chemistrie.com/cdn/s/trekkie.storefront.f004f70532a80935fbc1843785865c9096eb1816.min.js"});
+
+  };
+  scriptFallback.async = true;
+  scriptFallback.src = '//chemistrie.com/cdn/s/trekkie.storefront.f004f70532a80935fbc1843785865c9096eb1816.min.js';
+  first.parentNode.insertBefore(scriptFallback, first);
+};
+script.async = true;
+script.src = '//chemistrie.com/cdn/s/trekkie.storefront.f004f70532a80935fbc1843785865c9096eb1816.min.js';
+first.parentNode.insertBefore(script, first);
+
+    };
+    trekkie.load(
+      {"Trekkie":{"appName":"storefront","development":false,"defaultAttributes":{"shopId":68132307105,"isMerchantRequest":null,"themeId":146522865825,"themeCityHash":"5060718641649643517","contentLanguage":"en","currency":"USD","eventMetadataId":"5f840480-92f6-4e84-b7a7-85e3e8781ecd"},"isServerSideCookieWritingEnabled":true,"monorailRegion":"shop_domain","enabledBetaFlags":["b5387b81","d5bdd5d0"]},"Session Attribution":{},"S2S":{"facebookCapiEnabled":true,"source":"trekkie-storefront-renderer","apiClientId":580111}}
+    );
+
+    var loaded = false;
+    trekkie.ready(function() {
+      if (loaded) return;
+      loaded = true;
+
+      window.ShopifyAnalytics.lib = window.trekkie;
+
+      var originalDocumentWrite = document.write;
+      document.write = customDocumentWrite;
+      try { window.ShopifyAnalytics.merchantGoogleAnalytics.call(this); } catch(error) {};
+      document.write = originalDocumentWrite;
+
+      window.ShopifyAnalytics.lib.page(null,{"requestId":"b7619d3e-777a-4d1f-8a7f-315689e851bd-1777941811","shopifyEmitted":true});
+
+      var match = window.location.pathname.match(/checkouts\/(.+)\/(thank_you|post_purchase)/)
+      var token = match? match[1]: undefined;
+      if (!hasLoggedConversion(token)) {
+        setCookieIfConversion(token);
+        
+      }
+    });
+
+    var eventsListenerScript = document.createElement('script');
+    eventsListenerScript.async = true;
+    eventsListenerScript.src = "//chemistrie.com/cdn/shopifycloud/storefront/assets/shop_events_listener-3da45d37.js";
+    document.getElementsByTagName('head')[0].appendChild(eventsListenerScript);
+})();</script>
+<script
+  defer
+  src="https://chemistrie.com/cdn/shopifycloud/perf-kit/shopify-perf-kit-3.3.1.min.js"
+  data-application="storefront-renderer"
+  data-shop-id="68132307105"
+  data-render-region="gcp-us-central1"
+  data-page-type="404"
+  data-theme-instance-id="146522865825"
+  data-theme-name="Chemistrie Client Testing"
+  data-theme-version="1.0.0-testing.20251017"
+  data-monorail-region="shop_domain"
+  data-resource-timing-sampling-rate="10"
+  data-shs="true"
+  data-shs-beacon="true"
+  data-shs-export-with-fetch="true"
+  data-shs-logs-sample-rate="1"
+  data-shs-beacon-endpoint="https://chemistrie.com/api/collect"
+></script>
+</head>
+
+  <body class="template-404">
+    
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- BEGIN sections: header-group -->
+<section id="shopify-section-sections--19430307627169__announcement-bar" class="shopify-section shopify-section-group-header-group">
+<div class="announcement-bar"
+     
+     data-section-id="sections--19430307627169__announcement-bar"
+     style="--announcement-bg: #292929; --announcement-color: #ffffff; --announcement-height: 36px; --announcement-padding-y: 6px; --announcement-padding-x: 20px; --announcement-font-size: 14px; --announcement-font-size-mobile: 13px; --announcement-font-weight: 400;">
+  <div class="announcement-bar__container">
+
+    <!-- Messages Container -->
+    <div class="announcement-bar__messages"
+         data-autoplay="true"
+         data-speed="5000"
+         data-pause-on-hover="true">
+
+      <!-- Individual Messages --><div class="announcement-bar__message active"
+             data-block-id="announcement_nhEign"
+             data-index="0"
+             ><div class="announcement-bar__content"><span class="announcement-bar__text">
+                <p>📦<strong> Free Shipping & Free Returns!</strong></p>
+              </span>
+            </div></div></div>
+
+    <!-- Progress Indicators (optional dots) --></div>
+</div>
+
+
+
+</section><div id="shopify-section-sections--19430307627169__header-chemistrie" class="shopify-section shopify-section-group-header-group">
+
+<script src="//chemistrie.com/cdn/shop/t/15/assets/predictive-search.js?v=3965197855289248181771044131" defer="defer"></script>
+
+<header class="chemistrie-header" >
+  <div class="chemistrie-header__wrapper">
+    <!-- Combined Header Section -->
+    <div class="chemistrie-header__content">
+      <div class="chemistrie-header__top-row">
+        <!-- Logo -->
+        <div class="chemistrie-header__logo">
+          <a href="/" class="chemistrie-header__logo-link">
+            
+              <img src="//chemistrie.com/cdn/shop/t/15/assets/chemistrie-logo-284x46px.webp?v=24613791541348308961771043937" 
+                   alt="Chemistrie" 
+                   class="chemistrie-header__logo-image"
+                   width="284" 
+                   height="46"
+                   loading="eager">
+            
+          </a>
+        </div>
+
+        <!-- Icons Menu -->
+        <nav class="chemistrie-header__icons" aria-label="Utility navigation">
+          <!-- Search with expandable field and predictive search -->
+          <div class="chemistrie-header__search-container">
+            <button class="chemistrie-header__icon chemistrie-header__icon--search"
+                    aria-label="Search"
+                    data-action="search-toggle">
+              <img src="//chemistrie.com/cdn/shop/t/15/assets/Icon-Search-light-72px72px.png?v=178504605674475844281771044008"
+                   alt="Search"
+                   width="26"
+                   height="26">
+            </button>
+            <predictive-search class="chemistrie-header__search-field" data-search-field>
+              <form action="/search" method="get" role="search">
+                <input type="search"
+                       name="q"
+                       placeholder="Search our store"
+                       class="chemistrie-header__search-input"
+                       aria-label="Search"
+                       role="combobox"
+                       aria-expanded="false"
+                       aria-owns="predictive-search-results"
+                       aria-controls="predictive-search-results"
+                       aria-haspopup="listbox"
+                       aria-autocomplete="list"
+                       autocomplete="off">
+                <input type="hidden" name="options[prefix]" value="last">
+                <button type="button" class="chemistrie-header__search-clear" data-search-clear aria-label="Clear search">
+                  ×
+                </button>
+                <button type="submit" class="chemistrie-header__search-submit">
+                  <span class="visually-hidden">Submit</span>
+                  →
+                </button>
+              </form>
+              <div data-predictive-search-results class="chemistrie-header__predictive-results" style="display: none;"></div>
+            </predictive-search>
+            <div class="chemistrie-header__search-backdrop" data-search-backdrop></div>
+          </div>
+
+          <!-- Promotions/Gift (Hidden for now) -->
+          <button class="chemistrie-header__icon chemistrie-header__icon--gift"
+                  aria-label="Promotions"
+                  data-action="promotions-toggle"
+                  style="display: none;">
+            <img src="//chemistrie.com/cdn/shop/t/15/assets/Icon-Gift-light-72px72px.png?v=73365693523960638161771044007" 
+                 alt="Promotions" 
+                 width="26" 
+                 height="26">
+          </button>
+
+          <!-- Account -->
+          <div class="chemistrie-header__account-container">
+            <button class="chemistrie-header__icon chemistrie-header__icon--account"
+                    aria-label="My account"
+                    data-action="account-toggle">
+              <img src="//chemistrie.com/cdn/shop/t/15/assets/Icon-User-light-72px-72pxpng.png?v=41838910711629407511771044023" 
+                   alt="My account" 
+                   width="26" 
+                   height="26">
+            </button>
+            
+            <!-- Account Dropdown - New Customer Accounts (Passwordless) -->
+            <div class="chemistrie-header__account-dropdown" data-account-dropdown>
+              <div class="chemistrie-header__account-dropdown-content">
+                
+                  <!-- Not logged in - New Customer Accounts (passwordless) -->
+                  <div class="chemistrie-header__account-header">
+                    <span class="chemistrie-header__account-greeting">Welcome</span>
+                    <p class="chemistrie-header__account-subtitle">Sign in to view your orders and manage your account.</p>
+                  </div>
+
+                  <div class="chemistrie-header__account-actions">
+                    
+                      <a href="/account" class="chemistrie-header__sign-in-btn">
+                        Sign In
+                      </a>
+                    
+
+                    <p class="chemistrie-header__account-new-customer">
+                      New customer?
+                      
+                        <a href="https://chemistrie.com/customer_authentication/redirect?locale=en&region_country=US" class="chemistrie-header__create-account-link">
+                          Create an account
+                        </a>
+                      
+                    </p>
+                  </div>
+                
+              </div>
+            </div>
+          </div>
+
+          <!-- Cart -->
+          <div class="chemistrie-header__cart-container"><button class="chemistrie-header__icon chemistrie-header__icon--cart"
+                    aria-label="Shopping cart"
+                    data-action="cart-toggle">
+              <span class="chemistrie-header__cart-count"
+                    data-cart-count="0"
+                    style="display: none;">
+                0
+              </span>
+              <img src="//chemistrie.com/cdn/shop/t/15/assets/Icon-shopping-cart-72px72px.png?v=123955186514839081741771044009"
+                   alt="Shopping cart"
+                   width="26"
+                   height="26">
+            </button>
+
+            <!-- Cart Dropdown -->
+            <div class="chemistrie-header__cart-dropdown" data-cart-dropdown><div data-section="cart-header-dropdown"><div class="chemistrie-header__cart-dropdown-content">
+                  <div class="chemistrie-header__cart-header">
+                    <span class="chemistrie-header__cart-title">Shopping Cart</span>
+                    <span class="chemistrie-header__cart-item-count">0 items</span>
+                  </div>
+
+                  <div class="chemistrie-header__cart-items">
+                    
+                      <div class="chemistrie-header__cart-empty">
+                        <p>Your cart is empty</p>
+                        <a href="/collections" class="chemistrie-header__cart-continue">
+                          Continue Shopping
+                        </a>
+                      </div>
+                    
+                  </div>
+
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Menu Toggle -->
+          <div class="chemistrie-header__menu-container">
+            <button class="chemistrie-header__icon chemistrie-header__icon--menu"
+                    aria-label="Menu"
+                    data-action="menu-toggle">
+              <img src="//chemistrie.com/cdn/shop/t/15/assets/Icon-hamburger-menu-72px72px.png?v=89788169805418659001771044007" 
+                   alt="Menu" 
+                   width="26" 
+                   height="26">
+            </button>
+            
+            <!-- Hamburger Dropdown Menu -->
+            <div class="chemistrie-header__dropdown-menu" data-dropdown-menu>
+              <div class="chemistrie-header__dropdown-content">
+                <!-- Mobile Nav Items (hidden on desktop) -->
+                <div class="chemistrie-header__mobile-nav-section">
+                  <!-- Clips - Opens full-screen mega menu overlay -->
+                  <a href="#" class="chemistrie-header__dropdown-link" data-action="mobile-clips-menu">
+                    Clips
+                  </a>
+                  <!-- Eyeglasses with expandable submenu -->
+                  <div class="chemistrie-header__mobile-nav-item" data-mobile-nav-expandable>
+                    <button class="chemistrie-header__dropdown-link chemistrie-header__dropdown-link--expandable" data-mobile-nav-toggle>
+                      Eyeglasses
+                      <span class="chemistrie-header__mobile-nav-arrow">›</span>
+                    </button>
+                    <div class="chemistrie-header__mobile-submenu" data-mobile-submenu><a href="/collections/womens-eyewear" class="chemistrie-header__dropdown-link chemistrie-header__dropdown-link--sub">
+                          Women's
+                        </a><a href="/collections/mens-eyeglasses" class="chemistrie-header__dropdown-link chemistrie-header__dropdown-link--sub">
+                          Men's
+                        </a><a href="/collections/best-selling-eyewear" class="chemistrie-header__dropdown-link chemistrie-header__dropdown-link--sub">
+                          Best Sellers
+                        </a><a href="/collections/eyeglasses" class="chemistrie-header__dropdown-link chemistrie-header__dropdown-link--sub">
+                          All Eyeglasses
+                        </a><a href="/collections/blue-light-glasses" class="chemistrie-header__dropdown-link chemistrie-header__dropdown-link--sub">
+                          Blue Light
+                        </a><a href="/collections/accessories" class="chemistrie-header__dropdown-link chemistrie-header__dropdown-link--sub">
+                          Accessories
+                        </a></div>
+                  </div>
+                  <!-- Store Locator (simple link) -->
+                  <a href="/pages/store-locator" class="chemistrie-header__dropdown-link">
+                    Store Locator
+                  </a>
+                  <!-- Divider -->
+                  <div class="chemistrie-header__mobile-nav-divider"></div>
+                </div>
+                <!-- Original menu items -->
+                <a href="/pages/about-us" class="chemistrie-header__dropdown-link">
+                  About Us
+                </a>
+                <a href="/blogs/general" class="chemistrie-header__dropdown-link">
+                  Blog
+                </a>
+                <a href="/pages/faq" class="chemistrie-header__dropdown-link">
+                  FAQ
+                </a>
+                <a href="/pages/contact" class="chemistrie-header__dropdown-link">
+                  Contact
+                </a>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+
+      <!-- Mobile Clips Mega Menu Overlay (mobile only) -->
+      <div class="chemistrie-header__mobile-clips-overlay" data-mobile-clips-overlay>
+        
+
+<div class="clips-mega-menu">
+
+  <!-- Left Arrow Button (Outside wrapper) -->
+  <button class="clips-mega-scroll-arrow clips-mega-scroll-arrow--left" aria-label="Scroll left">
+    <svg width="24" height="48" viewBox="0 0 24 48" fill="none">
+      <path d="M16 36L8 24L16 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <div class="clips-mega-menu__scroll-wrapper">
+
+    <!-- Left Fade Gradient -->
+    <div class="clips-mega-fade clips-mega-fade--left"></div>
+
+  <div class="clips-mega-menu__container">
+
+    <!-- Sun Clips Card -->
+    <a href="/products/clip-on-sun-lenses" class="clips-mega-card" data-category="sun">
+      <div class="clips-mega-card__image-wrapper">
+        <img
+          src="//chemistrie.com/cdn/shop/t/15/assets/PDP-HeroImage-ClipOnly-Sun-GradientAmber.webp?v=163949451751592528961771044032"
+          alt="Sun Clips - Polarized sunglasses"
+          class="clips-mega-card__image"
+          loading="lazy"
+          width="1792"
+          height="1536"
+        />
+      </div>
+      <div class="clips-mega-card__content">
+        <h3 class="clips-mega-card__title">Sun</h3>
+        <p class="clips-mega-card__description">100% UV protection with 24 polarized lens colors. Perfect for outdoor activities and style.</p>
+        <ul class="clips-mega-card__features">
+          <li class="clips-mega-feature">Polarized</li>
+          <li class="clips-mega-feature">24 Colors</li>
+          <li class="clips-mega-feature">UV Protection</li>
+        </ul>
+        <span class="clips-mega-card__cta">
+          Shop Now
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path d="M7 3L14 10L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Reader Clips Card -->
+    <a href="/products/clip-on-reader-lenses" class="clips-mega-card" data-category="reader">
+      <div class="clips-mega-card__image-wrapper">
+        <img
+          src="//chemistrie.com/cdn/shop/t/15/assets/PDP-HeroImage-ClipOnly-Reader.webp?v=144917539516073478621771044031"
+          alt="Reader Clips - Magnification lenses"
+          class="clips-mega-card__image"
+          loading="lazy"
+          width="1982"
+          height="1536"
+        />
+      </div>
+      <div class="clips-mega-card__content">
+        <h3 class="clips-mega-card__title">Reader</h3>
+        <p class="clips-mega-card__description">On-demand magnification from +0.50 to +2.50. Ideal for those not ready for progressive lenses.</p>
+        <ul class="clips-mega-card__features">
+          <li class="clips-mega-feature">+0.50 to +2.50</li>
+          <li class="clips-mega-feature">Ultra-Thin</li>
+          <li class="clips-mega-feature">Hi-Vex Material</li>
+        </ul>
+        <span class="clips-mega-card__cta">
+          Shop Now
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path d="M7 3L14 10L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Blue Light Clips Card -->
+    <a href="/products/clip-on-blue-light-lenses" class="clips-mega-card" data-category="blue-light">
+      <div class="clips-mega-card__image-wrapper">
+        <img
+          src="//chemistrie.com/cdn/shop/t/15/assets/PDP-HeroImage-ClipOnly-BlueLight.webp?v=165617176303391392351771044029"
+          alt="Blue Light Clips - Digital screen protection"
+          class="clips-mega-card__image"
+          loading="lazy"
+          width="1884"
+          height="1536"
+        />
+      </div>
+      <div class="clips-mega-card__content">
+        <h3 class="clips-mega-card__title">Blue Light</h3>
+        <p class="clips-mega-card__description">Block 35-50% of harmful blue light from digital devices. Reduce eye strain and headaches.</p>
+        <ul class="clips-mega-card__features">
+          <li class="clips-mega-feature">Digital Protection</li>
+          <li class="clips-mega-feature">Plano & Powered</li>
+          <li class="clips-mega-feature">Anti-Fatigue</li>
+        </ul>
+        <span class="clips-mega-card__cta">
+          Shop Now
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path d="M7 3L14 10L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Migraine Clips Card -->
+    <a href="/products/clip-on-migraine-lenses" class="clips-mega-card" data-category="migraine">
+      <div class="clips-mega-card__image-wrapper">
+        <img
+          src="//chemistrie.com/cdn/shop/t/15/assets/PDP-HeroImage-ClipOnly-Avalux-Light.webp?v=180771276928997363481771044028"
+          alt="Migraine Clips - Avulux lenses"
+          class="clips-mega-card__image"
+          loading="lazy"
+          width="1580"
+          height="1536"
+        />
+      </div>
+      <div class="clips-mega-card__content">
+        <h3 class="clips-mega-card__title">Migraine</h3>
+        <p class="clips-mega-card__description">Avulux lenses clinically proven to reduce migraine frequency, severity, and duration.</p>
+        <ul class="clips-mega-card__features">
+          <li class="clips-mega-feature">Avulux Certified</li>
+          <li class="clips-mega-feature">97% Light Blocking</li>
+          <li class="clips-mega-feature">Clinically Proven</li>
+        </ul>
+        <span class="clips-mega-card__cta">
+          Shop Now
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path d="M7 3L14 10L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Light Sensitivity Clips Card -->
+    <a href="/products/clip-on-light-sensitivity-lenses" class="clips-mega-card" data-category="light-sensitivity">
+      <div class="clips-mega-card__image-wrapper">
+        <img
+          src="//chemistrie.com/cdn/shop/t/15/assets/PDP-HeroImage-ClipOnly-FL41-Light.webp?v=37818999792617472431771044030"
+          alt="Light Sensitivity Clips - FL-41 lenses"
+          class="clips-mega-card__image"
+          loading="lazy"
+          width="1580"
+          height="1536"
+        />
+      </div>
+      <div class="clips-mega-card__content">
+        <h3 class="clips-mega-card__title">Light Sensitivity</h3>
+        <p class="clips-mega-card__description">FL-41 tinted lenses for light sensitivity relief and migraine prevention.</p>
+        <ul class="clips-mega-card__features">
+          <li class="clips-mega-feature">FL-41 Technology</li>
+          <li class="clips-mega-feature">Light/Medium Tints</li>
+          <li class="clips-mega-feature">Clinically Proven</li>
+        </ul>
+        <span class="clips-mega-card__cta">
+          Shop Now
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path d="M7 3L14 10L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- 3D Clips Card -->
+    <a href="/products/clip-on-3d-lenses" class="clips-mega-card" data-category="3d">
+      <div class="clips-mega-card__image-wrapper">
+        <img
+          src="//chemistrie.com/cdn/shop/t/15/assets/PDP-HeroImage-ClipOnly-3D.webp?v=16853727479848377671771044028"
+          alt="3D Clips - Polarized cinema glasses"
+          class="clips-mega-card__image"
+          loading="lazy"
+          width="1516"
+          height="1536"
+        />
+      </div>
+      <div class="clips-mega-card__content">
+        <h3 class="clips-mega-card__title">3D</h3>
+        <p class="clips-mega-card__description">Custom 3D polarized clips for movies and home entertainment. Fits directly over prescription glasses.</p>
+        <ul class="clips-mega-card__features">
+          <li class="clips-mega-feature">Movie Theater</li>
+          <li class="clips-mega-feature">Home Cinema</li>
+          <li class="clips-mega-feature">Reusable</li>
+        </ul>
+        <span class="clips-mega-card__cta">
+          Shop Now
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path d="M7 3L14 10L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Driving Clips Card -->
+    <a href="/products/clip-on-night-driving-lenses" class="clips-mega-card" data-category="driving">
+      <div class="clips-mega-card__image-wrapper">
+        <img
+          src="//chemistrie.com/cdn/shop/t/15/assets/PDP-HeroImage-ClipOnly-Driving.webp?v=74500937453896429201771044030"
+          alt="Driving Clips - Night driving glare reduction"
+          class="clips-mega-card__image"
+          loading="lazy"
+          width="1792"
+          height="1536"
+        />
+      </div>
+      <div class="clips-mega-card__content">
+        <h3 class="clips-mega-card__title">Night Drive</h3>
+        <p class="clips-mega-card__description">Reduce glare from oncoming headlights. Enhanced nighttime vision with Quantum's glare-control technology.</p>
+        <ul class="clips-mega-card__features">
+          <li class="clips-mega-feature">Glare Reduction</li>
+          <li class="clips-mega-feature">565-595nm Filter</li>
+          <li class="clips-mega-feature">Enhanced Contrast</li>
+        </ul>
+        <span class="clips-mega-card__cta">
+          Shop Now
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path d="M7 3L14 10L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+
+  </div>
+
+    <!-- Right Fade Gradient -->
+    <div class="clips-mega-fade clips-mega-fade--right"></div>
+
+  </div>
+
+  <!-- Right Arrow Button (Outside wrapper) -->
+  <button class="clips-mega-scroll-arrow clips-mega-scroll-arrow--right" aria-label="Scroll right">
+    <svg width="24" height="48" viewBox="0 0 24 48" fill="none">
+      <path d="M8 12L16 24L8 36" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+</div>
+
+      </div>
+
+      <!-- Bottom Row: Main Navigation -->
+      <div class="chemistrie-header__bottom-row">
+        <nav class="chemistrie-header__nav" aria-label="Main navigation">
+          <ul class="chemistrie-header__nav-list">
+          <li class="chemistrie-header__nav-item chemistrie-header__nav-item--has-mega-menu">
+            <span class="chemistrie-header__nav-link chemistrie-header__nav-link--mega-menu">
+              Clips
+            </span>
+            <!-- Mega Menu Container -->
+            <div class="chemistrie-header__mega-menu">
+              
+
+<div class="clips-mega-menu">
+
+  <!-- Left Arrow Button (Outside wrapper) -->
+  <button class="clips-mega-scroll-arrow clips-mega-scroll-arrow--left" aria-label="Scroll left">
+    <svg width="24" height="48" viewBox="0 0 24 48" fill="none">
+      <path d="M16 36L8 24L16 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <div class="clips-mega-menu__scroll-wrapper">
+
+    <!-- Left Fade Gradient -->
+    <div class="clips-mega-fade clips-mega-fade--left"></div>
+
+  <div class="clips-mega-menu__container">
+
+    <!-- Sun Clips Card -->
+    <a href="/products/clip-on-sun-lenses" class="clips-mega-card" data-category="sun">
+      <div class="clips-mega-card__image-wrapper">
+        <img
+          src="//chemistrie.com/cdn/shop/t/15/assets/PDP-HeroImage-ClipOnly-Sun-GradientAmber.webp?v=163949451751592528961771044032"
+          alt="Sun Clips - Polarized sunglasses"
+          class="clips-mega-card__image"
+          loading="lazy"
+          width="1792"
+          height="1536"
+        />
+      </div>
+      <div class="clips-mega-card__content">
+        <h3 class="clips-mega-card__title">Sun</h3>
+        <p class="clips-mega-card__description">100% UV protection with 24 polarized lens colors. Perfect for outdoor activities and style.</p>
+        <ul class="clips-mega-card__features">
+          <li class="clips-mega-feature">Polarized</li>
+          <li class="clips-mega-feature">24 Colors</li>
+          <li class="clips-mega-feature">UV Protection</li>
+        </ul>
+        <span class="clips-mega-card__cta">
+          Shop Now
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path d="M7 3L14 10L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Reader Clips Card -->
+    <a href="/products/clip-on-reader-lenses" class="clips-mega-card" data-category="reader">
+      <div class="clips-mega-card__image-wrapper">
+        <img
+          src="//chemistrie.com/cdn/shop/t/15/assets/PDP-HeroImage-ClipOnly-Reader.webp?v=144917539516073478621771044031"
+          alt="Reader Clips - Magnification lenses"
+          class="clips-mega-card__image"
+          loading="lazy"
+          width="1982"
+          height="1536"
+        />
+      </div>
+      <div class="clips-mega-card__content">
+        <h3 class="clips-mega-card__title">Reader</h3>
+        <p class="clips-mega-card__description">On-demand magnification from +0.50 to +2.50. Ideal for those not ready for progressive lenses.</p>
+        <ul class="clips-mega-card__features">
+          <li class="clips-mega-feature">+0.50 to +2.50</li>
+          <li class="clips-mega-feature">Ultra-Thin</li>
+          <li class="clips-mega-feature">Hi-Vex Material</li>
+        </ul>
+        <span class="clips-mega-card__cta">
+          Shop Now
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path d="M7 3L14 10L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Blue Light Clips Card -->
+    <a href="/products/clip-on-blue-light-lenses" class="clips-mega-card" data-category="blue-light">
+      <div class="clips-mega-card__image-wrapper">
+        <img
+          src="//chemistrie.com/cdn/shop/t/15/assets/PDP-HeroImage-ClipOnly-BlueLight.webp?v=165617176303391392351771044029"
+          alt="Blue Light Clips - Digital screen protection"
+          class="clips-mega-card__image"
+          loading="lazy"
+          width="1884"
+          height="1536"
+        />
+      </div>
+      <div class="clips-mega-card__content">
+        <h3 class="clips-mega-card__title">Blue Light</h3>
+        <p class="clips-mega-card__description">Block 35-50% of harmful blue light from digital devices. Reduce eye strain and headaches.</p>
+        <ul class="clips-mega-card__features">
+          <li class="clips-mega-feature">Digital Protection</li>
+          <li class="clips-mega-feature">Plano & Powered</li>
+          <li class="clips-mega-feature">Anti-Fatigue</li>
+        </ul>
+        <span class="clips-mega-card__cta">
+          Shop Now
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path d="M7 3L14 10L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Migraine Clips Card -->
+    <a href="/products/clip-on-migraine-lenses" class="clips-mega-card" data-category="migraine">
+      <div class="clips-mega-card__image-wrapper">
+        <img
+          src="//chemistrie.com/cdn/shop/t/15/assets/PDP-HeroImage-ClipOnly-Avalux-Light.webp?v=180771276928997363481771044028"
+          alt="Migraine Clips - Avulux lenses"
+          class="clips-mega-card__image"
+          loading="lazy"
+          width="1580"
+          height="1536"
+        />
+      </div>
+      <div class="clips-mega-card__content">
+        <h3 class="clips-mega-card__title">Migraine</h3>
+        <p class="clips-mega-card__description">Avulux lenses clinically proven to reduce migraine frequency, severity, and duration.</p>
+        <ul class="clips-mega-card__features">
+          <li class="clips-mega-feature">Avulux Certified</li>
+          <li class="clips-mega-feature">97% Light Blocking</li>
+          <li class="clips-mega-feature">Clinically Proven</li>
+        </ul>
+        <span class="clips-mega-card__cta">
+          Shop Now
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path d="M7 3L14 10L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Light Sensitivity Clips Card -->
+    <a href="/products/clip-on-light-sensitivity-lenses" class="clips-mega-card" data-category="light-sensitivity">
+      <div class="clips-mega-card__image-wrapper">
+        <img
+          src="//chemistrie.com/cdn/shop/t/15/assets/PDP-HeroImage-ClipOnly-FL41-Light.webp?v=37818999792617472431771044030"
+          alt="Light Sensitivity Clips - FL-41 lenses"
+          class="clips-mega-card__image"
+          loading="lazy"
+          width="1580"
+          height="1536"
+        />
+      </div>
+      <div class="clips-mega-card__content">
+        <h3 class="clips-mega-card__title">Light Sensitivity</h3>
+        <p class="clips-mega-card__description">FL-41 tinted lenses for light sensitivity relief and migraine prevention.</p>
+        <ul class="clips-mega-card__features">
+          <li class="clips-mega-feature">FL-41 Technology</li>
+          <li class="clips-mega-feature">Light/Medium Tints</li>
+          <li class="clips-mega-feature">Clinically Proven</li>
+        </ul>
+        <span class="clips-mega-card__cta">
+          Shop Now
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path d="M7 3L14 10L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- 3D Clips Card -->
+    <a href="/products/clip-on-3d-lenses" class="clips-mega-card" data-category="3d">
+      <div class="clips-mega-card__image-wrapper">
+        <img
+          src="//chemistrie.com/cdn/shop/t/15/assets/PDP-HeroImage-ClipOnly-3D.webp?v=16853727479848377671771044028"
+          alt="3D Clips - Polarized cinema glasses"
+          class="clips-mega-card__image"
+          loading="lazy"
+          width="1516"
+          height="1536"
+        />
+      </div>
+      <div class="clips-mega-card__content">
+        <h3 class="clips-mega-card__title">3D</h3>
+        <p class="clips-mega-card__description">Custom 3D polarized clips for movies and home entertainment. Fits directly over prescription glasses.</p>
+        <ul class="clips-mega-card__features">
+          <li class="clips-mega-feature">Movie Theater</li>
+          <li class="clips-mega-feature">Home Cinema</li>
+          <li class="clips-mega-feature">Reusable</li>
+        </ul>
+        <span class="clips-mega-card__cta">
+          Shop Now
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path d="M7 3L14 10L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Driving Clips Card -->
+    <a href="/products/clip-on-night-driving-lenses" class="clips-mega-card" data-category="driving">
+      <div class="clips-mega-card__image-wrapper">
+        <img
+          src="//chemistrie.com/cdn/shop/t/15/assets/PDP-HeroImage-ClipOnly-Driving.webp?v=74500937453896429201771044030"
+          alt="Driving Clips - Night driving glare reduction"
+          class="clips-mega-card__image"
+          loading="lazy"
+          width="1792"
+          height="1536"
+        />
+      </div>
+      <div class="clips-mega-card__content">
+        <h3 class="clips-mega-card__title">Night Drive</h3>
+        <p class="clips-mega-card__description">Reduce glare from oncoming headlights. Enhanced nighttime vision with Quantum's glare-control technology.</p>
+        <ul class="clips-mega-card__features">
+          <li class="clips-mega-feature">Glare Reduction</li>
+          <li class="clips-mega-feature">565-595nm Filter</li>
+          <li class="clips-mega-feature">Enhanced Contrast</li>
+        </ul>
+        <span class="clips-mega-card__cta">
+          Shop Now
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path d="M7 3L14 10L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+
+  </div>
+
+    <!-- Right Fade Gradient -->
+    <div class="clips-mega-fade clips-mega-fade--right"></div>
+
+  </div>
+
+  <!-- Right Arrow Button (Outside wrapper) -->
+  <button class="clips-mega-scroll-arrow clips-mega-scroll-arrow--right" aria-label="Scroll right">
+    <svg width="24" height="48" viewBox="0 0 24 48" fill="none">
+      <path d="M8 12L16 24L8 36" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+</div>
+
+            </div>
+          </li>
+          <li class="chemistrie-header__nav-item chemistrie-header__nav-item--has-dropdown">
+            <a href="/collections/eyeglasses" class="chemistrie-header__nav-link">
+              Eyeglasses
+            </a>
+            <ul class="chemistrie-header__dropdown">
+              
+                <li>
+                  <a href="/collections/womens-eyewear" class="chemistrie-header__dropdown-link">
+                    Women's
+                  </a>
+                </li>
+              
+                <li>
+                  <a href="/collections/mens-eyeglasses" class="chemistrie-header__dropdown-link">
+                    Men's
+                  </a>
+                </li>
+              
+                <li>
+                  <a href="/collections/best-selling-eyewear" class="chemistrie-header__dropdown-link">
+                    Best Sellers
+                  </a>
+                </li>
+              
+                <li>
+                  <a href="/collections/eyeglasses" class="chemistrie-header__dropdown-link">
+                    All Eyeglasses
+                  </a>
+                </li>
+              
+                <li>
+                  <a href="/collections/blue-light-glasses" class="chemistrie-header__dropdown-link">
+                    Blue Light
+                  </a>
+                </li>
+              
+                <li>
+                  <a href="/collections/accessories" class="chemistrie-header__dropdown-link">
+                    Accessories
+                  </a>
+                </li>
+              
+            </ul>
+          </li>
+          <li class="chemistrie-header__nav-item">
+            <a href="/pages/store-locator" class="chemistrie-header__nav-link">
+              Store Locator
+            </a>
+          </li>
+        </ul>
+      </nav>
+      </div> <!-- Close .chemistrie-header__bottom-row -->
+    </div>
+  </div>
+
+  <!-- Mobile Slide-Down Search Bar -->
+  <div class="chemistrie-header__search-slidedown" data-search-slidedown>
+    <form action="/search" method="get" role="search" class="chemistrie-header__search-slidedown-form">
+      <input type="search"
+             name="q"
+             placeholder="Search our store"
+             class="chemistrie-header__search-slidedown-input"
+             data-search-slidedown-input
+             aria-label="Search"
+             autocomplete="off">
+      <input type="hidden" name="options[prefix]" value="last">
+      <button type="submit" class="chemistrie-header__search-slidedown-submit" aria-label="Submit">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="M21 21l-4.35-4.35"/>
+        </svg>
+      </button>
+      <button type="button" class="chemistrie-header__search-slidedown-close" data-search-slidedown-close aria-label="Close search">
+        &times;
+      </button>
+    </form>
+  </div>
+
+</header>
+
+<!-- Promotions Dialog - MUST be outside header to escape its stacking context -->
+<!-- The header has position:fixed + z-index:2100 which creates a stacking context -->
+<!-- Child elements cannot have z-index higher than parent's context relative to siblings -->
+<div class="chemistrie-header__promotions-dialog" data-promotions-dialog>
+  <div class="chemistrie-header__promotions-overlay" data-promotions-overlay></div>
+  <div class="chemistrie-header__promotions-content">
+    <button class="chemistrie-header__promotions-close" data-promotions-close>×</button>
+
+    <div class="chemistrie-header__promotions-header">
+      <h3>🎁 Current Promotions</h3>
+    </div>
+
+    <div class="chemistrie-header__promotions-body">
+      <div class="chemistrie-header__current-promotion">
+        <h4>Special Offer!</h4>
+        <p>Get 20% off your first order with code WELCOME20</p>
+        <div class="chemistrie-header__promotion-code">
+          <span>Code: <strong>WELCOME20</strong></span>
+          <button class="chemistrie-header__copy-code" data-copy-code="WELCOME20">
+            Copy
+          </button>
+        </div>
+      </div>
+
+      <div class="chemistrie-header__email-signup">
+        <h4>Stay Updated on New Promotions</h4>
+        <form class="chemistrie-header__email-form" data-email-form>
+          <input type="email"
+                 placeholder="Enter your email address"
+                 required
+                 class="chemistrie-header__email-input">
+          <button type="submit" class="chemistrie-header__email-submit">
+            Subscribe
+          </button>
+        </form>
+        <p class="chemistrie-header__email-disclaimer">
+          Get exclusive offers and updates. Unsubscribe anytime.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+</div>
+<!-- END sections: header-group -->
+
+    <main id="main-content" role="main" tabindex="-1">
+      <section id="shopify-section-template--19430306578593__main" class="shopify-section"><section class="hidden-product" ><div class="hidden-product__grid-bg"></div><div class="hidden-product__hero">
+    <div class="hidden-product__hero-content">
+      <div class="hidden-product__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M40 10 L72 65 L8 65 Z"/>
+          <path d="M40 30 L40 45"/>
+          <circle cx="40" cy="54" r="2" fill="currentColor"/>
+        </svg>
+      </div>
+      <h1 class="hidden-product__title">Oops! Page not found</h1>
+      <p class="hidden-product__subtitle">The page you&#39;re looking for doesn&#39;t exist, but we have plenty of other great options for you!</p>
+    </div>
+  </div><div class="hidden-product__ctas">
+    <div class="hidden-product__ctas-container"><a href="/pages/order-flow" class="hidden-product__card hidden-product__card--primary">
+        <div class="hidden-product__card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="24" cy="24" r="8"/>
+            <path d="M24 8 L24 12"/>
+            <path d="M24 36 L24 40"/>
+            <path d="M8 24 L12 24"/>
+            <path d="M36 24 L40 24"/>
+            <path d="M12.7 12.7 L15.5 15.5"/>
+            <path d="M32.5 32.5 L35.3 35.3"/>
+            <path d="M12.7 35.3 L15.5 32.5"/>
+            <path d="M32.5 15.5 L35.3 12.7"/>
+          </svg>
+        </div>
+        <h2 class="hidden-product__card-title">Build Your Perfect Clips</h2>
+        <p class="hidden-product__card-description">Design your custom magnetic clip-ons with our easy configurator.</p>
+        <span class="hidden-product__card-button">Start Customizing</span>
+      </a><a href="/collections/eyeglasses" class="hidden-product__card hidden-product__card--secondary">
+        <div class="hidden-product__card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="14" cy="26" r="8"/>
+            <circle cx="34" cy="26" r="8"/>
+            <path d="M22 26 L26 26"/>
+            <path d="M6 26 L4 22"/>
+            <path d="M42 26 L44 22"/>
+          </svg>
+        </div>
+        <h2 class="hidden-product__card-title">Explore Our Frames</h2>
+        <p class="hidden-product__card-description">Discover our collection of premium eyeglasses designed for Chemistrie clips.</p>
+        <span class="hidden-product__card-button hidden-product__card-button--secondary">View Collection</span>
+      </a>
+
+    </div>
+  </div><div class="hidden-product__clips">
+    <div class="hidden-product__clips-container">
+      <h2 class="hidden-product__clips-title">Shop Chemistrie Clips</h2>
+
+      <div class="hidden-product__slider"><button class="hidden-product__scroll-arrow hidden-product__scroll-arrow--left" aria-label="Scroll left">
+          <svg width="24" height="48" viewBox="0 0 24 48" fill="none">
+            <path d="M16 36L8 24L16 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <div class="hidden-product__scroll-wrapper"><div class="hidden-product__fade hidden-product__fade--left"></div>
+
+          <div class="hidden-product__cards"><a href="/products/clip-on-sun-lenses" class="hidden-product__mega-card" data-category="sun">
+              <div class="hidden-product__mega-card-image">
+                <img
+                  src="//chemistrie.com/cdn/shop/t/15/assets/PDP-HeroImage-ClipOnly-Sun-GradientAmber.webp?v=163949451751592528961771044032"
+                  alt="Sun Clips - Polarized sunglasses"
+                  loading="lazy"
+                  width="1792"
+                  height="1536"
+                />
+              </div>
+              <div class="hidden-product__mega-card-content">
+                <h4 class="hidden-product__mega-card-title">Sun</h4>
+                <p class="hidden-product__mega-card-desc">100% UV protection with 24 polarized lens colors. Perfect for outdoor activities.</p>
+                <ul class="hidden-product__mega-card-features">
+                  <li>Polarized</li>
+                  <li>24 Colors</li>
+                  <li>UV Protection</li>
+                </ul>
+                <span class="hidden-product__mega-card-cta">
+                  Shop Now
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                    <path d="M7 3L14 10L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </span>
+              </div>
+            </a><a href="/products/clip-on-reader-lenses" class="hidden-product__mega-card" data-category="reader">
+              <div class="hidden-product__mega-card-image">
+                <img
+                  src="//chemistrie.com/cdn/shop/t/15/assets/PDP-HeroImage-ClipOnly-Reader.webp?v=144917539516073478621771044031"
+                  alt="Reader Clips - Magnification lenses"
+                  loading="lazy"
+                  width="1982"
+                  height="1536"
+                />
+              </div>
+              <div class="hidden-product__mega-card-content">
+                <h4 class="hidden-product__mega-card-title">Reader</h4>
+                <p class="hidden-product__mega-card-desc">On-demand magnification from +0.50 to +2.50. Ideal for those not ready for progressives.</p>
+                <ul class="hidden-product__mega-card-features">
+                  <li>+0.50 to +2.50</li>
+                  <li>Ultra-Thin</li>
+                  <li>Hi-Vex Material</li>
+                </ul>
+                <span class="hidden-product__mega-card-cta">
+                  Shop Now
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                    <path d="M7 3L14 10L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </span>
+              </div>
+            </a><a href="/products/clip-on-blue-light-lenses" class="hidden-product__mega-card" data-category="blue-light">
+              <div class="hidden-product__mega-card-image">
+                <img
+                  src="//chemistrie.com/cdn/shop/t/15/assets/PDP-HeroImage-ClipOnly-BlueLight.webp?v=165617176303391392351771044029"
+                  alt="Blue Light Clips - Digital screen protection"
+                  loading="lazy"
+                  width="1884"
+                  height="1536"
+                />
+              </div>
+              <div class="hidden-product__mega-card-content">
+                <h4 class="hidden-product__mega-card-title">Blue Light</h4>
+                <p class="hidden-product__mega-card-desc">Block 35-50% of harmful blue light from digital devices. Reduce eye strain.</p>
+                <ul class="hidden-product__mega-card-features">
+                  <li>Digital Protection</li>
+                  <li>Plano & Powered</li>
+                  <li>Anti-Fatigue</li>
+                </ul>
+                <span class="hidden-product__mega-card-cta">
+                  Shop Now
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                    <path d="M7 3L14 10L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </span>
+              </div>
+            </a><a href="/products/clip-on-light-sensitivity-lenses" class="hidden-product__mega-card" data-category="therapeutics">
+              <div class="hidden-product__mega-card-image">
+                <img
+                  src="//chemistrie.com/cdn/shop/t/15/assets/PDP-HeroImage-ClipOnly-FL41-Light.webp?v=37818999792617472431771044030"
+                  alt="Therapeutics Clips - Migraine relief lenses"
+                  loading="lazy"
+                  width="1580"
+                  height="1536"
+                />
+              </div>
+              <div class="hidden-product__mega-card-content">
+                <h4 class="hidden-product__mega-card-title">Therapeutics</h4>
+                <p class="hidden-product__mega-card-desc">FL-41 tinted lenses and Avulux technology for migraine relief and light sensitivity.</p>
+                <ul class="hidden-product__mega-card-features">
+                  <li>Migraine Relief</li>
+                  <li>Light Sensitivity</li>
+                  <li>Avulux Certified</li>
+                </ul>
+                <span class="hidden-product__mega-card-cta">
+                  Shop Now
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                    <path d="M7 3L14 10L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </span>
+              </div>
+            </a><a href="/products/clip-on-3d-lenses" class="hidden-product__mega-card" data-category="3d">
+              <div class="hidden-product__mega-card-image">
+                <img
+                  src="//chemistrie.com/cdn/shop/t/15/assets/PDP-HeroImage-ClipOnly-3D.webp?v=16853727479848377671771044028"
+                  alt="3D Clips - Polarized cinema glasses"
+                  loading="lazy"
+                  width="1516"
+                  height="1536"
+                />
+              </div>
+              <div class="hidden-product__mega-card-content">
+                <h4 class="hidden-product__mega-card-title">3D</h4>
+                <p class="hidden-product__mega-card-desc">Custom 3D polarized clips for movies. Fits directly over prescription glasses.</p>
+                <ul class="hidden-product__mega-card-features">
+                  <li>Movie Theater</li>
+                  <li>Home Cinema</li>
+                  <li>Reusable</li>
+                </ul>
+                <span class="hidden-product__mega-card-cta">
+                  Shop Now
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                    <path d="M7 3L14 10L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </span>
+              </div>
+            </a><a href="/products/clip-on-night-driving-lenses" class="hidden-product__mega-card" data-category="driving">
+              <div class="hidden-product__mega-card-image">
+                <img
+                  src="//chemistrie.com/cdn/shop/t/15/assets/PDP-HeroImage-ClipOnly-Driving.webp?v=74500937453896429201771044030"
+                  alt="Driving Clips - Night driving glare reduction"
+                  loading="lazy"
+                  width="1792"
+                  height="1536"
+                />
+              </div>
+              <div class="hidden-product__mega-card-content">
+                <h4 class="hidden-product__mega-card-title">Night Driving</h4>
+                <p class="hidden-product__mega-card-desc">Reduce glare from oncoming headlights. Enhanced nighttime vision.</p>
+                <ul class="hidden-product__mega-card-features">
+                  <li>Glare Reduction</li>
+                  <li>565-595nm Filter</li>
+                  <li>Enhanced Contrast</li>
+                </ul>
+                <span class="hidden-product__mega-card-cta">
+                  Shop Now
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                    <path d="M7 3L14 10L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </span>
+              </div>
+            </a>
+
+          </div><div class="hidden-product__fade hidden-product__fade--right"></div>
+        </div><button class="hidden-product__scroll-arrow hidden-product__scroll-arrow--right" aria-label="Scroll right">
+          <svg width="24" height="48" viewBox="0 0 24 48" fill="none">
+            <path d="M8 12L16 24L8 36" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+
+
+
+
+</section>
+    </main>
+
+    
+
+    
+    
+      <!-- BEGIN sections: footer-group -->
+<div id="shopify-section-sections--19430307594401__footer" class="shopify-section shopify-section-group-footer-group footer-section">
+
+<footer class="footer" role="contentinfo">
+  <div class="footer__container">
+
+    <!-- Top Section: Company Info, Products, Company Links -->
+    <div class="footer__top">
+
+      <!-- Left Column: Company Information -->
+      <div class="footer__column footer__company">
+        <!-- Logo -->
+        <div class="footer__logo">
+          
+            <img src="//chemistrie.com/cdn/shop/t/15/assets/Chemistrie-Footer-Logo-White.svg?v=150896971920860988201776889833"
+                 alt="Chemistrie"
+                 class="footer__logo-image"
+                 width="240"
+                 height="auto">
+          
+        </div>
+
+        <!-- Tagline - Hidden as requested -->
+        
+
+        <!-- Description -->
+        <p class="footer__description">Pioneering clip-on lens technology that transforms ordinary eyewear into specialized vision solutions for professionals and patients worldwide.</p>
+
+        <!-- Newsletter Signup -->
+        <div class="footer__newsletter">
+          <h4 class="footer__newsletter-title">Stay Informed</h4>
+          <form method="post" action="/contact#contact_form" id="contact_form" accept-charset="UTF-8" class="footer__newsletter-form"><input type="hidden" name="form_type" value="customer" /><input type="hidden" name="utf8" value="✓" />
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            
+              <div class="footer__newsletter-wrapper">
+                <input
+                  type="email"
+                  name="contact[email]"
+                  placeholder="Enter your email"
+                  required
+                  class="footer__newsletter-input"
+                  autocomplete="email"
+                >
+                <button type="submit" class="footer__newsletter-button">
+                  Subscribe
+                </button>
+              </div>
+              
+            
+          </form>
+        </div>
+      </div>
+
+      <!-- Middle Column: Products -->
+      <div class="footer__column footer__products">
+        <h4 class="footer__column-title">PRODUCTS</h4>
+        <ul class="footer__list">
+          
+            
+              <li class="footer__list-item">
+                <a href="/products/clip-on-sun-lenses" class="footer__link">Sun</a>
+              </li>
+            
+              <li class="footer__list-item">
+                <a href="/products/clip-on-reader-lenses" class="footer__link">Readers</a>
+              </li>
+            
+              <li class="footer__list-item">
+                <a href="/products/clip-on-blue-light-lenses" class="footer__link">Blue Light</a>
+              </li>
+            
+              <li class="footer__list-item">
+                <a href="/products/clip-on-3d-lenses" class="footer__link">3D</a>
+              </li>
+            
+              <li class="footer__list-item">
+                <a href="/products/clip-on-night-driving-lenses" class="footer__link">Night Drive</a>
+              </li>
+            
+              <li class="footer__list-item">
+                <a href="/products/clip-on-light-sensitivity-lenses" class="footer__link">Therapeutics</a>
+              </li>
+            
+          
+        </ul>
+      </div>
+
+      <!-- Right Column: Company -->
+      <div class="footer__column footer__company-links">
+        <h4 class="footer__column-title">COMPANY</h4>
+        <ul class="footer__list">
+          
+            
+              <li class="footer__list-item">
+                <a href="/pages/about-us" class="footer__link">About Us</a>
+              </li>
+            
+              <li class="footer__list-item">
+                <a href="/pages/store-locator" class="footer__link">Locations</a>
+              </li>
+            
+              <li class="footer__list-item">
+                <a href="/blogs/general" class="footer__link">Blog</a>
+              </li>
+            
+              <li class="footer__list-item">
+                <a href="/pages/faq" class="footer__link">FAQ</a>
+              </li>
+            
+              <li class="footer__list-item">
+                <a href="/pages/reviews" class="footer__link">Reviews</a>
+              </li>
+            
+              <li class="footer__list-item">
+                <a href="/pages/contact" class="footer__link">Contact</a>
+              </li>
+            
+              <li class="footer__list-item">
+                <a href="https://af.uppromote.com/chemistrie/register" class="footer__link">Affiliate</a>
+              </li>
+            
+          
+        </ul>
+      </div>
+    </div>
+
+    <!-- Middle Section: ECP Section -->
+    <div class="footer__middle">
+      <div class="footer__ecp-content">
+        <div class="footer__ecp-info">
+          <h3 class="footer__ecp-title">For Eye Care Professionals</h3>
+          <p class="footer__ecp-description">Access exclusive resources, technical documentation, and professional support tools.</p>
+        </div>
+        <div class="footer__ecp-links">
+          
+            
+              <a href="https://www.forecps.com/" class="footer__ecp-link" >
+                ECP Portal
+              </a>
+            
+          
+            
+              <a href="https://www.forecps.com/lab-services/" class="footer__ecp-link" >
+                Lab Services
+              </a>
+            
+          
+            
+              <a href="https://www.forecps.com/technical-information/" class="footer__ecp-link" >
+                Technical Docs
+              </a>
+            
+          
+          
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Section: Copyright and Social -->
+    <div class="footer__bottom">
+      <div class="footer__bottom-content">
+        <!-- Left: Copyright and Legal -->
+        <div class="footer__copyright">
+          <span>&copy; 2026 Eyenavision, Inc.</span>
+          
+            
+              <a href="/policies/privacy-policy" class="footer__legal-link">Privacy</a>
+            
+            
+              <a href="/policies/refund-policy" class="footer__legal-link">Returns</a>
+            
+            
+              <a href="/policies/terms-of-service" class="footer__legal-link">Terms</a>
+            
+            <a href="/pages/data-sharing-opt-out" class="footer__legal-link">Do Not Sell My Info</a>
+          
+        </div>
+
+        <!-- Right: Social Media -->
+        <div class="footer__social">
+          <div class="footer__social-links">
+            <!-- LinkedIn -->
+            
+              <a href="https://www.linkedin.com/company/eyenavision-inc-/" class="footer__social-link" target="_blank" rel="noopener" aria-label="LinkedIn">
+                <img src="//chemistrie.com/cdn/shop/t/15/assets/Footer-Icon-LinkedIn.png?v=71967315286260868291771043999"
+                     alt="LinkedIn"
+                     width="20"
+                     height="20">
+              </a>
+            
+
+            <!-- Facebook -->
+            
+              <a href="https://www.facebook.com/chemistrieclips" class="footer__social-link" target="_blank" rel="noopener" aria-label="Facebook">
+                <img src="//chemistrie.com/cdn/shop/t/15/assets/Footer-Icon-Facebook.png?v=17724953153482017211771043998"
+                     alt="Facebook"
+                     width="20"
+                     height="20">
+              </a>
+            
+
+            <!-- Instagram -->
+            
+              <a href="https://www.instagram.com/chemistrieclips/" class="footer__social-link" target="_blank" rel="noopener" aria-label="Instagram">
+                <img src="//chemistrie.com/cdn/shop/t/15/assets/Footer-Icon-Instagram.png?v=83792897743690217061771043998"
+                     alt="Instagram"
+                     width="20"
+                     height="20">
+              </a>
+            
+
+            <!-- YouTube -->
+            
+              <a href="https://www.youtube.com/@eyenavisioninc.3019" class="footer__social-link" target="_blank" rel="noopener" aria-label="YouTube">
+                <img src="//chemistrie.com/cdn/shop/t/15/assets/Footer-Icon-YouTube.png?v=44108807069862198611771044000"
+                     alt="YouTube"
+                     width="20"
+                     height="20">
+              </a>
+            
+
+            <!-- Twitter/X -->
+            
+              <a href="/pages/data-sharing-opt-out" class="footer__social-link" target="_blank" rel="noopener" aria-label="Twitter">
+                <img src="//chemistrie.com/cdn/shop/t/15/assets/Footer-Icon-Twitter.png?v=111972086016760815781771043999"
+                     alt="Twitter"
+                     width="20"
+                     height="20">
+              </a>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</footer>
+
+
+
+
+
+</div>
+<!-- END sections: footer-group -->
+    
+
+    
+    <script src="//chemistrie.com/cdn/shop/t/15/assets/cart-state-manager.js?v=148078405062494762661772495896" defer></script>
+
+    
+    
+
+<!-- Backdrop Overlay -->
+<div class="cart-drawer-backdrop" data-cart-drawer-backdrop></div><!-- Cart Drawer Container -->
+<div class="cart-drawer" data-cart-drawer>
+  <div class="cart-drawer__inner">
+
+    <!-- Header -->
+    <div class="cart-drawer__header">
+      <h2 class="cart-drawer__title">
+        Shopping cart
+        <span class="cart-drawer__count" data-cart-count>
+          (0)
+        </span>
+      </h2>
+      <button
+        class="cart-drawer__close"
+        data-cart-drawer-close
+        aria-label="Close cart">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Cart Content (Rendered via Section Rendering API) --><div data-section="cart-drawer-items"><div class="cart-drawer__empty">
+          <svg class="cart-drawer__empty-icon" width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 16L12 48H52L56 16H8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M21.3333 16V10.6667C21.3333 7.72115 23.7211 5.33333 26.6667 5.33333H37.3333C40.2789 5.33333 42.6667 7.72115 42.6667 10.6667V16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p class="cart-drawer__empty-message">Your cart is currently empty.</p>
+          <a href="/collections/all" class="chemistrie-button chemistrie-button--primary">
+            Continue shopping
+          </a>
+        </div></div>
+  </div>
+</div>
+
+
+
+    <script src="//chemistrie.com/cdn/shop/t/15/assets/cart-drawer.js?v=94841469781184246861776889833" defer></script>
+
+    
+    <script src="//chemistrie.com/cdn/shop/t/15/assets/cart-add-another-clip.js?v=78718808707822234581771043912" defer></script>
+
+    
+    <script src="//chemistrie.com/cdn/shop/t/15/assets/cart-edit-clip.js?v=120471670733159656861775245102" defer></script>
+
+    
+    
+    <div class="order-flow-minimized-icon" id="minimized-icon-global"
+         role="button" tabindex="0" aria-label="Return to customizer">
+      <span class="minimized-icon-text">Back to Customizer</span>
+    </div>
+
+    
+    <style>
+      /* ========================================
+         Order Flow Minimized Button - Vertical Right-Edge
+         ======================================== */
+
+      .order-flow-minimized-icon {
+        /* Hidden by default - shown via JS */
+        display: none;
+
+        /* Positioning - flush to right edge, vertically centered */
+        position: fixed;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 3499;
+
+        /* Dimensions */
+        width: 48px;
+        height: auto;
+        max-height: 80vh; /* Safety for very short screens */
+        padding: 24px 12px;
+
+        /* Glassmorphism styling */
+        background: linear-gradient(135deg, rgba(234, 50, 36, 0.95) 0%, rgba(196, 18, 48, 0.95) 100%);
+        border: 3px solid rgba(255, 255, 255, 0.8);
+        border-right: none; /* Flush to edge */
+        border-radius: 16px 0 0 16px; /* Rounded left corners only */
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        box-shadow: -4px 0 32px rgba(234, 50, 36, 0.4),
+                    0 2px 8px rgba(0, 0, 0, 0.2),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+        /* Cursor & transitions */
+        cursor: pointer;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                    box-shadow 0.3s ease;
+      }
+
+      .minimized-icon-text {
+        /* Vertical text - reads bottom to top */
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        transform: rotate(180deg);
+
+        /* Typography */
+        color: white;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        white-space: nowrap;
+      }
+
+      /* Hover: slide out slightly from edge */
+      .order-flow-minimized-icon:hover {
+        transform: translateY(-50%) translateX(-8px);
+        box-shadow: -8px 0 48px rgba(234, 50, 36, 0.6),
+                    0 4px 16px rgba(0, 0, 0, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      }
+
+      /* Active/pressed state */
+      .order-flow-minimized-icon:active {
+        transform: translateY(-50%) translateX(-4px);
+      }
+
+      /* Focus state for accessibility */
+      .order-flow-minimized-icon:focus-visible {
+        outline: 3px solid rgba(255, 255, 255, 0.9);
+        outline-offset: 2px;
+      }
+
+      /* ========================================
+         Hide on order flow page
+         ======================================== */
+      body.template-page.page-order-flow .order-flow-minimized-icon,
+      body.template-page.page-order-flow #minimized-icon-global {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+      }
+
+      /* ========================================
+         Tablet Styles (768px and below)
+         ======================================== */
+      @media (max-width: 768px) {
+        .order-flow-minimized-icon {
+          width: 36px;
+          padding: 16px 8px;
+          border-radius: 10px 0 0 10px;
+        }
+
+        .minimized-icon-text {
+          font-size: 11px;
+        }
+
+        /* Smaller slide-out distance on mobile */
+        .order-flow-minimized-icon:hover {
+          transform: translateY(-50%) translateX(-4px);
+        }
+      }
+
+      /* ========================================
+         Phone Styles (480px and below)
+         ======================================== */
+      @media (max-width: 480px) {
+        .order-flow-minimized-icon {
+          width: 32px;
+          padding: 12px 6px;
+        }
+
+        .minimized-icon-text {
+          font-size: 10px;
+        }
+      }
+    </style>
+
+    <script>
+      // Global floating button click handler
+      document.addEventListener('DOMContentLoaded', function() {
+        const globalIcon = document.getElementById('minimized-icon-global');
+        if (!globalIcon) return;
+
+        // Preload order flow page on hover for instant transition
+        globalIcon.addEventListener('mouseenter', function() {
+          const existingPrefetch = document.querySelector('link[rel="prefetch"][href="/pages/order-flow"]');
+          if (!existingPrefetch) {
+            const link = document.createElement('link');
+            link.rel = 'prefetch';
+            link.href = '/pages/order-flow';
+            document.head.appendChild(link);
+          }
+        });
+
+        const clickHandler = () => {
+          const currentPage = window.location.pathname;
+          if (!currentPage.includes('/pages/order-flow')) {
+            // Navigate to order flow page
+            window.location.href = '/pages/order-flow';
+          }
+        };
+
+        globalIcon.addEventListener('click', clickHandler);
+        globalIcon.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            clickHandler();
+          }
+        });
+
+        // Function to check and show button if needed with GSAP animation
+        function checkAndShowButton() {
+          try {
+            const isMinimized = localStorage.getItem('orderFlowMinimized') === 'true';
+            const isOrderFlowPage = window.location.pathname.includes('/pages/order-flow');
+
+            // Show button if minimized AND not on order flow page
+            if (isMinimized && !isOrderFlowPage) {
+              // Check if GSAP is available
+              if (typeof gsap !== 'undefined') {
+                // Set initial state (off-screen to the right)
+                gsap.set(globalIcon, {
+                  display: 'block',
+                  x: 100,  // Start 100px off-screen to the right
+                  opacity: 0
+                });
+
+                // Slide IN from right edge
+                gsap.to(globalIcon, {
+                  x: 0,
+                  opacity: 1,
+                  duration: 0.4,
+                  ease: 'power2.out',
+                  force3D: true,
+                  clearProps: 'x,opacity'  // Clear x so CSS hover transform works
+                });
+              } else {
+                // Fallback if GSAP not loaded yet
+                globalIcon.style.display = 'block';
+              }
+            } else {
+              globalIcon.style.display = 'none';
+            }
+          } catch (e) {
+            console.warn('[Global Button] Error:', e);
+          }
+        }
+
+        // Check on initial load
+        checkAndShowButton();
+
+        // Also check when page is shown (handles browser back/forward with bfcache)
+        window.addEventListener('pageshow', function(event) {
+          console.log('[Global Button] pageshow event, persisted:', event.persisted);
+          checkAndShowButton();
+        });
+      });
+    </script>
+  <div id="shopify-block-AK0dLVWhIdk5hVnkyc__7194384644902525832" class="shopify-block shopify-app-block">
+
+
+  <!-- BEGIN app snippet: frontend_v1_init -->
+
+
+  <script src="https://cdn.shopify.com/extensions/019dd9cb-acfd-79f2-a053-3d7325a9d7fb/fokkio-gift-with-purchase-375/assets/v1-sdk.js" defer="defer" type="module"></script>
+
+
+<link href="//cdn.shopify.com/extensions/019dd9cb-acfd-79f2-a053-3d7325a9d7fb/fokkio-gift-with-purchase-375/assets/v1-style.css" rel="stylesheet" type="text/css" media="all" />
+
+
+
+
+
+
+
+<script>
+  // Global config
+  
+    window.FokkioAppConfig = {"subscribe_to_cart_requests":true,"trigger_promo_and_open_checkout_enabled":false,"is_active_subscription":false,"is_sdk_logs_enabled":false,"better_stack_source_token":"mnVYuzXZiKAwMM2C2WhfkxxJ","hide_property_in_theme_cart":false,"sdk_overwrite_links_use_stop_propagation":false,"is_widget_render_queue_enabled":false,"is_override_cart_change_links_disabled":false,"is_override_xml_http_request_enabled":false,"is_override_buy_it_now_button":false,"is_set_removing_items_enabled_for_xml":false,"allow_multiple_widgets_render":false};
+  
+
+
+  // Selectors
+  
+    const fokkioSelectors = {"productPage":{"quantityInput":null,"volumeDiscounts":null}};
+  
+
+
+  // Products additional data
+  // See comments about usage in web/frontend/sdk/utils/LocalStorageService.tsx
+  const fokkioStoredData = localStorage.getItem("fokkio_product_additional_data");
+  const fokkioProductsAdditionalData = fokkioStoredData ? JSON.parse(fokkioStoredData) : {};
+
+  // Cart items
+  
+
+  // Product
+  
+
+  // Collection products for debugging
+  window.fokkioDebugProducts = [];
+  
+
+
+
+  // Set local storage
+  localStorage.setItem("fokkio_product_additional_data", JSON.stringify(fokkioProductsAdditionalData));
+
+  function getLinkFromLocalStorage() {
+    const ssslParam = fokkioReferrerParams.get('sssl');
+    if (ssslParam) {
+      const payload = {
+        link: ssslParam,
+        savedAt: Date.now()
+      }
+      localStorage.setItem("fokkio_specific_link_param", JSON.stringify(payload));
+      return ssslParam;
+    }
+
+    const params = localStorage.getItem("fokkio_specific_link_param");
+    if (params) {
+      try {
+        const payload = JSON.parse(params);
+        const diffMs = Date.now() - new Date(payload.savedAt).getTime();
+        const diffSec = diffMs / 1000;
+        const diffMin = diffSec / 60;
+        const diffHours = diffMin / 60;
+        const diffDays = diffHours / 24;
+
+        if (diffDays > 5) {
+          localStorage.removeItem("fokkio_specific_link_param");
+          return null;
+        }
+
+        return payload.link;
+
+      } catch {
+        return null;
+      }
+    }
+
+    return null;
+  };
+
+  // Referrer link
+  const fokkioReferrerUrl = new URL(window.location.href);
+  const fokkioReferrerParams = new URLSearchParams(fokkioReferrerUrl.search);
+  const fokkioReferrerParamValue = getLinkFromLocalStorage();
+
+  
+    const fokkioCustomer = null;
+  
+
+  const couponCodes = localStorage.getItem("fokkio_coupon_codes");
+
+  window.FokkioShopSurprise = {
+    appUrl: "https://shop-surprise.fokkio.com",
+    promotionConfigs: [{"promotion":{"id":5915,"name":"Free Care Kit","promotion_type":"add_product_to_cart","trigger_group":{"id":"d4d4c26a-1e23-44ce-8840-8ab1227b91ad","type":"AND","triggers":{"id":"c47c815e-542d-454c-94de-2446a1ad8174","left":{"id":"33d35001-294b-48be-95b8-4318279fdf35","type":"AMOUNT","scope":"CART","amount":50,"operator":"MORE_OR_EQUAL","createdAt":"2026-01-16T01:13:34.670Z"},"type":"LINKED_LIST","right":{"id":"c443c360-e85a-4cd1-8019-a02234b8972e","type":"COUPON_CODE","scope":"GUI","operator":"IS","createdAt":"2026-01-16T18:19:41.303Z","couponCode":"YQJRDFRFYD0G"},"operator":"AND"}},"notification_type":"none","max_usage_limit_per_order":1,"action_data":[{"id":"8c5672dc-7e7e-4fbb-ac26-b797ae9d44fc","action":"automatically_add_product","discount":{"kind":"none","discounted_value":0},"variants":[{"id":"gid://shopify/ProductVariant/45643476828321","image":"https://cdn.shopify.com/s/files/1/0681/3230/7105/files/Eyeglasses-Cleaning-Kit.webp?v=1768508324","price":30,"title":"Care Kit - Default Title","quantity":1,"product_id":"gid://shopify/Product/8395807260833","productTitle":"Care Kit","variantTitle":"Default Title","availableForSale":true}]}],"skip_gift_adding_after_customer_removal":false,"skip_gift_adding_after_customer_removal_delay":84600,"add_default_gift_on_close":false,"start_datetime":null,"finish_datetime":null},"widgets":{"popup":{"id":15505,"custom_js":"","custom_css":"","title_text":"Your Order Just Got Better!","title_color":"111827","border_color":"ffffff","message_text":"Congratulations, you have successfully added a free gift to your cart! To check your gift, click on the the button below. We hope you enjoy your gift!","message_color":"6B7280","close_btn_text":"Thanks","showAfterDelay":{"seconds":""},"close_btn_color":"111827","title_font_size":"18","use_custom_font":"false","background_color":"ebeef3","title_font_style":"","message_font_size":"14","title_font_weight":"","custom_font_family":"","message_font_style":"","open_cart_btn_link":"/cart","open_cart_btn_text":"Check My Cart","close_btn_font_size":"14","message_font_weight":"","open_cart_btn_color":"ffffff","close_btn_font_style":"","selected_font_family":"'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif","close_btn_font_weight":"","title_font_decoration":"","close_btn_border_color":"","message_font_decoration":"","open_cart_btn_font_size":"14","open_cart_btn_font_style":"","close_btn_font_decoration":"","open_cart_btn_font_weight":"","close_btn_background_color":"ffffff","open_cart_btn_border_color":"","open_cart_btn_text_checkout":"Check My Checkout","open_cart_btn_font_decoration":"","open_cart_btn_background_color":"000000","image":null},"sticky_bar":{"id":15506,"custom_js":"","custom_css":"","title_text":"Your Order Just Got Better!","title_color":"111827","message_text":"We have added a free gift to your cart! To check your gift, click on the the button below. We hope you enjoy your gift!","message_color":"6B7280","showAfterDelay":{"seconds":""},"title_font_size":"18","use_custom_font":"false","background_color":"ebeef3","title_font_style":"","message_font_size":"14","title_font_weight":"","custom_font_family":"","message_font_style":"","message_font_weight":"","selected_font_family":"'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif","title_font_decoration":"","message_font_decoration":""},"banner":{"id":15504,"custom_js":"","custom_css":"","title_text":"Surprise!","title_color":"111827","message_text":"Enjoy a free gift as our way of saying thank.","message_color":"6B7280","showAfterDelay":{"seconds":""},"title_font_size":"16","use_custom_font":"false","background_color":"ffffff","title_font_style":"","message_font_size":"14","title_font_weight":"","custom_font_family":"","message_font_style":"","message_font_weight":"","selected_font_family":"'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif","title_font_decoration":"","message_font_decoration":"","image":null}}}],
+    selectors: fokkioSelectors,
+    config: window.FokkioAppConfig,
+    shopify: {
+      domain: window.Shopify.shop,
+      customer: fokkioCustomer,
+      cart: {"note":null,"attributes":{},"original_total_price":0,"total_price":0,"total_discount":0,"total_weight":0.0,"item_count":0,"items":[],"requires_shipping":false,"currency":"USD","items_subtotal_price":0,"cart_level_discount_applications":[],"checkout_charge_amount":0},
+      templateName: "404",
+      product: null,
+      currency: window.Shopify.currency,
+    },
+    sdkCartWatcherTimer: 1000,
+    specificLink: fokkioReferrerParamValue,
+    couponCodes: couponCodes ? new Set(JSON.parse(couponCodes)) : new Set()
+  };
+
+</script>
+<!-- END app snippet -->
+
+
+
+</div><div id="shopify-block-AeWtjZE1LT2Irb3pva__7079518687644006178" class="shopify-block shopify-app-block"><script>
+  (function () {
+    const cartAttributes = {};
+
+    // Helper function to retrieve the UTM from Url
+    function getUTMFromUrl() {
+      const url_string = window.location.href;
+      const url = new URL(url_string);
+
+      const utm_id = url.searchParams.get("utm_id");
+      const utm_source = url.searchParams.get("utm_source");
+      const utm_medium = url.searchParams.get("utm_medium");
+      const utm_campaign = url.searchParams.get("utm_campaign");
+      const utm_term = url.searchParams.get("utm_term");
+      const ref = url.searchParams.get("ref");
+
+      if (!utm_id && !utm_source && !utm_medium && !utm_campaign && !ref) {
+        return null;
+      }
+
+      let utmParameters = {};
+      
+        if (utm_id) {
+          utmParameters.utm_id = utm_id;
+        }
+        if (utm_source) {
+          utmParameters.utm_source = utm_source;
+        }
+        if (utm_medium) {
+          utmParameters.utm_medium = utm_medium;
+        }
+        if (utm_campaign) {
+          utmParameters.utm_campaign = utm_campaign;
+        }
+        if (utm_term) {
+          utmParameters.utm_term = utm_term;
+        }
+        if (ref) {
+          utmParameters.ref = ref;
+        }
+      
+
+      return Object.keys(utmParameters).length === 0
+        ? null
+        : utmParameters;
+    }
+
+    // Helper function to retrieve the UTM from Cookie
+    function getUTMAttributes() {
+      const urlUtmParams = getUTMFromUrl();
+
+      if (urlUtmParams) {
+          return urlUtmParams;
+      }
+
+      // No longer reading from deprecated Shopify cookies
+      return undefined;
+    }
+
+    function saveUtmParameters() {
+      const utmParams = getUTMAttributes();
+      if (utmParams) {
+        const cartHasUtmAttributes = Object.keys(cartAttributes).find(attributeKey => attributeKey.startsWith("utm_") || attributeKey === "ref");
+        if (cartHasUtmAttributes) {
+          // Don't call API if it already contains our UTM parameters
+          return;
+        }
+
+        // Handle both Shopify.routes.root and routes.root_url for better compatibility
+        var rootUrl = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) 
+          || (window.routes && window.routes.root_url) 
+          || '/';
+        
+        var updateCart = fetch(rootUrl + 'cart/update.js',
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: "POST",
+          body: JSON.stringify({
+            attributes: {
+              ...utmParams
+            },
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          return data
+        });
+      }
+    }
+
+    saveUtmParameters();
+  })();
+</script>
+
+
+
+
+</div></body>
+</html>

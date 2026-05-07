@@ -34,6 +34,7 @@ type ResourceItem = {
   icon?: string;
   logo?: string;
   logoAlt?: string;
+  pending?: boolean;
 };
 
 type ProductVisual = {
@@ -102,6 +103,523 @@ type SingleLogoCard = LogoCard & {
   logo: string;
   logoAlt: string;
 };
+
+type DownloadResourceItem = {
+  title: string;
+  description: string;
+  label: string;
+  filename?: string;
+  externalHref?: string;
+  cta?: string;
+};
+
+type DownloadResourceSection = {
+  id: string;
+  title: string;
+  description: string;
+  eyebrow: string;
+  logo?: string;
+  logoAlt?: string;
+  logoClass?: string;
+  resources: DownloadResourceItem[];
+};
+
+const localResourceFiles = new Set([
+  "ArtisanDesigns/cds_bifocal.pdf",
+  "ArtisanDesigns/diamond_series.pdf",
+  "ArtisanDesigns/gold_series.pdf",
+  "ArtisanDesigns/platinum_series.pdf",
+  "ArtisanDesigns/ps_ultra_short.pdf",
+  "ArtisanDesigns/sd_concept.pdf",
+  "ArtisanDesigns/sd_digital.pdf",
+  "ArtisanDesigns/sd_radius.pdf",
+  "ArtisanDesigns/sd_reach.pdf",
+  "modern-frame-book.pdf",
+  "armou-rx-frame-book.pdf",
+  "dvx-wileyx-frame-book.pdf",
+  "wileyx-frame-book.pdf",
+  "artcraft-frame-book.pdf",
+  "safevision-frame-book.pdf",
+  "tokai-select-guide.pdf",
+  "tokai-bias-sv-guide.pdf",
+  "tokai-reset-guide.pdf",
+  "tokai-largo-guide.pdf",
+  "tokai-tint-guide.pdf",
+  "varilux-product-guide.pdf",
+  "varilux-comfort.pdf",
+  "varilux-xr-series.pdf",
+  "varilux-x-series.pdf",
+  "varilux-comfort-max.pdf",
+  "crizal-product-guide.pdf",
+  "hoya-product-guide.pdf",
+  "hoya-centration-charts.pdf",
+  "hoya-id-lifestyle-4.pdf",
+  "iot-centration-charts.pdf",
+  "iot-portfolio-guide.pdf",
+  "iot-camber-pure.pdf",
+  "camber-steady-plus.pdf",
+  "endless-steady.pdf",
+  "essential-steady.pdf",
+  "iot-comparison-guide.pdf",
+  "endless-office.pdf",
+  "endless-plus.pdf",
+  "endless-office-degression-chart.pdf",
+  "neochromes-guide.pdf",
+  "shamir-quick-reference.pdf",
+  "shamir-dispensing-guide.pdf",
+  "shamir-driver-intelligence.pdf",
+  "unity-v3-sales-guide.pdf",
+  "unity-v3-whitepaper.pdf",
+  "unity-v3-product-guide.pdf",
+  "techshield-ar-guide.pdf",
+  "sunsync-product-guide.pdf",
+  "neurolens-provider-brochure.pdf",
+  "sequel-lens-overview.pdf",
+  "chemistrie-clip-system.pdf",
+]);
+
+const downloadResourceSections: DownloadResourceSection[] = [
+  {
+    id: "artisan-designs",
+    title: "Artisan Designs & Training",
+    eyebrow: "Centration Charts",
+    description:
+      "Download centration charts and fitting references for Artisan lens designs. These tools help confirm measurements, placement, and design selection before ordering.",
+    logo: "/aln-icon.png",
+    logoAlt: "Artisan Lab Network",
+    logoClass: "h-14 w-14",
+    resources: [
+      {
+        title: "CDS Bifocal",
+        description: "Centration and fitting reference for CDS Bifocal orders.",
+        label: "Artisan Designs",
+        filename: "ArtisanDesigns/cds_bifocal.pdf",
+      },
+      {
+        title: "Diamond Series",
+        description: "Measurement and placement guide for Diamond Series designs.",
+        label: "Artisan Designs",
+        filename: "ArtisanDesigns/diamond_series.pdf",
+      },
+      {
+        title: "Gold Series",
+        description: "Fitting reference for Gold Series lens design selection.",
+        label: "Artisan Designs",
+        filename: "ArtisanDesigns/gold_series.pdf",
+      },
+      {
+        title: "Platinum Series",
+        description: "Centration chart for Platinum Series ordering support.",
+        label: "Artisan Designs",
+        filename: "ArtisanDesigns/platinum_series.pdf",
+      },
+      {
+        title: "PS Ultra Short",
+        description: "Fitting reference for PS Ultra Short measurements and placement.",
+        label: "Artisan Designs",
+        filename: "ArtisanDesigns/ps_ultra_short.pdf",
+      },
+      {
+        title: "SD Concept",
+        description: "Centration chart for SD Concept lens designs.",
+        label: "Artisan Designs",
+        filename: "ArtisanDesigns/sd_concept.pdf",
+      },
+      {
+        title: "SD Digital",
+        description: "Fitting reference for SD Digital lens design placement.",
+        label: "Artisan Designs",
+        filename: "ArtisanDesigns/sd_digital.pdf",
+      },
+      {
+        title: "SD Radius",
+        description: "Centration guide for SD Radius ordering support.",
+        label: "Artisan Designs",
+        filename: "ArtisanDesigns/sd_radius.pdf",
+      },
+      {
+        title: "SD Reach",
+        description: "Fitting reference for SD Reach design selection and measurements.",
+        label: "Artisan Designs",
+        filename: "ArtisanDesigns/sd_reach.pdf",
+      },
+      {
+        title: "IOT Camber Steady Plus Training Video",
+        description: "Training for Camber Steady Plus positioning, fitting, and practical dispensing conversations.",
+        label: "Training",
+        externalHref: "https://youtu.be/phvH3ahy2e4",
+        cta: "View Video",
+      },
+    ],
+  },
+  {
+    id: "iot",
+    title: "IOT",
+    eyebrow: "Artisan Lens Systems",
+    description: "IOT and Artisan Lens Systems resources for design selection, centration, occupational lenses, and product comparisons.",
+    logo: "/iot-logo.png",
+    logoAlt: "IOT",
+    logoClass: "max-h-14 max-w-[180px]",
+    resources: [
+      {
+        title: "IOT Centration Charts",
+        description: "Fitting and centration charts for IOT-powered lens designs.",
+        label: "IOT",
+        filename: "iot-centration-charts.pdf",
+      },
+      {
+        title: "IOT Portfolio Guide",
+        description: "Portfolio overview for IOT lens designs and platform options.",
+        label: "IOT",
+        filename: "iot-portfolio-guide.pdf",
+      },
+      {
+        title: "IOT Camber Pure",
+        description: "Camber Pure guide for IOT-powered lens recommendations.",
+        label: "IOT",
+        filename: "iot-camber-pure.pdf",
+      },
+      {
+        title: "Camber Steady Plus",
+        description: "Artisan Lens Systems guide for Camber Steady Plus recommendations.",
+        label: "Artisan Lens Systems",
+        filename: "camber-steady-plus.pdf",
+      },
+      {
+        title: "Endless Steady",
+        description: "Lens system reference for Endless Steady positioning and dispensing.",
+        label: "Artisan Lens Systems",
+        filename: "endless-steady.pdf",
+      },
+      {
+        title: "Essential Steady",
+        description: "Lens system reference for Essential Steady product selection.",
+        label: "Artisan Lens Systems",
+        filename: "essential-steady.pdf",
+      },
+      {
+        title: "Product Comparison Guide",
+        description: "Comparison guide for Artisan lens systems and recommendation paths.",
+        label: "Artisan Lens Systems",
+        filename: "iot-comparison-guide.pdf",
+      },
+      {
+        title: "Endless Office",
+        description: "Occupational lens guide for workspace-specific visual needs.",
+        label: "Artisan Lens Systems",
+        filename: "endless-office.pdf",
+      },
+      {
+        title: "Endless Plus",
+        description: "Lens system guide for Endless Plus product conversations.",
+        label: "Artisan Lens Systems",
+        filename: "endless-plus.pdf",
+      },
+      {
+        title: "Endless Office Degression Chart",
+        description: "Degression chart for fitting and explaining Endless Office options.",
+        label: "Artisan Lens Systems",
+        filename: "endless-office-degression-chart.pdf",
+      },
+      {
+        title: "Neochromes",
+        description: "Photochromic lens guide for Neochromes product conversations.",
+        label: "Artisan Lens Systems",
+        filename: "neochromes-guide.pdf",
+      },
+    ],
+  },
+  {
+    id: "tokai",
+    title: "Tokai",
+    eyebrow: "Lens Guides",
+    description: "Tokai lens guides for material, design, tint, and reset conversations.",
+    logo: "/tokai-logo.png",
+    logoAlt: "Tokai",
+    logoClass: "max-h-14 max-w-[180px]",
+    resources: [
+      {
+        title: "Tokai Select Guide",
+        description: "Overview guide for Tokai Select options and positioning.",
+        label: "Tokai",
+        filename: "tokai-select-guide.pdf",
+      },
+      {
+        title: "Tokai Bi-AS SV Guide",
+        description: "Single vision Bi-AS reference for fitting and product selection.",
+        label: "Tokai",
+        filename: "tokai-bias-sv-guide.pdf",
+      },
+      {
+        title: "Tokai Reset Guide",
+        description: "Tokai Reset resource for patient conversations and dispensing support.",
+        label: "Tokai",
+        filename: "tokai-reset-guide.pdf",
+      },
+      {
+        title: "Tokai Largo Guide",
+        description: "Tokai Largo guide for product positioning and lens selection.",
+        label: "Tokai",
+        filename: "tokai-largo-guide.pdf",
+      },
+      {
+        title: "Tokai Tint Guide",
+        description: "Tint reference for Tokai lens options and patient preferences.",
+        label: "Tokai",
+        filename: "tokai-tint-guide.pdf",
+      },
+    ],
+  },
+  {
+    id: "varilux-crizal",
+    title: "Varilux / Crizal",
+    eyebrow: "Essilor Resources",
+    description: "Premium Essilor lens and treatment guides for progressive and AR recommendations.",
+    logo: "/varilux-logo.png",
+    logoAlt: "Varilux",
+    logoClass: "max-h-14 max-w-[190px]",
+    resources: [
+      {
+        title: "Varilux Product Guide",
+        description: "Portfolio guide for Varilux progressive lens recommendations.",
+        label: "Varilux",
+        filename: "varilux-product-guide.pdf",
+      },
+      {
+        title: "Varilux Comfort",
+        description: "Reference sheet for Varilux Comfort features and patient fit.",
+        label: "Varilux",
+        filename: "varilux-comfort.pdf",
+      },
+      {
+        title: "Varilux XR Series",
+        description: "XR Series guide for premium progressive positioning and selection.",
+        label: "Varilux",
+        filename: "varilux-xr-series.pdf",
+      },
+      {
+        title: "Varilux X Series",
+        description: "X Series resource for design benefits and patient conversations.",
+        label: "Varilux",
+        filename: "varilux-x-series.pdf",
+      },
+      {
+        title: "Varilux Comfort Max",
+        description: "Comfort Max product guide for everyday progressive recommendations.",
+        label: "Varilux",
+        filename: "varilux-comfort-max.pdf",
+      },
+      {
+        title: "Crizal Product Guide",
+        description: "Crizal treatment guide for AR positioning and lens protection conversations.",
+        label: "Crizal",
+        filename: "crizal-product-guide.pdf",
+      },
+    ],
+  },
+  {
+    id: "hoya",
+    title: "Hoya",
+    eyebrow: "Lens Resources",
+    description: "Hoya product and fitting references for progressive lens conversations.",
+    logo: "/hoya-logo.png",
+    logoAlt: "Hoya",
+    logoClass: "max-h-14 max-w-[190px]",
+    resources: [
+      {
+        title: "Hoya Product Guide",
+        description: "Portfolio guide for Hoya lens options and patient recommendations.",
+        label: "Hoya",
+        filename: "hoya-product-guide.pdf",
+      },
+      {
+        title: "Hoya Centration Charts",
+        description: "Fitting and centration charts for Hoya lens dispensing.",
+        label: "Hoya",
+        filename: "hoya-centration-charts.pdf",
+      },
+      {
+        title: "Hoya iD LifeStyle 4",
+        description: "Product guide for Hoya iD LifeStyle 4 positioning and selection.",
+        label: "Hoya",
+        filename: "hoya-id-lifestyle-4.pdf",
+      },
+    ],
+  },
+  {
+    id: "shamir",
+    title: "Shamir",
+    eyebrow: "Lens Resources",
+    description: "Shamir reference guides for fitting, dispensing, and specialty lens conversations.",
+    logo: "/shamir-logo.png",
+    logoAlt: "Shamir",
+    logoClass: "max-h-14 max-w-[190px]",
+    resources: [
+      {
+        title: "Quick Reference Guide",
+        description: "Fast Shamir reference for design selection and team conversations.",
+        label: "Shamir",
+        filename: "shamir-quick-reference.pdf",
+      },
+      {
+        title: "Dispensing Guide",
+        description: "Fitting and dispensing guide for Shamir product success.",
+        label: "Shamir",
+        filename: "shamir-dispensing-guide.pdf",
+      },
+      {
+        title: "Driver Intelligence Sun / Moon",
+        description: "Product guide for Shamir Driver Intelligence Sun and Moon options.",
+        label: "Shamir",
+        filename: "shamir-driver-intelligence.pdf",
+      },
+    ],
+  },
+  {
+    id: "unity-vsp",
+    title: "Unity / VSP",
+    eyebrow: "Plan-Aligned Resources",
+    description: "VSP-aligned product references and treatment resources for plan-friendly dispensing.",
+    logo: "/unity-logo.png",
+    logoAlt: "Unity",
+    logoClass: "max-h-14 max-w-[190px]",
+    resources: [
+      {
+        title: "Unity V3 Sales Guide",
+        description: "Sales guide for Unity V3 lens positioning and plan conversations.",
+        label: "Unity",
+        filename: "unity-v3-sales-guide.pdf",
+      },
+      {
+        title: "Unity V3 White Paper",
+        description: "Technical white paper for Unity V3 performance and product context.",
+        label: "Unity",
+        filename: "unity-v3-whitepaper.pdf",
+      },
+      {
+        title: "Unity V3 Product Guide",
+        description: "Product guide for Unity V3 options and dispensing support.",
+        label: "Unity",
+        filename: "unity-v3-product-guide.pdf",
+      },
+      {
+        title: "TechShield AR Guide",
+        description: "Treatment guide for TechShield AR recommendations.",
+        label: "TechShield",
+        filename: "techshield-ar-guide.pdf",
+      },
+      {
+        title: "SunSync Product Guide",
+        description: "SunSync guide for photochromic product positioning.",
+        label: "SunSync",
+        filename: "sunsync-product-guide.pdf",
+      },
+    ],
+  },
+  {
+    id: "newton",
+    title: "Newton",
+    eyebrow: "Neurolens and Sequel",
+    description:
+      "Newton products help practices support patients with visual comfort solutions, including Neurolens and Sequel lens technologies.",
+    resources: [
+      {
+        title: "Neurolens Provider Guide",
+        description: "Provider guide for Neurolens conversations and practice positioning.",
+        label: "Neurolens",
+        filename: "neurolens-provider-brochure.pdf",
+      },
+      {
+        title: "Sequel Lens Overview",
+        description: "Overview guide for Sequel lens options and patient conversations.",
+        label: "Sequel",
+        filename: "sequel-lens-overview.pdf",
+      },
+    ],
+  },
+  {
+    id: "frame-systems",
+    title: "Frame Systems",
+    eyebrow: "Frame Books",
+    description: "Frame system references for cleaner complete-pair conversations and easy product selection.",
+    logo: "/images/framesystems.png",
+    logoAlt: "Frame Systems",
+    logoClass: "max-h-16 max-w-[200px]",
+    resources: [
+      {
+        title: "Modern Frame Book",
+        description: "Modern Optical frame book for practice frame selection and staff reference.",
+        label: "Modern",
+        filename: "modern-frame-book.pdf",
+      },
+    ],
+  },
+  {
+    id: "safety-systems",
+    title: "Safety Systems",
+    eyebrow: "Safety Frame Books",
+    description: "Safety frame resources for occupational eyewear programs, demos, and approved product paths.",
+    logo: "/logos/safetysystems.png",
+    logoAlt: "Safety Systems",
+    logoClass: "max-h-14 max-w-[190px]",
+    resources: [
+      {
+        title: "ArmouRx Frame Book",
+        description: "Safety frame catalog for ArmouRx product selection and occupational eyewear programs.",
+        label: "ArmouRx",
+        filename: "armou-rx-frame-book.pdf",
+      },
+      {
+        title: "DVX / Wiley X Frame Book",
+        description: "DVX and Wiley X frame options for safety, outdoor, and performance eyewear needs.",
+        label: "DVX / Wiley X",
+        filename: "dvx-wileyx-frame-book.pdf",
+      },
+      {
+        title: "Wiley X Frame Book",
+        description: "Wiley X frame book for ANSI-rated and performance-focused eyewear conversations.",
+        label: "Wiley X",
+        filename: "wileyx-frame-book.pdf",
+      },
+      {
+        title: "ArtCraft Frame Book",
+        description: "ArtCraft frame references for safety and specialty frame selection.",
+        label: "ArtCraft",
+        filename: "artcraft-frame-book.pdf",
+      },
+      {
+        title: "SafeVision Frame Book",
+        description: "SafeVision frame catalog for occupational eyewear and safety program support.",
+        label: "SafeVision",
+        filename: "safevision-frame-book.pdf",
+      },
+      {
+        title: "On Guard Frame Catalog",
+        description: "External safety frame page for On Guard frame browsing.",
+        label: "On Guard",
+        externalHref: "https://www.hilcovision.com/cp/eyewear-accessories/prescription-safety-glasses",
+        cta: "Open Webpage",
+      },
+    ],
+  },
+  {
+    id: "specialty-systems",
+    title: "Chemistrie",
+    eyebrow: "Specialty Products",
+    description: "Specialty system references for differentiated patient solutions and add-on workflows.",
+    logo: "/chemistrie-logo.png",
+    logoAlt: "Chemistrie",
+    logoClass: "max-h-14 max-w-[190px]",
+    resources: [
+      {
+        title: "Chemistrie Clip System",
+        description: "Guide for Chemistrie magnetic clip system ordering, fitting, and demos.",
+        label: "Chemistrie",
+        filename: "chemistrie-clip-system.pdf",
+      },
+    ],
+  },
+];
 
 const systems: LogoCard[] = [
   {
@@ -261,7 +779,7 @@ const mostUsedResources: ResourceItem[] = [
     type: "Download",
     description: "Compare Artisan Series options for daily dispensing conversations.",
     cta: "View Resource",
-    href: "#product-information",
+    href: "/files/iot-comparison-guide.pdf",
   },
   {
     title: "Shipping Label Request",
@@ -576,207 +1094,15 @@ function phoneHref(phone: string) {
   return `tel:${phone.replace(/\D/g, "")}`;
 }
 
-const lensBrands: BrandPanel[] = [
-  {
-    id: "artisan",
-    label: "Artisan Designs & Treatments",
-    logo: "/aln-icon.png",
-    logoAlt: "Artisan Lab Network icon",
-    logoClass: "h-14 w-14",
-    intro:
-      "Artisan Designs and Treatments are built to support independent practices with premium performance, flexible product choice, and practical tools for real world dispensing.",
-    websiteHref: "#",
-    featuredCta: {
-      title: "Artisan Portfolio Overview",
-      type: "Download",
-      description: "A quick way to review Artisan design and treatment options with your team.",
-      cta: "View Overview",
-      href: "#",
-    },
-    visualTitle: "Artisan AR Treatments",
-    visualAssets: [
-      { src: "/ar/armour.png", alt: "Armour AR treatment", label: "Armour", href: "/artisan-ar/armour" },
-      { src: "/ar/azure.png", alt: "Azure AR treatment", label: "Azure", href: "/artisan-ar/azure" },
-      { src: "/ar/emerald.png", alt: "Emerald AR treatment", label: "Emerald", href: "/artisan-ar/emerald" },
-      { src: "/ar/nytopia.png", alt: "Nytopia AR treatment", label: "Nytopia", href: "/artisan-ar/nytopia" },
-    ],
-    resources: [
-      "Design Mini Catalog",
-      "Design Brand Comparison Sheet",
-      "Treatment Guide",
-      "Treatment Comparison Sheet",
-      "Treatment Care Guide",
-      "Treatment Training Video",
-    ].map((title) => ({
-      title,
-      type: title.includes("Video") ? ("Video" as const) : ("Download" as const),
-      description: "Curated resource for presenting and dispensing Artisan design and treatment options.",
-      cta: "View Resource",
-      href: "#",
-    })),
-  },
-  {
-    id: "iot",
-    label: "IOT",
-    logo: "/iot-logo.png",
-    logoAlt: "IOT logo",
-    logoClass: "max-h-16 max-w-[210px]",
-    intro:
-      "IOT is a global optical technology company known for advanced digital lens design and flexible modern lens platforms.",
-    websiteHref: "#",
-    featuredCta: {
-      title: "Camber Guide",
-      type: "Download",
-      description: "Reference material for IOT-powered designs and fitting conversations.",
-      cta: "View Guide",
-      href: "#",
-    },
-    resources: [
-      "Endless Steady",
-      "Essential Steady",
-      "Endless Office",
-      "Endless Plus",
-      "Occupational Chart",
-      "Centration Charts",
-      "Camber Guide",
-      "Camber Availability",
-      "Training Video",
-    ].map((title) => ({
-      title,
-      type: title.includes("Video") ? ("Video" as const) : ("Download" as const),
-      description: "Curated resource for understanding and supporting IOT-specific platform options.",
-      cta: "View Resource",
-      href: "#",
-    })),
-  },
-  {
-    id: "hoya",
-    label: "Hoya",
-    logo: "/hoya-logo.png",
-    logoAlt: "Hoya logo",
-    logoClass: "max-h-16 max-w-[220px]",
-    intro: "Widely recognized lens portfolio with strong brand awareness.",
-    websiteHref: "#",
-    resources: ["Product Guide", "Centration Chart"].map((title) => ({
-      title,
-      type: "Download",
-      description: "Quick reference material for fitting and explaining Hoya options.",
-      cta: "View Resource",
-      href: "#",
-    })),
-  },
-  {
-    id: "varilux",
-    label: "Varilux / Essilor",
-    logo: "/varilux-logo.png",
-    logoAlt: "Varilux logo",
-    logoClass: "max-h-14 max-w-[240px]",
-    intro: "Recognized premium progressive designs with consumer awareness.",
-    websiteHref: "#",
-    resources: ["Product Range Guide", "Transitions"].map((title) => ({
-      title,
-      type: "Download",
-      description: "Support material for premium lens conversations and product selection.",
-      cta: "View Resource",
-      href: "#",
-    })),
-  },
-  {
-    id: "shamir",
-    label: "Shamir",
-    logo: "/shamir-logo.png",
-    logoAlt: "Shamir logo",
-    logoClass: "max-h-16 max-w-[210px]",
-    intro: "Design-driven progressive lenses with strong customization.",
-    websiteHref: "#",
-    visualTitle: "Shamir Design Resources",
-    visualAssets: [
-      { src: "/sd-concept.png", alt: "Shamir Design Concept", label: "Design Concept" },
-      { src: "/sd-digital.png", alt: "Shamir Design Digital", label: "Design Digital" },
-    ],
-    resources: ["Quick Reference Guide", "Dispensing Guide"].map((title) => ({
-      title,
-      type: "Download",
-      description: "Reference tools for fitting, dispensing, and communicating Shamir designs.",
-      cta: "View Resource",
-      href: "#",
-    })),
-  },
-  {
-    id: "unity",
-    label: "Unity",
-    logo: "/unity-logo.png",
-    logoAlt: "Unity logo",
-    logoClass: "max-h-16 max-w-[210px]",
-    intro: "VSP-aligned designs built for coverage and consistency.",
-    websiteHref: "#",
-    resources: ["V3 Sales Flyer", "Whitepaper"].map((title) => ({
-      title,
-      type: "Download",
-      description: "Useful Unity materials for plan-aligned dispensing conversations.",
-      cta: "View Resource",
-      href: "#",
-    })),
-  },
-  {
-    id: "newton",
-    label: "Newton / Neurolens",
-    logo: "/neurolens-logo.png",
-    logoAlt: "Neurolens logo",
-    logoClass: "max-h-16 max-w-[230px]",
-    intro:
-      "Newton offers specialty lens solutions designed to support modern visual needs and differentiated practice offerings.",
-    websiteHref: "#",
-    resources: ["Product Overview", "Quick Reference Guide", "Specialty Positioning Sheet"].map((title) => ({
-      title,
-      type: "Download",
-      description: "Placeholder Newton resource card ready for mapped files and training assets.",
-      cta: "View Resource",
-      href: "#",
-    })),
-  },
-  {
-    id: "younger-optics",
-    label: "Younger Optics",
-    logo: "/younger-optics-logo.png",
-    logoAlt: "Younger Optics logo",
-    logoClass: "max-h-16 max-w-[230px]",
-    intro:
-      "Younger Optics resources support teams with specialty lens options and practical patient conversations.",
-    websiteHref: "#",
-    resources: ["Product Overview", "Polarized Lens Guide", "Practice Reference Sheet"].map((title) => ({
-      title,
-      type: "Download",
-      description: "Younger Optics resource for product positioning, dispensing support, and patient education.",
-      cta: "View Resource",
-      href: "#",
-    })),
-  },
-  {
-    id: "chemistrie",
-    label: "Chemistrie",
-    logo: "/chemistrie-logo.png",
-    logoAlt: "Chemistrie logo",
-    logoClass: "max-h-16 max-w-[220px]",
-    intro:
-      "Chemistrie resources support magnetic clip lens ordering, fitting, demos, and clean patient conversations.",
-    websiteHref: "#",
-    resources: [
-      "Chemistrie Order Form",
-      "Chemistrie Demo Kit Request",
-      "Chemistrie Product Overview",
-      "Chemistrie Fitting Guide",
-    ].map((title) => ({
-      title,
-      type: title.includes("Order Form") || title.includes("Request") ? ("Form" as const) : ("Download" as const),
-      description: "Chemistrie placeholder resource ready for order forms, fitting support, and product education.",
-      cta: title.includes("Request") ? "Request Kit" : title.includes("Order Form") ? "Open Form" : "View Resource",
-      href: "#",
-    })),
-  },
-];
-
 const youtubeVideos: VideoGalleryItem[] = [
+  {
+    id: "phvH3ahy2e4",
+    title: "IOT Camber Steady Plus Training Video",
+    category: "Training",
+    href: "https://youtu.be/phvH3ahy2e4",
+    description:
+      "Training for Camber Steady Plus positioning, fitting, and practical dispensing conversations.",
+  },
   {
     id: "eFw7BzI1SZY",
     title: "ALN | Camber Pure Training Webinar",
@@ -865,9 +1191,17 @@ function ResourceLink({
   children: React.ReactNode;
   className: string;
 }) {
+  if (href.endsWith(".pdf")) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
+        {children}
+      </a>
+    );
+  }
+
   if (openExternal(href)) {
     return (
-      <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noreferrer" : undefined} className={className}>
+      <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noopener noreferrer" : undefined} className={className}>
         {children}
       </a>
     );
@@ -877,6 +1211,239 @@ function ResourceLink({
     <Link href={href} className={className}>
       {children}
     </Link>
+  );
+}
+
+function DownloadResourceCard({ resource }: { resource: DownloadResourceItem }) {
+  const href = resource.filename ? `/files/${resource.filename}` : resource.externalHref;
+  const hasLocalFile = resource.filename ? localResourceFiles.has(resource.filename) : Boolean(resource.externalHref);
+
+  return (
+    <article className="group flex h-full flex-col rounded-[22px] border border-[#e4d7c6] bg-[linear-gradient(180deg,#fff,#fbf7f0)] p-5 shadow-[0_14px_34px_rgba(24,18,13,0.055)] transition duration-300 hover:-translate-y-1 hover:border-[#d8c095] hover:shadow-[0_22px_48px_rgba(24,18,13,0.1)]">
+      <div className="flex items-start justify-between gap-4">
+        <span className="inline-flex rounded-full border border-[#dbcdb9] bg-[#fbf8f3] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8a7654]">
+          {resource.label}
+        </span>
+        {!hasLocalFile ? (
+          <span className="rounded-full border border-[#e5d2b2] bg-[#fbf3df] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8a7654]">
+            File pending
+          </span>
+        ) : null}
+      </div>
+      <h3 className="mt-5 text-xl font-semibold leading-tight text-[#1f1a17]">
+        {resource.title}
+      </h3>
+      <p className="mt-3 flex-1 text-sm leading-7 text-[#625b53]">
+        {resource.description}
+      </p>
+      {href && hasLocalFile ? (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-6 inline-flex w-fit items-center gap-2 rounded-full border border-[#d9c9ae] bg-[#1f1a17] px-4 py-2.5 text-sm font-semibold text-white shadow-[0_10px_22px_rgba(24,18,13,0.16)] transition hover:-translate-y-0.5 hover:bg-[#d4c09a] hover:text-[#1f1a17]"
+        >
+          {resource.cta ?? "Download PDF"}
+          <span aria-hidden="true">→</span>
+        </a>
+      ) : (
+        <span className="mt-6 inline-flex w-fit items-center rounded-full border border-[#e4d7c6] bg-[#fbf8f3] px-4 py-2.5 text-sm font-semibold text-[#75664e]">
+          File pending
+        </span>
+      )}
+    </article>
+  );
+}
+
+function ResourceMenuBar({
+  activeSection,
+  onSelect,
+}: {
+  activeSection: string;
+  onSelect: (sectionId: string) => void;
+}) {
+  return (
+    <>
+      <div className="mt-12 hidden gap-3 overflow-x-auto rounded-[999px] border border-black/10 bg-white p-2 shadow-[0_16px_40px_rgba(24,18,13,0.06)] md:flex">
+        {downloadResourceSections.map((item) => {
+          const active = activeSection === item.id;
+
+          return (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => onSelect(item.id)}
+              className={`shrink-0 rounded-full px-5 py-3 text-sm font-semibold transition ${
+                active
+                  ? "border-[#c9b28b] bg-[#1f1a17] text-white shadow-[0_14px_30px_rgba(24,18,13,0.18)]"
+                  : "text-[#625b53] hover:bg-[#f3eadb] hover:text-[#1f1a17]"
+              }`}
+            >
+              {item.title}
+            </button>
+          );
+        })}
+      </div>
+      <p className="mt-3 hidden text-center text-sm font-medium text-[#8a7654]/80 md:block">
+        Scroll for more →
+      </p>
+    </>
+  );
+}
+
+function resourceHref(resource: DownloadResourceItem) {
+  return resource.filename ? `/files/${resource.filename}` : resource.externalHref ?? "#";
+}
+
+function resourceIsAvailable(resource: DownloadResourceItem) {
+  return resource.filename ? localResourceFiles.has(resource.filename) : Boolean(resource.externalHref);
+}
+
+function resourceToItem(resource: DownloadResourceItem): ResourceItem {
+  const available = resourceIsAvailable(resource);
+
+  return {
+    title: resource.title,
+    type: resource.externalHref ? "External" : "Download",
+    description: resource.description,
+    cta: resource.externalHref ? resource.cta ?? "View Resource" : "Download PDF",
+    href: available ? resourceHref(resource) : "#",
+    pending: !available,
+  };
+}
+
+function ResourceSectionLogo({ section, compact = false }: { section: DownloadResourceSection; compact?: boolean }) {
+  return (
+    <div
+      className={`flex items-center justify-center rounded-2xl border border-[#e4d7c6] bg-white shadow-[0_10px_26px_rgba(24,18,13,0.05)] ${
+        compact ? "h-16 w-24 p-3" : "h-[76px] w-fit min-w-[132px] px-5 py-3"
+      }`}
+    >
+      {section.logo ? (
+        <Image
+          src={section.logo}
+          alt={section.logoAlt ?? section.title}
+          width={240}
+          height={90}
+          className={`${section.logoClass ?? "max-h-16 max-w-[210px]"} max-w-full object-contain`}
+        />
+      ) : (
+        <span className="text-center text-sm font-semibold leading-tight text-[#1f1a17]">
+          {section.title}
+        </span>
+      )}
+    </div>
+  );
+}
+
+function SelectedResourceSection({ section }: { section: DownloadResourceSection }) {
+  return (
+    <div id={section.id} className="scroll-mt-28">
+      <div className="mt-8 hidden rounded-[34px] border border-black/10 bg-white p-6 shadow-[0_24px_64px_rgba(24,18,13,0.08)] md:block md:p-8">
+        <div className="grid gap-8 lg:grid-cols-[0.78fr_1.22fr]">
+          <div>
+            <div className="flex flex-col items-start gap-5">
+              <ResourceSectionLogo section={section} />
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#8a7654]">
+                  Selected Brand
+                </p>
+                <h3 className="mt-4 text-4xl font-semibold tracking-tight">
+                  {section.title}
+                </h3>
+              </div>
+            </div>
+            <p className="mt-5 text-lg leading-8 text-[#625b53]">
+              {section.description}
+            </p>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {section.resources.map((resource) => (
+              <ResourceCard
+                key={`${section.id}-${resource.title}`}
+                item={resourceToItem(resource)}
+                compact
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DownloadResourceSection({
+  section,
+  isOpen,
+  onToggle,
+}: {
+  section: DownloadResourceSection;
+  isOpen: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <article
+      id={section.id}
+      className="group scroll-mt-28 overflow-hidden rounded-[30px] border border-black/10 bg-[#fffdf9] shadow-[0_18px_48px_rgba(24,18,13,0.06)]"
+    >
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        aria-controls={`${section.id}-resources`}
+        className="flex w-full cursor-pointer items-start justify-between gap-5 px-5 py-6 text-left md:px-7 md:py-7"
+      >
+        <span className="flex min-w-0 flex-col gap-5 md:flex-row md:items-start">
+          <span className="flex h-20 w-36 shrink-0 items-center justify-center rounded-2xl border border-[#e4d7c6] bg-white px-4 shadow-[0_12px_28px_rgba(24,18,13,0.06)]">
+            {section.logo ? (
+              <Image
+                src={section.logo}
+                alt={section.logoAlt ?? section.title}
+                width={220}
+                height={90}
+                className={`${section.logoClass ?? "max-h-14 max-w-[170px]"} object-contain`}
+              />
+            ) : (
+              <span className="text-lg font-semibold text-[#1f1a17]">{section.title}</span>
+            )}
+          </span>
+          <span>
+            <span className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8a7654]">
+              {section.eyebrow}
+            </span>
+            <span className="mt-2 block text-2xl font-semibold tracking-tight text-[#1f1a17] md:text-3xl">
+              {section.title}
+            </span>
+            <span className="mt-3 block max-w-3xl text-sm leading-7 text-[#625b53] md:text-base">
+              {section.description}
+            </span>
+          </span>
+        </span>
+        <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-full border border-[#e2d2bb] bg-[#fbf8f3] text-2xl leading-none text-[#8a7654] transition group-hover:border-[#c9b28b] ${isOpen ? "rotate-45" : ""}`}>
+          +
+        </span>
+      </button>
+      <AnimatePresence initial={false}>
+        {isOpen ? (
+          <motion.div
+            id={`${section.id}-resources`}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.28, ease: "easeOut" }}
+            className="overflow-hidden"
+          >
+            <div className="border-t border-[#eadfce] bg-[#fbf8f3]/70 px-5 py-6 md:px-7 md:py-7">
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                {section.resources.map((resource) => (
+                  <DownloadResourceCard key={`${section.id}-${resource.title}`} resource={resource} />
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </article>
   );
 }
 
@@ -927,13 +1494,19 @@ function ResourceCard({
         {item.title}
       </h3>
       <p className="mt-3 flex-1 text-sm leading-7 text-[#625b53]">{item.description}</p>
-      <ResourceLink
-        href={item.href}
-        className="mt-7 inline-flex w-fit items-center gap-2 rounded-full border border-[#e1d4c2] bg-[#fbf8f3] px-4 py-2.5 text-sm font-semibold text-[#1f1a17] transition hover:border-[#c9b28b] hover:bg-[#f0e5d5]"
-      >
-        {item.cta}
-        <span className="text-[#8a7654]">→</span>
-      </ResourceLink>
+      {item.pending ? (
+        <span className="mt-7 inline-flex w-fit rounded-full border border-[#e4d7c6] bg-[#fbf8f3] px-4 py-2.5 text-sm font-semibold text-[#75664e]">
+          File pending
+        </span>
+      ) : (
+        <ResourceLink
+          href={item.href}
+          className="mt-7 inline-flex w-fit items-center gap-2 rounded-full border border-[#e1d4c2] bg-[#fbf8f3] px-4 py-2.5 text-sm font-semibold text-[#1f1a17] transition hover:border-[#c9b28b] hover:bg-[#f0e5d5]"
+        >
+          {item.cta}
+          <span className="text-[#8a7654]">→</span>
+        </ResourceLink>
+      )}
     </article>
   );
 }
@@ -947,6 +1520,14 @@ function BrandWebsiteLink({ href }: { href: string }) {
       Visit Company Website <span className="text-[#8a7654]">→</span>
     </ResourceLink>
   );
+}
+
+function getProfessionalServiceLogoScale(system: LogoCard) {
+  if (system.title === "Frame Systems" || system.title === "Safety Systems") {
+    return "scale-[1.5]";
+  }
+
+  return system.logoScale ?? "";
 }
 
 function BrandLogo({ brand, compact = false }: { brand: BrandPanel; compact?: boolean }) {
@@ -1636,13 +2217,12 @@ type ProviderResourcesPageProps = {
 export default function ProviderResourcesPage({
   showProfessionalEnhancements = true,
 }: ProviderResourcesPageProps = {}) {
-  const [activeBrand, setActiveBrand] = useState(lensBrands[0].label);
-  const [openMobileBrand, setOpenMobileBrand] = useState(lensBrands[0].label);
+  const [openResourceSection, setOpenResourceSection] = useState(downloadResourceSections[0].id);
   const [contactOpen, setContactOpen] = useState(false);
   const [showExperienceModal, setShowExperienceModal] = useState(false);
-
-  const selectedBrand =
-    lensBrands.find((brand) => brand.label === activeBrand) ?? lensBrands[0];
+  const selectedResourceSection =
+    downloadResourceSections.find((section) => section.id === openResourceSection) ??
+    downloadResourceSections[0];
 
   useEffect(() => {
     if (!showProfessionalEnhancements || hasDismissedExperiencePopup()) {
@@ -1659,27 +2239,33 @@ export default function ProviderResourcesPage({
   };
 
   useEffect(() => {
-    const selectBrandFromHash = () => {
-      const brandId = window.location.hash.replace("#", "");
-      const brand = lensBrands.find((item) => item.id === brandId);
+    const scrollResourceSectionFromHash = () => {
+      const sectionId = window.location.hash.replace("#", "");
+      const section = downloadResourceSections.find((item) => item.id === sectionId);
 
-      if (!brand) return;
-
-      setActiveBrand(brand.label);
-      setOpenMobileBrand(brand.label);
-
+      if (!section) return;
+      setOpenResourceSection(section.id);
       window.setTimeout(() => {
         document
-          .getElementById(brand.id)
+          .getElementById(section.id)
           ?.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 80);
     };
 
-    selectBrandFromHash();
-    window.addEventListener("hashchange", selectBrandFromHash);
+    scrollResourceSectionFromHash();
+    window.addEventListener("hashchange", scrollResourceSectionFromHash);
 
-    return () => window.removeEventListener("hashchange", selectBrandFromHash);
+    return () => window.removeEventListener("hashchange", scrollResourceSectionFromHash);
   }, []);
+
+  const selectResourceSection = (sectionId: string) => {
+    setOpenResourceSection(sectionId);
+    window.setTimeout(() => {
+      document
+        .getElementById("product-information")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 40);
+  };
 
   return (
     <main className="min-h-screen bg-[#f5f1eb] text-[#1f1a17]">
@@ -1760,14 +2346,14 @@ export default function ProviderResourcesPage({
                 key={system.title}
                 className="flex h-full min-h-[440px] flex-col rounded-[28px] border border-black/10 bg-white p-7 shadow-[0_18px_48px_rgba(24,18,13,0.07)]"
               >
-                <div className="flex h-36 w-full items-center justify-center rounded-2xl border border-[#e4d7c6] bg-[#fbf8f3] px-6">
+                <div className="flex h-36 w-full items-center justify-center overflow-visible rounded-2xl border border-[#e4d7c6] bg-[#fbf8f3] px-6">
                   {system.logo ? (
                     <Image
                       src={system.logo}
                       alt={system.logoAlt ?? system.title}
                       width={420}
                       height={170}
-                      className={`${system.logoScale ?? ""} ${
+                      className={`${getProfessionalServiceLogoScale(system)} ${
                         system.title === "Artisan Lens Systems" ? "max-h-20" : "max-h-24"
                       } w-auto max-w-[86%] object-contain`}
                     />
@@ -2107,119 +2693,64 @@ export default function ProviderResourcesPage({
             description="Curated by brand so your team does not have to sort through a giant pile of files."
           />
 
-          <div className="mt-12 hidden gap-3 overflow-x-auto rounded-[999px] border border-black/10 bg-white p-2 shadow-[0_16px_40px_rgba(24,18,13,0.06)] md:flex">
-            {lensBrands.map((brand) => (
-              <button
-                key={brand.label}
-                type="button"
-                onClick={() => setActiveBrand(brand.label)}
-                className={`shrink-0 rounded-full px-5 py-3 text-sm font-semibold transition ${
-                  selectedBrand.label === brand.label
-                    ? "bg-[#1f1a17] text-white shadow-[0_12px_24px_rgba(24,18,13,0.22)]"
-                    : "text-[#625b53] hover:bg-[#f3eadb] hover:text-[#1f1a17]"
-                }`}
-              >
-                {brand.label}
-              </button>
-            ))}
-          </div>
-          <p className="mt-3 hidden text-center text-sm font-medium text-[#8a7654]/80 md:block">
-            Scroll for more →
-          </p>
+          <ResourceMenuBar
+            activeSection={openResourceSection}
+            onSelect={selectResourceSection}
+          />
 
-          <div id={selectedBrand.id} className="scroll-mt-28">
-            <div className="mt-8 hidden rounded-[34px] border border-black/10 bg-white p-6 shadow-[0_24px_64px_rgba(24,18,13,0.08)] md:block md:p-8">
-              <div className="grid gap-8 lg:grid-cols-[0.78fr_1.22fr]">
-                <div>
-                  <div className="flex flex-col items-start gap-5">
-                    <BrandLogo brand={selectedBrand} />
-                    <div>
-                      <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#8a7654]">
-                        Selected Brand
-                      </p>
-                      <h3 className="mt-4 text-4xl font-semibold tracking-tight">{selectedBrand.label}</h3>
-                    </div>
-                  </div>
-                  <p className="mt-5 text-lg leading-8 text-[#625b53]">{selectedBrand.intro}</p>
-                  {selectedBrand.id !== "artisan" ? (
-                    <BrandWebsiteLink href={selectedBrand.websiteHref} />
-                  ) : null}
-                  {selectedBrand.visualAssets ? (
-                    <ProductVisualStrip
-                      title={selectedBrand.visualTitle ?? "Product Resources"}
-                      assets={selectedBrand.visualAssets}
-                    />
-                  ) : null}
-                  {selectedBrand.featuredCta && (
-                    <div className="mt-8">
-                      <ResourceCard item={selectedBrand.featuredCta} compact premium />
-                    </div>
-                  )}
-                </div>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {selectedBrand.resources.map((item) => (
-                    <ResourceCard key={`${selectedBrand.label}-${item.title}`} item={item} compact />
-                  ))}
-                </div>
-              </div>
-            </div>
+          <SelectedResourceSection section={selectedResourceSection} />
 
-            <div className="mt-8 space-y-4 md:hidden">
-              {lensBrands.map((brand) => {
-                const isOpen = openMobileBrand === brand.label;
-                return (
-                  <div
-                    key={brand.label}
-                    className="overflow-hidden rounded-[26px] border border-black/10 bg-white shadow-[0_14px_36px_rgba(24,18,13,0.06)]"
+          <div className="mt-8 space-y-4 md:hidden">
+            {downloadResourceSections.map((section) => {
+              const isOpen = openResourceSection === section.id;
+
+              return (
+                <div
+                  key={section.id}
+                  className="overflow-hidden rounded-[26px] border border-black/10 bg-white shadow-[0_14px_36px_rgba(24,18,13,0.06)]"
+                >
+                  <button
+                    type="button"
+                    onClick={() => setOpenResourceSection(isOpen ? "" : section.id)}
+                    className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left"
+                    aria-expanded={isOpen}
                   >
-                    <button
-                      type="button"
-                      onClick={() => setOpenMobileBrand(isOpen ? "" : brand.label)}
-                      className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left"
-                      aria-expanded={isOpen}
-                    >
-                      <span className="text-lg font-semibold">{brand.label}</span>
-                      <span className="text-2xl leading-none text-[#8a7654]">{isOpen ? "−" : "+"}</span>
-                    </button>
-                    <AnimatePresence initial={false}>
-                      {isOpen && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.24 }}
-                          className="overflow-hidden"
-                        >
-                          <div className="border-t border-black/10 px-5 pb-5 pt-4">
-                            <div className="mb-4 flex items-center gap-4">
-                              <BrandLogo brand={brand} compact />
-                              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#8a7654]">
-                                Brand Resources
-                              </p>
-                            </div>
-                            <p className="text-sm leading-7 text-[#625b53]">{brand.intro}</p>
-                            {brand.id !== "artisan" ? (
-                              <BrandWebsiteLink href={brand.websiteHref} />
-                            ) : null}
-                            {brand.visualAssets ? (
-                              <ProductVisualStrip
-                                title={brand.visualTitle ?? "Product Resources"}
-                                assets={brand.visualAssets}
-                              />
-                            ) : null}
-                            <div className="mt-5 grid gap-4">
-                              {brand.resources.map((item) => (
-                                <ResourceCard key={`${brand.label}-mobile-${item.title}`} item={item} compact />
-                              ))}
-                            </div>
+                    <span className="text-lg font-semibold">{section.title}</span>
+                    <span className="text-2xl leading-none text-[#8a7654]">{isOpen ? "−" : "+"}</span>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.24 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="border-t border-black/10 px-5 pb-5 pt-4">
+                          <div className="mb-4 flex items-center gap-4">
+                            <ResourceSectionLogo section={section} compact />
+                            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#8a7654]">
+                              Brand Resources
+                            </p>
                           </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                );
-              })}
-            </div>
+                          <p className="text-sm leading-7 text-[#625b53]">{section.description}</p>
+                          <div className="mt-5 grid gap-4">
+                            {section.resources.map((resource) => (
+                              <ResourceCard
+                                key={`${section.id}-mobile-${resource.title}`}
+                                item={resourceToItem(resource)}
+                                compact
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

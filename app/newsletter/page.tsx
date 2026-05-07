@@ -1,289 +1,167 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import type { Metadata } from "next";
+import NewsletterShell from "../components/newsletter/NewsletterShell";
 
-const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
-const CONTACT_FORM_URL = "https://form.typeform.com/to/m0lQ9zjD";
+export const metadata: Metadata = {
+  title: "Practice Matters Newsletter | Artisan Lab Network",
+  description:
+    "Practice Matters is Artisan Lab Network's publication for independent eye care practices, featuring current issues and upcoming editorial themes.",
+};
 
-const issues = [
+const issueUrl = "/newsletters/practice-matters/issue-001";
+
+const upcomingIssues = [
   {
-    title: "Practice Matters: Spring Update",
-    date: "Spring 2026",
+    label: "Issue 002",
+    title: "Product conversations that build confidence",
     description:
-      "A seasonal look at practice growth, network news, and the conversations shaping independent eye care.",
+      "Practical ways to help teams connect premium lens choices to patient needs without making the conversation feel forced.",
   },
   {
-    title: "Product Spotlight: Tokai Thin Lens Options",
-    date: "Coming Soon",
+    label: "Issue 003",
+    title: "Service, turnaround, and the practice experience",
     description:
-      "Product education and dispensing notes for helping patients understand advanced thin lens options.",
+      "A closer look at the lab behaviors that help practices protect trust at the dispensing table.",
   },
   {
-    title: "Building Stronger Independent Practices",
-    date: "Coming Soon",
+    label: "Issue 004",
+    title: "Training notes for independent optical teams",
     description:
-      "Ideas for strengthening practice control, improving margins, and building more resilient lab relationships.",
-  },
-  {
-    title: "Lab Updates: Service, Turnaround, and Support",
-    date: "Coming Soon",
-    description:
-      "Operational updates from the Artisan network, including service improvements and support reminders.",
-  },
-  {
-    title: "Training Corner: Helping Opticians Explain Lens Options",
-    date: "Coming Soon",
-    description:
-      "Practical language and team education ideas for clearer lens conversations at the dispensing table.",
-  },
-  {
-    title: "Artisan Intel: Smarter Practice Reporting",
-    date: "Coming Soon",
-    description:
-      "A preview of better reporting habits and the practice insights that help teams make confident decisions.",
+      "Short, usable education pieces for opticians who want clearer language, stronger recommendations, and better patient conversations.",
   },
 ];
-
-const newsletterBenefits = [
-  "Product education",
-  "Lab updates",
-  "Managed care tips",
-  "Practice growth ideas",
-  "Partner announcements",
-];
-
-function ContactModal({
-  open,
-  onClose,
-}: {
-  open: boolean;
-  onClose: () => void;
-}) {
-  useEffect(() => {
-    if (!open) return;
-
-    const originalOverflow = document.body.style.overflow;
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-    };
-
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.body.style.overflow = originalOverflow;
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [open, onClose]);
-
-  return (
-    <AnimatePresence>
-      {open ? (
-        <motion.div
-          className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/72 px-4 py-6 backdrop-blur-md"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          role="dialog"
-          aria-modal="true"
-        >
-          <motion.div
-            initial={{ opacity: 0, y: 18, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 18, scale: 0.98 }}
-            transition={{ duration: 0.22, ease: "easeOut" }}
-            className="relative h-[82vh] w-full max-w-3xl overflow-hidden rounded-2xl border border-white/15 bg-[#171311] shadow-2xl"
-          >
-            <button
-              type="button"
-              onClick={onClose}
-              className="absolute right-4 top-4 z-10 rounded-full border border-white/15 bg-black/45 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
-            >
-              Close
-            </button>
-            <iframe
-              title="Contact Artisan Lab Network"
-              src={CONTACT_FORM_URL}
-              className="h-full w-full"
-            />
-          </motion.div>
-        </motion.div>
-      ) : null}
-    </AnimatePresence>
-  );
-}
 
 export default function NewsletterPage() {
-  const [contactOpen, setContactOpen] = useState(false);
-
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#fbf8f2] text-[#1f1a17]">
-      <Header onContactClick={() => setContactOpen(true)} />
+    <NewsletterShell>
+      <section className="px-5 py-16 md:px-8 md:py-24">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-8 lg:grid-cols-[1.02fr_0.98fr] lg:items-end">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#8a7654]">
+                Artisan Lab Network Publication
+              </p>
+              <h1 className="mt-5 max-w-4xl text-5xl font-semibold tracking-tight text-[#142033] md:text-7xl">
+                Practice Matters
+              </h1>
+              <p className="mt-6 max-w-3xl text-xl leading-9 text-[#364150]">
+                What&apos;s happening. What&apos;s changing. What matters to independent eye care.
+              </p>
+              <p className="mt-5 max-w-3xl text-base leading-8 text-[#4c5563]">
+                Practice Matters is Artisan Lab Network&apos;s editorial home for the people, products,
+                ideas, and updates helping independent practices stay informed and in control.
+              </p>
+            </div>
 
-      <section
-        data-theme="light"
-        className="relative overflow-hidden bg-[#f2eee7] px-6 pb-20 pt-36 md:px-10 md:pb-24 md:pt-44"
-      >
-        <div className="absolute inset-x-0 bottom-0 h-px bg-[#d6c3a1]/70" />
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1fr_0.9fr] lg:items-center">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, ease: "easeOut" }}
-          >
-            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#8b7656]">
-              Practice Matters
-            </p>
-            <h1 className="mt-5 max-w-4xl text-5xl font-semibold tracking-tight md:text-7xl">
-              Insights for Independent Eye Care
-            </h1>
-            <p className="mt-7 max-w-2xl text-lg leading-8 text-black/68 md:text-xl md:leading-9">
-              Get updates, product education, lab news, program announcements,
-              and ideas to help independent practices stay informed and grow
-              with confidence.
-            </p>
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <div className="rounded-[34px] border border-[#dfd2bf] bg-[#fbf7ef]/92 p-7 shadow-[0_24px_70px_rgba(20,32,51,0.10)]">
+              <div className="flex items-center gap-4">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-[#dfd2bf] bg-white">
+                  <Image src="/aln-icon.png" alt="" width={34} height={34} className="h-8 w-8 object-contain" />
+                </div>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8a7654]">
+                    Current Issue
+                  </p>
+                  <h2 className="mt-1 text-2xl font-semibold text-[#142033]">
+                    Issue 001
+                  </h2>
+                </div>
+              </div>
+              <p className="mt-6 text-sm leading-7 text-[#4c5563]">
+                Meet Jenn C., explore Chemistrie and Unity V3 opportunities, revisit what independence
+                makes possible, and review the Tokai 1.76 availability update.
+              </p>
               <a
-                href="#newsletter-signup"
-                className="inline-flex items-center justify-center rounded-full bg-[#1f1a17] px-7 py-3 text-sm font-semibold text-white shadow-[0_16px_40px_rgba(31,26,23,0.18)] transition hover:-translate-y-0.5 hover:bg-black"
+                href={issueUrl}
+                className="mt-7 inline-flex min-h-11 items-center justify-center rounded-full bg-[#142033] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_16px_34px_rgba(20,32,51,0.18)] transition hover:-translate-y-0.5 hover:bg-[#c7ad7b] hover:text-[#142033]"
               >
-                Sign Up for the Newsletter
-              </a>
-              <a
-                href="#past-issues"
-                className="inline-flex items-center justify-center rounded-full border border-black/14 bg-white/60 px-7 py-3 text-sm font-semibold text-[#1f1a17] transition hover:-translate-y-0.5 hover:bg-white"
-              >
-                View Past Issues
+                Read Issue 001
               </a>
             </div>
-            <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {newsletterBenefits.map((benefit) => (
-                <div key={benefit} className="rounded-2xl border border-[#d6c3a1]/70 bg-white/70 px-4 py-3 text-sm font-semibold text-[#1f1a17] shadow-[0_10px_26px_rgba(49,39,26,0.06)]">
-                  {benefit}
+          </div>
+
+          <div className="mt-14 rounded-[36px] border border-[#dfd2bf] bg-white/86 p-5 shadow-[0_24px_70px_rgba(20,32,51,0.08)] md:p-8">
+            <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+              <div className="overflow-hidden rounded-[28px] bg-[#122033]">
+                <Image
+                  src="/newsletter-assets/jennc.jpg"
+                  alt="Artisan Lab Network team spotlight"
+                  width={900}
+                  height={640}
+                  className="aspect-[4/3] h-full w-full object-cover opacity-[0.88]"
+                  priority
+                />
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8a7654]">
+                  Featured Now
+                </p>
+                <h2 className="mt-4 text-4xl font-semibold tracking-tight text-[#142033] md:text-5xl">
+                  Issue 001 is live.
+                </h2>
+                <p className="mt-5 text-base leading-8 text-[#4c5563]">
+                  The first issue introduces the rhythm of Practice Matters: useful product context,
+                  practical practice support, important availability updates, and a closer look at the
+                  people behind the Artisan experience.
+                </p>
+                <div className="mt-7 flex flex-wrap gap-3">
+                  <a
+                    href={issueUrl}
+                    className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#142033] px-5 py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#c7ad7b] hover:text-[#142033]"
+                  >
+                    Open Current Issue
+                  </a>
+                  <a
+                    href={`${issueUrl}#tokai-update`}
+                    className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#d7c5a8] bg-[#fbf7ef] px-5 py-2.5 text-sm font-semibold text-[#142033] transition hover:-translate-y-0.5 hover:border-[#c7ad7b] hover:bg-white"
+                  >
+                    Read Tokai Update
+                  </a>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <section id="upcoming" className="mt-16">
+            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8a7654]">
+                  Coming Next
+                </p>
+                <h2 className="mt-3 text-3xl font-semibold tracking-tight text-[#142033] md:text-4xl">
+                  Upcoming issues
+                </h2>
+              </div>
+              <p className="max-w-xl text-sm leading-7 text-[#4c5563]">
+                Future editions will continue to focus on usable ideas, product education, and the
+                operating details that help independent practices make confident choices.
+              </p>
+            </div>
+
+            <div className="mt-8 grid gap-5 md:grid-cols-3">
+              {upcomingIssues.map((issue) => (
+                <article
+                  key={issue.label}
+                  className="rounded-[28px] border border-[#dfd2bf] bg-[#fbf7ef]/88 p-6 shadow-[0_18px_46px_rgba(20,32,51,0.07)]"
+                >
+                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8a7654]">
+                    {issue.label}
+                  </p>
+                  <h3 className="mt-4 text-xl font-semibold leading-7 text-[#142033]">
+                    {issue.title}
+                  </h3>
+                  <p className="mt-4 text-sm leading-7 text-[#4c5563]">
+                    {issue.description}
+                  </p>
+                  <span className="mt-6 inline-flex rounded-full border border-[#dfd2bf] bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#8a7654]">
+                    In development
+                  </span>
+                </article>
               ))}
             </div>
-            <div className="mt-8 rounded-2xl border border-[#d6c3a1]/70 bg-[#fffaf2]/72 p-5 shadow-[0_16px_45px_rgba(49,39,26,0.08)]">
-              <p className="text-sm leading-7 text-black/62">
-                Prefer a feed reader? Subscribe to updates through RSS.
-              </p>
-              <Link
-                href="/newsletter/feed.xml"
-                className="mt-2 inline-flex text-sm font-semibold text-[#7b6647] transition hover:text-black"
-              >
-                Subscribe by RSS
-              </Link>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.1, ease: "easeOut" }}
-            className="relative min-h-[360px] overflow-hidden rounded-[28px] border border-[#d6c3a1]/70 bg-[#171311] p-3 shadow-[0_28px_80px_rgba(49,39,26,0.16)]"
-          >
-            <Image
-              src="/images/eyewear-brochure-meeting-2022-1.jpg"
-              alt="Eyewear education materials during an Artisan meeting"
-              fill
-              priority
-              sizes="(min-width: 1024px) 45vw, 100vw"
-              className="rounded-[22px] object-cover object-center"
-            />
-            <div className="absolute inset-x-3 bottom-3 rounded-b-[22px] bg-gradient-to-t from-black/82 via-black/42 to-transparent px-6 pb-6 pt-24">
-              <p className="max-w-md text-2xl font-semibold tracking-tight text-white">
-                Product education, practice ideas, and lab updates in one place.
-              </p>
-            </div>
-          </motion.div>
+          </section>
         </div>
       </section>
-
-      <section
-        id="past-issues"
-        data-theme="light"
-        className="scroll-mt-24 bg-[#fbf8f2] px-6 py-24 md:px-10"
-      >
-        <div className="mx-auto max-w-7xl">
-          <div className="max-w-3xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-black/45">
-              Past Issues
-            </p>
-            <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">
-              Newsletter Archive
-            </h2>
-          </div>
-
-          <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {issues.map((issue, index) => (
-              <motion.article
-                key={issue.title}
-                initial={{ opacity: 0, y: 18 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.42, delay: index * 0.04, ease: "easeOut" }}
-                className="group flex min-h-[300px] flex-col rounded-[24px] border border-black/10 bg-white p-6 shadow-[0_18px_45px_rgba(49,39,26,0.08)] transition hover:-translate-y-1 hover:shadow-[0_26px_65px_rgba(49,39,26,0.13)]"
-              >
-                <div className="mb-7 flex items-center justify-between gap-4">
-                  <div className="grid h-12 w-12 place-items-center rounded-full border border-[#d6c3a1]/70 bg-[#f2eee7] text-xs font-bold tracking-[0.18em] text-[#7b6647]">
-                    PM
-                  </div>
-                  <div className="text-xs uppercase tracking-[0.22em] text-black/42">
-                    {issue.date}
-                  </div>
-                </div>
-                <h3 className="text-xl font-semibold leading-snug">
-                  {issue.title}
-                </h3>
-                <p className="mt-4 flex-1 text-sm leading-7 text-black/62">
-                  {issue.description}
-                </p>
-                <a
-                  href="#"
-                  className="mt-7 inline-flex w-fit items-center justify-center rounded-full border border-black/12 bg-[#1f1a17] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-black"
-                >
-                  {issue.date === "Coming Soon" ? "Preview Topic" : "Read Issue"}
-                </a>
-              </motion.article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="newsletter-signup"
-        data-theme="dark"
-        className="scroll-mt-24 border-y border-white/10 bg-[#171311] px-6 py-20 text-white md:px-10"
-      >
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          <div className="max-w-3xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#d4c09a]">
-              Newsletter
-            </p>
-            <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">
-              Stay Connected
-            </h2>
-            <p className="mt-5 text-lg leading-8 text-white/70">
-              We&apos;ll send helpful updates, resources, and announcements without
-              filling your inbox with noise.
-            </p>
-          </div>
-          <a
-            href="#"
-            className="inline-flex w-fit items-center justify-center rounded-full bg-[#d4c09a] px-7 py-3 text-sm font-semibold text-[#171311] shadow-sm transition hover:-translate-y-0.5 hover:bg-[#e2cca2]"
-          >
-            Sign Up Coming Soon
-          </a>
-        </div>
-      </section>
-
-      <Footer onContactClick={() => setContactOpen(true)} signUpHref={SIGNUP_URL} />
-      <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
-    </main>
+    </NewsletterShell>
   );
 }

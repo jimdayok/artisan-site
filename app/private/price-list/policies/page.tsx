@@ -220,6 +220,9 @@ export default function ArtisanPoliciesPage() {
             <Link href="/provider-resources" className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/18 bg-white/10 px-6 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/16">
               Provider Resources
             </Link>
+            <a href="/files/artisan-policies-guide.pdf" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#d4c09a]/55 bg-white/10 px-6 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-[#d4c09a] hover:bg-[#d4c09a] hover:text-[#171311]">
+              Download PDF Policies Guide
+            </a>
           </div>
         </div>
       </section>

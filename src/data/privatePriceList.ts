@@ -1,4 +1,5 @@
 export type PriceType = "SV" | "ESV" | "MF" | "OCP" | "PAL" | "Add-On" | "Service" | "Reference";
+export const occupationalPriceType = "OCP" as const;
 
 export type PriceCategory =
   | "Standard Designs"
@@ -62,6 +63,7 @@ export type PriceItem = {
   code?: string;
   recommended: boolean;
   outsourced: boolean;
+  packageEligible?: boolean;
   notes?: string;
   requires?: string;
 };
@@ -99,6 +101,23 @@ const item = (
   notes: options.notes,
   requires: options.requires,
 });
+
+export type LensGroup =
+  | "Single Vision"
+  | "Multifocal Lenses"
+  | "Digital SV & Anti-Fatigue Lenses"
+  | "Occupational Lenses"
+  | "Progressive Lenses";
+
+export type PriceView = "Wholesale" | "MSRP" | "Both";
+
+export const lensGroupLabels: LensGroup[] = [
+  "Single Vision",
+  "Multifocal Lenses",
+  "Digital SV & Anti-Fatigue Lenses",
+  "Occupational Lenses",
+  "Progressive Lenses",
+];
 
 export const materialAdders: MaterialAdder[] = [
   item("material-plastic", "Lab Services", "Materials", "Add-On", "Plastic", -11, {
@@ -342,7 +361,6 @@ export const priceItems: PriceItem[] = [
   item("ref-sv", "Reference", "Reference Key", "SV", "Single Vision", 0),
   item("ref-esv", "Reference", "Reference Key", "ESV", "Enhanced Single Vision with Power Boost", 0),
   item("ref-mf", "Reference", "Reference Key", "MF", "Multifocal Design", 0),
-  item("ref-ocp", "Reference", "Reference Key", "OCP", "Occupational Progressive Design", 0),
   item("ref-pal", "Reference", "Reference Key", "PAL", "Progressive Design", 0),
 ];
 
@@ -449,6 +467,20 @@ export const logoByBrand: Partial<Record<PriceBrand, string>> = {
   ChemClip: "/chemistrie-logo.png",
 };
 
+export function logoForPriceItem(item: Pick<PriceItem, "brand" | "name">) {
+  const name = item.name.toLowerCase();
+  if (name.includes("nupolar")) return "/younger-optics-logo.png";
+  if (name.includes("drivewear")) return "/younger-optics-logo.png";
+  if (name.includes("techshield")) return "/logos/VSP_Vision_Logotype_RGB_Blk.png";
+  if (name.includes("crizal")) return logoByBrand.Crizal;
+  if (name.includes("hoya") || item.brand === "Hoya AR") return "/hoya-logo.png";
+  if (name.includes("glacier") || item.brand === "Shamir AR") return "/shamir-logo.png";
+  if (item.brand === "Tokai AR" || name.includes("tokai")) return "/tokai-logo.png";
+  if (item.brand === "Artisan Coatings" || name.includes("artisan")) return "/aln-icon.png";
+  if (item.brand === "ChemClip" || name.includes("chemclip")) return "/chemistrie-logo.png";
+  return logoByBrand[item.brand];
+}
+
 export const money = (price: number) => {
   if (price === 0) return "$0";
   if (price < 0) return `-$${Math.abs(price).toLocaleString("en-US")}`;
@@ -506,7 +538,89 @@ export function professionalResourceHref(brand: PriceBrand) {
 export const lensItems = priceItems.filter((entry) => lensCategories.includes(entry.category));
 export const coatingItems = priceItems.filter((entry) => coatingCategories.includes(entry.category));
 export const photochromicItems = priceItems.filter((entry) => entry.category === "Photochromic Options");
+export const polarizedItems = priceItems.filter((entry) => entry.category === "Polarized Options" || entry.category === "KBCO Polarized Mirrors" || entry.category === "Nupolar Mirrors");
+export const mirrorItems = priceItems.filter((entry) => entry.category === "Provisics Mirror Coatings" || entry.category === "KBCO Polarized Mirrors" || entry.category === "Nupolar Mirrors");
+export const blueLightItems = priceItems.filter((entry) => entry.category === "Blue Light Filter Options");
 export const finishingItems = priceItems.filter((entry) =>
-  ["Edging", "Finishing Services", "Handling", "Polarized Options", "Blue Light Filter Options", "Provisics Mirror Coatings", "KBCO Polarized Mirrors", "Nupolar Mirrors", "ChemClip by Chemistrie"].includes(entry.category),
+  ["Edging", "Finishing Services", "Handling", "ChemClip by Chemistrie"].includes(entry.category),
 );
 export const shippingItems = priceItems.filter((entry) => entry.category === "Shipping");
+
+export const packageEligibleNames = new Set([
+  "Camber Steady Pure",
+  "Camber Steady Plus",
+  "Endless Steady",
+  "Essential Steady",
+  "CFB",
+  "Endless Plus",
+  "Endless SV",
+  "Endless Office",
+]);
+
+export function isPackageEligible(item: PriceItem) {
+  return packageEligibleNames.has(item.name);
+}
+
+export function lensGroupForItem(item: PriceItem): LensGroup | undefined {
+  const name = item.name.toLowerCase();
+
+  if (item.type === "PAL") return "Progressive Lenses";
+  if (item.type === "SV") return "Single Vision";
+  if (item.type === "MF") return "Multifocal Lenses";
+  if (item.type === "OCP") return "Occupational Lenses";
+  if (item.type === "ESV") return "Digital SV & Anti-Fatigue Lenses";
+
+  if (["st28", "st35", "st45", "round seg", "trifocal", "cd digital round", "endless bifocal"].some((term) => name.includes(term))) {
+    return "Multifocal Lenses";
+  }
+  if (["endless office", "sd reach", "largo", "unity via pro", "id workstyle", "id screen", "space", "zoom", "workspace", "computer", "ocp sv", "tact bks"].some((term) => name.includes(term))) {
+    return "Occupational Lenses";
+  }
+  if (["eyezen", "sync iii", "endless plus", "sd concept", "unity relieve", "relax"].some((term) => name.includes(term))) {
+    return "Digital SV & Anti-Fatigue Lenses";
+  }
+
+  return undefined;
+}
+
+export function isLensItem(item: PriceItem) {
+  return Boolean(lensGroupForItem(item));
+}
+
+export function materialName(materialId: string) {
+  return materialAdders.find((entry) => entry.id === materialId)?.name ?? "Polycarbonate";
+}
+
+export function priceTypeLabel(type: PriceType) {
+  const labels: Record<PriceType, string> = {
+    SV: "SV",
+    ESV: "Digital SV",
+    MF: "MF",
+    OCP: "Occupational",
+    PAL: "PAL",
+    "Add-On": "Add-On",
+    Service: "Service",
+    Reference: "Reference",
+  };
+
+  return labels[type];
+}
+
+export function timeToMake(item: PriceItem, arSelected = false) {
+  if (item.outsourced && item.brand === "Tokai") return "14 to 21 days";
+  if (item.outsourced) return "7 to 14 days";
+  if (arSelected) return "4 to 7 days";
+  return "1 to 4 days";
+}
+
+export function selectedMaterialLabel(item: PriceItem | undefined, materialId: string) {
+  const adjustment = materialAdjustmentForItem(item, materialId);
+  return adjustmentLabel(adjustment);
+}
+
+export function searchableText(item: PriceItem) {
+  return [item.name, item.brand, item.category, item.type, lensGroupForItem(item), item.code, item.notes, item.requires]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}

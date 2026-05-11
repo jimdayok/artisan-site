@@ -1,122 +1,139 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
-import { brands, categories, lensItems, priceItems, type EdgeMode, type PriceItem } from "../../data/privatePriceList";
-import BrandFilter from "./BrandFilter";
-import MaterialAdder from "./MaterialAdder";
-import PricingCard from "./PricingCard";
+import { itemMatchesARGroup } from "../../data/arCompatibility";
+import {
+  calculatedPrice,
+  isLensItem,
+  isPackageEligible,
+  lensGroupForItem,
+  lensItems,
+  priceItems,
+  searchableText,
+  timeToMake,
+  type LensGroup,
+  type PriceBrand,
+  type PriceItem,
+} from "../../data/privatePriceList";
+import type { FilterState } from "./PriceFilters";
+import CompactEmptyState from "./CompactEmptyState";
+import FilterRail from "./FilterRail";
+import MobileQuoteBar from "./MobileQuoteBar";
+import PrimaryCategoryNav from "./PrimaryCategoryNav";
+import PricingPortalLayout from "./PricingPortalLayout";
+import PricingResultsList from "./PricingResultsList";
+import QuoteSummaryRail from "./QuoteSummaryRail";
+import ResultsToolbar, { type PricingSort } from "./ResultsToolbar";
 
-export default function PrivatePriceDashboard() {
-  const [query, setQuery] = useState("");
-  const [brand, setBrand] = useState("All");
-  const [category, setCategory] = useState("All");
-  const [recommendedOnly, setRecommendedOnly] = useState(false);
-  const [outsourcedOnly, setOutsourcedOnly] = useState(false);
-  const [materialId, setMaterialId] = useState("material-polycarb");
-  const [edgeMode, setEdgeMode] = useState<EdgeMode>("Edged");
-  const [selectedLensId, setSelectedLensId] = useState("artisan-diamond-series");
+const initialFilters: FilterState = {
+  query: "",
+  brand: "All",
+  lensGroup: "All",
+  materialId: "material-polycarb",
+  edgeMode: "Edged",
+  priceView: "Wholesale",
+  excludeOutsourced: false,
+  packageOnly: false,
+  coatingId: "All",
+};
+
+export default function PrivatePriceDashboard({ initialCoatingId }: { initialCoatingId?: string }) {
+  const [filters, setFilters] = useState<FilterState>({ ...initialFilters, coatingId: initialCoatingId ?? initialFilters.coatingId });
+  const [quoteItemId, setQuoteItemId] = useState("artisan-diamond-series");
   const [recentlyViewed, setRecentlyViewed] = useState<PriceItem[]>([]);
+  const [sort, setSort] = useState<PricingSort>("Recommended");
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const quoteItem = lensItems.find((entry) => entry.id === quoteItemId) ?? lensItems[0];
+  const hasActiveFilters = Boolean(filters.query.trim()) || filters.brand !== "All" || filters.lensGroup !== "All" || filters.excludeOutsourced || filters.packageOnly || filters.coatingId !== "All";
 
-  const selectedLens = lensItems.find((entry) => entry.id === selectedLensId);
-  const hasActiveSearch = Boolean(query.trim()) || brand !== "All" || category !== "All" || recommendedOnly || outsourcedOnly;
+  const updateFilters = (next: Partial<FilterState>) => setFilters((current) => ({ ...current, ...next }));
+  const resetFilters = () => setFilters(initialFilters);
+  const remember = (item: PriceItem) => setRecentlyViewed((current) => [item, ...current.filter((entry) => entry.id !== item.id)].slice(0, 5));
+  const quote = (item: PriceItem) => {
+    setQuoteItemId(item.id);
+    remember(item);
+  };
+
   const visibleItems = useMemo(() => {
-    if (!hasActiveSearch) return [];
-    const normalized = query.trim().toLowerCase();
-    return priceItems.filter((entry) => {
-      if (brand !== "All" && entry.brand !== brand) return false;
-      if (category !== "All" && entry.category !== category) return false;
-      if (recommendedOnly && !entry.recommended) return false;
-      if (outsourcedOnly && !entry.outsourced) return false;
-      if (!normalized) return true;
-      return [entry.name, entry.brand, entry.category, entry.type, entry.code, entry.notes].filter(Boolean).join(" ").toLowerCase().includes(normalized);
+    if (!hasActiveFilters) return [];
+    const query = filters.query.trim().toLowerCase();
+    const arSelected = filters.coatingId !== "All";
+    const rows = priceItems.filter((item) => {
+      if (!isLensItem(item) && filters.lensGroup !== "All") return false;
+      if (filters.brand !== "All" && item.brand !== filters.brand) return false;
+      if (filters.lensGroup !== "All" && lensGroupForItem(item) !== filters.lensGroup) return false;
+      if (filters.excludeOutsourced && item.outsourced) return false;
+      if (filters.packageOnly && !isPackageEligible(item)) return false;
+      if (!itemMatchesARGroup(item, filters.coatingId)) return false;
+      if (query && !searchableText(item).includes(query)) return false;
+      return true;
     });
-  }, [brand, category, hasActiveSearch, outsourcedOnly, query, recommendedOnly]);
+    return rows.sort((a, b) => {
+      if (sort === "Recommended") return Number(b.recommended) - Number(a.recommended) || Number(isPackageEligible(b)) - Number(isPackageEligible(a)) || a.name.localeCompare(b.name);
+      if (sort === "Price low to high") return calculatedPrice(a, filters.materialId, filters.edgeMode) - calculatedPrice(b, filters.materialId, filters.edgeMode);
+      if (sort === "Price high to low") return calculatedPrice(b, filters.materialId, filters.edgeMode) - calculatedPrice(a, filters.materialId, filters.edgeMode);
+      if (sort === "Brand A to Z") return a.brand.localeCompare(b.brand) || a.name.localeCompare(b.name);
+      if (sort === "Brand Z to A") return b.brand.localeCompare(a.brand) || a.name.localeCompare(b.name);
+      return timeToMake(a, arSelected).localeCompare(timeToMake(b, arSelected)) || a.name.localeCompare(b.name);
+    });
+  }, [filters, hasActiveFilters, sort]);
 
-  const quickCategories = ["Standard Designs", "IOT Designs", "Artisan Coatings", "Photochromic Options", "Edging", "Shipping"];
-
-  const remember = (entry: PriceItem) => {
-    setRecentlyViewed((current) => [entry, ...current.filter((item) => item.id !== entry.id)].slice(0, 4));
+  const exportFilters = { ...filters };
+  const selectedIdList = Array.from(selectedIds);
+  const toggleSelected = (item: PriceItem, selected: boolean) => {
+    setSelectedIds((current) => {
+      const next = new Set(current);
+      if (selected) next.add(item.id);
+      else next.delete(item.id);
+      return next;
+    });
   };
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[300px_minmax(0,1fr)] lg:items-start">
-      <aside className="grid gap-5">
-        <BrandFilter
-          brands={brands}
-          categories={categories}
-          activeBrand={brand}
-          activeCategory={category}
-          recommendedOnly={recommendedOnly}
-          outsourcedOnly={outsourcedOnly}
-          onBrand={setBrand}
-          onCategory={setCategory}
-          onRecommended={setRecommendedOnly}
-          onOutsourced={setOutsourcedOnly}
+    <PricingPortalLayout
+      categoryNav={<PrimaryCategoryNav value={filters.lensGroup} onChange={(lensGroup) => updateFilters({ lensGroup })} />}
+      filterRail={<FilterRail filters={filters} selectedLens={quoteItem} onChange={updateFilters} />}
+      quoteRail={<QuoteSummaryRail item={quoteItem} materialId={filters.materialId} edgeMode={filters.edgeMode} priceView={filters.priceView} filters={exportFilters} selectedIds={selectedIdList} />}
+      mobileQuoteBar={<MobileQuoteBar item={quoteItem} materialId={filters.materialId} edgeMode={filters.edgeMode} />}
+    >
+      <div className="sticky top-0 z-20 mb-3 rounded-3xl border border-[#dfd2bf] bg-[#f8f1e7]/95 p-3 shadow-[0_12px_34px_rgba(18,32,51,0.06)] backdrop-blur">
+        <input
+          value={filters.query}
+          onChange={(event) => updateFilters({ query: event.target.value })}
+          placeholder="Search product, brand, category, or treatment..."
+          className="min-h-10 w-full rounded-full border border-[#dfd2bf] bg-white px-3 text-sm outline-none focus:border-[#c7ad7b]"
         />
-        <MaterialAdder selectedLens={selectedLens} selectedMaterialId={materialId} edgeMode={edgeMode} onMaterial={setMaterialId} onEdgeMode={setEdgeMode} />
-      </aside>
-      <section>
-        <div className="rounded-[26px] border border-[#dfd2bf] bg-white/86 p-4 shadow-[0_18px_48px_rgba(18,32,51,0.08)]">
-          <label className="grid gap-2 text-sm font-semibold text-[#122033]">
-            Search the price list
-            <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search lens designs, coatings, materials, shipping..." className="min-h-12 rounded-2xl border border-[#dfd2bf] bg-[#fbf8f3] px-4 text-base outline-none focus:border-[#c7ad7b]" />
-          </label>
-          <label className="mt-4 grid gap-2 text-sm font-semibold text-[#122033]">
-            Calculator lens design
-            <select value={selectedLensId} onChange={(event) => setSelectedLensId(event.target.value)} className="min-h-12 rounded-2xl border border-[#dfd2bf] bg-[#fbf8f3] px-4 text-sm outline-none focus:border-[#c7ad7b]">
-              {lensItems.map((entry) => <option key={entry.id} value={entry.id}>{entry.name} - ${entry.price}</option>)}
-            </select>
-          </label>
-        </div>
-        {hasActiveSearch ? (
-          <>
-            <div className="mt-5 flex items-center justify-between gap-4">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#8a7654]">{visibleItems.length} matching items</p>
-              <button type="button" onClick={() => { setQuery(""); setBrand("All"); setCategory("All"); setRecommendedOnly(false); setOutsourcedOnly(false); }} className="rounded-full border border-[#dfd2bf] bg-white px-4 py-2 text-sm font-semibold text-[#122033]">Clear</button>
-            </div>
-            <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {visibleItems.map((entry: PriceItem) => (
-                <div key={entry.id} onMouseEnter={() => remember(entry)} onFocus={() => remember(entry)} className="h-full">
-                  <PricingCard item={entry} selectedMaterialId={materialId} edgeMode={edgeMode} />
-                </div>
-              ))}
-            </div>
-          </>
-        ) : (
-          <div className="mt-5 rounded-[30px] border border-[#dfd2bf] bg-[#fbf8f3]/90 p-6 shadow-[0_20px_58px_rgba(18,32,51,0.08)] md:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">Private price guide</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-[#122033]">Search by product, brand, category, or treatment to begin.</h2>
-            <p className="mt-4 max-w-2xl text-base leading-8 text-[#4d5664]">
-              Choose a quick category, jump to packages, or search directly. Results appear only after you ask for them, keeping the workspace calm.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              {quickCategories.map((quick) => (
-                <button key={quick} type="button" onClick={() => setCategory(quick)} className="rounded-full border border-[#d7c5a8] bg-white px-4 py-2 text-sm font-semibold text-[#122033] transition hover:bg-[#eadcc6]">
-                  {quick}
-                </button>
-              ))}
-              <Link href="/private/price-list/packages" className="rounded-full bg-[#122033] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#c7ad7b] hover:text-[#122033]">
-                Packages
-              </Link>
-            </div>
-            <div className="mt-8 rounded-2xl border border-[#dfd2bf] bg-white p-5">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#8a7654]">Recently viewed</p>
-              {recentlyViewed.length ? (
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  {recentlyViewed.map((entry) => (
-                    <button key={entry.id} type="button" onClick={() => setQuery(entry.name)} className="rounded-2xl border border-[#eadfce] bg-[#fbf8f3] px-4 py-3 text-left text-sm font-semibold text-[#122033]">
-                      {entry.name}
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <p className="mt-3 text-sm leading-7 text-[#625b53]">Products you open during this session will appear here.</p>
-              )}
-            </div>
+        <details className="mt-2 min-[1700px]:hidden">
+          <summary className="cursor-pointer rounded-full border border-[#d7c5a8] bg-white px-3 py-2 text-center text-xs font-bold text-[#122033]">Filters</summary>
+          <div className="mt-2">
+            <FilterRail filters={filters} selectedLens={quoteItem} onChange={updateFilters} />
           </div>
-        )}
-      </section>
-    </div>
+        </details>
+      </div>
+
+      {hasActiveFilters ? (
+        <>
+          <ResultsToolbar count={visibleItems.length} filters={exportFilters} sort={sort} onSort={setSort} selectedIds={selectedIdList} onClearSelected={() => setSelectedIds(new Set())} onClear={resetFilters} />
+          <PricingResultsList
+            items={visibleItems}
+            materialId={filters.materialId}
+            edgeMode={filters.edgeMode}
+            priceView={filters.priceView}
+            arSelected={filters.coatingId !== "All"}
+            selectedIds={selectedIds}
+            onToggleSelected={toggleSelected}
+            onQuote={quote}
+            onRemember={remember}
+          />
+        </>
+      ) : (
+        <CompactEmptyState
+          recentlyViewed={recentlyViewed}
+          onCategory={(lensGroup: LensGroup) => updateFilters({ lensGroup })}
+          onBrand={(brand: PriceBrand) => updateFilters({ brand })}
+          onRecent={(item) => updateFilters({ query: item.name })}
+        />
+      )}
+    </PricingPortalLayout>
   );
 }

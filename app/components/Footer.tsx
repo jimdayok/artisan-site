@@ -15,6 +15,7 @@ export default function Footer({
   signUpHref,
 }: FooterProps) {
   const [footerIconClicks, setFooterIconClicks] = useState(0);
+  const [privacyClicks, setPrivacyClicks] = useState(0);
   const socialLinks = [
     { label: "Facebook", icon: "/social/facebook.svg", href: "https://www.facebook.com/artisanlabnetwork" },
     { label: "Instagram", icon: "/social/instagram.svg", href: "https://www.instagram.com/artisanlabnetwork" },
@@ -26,6 +27,18 @@ export default function Footer({
       const next = current + 1;
       if (next >= 5) {
         window.location.href = "/programs?p=aln2026";
+        return 0;
+      }
+
+      return next;
+    });
+  };
+
+  const handlePrivacyClick = () => {
+    setPrivacyClicks((current) => {
+      const next = current + 1;
+      if (next >= 3) {
+        window.location.href = "/break-the-system";
         return 0;
       }
 
@@ -80,8 +93,10 @@ export default function Footer({
             </div>
           </div>
           <p className="mt-5 max-w-md text-sm leading-7 text-white/68">
-            Artisan Lab Network is the parent organization supporting Pacific
-            Artisan Labs, Peak Artisan Labs, and Pike Artisan Labs, built to
+            Artisan Lab Network is the parent organization supporting{" "}
+            <Link href="/pacific-artisan-labs" className="transition hover:text-white">Pacific Artisan Labs</Link>,{" "}
+            <Link href="/peak-artisan-labs" className="transition hover:text-white">Peak Artisan Labs</Link>, and{" "}
+            <Link href="/pike-artisan-labs" className="transition hover:text-white">Pike Artisan Labs</Link>, built to
             serve independent eye care with more choice, more control, and
             better partnership.
           </p>
@@ -181,7 +196,15 @@ export default function Footer({
           <div>
             <p>© 2026 Artisan Lab Network</p>
             <p className="mt-1 max-w-2xl">
-              We respect your privacy. Information submitted through this site is used only to respond to your inquiry and support your relationship with Artisan Lab Network.
+              Privacy is not a game (
+              <button
+                type="button"
+                onClick={handlePrivacyClick}
+                className="inline cursor-default appearance-none border-0 bg-transparent p-0 text-inherit no-underline"
+              >
+                this is
+              </button>
+              ), and we respect your privacy. Information submitted through this site is used only to respond to your inquiry and support your relationship with Artisan Lab Network.
             </p>
           </div>
           <div className="flex shrink-0 gap-5">
@@ -191,12 +214,6 @@ export default function Footer({
         </div>
       </div>
 
-      <Link
-        href="/break-the-system"
-        className="block bg-[#14110f] pb-5 text-center text-[10px] text-white/10 transition hover:text-[#d4c09a]"
-      >
-        Keep control.
-      </Link>
     </footer>
   );
 }

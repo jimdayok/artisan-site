@@ -12,21 +12,42 @@ import {
   packagePhotochromics,
   packageShipping,
 } from "../../../../src/data/packagePriceList";
+import { lensGroupForItem } from "../../../../src/data/privatePriceList";
 
 const groups = [
   ["Progressive Designs", packageLensItems.filter((item) => item.type === "PAL")],
   ["SV Designs", packageLensItems.filter((item) => item.type === "SV" || item.type === "ESV")],
-  ["OCP Designs", packageLensItems.filter((item) => item.type === "OCP")],
+  ["Occupational Designs", packageLensItems.filter((item) => lensGroupForItem(item) === "Occupational Lenses")],
   ["Artisan Coatings", packageCoatings],
   ["Material upgrades", packageMaterials],
-  ["Photochromic options", packagePhotochromics],
   ["Blue filter options", packageBlueFilters],
+  ["Photochromic options", packagePhotochromics],
+  ["Polarized options", packageFinishing.filter((item) => item.category === "Polarized Options")],
+  ["Provisics mirror coatings", packageFinishing.filter((item) => item.category === "Provisics Mirror Coatings")],
   ["ChemClip", packageChemClip],
-  ["Edging", packageFinishing],
+  ["Edging", packageFinishing.filter((item) => item.category !== "Polarized Options" && item.category !== "Provisics Mirror Coatings")],
   ["Shipping", packageShipping],
 ] as const;
 
-export default function PrivatePricePackagesPage() {
+const packageProductMap: Record<string, string> = {
+  "iot-camber-steady-pure": "pkg-camber-steady-pure",
+  "iot-camber-steady-plus": "pkg-camber-steady-plus",
+  "iot-endless-steady": "pkg-endless-steady",
+  "iot-essential-steady": "pkg-essential-steady",
+  "artisan-cfb": "pkg-cfb",
+  "iot-endless-plus": "pkg-endless-plus",
+  "iot-endless-sv": "pkg-endless-sv",
+  "iot-endless-office": "pkg-endless-office",
+};
+
+export default async function PrivatePricePackagesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ product?: string }>;
+}) {
+  const params = await searchParams;
+  const initialLensId = params.product ? packageProductMap[params.product] : undefined;
+
   return (
     <main className="min-h-screen bg-[#f4eee4] px-4 py-8 text-[#122033] md:px-8">
       <div className="mx-auto max-w-7xl">
@@ -45,14 +66,14 @@ export default function PrivatePricePackagesPage() {
           </div>
         </section>
         <div className="mt-7">
-          <PackageQuoteBuilder />
+          <PackageQuoteBuilder initialLensId={initialLensId} />
         </div>
         <div className="mt-10 grid gap-8">
           {groups.map(([title, items]) => (
             <section key={title} className="rounded-[30px] border border-[#dfd2bf] bg-[#fbf8f3]/90 p-5 shadow-[0_20px_58px_rgba(18,32,51,0.08)] md:p-7">
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">Package Section</p>
-              <h2 className="mt-2 text-3xl font-semibold">{title}</h2>
-              <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              <h2 className="mt-2 text-2xl font-semibold">{title}</h2>
+              <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
                 {items.map((item) => <PricingCard key={item.id} item={item} compact />)}
               </div>
             </section>

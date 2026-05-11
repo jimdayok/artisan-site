@@ -9,11 +9,15 @@ export function proxy(request: NextRequest) {
   const configuredPassword = privatePriceListPassword();
   const token = request.cookies.get(privatePriceListCookieName)?.value;
 
-  if (token === privatePriceListToken(configuredPassword) || pathname === "/private/price-list/access") {
+  if (
+    token === privatePriceListToken(configuredPassword) ||
+    pathname === "/private/price-list/access" ||
+    pathname === "/private/price-list/policies"
+  ) {
     return response;
   }
 
-  // This page is hidden and discouraged from indexing, but real privacy requires authentication. This route should be moved behind the future customer portal login.
+  // This page is hidden from indexing and protected by password, but true long term privacy should be handled through the future customer portal authentication system.
   if (pathname.startsWith("/private/price-list")) {
     const accessUrl = request.nextUrl.clone();
     accessUrl.pathname = "/private/price-list/access";

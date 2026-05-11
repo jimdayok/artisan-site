@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { AlertTriangle, PackageCheck } from "lucide-react";
 import {
   adjustmentLabel,
   packageBlueFilters,
@@ -15,7 +16,7 @@ import {
   money,
   type PackageItem,
 } from "../../data/packagePriceList";
-import type { EdgeMode } from "../../data/privatePriceList";
+import { priceTypeLabel, type EdgeMode } from "../../data/privatePriceList";
 import PriceBadge from "./PriceBadge";
 
 const none = "none";
@@ -32,7 +33,7 @@ function SelectRow({ label, value, onChange, items, allowNone = true }: { label:
         {allowNone ? <option value={none}>None</option> : null}
         {items.map((entry) => (
           <option key={entry.id} value={entry.id}>
-            {entry.name} - {entry.price === 0 ? "Included" : money(entry.price)}
+            {entry.name}
           </option>
         ))}
       </select>
@@ -40,8 +41,12 @@ function SelectRow({ label, value, onChange, items, allowNone = true }: { label:
   );
 }
 
-export default function PackageQuoteBuilder() {
-  const [lensId, setLensId] = useState(packageLensItems[0].id);
+function isPackageMaterialAvailable(item: PackageItem) {
+  return !item.notes?.toLowerCase().includes("n/a");
+}
+
+export default function PackageQuoteBuilder({ initialLensId }: { initialLensId?: string }) {
+  const [lensId, setLensId] = useState(initialLensId && packageLensItems.some((item) => item.id === initialLensId) ? initialLensId : packageLensItems[0].id);
   const [materialId, setMaterialId] = useState(packageMaterials[1].id);
   const [coatingId, setCoatingId] = useState("pkg-coat-emerald");
   const [photoId, setPhotoId] = useState(none);
@@ -50,9 +55,19 @@ export default function PackageQuoteBuilder() {
   const [chemClipId, setChemClipId] = useState(none);
   const [shippingId, setShippingId] = useState("pkg-ship-ground-box");
   const [edgeMode, setEdgeMode] = useState<EdgeMode>("Edged");
+  const [showUnavailableMaterials, setShowUnavailableMaterials] = useState(false);
+  const availableMaterials = useMemo(() => packageMaterials.filter(isPackageMaterialAvailable), []);
+
+  useEffect(() => {
+    const current = packageMaterials.find((entry) => entry.id === materialId);
+    if (!current || !isPackageMaterialAvailable(current)) {
+      setMaterialId("pkg-material-polycarb");
+    }
+  }, [materialId]);
 
   const lens = selectItem(packageLensItems, lensId) ?? packageLensItems[0];
   const material = selectItem(packageMaterials, materialId);
+  const safeMaterial = material && isPackageMaterialAvailable(material) ? material : undefined;
   const coating = selectItem(packageCoatings, coatingId);
   const photo = selectItem(packagePhotochromics, photoId);
   const blue = selectItem(packageBlueFilters, blueId);
@@ -60,7 +75,7 @@ export default function PackageQuoteBuilder() {
   const chemClip = selectItem(packageChemClip, chemClipId);
   const shipping = selectItem(packageShipping, shippingId);
   const otherAddOns = [photo, blue, finishing, chemClip].filter(Boolean) as PackageItem[];
-  const total = packageTotal(lens, material, coating, undefined, undefined, shipping, edgeMode) + otherAddOns.reduce((sum, entry) => sum + entry.price, 0);
+  const total = packageTotal(lens, safeMaterial, coating, undefined, undefined, shipping, edgeMode) + otherAddOns.reduce((sum, entry) => sum + entry.price, 0);
   const outsourced = [lens, coating, photo, blue, finishing, chemClip, shipping].filter(Boolean).some((entry) => entry?.outsourced);
 
   return (
@@ -72,7 +87,39 @@ export default function PackageQuoteBuilder() {
         </div>
         <div className="grid gap-5 md:grid-cols-2">
           <SelectRow label="Package lens design" value={lensId} onChange={setLensId} items={packageLensItems} allowNone={false} />
-          <SelectRow label="Material upgrade" value={materialId} onChange={setMaterialId} items={packageMaterials} allowNone={false} />
+          <div className="grid gap-2 text-sm font-semibold text-[#122033] md:col-span-2">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span>Material upgrade</span>
+              <label className="flex items-center gap-2 text-xs text-[#625b53]">
+                <input type="checkbox" checked={showUnavailableMaterials} onChange={(event) => setShowUnavailableMaterials(event.target.checked)} />
+                Show unavailable materials
+              </label>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {(showUnavailableMaterials ? packageMaterials : availableMaterials).map((entry) => {
+                const available = isPackageMaterialAvailable(entry);
+                return (
+                  <button
+                    key={entry.id}
+                    type="button"
+                    disabled={!available}
+                    onClick={() => available && setMaterialId(entry.id)}
+                    className={`inline-flex min-h-10 items-center gap-1.5 rounded-full border px-3 text-xs font-bold transition ${
+                      materialId === entry.id
+                        ? "border-[#c7ad7b] bg-[#122033] text-white"
+                        : available
+                          ? "border-[#dfd2bf] bg-white text-[#122033] hover:bg-[#f4ead9]"
+                          : "cursor-not-allowed border-[#eadfce] bg-[#f8f1e7] text-[#9b8d7a] opacity-75"
+                    }`}
+                  >
+                    {!available ? <AlertTriangle className="h-3.5 w-3.5" aria-hidden="true" /> : null}
+                    {entry.name.replace("Hi Index ", "")} {available ? adjustmentLabel(entry.price) : "N/A"}
+                  </button>
+                );
+              })}
+            </div>
+            {!material || !isPackageMaterialAvailable(material) ? <p className="text-xs font-semibold text-[#8a4f28]">Not available for this package</p> : null}
+          </div>
           <label className="grid gap-2 text-sm font-semibold text-[#122033]">
             Edged or uncut
             <select value={edgeMode} onChange={(event) => setEdgeMode(event.target.value as EdgeMode)} className="min-h-12 rounded-2xl border border-[#dfd2bf] bg-white px-4 text-sm font-medium outline-none focus:border-[#c7ad7b]">
@@ -94,7 +141,7 @@ export default function PackageQuoteBuilder() {
         <div className="mt-6 grid gap-3">
           {[
             ["Package lens", lens.price],
-            ["Material upgrade", material?.price ?? 0],
+            ["Material upgrade", safeMaterial?.price ?? 0],
             [edgeMode, edgeMode === "Edged" ? 0 : -8],
             ["Coating upgrade", coating?.price ?? 0],
             ["Other add ons", otherAddOns.reduce((sum, entry) => sum + entry.price, 0)],
@@ -109,9 +156,13 @@ export default function PackageQuoteBuilder() {
         <div className="mt-5 flex flex-wrap gap-2">
           {lens.recommended ? <PriceBadge tone="recommended">★ Recommended</PriceBadge> : null}
           {outsourced ? <PriceBadge tone="outsourced">➜ Outsourced</PriceBadge> : null}
-          <PriceBadge tone="dark">{lens.type}</PriceBadge>
+          <PriceBadge tone="dark">{priceTypeLabel(lens.type)}</PriceBadge>
         </div>
-        <p className="mt-5 text-sm leading-7 text-white/78">
+        <p className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-white/88">
+          <PackageCheck className="h-4 w-4 text-[#d9c394]" aria-hidden="true" />
+          Package Available
+        </p>
+        <p className="mt-3 text-sm leading-7 text-white/78">
           Artisan Lens Systems include Polycarbonate and Artisan Emerald AR Treatment. This Lens System is eligible for multiple pair 50% discount.
         </p>
       </aside>

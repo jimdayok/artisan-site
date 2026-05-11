@@ -108,6 +108,7 @@ const timelineEvents = [
     title: "Pacific Artisan Labs",
     body: "Foundation of the Artisan model and independent lab vision.",
     logos: [{ src: "/logos/PAL_2CTan.png", alt: "Pacific Artisan Labs" }],
+    href: "/pacific-artisan-labs",
   },
   {
     year: "2019",
@@ -120,12 +121,14 @@ const timelineEvents = [
     title: "Peak Artisan Labs",
     body: "Expansion into Colorado strengthens the Artisan model across another regional lab relationship.",
     logos: [{ src: "/logos/Peak_Artisan_Logo 9-1-23_FINAL.png", alt: "Peak Artisan Labs" }],
+    href: "/peak-artisan-labs",
   },
   {
     year: "2025",
     title: "Pike Artisan Labs",
     body: "Expansion into Indianapolis adds another Artisan lab serving independent practices.",
     logos: [{ src: "/logos/Pike_Labs_Logo-4C.png", alt: "Pike Artisan Labs" }],
+    href: "/pike-artisan-labs",
   },
 ];
 
@@ -393,8 +396,9 @@ export default function AboutPage() {
               choice, and a stronger financial future.
             </p>
             <p>
-              Through Pacific Artisan Labs, Peak Artisan Labs, and Pike Artisan
-              Labs, we have built a national platform that aligns laboratories
+              Through <Link href="/pacific-artisan-labs" className="font-semibold text-[#1f1a17] underline decoration-[#c9b28b] underline-offset-4">Pacific Artisan Labs</Link>,{" "}
+              <Link href="/peak-artisan-labs" className="font-semibold text-[#1f1a17] underline decoration-[#c9b28b] underline-offset-4">Peak Artisan Labs</Link>, and{" "}
+              <Link href="/pike-artisan-labs" className="font-semibold text-[#1f1a17] underline decoration-[#c9b28b] underline-offset-4">Pike Artisan Labs</Link>, we have built a national platform that aligns laboratories
               and practices around shared ownership, performance, and long-term
               success.
             </p>
@@ -496,8 +500,9 @@ export default function AboutPage() {
               className="flex snap-x gap-3 overflow-x-auto pb-3 [scrollbar-width:thin]"
             >
               {timelineEvents.map((event) => (
-                <div
+                <Link
                   key={`${event.year}-${event.title}`}
+                  href={event.href ?? "#timeline"}
                   className="group relative min-w-[278px] snap-start border border-[#d8c6a8]/65 bg-[#fffaf2]/82 p-5 shadow-[0_12px_36px_rgba(49,39,26,0.07)] transition duration-200 hover:scale-[1.015] hover:border-[#c9b28b] hover:bg-white hover:shadow-[0_20px_55px_rgba(49,39,26,0.13)] md:min-w-[360px]"
                 >
                   <div className="mb-4 h-2 w-2 rounded-full bg-[#d4c09a] shadow-[0_0_18px_rgba(212,192,154,0.85)]" />
@@ -522,7 +527,7 @@ export default function AboutPage() {
                   <p className="mt-3 text-sm leading-6 text-[#5c544d]">
                     {event.body}
                   </p>
-                </div>
+                </Link>
               ))}
             </div>
           </div>

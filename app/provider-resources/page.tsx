@@ -920,27 +920,42 @@ const exclusivePrograms = [
   },
 ];
 
+const pricingAccessCards = [
+  {
+    title: "Access Private Price List",
+    body: "Confidential pricing for authorized Artisan partners. Password required.",
+    href: "/private/price-list",
+    cta: "Open Price List",
+  },
+  {
+    title: "Artisan Policies",
+    body: "Official policy guide for warranties, remakes, redos, shipping, frame handling, coatings, canceled orders, multiple pair programs, and account support.",
+    href: "/private/price-list/policies",
+    cta: "Open Artisan Policies",
+  },
+];
+
 const labCustomerServiceContacts = [
   {
     name: "Pacific Artisan Labs",
     phone: "877.390.6900",
     email: "customerservice@pacificartisanlabs.com",
-    website: "https://pacificartisanlabs.com",
-    meetHref: "/meet-the-artisans#pacific",
+    website: "/pacific-artisan-labs",
+    meetHref: "/pacific-artisan-labs",
   },
   {
     name: "Peak Artisan Labs",
     phone: "833.690.4321",
     email: "customerservice@peakartisanlabs.com",
-    website: "https://peakartisanlabs.com",
-    meetHref: "/meet-the-artisans#peak",
+    website: "/peak-artisan-labs",
+    meetHref: "/peak-artisan-labs",
   },
   {
     name: "Pike Artisan Labs",
     phone: "888.239.0303",
     email: "customerservice@pikeartisanlabs.com",
-    website: "https://pikeartisanlabs.com",
-    meetHref: "/meet-the-artisans#pike",
+    website: "/pike-artisan-labs",
+    meetHref: "/pike-artisan-labs",
   },
 ];
 
@@ -2296,6 +2311,7 @@ export default function ProviderResourcesPage({
                 {[
                   ["Systems", "#systems"],
                   ["Ordering Tools", "#tools-ordering"],
+                  ["Pricing", "#pricing-access"],
                   ["Training", "#training-education"],
                   ["Customer Service", "#lab-customer-service"],
                 ].map(([label, href]) => (
@@ -2330,6 +2346,38 @@ export default function ProviderResourcesPage({
               className="object-cover"
             />
           </motion.div>
+        </div>
+      </section>
+
+      <section id="pricing-access" data-theme="light" className="border-y border-[#e7ddd0] bg-[#fbf8f3] px-6 py-16 md:px-10 md:py-20">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeader
+            eyebrow="Partner Resources"
+            title="Partner Pricing and Artisan Policies"
+            description="Use these links for confidential partner pricing and official Artisan policy guidance. Private pricing pages require the current partner password. Artisan Policies are available as the official guide for lab policies, warranties, remakes, redos, shipping, frame handling, and account support."
+          />
+          <div className="mt-10 grid gap-5 md:grid-cols-2">
+            {pricingAccessCards.map((card) => (
+              <Link
+                key={card.title}
+                href={card.href}
+                className="group flex min-h-56 flex-col rounded-[28px] border border-black/10 bg-white p-7 shadow-[0_18px_48px_rgba(24,18,13,0.07)] transition hover:-translate-y-1 hover:border-[#c9b28b] hover:shadow-[0_26px_62px_rgba(24,18,13,0.11)]"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8a7654]">
+                  Confidential Resource
+                </p>
+                <h2 className="mt-4 text-2xl font-semibold text-[#1f1a17]">
+                  {card.title}
+                </h2>
+                <p className="mt-4 flex-1 text-sm leading-7 text-[#625b53]">
+                  {card.body}
+                </p>
+                <span className="mt-6 inline-flex w-fit items-center justify-center rounded-full bg-[#1f1a17] px-5 py-2.5 text-sm font-semibold text-white transition group-hover:bg-[#d4c09a] group-hover:text-[#171311]">
+                  {card.cta}
+                </span>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -2804,8 +2852,6 @@ export default function ProviderResourcesPage({
                       </a>
                       <a
                         href={lab.website}
-                        target="_blank"
-                        rel="noreferrer"
                         className="inline-flex min-h-10 items-center justify-center rounded-full border border-white/12 bg-white/8 px-3 py-2 text-center text-xs font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-[#171311]"
                       >
                         Visit Website

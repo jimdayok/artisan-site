@@ -18,7 +18,7 @@ const labs = [
       "https://www.google.com/maps/search/?api=1&query=12302%20NE%20Marx%20St%20Portland%20OR%2097230",
     phone: "877.390.6900",
     email: "customerservice@pacificartisanlabs.com",
-    website: "https://pacificartisanlabs.com",
+    website: "/pacific-artisan-labs",
   },
   {
     id: "peak" as const,
@@ -30,7 +30,7 @@ const labs = [
       "https://www.google.com/maps/search/?api=1&query=3568%20Peoria%20St%20Suite%20608%20Aurora%20CO%2080010",
     phone: "833.690.4321",
     email: "customerservice@peakartisanlabs.com",
-    website: "https://peakartisanlabs.com",
+    website: "/peak-artisan-labs",
   },
   {
     id: "pike" as const,
@@ -42,7 +42,7 @@ const labs = [
       "https://www.google.com/maps/search/?api=1&query=8902%20Vincennes%20Cir%20Suite%20F%20Indianapolis%20IN%2046268",
     phone: "888.239.0303",
     email: "customerservice@pikeartisanlabs.com",
-    website: "https://pikeartisanlabs.com",
+    website: "/pike-artisan-labs",
   },
 ];
 
@@ -181,8 +181,6 @@ export default function LabsSection() {
                             </a>
                             <a
                               href={lab.website}
-                              target="_blank"
-                              rel="noreferrer"
                               className="inline-flex min-h-10 items-center justify-center rounded-full border border-white/12 bg-white/8 px-3 py-2 text-center text-xs font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-[#171311]"
                             >
                               Visit Website

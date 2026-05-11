@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type MouseEvent } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,8 +9,6 @@ type Theme = "dark" | "light";
 
 type NavItem = { label: string; href?: string; dividerBefore?: boolean };
 type Dropdown = { label: string; items: NavItem[] };
-
-const LOGO_EASTER_EGG_STORAGE_KEY = "artisanLogoProgramClicks";
 
 function Capsule({
   children,
@@ -159,7 +157,6 @@ export default function Header({
 }) {
   const [theme, setTheme] = useState<Theme>("dark");
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [logoClicks, setLogoClicks] = useState(0);
 
   const resources: Dropdown = useMemo(
     () => ({
@@ -177,9 +174,9 @@ export default function Header({
     () => ({
       label: "Our Labs",
       items: [
-        { label: "Pacific Artisan Labs", href: "https://pacificartisanlabs.com" },
-        { label: "Peak Artisan Labs", href: "https://peakartisanlabs.com" },
-        { label: "Pike Artisan Labs", href: "https://pikeartisanlabs.com" },
+        { label: "Pacific Artisan Labs", href: "/pacific-artisan-labs" },
+        { label: "Peak Artisan Labs", href: "/peak-artisan-labs" },
+        { label: "Pike Artisan Labs", href: "/pike-artisan-labs" },
       ],
     }),
     []
@@ -217,35 +214,7 @@ export default function Header({
       ? "brightness(0) saturate(100%) drop-shadow(0 1px 0 rgba(255,255,255,0.2))"
       : "drop-shadow(0 0 10px rgba(0,0,0,0.55))";
 
-  const handleLogoClick = (event: MouseEvent<HTMLAnchorElement>) => {
-    const storedClicks = Number(window.localStorage.getItem(LOGO_EASTER_EGG_STORAGE_KEY) ?? logoClicks);
-    const nextClicks = Number.isFinite(storedClicks) ? storedClicks + 1 : 1;
-
-    setLogoClicks(nextClicks);
-    window.localStorage.setItem(LOGO_EASTER_EGG_STORAGE_KEY, String(nextClicks));
-
-    if (nextClicks >= 5) {
-      event.preventDefault();
-      window.localStorage.removeItem(LOGO_EASTER_EGG_STORAGE_KEY);
-      setLogoClicks(0);
-      window.location.href = "/break-the-system";
-    }
-  };
-
   const handleMobileIconClick = () => {
-    const storedClicks = Number(window.localStorage.getItem(LOGO_EASTER_EGG_STORAGE_KEY) ?? logoClicks);
-    const nextClicks = Number.isFinite(storedClicks) ? storedClicks + 1 : 1;
-
-    setLogoClicks(nextClicks);
-    window.localStorage.setItem(LOGO_EASTER_EGG_STORAGE_KEY, String(nextClicks));
-
-    if (nextClicks >= 5) {
-      window.localStorage.removeItem(LOGO_EASTER_EGG_STORAGE_KEY);
-      setLogoClicks(0);
-      window.location.href = "/break-the-system";
-      return;
-    }
-
     setMobileOpen((v) => !v);
   };
 
@@ -259,7 +228,6 @@ export default function Header({
             href="/"
             className="shrink-0 flex items-center"
             aria-label="Home"
-            onClick={handleLogoClick}
           >
             <Image
               src="/aln-white-logo.png"

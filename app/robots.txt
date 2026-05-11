@@ -8,6 +8,9 @@ Disallow: /
 User-agent: OAI-SearchBot
 Disallow: /
 
+User-agent: OAI SearchBot
+Disallow: /
+
 User-agent: ChatGPT-User
 Disallow: /
 

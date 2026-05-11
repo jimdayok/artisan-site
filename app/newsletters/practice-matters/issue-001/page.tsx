@@ -285,7 +285,7 @@ export default function PracticeMattersIssue001Page() {
                   Curious how your current lab compares?
                 </h3>
                 <Link
-                  href="/break-the-system"
+                  href="/artisan-model"
                   className="mt-5 inline-flex w-full justify-center rounded-full bg-[#d9c394] px-5 py-2.5 text-center text-sm font-semibold text-[#142033] transition hover:-translate-y-0.5 hover:bg-white sm:w-auto"
                 >
                   See the Difference
@@ -392,7 +392,7 @@ export default function PracticeMattersIssue001Page() {
                   Request Product Guidance
                 </Link>
                 <Link
-                  href="/break-the-system"
+                  href="/artisan-model"
                   className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#dfd2bf] bg-[#f8f3eb] px-5 py-2 text-center text-sm font-semibold text-[#142033] transition hover:-translate-y-0.5 hover:bg-white sm:w-auto"
                 >
                   Compare Your Current Lab

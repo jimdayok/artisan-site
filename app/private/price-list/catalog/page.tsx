@@ -42,7 +42,7 @@ export default function PrivatePriceCatalogPage() {
         <PricingHeader
           eyebrow="Brand Catalog"
           title="Price List by Brand"
-          description="Browse the 2026 XG price list grouped by brand and product family, with cards instead of cramped tables."
+          description="Browse General Pricing by brand and product family, with compact cards, AR compatibility, and professional resource links."
         />
         <div className="mt-8 grid gap-8">
           {catalogSections.map((section) => {
@@ -58,7 +58,7 @@ export default function PrivatePriceCatalogPage() {
                   </div>
                   <BrandMark brand={section.label} />
                 </div>
-                <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
                   {items.map((entry) => <PricingCard key={entry.id} item={entry} compact />)}
                 </div>
               </section>

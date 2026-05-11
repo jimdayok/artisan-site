@@ -295,7 +295,7 @@ const homeLabs = [
     description:
       "The original Artisan lab, serving independent practices with full-service production, responsive customer service, and strong regional relationships.",
     address: ["12302 NE Marx St.", "Portland, OR 97230"],
-    meetHref: "/meet-the-artisans#pacific",
+    meetHref: "/pacific-artisan-labs",
     phone: "877.390.6900",
     phoneHref: "8773906900",
     email: "customerservice@pacificartisanlabs.com",
@@ -312,7 +312,7 @@ const homeLabs = [
     description:
       "A Colorado-based Artisan lab bringing local support, finishing expertise, and practical service to independent practices across the mountain region.",
     address: ["3568 Peoria St., Suite 608", "Aurora, CO 80010"],
-    meetHref: "/meet-the-artisans#peak",
+    meetHref: "/peak-artisan-labs",
     phone: "833.690.4321",
     phoneHref: "8336904321",
     email: "customerservice@peakartisanlabs.com",
@@ -329,7 +329,7 @@ const homeLabs = [
     description:
       "The central U.S. Artisan lab, built to add speed, flexibility, and personal support for practices that want a better lab relationship.",
     address: ["8902 Vincennes Cir., Suite F", "Indianapolis, IN 46268"],
-    meetHref: "/meet-the-artisans#pike",
+    meetHref: "/pike-artisan-labs",
     phone: "888.239.0303",
     phoneHref: "8882390303",
     email: "customerservice@pikeartisanlabs.com",
@@ -713,31 +713,16 @@ function BetterModelCard({
                           alt: "$0 Tariff Fees. No tariff passthrough fees. Clear pricing from the start.",
                         },
                       ].map((metric) => (
-                        metric.title === "Service Levels" ? (
-                          <Link
-                            key={metric.title}
-                            href="/break-the-system"
-                            aria-label="Break the System"
-                            className="block rounded-2xl border border-black/10 bg-white p-3 shadow-[0_20px_50px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_25px_60px_rgba(0,0,0,0.12)]"
-                          >
-                            <img
-                              src={metric.icon}
-                              alt={metric.alt}
-                              className="h-auto w-full rounded-xl object-contain"
-                            />
-                          </Link>
-                        ) : (
                         <div
-                            key={metric.title}
-                            className="rounded-2xl border border-black/10 bg-white p-3 shadow-[0_20px_50px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_25px_60px_rgba(0,0,0,0.12)]"
-                          >
+                          key={metric.title}
+                          className="rounded-2xl border border-black/10 bg-white p-3 shadow-[0_20px_50px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_25px_60px_rgba(0,0,0,0.12)]"
+                        >
                           <img
                             src={metric.icon}
                             alt={metric.alt}
                             className="h-auto w-full rounded-xl object-contain"
                           />
                         </div>
-                        )
                       ))}
                     </div>
 

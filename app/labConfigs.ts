@@ -1,0 +1,361 @@
+import type { LabLandingConfig } from "./components/LabLandingPage";
+
+const SIGNUP_URL = "https://newaccount.artisanlabnetwork.com/";
+const CONTACT_URL = "https://wkf.ms/43N58Nx";
+const RESOURCES_URL = "/provider-resources";
+
+const pacificBase = "/pdx/website-images";
+const peakBase = "/images/labs/peak";
+const pikeBase = "/images/labs/pike";
+
+export const pacificLabConfig = {
+  labName: "Pacific Artisan Labs",
+  locationLabel: "Pacific Artisan Labs | Portland, Oregon",
+  logo: `${pacificBase}/84bf801-8df3-dea0-f466-11c3a773e13_PacificArtisanLabs_logoWHITE.png`,
+  logoAlt: "Pacific Artisan Labs logo",
+  heroImage: `${pacificBase}/pdx-background.jpeg`,
+  heroAlt: "Pacific Artisan Labs original Portland hero background graphic",
+  heroEyebrowIcon: "trees",
+  headline: "Crafted with Northwest Character.",
+  subheadline:
+    "Pacific Artisan Labs brings together independent values, premium lens production, and a service-first mindset for practices that expect more from their lab.",
+  theme: "pacific",
+  accent: "#d8c098",
+  accentSoft: "#e9dcc3",
+  dark: "#10251f",
+  heroOverlay: "bg-[linear-gradient(90deg,rgba(9,22,20,0.96)_0%,rgba(14,25,39,0.82)_46%,rgba(14,25,39,0.48)_100%)]",
+  primaryHref: SIGNUP_URL,
+  contactHref: CONTACT_URL,
+  resourcesHref: RESOURCES_URL,
+  stats: {
+    partnerLocations: 20,
+    regionLine:
+      "Pacific combines Portland craft and Northwest independence with the scale, product access, and service support of the Artisan Lab Network.",
+  },
+  intro: {
+    eyebrow: "The Original Artisan Spirit",
+    title: "Built in the Pacific Northwest with craft, care, and quiet confidence.",
+    icon: "leaf",
+    image: `${pacificBase}/5e3ae8d-8c5-0df-6675-02843c0d66_Pacific_Artisan_Labs_Artisan_Quality.jpg`,
+    imageAlt: "Pacific Artisan Labs optical quality detail",
+    body: [
+      "Pacific carries the warm, independent spirit that shaped Artisan Lab Network from the beginning. The work is thoughtful, detailed, and rooted in the belief that practices deserve a lab relationship with real people behind it.",
+      "From Portland, the team supports independent eye care with premium lens choices, consistent communication, and a craft mindset that respects every prescription and every patient experience.",
+    ],
+  },
+  difference: {
+    eyebrow: "Built in the Pacific Northwest",
+    title: "A warmer kind of precision for independent practices.",
+    cards: [
+      {
+        icon: "trees",
+        title: "Regional Character",
+        body: "Pacific feels local because it is local: grounded, practical, creative, and comfortable working close to the details.",
+      },
+      {
+        icon: "glasses",
+        title: "Optical Craft",
+        body: "Every job moves through a team that understands how measurements, materials, coatings, and finishing affect the final experience.",
+      },
+      {
+        icon: "handshake",
+        title: "Independent Alignment",
+        body: "PAL is built to support doctor-owned practices with more choice, honest service, and partnership that does not feel scripted.",
+      },
+    ],
+  },
+  strengths: {
+    eyebrow: "Craft, Care, and Consistency",
+    title: "Production strength with a human touch at every handoff.",
+    body: "Pacific blends modern lab systems with experienced judgment. The result is a steady, premium workflow that keeps quality visible without making service feel impersonal.",
+    image: `${pacificBase}/37c5b8-1c2c-c8e4-c35-c163d37a785_Pacific_Artisan_Labs_HP_Asian_Glasses.jpg`,
+    imageAlt: "Patient wearing eyewear supported by Pacific Artisan Labs",
+    points: [
+      { icon: "clock", title: "Responsive Service", body: "Clear support when your team needs answers." },
+      { icon: "shieldCheck", title: "Quality Controls", body: "Practical checkpoints that protect the patient result." },
+      { icon: "sparkles", title: "Premium Finishing", body: "A polished approach to lens work and presentation." },
+      { icon: "users", title: "Practice-Aware Support", body: "People who understand independent optical workflows." },
+    ],
+  },
+  technology: {
+    eyebrow: "Technology with a Human Touch",
+    title: "Advanced tools are strongest when skilled people guide them.",
+    body: "PAL uses modern production technology to improve consistency, but the experience stays personal. The team keeps attention on fit, finish, communication, and the practice relationship behind each order.",
+    image: `${pacificBase}/6552f5-2ac7-15a1-43-5fc5873b86d_b0eb63fe-d463-4bb5-8150-13c71d440e1f.jpg`,
+    imageAlt: "Pacific Artisan Labs optical lab detail",
+    cards: [
+      { icon: "scanLine", title: "Measured Accuracy", body: "Digital workflows support more confident lens production." },
+      { icon: "cog", title: "Reliable Process", body: "A steady production rhythm helps reduce friction for practices." },
+    ],
+  },
+  partnership: {
+    eyebrow: "Independent by Nature",
+    title: "A local lab presence with the broader Artisan Lab Network behind it.",
+    body: "Pacific gives practices the feel of a close lab team with access to the support, resources, and vendor choice of the network. It is a better fit for practices that want partnership without giving up control.",
+    image: `${pacificBase}/658caac-5fdb-5577-3c18-b67c85ce861c_Pacific_Artisan_Labs_PAL_Kajabi_Cover.jpg`,
+    imageAlt: "Pacific Artisan Labs branded Portland visual",
+    stats: [
+      { icon: "mapPin", value: "PDX", label: "Portland-based lab support" },
+      { icon: "handshake", value: "Choice", label: "Built for independent practices" },
+      { icon: "gem", value: "Craft", label: "Premium lens work with care" },
+    ],
+  },
+  features: {
+    eyebrow: "A Better Lab Experience",
+    title: "The details that make Pacific feel different.",
+    cards: [
+      { icon: "trees", title: "Northwest Craft", body: "Warm, independent, and attentive to the texture of the work." },
+      { icon: "leaf", title: "Independent Spirit", body: "A lab relationship designed around choice and trust." },
+      { icon: "glasses", title: "Premium Lens Work", body: "Focused production for eyewear patients can feel confident wearing." },
+      { icon: "clock", title: "Service with Care", body: "Useful answers, clear handoffs, and practical follow-through." },
+      { icon: "scanLine", title: "Technology with Touch", body: "Modern systems guided by experienced optical judgment." },
+      { icon: "handshake", title: "Partnership First", body: "Support that respects how your practice wants to serve patients." },
+    ],
+  },
+  culture: {
+    eyebrow: "Local Lab Culture",
+    title: "Thoughtful, capable, and intentionally independent.",
+    body: "Pacific’s culture is less about noise and more about attention. The team brings a maker’s discipline to production and a neighborly mindset to service.",
+    image: `${pacificBase}/4b0850-53de-ab2a-2ec4-0dfd55a1de1_david-travis-aVvZJC0ynBQ-unsplash.jpg`,
+    imageAlt: "Pacific Northwest forest landscape representing Portland regional character",
+    notes: [
+      "Warm communication that helps practices feel known.",
+      "A craft-focused approach to quality, not just throughput.",
+      "Independent values backed by the reach of Artisan Lab Network.",
+    ],
+  },
+  finalCta: {
+    title: "Work with a lab built on craft, care, and independent values.",
+    body: "Pacific Artisan Labs is ready for practices that want a thoughtful lab partner with premium production and a distinctly Northwest point of view.",
+    image: `${pacificBase}/13e5b2-f1b-52ed-cf73-d6803c2caa_Pacific_Artisan_Labs_Glasses_2Template_Background_HP.jpg`,
+    imageAlt: "Pacific Artisan Labs glasses background",
+    icon: "glasses",
+  },
+} satisfies LabLandingConfig;
+
+export const peakLabConfig = {
+  labName: "Peak Artisan Labs",
+  locationLabel: "Peak Artisan Labs | Denver, Colorado",
+  logo: `${peakBase}/01566-0744-4e88-4e8a-cf414f64a51b_Peak_Artisan_Logo_LIGHTBLUE_5-30-23_FINAL.png`,
+  logoAlt: "Peak Artisan Labs logo",
+  heroImage: `${peakBase}/284f314-0271-d8c3-565c-353313efff5_Pacific_Artisan_Labs_PEAK_Kajabi_Cover.jpg`,
+  heroAlt: "Peak Artisan Labs mountain-inspired hero background",
+  heroEyebrowIcon: "mountain",
+  headline: "Crafted at Elevation.",
+  subheadline:
+    "Peak Artisan Labs delivers premium lens technology, sharp service, and independent partnership from the heart of Colorado.",
+  theme: "peak",
+  accent: "#b9cad7",
+  accentSoft: "#d9e4e9",
+  dark: "#162636",
+  heroOverlay: "bg-[linear-gradient(90deg,rgba(16,28,42,0.94)_0%,rgba(23,39,56,0.74)_48%,rgba(69,74,88,0.36)_100%)]",
+  primaryHref: SIGNUP_URL,
+  contactHref: CONTACT_URL,
+  resourcesHref: RESOURCES_URL,
+  stats: {
+    partnerLocations: 15,
+    regionLine:
+      "Peak brings Colorado confidence, clean production discipline, and doctor-owned alignment to independent practices that want a lab built to perform.",
+  },
+  intro: {
+    eyebrow: "Built for Practices That Aim Higher",
+    title: "Denver energy, artisan precision, and a cooler standard of service.",
+    icon: "compass",
+    image: `${peakBase}/a07eab-ee36-606c-a2b4-84a8a352b5_b42cf282-31fd-491a-8147-5db146c8f6db.jpg`,
+    imageAlt: "Peak Artisan Labs optical brand photography",
+    body: [
+      "Peak brings a clean, elevated feel to the Artisan Lab Network. The work is confident and performance-minded, with a lab team focused on helping practices move with clarity.",
+      "From Denver, Peak supports independent eye care with premium lens options, modern production, and service standards that stay steady when the day gets demanding.",
+    ],
+  },
+  difference: {
+    eyebrow: "Denver Energy. Artisan Precision.",
+    title: "A lab experience shaped by altitude, clarity, and momentum.",
+    cards: [
+      { icon: "mountain", title: "Elevated Perspective", body: "Peak brings a Colorado point of view: focused, capable, and comfortable with ambitious practices." },
+      { icon: "gauge", title: "Performance Mindset", body: "Production support is built to keep quality high and communication crisp." },
+      { icon: "shieldCheck", title: "Confident Follow-Through", body: "The team works to make each order feel handled, from submission to final delivery." },
+    ],
+  },
+  strengths: {
+    eyebrow: "Elevated Service Standards",
+    title: "Cool-headed production for high-quality results.",
+    body: "Peak is designed for practices that need a lab partner with control, composure, and premium execution. The workflow favors precision, service visibility, and the confidence to keep orders moving.",
+    image: `${peakBase}/38d37c-aa73-2b1-366-4cb4b18e171e_Peak_Artisan_Labs_MTNS_ONLY_CREAME.jpg`,
+    imageAlt: "Cream mountain graphic for Peak Artisan Labs",
+    points: [
+      { icon: "zap", title: "Daring Energy", body: "A sharper, more forward lab personality." },
+      { icon: "compass", title: "Clear Direction", body: "Support that helps practices know the next step." },
+      { icon: "glasses", title: "Premium Lens Work", body: "Technology and craft applied with discipline." },
+      { icon: "mapPin", title: "Denver Reach", body: "Regional service with network backing." },
+    ],
+  },
+  technology: {
+    eyebrow: "Technology That Performs Under Pressure",
+    title: "Modern production built for clean execution.",
+    body: "Peak pairs advanced lab capability with a practical service model. The technology supports consistency, while the team brings the judgment needed to keep the experience premium.",
+    image: `${peakBase}/fab6848-61c-cac7-cd4-82c214b3dd3c_ethan-hu-0o33pFb6j08-unsplash.jpg`,
+    imageAlt: "Colorado mountain landscape representing Peak Artisan Labs",
+    cards: [
+      { icon: "scanLine", title: "Sharp Detail", body: "Digital production support for accurate lens work." },
+      { icon: "cog", title: "Steady Systems", body: "Processes built to reduce drag and maintain quality." },
+    ],
+  },
+  partnership: {
+    eyebrow: "Independent Strength at Altitude",
+    title: "A premium Colorado lab for practices that value choice.",
+    body: "Peak supports independent practices with a stronger kind of lab relationship: responsive, modern, and aligned with doctors who want product choice and service that shows up.",
+    image: `${peakBase}/8ebf8c-381c-0074-4636-13bada42ab_Peak_Artisan_Labs_MTNS_ONLY_MAUVE_Kajabi_Cover.jpg`,
+    imageAlt: "Mauve mountain cover artwork for Peak Artisan Labs",
+    stats: [
+      { icon: "mapPin", value: "DEN", label: "Denver-based regional energy" },
+      { icon: "gauge", value: "High", label: "Performance-minded production" },
+      { icon: "users", value: "Open", label: "Independent practice support" },
+    ],
+  },
+  features: {
+    eyebrow: "Premium Performance",
+    title: "Peak is built to feel focused, capable, and elevated.",
+    cards: [
+      { icon: "target", title: "Elevated Precision", body: "Disciplined lens work with a polished service rhythm." },
+      { icon: "mapPin", title: "Denver Driven", body: "A local identity with Colorado confidence." },
+      { icon: "shieldCheck", title: "Cool Under Pressure", body: "Calm support when production details matter." },
+      { icon: "gauge", title: "Premium Performance", body: "A lab experience shaped around consistency and control." },
+      { icon: "mountain", title: "Mountain Strong", body: "Durable partnership for ambitious independent practices." },
+      { icon: "compass", title: "Independent Focus", body: "More choice, better alignment, and practical guidance." },
+    ],
+  },
+  culture: {
+    eyebrow: "Peak Lab Culture",
+    title: "Clean, confident, and ready for demanding days.",
+    body: "Peak’s culture is modern and steady. The team brings focus to production, clarity to service, and a sense of momentum that fits Colorado practices looking for a stronger lab partner.",
+    image: `${peakBase}/dc18f4-45b6-2261-3844-4dee5ea4e04b_Colorado_State_Lab_Location.png`,
+    imageAlt: "Colorado lab location artwork for Peak Artisan Labs",
+    notes: [
+      "Crisp communication that helps teams plan with confidence.",
+      "A premium performance mindset without unnecessary drama.",
+      "Independent support backed by Artisan Lab Network resources.",
+    ],
+  },
+  finalCta: {
+    title: "Partner with a lab built to perform at a higher level.",
+    body: "Peak Artisan Labs gives independent practices a Colorado lab partner with precision, modern production, and service that keeps its footing.",
+    image: `${peakBase}/284f314-0271-d8c3-565c-353313efff5_Pacific_Artisan_Labs_PEAK_Kajabi_Cover.jpg`,
+    imageAlt: "Peak Artisan Labs hero background",
+    icon: "mountain",
+  },
+} satisfies LabLandingConfig;
+
+export const pikeLabConfig = {
+  labName: "Pike Artisan Labs",
+  locationLabel: "Pike Artisan Labs | Indianapolis, Indiana",
+  logo: `${pikeBase}/33e621-ca6-84b-bf0a-f854bfbc6d2a_Pike_Labs_Logo-4C.png`,
+  logoAlt: "Pike Artisan Labs logo",
+  logoDark: true,
+  heroImage: `${pikeBase}/fc1b02-878-0ef7-0715-5dd4b8f727e3_PIKE_Cover_2880x1200.jpg`,
+  heroAlt: "Pike Artisan Labs original Indianapolis hero background",
+  heroEyebrowIcon: "gauge",
+  headline: "Precision at Full Speed.",
+  subheadline:
+    "Pike Artisan Labs brings Midwestern work ethic, modern production, and independent lab partnership together for practices that need quality without slowing down.",
+  theme: "pike",
+  accent: "#c95f4b",
+  accentSoft: "#ead0c6",
+  dark: "#1f2026",
+  heroOverlay: "bg-[linear-gradient(90deg,rgba(14,18,24,0.95)_0%,rgba(24,29,39,0.76)_48%,rgba(108,37,31,0.34)_100%)]",
+  primaryHref: SIGNUP_URL,
+  contactHref: CONTACT_URL,
+  resourcesHref: RESOURCES_URL,
+  stats: {
+    partnerLocations: 25,
+    regionLine:
+      "Pike pairs Indianapolis momentum and Midwestern follow-through with modern production support for independent practices that need quality to keep moving.",
+  },
+  intro: {
+    eyebrow: "Built for Momentum",
+    title: "Indianapolis speed, artisan accuracy, and service that follows through.",
+    icon: "route",
+    image: `${pikeBase}/1788cb0-b45c-0bb-6282-150e4b471e7_Artisan_Quality_PIKE.jpg`,
+    imageAlt: "Pike Artisan Labs quality and production imagery",
+    body: [
+      "Pike brings a practical, high-output mindset to the Artisan Lab Network. The energy is fast and precise, but never flashy for its own sake.",
+      "From Indianapolis, Pike supports independent practices with production discipline, reliable service, and a steady focus on getting quality orders where they need to go.",
+    ],
+  },
+  difference: {
+    eyebrow: "Fast Service Without Cutting Corners",
+    title: "A premium lab experience built for movement and reliability.",
+    cards: [
+      { icon: "gauge", title: "Built for Speed", body: "Pike keeps momentum visible with production habits that help practices stay on schedule." },
+      { icon: "target", title: "Precision First", body: "The focus stays on accuracy, fit, and finishing even when the pace is high." },
+      { icon: "shieldCheck", title: "Midwest Reliable", body: "Straightforward support, practical problem solving, and follow-through your team can trust." },
+    ],
+  },
+  strengths: {
+    eyebrow: "Precision Production for Independent Practices",
+    title: "Modern production that keeps orders moving.",
+    body: "Pike is shaped for practices that value speed, communication, and consistency. The lab experience is direct, efficient, and grounded in service that helps the practice day run cleaner.",
+    image: `${pikeBase}/05dc0e-0a84-768e-4af3-72f66ccc2a0_PIKE_GLASSES_HP_Kajabi_Cover.jpg`,
+    imageAlt: "Pike Artisan Labs glasses production background",
+    points: [
+      { icon: "timer", title: "Turnaround Focus", body: "A production mindset centered on timely movement." },
+      { icon: "target", title: "Accurate Execution", body: "Precision matters from order entry through finishing." },
+      { icon: "cog", title: "Production Rhythm", body: "Clean handoffs help work move without confusion." },
+      { icon: "handshake", title: "Practical Support", body: "Service built around what practices actually need." },
+    ],
+  },
+  technology: {
+    eyebrow: "Technology That Keeps Orders Moving",
+    title: "Systems, people, and process aligned around reliable output.",
+    body: "Pike uses modern lab technology to support speed and precision while keeping people in the loop. The result is a lab partner that moves quickly and still pays attention.",
+    image: `${pikeBase}/e783a1c-e14a-bace-7238-53ccbfcc27d6_AdobeStock_1050636918_Preview.jpeg`,
+    imageAlt: "Modern production technology representing Pike Artisan Labs",
+    cards: [
+      { icon: "route", title: "Order Flow", body: "A practical process for keeping jobs moving." },
+      { icon: "factory", title: "High-Output Ready", body: "Production support for busy independent practices." },
+    ],
+  },
+  partnership: {
+    eyebrow: "A Lab Partner That Shows Up",
+    title: "Fast, practical support for independent practices.",
+    body: "Pike gives practices a lab relationship built around reliability. It is a strong fit for teams that want clear answers, steady production, and an independent partner that understands urgency.",
+    image: `${pikeBase}/88213cb-2e22-bdc1-7e4-c8436eefea82_c51c904b-4a82-49a8-981f-77731ee647c6.jpg`,
+    imageAlt: "Pike Artisan Labs Indianapolis regional visual",
+    stats: [
+      { icon: "mapPin", value: "IND", label: "Indianapolis-based lab energy" },
+      { icon: "timer", value: "Fast", label: "Momentum-minded production" },
+      { icon: "shieldCheck", value: "Steady", label: "Service-driven reliability" },
+    ],
+  },
+  features: {
+    eyebrow: "Midwestern Reliability",
+    title: "Pike is precise, practical, and built to move.",
+    cards: [
+      { icon: "gauge", title: "Built for Speed", body: "Momentum without turning quality into an afterthought." },
+      { icon: "target", title: "Precision First", body: "Accurate lens work that keeps the patient result in view." },
+      { icon: "shieldCheck", title: "Midwest Reliable", body: "Clear communication and dependable follow-through." },
+      { icon: "route", title: "Orders in Motion", body: "A workflow designed to keep jobs from sitting still." },
+      { icon: "cog", title: "Technology Powered", body: "Modern systems that support efficient production." },
+      { icon: "handshake", title: "Partner Focused", body: "A practical lab relationship for independent practices." },
+    ],
+  },
+  culture: {
+    eyebrow: "Pike Lab Culture",
+    title: "Direct, capable, and serious about follow-through.",
+    body: "Pike’s culture reflects Indianapolis at its best: hardworking, precise, and built around motion. The page has speed in its posture, but the lab’s promise is reliability.",
+    image: `${pikeBase}/77acd47-8d62-271c-4e1c-c554b0003_newlogoforwebsite.png`,
+    imageAlt: "Pike Artisan Labs branded artwork",
+    notes: [
+      "Practical service for busy teams that need answers.",
+      "Production discipline that supports speed and quality together.",
+      "Doctor-owned alignment with the strength of the network behind it.",
+    ],
+  },
+  finalCta: {
+    title: "Move forward with a lab built for speed, precision, and follow-through.",
+    body: "Pike Artisan Labs helps independent practices keep quality moving with modern production, clear service, and a practical Indianapolis mindset.",
+    image: `${pikeBase}/fc1b02-878-0ef7-0715-5dd4b8f727e3_PIKE_Cover_2880x1200.jpg`,
+    imageAlt: "Pike Artisan Labs original hero background",
+    icon: "gauge",
+  },
+} satisfies LabLandingConfig;

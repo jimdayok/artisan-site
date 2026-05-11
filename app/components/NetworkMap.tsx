@@ -27,7 +27,7 @@ const labs = [
     logoAlt: "Pacific Artisan Labs logo",
     description:
       "The original Artisan lab, serving independent practices with full-service production, responsive customer service, and strong regional relationships.",
-    meetHref: "/meet-the-artisans#pacific",
+    meetHref: "/pacific-artisan-labs",
     established: "2018",
     address: ["12302 NE Marx St.", "Portland, OR 97230"],
     mapsHref:
@@ -35,7 +35,7 @@ const labs = [
     phone: "877.390.6900",
     phoneHref: "8773906900",
     email: "customerservice@pacificartisanlabs.com",
-    website: "https://pacificartisanlabs.com",
+    website: "/pacific-artisan-labs",
     position: { left: "19%", top: "33%" },
   },
   {
@@ -47,7 +47,7 @@ const labs = [
     logoAlt: "Peak Artisan Labs logo",
     description:
       "A Colorado-based Artisan lab bringing local support, finishing expertise, and practical service to independent practices across the mountain region.",
-    meetHref: "/meet-the-artisans#peak",
+    meetHref: "/peak-artisan-labs",
     established: "2023",
     address: ["3568 Peoria St., Suite 608", "Aurora, CO 80010"],
     mapsHref:
@@ -55,7 +55,7 @@ const labs = [
     phone: "833.690.4321",
     phoneHref: "8336904321",
     email: "customerservice@peakartisanlabs.com",
-    website: "https://peakartisanlabs.com",
+    website: "/peak-artisan-labs",
     position: { left: "44%", top: "51%" },
   },
   {
@@ -67,7 +67,7 @@ const labs = [
     logoAlt: "Pike Artisan Labs logo",
     description:
       "The central U.S. Artisan lab, built to add speed, flexibility, and personal support for practices that want a better lab relationship.",
-    meetHref: "/meet-the-artisans#pike",
+    meetHref: "/pike-artisan-labs",
     established: "2025",
     address: ["8902 Vincennes Cir., Suite F", "Indianapolis, IN 46268"],
     mapsHref:
@@ -75,7 +75,7 @@ const labs = [
     phone: "888.239.0303",
     phoneHref: "8882390303",
     email: "customerservice@pikeartisanlabs.com",
-    website: "https://pikeartisanlabs.com",
+    website: "/pike-artisan-labs",
     position: { left: "67%", top: "43%" },
   },
 ];
@@ -278,8 +278,6 @@ export default function NetworkMap({
                               </a>
                               <a
                                 href={lab.website}
-                                target="_blank"
-                                rel="noreferrer"
                                 className="inline-flex min-h-10 items-center justify-center rounded-full border border-white/12 bg-white/8 px-3 py-2 text-center text-xs font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-black"
                               >
                                 Visit Website

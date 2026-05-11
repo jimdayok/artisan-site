@@ -1,17 +1,23 @@
 import PricingHeader from "../../../src/components/private-price/PricingHeader";
 import PrivatePriceDashboard from "../../../src/components/private-price/PrivatePriceDashboard";
 
-export default function PrivatePriceListPage() {
+export default async function PrivatePriceListPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ coating?: string }>;
+}) {
+  const params = await searchParams;
+
   return (
-    <main className="min-h-screen bg-[#f4eee4] px-4 py-8 text-[#122033] md:px-8">
-      <div className="mx-auto max-w-7xl">
+    <main className="min-h-screen overflow-x-hidden bg-[#f4eee4] px-3 py-5 text-[#122033] md:px-6">
+      <div className="mx-auto w-full max-w-[1680px]">
         <PricingHeader
-          eyebrow="Premium Dashboard"
+          eyebrow="Premium Pricing Portal"
           title="2026 Price List"
-          description="Search, filter, and calculate material-adjusted pricing from the 2026 Artisan Lab Network XG price list."
+          description="Compact search, filters, live material pricing, AR compatibility, package availability, MSRP guidance, and PDF exports."
         />
         <div className="mt-7">
-          <PrivatePriceDashboard />
+          <PrivatePriceDashboard initialCoatingId={params.coating} />
         </div>
       </div>
     </main>

@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   robots: {
     index: false,
     follow: false,
+    noarchive: true,
+    nosnippet: true,
     nocache: true,
     googleBot: {
       index: false,
@@ -23,6 +25,6 @@ export default async function PrivatePriceListLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // This page is hidden and discouraged from indexing, but real privacy requires authentication. This route should be moved behind the future customer portal login.
+  // This page is hidden from indexing and protected by password, but true long term privacy should be handled through the future customer portal authentication system.
   return <>{children}</>;
 }

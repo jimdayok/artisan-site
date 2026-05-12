@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { MotionConfig, motion, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
   Clock,
@@ -73,6 +73,8 @@ export type LabLandingConfig = {
   primaryHref: string;
   contactHref: string;
   resourcesHref: string;
+  websiteHref: string;
+  meetHref: string;
   intro: {
     eyebrow: string;
     title: string;
@@ -130,6 +132,25 @@ export type LabLandingConfig = {
     imageAlt: string;
     icon: IconName;
   };
+  personality: {
+    eyebrow: string;
+    title: string;
+    body: string;
+    words: string[];
+  };
+  backgroundWords: {
+    hero: string;
+    identity: string;
+    stats: string;
+    personality: string;
+    difference: string;
+    strengths: string;
+    technology: string;
+    partnership: string;
+    features: string;
+    culture: string;
+    finalCta: string;
+  };
   stats: {
     partnerLocations: number;
     regionLine: string;
@@ -161,29 +182,32 @@ const iconMap: Record<IconName, LucideIcon> = {
 };
 
 const reveal = {
-  initial: { opacity: 0, y: 24 },
+  initial: { opacity: 0, y: 28 },
   whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, amount: 0.2 },
-  transition: { duration: 0.55, ease: "easeOut" },
+  viewport: { once: true, amount: 0.18 },
+  transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] },
 } as const;
 
 export default function LabLandingPage({ config }: { config: LabLandingConfig }) {
   return (
-    <main className="min-h-screen bg-[#f4eee4] text-[#142033]">
-      <Header signUpHref={config.primaryHref} />
-      <Hero config={config} />
-      <Identity config={config} />
-      <LabStats config={config} />
-      <MeetArtisans config={config} />
-      <Difference config={config} />
-      <Strengths config={config} />
-      <Technology config={config} />
-      <Partnership config={config} />
-      <FeatureGrid config={config} />
-      <Culture config={config} />
-      <FinalCta config={config} />
-      <Footer signUpHref={config.primaryHref} />
-    </main>
+    <MotionConfig reducedMotion="user">
+      <main className="min-h-screen bg-[#f4eee4] text-[#142033]">
+        <Header signUpHref={config.primaryHref} />
+        <Hero config={config} />
+        <Identity config={config} />
+        <LabPersonalityPanel config={config} />
+        <LabStats config={config} />
+        <MeetArtisans config={config} />
+        <Difference config={config} />
+        <Strengths config={config} />
+        <Technology config={config} />
+        <Partnership config={config} />
+        <FeatureGrid config={config} />
+        <Culture config={config} />
+        <FinalCta config={config} />
+        <Footer signUpHref={config.primaryHref} />
+      </main>
+    </MotionConfig>
   );
 }
 
@@ -200,13 +224,16 @@ function Hero({ config }: { config: LabLandingConfig }) {
       <Image src={config.heroImage} alt={config.heroAlt} width={1} height={1} priority className="sr-only" />
       <div className={`absolute inset-0 -z-10 ${config.heroOverlay}`} />
       <div className={heroAccentClass(config.theme)} aria-hidden />
+      <BackgroundWord light className="bottom-28 left-[-1rem] md:left-[5vw]">
+        {config.backgroundWords.hero}
+      </BackgroundWord>
 
       <div className="mx-auto flex min-h-[calc(100vh-6rem)] max-w-7xl flex-col justify-end px-5 pb-12 md:px-10 md:pb-20">
         <motion.div
           initial={{ opacity: 0, y: 22 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.65, ease: "easeOut" }}
-          className="max-w-3xl"
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+          className="relative z-10 max-w-3xl premium-reveal"
         >
           <Image
             src={config.logo}
@@ -222,6 +249,9 @@ function Hero({ config }: { config: LabLandingConfig }) {
           <h1 className="mt-6 max-w-4xl text-5xl font-semibold tracking-tight sm:text-6xl lg:text-7xl">
             {config.headline}
           </h1>
+          <div className="font-alfons-display mt-4 text-3xl leading-none text-white/70 md:text-5xl">
+            {config.personality.words[0]}
+          </div>
           <p className="mt-6 max-w-2xl text-lg leading-8 text-white/80 md:text-xl">{config.subheadline}</p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <ButtonLink href={config.primaryHref} variant="gold">Become an Artisan Partner</ButtonLink>
@@ -243,11 +273,14 @@ function LabStats({ config }: { config: LabLandingConfig }) {
 
   return (
     <section data-theme="dark" className="relative isolate overflow-hidden px-5 py-20 text-white md:px-10 lg:py-24" style={{ background: config.dark }}>
+      <BackgroundWord light className="right-[-12rem] top-16">
+        {config.backgroundWords.stats}
+      </BackgroundWord>
       <div className="pointer-events-none absolute -left-28 top-8 -z-10 h-80 w-80 rounded-full border border-white/10" />
       <div className="pointer-events-none absolute right-[-8rem] top-20 -z-10 h-[28rem] w-[28rem] rounded-full border opacity-35" style={{ borderColor: config.accent }} />
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_15%,rgba(212,192,154,0.14),transparent_34%),radial-gradient(circle_at_82%_60%,rgba(255,255,255,0.08),transparent_30%)]" />
       <div className="mx-auto max-w-7xl">
-        <motion.div {...reveal} className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+        <motion.div {...reveal} className="relative z-10 grid gap-8 premium-reveal lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
           <div>
             <SectionLabel config={config} light icon={iconMap.gem}>Network Strength</SectionLabel>
             <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">
@@ -267,7 +300,7 @@ function LabStats({ config }: { config: LabLandingConfig }) {
               <motion.article
                 key={card.label}
                 {...reveal}
-                transition={{ duration: 0.48, delay: index * 0.06, ease: "easeOut" }}
+                transition={{ duration: 0.8, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
                 className="group rounded-[1.75rem] border border-white/12 bg-white/[0.065] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur transition hover:-translate-y-1 hover:border-white/24 hover:bg-white/[0.09]"
               >
                 <span className="grid h-12 w-12 place-items-center rounded-2xl border border-white/12 bg-white/10">
@@ -359,7 +392,7 @@ function MeetArtisans({ config }: { config: LabLandingConfig }) {
   return (
     <section data-theme="light" className="relative overflow-hidden border-b border-[#dccbaa] bg-[#fbf7ef] px-5 py-16 md:px-10 lg:py-20">
       <DecorativeRings config={config} />
-      <motion.div {...reveal} className="mx-auto grid max-w-7xl gap-8 rounded-[2rem] border border-[#dccbaa] bg-white/78 p-6 shadow-[0_20px_58px_rgba(30,22,14,0.08)] backdrop-blur md:p-8 lg:grid-cols-[1fr_auto] lg:items-center">
+      <PremiumReveal className="mx-auto grid max-w-7xl gap-8 rounded-[2rem] border border-[#dccbaa] bg-white/78 p-6 shadow-[0_20px_58px_rgba(30,22,14,0.08)] backdrop-blur md:p-8 lg:grid-cols-[1fr_auto] lg:items-center">
         <div>
           <SectionLabel icon={iconMap.users} config={config}>Meet Your Artisans</SectionLabel>
           <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">
@@ -369,14 +402,22 @@ function MeetArtisans({ config }: { config: LabLandingConfig }) {
             Behind every prescription is a team that cares about the result. Meet the people who bring craft, service, and independent values to your lab experience.
           </p>
         </div>
-        <Link
-          href="/meet-the-artisans"
-          className="inline-flex min-h-12 items-center justify-center rounded-full px-6 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5"
-          style={{ backgroundColor: config.dark }}
-        >
-          Meet the Team Behind Your Lab
-        </Link>
-      </motion.div>
+        <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
+          <Link
+            href={config.websiteHref}
+            className="inline-flex min-h-12 items-center justify-center rounded-full px-6 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5"
+            style={{ backgroundColor: config.dark }}
+          >
+            Visit Lab Website
+          </Link>
+          <Link
+            href={config.meetHref}
+            className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#d8c6a8] bg-[#fbf8f3] px-6 text-sm font-semibold text-[#1f1a17] transition hover:-translate-y-0.5 hover:border-[#c9b28b] hover:bg-white"
+          >
+            Meet Your Lab
+          </Link>
+        </div>
+      </PremiumReveal>
     </section>
   );
 }
@@ -387,20 +428,55 @@ function Identity({ config }: { config: LabLandingConfig }) {
   return (
     <section data-theme="light" className="relative overflow-hidden px-5 py-20 md:px-10 lg:py-28">
       <DecorativeRings config={config} />
-      <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.96fr_1.04fr] lg:items-center">
-        <motion.div {...reveal} className="relative">
+      <BackgroundWord className="left-[-8rem] top-10">
+        {config.backgroundWords.identity}
+      </BackgroundWord>
+      <div className="relative z-10 mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.96fr_1.04fr] lg:items-center">
+        <PremiumReveal className="relative">
           <div className="absolute -left-4 -top-4 hidden h-36 w-36 rounded-full border md:block" style={{ borderColor: config.accentSoft }} />
-          <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] shadow-[0_26px_70px_rgba(30,22,14,0.14)]">
+          <div className="premium-image-hover relative aspect-[4/5] overflow-hidden rounded-[2rem] shadow-[0_26px_70px_rgba(30,22,14,0.14)]">
             <Image src={config.intro.image} alt={config.intro.imageAlt} fill sizes="(max-width: 1024px) 100vw, 46vw" className="object-cover" />
           </div>
-        </motion.div>
-        <motion.div {...reveal}>
+        </PremiumReveal>
+        <PremiumReveal>
           <SectionLabel icon={Icon} config={config}>{config.intro.eyebrow}</SectionLabel>
           <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">{config.intro.title}</h2>
           <div className="mt-6 space-y-5 text-lg leading-8 text-[#4f5662]">
             {config.intro.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
           </div>
-        </motion.div>
+        </PremiumReveal>
+      </div>
+    </section>
+  );
+}
+
+function LabPersonalityPanel({ config }: { config: LabLandingConfig }) {
+  return (
+    <section data-theme="light" className="relative isolate overflow-hidden border-y border-[#dccbaa] bg-[#f4eee4] px-5 py-14 md:px-10 md:py-18">
+      <BackgroundWord className="bottom-4 right-[-10rem]">
+        {config.backgroundWords.personality}
+      </BackgroundWord>
+      <div className="relative z-10 mx-auto grid max-w-7xl gap-8 md:grid-cols-[0.85fr_1.15fr] md:items-end">
+        <PremiumReveal>
+          <SectionLabel icon={iconMap.mapPin} config={config}>{config.personality.eyebrow}</SectionLabel>
+          <h2 className="font-alfons-display mt-4 text-5xl leading-[0.9] text-[#142033] md:text-7xl">
+            {config.personality.title}
+          </h2>
+        </PremiumReveal>
+        <PremiumReveal delay={0.08} className="rounded-[1.5rem] border border-[#dccbaa] bg-white/70 p-5 shadow-[0_18px_48px_rgba(30,22,14,0.06)] backdrop-blur md:p-6">
+          <p className="max-w-2xl text-base leading-8 text-[#4f5662] md:text-lg">{config.personality.body}</p>
+          <div className="mt-6 flex flex-wrap gap-2">
+            {config.personality.words.map((word) => (
+              <span
+                key={word}
+                className="font-alfons-display rounded-full border border-[#d8c6a8] bg-[#fbf8f3] px-4 py-2 text-2xl leading-none text-[#142033]"
+              >
+                {word}
+              </span>
+            ))}
+          </div>
+          <p className="font-alfons-brush mt-5 text-2xl leading-none text-[#8a6f3d]">Own the craft.</p>
+        </PremiumReveal>
       </div>
     </section>
   );
@@ -410,11 +486,14 @@ function Difference({ config }: { config: LabLandingConfig }) {
   return (
     <section data-theme="dark" className="relative overflow-hidden px-5 py-20 text-white md:px-10 lg:py-24" style={{ background: config.dark }}>
       <div className={differenceTextureClass(config.theme)} aria-hidden />
-      <div className="mx-auto max-w-7xl">
-        <motion.div {...reveal} className="max-w-3xl">
+      <BackgroundWord light className="bottom-10 left-[-9rem]">
+        {config.backgroundWords.difference}
+      </BackgroundWord>
+      <div className="relative z-10 mx-auto max-w-7xl">
+        <PremiumReveal className="max-w-3xl">
           <SectionLabel config={config} light>{config.difference.eyebrow}</SectionLabel>
           <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">{config.difference.title}</h2>
-        </motion.div>
+        </PremiumReveal>
         <div className="mt-10 grid gap-4 md:grid-cols-3">
           {config.difference.cards.map((card, index) => <PremiumCard key={card.title} card={card} config={config} dark index={index} />)}
         </div>
@@ -425,19 +504,22 @@ function Difference({ config }: { config: LabLandingConfig }) {
 
 function Strengths({ config }: { config: LabLandingConfig }) {
   return (
-    <section data-theme="light" className="px-5 py-20 md:px-10 lg:py-28">
-      <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.04fr_0.96fr] lg:items-center">
-        <motion.div {...reveal}>
+    <section data-theme="light" className="relative overflow-hidden px-5 py-20 md:px-10 lg:py-28">
+      <BackgroundWord className="right-[-16rem] top-20">
+        {config.backgroundWords.strengths}
+      </BackgroundWord>
+      <div className="relative z-10 mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.04fr_0.96fr] lg:items-center">
+        <PremiumReveal>
           <SectionLabel icon={iconMap.factory} config={config}>{config.strengths.eyebrow}</SectionLabel>
           <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">{config.strengths.title}</h2>
           <p className="mt-6 text-lg leading-8 text-[#4f5662]">{config.strengths.body}</p>
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             {config.strengths.points.map((point) => <FeatureRow key={point.title} item={point} config={config} />)}
           </div>
-        </motion.div>
-        <motion.div {...reveal} className="relative aspect-[5/6] overflow-hidden rounded-[2rem] shadow-[0_26px_70px_rgba(30,22,14,0.14)]">
+        </PremiumReveal>
+        <PremiumReveal className="premium-image-hover relative aspect-[5/6] overflow-hidden rounded-[2rem] shadow-[0_26px_70px_rgba(30,22,14,0.14)]">
           <Image src={config.strengths.image} alt={config.strengths.imageAlt} fill sizes="(max-width: 1024px) 100vw, 44vw" className="object-cover" />
-        </motion.div>
+        </PremiumReveal>
       </div>
     </section>
   );
@@ -445,21 +527,24 @@ function Strengths({ config }: { config: LabLandingConfig }) {
 
 function Technology({ config }: { config: LabLandingConfig }) {
   return (
-    <section data-theme="light" className="border-y border-[#dccbaa] bg-[#fbf7ef] px-5 py-20 md:px-10 lg:py-28">
-      <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
-        <motion.div {...reveal} className="grid gap-4 sm:grid-cols-2">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] shadow-[0_22px_54px_rgba(30,22,14,0.12)] sm:translate-y-8">
+    <section data-theme="light" className="relative overflow-hidden border-y border-[#dccbaa] bg-[#fbf7ef] px-5 py-20 md:px-10 lg:py-28">
+      <BackgroundWord className="left-[-12rem] top-16">
+        {config.backgroundWords.technology}
+      </BackgroundWord>
+      <div className="relative z-10 mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
+        <PremiumReveal className="grid gap-4 sm:grid-cols-2">
+          <div className="premium-image-hover relative aspect-[4/5] overflow-hidden rounded-[2rem] shadow-[0_22px_54px_rgba(30,22,14,0.12)] sm:translate-y-8">
             <Image src={config.technology.image} alt={config.technology.imageAlt} fill sizes="(max-width: 1024px) 50vw, 28vw" className="object-cover" />
           </div>
           <div className="grid content-center gap-4">
             {config.technology.cards.map((card) => <MiniCard key={card.title} card={card} config={config} />)}
           </div>
-        </motion.div>
-        <motion.div {...reveal}>
+        </PremiumReveal>
+        <PremiumReveal>
           <SectionLabel icon={iconMap.scanLine} config={config}>{config.technology.eyebrow}</SectionLabel>
           <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">{config.technology.title}</h2>
           <p className="mt-6 text-lg leading-8 text-[#4f5662]">{config.technology.body}</p>
-        </motion.div>
+        </PremiumReveal>
       </div>
     </section>
   );
@@ -470,8 +555,11 @@ function Partnership({ config }: { config: LabLandingConfig }) {
     <section data-theme="dark" className="relative isolate overflow-hidden px-5 py-20 text-white md:px-10 lg:py-28" style={{ background: config.dark }}>
       <Image src={config.partnership.image} alt={config.partnership.imageAlt} fill sizes="100vw" className="absolute inset-0 -z-20 object-cover opacity-28" />
       <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(15,25,38,0.94),rgba(15,25,38,0.7),rgba(15,25,38,0.9))]" />
+      <BackgroundWord light className="right-[-14rem] top-20">
+        {config.backgroundWords.partnership}
+      </BackgroundWord>
       <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1fr_0.82fr] lg:items-end">
-        <motion.div {...reveal}>
+        <PremiumReveal>
           <SectionLabel config={config} light>{config.partnership.eyebrow}</SectionLabel>
           <h2 className="mt-4 max-w-4xl text-4xl font-semibold tracking-tight md:text-5xl">{config.partnership.title}</h2>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-white/72">{config.partnership.body}</p>
@@ -479,8 +567,8 @@ function Partnership({ config }: { config: LabLandingConfig }) {
             <ButtonLink href={config.primaryHref} variant="gold">Become an Artisan Partner</ButtonLink>
             <ButtonLink href={config.resourcesHref} variant="ghost">Explore Practice Resources</ButtonLink>
           </div>
-        </motion.div>
-        <motion.div {...reveal} className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+        </PremiumReveal>
+        <PremiumReveal className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
           {config.partnership.stats.map((stat) => {
             const Icon = iconMap[stat.icon];
             return (
@@ -491,7 +579,7 @@ function Partnership({ config }: { config: LabLandingConfig }) {
               </div>
             );
           })}
-        </motion.div>
+        </PremiumReveal>
       </div>
     </section>
   );
@@ -499,12 +587,15 @@ function Partnership({ config }: { config: LabLandingConfig }) {
 
 function FeatureGrid({ config }: { config: LabLandingConfig }) {
   return (
-    <section data-theme="light" className="px-5 py-20 md:px-10 lg:py-28">
-      <div className="mx-auto max-w-7xl">
-        <motion.div {...reveal} className="max-w-3xl">
+    <section data-theme="light" className="relative overflow-hidden px-5 py-20 md:px-10 lg:py-28">
+      <BackgroundWord className="bottom-8 left-[-10rem]">
+        {config.backgroundWords.features}
+      </BackgroundWord>
+      <div className="relative z-10 mx-auto max-w-7xl">
+        <PremiumReveal className="max-w-3xl">
           <SectionLabel icon={iconMap.sparkles} config={config}>{config.features.eyebrow}</SectionLabel>
           <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">{config.features.title}</h2>
-        </motion.div>
+        </PremiumReveal>
         <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {config.features.cards.map((card, index) => <PremiumCard key={card.title} card={card} config={config} index={index} />)}
         </div>
@@ -515,12 +606,15 @@ function FeatureGrid({ config }: { config: LabLandingConfig }) {
 
 function Culture({ config }: { config: LabLandingConfig }) {
   return (
-    <section data-theme="light" className="bg-[#fbf7ef] px-5 py-20 md:px-10 lg:py-28">
-      <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.96fr_1.04fr] lg:items-center">
-        <motion.div {...reveal} className="relative aspect-[5/4] overflow-hidden rounded-[2rem] shadow-[0_26px_70px_rgba(30,22,14,0.13)]">
+    <section data-theme="light" className="relative overflow-hidden bg-[#fbf7ef] px-5 py-20 md:px-10 lg:py-28">
+      <BackgroundWord className="right-[-12rem] top-10">
+        {config.backgroundWords.culture}
+      </BackgroundWord>
+      <div className="relative z-10 mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.96fr_1.04fr] lg:items-center">
+        <PremiumReveal className="premium-image-hover relative aspect-[5/4] overflow-hidden rounded-[2rem] shadow-[0_26px_70px_rgba(30,22,14,0.13)]">
           <Image src={config.culture.image} alt={config.culture.imageAlt} fill sizes="(max-width: 1024px) 100vw, 46vw" className="object-cover" />
-        </motion.div>
-        <motion.div {...reveal}>
+        </PremiumReveal>
+        <PremiumReveal>
           <SectionLabel icon={iconMap.users} config={config}>{config.culture.eyebrow}</SectionLabel>
           <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">{config.culture.title}</h2>
           <p className="mt-6 text-lg leading-8 text-[#4f5662]">{config.culture.body}</p>
@@ -534,7 +628,7 @@ function Culture({ config }: { config: LabLandingConfig }) {
               </div>
             ))}
           </div>
-        </motion.div>
+        </PremiumReveal>
       </div>
     </section>
   );
@@ -547,7 +641,10 @@ function FinalCta({ config }: { config: LabLandingConfig }) {
     <section data-theme="dark" className="relative isolate overflow-hidden px-5 py-24 text-white md:px-10 lg:py-32">
       <Image src={config.finalCta.image} alt={config.finalCta.imageAlt} fill sizes="100vw" className="absolute inset-0 -z-20 object-cover" />
       <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(15,25,38,0.94),rgba(15,25,38,0.64),rgba(15,25,38,0.88))]" />
-      <motion.div {...reveal} className="mx-auto max-w-4xl text-center">
+      <BackgroundWord light className="bottom-12 left-1/2 -translate-x-1/2">
+        {config.backgroundWords.finalCta}
+      </BackgroundWord>
+      <PremiumReveal className="relative z-10 mx-auto max-w-4xl text-center">
         <span className="mx-auto grid h-16 w-16 place-items-center rounded-full border border-white/15 bg-white/10 backdrop-blur">
           <Icon className="h-7 w-7" style={{ color: config.accent }} />
         </span>
@@ -558,8 +655,48 @@ function FinalCta({ config }: { config: LabLandingConfig }) {
           <ButtonLink href={config.contactHref} variant="light">Contact the Lab</ButtonLink>
           <ButtonLink href={config.resourcesHref} variant="ghost">Explore Practice Resources</ButtonLink>
         </div>
-      </motion.div>
+      </PremiumReveal>
     </section>
+  );
+}
+
+function BackgroundWord({
+  children,
+  className = "",
+  light = false,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  light?: boolean;
+}) {
+  return (
+    <span className={`premium-bg-word ${light ? "text-white" : "text-[#142033]"} ${className}`} aria-hidden>
+      {children}
+    </span>
+  );
+}
+
+function PremiumReveal({
+  children,
+  className = "",
+  delay = 0,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  const shouldReduceMotion = useReducedMotion();
+
+  return (
+    <motion.div
+      initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.18 }}
+      transition={{ duration: shouldReduceMotion ? 0 : 0.9, delay: shouldReduceMotion ? 0 : delay, ease: [0.22, 1, 0.36, 1] }}
+      className={`premium-reveal ${className}`}
+    >
+      {children}
+    </motion.div>
   );
 }
 
@@ -579,7 +716,7 @@ function PremiumCard({
   return (
     <motion.article
       {...reveal}
-      transition={{ duration: 0.48, delay: index * 0.04, ease: "easeOut" }}
+      transition={{ duration: 0.82, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
       className={dark ? "rounded-[1.75rem] border border-white/12 bg-white/[0.06] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur" : "rounded-[1.75rem] border border-[#dccbaa] bg-white/82 p-6 shadow-[0_18px_48px_rgba(30,22,14,0.08)] transition hover:-translate-y-1 hover:shadow-[0_24px_54px_rgba(30,22,14,0.12)]"}
     >
       <IconContainer config={config} icon={Icon} dark={dark} />

@@ -27,7 +27,7 @@ const labs = [
     logoAlt: "Pacific Artisan Labs logo",
     description:
       "The original Artisan lab, serving independent practices with full-service production, responsive customer service, and strong regional relationships.",
-    meetHref: "/pacific-artisan-labs",
+    meetHref: "/meet-the-artisans#pacific",
     established: "2018",
     address: ["12302 NE Marx St.", "Portland, OR 97230"],
     mapsHref:
@@ -47,7 +47,7 @@ const labs = [
     logoAlt: "Peak Artisan Labs logo",
     description:
       "A Colorado-based Artisan lab bringing local support, finishing expertise, and practical service to independent practices across the mountain region.",
-    meetHref: "/peak-artisan-labs",
+    meetHref: "/meet-the-artisans#peak",
     established: "2023",
     address: ["3568 Peoria St., Suite 608", "Aurora, CO 80010"],
     mapsHref:
@@ -67,7 +67,7 @@ const labs = [
     logoAlt: "Pike Artisan Labs logo",
     description:
       "The central U.S. Artisan lab, built to add speed, flexibility, and personal support for practices that want a better lab relationship.",
-    meetHref: "/pike-artisan-labs",
+    meetHref: "/meet-the-artisans#pike",
     established: "2025",
     address: ["8902 Vincennes Cir., Suite F", "Indianapolis, IN 46268"],
     mapsHref:
@@ -278,9 +278,9 @@ export default function NetworkMap({
                               </a>
                               <a
                                 href={lab.website}
-                                className="inline-flex min-h-10 items-center justify-center rounded-full border border-white/12 bg-white/8 px-3 py-2 text-center text-xs font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-black"
+                                className="inline-flex min-h-10 items-center justify-center rounded-full border border-white/12 bg-white/8 px-3 py-2 text-center text-xs font-semibold text-white transition hover:-translate-y-0.5 hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-black"
                               >
-                                Visit Website
+                                Visit Lab Website
                               </a>
                               <a
                                 href={lab.meetHref}

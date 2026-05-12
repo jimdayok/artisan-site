@@ -19,6 +19,7 @@ const labs = [
     phone: "877.390.6900",
     email: "customerservice@pacificartisanlabs.com",
     website: "/pacific-artisan-labs",
+    meetHref: "/meet-the-artisans#pacific",
   },
   {
     id: "peak" as const,
@@ -31,6 +32,7 @@ const labs = [
     phone: "833.690.4321",
     email: "customerservice@peakartisanlabs.com",
     website: "/peak-artisan-labs",
+    meetHref: "/meet-the-artisans#peak",
   },
   {
     id: "pike" as const,
@@ -43,6 +45,7 @@ const labs = [
     phone: "888.239.0303",
     email: "customerservice@pikeartisanlabs.com",
     website: "/pike-artisan-labs",
+    meetHref: "/meet-the-artisans#pike",
   },
 ];
 
@@ -174,16 +177,22 @@ export default function LabsSection() {
                           </a>
                           <div className="grid grid-cols-2 gap-2 pt-3">
                             <a
-                              href={`mailto:${lab.email}`}
-                              className="inline-flex min-h-10 items-center justify-center rounded-full border border-white/12 bg-white/8 px-3 py-2 text-center text-xs font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-[#171311]"
+                              href={lab.website}
+                              className="inline-flex min-h-10 items-center justify-center rounded-full border border-[#d4c09a]/45 bg-[#d4c09a] px-3 py-2 text-center text-xs font-semibold text-[#171311] transition hover:-translate-y-0.5 hover:bg-[#e2cca2]"
                             >
-                              Email Customer Service
+                              Visit Lab Website
                             </a>
                             <a
-                              href={lab.website}
-                              className="inline-flex min-h-10 items-center justify-center rounded-full border border-white/12 bg-white/8 px-3 py-2 text-center text-xs font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-[#171311]"
+                              href={lab.meetHref}
+                              className="inline-flex min-h-10 items-center justify-center rounded-full border border-white/12 bg-white/8 px-3 py-2 text-center text-xs font-semibold text-white transition hover:-translate-y-0.5 hover:border-[#d4c09a]/55 hover:bg-white/14"
                             >
-                              Visit Website
+                              Meet Your Lab
+                            </a>
+                            <a
+                              href={`mailto:${lab.email}`}
+                              className="col-span-2 inline-flex min-h-10 items-center justify-center rounded-full border border-white/12 bg-white/8 px-3 py-2 text-center text-xs font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-[#171311]"
+                            >
+                              Email Customer Service
                             </a>
                           </div>
                         </div>

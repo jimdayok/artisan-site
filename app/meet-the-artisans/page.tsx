@@ -313,6 +313,19 @@ export default function MeetTheArtisansPage() {
   const [contactOpen, setContactOpen] = useState(false);
   const [activeServiceLab, setActiveServiceLab] = useState<LabKey>("pacific");
 
+  useEffect(() => {
+    const syncLabFromHash = () => {
+      const hash = window.location.hash.replace("#", "");
+      if (hash === "pacific" || hash === "peak" || hash === "pike") {
+        setActiveServiceLab(hash);
+      }
+    };
+
+    syncLabFromHash();
+    window.addEventListener("hashchange", syncLabFromHash);
+    return () => window.removeEventListener("hashchange", syncLabFromHash);
+  }, []);
+
   const activeServicePhotos = customerServicePhotos[activeServiceLab];
 
   return (

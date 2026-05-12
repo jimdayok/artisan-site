@@ -10,10 +10,17 @@ export default function PricingHeader({ eyebrow, title, description }: { eyebrow
           <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[#122033] md:text-4xl">{title}</h1>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-[#4d5664]">{description}</p>
         </div>
-        <div className="grid gap-1.5 rounded-2xl border border-[#dfd2bf] bg-white/80 p-3 text-xs text-[#4d5664]">
-          <span><strong className="text-[#122033]">General Pricing</strong></span>
-          <span>{priceListMeta.guideLabel}</span>
-          <span className="font-semibold text-[#8a4f28]">{priceListMeta.distributionNotice}</span>
+        <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[520px]">
+          <div className="grid gap-1.5 rounded-2xl border border-[#dfd2bf] bg-white/80 p-3 text-xs text-[#4d5664]">
+            <span><strong className="text-[#122033]">General Pricing</strong></span>
+            <span>{priceListMeta.guideLabel}</span>
+            <span className="font-semibold text-[#8a4f28]">{priceListMeta.distributionNotice}</span>
+          </div>
+          <div className="grid gap-1.5 rounded-2xl border border-[#d8c6a8] bg-[#fffaf2] p-3 text-xs text-[#4d5664]">
+            <span><strong className="text-[#122033]">Shipping Rates</strong></span>
+            <span>Next Day Air: <strong className="text-[#122033]">$4</strong></span>
+            <span>2 Day Shipping: <strong className="text-[#122033]">$16</strong></span>
+          </div>
         </div>
       </div>
       <nav className="mt-4 flex gap-2 overflow-x-auto pb-1 sm:flex-wrap">

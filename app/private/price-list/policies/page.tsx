@@ -96,10 +96,10 @@ const policySections: PolicySection[] = [
     icon: Truck,
     summary: "Outbound and inbound shipping guidance for Artisan lab orders.",
     body: [
-      "Option 1: Outbound per job shipping fee: $4.",
-      "Option 2: Outbound per box shipping fee: $16.",
+      "Next Day Air: $4.",
+      "2 Day Shipping: $16.",
       "Inbound shipping is provided complimentary.",
-      "The method of shipping is determined by PAL with the intention to deliver outbound shipments next day, volume dependent.",
+      "The shipping method is determined by the lab based on job flow, volume, and delivery needs.",
     ],
   },
   {
@@ -228,12 +228,18 @@ export default function ArtisanPoliciesPage() {
       </section>
 
       <section className="border-b border-[#dfd2bf] bg-[#fbf8f3] px-5 py-6 md:px-10">
-        <nav aria-label="Policy categories" className="mx-auto flex max-w-7xl gap-2 overflow-x-auto pb-1">
-          {policySections.map((section) => (
-            <a key={section.id} href={`#${section.id}`} className="inline-flex min-h-10 shrink-0 items-center rounded-full border border-[#dfd2bf] bg-white px-4 text-sm font-semibold text-[#122033] transition hover:border-[#c9b28b] hover:bg-[#eadcc6]">
-              {section.title}
-            </a>
-          ))}
+        <nav aria-label="Policy categories" className="relative mx-auto max-w-7xl">
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-14 bg-gradient-to-l from-[#fbf8f3] to-transparent" aria-hidden="true" />
+          <div className="pointer-events-none absolute -bottom-3 right-2 z-10 hidden rounded-full border border-[#dfd2bf] bg-white/92 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8a7654] shadow-sm sm:block">
+            Scroll for more
+          </div>
+          <div className="flex gap-2 overflow-x-auto overscroll-x-contain pb-4 pr-14 [scrollbar-gutter:stable] [scrollbar-width:thin]">
+            {policySections.map((section) => (
+              <a key={section.id} href={`#${section.id}`} className="inline-flex min-h-10 shrink-0 items-center rounded-full border border-[#dfd2bf] bg-white px-4 text-sm font-semibold text-[#122033] transition hover:border-[#c9b28b] hover:bg-[#eadcc6]">
+                {section.title}
+              </a>
+            ))}
+          </div>
         </nav>
       </section>
 

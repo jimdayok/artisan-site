@@ -1,0 +1,408 @@
+- main [ref=e2]:
+  - generic [ref=e5]:
+    - link "Home" [ref=e6] [cursor=pointer]:
+      - /url: /
+      - img "Artisan Lab Network" [ref=e7]
+    - navigation [ref=e8]:
+      - link "Home" [ref=e9] [cursor=pointer]:
+        - /url: /
+      - link "About Us" [ref=e10] [cursor=pointer]:
+        - /url: /about
+      - button "Our Labs ▼" [ref=e12]:
+        - text: Our Labs
+        - generic [ref=e13]: ▼
+      - button "Resources ▼" [ref=e15]:
+        - text: Resources
+        - generic [ref=e16]: ▼
+      - button "Contact Us" [ref=e17]
+      - link "Get Started" [ref=e18] [cursor=pointer]:
+        - /url: https://form.typeform.com/to/quuPCSff
+  - generic [ref=e24]:
+    - paragraph [ref=e26]: Lab Policies
+    - heading "Lab Policies Built Around Partnership" [level=1] [ref=e27]
+    - paragraph [ref=e28]: A clear guide to remakes, redos, warranties, credits, frames, shipping, and special cases, designed to help your practice serve patients with confidence.
+    - generic [ref=e29]:
+      - link "Search Policies" [ref=e30] [cursor=pointer]:
+        - /url: "#policy-search-panel"
+      - link "View Common Examples" [ref=e31] [cursor=pointer]:
+        - /url: "#real-world-examples"
+      - link "Download PDF Policies Guide" [ref=e32] [cursor=pointer]:
+        - /url: /downloads/artisan-policies-guide.pdf
+      - button "Contact Customer Service" [ref=e33]
+  - generic [ref=e36]:
+    - generic [ref=e37]:
+      - paragraph [ref=e38]: Our Shared Goal
+      - heading "Helping your team choose the clearest next step." [level=2] [ref=e39]
+    - generic [ref=e40]:
+      - paragraph [ref=e41]: "Every policy on this page is built around one outcome: helping your practice deliver the best possible experience to the patient. These guidelines are here to support your team, simplify decisions, and ensure consistency from order entry through delivery."
+      - paragraph [ref=e42]: When questions come up, our team will work with you to find the clearest and fairest next step.
+  - generic [ref=e44]:
+    - generic [ref=e45]:
+      - heading "Search the policy guide." [level=2] [ref=e46]
+      - paragraph [ref=e47]: Type the product, situation, policy area, or vendor you want to understand.
+    - generic [ref=e48]:
+      - generic [ref=e49]: Search lab policies
+      - textbox "Search lab policies" [ref=e50]:
+        - /placeholder: Search by policy, product, redo type, warranty, vendor, or situation
+      - generic [ref=e51]:
+        - paragraph [ref=e52]: "Try searching: AR warranty, doctor redo, VSP Unity, patient-owned frame, shipping, Chemistrie, Neurolens"
+        - generic [ref=e54]: Search or choose a category below
+  - navigation "Lab policy quick navigation" [ref=e55]:
+    - generic [ref=e56]:
+      - generic:
+        - text: Scroll for more
+        - generic: v
+      - generic [ref=e57]:
+        - link "Warranty" [ref=e58] [cursor=pointer]:
+          - /url: "#warranty-coverage"
+          - img [ref=e60]
+          - text: Warranty
+        - link "Doctor Redos" [ref=e61] [cursor=pointer]:
+          - /url: "#doctor-redos"
+          - img [ref=e63]
+          - text: Doctor Redos
+        - link "Lab Errors" [ref=e64] [cursor=pointer]:
+          - /url: "#lab-error-remake"
+          - img [ref=e66]
+          - text: Lab Errors
+        - link "AR & Scratch" [ref=e67] [cursor=pointer]:
+          - /url: "#ar-policies"
+          - img [ref=e69]
+          - text: AR & Scratch
+        - link "VSP & Unity" [ref=e70] [cursor=pointer]:
+          - /url: "#vsp-unity"
+          - img [ref=e72]
+          - text: VSP & Unity
+        - link "Frames" [ref=e73] [cursor=pointer]:
+          - /url: "#frame-policies"
+          - img [ref=e75]
+          - text: Frames
+        - link "Shipping" [ref=e76] [cursor=pointer]:
+          - /url: "#shipping-policies"
+          - img [ref=e78]
+          - text: Shipping
+        - link "Specialty" [ref=e79] [cursor=pointer]:
+          - /url: "#specialty-outsourced"
+          - img [ref=e81]
+          - text: Specialty
+        - link "Examples" [ref=e82] [cursor=pointer]:
+          - /url: "#real-world-examples"
+          - img [ref=e84]
+          - text: Examples
+  - generic [ref=e86]:
+    - generic [ref=e87]:
+      - generic [ref=e88]:
+        - paragraph [ref=e89]: Most Asked
+        - heading "Start with the common questions." [level=2] [ref=e90]
+      - paragraph [ref=e91]: These cards summarize common situations in plain language so your team can move faster before opening the full policy details.
+    - generic [ref=e92]:
+      - link "Warranty How long is coverage? Most Artisan lenses are covered for 2 years with up to 2 remakes, depending on product type." [ref=e93] [cursor=pointer]:
+        - /url: "#warranty-coverage"
+        - generic [ref=e94]:
+          - generic [ref=e95]: Warranty
+          - img [ref=e98]
+        - heading "How long is coverage?" [level=3] [ref=e99]
+        - paragraph [ref=e100]: Most Artisan lenses are covered for 2 years with up to 2 remakes, depending on product type.
+      - link "Redo What about patient changes? Patient non-adapt changes may qualify for a one-time redo within the first year." [ref=e101] [cursor=pointer]:
+        - /url: "#doctor-redos"
+        - generic [ref=e102]:
+          - generic [ref=e103]: Redo
+          - img [ref=e106]
+        - heading "What about patient changes?" [level=3] [ref=e107]
+        - paragraph [ref=e108]: Patient non-adapt changes may qualify for a one-time redo within the first year.
+      - link "Frames Are patient-owned frames covered? Patient-owned frames are handled with care but cannot be guaranteed due to variability in condition." [ref=e109] [cursor=pointer]:
+        - /url: "#frame-policies"
+        - generic [ref=e110]:
+          - generic [ref=e111]: Frames
+          - img [ref=e114]
+        - heading "Are patient-owned frames covered?" [level=3] [ref=e115]
+        - paragraph [ref=e116]: Patient-owned frames are handled with care but cannot be guaranteed due to variability in condition.
+      - link "Shipping How does shipping work? Inbound shipping is covered. Outbound shipping is structured per job or per box." [ref=e117] [cursor=pointer]:
+        - /url: "#shipping-policies"
+        - generic [ref=e118]:
+          - generic [ref=e119]: Shipping
+          - img [ref=e122]
+        - heading "How does shipping work?" [level=3] [ref=e123]
+        - paragraph [ref=e124]: Inbound shipping is covered. Outbound shipping is structured per job or per box.
+  - generic [ref=e127]:
+    - generic [ref=e128]:
+      - paragraph [ref=e129]: How to Use This Page
+      - heading "Four steps, no guesswork." [level=2] [ref=e130]
+    - generic [ref=e131]:
+      - generic [ref=e132]:
+        - generic [ref=e133]: "1"
+        - paragraph [ref=e134]: Search your situation or select a category.
+      - generic [ref=e135]:
+        - generic [ref=e136]: "2"
+        - paragraph [ref=e137]: Review the policy summary.
+      - generic [ref=e138]:
+        - generic [ref=e139]: "3"
+        - paragraph [ref=e140]: Open the section for details.
+      - generic [ref=e141]:
+        - generic [ref=e142]: "4"
+        - paragraph [ref=e143]: Contact us if you want confirmation before submitting.
+  - generic [ref=e145]:
+    - generic [ref=e146]:
+      - paragraph [ref=e147]: Policy Sections
+      - heading "Open the area that matches your situation." [level=2] [ref=e148]
+      - paragraph [ref=e149]: Each section gives the summary first, then breaks the policy into what it means, what qualifies, what does not qualify, and what to do next.
+    - generic [ref=e150]:
+      - article [ref=e151]:
+        - generic [ref=e152]:
+          - generic [ref=e153]:
+            - generic [ref=e154]: Warranty
+            - heading "Warranty Coverage" [level=3] [ref=e155]
+            - paragraph [ref=e156]: Coverage timing depends on the product, treatment, and warranty program attached to the order.
+          - button "View Policy +" [ref=e157]:
+            - text: View Policy
+            - generic [ref=e158]: +
+      - article [ref=e159]:
+        - generic [ref=e160]:
+          - generic [ref=e161]:
+            - generic [ref=e162]: Doctor Redos
+            - heading "Doctor Redos and Rx Changes" [level=3] [ref=e163]
+            - paragraph [ref=e164]: Patient non-adapt changes may qualify for a one-time redo within the first year.
+          - button "View Policy +" [ref=e165]:
+            - text: View Policy
+            - generic [ref=e166]: +
+      - article [ref=e167]:
+        - generic [ref=e168]:
+          - generic [ref=e169]:
+            - generic [ref=e170]: Lab Errors
+            - heading "Lab Error Remake Process" [level=3] [ref=e171]
+            - paragraph [ref=e172]: Lab error remakes are reviewed quickly and processed at no charge when the request is valid.
+          - button "View Policy +" [ref=e173]:
+            - text: View Policy
+            - generic [ref=e174]: +
+      - article [ref=e175]:
+        - generic [ref=e176]:
+          - generic [ref=e177]:
+            - generic [ref=e178]: AR & Scratch
+            - heading "AR Policies" [level=3] [ref=e179]
+            - paragraph [ref=e180]: AR warranty use is built to be simple, with no lens return required for treatment warranty usage.
+          - button "View Policy +" [ref=e181]:
+            - text: View Policy
+            - generic [ref=e182]: +
+      - article [ref=e183]:
+        - generic [ref=e184]:
+          - generic [ref=e185]:
+            - generic [ref=e186]: AR & Scratch
+            - heading "Scratch Coating Policies" [level=3] [ref=e187]
+            - paragraph [ref=e188]: Scratch coating warranty use does not require lenses to be returned before the warranty request is used.
+          - button "View Policy +" [ref=e189]:
+            - text: View Policy
+            - generic [ref=e190]: +
+      - article [ref=e191]:
+        - generic [ref=e192]:
+          - generic [ref=e193]:
+            - generic [ref=e194]: VSP & Unity
+            - heading "VSP and Unity Products" [level=3] [ref=e195]
+            - paragraph [ref=e196]: VSP and Unity orders may require authorization steps before reimbursement can be completed.
+          - button "View Policy +" [ref=e197]:
+            - text: View Policy
+            - generic [ref=e198]: +
+      - article [ref=e199]:
+        - generic [ref=e200]:
+          - generic [ref=e201]:
+            - generic [ref=e202]: Frames
+            - heading "Frame Replacement and Frame Policies" [level=3] [ref=e203]
+            - paragraph [ref=e204]: Frames are handled with care, and documentation helps determine the right replacement path.
+          - button "View Policy +" [ref=e205]:
+            - text: View Policy
+            - generic [ref=e206]: +
+      - article [ref=e207]:
+        - generic [ref=e208]:
+          - generic [ref=e209]:
+            - generic [ref=e210]: Specialty
+            - heading "Multiple-Pair Discount" [level=3] [ref=e211]
+            - paragraph [ref=e212]: Additional eligible pairs may receive a discount when ordered within the approved timing and program terms.
+          - button "View Policy +" [ref=e213]:
+            - text: View Policy
+            - generic [ref=e214]: +
+      - article [ref=e215]:
+        - generic [ref=e216]:
+          - generic [ref=e217]:
+            - generic [ref=e218]: Specialty
+            - heading "Cancelled Orders" [level=3] [ref=e219]
+            - paragraph [ref=e220]: Cancellation billing depends on whether production work has already started.
+          - button "View Policy +" [ref=e221]:
+            - text: View Policy
+            - generic [ref=e222]: +
+      - article [ref=e223]:
+        - generic [ref=e224]:
+          - generic [ref=e225]:
+            - generic [ref=e226]: Shipping
+            - heading "Shipping Policies" [level=3] [ref=e227]
+            - paragraph [ref=e228]: Inbound shipping is covered, with clear outbound rates for next-day and 2 day service.
+          - button "View Policy +" [ref=e229]:
+            - text: View Policy
+            - generic [ref=e230]: +
+      - article [ref=e231]:
+        - generic [ref=e232]:
+          - generic [ref=e233]:
+            - generic [ref=e234]: Specialty
+            - heading "Specialty and Outsourced Jobs" [level=3] [ref=e235]
+            - paragraph [ref=e236]: Specialty and outsourced work may follow separate pricing, lead times, and lab rules.
+          - button "View Policy +" [ref=e237]:
+            - text: View Policy
+            - generic [ref=e238]: +
+      - article [ref=e239]:
+        - generic [ref=e240]:
+          - generic [ref=e241]:
+            - generic [ref=e242]: Specialty
+            - heading "Manufacturer and Lab Warranty Credits" [level=3] [ref=e243]
+            - paragraph [ref=e244]: Some vendor and manufacturer credits require lens returns before credit can be finalized.
+          - button "View Policy +" [ref=e245]:
+            - text: View Policy
+            - generic [ref=e246]: +
+      - article [ref=e247]:
+        - generic [ref=e248]:
+          - generic [ref=e249]:
+            - generic [ref=e250]: Specialty
+            - heading "Chemiclips and Retrofit Magnets" [level=3] [ref=e251]
+            - paragraph [ref=e252]: Chemiclips and retrofit magnet work has specific scratch warranty and charge rules.
+          - button "View Policy +" [ref=e253]:
+            - text: View Policy
+            - generic [ref=e254]: +
+  - generic [ref=e256]:
+    - generic [ref=e257]:
+      - generic [ref=e258]:
+        - paragraph [ref=e259]: Real World Examples
+        - heading "See how policies apply." [level=2] [ref=e260]
+      - paragraph [ref=e261]: These examples are meant to help your team quickly match a patient situation to the policy area that may apply.
+    - generic [ref=e262]:
+      - 'link "Patient cannot adapt to a progressive after 3 weeks Likely path: May qualify for a one-time non-adapt redo within 1 year." [ref=e263] [cursor=pointer]':
+        - /url: "#doctor-redos"
+        - img [ref=e265]
+        - heading "Patient cannot adapt to a progressive after 3 weeks" [level=3] [ref=e266]
+        - paragraph [ref=e267]: "Likely path: May qualify for a one-time non-adapt redo within 1 year."
+      - 'link "Power change requested after delivery Likely path: May qualify under doctor redo depending on timing and eligibility." [ref=e268] [cursor=pointer]':
+        - /url: "#doctor-redos"
+        - img [ref=e270]
+        - heading "Power change requested after delivery" [level=3] [ref=e271]
+        - paragraph [ref=e272]: "Likely path: May qualify under doctor redo depending on timing and eligibility."
+      - 'link "Patient-owned frame breaks during processing Likely path: Frames are handled with care but are not guaranteed due to condition variability." [ref=e273] [cursor=pointer]':
+        - /url: "#frame-policies"
+        - img [ref=e275]
+        - heading "Patient-owned frame breaks during processing" [level=3] [ref=e276]
+        - paragraph [ref=e277]: "Likely path: Frames are handled with care but are not guaranteed due to condition variability."
+      - 'link "VSP Unity non-adapt Likely path: Requires a new VSP authorization for reimbursement." [ref=e278] [cursor=pointer]':
+        - /url: "#vsp-unity"
+        - img [ref=e280]
+        - heading "VSP Unity non-adapt" [level=3] [ref=e281]
+        - paragraph [ref=e282]: "Likely path: Requires a new VSP authorization for reimbursement."
+      - 'link "Mirror coating issue Likely path: Mirror-only coverage follows a 1 year, 1 time policy." [ref=e283] [cursor=pointer]':
+        - /url: "#warranty-coverage"
+        - img [ref=e285]
+        - heading "Mirror coating issue" [level=3] [ref=e286]
+        - paragraph [ref=e287]: "Likely path: Mirror-only coverage follows a 1 year, 1 time policy."
+      - 'link "Specialty lab job Likely path: Specialty lab pricing and policies may override standard policies." [ref=e288] [cursor=pointer]':
+        - /url: "#specialty-outsourced"
+        - img [ref=e290]
+        - heading "Specialty lab job" [level=3] [ref=e291]
+        - paragraph [ref=e292]: "Likely path: Specialty lab pricing and policies may override standard policies."
+  - generic [ref=e294]:
+    - generic [ref=e295]:
+      - paragraph [ref=e296]: Need Help?
+      - heading "Still Have a Question?" [level=2] [ref=e297]
+      - paragraph [ref=e298]: Our team is here to help you confirm the right next step before submitting a remake, redo, warranty request, or credit review.
+    - generic [ref=e299]:
+      - heading "Contact Customer Service" [level=3] [ref=e300]
+      - paragraph [ref=e301]: If a policy depends on product, vendor, specialty lab rules, or account program terms, customer service can help confirm the right path.
+      - generic [ref=e302]:
+        - button "Contact Customer Service" [ref=e303]
+        - link "Email Our Team" [ref=e304] [cursor=pointer]:
+          - /url: mailto:customerservice@artisanlabnetwork.com?subject=Lab%20Policy%20Question
+      - paragraph [ref=e305]: Policies may vary by product, vendor, account program, or specialty lab requirements. Final credit approval is subject to lab review.
+  - generic [ref=e306]:
+    - generic [ref=e308]:
+      - generic [ref=e309]:
+        - paragraph [ref=e310]: Artisan Lab Network
+        - heading "Independent eye care deserves a better lab model." [level=2] [ref=e311]
+      - link "Get Started" [ref=e312] [cursor=pointer]:
+        - /url: https://form.typeform.com/to/quuPCSff
+    - generic [ref=e313]:
+      - generic [ref=e314]:
+        - generic [ref=e315]:
+          - button "Artisan Lab Network" [ref=e316]
+          - generic [ref=e317]:
+            - generic [ref=e318]: Artisan Lab Network
+            - generic [ref=e319]: Doctor-owned network
+        - paragraph [ref=e320]:
+          - text: Artisan Lab Network is the parent organization supporting
+          - link "Pacific Artisan Labs" [ref=e321] [cursor=pointer]:
+            - /url: /pacific-artisan-labs
+          - text: ","
+          - link "Peak Artisan Labs" [ref=e322] [cursor=pointer]:
+            - /url: /peak-artisan-labs
+          - text: ", and"
+          - link "Pike Artisan Labs" [ref=e323] [cursor=pointer]:
+            - /url: /pike-artisan-labs
+          - text: ", built to serve independent eye care with more choice, more control, and better partnership."
+        - generic [ref=e324]:
+          - link "Facebook" [ref=e325] [cursor=pointer]:
+            - /url: https://www.facebook.com/artisanlabnetwork
+          - link "Instagram" [ref=e326] [cursor=pointer]:
+            - /url: https://www.instagram.com/artisanlabnetwork
+          - link "LinkedIn" [ref=e327] [cursor=pointer]:
+            - /url: https://www.linkedin.com/company/artisan-lab-network/
+      - generic [ref=e328]:
+        - heading "Explore" [level=3] [ref=e329]
+        - list [ref=e330]:
+          - listitem [ref=e331]:
+            - link "Home" [ref=e332] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=e333]:
+            - link "About Us" [ref=e334] [cursor=pointer]:
+              - /url: /about
+          - listitem [ref=e335]:
+            - link "Meet the Artisans" [ref=e336] [cursor=pointer]:
+              - /url: /meet-the-artisans
+          - listitem [ref=e337]:
+            - link "Our Labs" [ref=e338] [cursor=pointer]:
+              - /url: /#labs
+          - listitem [ref=e339]:
+            - link "Resources" [ref=e340] [cursor=pointer]:
+              - /url: /provider-resources
+          - listitem [ref=e341]:
+            - button "Contact Us" [ref=e342]
+      - generic [ref=e343]:
+        - heading "Company" [level=3] [ref=e344]
+        - list [ref=e345]:
+          - listitem [ref=e346]:
+            - link "Careers" [ref=e347] [cursor=pointer]:
+              - /url: /careers
+          - listitem [ref=e348]:
+            - link "Press Releases" [ref=e349] [cursor=pointer]:
+              - /url: /about#press-releases
+          - listitem [ref=e350]:
+            - link "Newsletter" [ref=e351] [cursor=pointer]:
+              - /url: /newsletter
+      - generic [ref=e352]:
+        - heading "Contact" [level=3] [ref=e353]
+        - generic [ref=e354]:
+          - paragraph [ref=e355]:
+            - link "12302 NE Marx St. Portland, OR 97230" [ref=e356] [cursor=pointer]:
+              - /url: https://www.google.com/maps/search/?api=1&query=12302%20NE%20Marx%20St%20Portland%20OR%2097230
+              - text: 12302 NE Marx St.
+              - text: Portland, OR 97230
+            - link "Open in Maps" [ref=e357] [cursor=pointer]:
+              - /url: https://www.google.com/maps/search/?api=1&query=12302%20NE%20Marx%20St%20Portland%20OR%2097230
+          - paragraph [ref=e358]:
+            - link "877.390.6900" [ref=e359] [cursor=pointer]:
+              - /url: tel:8773906900
+          - paragraph [ref=e360]:
+            - link "info@artisanlabnetwork.com" [ref=e361] [cursor=pointer]:
+              - /url: mailto:info@artisanlabnetwork.com
+    - generic [ref=e363]:
+      - generic [ref=e364]:
+        - paragraph [ref=e365]: © 2026 Artisan Lab Network
+        - paragraph [ref=e366]:
+          - text: Privacy is not a game (
+          - button "this is" [ref=e367]
+          - text: ), and we respect your privacy. Information submitted through this site is used only to respond to your inquiry and support your relationship with Artisan Lab Network.
+      - generic [ref=e368]:
+        - link "Terms & Conditions" [ref=e369] [cursor=pointer]:
+          - /url: /terms-and-conditions
+        - link "Privacy Policy" [ref=e370] [cursor=pointer]:
+          - /url: /privacy-policy

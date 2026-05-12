@@ -384,25 +384,25 @@ const policySections: PolicySection[] = [
     navLabel: "Shipping",
     icon: "truck",
     title: "Shipping Policies",
-    summary: "Inbound shipping is covered, and outbound shipping is structured around job or box movement.",
+    summary: "Inbound shipping is covered, with clear outbound rates for next-day and 2 day service.",
     whatThisMeans:
       "Shipping policy is designed to keep orders moving predictably while allowing the lab to choose the method that best supports next-day delivery intent.",
     qualifies: [
-      "Option 1: outbound per job shipping fee of $4.",
-      "Option 2: outbound per box shipping fee of $16.",
+      "Next Day Air: $4.",
+      "2 Day Shipping: $16.",
       "Inbound shipping is complimentary.",
-      "A $4 flat outbound shipping fee is generally applied.",
+      "Outbound method is selected by the lab based on job flow, volume, and delivery needs.",
     ],
     doesNotQualify: [
       "Outbound delivery method is determined by the lab based on volume and delivery needs.",
-      "Next-day delivery is the intent, but it may depend on volume and shipping conditions.",
+      "Next-day and 2 day service availability may depend on volume and shipping conditions.",
     ],
     nextSteps: [
-      "Review whether the order is being handled per job or per box.",
+      "Confirm whether Next Day Air or 2 Day Shipping is the right service expectation.",
       "Plan around the lab's selected outbound shipping method.",
       "Contact customer service for shipping questions on unusual order volume or timing.",
     ],
-    keywords: ["shipping", "inbound", "outbound", "box", "job", "next day", "$4", "$16"],
+    keywords: ["shipping", "inbound", "outbound", "box", "job", "next day", "next day air", "2 day", "$4", "$16"],
   },
   {
     id: "specialty-outsourced",
@@ -944,24 +944,30 @@ export default function LabPoliciesPage() {
       <nav
         data-theme="light"
         aria-label="Lab policy quick navigation"
-        className="sticky top-[72px] z-40 border-y border-[#e5d9c8] bg-[#f5f1eb]/94 px-5 py-3 backdrop-blur-xl md:top-[76px]"
+        className="sticky top-[72px] z-40 border-y border-[#e5d9c8] bg-[#f5f1eb]/94 px-5 py-3 shadow-[0_16px_38px_rgba(24,18,13,0.08)] backdrop-blur-xl md:top-[76px]"
       >
-        <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto [scrollbar-width:thin]">
-          {quickNav.map((item) => (
-            <a
-              key={`${item.href}-${item.label}`}
-              href={item.href}
-              className="inline-flex shrink-0 items-center gap-2 rounded-full border border-black/10 bg-white/78 px-4 py-2 text-sm font-semibold text-[#1f1a17] shadow-sm transition hover:-translate-y-0.5 hover:border-[#d4c09a] hover:bg-[#d4c09a]"
-            >
-              <SiteIcon
-                src={item.icon}
-                size="sm"
-                className="h-8 w-8 rounded-xl border-[#e1d4c2] bg-[#fbf8f3]"
-                imgClassName="h-4 w-4"
-              />
-              {item.label}
-            </a>
-          ))}
+        <div className="relative mx-auto max-w-7xl">
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#f5f1eb] to-transparent" aria-hidden="true" />
+          <div className="pointer-events-none absolute bottom-[-0.35rem] right-3 z-10 hidden items-center gap-1 rounded-full border border-[#d8c6a8] bg-white/90 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8a7654] shadow-sm sm:flex">
+            Scroll for more <span aria-hidden="true">v</span>
+          </div>
+          <div className="flex gap-2 overflow-x-auto overscroll-x-contain pb-4 pr-16 [scrollbar-gutter:stable] [scrollbar-width:thin]">
+            {quickNav.map((item) => (
+              <a
+                key={`${item.href}-${item.label}`}
+                href={item.href}
+                className="inline-flex shrink-0 items-center gap-2 rounded-full border border-black/10 bg-white/78 px-4 py-2 text-sm font-semibold text-[#1f1a17] shadow-sm transition hover:-translate-y-0.5 hover:border-[#d4c09a] hover:bg-[#d4c09a]"
+              >
+                <SiteIcon
+                  src={item.icon}
+                  size="sm"
+                  className="h-8 w-8 rounded-xl border-[#e1d4c2] bg-[#fbf8f3]"
+                  imgClassName="h-4 w-4"
+                />
+                {item.label}
+              </a>
+            ))}
+          </div>
         </div>
       </nav>
 

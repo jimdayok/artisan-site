@@ -1,0 +1,1750 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    
+              <meta name="csrf-param" content="authenticity_token">
+              <meta name="csrf-token" content="jTu2ySSBjWjDhbo2G7PxOoiz7Qt54_YwEc9cE6iPXm_tlKIUoHTYHEAcZCdn-T_TSEW8CUQ3iKIhWbNSavx7EQ">
+            
+    <title>
+      
+        Not Found (404)
+      
+    </title>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge, chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <meta property="og:type" content="website">
+<meta property="og:url" content="https://www.artisanlabnetwork.com/url(https:/kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/themes/2154189510/settings_images/658caac-5fdb-5577-3c18-b67c85ce861c_Pacific_Artisan_Labs_PAL_Kajabi_Cover">
+<meta name="twitter:card" content="summary_large_image">
+
+<meta property="og:title" content="Not Found (404)">
+<meta name="twitter:title" content="Not Found (404)">
+
+
+
+
+    
+      <link href="https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/themes/2153570915/settings_images/4552af-5f-334-ba23-f1755cfa00b_ALN_Logo_3x3.png?v=2" rel="shortcut icon" />
+    
+    <link rel="canonical" href="https://www.artisanlabnetwork.com/url(https:/kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/themes/2154189510/settings_images/658caac-5fdb-5577-3c18-b67c85ce861c_Pacific_Artisan_Labs_PAL_Kajabi_Cover" />
+
+    <!-- Google Fonts ====================================================== -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    
+    
+    <link rel="stylesheet" media="print" onload="this.onload=null;this.removeAttribute(&#39;media&#39;);" type="text/css" href="//fonts.googleapis.com/css?family=Josefin+Sans:400,700,400italic,700italic|Dancing+Script:400,700,400italic,700italic&amp;display=swap" />
+
+    <!-- Kajabi CSS ======================================================== -->
+    <link rel="stylesheet" media="print" onload="this.onload=null;this.removeAttribute(&#39;media&#39;);" type="text/css" href="https://kajabi-app-assets.kajabi-cdn.com/assets/core-bd7b26fa88233b0deec176501f76275fcd62a9785b79309a9e2b92fe02ba1903.css" />
+
+    
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" media="print" onload="this.onload=null;this.removeAttribute(&#39;media&#39;);" type="text/css" crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" />
+
+    <link rel="stylesheet" media="screen" href="https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/themes/2153570915/assets/styles.css?1776112612964226" />
+
+    <!-- Customer CSS ====================================================== -->
+    <!-- If you're using custom css that affects the first render of the page, replace async_style_link below with styesheet_tag -->
+    <link rel="stylesheet" media="print" onload="this.onload=null;this.removeAttribute(&#39;media&#39;);" type="text/css" href="https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/themes/2153570915/assets/overrides.css?1776112612964226" />
+    <style>
+  /* Custom CSS Added Via Theme Settings */
+  /* Ensure the parent container fills the viewport */
+.hero-section {
+  position: relative;
+  width: 100%;
+  height: 100vh; /* Full screen height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Make the background image fill the container */
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures the image covers the section */
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1; /* Sends image to the background */
+}
+
+/* Style for the text overlay */
+.hero-text {
+  position: absolute;
+  text-align: center;
+  color: white;
+  font-size: clamp(2rem, 5vw, 6rem); /* Adjusts dynamically based on screen size */
+  font-weight: bold;
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7); /* Adds readability */
+  width: 90%;
+  max-width: 1200px;
+  padding: 20px;
+}
+
+/* Adjust styling for smaller screens */
+@media (max-width: 768px) {
+  .hero-text {
+    font-size: 3rem;
+    padding: 10px;
+  }
+}
+
+@font-face {
+    font-family: 'Lora';
+    src: url('https://artisanlabnetwork.mykajabi.com/resource_redirect/downloads/file-uploads/sites/2147659260/themes/2154472596/downloads/f2c7d67-cda5-10c-f847-5a8ccc4f8f_Lora-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Lora';
+    src: url('https://artisanlabnetwork.mykajabi.com/resource_redirect/downloads/file-uploads/sites/2147659260/themes/2154472596/downloads/46d671b-4765-3e1-fe4-257fbf308f_Lora-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Lora';
+    src: url('https://artisanlabnetwork.mykajabi.com/resource_redirect/downloads/file-uploads/sites/2147659260/themes/2154472596/downloads/b284127-fc16-fd8f-eeb4-1bf78ee76cc4_Lora-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Lora';
+    src: url('https://artisanlabnetwork.mykajabi.com/resource_redirect/downloads/file-uploads/sites/2147659260/themes/2154472596/downloads/360b111-ce4a-be5-dbd-d2ea63025851_Lora-BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Alfons Brush';
+    src: url('https://artisanlabnetwork.mykajabi.com/resource_redirect/downloads/file-uploads/sites/2147659260/themes/2154472596/downloads/21fc5bb-7e84-50b5-0dc2-213100db7ea6_Fenotype_-_Alfons_Brush_Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Alfons Brush';
+    src: url('https://artisanlabnetwork.mykajabi.com/resource_redirect/downloads/file-uploads/sites/2147659260/themes/2154472596/downloads/b054e7-ff5-5b6d-bcb2-231258c7fc2_Fenotype_-_Alfons_Brush_Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Alfons Display';
+    src: url('https://artisanlabnetwork.mykajabi.com/resource_redirect/downloads/file-uploads/sites/2147659260/themes/2154472596/downloads/d7ddec-ecac-81dd-bd30-0cd8e88d4a_Alfons_Display_Regular.tff.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Nunito Sans';
+    src: url('https://artisanlabnetwork.mykajabi.com/resource_redirect/downloads/file-uploads/sites/2147659260/themes/2154472596/downloads/34cc171-c233-56e2-3e5-6a33d50b6c76_Nunito_Sans_Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Nunito Sans';
+    src: url('https://artisanlabnetwork.mykajabi.com/resource_redirect/downloads/file-uploads/sites/2147659260/themes/2154472596/downloads/cc7ad8-2dcb-4ead-8860-072561aa551d_Nunito_Sans_Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Nunito Sans';
+    src: url('https://artisanlabnetwork.mykajabi.com/resource_redirect/downloads/file-uploads/sites/2147659260/themes/2154472596/downloads/0a34d4-e5e0-fce3-7cdf-2a70ba1784b0_Nunito_Sans_Bold_Italic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+/* Apply Alfons Display to Main Headings */
+h1, h2 {
+    font-family: 'Alfons Display', sans-serif;
+    font-weight: normal;
+}
+
+/* Apply Alfons Brush to H3 */
+h3 {
+    font-family: 'Alfons Brush', sans-serif;
+    font-weight: normal;
+}
+
+/* Apply Lora to H4-H6 */
+h4, h5, h6 {
+    font-family: 'Lora', serif;
+    font-weight: normal;
+}
+
+/* Apply Nunito Sans for Body Text */
+body, p {
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: normal;
+}
+
+/* Example of using Bold and Italic variations */
+strong {
+    font-family: 'Lora', serif;
+    font-weight: bold;
+}
+
+em {
+    font-family: 'Lora', serif;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    h1 { font-size: 36px; }
+    h2 { font-size: 30px; }
+    h3 { font-size: 26px; }
+    h4 { font-size: 22px; }
+    h5 { font-size: 18px; }
+    h6 { font-size: 16px; }
+    body { font-size: 16px; }
+}
+</style>
+
+
+    <!-- Kajabi Editor Only CSS ============================================ -->
+    
+
+    <!-- Header hook ======================================================= -->
+    <script type="text/javascript">
+  var Kajabi = Kajabi || {};
+</script>
+<script type="text/javascript">
+  Kajabi.currentSiteUser = {
+    "id" : "-1",
+    "type" : "Guest",
+    "contactId" : "",
+  };
+  
+</script>
+<script type="text/javascript">
+  Kajabi.theme = {
+    activeThemeName: "ALN Site Template",
+    previewThemeId: null,
+    editor: false
+  };
+</script>
+<meta name="turbo-prefetch" content="false">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SBTEQQE2LS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-SBTEQQE2LS');
+</script>
+<style type="text/css">
+  #editor-overlay {
+    display: none;
+    border-color: #2E91FC;
+    position: absolute;
+    background-color: rgba(46,145,252,0.05);
+    border-style: dashed;
+    border-width: 3px;
+    border-radius: 3px;
+    pointer-events: none;
+    cursor: pointer;
+    z-index: 10000000000;
+  }
+  .editor-overlay-button {
+    color: white;
+    background: #2E91FC;
+    border-radius: 2px;
+    font-size: 13px;
+    margin-inline-start: -24px;
+    margin-block-start: -12px;
+    padding-block: 3px;
+    padding-inline: 10px;
+    text-transform:uppercase;
+    font-weight:bold;
+    letter-spacing:1.5px;
+
+    left: 50%;
+    top: 50%;
+    position: absolute;
+  }
+</style>
+<script src="https://kajabi-app-assets.kajabi-cdn.com/vite/assets/track_analytics-999259ad.js" crossorigin="anonymous" type="module"></script><link rel="modulepreload" href="https://kajabi-app-assets.kajabi-cdn.com/vite/assets/stimulus-576c66eb.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="https://kajabi-app-assets.kajabi-cdn.com/vite/assets/track_product_analytics-9c66ca0a.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="https://kajabi-app-assets.kajabi-cdn.com/vite/assets/stimulus-e54d982b.js" as="script" crossorigin="anonymous">
+<link rel="modulepreload" href="https://kajabi-app-assets.kajabi-cdn.com/vite/assets/trackProductAnalytics-3d5f89d8.js" as="script" crossorigin="anonymous">      <script type="text/javascript">
+        if (typeof (window.rudderanalytics) === "undefined") {
+          !function(){"use strict";window.RudderSnippetVersion="3.0.3";var sdkBaseUrl="https://cdn.rudderlabs.com/v3"
+          ;var sdkName="rsa.min.js";var asyncScript=true;window.rudderAnalyticsBuildType="legacy",window.rudderanalytics=[]
+          ;var e=["setDefaultInstanceKey","load","ready","page","track","identify","alias","group","reset","setAnonymousId","startSession","endSession","consent"]
+          ;for(var n=0;n<e.length;n++){var t=e[n];window.rudderanalytics[t]=function(e){return function(){
+          window.rudderanalytics.push([e].concat(Array.prototype.slice.call(arguments)))}}(t)}try{
+          new Function('return import("")'),window.rudderAnalyticsBuildType="modern"}catch(a){}
+          if(window.rudderAnalyticsMount=function(){
+          "undefined"==typeof globalThis&&(Object.defineProperty(Object.prototype,"__globalThis_magic__",{get:function get(){
+          return this},configurable:true}),__globalThis_magic__.globalThis=__globalThis_magic__,
+          delete Object.prototype.__globalThis_magic__);var e=document.createElement("script")
+          ;e.src="".concat(sdkBaseUrl,"/").concat(window.rudderAnalyticsBuildType,"/").concat(sdkName),e.async=asyncScript,
+          document.head?document.head.appendChild(e):document.body.appendChild(e)
+          },"undefined"==typeof Promise||"undefined"==typeof globalThis){var d=document.createElement("script")
+          ;d.src="https://polyfill-fastly.io/v3/polyfill.min.js?version=3.111.0&features=Symbol%2CPromise&callback=rudderAnalyticsMount",
+          d.async=asyncScript,document.head?document.head.appendChild(d):document.body.appendChild(d)}else{
+          window.rudderAnalyticsMount()}window.rudderanalytics.load("2apYBMHHHWpiGqicceKmzPebApa","https://kajabiaarnyhwq.dataplane.rudderstack.com",{})}();
+        }
+      </script>
+      <script type="text/javascript">
+        if (typeof (window.rudderanalytics) !== "undefined") {
+          rudderanalytics.page({"account_id":"2147635594","site_id":"2147659260"});
+        }
+      </script>
+      <script type="text/javascript">
+        if (typeof (window.rudderanalytics) !== "undefined") {
+          (function () {
+            function AnalyticsClickHandler (event) {
+              const targetEl = event.target.closest('a') || event.target.closest('button');
+              if (targetEl) {
+                rudderanalytics.track('Site Link Clicked', Object.assign(
+                  {"account_id":"2147635594","site_id":"2147659260"},
+                  {
+                    link_text: targetEl.textContent.trim(),
+                    link_href: targetEl.href,
+                    tag_name: targetEl.tagName,
+                  }
+                ));
+              }
+            };
+            document.addEventListener('click', AnalyticsClickHandler);
+          })();
+        }
+      </script>
+<meta name='site_locale' content='en'><style type="text/css">
+  body main {
+    direction: ltr;
+  }
+  .slick-list {
+    direction: ltr;
+  }
+</style>
+<style type="text/css">
+  /* Font Awesome 4 */
+  .fa.fa-twitter{
+    font-family:sans-serif;
+  }
+  .fa.fa-twitter::before{
+    content:"𝕏";
+    font-size:1.2em;
+  }
+
+  /* Font Awesome 5 */
+  .fab.fa-twitter{
+    font-family:sans-serif;
+  }
+  .fab.fa-twitter::before{
+    content:"𝕏";
+    font-size:1.2em;
+  }
+</style>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@kajabi-ui/styles@1.1.2/dist/kajabi_products/kajabi_products.css" />
+<script type="module" src="https://cdn.jsdelivr.net/npm/@pine-ds/core@3.24.3/dist/pine-core/pine-core.esm.js"></script>
+<script nomodule src="https://cdn.jsdelivr.net/npm/@pine-ds/core@3.24.3/dist/pine-core/index.esm.js"></script>
+<script>fetch("https://app.kajabi.com/health_check/ping",{mode:"no-cors"})</script>
+
+  </head>
+
+  <style>
+  
+
+  
+    
+      body {
+        background-color: #f3efe6;
+      }
+    
+  
+</style>
+
+  <body class="background-light">
+    <main>
+      
+<div id="section-header" data-section-id="header">
+
+<style>
+  /* Default Header Styles */
+  .header {
+    
+      background-color: rgba(0, 0, 0, 0);
+    
+    font-size: 16px;
+  }
+  .header a,
+  .header a.link-list__link,
+  .header a.link-list__link:hover,
+  .header a.social-icons__icon,
+  .header .user__login a,
+  .header .dropdown__item a,
+  .header .dropdown__trigger:hover {
+    color: #ffffff;
+  }
+  .header .dropdown__trigger {
+    color: #ffffff !important;
+  }
+  /* Mobile Header Styles */
+  @media (max-width: 767px) {
+    .header {
+      
+        background-color: #aa998f;
+      
+      font-size: 14px;
+    }
+    
+      .header a,
+      .header a.link-list__link,
+      .header a.social-icons__icon,
+      .header .dropdown__item a,
+      .header .user__login a,
+      .header a.link-list__link:hover,
+      .header .dropdown__trigger:hover {
+        color: #f3efe6;
+      }
+      .header .dropdown__trigger {
+        color: #f3efe6 !important;
+      }
+    
+    .header .hamburger__slices .hamburger__slice {
+      
+        background-color: #d0bd9c;
+      
+    }
+    
+      .header a.link-list__link, .dropdown__item a, .header__content--mobile {
+        text-align: left;
+      }
+    
+    .header--overlay .header__content--mobile  {
+      padding-bottom: 20px;
+    }
+  }
+  /* Sticky Styles */
+  
+    .header.header--fixed {
+      background-color: rgba(0, 0, 0, 0);
+      
+        background-color: #aa998f;
+      
+      
+        background-color: ;
+      
+    }
+    
+      .header.header--fixed a,
+      .header.header--fixed a.link-list__link,
+      .header.header--fixed a.link-list__link:hover,
+      .header.header--fixed a.social-icons__icon,
+      .header.header--fixed .dropdown__trigger:hover,
+      .header.header--fixed .dropdown__item a,
+      .header.header--fixed .user__login a {
+        color: #f3efe6;
+      }
+    
+    
+      .header.header--fixed .dropdown__trigger {
+        color: #f3efe6 !important;
+      }
+    
+    .header.header--fixed .hamburger__slice {
+      
+        background-color: #f3efe6;
+      
+    }
+  
+</style>
+
+<div class="hidden">
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      0
+    
+  
+    
+  
+  
+  
+  
+</div>
+
+<header class="header header--overlay sticky   background-dark header--close-on-scroll" kjb-settings-id="sections_header_settings_background_color">
+  <div class="hello-bars">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+          <style>
+@media (min-width: 768px) {
+  #block-1723304442408 {
+    text-align: ;
+  }
+} 
+</style>
+
+<div 
+  id="block-1723304442408" 
+  class="header__block header__block--hello-bar header__block--show " 
+  kjb-settings-id="sections_header_blocks_1723304442408_settings_stretch"
+  
+>
+  
+
+<style>
+  #block-1723304442408 .hello-bar {
+    background-color: #677574;
+  }
+  #block-1723304442408 .hello-bar__text {
+    color: ;
+  }
+</style>
+
+<div class="block hello-bar background-dark text-center" kjb-settings-id="sections_header_blocks_1723304442408_settings_text">
+  
+    <a href="https://form.typeform.com/to/WCU5ReWQ"  >
+  
+    <div class="container">
+      <p
+        class="hello-bar__text"
+        kjb-settings-id="sections_header_blocks_1723304442408_settings_text_color"
+        
+      >
+        Enrolling in a Program? Click Here.
+      </p>
+    </div>
+  
+    </a>
+  
+</div>
+
+</div>
+
+      
+    
+      
+    
+  </div>
+  
+    <div class="header__wrap">
+      <div class="header__content header__content--desktop background-dark">
+        <div class="container header__container media justify-content-left">
+          
+            
+                <style>
+@media (min-width: 768px) {
+  #block-1555988494486 {
+    text-align: left;
+  }
+} 
+</style>
+
+<div 
+  id="block-1555988494486" 
+  class="header__block header__block--logo header__block--show header__switch-content stretch" 
+  kjb-settings-id="sections_header_blocks_1555988494486_settings_stretch"
+  
+>
+  
+
+<style>
+  #block-1555988494486 {
+    line-height: 1;
+  }
+  #block-1555988494486 .logo__image {
+    display: block;
+    width: 200px;
+  }
+  #block-1555988494486 .logo__text {
+    color: rgba(0, 0, 0, 0);
+  }
+</style>
+
+<a class="logo" href="/">
+  
+    
+      <img loading="auto" class="logo__image" alt="Artisan Lab Network" kjb-settings-id="sections_header_blocks_1555988494486_settings_logo" src="https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/themes/2153570915/settings_images/804f07c-8d34-ed52-c676-d52520e2db2_Artisan_Lab_Network_logo_CREAM_7-15-23.png" />
+    
+  
+</a>
+
+</div>
+
+              
+          
+            
+                <style>
+@media (min-width: 768px) {
+  #block-1687987358314 {
+    text-align: right;
+  }
+} 
+</style>
+
+<div 
+  id="block-1687987358314" 
+  class="header__block header__switch-content header__block--menu " 
+  kjb-settings-id="sections_header_blocks_1687987358314_settings_stretch"
+  
+>
+  <div class="link-list justify-content-right" kjb-settings-id="sections_header_blocks_1687987358314_settings_menu">
+  
+    <a class="link-list__link" href="https://www.artisanlabnetwork.com/" >Home</a>
+  
+    <a class="link-list__link" href="https://www.artisanlabnetwork.com/artisanlabnetwork-about" >About Us</a>
+  
+</div>
+
+</div>
+
+              
+          
+            
+                <style>
+@media (min-width: 768px) {
+  #block-1687986100007 {
+    text-align: left;
+  }
+} 
+</style>
+
+<div 
+  id="block-1687986100007" 
+  class="header__block header__switch-content header__block--dropdown " 
+  kjb-settings-id="sections_header_blocks_1687986100007_settings_stretch"
+  
+>
+  <style>
+  /* Dropdown menu colors for desktop */
+  @media (min-width: 768px) {
+    #block-1687986100007 .dropdown__menu {
+      background-color: #f3efe6;
+    }
+    #block-1687986100007 .dropdown__item a {
+      color: #677574;
+    }
+  }
+  /* Mobile menu text alignment */
+  @media (max-width: 767px) {
+    #block-1687986100007 .dropdown__item a {
+      text-align: left;
+    }
+  }
+</style>
+
+<div class="dropdown" kjb-settings-id="sections_header_blocks_1687986100007_settings_trigger">
+  <a class="dropdown__trigger">
+    
+      Our Labs
+    
+    
+  </a>
+  <div class="dropdown__menu dropdown__menu--text-right ">
+    
+      <span class="dropdown__item"><a href="https://www.artisanlabnetwork.com/pacificartisanlabs" >Pacific Artisan Labs</a></span>
+    
+      <span class="dropdown__item"><a href="https://www.artisanlabnetwork.com/peak-artisan-labs" >Peak Artisan Labs</a></span>
+    
+      <span class="dropdown__item"><a href="https://www.artisanlabnetwork.com/pikeartisanlabs" >Pike Artisan Labs</a></span>
+    
+      <span class="dropdown__item"><a href="https://www.artisanlabnetwork.com/our-partners" >ALN Partners</a></span>
+    
+  </div>
+</div>
+
+</div>
+
+              
+          
+            
+                <style>
+@media (min-width: 768px) {
+  #block-1723815335093 {
+    text-align: right;
+  }
+} 
+</style>
+
+<div 
+  id="block-1723815335093" 
+  class="header__block header__switch-content header__block--dropdown " 
+  kjb-settings-id="sections_header_blocks_1723815335093_settings_stretch"
+  
+>
+  <style>
+  /* Dropdown menu colors for desktop */
+  @media (min-width: 768px) {
+    #block-1723815335093 .dropdown__menu {
+      background-color: #f3efe6;
+    }
+    #block-1723815335093 .dropdown__item a {
+      color: #677574;
+    }
+  }
+  /* Mobile menu text alignment */
+  @media (max-width: 767px) {
+    #block-1723815335093 .dropdown__item a {
+      text-align: left;
+    }
+  }
+</style>
+
+<div class="dropdown" kjb-settings-id="sections_header_blocks_1723815335093_settings_trigger">
+  <a class="dropdown__trigger">
+    
+      
+      Resources
+    
+    
+    
+  </a>
+  <div class="dropdown__menu dropdown__menu--text-left ">
+    
+      <span class="dropdown__item"><a href="https://www.artisanlabnetwork.com/provider-resources" >Practice Resources</a></span>
+    
+      <span class="dropdown__item"><a href="https://www.artisanlabnetwork.com/LabAlliance" >Lab2Lab Resources</a></span>
+    
+      <span class="dropdown__item"><a href="https://www.artisanlabnetwork.com/patient-resources" >Patient Resources</a></span>
+    
+  </div>
+</div>
+
+</div>
+
+              
+          
+            
+                <style>
+@media (min-width: 768px) {
+  #block-1739974865720 {
+    text-align: right;
+  }
+} 
+</style>
+
+<div 
+  id="block-1739974865720" 
+  class="header__block header__switch-content header__block--menu " 
+  kjb-settings-id="sections_header_blocks_1739974865720_settings_stretch"
+  
+>
+  <div class="link-list justify-content-right" kjb-settings-id="sections_header_blocks_1739974865720_settings_menu">
+  
+</div>
+
+</div>
+
+              
+          
+            
+                <style>
+@media (min-width: 768px) {
+  #block-1723816346337 {
+    text-align: right;
+  }
+} 
+</style>
+
+<div 
+  id="block-1723816346337" 
+  class="header__block header__switch-content header__block--menu " 
+  kjb-settings-id="sections_header_blocks_1723816346337_settings_stretch"
+  
+>
+  <div class="link-list justify-content-right" kjb-settings-id="sections_header_blocks_1723816346337_settings_menu">
+  
+    <a class="link-list__link" href="https://form.typeform.com/to/m0lQ9zjD" >Contact Us</a>
+  
+</div>
+
+</div>
+
+              
+          
+            
+                <style>
+@media (min-width: 768px) {
+  #block-1723815546971 {
+    text-align: center;
+  }
+} 
+</style>
+
+<div 
+  id="block-1723815546971" 
+  class="header__block header__switch-content header__block--cta " 
+  kjb-settings-id="sections_header_blocks_1723815546971_settings_stretch"
+  
+>
+  
+
+
+
+
+
+
+<style>
+  #block-1723815546971 .btn,
+  [data-slick-id="1723815546971"] .block .btn {
+    color: #f3efe6;
+    border-color: #d0bd9c;
+    border-radius: 50px;
+    background-color: #d0bd9c;
+  }
+  #block-1723815546971 .btn--outline,
+  [data-slick-id="1723815546971"] .block .btn--outline {
+    background: transparent;
+    color: #d0bd9c;
+  }
+</style>
+
+<a class="btn btn--solid btn--small btn--auto" href="https://form.typeform.com/to/quuPCSff"    kjb-settings-id="sections_header_blocks_1723815546971_settings_btn_background_color" role="button">
+  Sign Up
+</a>
+
+
+
+</div>
+
+              
+          
+            
+                <style>
+@media (min-width: 768px) {
+  #block-1696601323565 {
+    text-align: ;
+  }
+} 
+</style>
+
+<div 
+  id="block-1696601323565" 
+  class="header__block header__switch-content header__block--social-icons " 
+  kjb-settings-id="sections_header_blocks_1696601323565_settings_stretch"
+  
+>
+  <style>
+  .social-icons--1696601323565 .social-icons__icons {
+    justify-content: left
+  }
+  .social-icons--1696601323565 .social-icons__icon {
+    color: #f3efe6 !important;
+  }
+  .social-icons--1696601323565.social-icons--round .social-icons__icon {
+    background-color: #677574;
+  }
+  .social-icons--1696601323565.social-icons--square .social-icons__icon {
+    background-color: #677574;
+  }
+  
+  @media (min-width: 768px) {
+    .social-icons--1696601323565 .social-icons__icons {
+      justify-content: space-around
+    }
+  }
+</style>
+
+
+<div class="social-icons social-icons-- social-icons-- social-icons--1696601323565 " kjb-settings-id="sections_header_blocks_1696601323565_settings_social_icons_text_color">
+  <div class="social-icons__icons">
+    
+
+  <a class="social-icons__icon social-icons__icon--" href="https://www.facebook.com/artisanlabnetwork"  kjb-settings-id="sections_header_blocks_1696601323565_settings_social_icon_link_facebook">
+    <i class="fab fa-facebook-f"></i>
+  </a>
+
+
+
+
+
+
+
+  <a class="social-icons__icon social-icons__icon--" href="https://www.instagram.com/artisanlabnetwork"  kjb-settings-id="sections_header_blocks_1696601323565_settings_social_icon_link_instagram">
+    <i class="fab fa-instagram"></i>
+  </a>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a class="social-icons__icon social-icons__icon--" href="https://www.linkedin.com/company/artisan-lab-network/"  kjb-settings-id="sections_header_blocks_1696601323565_settings_social_icon_link_linkedin">
+    <i class="fab fa-linkedin-in"></i>
+  </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+</div>
+
+</div>
+
+            
+          
+            
+          
+            
+                <style>
+@media (min-width: 768px) {
+  #block-1739974707570 {
+    text-align: right;
+  }
+} 
+</style>
+
+<div 
+  id="block-1739974707570" 
+  class="header__block header__switch-content header__block--menu " 
+  kjb-settings-id="sections_header_blocks_1739974707570_settings_stretch"
+  
+>
+  <div class="link-list justify-content-right" kjb-settings-id="sections_header_blocks_1739974707570_settings_menu">
+  
+</div>
+
+</div>
+
+              
+          
+          
+            <div class="hamburger hidden--desktop" kjb-settings-id="sections_header_settings_hamburger_color">
+              <div class="hamburger__slices">
+                <div class="hamburger__slice hamburger--slice-1"></div>
+                <div class="hamburger__slice hamburger--slice-2"></div>
+                <div class="hamburger__slice hamburger--slice-3"></div>
+                <div class="hamburger__slice hamburger--slice-4"></div>
+              </div>
+            </div>
+          
+          
+        </div>
+      </div>
+      <div class="header__content header__content--mobile">
+        <div class="header__switch-content header__spacer"></div>
+      </div>
+    </div>
+  
+</header>
+
+</div>
+<div data-dynamic-sections=404><div id="section-1593045036549" data-section-id="1593045036549"><style>
+  
+    #section-1593045036549 {
+      background-image: url(https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/themes/2153570915/settings_images/c8858c-b427-af04-10e-fb6b5a113a2f_Pacific_Artisan_Labs_404_Kajabi_Cover.jpg);
+      background-position: center;
+    }
+  
+  #section-1593045036549 .section__overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-color: ;
+  }
+  #section-1593045036549 .sizer {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+  #section-1593045036549 .container {
+    max-width: calc(1260px + 10px + 10px);
+    padding-right: 10px;
+    padding-left: 10px;
+    
+  }
+  #section-1593045036549 .row {
+    
+  }
+  #section-1593045036549 .container--full {
+    width: 100%;
+    max-width: calc(100% + 10px + 10px);
+  }
+  @media (min-width: 768px) {
+    
+      #section-1593045036549 {
+        
+          background-attachment: fixed;
+        
+      }
+    
+    #section-1593045036549 .sizer {
+      padding-top: 100px;
+      padding-bottom: 100px;
+    }
+    #section-1593045036549 .container {
+      max-width: calc(1260px + 40px + 40px);
+      padding-right: 40px;
+      padding-left: 40px;
+    }
+    #section-1593045036549 .container--full {
+      max-width: calc(100% + 40px + 40px);
+    }
+  }
+  
+  
+</style>
+
+
+<section kjb-settings-id="sections_1593045036549_settings_background_color"
+  class="section
+  
+  
+   "
+  data-reveal-event=""
+  data-reveal-offset=""
+  data-reveal-units="seconds">
+  <div class="sizer sizer--full">
+    
+    <div class="section__overlay"></div>
+    <div class="container ">
+      <div class="row align-items-center justify-content-center">
+        
+          
+
+
+
+
+<style>
+  /* flush setting */
+  
+  
+  /* margin settings */
+  #block-1593045036549_0, [data-slick-id="1593045036549_0"] {
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+  }
+  #block-1593045036549_0 .block, [data-slick-id="1593045036549_0"] .block {
+    /* border settings */
+    border: 4px none black;
+    border-radius: 4px;
+    
+
+    /* background color */
+    
+    /* default padding for mobile */
+    
+    
+    
+    /* mobile padding overrides */
+    
+    
+    
+    
+    
+  }
+
+  @media (min-width: 768px) {
+    /* desktop margin settings */
+    #block-1593045036549_0, [data-slick-id="1593045036549_0"] {
+      margin-top: 0px;
+      margin-right: 0px;
+      margin-bottom: 0px;
+      margin-left: 0px;
+    }
+    #block-1593045036549_0 .block, [data-slick-id="1593045036549_0"] .block {
+      /* default padding for desktop  */
+      
+      
+      /* desktop padding overrides */
+      
+      
+      
+      
+      
+    }
+  }
+  /* mobile text align */
+  @media (max-width: 767px) {
+    #block-1593045036549_0, [data-slick-id="1593045036549_0"] {
+      text-align: center;
+    }
+  }
+</style>
+
+
+
+<div
+  id="block-1593045036549_0"
+  class="
+  block-type--text
+  text-center
+  col-6
+  
+  
+  
+    
+  
+  
+  "
+  
+  data-reveal-event=""
+  data-reveal-offset=""
+  data-reveal-units="seconds"
+  
+    kjb-settings-id="sections_1593045036549_blocks_1593045036549_0_settings_width"
+  
+  
+>
+  <div class="block
+    box-shadow-none
+    "
+    
+      data-aos="none"
+      data-aos-delay="0"
+      data-aos-duration="0"
+    
+    
+  >
+    
+    <style>
+  
+  #block-1577982541036_0 .btn {
+    margin-top: 1rem;
+  }
+</style>
+
+
+  <h1><span style="color: #201a1c;">Page not found</span></h1>
+<p><span style="color: #201a1c;">The page you are looking for doesn't exist or has been moved.</span></p>
+
+
+
+  
+
+
+
+
+
+
+<style>
+  #block-1593045036549_0 .btn,
+  [data-slick-id="1593045036549_0"] .block .btn {
+    color: #f3efe6;
+    border-color: #201a1c;
+    border-radius: 50px;
+    background-color: #201a1c;
+  }
+  #block-1593045036549_0 .btn--outline,
+  [data-slick-id="1593045036549_0"] .block .btn--outline {
+    background: transparent;
+    color: #201a1c;
+  }
+</style>
+
+<a class="btn btn--solid btn--medium btn--auto" href="/resource_redirect/landing_pages/2149438927"    kjb-settings-id="sections_1593045036549_blocks_1593045036549_0_settings_btn_background_color" role="button">
+  Back to Artisan Lab Network
+</a>
+
+
+
+
+
+  </div>
+</div>
+
+
+        
+      </div>
+    </div>
+  </div>
+</section>
+
+</div></div>
+<div id="section-footer" data-section-id="footer">
+  <style>
+    #section-footer {
+      -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+      flex-grow: 1;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+    }
+    .footer {
+      -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+      flex-grow: 1;
+    }
+  </style>
+
+<style>
+  .footer {
+    background-color: #aa998f;
+  }
+  .footer, .footer__block {
+    font-size: 12px;
+    color: #f3efe6;
+  }
+  .footer .logo__text {
+    color: ;
+  }
+  .footer .link-list__links {
+    width: 100%;
+  }
+  .footer a.link-list__link {
+    color: #f3efe6;
+  }
+  .footer .link-list__link:hover {
+    color: #f3efe6;
+  }
+  .copyright {
+    color: #f3efe6;
+  }
+  @media (min-width: 768px) {
+    .footer, .footer__block {
+      font-size: 14px;
+    }
+  }
+  .powered-by a {
+    color: rgba(0, 0, 0, 0) !important;
+  }
+  
+    .powered-by {
+      text-align: center;
+      padding-top: 0;
+    }
+  
+</style>
+
+<footer class="footer footer--stacked  background-light  " kjb-settings-id="sections_footer_settings_background_color">
+  <div class="footer__content">
+    <div class="container footer__container media">
+      
+        
+            <div 
+  id="block-footer_0" 
+  class="footer__block "
+  
+>
+  
+
+<style>
+  #block-footer_0 {
+    line-height: 1;
+  }
+  #block-footer_0 .logo__image {
+    display: block;
+    width: 150px;
+  }
+  #block-footer_0 .logo__text {
+    color: ;
+  }
+</style>
+
+<a class="logo" href="/">
+  
+    
+      <img loading="auto" class="logo__image" alt="Artisan Lab Network" kjb-settings-id="sections_footer_blocks_footer_0_settings_logo" src="https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/themes/2153570915/settings_images/36d25d-87f6-12e-334-a2674f47f8_Artisan_Lab_Network_logo_CREAM_7-15-23.png" />
+    
+  
+</a>
+
+</div>
+
+          
+      
+        
+            
+
+
+
+
+<style>
+  /* flush setting */
+  
+  
+  /* margin settings */
+  #block-1691074883596, [data-slick-id="1691074883596"] {
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+  }
+  #block-1691074883596 .block, [data-slick-id="1691074883596"] .block {
+    /* border settings */
+    border: 4px  black;
+    border-radius: 4px;
+    
+
+    /* background color */
+    
+      background-color: ;
+    
+    /* default padding for mobile */
+    
+      padding: 20px;
+    
+    
+      padding: 20px;
+    
+    
+      
+        padding: 20px;
+      
+    
+    /* mobile padding overrides */
+    
+    
+      padding-top: 0px;
+    
+    
+      padding-right: 0px;
+    
+    
+      padding-bottom: 0px;
+    
+    
+      padding-left: 0px;
+    
+  }
+
+  @media (min-width: 768px) {
+    /* desktop margin settings */
+    #block-1691074883596, [data-slick-id="1691074883596"] {
+      margin-top: 0px;
+      margin-right: 0px;
+      margin-bottom: 0px;
+      margin-left: 0px;
+    }
+    #block-1691074883596 .block, [data-slick-id="1691074883596"] .block {
+      /* default padding for desktop  */
+      
+        padding: 30px;
+      
+      
+        
+          padding: 30px;
+        
+      
+      /* desktop padding overrides */
+      
+      
+        padding-top: 0px;
+      
+      
+        padding-right: 0px;
+      
+      
+        padding-bottom: 0px;
+      
+      
+        padding-left: 0px;
+      
+    }
+  }
+  /* mobile text align */
+  @media (max-width: 767px) {
+    #block-1691074883596, [data-slick-id="1691074883596"] {
+      text-align: center;
+    }
+  }
+</style>
+
+
+
+<div
+  id="block-1691074883596"
+  class="
+  block-type--link_list
+  text-right
+  col-
+  
+  
+  
+  
+  "
+  
+  data-reveal-event=""
+  data-reveal-offset=""
+  data-reveal-units=""
+  
+    kjb-settings-id="sections_footer_blocks_1691074883596_settings_width"
+  
+  
+>
+  <div class="block
+    box-shadow-
+    "
+    
+      data-aos="-"
+      data-aos-delay=""
+      data-aos-duration=""
+    
+    
+  >
+    
+    <style>
+  #block-1691074883596 .link-list__title {
+    color: ;
+  }
+  #block-1691074883596 .link-list__link {
+    color: ;
+  }
+</style>
+
+
+
+<div class="link-list link-list--row link-list--desktop-right link-list--mobile-center">
+  
+  <div class="link-list__links" kjb-settings-id="sections_footer_blocks_1691074883596_settings_menu">
+    
+      <a class="link-list__link" href="https://www.artisanlabnetwork.com/" >Home</a>
+    
+      <a class="link-list__link" href="https://www.artisanlabnetwork.com/artisanlabnetwork-about" >About Us</a>
+    
+      <a class="link-list__link" href="https://www.artisanlabnetwork.com/blog" >Press Releases</a>
+    
+      <a class="link-list__link" href="https://www.artisanlabnetwork.com/careers" >Careers</a>
+    
+      <a class="link-list__link" href="https://www.artisanlabnetwork.com/practicematters" >Newsletter</a>
+    
+  </div>
+</div>
+
+  </div>
+</div>
+
+
+          
+      
+        
+            <div 
+  id="block-1689443924320" 
+  class="footer__block "
+  
+>
+  <span class="copyright" kjb-settings-id="sections_footer_blocks_1689443924320_settings_copyright" role="presentation">
+  &copy; 2026 Artisan Lab Network
+</span>
+
+</div>
+
+          
+      
+        
+            
+
+
+
+
+<style>
+  /* flush setting */
+  
+  
+  /* margin settings */
+  #block-1689443933991, [data-slick-id="1689443933991"] {
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+  }
+  #block-1689443933991 .block, [data-slick-id="1689443933991"] .block {
+    /* border settings */
+    border: 4px  black;
+    border-radius: 4px;
+    
+
+    /* background color */
+    
+      background-color: ;
+    
+    /* default padding for mobile */
+    
+      padding: 20px;
+    
+    
+      padding: 20px;
+    
+    
+      
+        padding: 20px;
+      
+    
+    /* mobile padding overrides */
+    
+    
+      padding-top: 0px;
+    
+    
+      padding-right: 0px;
+    
+    
+      padding-bottom: 0px;
+    
+    
+      padding-left: 0px;
+    
+  }
+
+  @media (min-width: 768px) {
+    /* desktop margin settings */
+    #block-1689443933991, [data-slick-id="1689443933991"] {
+      margin-top: 0px;
+      margin-right: 0px;
+      margin-bottom: 0px;
+      margin-left: 0px;
+    }
+    #block-1689443933991 .block, [data-slick-id="1689443933991"] .block {
+      /* default padding for desktop  */
+      
+        padding: 30px;
+      
+      
+        
+          padding: 30px;
+        
+      
+      /* desktop padding overrides */
+      
+      
+        padding-top: 0px;
+      
+      
+        padding-right: 0px;
+      
+      
+        padding-bottom: 0px;
+      
+      
+        padding-left: 0px;
+      
+    }
+  }
+  /* mobile text align */
+  @media (max-width: 767px) {
+    #block-1689443933991, [data-slick-id="1689443933991"] {
+      text-align: center;
+    }
+  }
+</style>
+
+
+
+<div
+  id="block-1689443933991"
+  class="
+  block-type--link_list
+  text-right
+  col-
+  
+  
+  
+  
+  "
+  
+  data-reveal-event=""
+  data-reveal-offset=""
+  data-reveal-units=""
+  
+    kjb-settings-id="sections_footer_blocks_1689443933991_settings_width"
+  
+  
+>
+  <div class="block
+    box-shadow-
+    "
+    
+      data-aos="-"
+      data-aos-delay=""
+      data-aos-duration=""
+    
+    
+  >
+    
+    <style>
+  #block-1689443933991 .link-list__title {
+    color: ;
+  }
+  #block-1689443933991 .link-list__link {
+    color: ;
+  }
+</style>
+
+
+
+<div class="link-list link-list--row link-list--desktop-right link-list--mobile-center">
+  
+  <div class="link-list__links" kjb-settings-id="sections_footer_blocks_1689443933991_settings_menu">
+    
+      <a class="link-list__link" href="https://www.google.com/maps/place/12302+NE+Marx+St,+Portland,+OR+97220/data=!4m2!3m1!1s0x5495a3ece79a289f:0x6dff04962fb7c569?sa=X&ved=2ahUKEwiH4umG1r-AAxVplWoFHQzKCK0Q8gF6BAgPEAA&ved=2ahUKEwiH4umG1r-AAxVplWoFHQzKCK0Q8gF6BAgSEAI" >12302 NE Marx | Portland, OR 97230</a>
+    
+      <a class="link-list__link" href="https://www.google.com/maps/place/12302+NE+Marx+St,+Portland,+OR+97220/data=!4m2!3m1!1s0x5495a3ece79a289f:0x6dff04962fb7c569?sa=X&ved=2ahUKEwiH4umG1r-AAxVplWoFHQzKCK0Q8gF6BAgPEAA&ved=2ahUKEwiH4umG1r-AAxVplWoFHQzKCK0Q8gF6BAgSEAI" >877-390-6900</a>
+    
+      <a class="link-list__link" href="https://www.artisanlabnetwork.com/privacy-policy" >Terms, Conditions and Privacy Policies</a>
+    
+  </div>
+</div>
+
+  </div>
+</div>
+
+
+          
+      
+        
+            <div 
+  id="block-1689443978608" 
+  class="footer__block "
+  
+>
+  <style>
+  .social-icons--1689443978608 .social-icons__icons {
+    justify-content: 
+  }
+  .social-icons--1689443978608 .social-icons__icon {
+    color: #f3efe6 !important;
+  }
+  .social-icons--1689443978608.social-icons--round .social-icons__icon {
+    background-color: #677574;
+  }
+  .social-icons--1689443978608.social-icons--square .social-icons__icon {
+    background-color: #677574;
+  }
+  
+  @media (min-width: 768px) {
+    .social-icons--1689443978608 .social-icons__icons {
+      justify-content: 
+    }
+  }
+</style>
+
+<div class="social-icons social-icons-- social-icons--1689443978608" kjb-settings-id="sections_footer_blocks_1689443978608_settings_social_icons_text_color">
+  <div class="social-icons__icons">
+    
+
+  <a class="social-icons__icon social-icons__icon--" href="https://www.facebook.com/artisanlabnetwork"  kjb-settings-id="sections_footer_blocks_1689443978608_settings_social_icon_link_facebook">
+    <i class="fab fa-facebook-f"></i>
+  </a>
+
+
+
+
+
+
+
+  <a class="social-icons__icon social-icons__icon--" href="https://www.instagram.com/artisanlabnetwork"  kjb-settings-id="sections_footer_blocks_1689443978608_settings_social_icon_link_instagram">
+    <i class="fab fa-instagram"></i>
+  </a>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a class="social-icons__icon social-icons__icon--" href="https://www.linkedin.com/company/artisan-lab-network/"  kjb-settings-id="sections_footer_blocks_1689443978608_settings_social_icon_link_linkedin">
+    <i class="fab fa-linkedin-in"></i>
+  </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+</div>
+
+</div>
+
+        
+      
+    </div>
+    
+
+  </div>
+
+</footer>
+
+</div>
+
+
+
+    </main>
+    <!-- Javascripts ======================================================= -->
+<script src="https://kajabi-app-assets.kajabi-cdn.com/assets/encore_core-0f1e990da766d4f46d21baca394febf849e3e45049f1cf04aec50965474841de.js"></script>
+<script src="https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/themes/2153570915/assets/scripts.js?1776112612964226"></script>
+
+
+
+<!-- Customer JS ======================================================= -->
+<script>
+  /* Custom JS Added Via Theme Settings */
+  /* Javascript code goes here */
+</script>
+
+
+  </body>
+</html>

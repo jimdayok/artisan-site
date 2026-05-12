@@ -121,9 +121,8 @@ export const packageChemClip: PackageItem[] = [
 ];
 
 export const packageShipping: PackageItem[] = [
-  pkg("pkg-ship-next-day", "Shipping", "Service", "Next Day Delivery per Order", 4),
-  pkg("pkg-ship-overnight-box", "Shipping", "Service", "Overnight Delivery per Box", 22),
-  pkg("pkg-ship-2-day-box", "Shipping", "Service", "2-Day Delivery per Box", 18),
+  pkg("pkg-ship-next-day", "Shipping", "Service", "Next Day Air", 4),
+  pkg("pkg-ship-2-day-box", "Shipping", "Service", "2 Day Shipping", 16),
   pkg("pkg-ship-ground-box", "Shipping", "Service", "Ground Delivery per Box", 8),
   pkg("pkg-ship-mail-patient", "Shipping", "Service", "Mail to Patient", 8, { notes: "Add-on to standard shipping." }),
 ];

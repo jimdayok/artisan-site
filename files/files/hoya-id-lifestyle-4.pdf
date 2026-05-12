@@ -1,0 +1,1629 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en"  class=""
+      data-server="86891a5ae70a">
+
+<head>
+
+<script>
+    window.dataLayer = [
+  {
+    "event": "pageview",
+    "environment": "production",
+    "market": "int",
+    "language": "en",
+    "brand": "Hoya",
+    "page": {
+      "type": "b2b",
+      "contentTypeName": "errorpage",
+      "targetGroup": "other",
+      "category": "website"
+    }
+  }
+];
+</script>
+
+
+
+<script>
+    // Define dataLayer and the gtag function.
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+
+    gtag('set', 'developer_id.dYWJhMj', true);
+
+    // Default ad_storage to 'denied'.
+    gtag('consent', 'default',
+        {
+            ad_storage: "denied",
+            analytics_storage: "denied",
+            functionality_storage: "denied",
+            personalization_storage: "denied",
+            security_storage: "denied",
+            ad_user_data: "denied",
+            ad_personalization: "denied",
+            'wait_for_update': 500
+        }
+    );
+</script>
+<!-- Google Tag Manager -->
+<script>
+    (function (w, d, s, l, i) {
+        w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s),
+            dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+
+    })(window, document, 'script', 'dataLayer', 'GTM-W3VRWHS');
+</script>
+<!-- End Google Tag Manager -->
+
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=10" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+
+
+
+    <meta property="og:title" content="404-page | HOYA Vision Care" />
+
+
+    <meta property="og:site_name" content="HOYA Vision Care" />
+
+    <meta property="og:description" />
+
+<meta property="og:type" content="WebSite" />
+<link rel="apple-touch-icon" sizes="180x180" href="/Static/img/favicons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/Static/img/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/Static/img/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="manifest" href="/Static/img/favicons/manifest.json">
+<link rel="mask-icon" href="/Static/img/favicons/safari-pinned-tab.svg" color="#5bbad5">
+
+<meta name="theme-color" content="#ffffff">
+
+    <link href="/dist/css/hoyavision.min.css?v=H4MFh5dOMXNI2rBVl3JfFpyuUxv29tgILewGLQ-xbkA" rel="stylesheet" />
+
+<link href="/frontend/dist/base/css.bundle.css?v=RYIkrbRq1G9AbojcpPRC9egcTyMLeXQErXGDzDoshqw" rel="stylesheet" />
+<link href="/frontend/dist/hoya/b2b/css.bundle.css?v=aRVSSH6V1gE1CG0DlWOXKawbd6hOLuo-fwMGYZ_jsyA" rel="stylesheet" />
+
+
+<link rel="canonical" href="https://www.hoyavision.com/404-page/" />
+<link rel="alternate" hreflang="x-default" href="https://www.hoyavision.com/404-page/" />
+<link rel="alternate" hreflang="en-GB" href="https://www.hoyavision.com/uk/404-page/" />
+<link rel="alternate" hreflang="en-ZA" href="https://www.hoyavision.com/za/404-page/" />
+<link rel="alternate" hreflang="de" href="https://www.hoyavision.com/de/404-seite/" />
+<link rel="alternate" hreflang="fr" href="https://www.hoyavision.com/fr/404-page/" />
+<link rel="alternate" hreflang="es" href="https://www.hoyavision.com/es/404-page/" />
+<link rel="alternate" hreflang="sv" href="https://www.hoyavision.com/se/404-sida/" />
+<link rel="alternate" hreflang="no" href="https://www.hoyavision.com/no/404-side/" />
+<link rel="alternate" hreflang="da" href="https://www.hoyavision.com/dk/404-page/" />
+<link rel="alternate" hreflang="fi" href="https://www.hoyavision.com/fi/404-sivu/" />
+<link rel="alternate" hreflang="nl" href="https://www.hoyavision.com/nl/404---pagina/" />
+<link rel="alternate" hreflang="nl-BE" href="https://www.hoyavision.com/nl-be/404-pagina/" />
+<link rel="alternate" hreflang="pt-BR" href="https://www.hoyavision.com/br/pagina-404/" />
+<link rel="alternate" hreflang="it" href="https://www.hoyavision.com/it/404-page/" />
+<link rel="alternate" hreflang="en-US" href="https://www.hoyavision.com/en-us/404-page/" />
+<link rel="alternate" hreflang="en-CA" href="https://www.hoyavision.com/en-ca/404-page/" />
+<link rel="alternate" hreflang="en-AU" href="https://www.hoyavision.com/au/404-page/" />
+<link rel="alternate" hreflang="en-IN" href="https://www.hoyavision.com/in/404-page/" />
+<link rel="alternate" hreflang="en-SG" href="https://www.hoyavision.com/sg/404-page/" />
+<link rel="alternate" hreflang="pl" href="https://www.hoyavision.com/pl/404--nie-znaleziono-strony/" />
+<link rel="alternate" hreflang="tr" href="https://www.hoyavision.com/tr/404-sayfasi/" />
+<link rel="alternate" hreflang="pt-PT" href="https://www.hoyavision.com/pt/404-page/" />
+<link rel="alternate" hreflang="hu" href="https://www.hoyavision.com/hu/404-es-oldal/" />
+<link rel="alternate" hreflang="fr-CA" href="https://www.hoyavision.com/fr-ca/404-page/" />
+<link rel="alternate" hreflang="es-US" href="https://www.hoyavision.com/es-us/página-404/" />
+<link rel="alternate" hreflang="fr-BE" href="https://www.hoyavision.com/fr-be/404-page/" />
+<link rel="alternate" hreflang="cs-CZ" href="https://www.hoyavision.com/cz/404-page/" />
+<link rel="alternate" hreflang="ru-RU" href="https://www.hoyavision.com/ru/страница-404/" />
+<link rel="alternate" hreflang="ro-RO" href="https://www.hoyavision.com/ro/pagina-404/" />
+<link rel="alternate" hreflang="ko" href="https://www.hoyavision.com/kr/404-page/" />
+<link rel="alternate" hreflang="id-ID" href="https://www.hoyavision.com/id/404-page/" />
+<link rel="alternate" hreflang="zh-HK" href="https://www.hoyavision.com/hk/404-page/" />
+<link rel="alternate" hreflang="zh-TW" href="https://www.hoyavision.com/tw/404-page/" />
+<link rel="alternate" hreflang="zh-CN" href="https://www.hoyavision.com/cn/404/" />
+<link rel="alternate" hreflang="en-MY" href="https://www.hoyavision.com/my/404-page/" />
+<link rel="alternate" hreflang="sl-SI" href="https://www.hoyavision.com/si/404-stran/" />
+<link rel="alternate" hreflang="en-HK" href="https://www.hoyavision.com/en-hk/404-page/" />
+<link rel="alternate" hreflang="ar-SA" href="https://www.hoyavision.com/ar-sa/404-page/" />
+<link rel="alternate" hreflang="fr-CH" href="https://www.hoyavision.com/fr-ch/404-page/" />
+<link rel="alternate" hreflang="de-CH" href="https://www.hoyavision.com/de-ch/404-page/" />
+<link rel="alternate" hreflang="it-CH" href="https://www.hoyavision.com/it-ch/404-page/" />
+<link rel="alternate" hreflang="th" href="https://www.hoyavision.com/en-th/404-page/" />
+<link rel="alternate" hreflang="si" href="https://www.hoyavision.com/en-lk/404-page/" />
+<link rel="alternate" hreflang="ne-NP" href="https://www.hoyavision.com/en-np/404-page/" />
+<link rel="alternate" hreflang="bn-BD" href="https://www.hoyavision.com/en-bd/404-page/" />
+<link rel="alternate" hreflang="dv-MV" href="https://www.hoyavision.com/en-mv/404-page/" />
+
+
+<script>
+    if ('serviceWorker' in navigator && !window.__swRegistered)
+    {
+        window.addEventListener('load', () =>
+        {
+            navigator.serviceWorker.register('/serviceworker.js')
+                .then(reg => { window.__swRegistered = true; })
+                .catch(err => console.error('❌ Service Worker registration failed:', err));
+        });
+    }
+
+    (function ()
+    {
+        const isStandalone =
+            window.matchMedia('(display-mode: standalone)').matches ||
+            window.navigator.standalone === true; // iOS flag on older versions
+
+        const { pathname, search, hash } = window.location;
+        const currentFull = pathname + search + hash;
+
+        const KEY = 'pwa_start_url';
+        const storedFull = localStorage.getItem(KEY);
+
+        if (isStandalone && storedFull && storedFull !== currentFull)
+        {
+            window.location.replace(storedFull);
+            return;
+        }
+
+        if (!isStandalone)
+        {
+            try
+            {
+                localStorage.setItem(KEY, currentFull);
+            } catch (e)
+            {
+                console.warn('LocalStorage save failed', e);
+            }
+        }
+    })();
+</script>
+
+<script>
+    window.preferredLanguageCookieName = 'preferredLanguage';
+</script>
+
+    
+    <link rel="canonical" href="https://www.hoyavision.comhttps://www.hoyavision.com/404-page/404" />
+
+
+
+<title>404-page | HOYA Vision Care</title>
+
+
+
+
+<!-- OneTrust Cookies Consent Notice start -->
+<script>
+  window.UsingOneTrustConsent = true;
+  const categoriesRequiredForYouTube = '';
+  window.requiredForYoutubeOnetrustCookieCategories = categoriesRequiredForYouTube.split(',');
+  window.requiredFunctinalCookieCategory = 'C0003';
+  window.requiredMarketingCookieCategory = 'C0004';
+</script>
+
+
+<script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js"
+        type="text/javascript" charset="UTF-8"
+        data-domain-script="f83384b6-73a9-4b31-abd6-181635764427">
+</script>
+<script type="text/javascript">
+    function OptanonWrapper() { }
+</script>
+<!-- OneTrust Cookies Consent Notice end -->
+
+
+
+    <script>
+!function(T,l,y){var S=T.location,k="script",D="instrumentationKey",C="ingestionendpoint",I="disableExceptionTracking",E="ai.device.",b="toLowerCase",w="crossOrigin",N="POST",e="appInsightsSDK",t=y.name||"appInsights";(y.name||T[e])&&(T[e]=t);var n=T[t]||function(d){var g=!1,f=!1,m={initialize:!0,queue:[],sv:"5",version:2,config:d};function v(e,t){var n={},a="Browser";return n[E+"id"]=a[b](),n[E+"type"]=a,n["ai.operation.name"]=S&&S.pathname||"_unknown_",n["ai.internal.sdkVersion"]="javascript:snippet_"+(m.sv||m.version),{time:function(){var e=new Date;function t(e){var t=""+e;return 1===t.length&&(t="0"+t),t}return e.getUTCFullYear()+"-"+t(1+e.getUTCMonth())+"-"+t(e.getUTCDate())+"T"+t(e.getUTCHours())+":"+t(e.getUTCMinutes())+":"+t(e.getUTCSeconds())+"."+((e.getUTCMilliseconds()/1e3).toFixed(3)+"").slice(2,5)+"Z"}(),iKey:e,name:"Microsoft.ApplicationInsights."+e.replace(/-/g,"")+"."+t,sampleRate:100,tags:n,data:{baseData:{ver:2}}}}var h=d.url||y.src;if(h){function a(e){var t,n,a,i,r,o,s,c,u,p,l;g=!0,m.queue=[],f||(f=!0,t=h,s=function(){var e={},t=d.connectionString;if(t)for(var n=t.split(";"),a=0;a<n.length;a++){var i=n[a].split("=");2===i.length&&(e[i[0][b]()]=i[1])}if(!e[C]){var r=e.endpointsuffix,o=r?e.location:null;e[C]="https://"+(o?o+".":"")+"dc."+(r||"services.visualstudio.com")}return e}(),c=s[D]||d[D]||"",u=s[C],p=u?u+"/v2/track":d.endpointUrl,(l=[]).push((n="SDK LOAD Failure: Failed to load Application Insights SDK script (See stack for details)",a=t,i=p,(o=(r=v(c,"Exception")).data).baseType="ExceptionData",o.baseData.exceptions=[{typeName:"SDKLoadFailed",message:n.replace(/\./g,"-"),hasFullStack:!1,stack:n+"\nSnippet failed to load ["+a+"] -- Telemetry is disabled\nHelp Link: https://go.microsoft.com/fwlink/?linkid=2128109\nHost: "+(S&&S.pathname||"_unknown_")+"\nEndpoint: "+i,parsedStack:[]}],r)),l.push(function(e,t,n,a){var i=v(c,"Message"),r=i.data;r.baseType="MessageData";var o=r.baseData;return o.message='AI (Internal): 99 message:"'+("SDK LOAD Failure: Failed to load Application Insights SDK script (See stack for details) ("+n+")").replace(/\"/g,"")+'"',o.properties={endpoint:a},i}(0,0,t,p)),function(e,t){if(JSON){var n=T.fetch;if(n&&!y.useXhr)n(t,{method:N,body:JSON.stringify(e),mode:"cors"});else if(XMLHttpRequest){var a=new XMLHttpRequest;a.open(N,t),a.setRequestHeader("Content-type","application/json"),a.send(JSON.stringify(e))}}}(l,p))}function i(e,t){f||setTimeout(function(){!t&&m.core||a()},500)}var e=function(){var n=l.createElement(k);n.src=h;var e=y[w];return!e&&""!==e||"undefined"==n[w]||(n[w]=e),n.onload=i,n.onerror=a,n.onreadystatechange=function(e,t){"loaded"!==n.readyState&&"complete"!==n.readyState||i(0,t)},n}();y.ld<0?l.getElementsByTagName("head")[0].appendChild(e):setTimeout(function(){l.getElementsByTagName(k)[0].parentNode.appendChild(e)},y.ld||0)}try{m.cookie=l.cookie}catch(p){}function t(e){for(;e.length;)!function(t){m[t]=function(){var e=arguments;g||m.queue.push(function(){m[t].apply(m,e)})}}(e.pop())}var n="track",r="TrackPage",o="TrackEvent";t([n+"Event",n+"PageView",n+"Exception",n+"Trace",n+"DependencyData",n+"Metric",n+"PageViewPerformance","start"+r,"stop"+r,"start"+o,"stop"+o,"addTelemetryInitializer","setAuthenticatedUserContext","clearAuthenticatedUserContext","flush"]),m.SeverityLevel={Verbose:0,Information:1,Warning:2,Error:3,Critical:4};var s=(d.extensionConfig||{}).ApplicationInsightsAnalytics||{};if(!0!==d[I]&&!0!==s[I]){var c="onerror";t(["_"+c]);var u=T[c];T[c]=function(e,t,n,a,i){var r=u&&u(e,t,n,a,i);return!0!==r&&m["_"+c]({message:e,url:t,lineNumber:n,columnNumber:a,error:i}),r},d.autoExceptionInstrumented=!0}return m}(y.cfg);function a(){y.onInit&&y.onInit(n)}(T[t]=n).queue&&0===n.queue.length?(n.queue.push(a),n.trackPageView({})):a()}(window,document,{src: "https://js.monitor.azure.com/scripts/b/ai.2.gbl.min.js", crossOrigin: "anonymous", cfg: {instrumentationKey: '26cb0de8-216a-43df-a608-944b6cffc97b', disableCookiesUsage: false }});
+</script>
+
+</head>
+
+<body class="is-b2b has-b2c theme-other">
+    
+<!-- Google Tag  Manager (noscript) -->
+<noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W3VRWHS" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript>
+<!-- End Google Tag Manager (noscript) -->
+    
+
+
+
+
+
+
+
+<div class="cmp-mainnavigation" data-js="cmp-mainnavigation">
+    <nav role="navigation" aria-label="main navigation">
+        <ul class="cmp-mainnavigation--left">
+            <li class="logo">
+                <a title="HOYA LOGO VISIONARY"
+                   href="/">
+                    
+    <svg width="124px" height="28px" viewBox="0 0 124 28">
+        <path d="M55.35614,0.10987c-6.75177,0-13.88678,4.04517-15.16956,11.5957
+                        c-1.87311-0.20557-3.80884-0.36572-5.79529-0.47754V0.52735h-6.02686v10.5166c-0.21655-0.00116-0.43262-0.00275-0.64966-0.00275
+                        c-4.36536,0-8.56445,0.23425-12.48846,0.66638V0.52735H9.19946v12.03528C5.80609,13.15918,2.70905,13.91437,0,14.79828h9.19946
+                        v12.87384h6.02686V14.79828h13.13812v12.87384h6.02686V14.79828h5.60669c0.31458,7.86981,6.53931,13.31159,15.35815,13.31159
+                        c9.3385,0,15.37213-5.47119,15.37213-13.93842C70.72827,5.6294,64.69464,0.10987,55.35614,0.10987z M55.35614,23.41242
+                        c-4.15155,0-8.97772-2.27118-9.27557-8.61414h9.34857c-2.72455-0.8891-5.84259-1.64746-9.25909-2.24628
+                        c0.70544-5.42194,4.96204-7.87317,9.1861-7.87317c2.79333,0,9.28979,0.92505,9.28979,9.49261
+                        C64.64594,20.98426,59.8468,23.41242,55.35614,23.41242z" />
+        <path d="M110.93988,0.64466h-5.26031L93.42719,27.57508h6.38562c0,0,2.99005-7.0448,3.12659-7.36603h11.06964
+                        c0.13879,0.3147,3.25226,7.36603,3.25226,7.36603H124L110.93988,0.64466z M104.883,15.6297
+                        c0.26208-0.61786,1.37494-3.23871,1.37494-3.23871s1.70996-4.02771,2.10742-4.96497c0.4306,0.97455,3.3269,7.53479,3.62207,8.20367
+                        H104.883z" />
+        <path d="M92.25037,0.64466c0,0-7.57129,10.74426-7.9967,11.34766c-0.4245-0.60339-7.99554-11.34766-7.99554-11.34766
+                        H69.229c0,0,11.83075,15.51001,11.94342,15.65729v11.27313h6.06067V16.43592c0.11267-0.14844,12.04553-15.79126,12.04553-15.79126
+                        H92.25037z" />
+    </svg>
+
+                </a>
+            </li>
+            <li class="hamburger-menu">
+                    <span class="search-bar__open mobile-only" role="none">
+                    </span>
+                <button data-js="hamburger" class="hamburger hamburger--spin" type="button" aria-label="Mobile menu">
+                    <span class="hamburger-box">
+                        <span class="hamburger-inner"></span>
+                    </span>
+                </button>
+            </li>
+        </ul>
+        <div class="mobilemenu" data-js="mobilemenu">
+                <ol>
+                    <li><a href="/">I&#x27;m an eye care professional</a></li>
+                        <li>
+                            <a href="/for-spectacle-wearers/">
+                                I&#x27;m a spectacle wearer
+                            </a>
+                        </li>
+                </ol>
+            <ul class="menu-group">
+                <li class="menu-group-main">
+                    <ul role="menubar">
+                            <li role="none">
+                                <a role="menuitem" title="Vision Products" href="/vision-products/">
+                                    Vision Products
+                                </a>
+                            </li>
+                            <li role="none">
+                                <a role="menuitem" title="Your Business Partner" href="/your-business-partner/">
+                                    Your Business Partner
+                                </a>
+                            </li>
+                            <li role="none">
+                                <a role="menuitem" title="Visionary Knowledge" href="/visionary-knowlegde/">
+                                    Visionary Knowledge
+                                </a>
+                            </li>
+                            <li role="none">
+                                <a role="menuitem" title="Sustainability" href="/about-hoya/sustainability/">
+                                    Sustainability
+                                </a>
+                            </li>
+                            <li role="none">
+                                <a role="menuitem" title="About Us" href="/about-hoya/">
+                                    About Us
+                                </a>
+                            </li>
+                            <li role="none">
+                                <a role="menuitem" title="Careers" href="/about-hoya/careers/">
+                                    Careers
+                                </a>
+                            </li>
+                    </ul>
+                </li>
+                <li class="menu-group-sub">
+                    <ul class="submenu" role="menu">
+                                <li role="none">
+                                    <a role="menuitem" class="submenu" title="Find optician"
+                                       href="/find-optician/">
+                                        Find optician
+                                    </a>
+                                </li>
+                                <li role="none">
+                                    <a role="menuitem" class="submenu" title="Contact us"
+                                       href="/contact-us-global/">
+                                        Contact us
+                                    </a>
+                                </li>
+                            <li role="none" class=>
+                                <a role="menuitem" class="submenu" href="#language-selector" aria-label="Location">
+                                    <span>
+                                        <svg viewBox="0 0 512.001 512.001" width="24" height="24">
+                                            <path d="M257.297,0.004c-0.018,0-0.035,0-0.053-0.001C257.162,0.003,257.081,0,257,0c-0.012,0-0.024,0-0.036,0
+                                                c-0.032,0-0.065,0.001-0.097,0.001C115.786,0.073,0,114.252,0,255c0,34.416,6.855,67.932,20.376,99.618
+                                                c26.177,61.348,75.527,110.772,137.005,137.005c31.682,13.519,65.194,20.375,99.605,20.376c0.009,0,0.018,0.002,0.027,0.002
+                                                c0.023,0,0.047-0.002,0.07-0.003C398.634,511.953,512,395.326,512,255C512,114.274,398.242,0.163,257.297,0.004z M207.317,35.443
+                                                C181.736,59.695,160.835,88.099,145.096,120H75.515C107.426,77.96,153.837,47.325,207.317,35.443z M56.286,149.8h75.991
+                                                c-10.493,28.747-16.697,59.387-18.298,90.2H30.517C32.674,207.672,41.749,176.993,56.286,149.8z M56.851,362
+                                                c-14.89-27.74-24.173-58.913-26.342-92h83.368c1.432,31.496,7.682,62.631,18.402,92H56.851z M76.129,392h68.967
+                                                c15.709,31.842,36.581,60.236,62.154,84.494C154.137,464.571,108.007,433.983,76.129,392z M143.921,270h98.078v92h-77.373
+                                                C152.648,333.142,145.53,302.081,143.921,270z M242.001,467.115C216.497,445.88,195.351,420.38,179.27,392h62.73V467.115z
+                                                M242.001,240h-97.979c1.799-31.373,8.876-61.742,20.606-90h77.373V240z M242.001,120h-62.729
+                                                c16.08-28.38,37.226-53.88,62.729-75.116V120z M455.945,150c14.41,27.193,23.404,57.672,25.543,90H400.02
+                                                c-1.601-30.813-7.805-61.253-18.298-90H455.945z M436.887,120h-67.982c-15.697-31.817-36.546-60.189-62.088-84.433
+                                                C359.585,47.541,405.369,78.11,436.887,120z M272.001,44.89c25.503,21.236,46.657,46.73,62.737,75.11h-62.737V44.89z M272,150
+                                                h77.392c11.728,28.256,18.789,58.629,20.588,90H272V150z M370.088,269.8c-1.608,32.079-8.719,63.344-20.696,92.2h-77.392v-92.2
+                                                H370.088z M272.001,467.11V391.8h62.737C318.658,420.18,297.504,445.873,272.001,467.11z M306.885,476.368
+                                                c25.491-24.21,46.326-52.757,62.019-84.568h67.373C404.796,433.63,359.29,464.353,306.885,476.368z M381.723,362
+                                                c10.72-29.369,16.97-60.704,18.402-92.2h81.372c-2.15,33.087-11.351,64.46-26.11,92.2H381.723z" />
+                                        </svg>
+                                        <span class="visually-hidden">
+                                            Location
+                                        </span>
+                                            <span>
+
+                                                 
+                                            </span>
+                                    </span>
+                                </a>
+
+                            </li>
+                            <li class="search-bar__open" role="none">
+                            </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+
+
+
+
+<nav id="site-selector" class="site-selector-overlay ">
+    <div class="site-selector-overlay__close">
+        <a class="close-site-selector close-icon-link" href="#" aria-label="Close"><span class="close-icon"></span></a>
+    </div>
+    <div class="site-selector-overlay__inner">
+        <div class="">
+            <div class="container">
+                <div class="row">
+                        <div class="go-to-global-container">
+                            <a href="/" class="set-global-site"
+                               data-setLanguage="en">
+                                <div class="global-image-container">
+                                    <div class="global-image"
+                                         data-src="/globalassets/hoya-content-images/Hoya-Vision-404-page-lens-materials.jpg?preset="
+                                         data-alt=""></div>
+                                </div>
+                                        <div class="global-information-container">
+                                                <h3 class="title">Go to HOYA Vision international website</h3>
+                                                <p class="global-text">
+                                                    HOYA Vision premium eyeglass lenses &#x2014; the umbrella and the core for our global presence.
+                                                </p>
+                                        </div>
+                            </a>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="region-block">
+            <div class="container">
+                <div class="row">
+                        <h2 class="section-heading">...or visit your local website</h2>
+                    <div class="region-block__countries">
+                        <ul>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/" hreflang="ab" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Albania">
+            <span class="country__name">Albania</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/es-us/" hreflang="es-ar" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Argentina">
+            <span class="country__name">Argentina</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/am/home/" hreflang="am" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="&#x540;&#x561;&#x575;&#x561;&#x57D;&#x57F;&#x561;&#x576;">
+            <span class="country__name">&#x540;&#x561;&#x575;&#x561;&#x57D;&#x57F;&#x561;&#x576;</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/au/" hreflang="en-au" data-setLanguage="en-AU">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Australia">
+            <span class="country__name">Australia</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/az-cyrl-az/home/" hreflang="az" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Az&#x259;rbaycan">
+            <span class="country__name">Az&#x259;rbaycan</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/en-bd/" hreflang="en-bd" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Bangladesh">
+            <span class="country__name">Bangladesh</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/ar-bh/home/" hreflang="ar-bh" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="&#x627;&#x644;&#x628;&#x62D;&#x631;&#x64A;&#x646;">
+            <span class="country__name">&#x627;&#x644;&#x628;&#x62D;&#x631;&#x64A;&#x646;</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/ru/" hreflang="ru-by" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="&#x411;&#x435;&#x43B;&#x430;&#x440;&#x443;&#x441;&#x44C;">
+            <span class="country__name">&#x411;&#x435;&#x43B;&#x430;&#x440;&#x443;&#x441;&#x44C;</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country region-block__country--multi-lang">
+                    <div class="country__wrap">
+                        <a href="#">
+                                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Belgi&#xEB;">
+                            <span class="country__name">Belgi&#xEB;</span>
+                        </a>
+                        <ul class="country__languages">
+                                <li>
+                                    <a href="/nl-be/"
+                                       hreflang="nl-be"
+                                       data-setLanguage="nl-BE">
+                                        Nederlands
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/fr-be/"
+                                       hreflang="fr-be"
+                                       data-setLanguage="fr-BE">
+                                        Fran&#xE7;ais
+                                    </a>
+                                </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/es-us/" hreflang="es-us" data-setLanguage="es-US">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Bolivia">
+            <span class="country__name">Bolivia</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/br/" hreflang="pt-br" data-setLanguage="pt-BR">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Brasil">
+            <span class="country__name">Brasil</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/bg/home/" hreflang="bg" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="&#x411;&#x44A;&#x43B;&#x433;&#x430;&#x440;&#x438;&#x44F;">
+            <span class="country__name">&#x411;&#x44A;&#x43B;&#x433;&#x430;&#x440;&#x438;&#x44F;</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country region-block__country--multi-lang">
+                    <div class="country__wrap">
+                        <a href="#">
+                                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Canada">
+                            <span class="country__name">Canada</span>
+                        </a>
+                        <ul class="country__languages">
+                                <li>
+                                    <a href="/en-ca/"
+                                       hreflang="en-ca"
+                                       data-setLanguage="en-CA">
+                                        English
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/fr-ca/"
+                                       hreflang="fr-ca"
+                                       data-setLanguage="fr-CA">
+                                        Fran&#xE7;ais
+                                    </a>
+                                </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/es-us/" hreflang="es-co" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Colombia">
+            <span class="country__name">Colombia</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/cz/" hreflang="cs-cz" data-setLanguage="cs-CZ">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="&#x10C;esk&#xE1; republika">
+            <span class="country__name">&#x10C;esk&#xE1; republika</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/cn/" hreflang="zh-cn" data-setLanguage="zh-CN">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="&#x4E2D;&#x56FD;">
+            <span class="country__name">&#x4E2D;&#x56FD;</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/el-cy/home/" hreflang="el-cy" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="&#x39A;&#x3CD;&#x3C0;&#x3C1;&#x3BF;&#x3C2;">
+            <span class="country__name">&#x39A;&#x3CD;&#x3C0;&#x3C1;&#x3BF;&#x3C2;</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/dk/" hreflang="da" data-setLanguage="da">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Danmark">
+            <span class="country__name">Danmark</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/de/" hreflang="de" data-setLanguage="de">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Deutschland">
+            <span class="country__name">Deutschland</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/es/" hreflang="es" data-setLanguage="es">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Espa&#xF1;a">
+            <span class="country__name">Espa&#xF1;a</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/et/avaleht/" hreflang="et-ee" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Eesti">
+            <span class="country__name">Eesti</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/ar-eg/home/" hreflang="ar-eg" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="&#x645;&#x635;&#x631;">
+            <span class="country__name">&#x645;&#x635;&#x631;</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/fi/" hreflang="fi" data-setLanguage="fi">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Suomi">
+            <span class="country__name">Suomi</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/fr/" hreflang="fr" data-setLanguage="fr">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="France">
+            <span class="country__name">France</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/ka-ge/home/" hreflang="ka-ge" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Georgia">
+            <span class="country__name">Georgia</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/gr/home/" hreflang="el-gr" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="&#x395;&#x3BB;&#x3BB;&#x3AC;&#x3B4;&#x3B1;">
+            <span class="country__name">&#x395;&#x3BB;&#x3BB;&#x3AC;&#x3B4;&#x3B1;</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country region-block__country--multi-lang">
+                    <div class="country__wrap">
+                        <a href="#">
+                                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="&#x9999;&#x6E2F;">
+                            <span class="country__name">&#x9999;&#x6E2F;</span>
+                        </a>
+                        <ul class="country__languages">
+                                <li>
+                                    <a href="/hk/"
+                                       hreflang="zh-hk"
+                                       data-setLanguage="zh-HK">
+                                        &#x4E2D;&#x6587;
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/en-hk/"
+                                       hreflang="en-hk"
+                                       data-setLanguage="en-HK">
+                                        English
+                                    </a>
+                                </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/hr/" hreflang="hr" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Hrvatska">
+            <span class="country__name">Hrvatska</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/in/" hreflang="en-in" data-setLanguage="en-IN">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="India">
+            <span class="country__name">India</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/id/" hreflang="id-id" data-setLanguage="id-ID">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Indonesia">
+            <span class="country__name">Indonesia</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/ir/home/" hreflang="ir" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="&#x627;&#x6CC;&#x631;&#x627;&#x646;">
+            <span class="country__name">&#x627;&#x6CC;&#x631;&#x627;&#x646;</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/ar-iq/&#x627;&#x644;&#x645;&#x648;&#x627;&#x642;&#x639;-&#x627;&#x644;&#x62A;&#x62C;&#x627;&#x631;&#x64A;&#x629;-&#x627;&#x644;&#x645;&#x635;&#x63A;&#x631;&#x629;/" hreflang="ar-iq" data-setLanguage="ar-IQ">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="&#x627;&#x644;&#x639;&#x631;&#x627;&#x642;">
+            <span class="country__name">&#x627;&#x644;&#x639;&#x631;&#x627;&#x642;</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/il/home/" hreflang="he-il" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="&#x5D9;&#x5E9;&#x5E8;&#x5D0;&#x5DC;">
+            <span class="country__name">&#x5D9;&#x5E9;&#x5E8;&#x5D0;&#x5DC;</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/it/" hreflang="it" data-setLanguage="it">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Italia">
+            <span class="country__name">Italia</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/" hreflang="en-jm" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Jamaica">
+            <span class="country__name">Jamaica</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="https://www.vc.hoya.co.jp/" hreflang="jp" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="&#x65E5;&#x672C;">
+            <span class="country__name">&#x65E5;&#x672C;</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/ar-jo/home/" hreflang="ar-jo" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="&#x627;&#x644;&#x623;&#x631;&#x62F;&#x646;">
+            <span class="country__name">&#x627;&#x644;&#x623;&#x631;&#x62F;&#x646;</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/ru/" hreflang="ru-kz" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="&#x49A;&#x430;&#x437;&#x430;&#x49B;&#x441;&#x442;&#x430;&#x43D;">
+            <span class="country__name">&#x49A;&#x430;&#x437;&#x430;&#x49B;&#x441;&#x442;&#x430;&#x43D;</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/kr/" hreflang="ko" data-setLanguage="ko">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="&#xB300;&#xD55C;&#xBBFC;&#xAD6D;">
+            <span class="country__name">&#xB300;&#xD55C;&#xBBFC;&#xAD6D;</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/ar-kw/home/" hreflang="ar-kw" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="&#x627;&#x644;&#x643;&#x648;&#x64A;&#x62A;">
+            <span class="country__name">&#x627;&#x644;&#x643;&#x648;&#x64A;&#x62A;</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/lv/home/" hreflang="lv" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Latvija">
+            <span class="country__name">Latvija</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/en-lb/home/" hreflang="lb" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Lebanon">
+            <span class="country__name">Lebanon</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/lt/home/" hreflang="lt" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Lietuva">
+            <span class="country__name">Lietuva</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/hu/" hreflang="hu" data-setLanguage="hu">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Magyarorsz&#xE1;g">
+            <span class="country__name">Magyarorsz&#xE1;g</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/my/" hreflang="en-my" data-setLanguage="en-MY">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Malaysia">
+            <span class="country__name">Malaysia</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/es-us/" hreflang="es-mx" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="M&#xE9;xico">
+            <span class="country__name">M&#xE9;xico</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/fr-ma/home/" hreflang="fr-ma" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Maroc">
+            <span class="country__name">Maroc</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/nl/" hreflang="nl" data-setLanguage="nl">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Nederland">
+            <span class="country__name">Nederland</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/en-np/" hreflang="en-np" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Nepal">
+            <span class="country__name">Nepal</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/au/" hreflang="en-nz" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="New Zealand">
+            <span class="country__name">New Zealand</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/no/" hreflang="no" data-setLanguage="no">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Norge">
+            <span class="country__name">Norge</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/" hreflang="mk-mk" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Nort Macedonia">
+            <span class="country__name">Nort Macedonia</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/en-mv/" hreflang="en-mv" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Maldives">
+            <span class="country__name">Maldives</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/de/" hreflang="de-at" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="&#xF6;sterreich">
+            <span class="country__name">&#xF6;sterreich</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/es-us/" hreflang="es-pe" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Per&#xFA;">
+            <span class="country__name">Per&#xFA;</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/ph/" hreflang="en-ph" data-setLanguage="en-PH">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Philippines">
+            <span class="country__name">Philippines</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/pl/" hreflang="pl" data-setLanguage="pl">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Polska">
+            <span class="country__name">Polska</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/pt/" hreflang="pt" data-setLanguage="pt-PT">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Portugal">
+            <span class="country__name">Portugal</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/ar-qa/home/" hreflang="ar-qa" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="&#x642;&#x637;&#x631;">
+            <span class="country__name">&#x642;&#x637;&#x631;</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/ro/" hreflang="ro-ro" data-setLanguage="ro-RO">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Rom&#xE2;nia">
+            <span class="country__name">Rom&#xE2;nia</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/ru/" hreflang="ru-ru" data-setLanguage="ru-RU">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="&#x420;&#x43E;&#x441;&#x441;&#x438;&#x44F;">
+            <span class="country__name">&#x420;&#x43E;&#x441;&#x441;&#x438;&#x44F;</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/" hreflang="ar-sa" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="&#x627;&#x644;&#x633;&#x639;&#x648;&#x62F;&#x64A;&#x629;">
+            <span class="country__name">&#x627;&#x644;&#x633;&#x639;&#x648;&#x62F;&#x64A;&#x629;</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country region-block__country--multi-lang">
+                    <div class="country__wrap">
+                        <a href="#">
+                                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Switzerland">
+                            <span class="country__name">Switzerland</span>
+                        </a>
+                        <ul class="country__languages">
+                                <li>
+                                    <a href="/de-ch/"
+                                       hreflang="de-ch"
+                                       >
+                                        Deutsch
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/fr-ch/"
+                                       hreflang="fr-ch"
+                                       data-setLanguage="fr-CH">
+                                        Fran&#xE7;ais
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/it-ch/"
+                                       hreflang="it-ch"
+                                       data-setLanguage="it-CH">
+                                        Italiano
+                                    </a>
+                                </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/fr/" hreflang="fr-sn" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="S&#xE9;n&#xE9;gal">
+            <span class="country__name">S&#xE9;n&#xE9;gal</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/sr-cyrl-rs/home/" hreflang="sr-cyrl-rs" data-setLanguage="sr-Cyrl-RS">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Serbia">
+            <span class="country__name">Serbia</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/sg/" hreflang="en-sg" data-setLanguage="en-SG">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Singapore">
+            <span class="country__name">Singapore</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/si/" hreflang="sl-si" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Slovenia">
+            <span class="country__name">Slovenia</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/sk-sk/home/" hreflang="sk-sk" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Slovensko">
+            <span class="country__name">Slovensko</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/za/" hreflang="en-za" data-setLanguage="en-ZA">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="South Africa">
+            <span class="country__name">South Africa</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/en-lk/" hreflang="en-lk" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Sri Lanka">
+            <span class="country__name">Sri Lanka</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/se/" hreflang="sv" data-setLanguage="sv">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Sverige">
+            <span class="country__name">Sverige</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/tw/" hreflang="zh-tw" data-setLanguage="zh-TW">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="&#x53F0;&#x7063;">
+            <span class="country__name">&#x53F0;&#x7063;</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country region-block__country--multi-lang">
+                    <div class="country__wrap">
+                        <a href="#">
+                                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="&#xE1B;&#xE23;&#xE30;&#xE40;&#xE17;&#xE28;&#xE44;&#xE17;&#xE22;">
+                            <span class="country__name">&#xE1B;&#xE23;&#xE30;&#xE40;&#xE17;&#xE28;&#xE44;&#xE17;&#xE22;</span>
+                        </a>
+                        <ul class="country__languages">
+                                <li>
+                                    <a href="/en-th/"
+                                       hreflang="en-th"
+                                       >
+                                        English
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/th/"
+                                       hreflang="th"
+                                       >
+                                        &#xE44;&#xE17;&#xE22;
+                                    </a>
+                                </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/tr/" hreflang="tr" data-setLanguage="tr">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="T&#xFC;rkiye">
+            <span class="country__name">T&#xFC;rkiye</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/fr-tn/home/" hreflang="tn" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Tunisie">
+            <span class="country__name">Tunisie</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/" hreflang="uk-ua" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Ukraine">
+            <span class="country__name">Ukraine</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country region-block__country--multi-lang">
+                    <div class="country__wrap">
+                        <a href="#">
+                                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="UAE (&#x627;&#x644;&#x625;&#x645;&#x627;&#x631;&#x627;&#x62A;)">
+                            <span class="country__name">UAE (&#x627;&#x644;&#x625;&#x645;&#x627;&#x631;&#x627;&#x62A;)</span>
+                        </a>
+                        <ul class="country__languages">
+                                <li>
+                                    <a href="/en-ae/home/"
+                                       hreflang="en-ae"
+                                       data-setLanguage="en-AE">
+                                        English
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/ar-ae/home/"
+                                       hreflang="ar-ae"
+                                       data-setLanguage="ar-AE">
+                                        &#x627;&#x644;&#x639;&#x631;&#x628;&#x64A;&#x629;
+                                    </a>
+                                </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/uk/" hreflang="en-gb" data-setLanguage="en-GB">
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="United Kingdom">
+            <span class="country__name">United Kingdom</span>
+        </a>
+                    </div>
+                </li>
+                <li class="region-block__country region-block__country--multi-lang">
+                    <div class="country__wrap">
+                        <a href="#">
+                                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="United States">
+                            <span class="country__name">United States</span>
+                        </a>
+                        <ul class="country__languages">
+                                <li>
+                                    <a href="/en-us/"
+                                       hreflang="en-us"
+                                       data-setLanguage="en-US">
+                                        English
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/es-us/"
+                                       hreflang="es-us"
+                                       data-setLanguage="es-US">
+                                        Espa&#xF1;ol
+                                    </a>
+                                </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="region-block__country">
+                    <div class="country__wrap">
+        <a href="/vn/home/" hreflang="vi-vn" >
+                <img class="country__flag" loading="lazy" src="/globalassets/__new-hoya-website-asset/_generic-images/bullet.svg" alt="Vi&#x1EC7;t Nam">
+            <span class="country__name">Vi&#x1EC7;t Nam</span>
+        </a>
+                    </div>
+                </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <div class="search-bar">
+        <form class="search-bar__form" action="/settings/search-page/" method="GET">
+            <button type="submit" id="btnFind" class="search-bar__submit" title="Search"></button>
+            <input id="query" name="q" value="" class="search-bar__input" autofocus="" placeholder="Enter your search term here">
+            <select hidden="" name="size" id="resultsPerPage" class="form-select">
+                <option value="10">10</option>
+                <option value="100">100</option>
+            </select>
+            <button type="submit" id="btnSearchArrow" class="search-bar__arrow" title="Search"></button>
+            <span class="search-bar__close"></span>
+        </form>
+    </div>
+
+
+    <main id="main">
+
+
+        
+
+
+
+
+
+
+
+
+
+
+<div><div>
+
+
+
+
+
+<article id="1153" data-name=""
+         class="block two-column-text-block  background-none">
+    <div class="container">
+        <div class="row">
+            <div class="header-column col-xs-15 col-sm-5 ">
+                    <h2 auto-font-size>
+                        Oops... Why did you end up here?<br />
+                        
+                    </h2>
+            </div>
+
+                <div class="text-column col-xs-15 col-sm-8 col-sm-offset-1">
+                        <div class="block-ingress">
+                            
+<p>Well, there could be a technical reason, like a bad link or a removed page. Or, you might have typed the wrong URL. Whatever reason, don&rsquo;t despair. Just go back and try another path.</p>
+                        </div>
+                        <div class="block-text post-typography">
+                            
+<style type="text/css"><!--
+p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.7px Times; -webkit-text-stroke: #000000}
+span.s1 {font-kerning: none}
+--></style>
+                        </div>
+                </div>
+        </div>
+    </div>
+</article></div><div>
+
+
+
+
+<article id="1154" data-name=""
+         class="block column-block three-column-block background-primary">
+    <div class="container">
+            <div class="row">
+                <h2 class="title col-xs-15 col-sm-5">
+                    Try this instead
+                </h2>
+            </div>
+        <div class="row equal-height ">
+            <div class="equalize col col-xs-15 col-lg-4 col-lg-offset-1   ">
+                
+
+
+<div class="content-block  ">
+        <div class="image-container">
+                    <div  
+                        class="block-image" 
+                        data-lazy="/globalassets/hoya-hero-images/hoya-vision-understanding-vision.jpg?preset=" 
+                        style="background-image: url('/globalassets/hoya-hero-images/hoya-vision-understanding-vision.jpg?preset=?width=160')">
+                    </div>
+        </div>
+
+    <div class="text-container have-learn-more">
+        <h4 class="content-title" >
+          Understanding vision
+        </h4>
+        <div class="content-text post-typography">
+          
+
+        </div>
+        <a class="learn-more-link" 
+           href="/for-spectacle-wearers/understanding-vision/" target="_self">Learn more</a>
+    </div>
+</div>
+            </div>
+            <div class="equalize col col-xs-15 col-lg-4 col-lg-offset-1   ">
+                
+
+
+<div class="content-block  ">
+        <div class="image-container">
+                    <div  
+                        class="block-image" 
+                        data-lazy="/globalassets/hoya-content-images/Hoya-Vision-404-page-choosing-lenses.jpg?preset=" 
+                        style="background-image: url('/globalassets/hoya-content-images/Hoya-Vision-404-page-choosing-lenses.jpg?preset=?width=160')">
+                    </div>
+        </div>
+
+    <div class="text-container have-learn-more">
+        <h4 class="content-title" >
+          Choosing lenses
+        </h4>
+        <div class="content-text post-typography">
+          
+
+        </div>
+        <a class="learn-more-link" 
+           href="/for-spectacle-wearers/choose-the-right-lens-for-you/" target="_self">Learn more</a>
+    </div>
+</div>
+            </div>
+            <div class="equalize col col-3 col-xs-15 col-lg-4 col-lg-offset-1   ">
+                
+
+
+<div class="content-block  ">
+        <div class="image-container">
+                    <div  
+                        class="block-image" 
+                        data-lazy="/globalassets/hoya-content-images/Hoya-Vision-404-page-lens-materials.jpg?preset=" 
+                        style="background-image: url('/globalassets/hoya-content-images/Hoya-Vision-404-page-lens-materials.jpg?preset=?width=160')">
+                    </div>
+        </div>
+
+    <div class="text-container have-learn-more">
+        <h4 class="content-title" >
+          Lens materials
+        </h4>
+        <div class="content-text post-typography">
+          
+
+        </div>
+        <a class="learn-more-link" 
+           href="/vision-products/lens-materials/" target="_self">Learn more</a>
+    </div>
+</div>
+            </div>
+        </div>
+    </div>
+</article></div></div>
+
+
+
+
+<footer class="cmp-footernavigation">
+    <div class="grid-container navigation">
+
+<div>
+    <ul role="menu" aria-label="Footer navigation">
+        <li role="presentation" class="first">
+            Our Solutions
+        </li>
+            <li role="none">
+                    <a role="menuitem" href="/vision-products/progressive-lenses/">
+                        Progressive lenses
+                    </a>
+            </li>
+            <li role="none">
+                    <a role="menuitem" href="/vision-products/single-vision-lenses/">
+                        Single Vision
+                    </a>
+            </li>
+            <li role="none">
+                    <a role="menuitem" href="/vision-products/occupational-lenses/">
+                        Occupational lenses
+                    </a>
+            </li>
+            <li role="none">
+                    <a role="menuitem" href="/vision-products/photochromic-lenses/">
+                        Photochromic Lenses
+                    </a>
+            </li>
+            <li role="none">
+                    <a role="menuitem" href="/vision-products/sun-solutions/">
+                        Sun Solutions
+                    </a>
+            </li>
+            <li role="none">
+                    <a role="menuitem" href="/vision-products/special-lenses/">
+                        Special Lenses
+                    </a>
+            </li>
+            <li role="none">
+                    <a role="menuitem" href="/vision-products/lens-materials/">
+                        Lens Materials
+                    </a>
+            </li>
+            <li role="none">
+                    <a role="menuitem" href="/vision-products/anti-reflective-coatings/">
+                        Coatings
+                    </a>
+            </li>
+    </ul>
+</div>
+<div>
+    <ul role="menu" aria-label="Footer navigation">
+        <li role="presentation" class="first">
+            Your Business Partner
+        </li>
+            <li role="none">
+                    <a role="menuitem" href="/your-business-partner/run-an-outstanding-practice/">
+                        Run an outstanding practise
+                    </a>
+            </li>
+            <li role="none">
+                    <a role="menuitem" href="/your-business-partner/deliver-the-best-patient-care/">
+                        Deliver the best patient care
+                    </a>
+            </li>
+            <li role="none">
+                    <a role="menuitem" href="/your-business-partner/grow-your-knowledge-with-hoya/">
+                        Grow your knowledge
+                    </a>
+            </li>
+    </ul>
+</div>
+<div>
+    <ul role="menu" aria-label="Footer navigation">
+        <li role="presentation" class="first">
+            Visionary Knowledge
+        </li>
+            <li role="none">
+                    <a role="menuitem" href="/visionary-knowlegde/">
+                        Visionary Knowledge
+                    </a>
+            </li>
+    </ul>
+</div>
+<div>
+    <ul role="menu" aria-label="Footer navigation">
+        <li role="presentation" class="first">
+            About Hoya
+        </li>
+            <li role="none">
+                    <a role="menuitem" href="/about-hoya/">
+                        About Us
+                    </a>
+            </li>
+            <li role="none">
+                    <a role="menuitem" href="/about-hoya/hoya-vision-care-news/">
+                        HOYA Vision Care News
+                    </a>
+            </li>
+            <li role="none">
+                    <a role="menuitem" href="/about-hoya/sustainability/">
+                        Sustainability
+                    </a>
+            </li>
+            <li role="none">
+                    <a role="menuitem" href="/contact-us-global/">
+                        Contact Us (Global Site)
+                    </a>
+            </li>
+    </ul>
+</div>
+<div>
+    <ul role="menu" aria-label="Footer navigation">
+        <li role="presentation" class="first">
+            Careers
+        </li>
+            <li role="none">
+                    <a role="menuitem" href="/about-hoya/careers/">
+                        Careers
+                    </a>
+            </li>
+    </ul>
+</div>        <div>
+            
+    <div class="footer-logo">
+        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+             width="141px" viewBox="100 100 600 339" xml:space="preserve">
+
+            <style type="text/css">
+            .st1 {
+                fill: #FFFFFF;
+            }
+            </style>
+            <g>
+                <path class="st1" d="M414.71,185.14c0-38.12-26.99-62.74-68.77-62.74c-30.2,0-62.12,18.05-67.86,51.74
+		            c-8.38-0.92-17.04-1.63-25.92-2.13v-47.75h-26.96v46.93c-0.97-0.01-1.93-0.01-2.91-0.01c-19.53,0-38.31,1.04-55.87,2.97v-49.89
+		            h-26.96v53.7c-15.18,2.66-29.03,6.03-41.15,9.98h41.15v57.44h26.96v-57.44h58.77v57.44h26.96v-57.44h25.08
+		            c1.41,35.11,29.25,59.4,68.7,59.4C387.72,247.34,414.71,222.93,414.71,185.14z M345.94,226.38c-18.57,0-40.16-10.13-41.49-38.44
+		            h41.82c-12.19-3.97-26.14-7.35-41.42-10.02c3.16-24.19,22.2-35.13,41.09-35.13c12.5,0,41.56,4.13,41.56,42.36
+		            C387.5,215.54,366.03,226.38,345.94,226.38z" />
+                <path class="st1" d="M653.02,245.37L594.6,125.2h-23.53l-54.81,120.17h28.57c0,0,13.38-31.44,13.99-32.87h49.52
+		                        c0.62,1.41,14.55,32.87,14.55,32.87H653.02z M567.5,192.07c1.17-2.76,6.15-14.45,6.15-14.45s7.65-17.97,9.43-22.15
+		                        c1.93,4.35,14.88,33.62,16.2,36.61H567.5z" />
+                <path class="st1" d="M461.43,245.37h27.11v-49.7c0.5-0.66,53.88-70.46,53.88-70.46h-31.44c0,0-33.87,47.94-35.77,50.63
+		                        c-1.9-2.69-35.77-50.63-35.77-50.63H408c0,0,52.93,69.21,53.43,69.86V245.37z" />
+                <polygon class="st1" points="140,326.65 146.89,326.65 146.89,316.63 159.99,316.63 159.99,310.62 146.89,310.62 146.89,304.73
+		                            161.62,304.73 161.62,298.68 140,298.68" />
+                <path class="st1" d="M182.96,298.06c-8.35,0-14.9,6.47-14.9,14.65c0,8.14,6.55,14.57,14.9,14.57s14.9-6.43,14.9-14.57
+		                        C197.86,304.53,191.31,298.06,182.96,298.06z M182.96,320.97c-4.55,0-8.01-3.51-8.01-8.26c0-4.8,3.46-8.35,8.01-8.35
+		                        c4.55,0,8.01,3.55,8.01,8.35C190.97,317.46,187.51,320.97,182.96,320.97z" />
+                <polygon class="st1" points="300.49,309.58 288.72,309.58 288.72,298.68 281.83,298.68 281.83,326.65 288.72,326.65 288.72,315.59
+		                                300.49,315.59 300.49,326.65 307.33,326.65 307.33,298.68 300.49,298.68" />
+                <rect x="393.57" y="298.68" class="st1" width="6.89" height="27.96" />
+                <path class="st1" d="M422.99,310.08l-5.8-1.29c-1.75-0.38-2.25-1.21-2.25-2.34c0-1.59,1.46-2.84,3.76-2.84
+		                            c2.21,0,4.38,1.29,4.88,3.92l6.76-1.38c-1.04-5.09-5.47-8.1-11.56-8.1c-6.55,0-11.06,3.38-11.06,8.81c0,5.09,3.51,7.18,7.51,8.1
+		                            l5.84,1.25c2,0.42,2.59,1.21,2.59,2.46c0,1.71-1.54,2.88-4.13,2.88c-2.8,0-4.8-1.25-5.51-4.13l-7.09,1.38
+		                            c0.75,5.47,5.93,8.47,12.23,8.47c6.22,0,11.52-3.09,11.52-9.06C430.67,313.79,427.83,311.16,422.99,310.08z" />
+                <rect x="436.63" y="298.68" class="st1" width="6.89" height="27.96" />
+                <path class="st1" d="M464.52,298.06c-8.35,0-14.9,6.47-14.9,14.65c0,8.14,6.55,14.57,14.9,14.57c8.35,0,14.9-6.43,14.9-14.57
+		                        C479.42,304.53,472.87,298.06,464.52,298.06z M464.52,320.97c-4.55,0-8.01-3.51-8.01-8.26c0-4.8,3.46-8.35,8.01-8.35
+		                        c4.55,0,8.01,3.55,8.01,8.35C472.53,317.46,469.07,320.97,464.52,320.97z" />
+                <polygon class="st1" points="505.71,315.38 491.56,298.68 485.84,298.68 485.84,326.65 492.73,326.65 492.73,310.45 506.88,326.65
+		                                   512.55,326.65 512.55,298.68 505.71,298.68" />
+                <path class="st1" d="M530.32,298.68l-11.69,27.96h7.39l1.96-5.09h11.77l1.96,5.09h7.35l-11.69-27.96H530.32z M530.32,315.63
+		                            l3.55-9.18l3.59,9.18H530.32z" />
+                <path class="st1" d="M579.47,307.82c0-5.47-4.01-9.14-10.06-9.14h-14.15v27.96h6.89v-9.6h2l8.43,9.6h8.3l-8.76-9.93
+		                            C576.64,315.71,579.47,312.41,579.47,307.82z M568.67,311.29h-6.51v-6.72h6.51c2.46,0,4.05,1.34,4.05,3.34
+		                            C572.71,309.95,571.13,311.29,568.67,311.29z" />
+                <polygon class="st1" points="606.74,315.46 620.3,315.46 620.3,309.87 606.74,309.87 606.74,304.61 621.51,304.61 621.51,298.68
+		                                    599.85,298.68 599.85,326.65 621.64,326.65 621.64,320.72 606.74,320.72" />
+                <path class="st1" d="M641.96,310.08l-5.8-1.29c-1.75-0.38-2.25-1.21-2.25-2.34c0-1.59,1.46-2.84,3.76-2.84
+		                        c2.21,0,4.38,1.29,4.88,3.92l6.76-1.38c-1.04-5.09-5.47-8.1-11.56-8.1c-6.55,0-11.06,3.38-11.06,8.81c0,5.09,3.51,7.18,7.51,8.1
+		                        l5.84,1.25c2,0.42,2.59,1.21,2.59,2.46c0,1.71-1.54,2.88-4.13,2.88c-2.8,0-4.8-1.25-5.51-4.13l-7.09,1.38
+		                        c0.75,5.47,5.93,8.47,12.23,8.47c6.22,0,11.52-3.09,11.52-9.06C649.64,313.79,646.8,311.16,641.96,310.08z" />
+                <path class="st1" d="M228.27,307.96c0-5.47-4.01-9.14-10.06-9.14h-14.15v27.96h6.89v-9.6h2l8.43,9.6h8.31l-8.76-9.93
+		                        C225.43,315.85,228.27,312.55,228.27,307.96z M217.46,311.42h-6.51v-6.72h6.51c2.46,0,4.05,1.34,4.05,3.34
+		                        C221.51,310.09,219.92,311.42,217.46,311.42z" />
+                <polygon class="st1" points="251.04,304.83 260.1,304.83 260.1,326.78 266.94,326.78 266.94,304.83 276,304.83 276,298.82
+		                                    251.04,298.82" />
+                <polygon class="st1" points="320.4,315.6 333.97,315.6 333.97,310 320.4,310 320.4,304.75 335.18,304.75 335.18,298.82
+		                                    313.52,298.82 313.52,326.78 335.3,326.78 335.3,320.86 320.4,320.86" />
+                <polygon class="st1" points="372.15,317.35 364.56,298.82 356.96,298.82 368.86,326.78 375.49,326.78 387.39,298.82
+                                        379.79,298.82" />
+                <rect x="586.67" y="298.68" class="st1" width="6.89" height="27.96" />
+            </g>
+        </svg>
+    </div>
+
+        </div>
+    </div>
+    <div class="grid-container language social">
+            <ul class="social" role="menubar">
+                    <li role="none">
+                        <a href="https://www.bing.com/ck/a?!&amp;&amp;p=a6c17ff6acfe4f2fJmltdHM9MTY4NzEzMjgwMCZpZ3VpZD0wYmU3NWIzNC1kZDVlLTY1Y2UtMmNhMC00OTU5ZGNmNDY0NDYmaW5zaWQ9NTIxMw&amp;ptn=3&amp;hsh=3&amp;fclid=0be75b34-dd5e-65ce-2ca0-4959dcf46446&amp;psq=linkedin&#x2B;hoya&#x2B;vision&#x2B;care&amp;u=a1aHR0cHM6Ly93d3cubGlua2VkaW4uY29tL2NvbXBhbnkvaG95YS12aXNpb24tY2FyZQ&amp;ntb=1" role="menuitem"
+                           target="_blank">
+                            <img width="16" height="16" src="/Static/img/assets/icons/linkedin.svg" alt="Linkedin">
+                        </a>
+                    </li>
+                    <li role="none">
+                        <a href="https://www.youtube.com/channel/UCXnEltnN26CcEr9zqh3NH4A" role="menuitem"
+                           target="_blank">
+                            <img width="16" height="16" src="/Static/img/assets/icons/youtube.svg" alt="Youtube">
+                        </a>
+                    </li>
+            </ul>
+
+            <ul class="language">
+                <li>
+                    <a href="#language-selector" role="button">
+                        <img width="16" height="16" src="/Static/img/assets/icons/world-grid.svg" alt="Menu">
+                         
+                    </a>
+                </li>
+            </ul>
+    </div>
+
+
+    <div class="grid-container subfooter">
+        <ul>
+            <li>© 2026 HOYA - All rights reserved</li>
+        </ul>
+
+            <ul role="menubar">
+                    <li role="none">
+                        <a role="menuitem" href="/settings/privacy-policy/">
+                            Privacy Policy
+                        </a>
+                    </li>
+                    <li role="none">
+                        <a role="menuitem" href="/settings/term-of-use/">
+                            Terms of Use
+                        </a>
+                    </li>
+                    <li role="none">
+                        <a target="_blank" role="menuitem" href="https://www.hoya.com/en/company/guidelines/">
+                            HOYA Code of Conduct
+                        </a>
+                    </li>
+            </ul>
+    </div>
+</footer>
+        <script src="/lib/jquery/jquery.min.js"></script>
+        <script src="/lib/jquery.matchHeight/jquery.matchHeight-min.js"></script>
+
+        <script src="/dist/js/hoyavision.min.js?v=8xnBwDPOBoPyKNv2S9PI28xWi3kA83ptx1wbVHgAU0I"></script>
+        <script src="/frontend/dist/base/js.bundle.js?v=xar8cnst8CKGeEZ6V2IdSvnZBTiqIO9DrDGcxtr2D88"></script>
+        <script src="/frontend/dist/hoya/b2b/js.bundle.js?v=47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU"></script>
+
+
+            <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/2782929.js"></script>
+    </main>
+    
+
+    <script defer="defer" src="/Util/Find/epi-util/find.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded',function(){if(typeof FindApi === 'function'){var api = new FindApi();api.setApplicationUrl('/');api.setServiceApiBaseUrl('/find_v2/');api.processEventFromCurrentUri();api.bindWindowEvents();api.bindAClickEvent();api.sendBufferedEvents();}})
+</script>
+
+
+
+<!-- Pardot Website tracking -->
+<script type="text/javascript">
+            piAId = '938443';
+            piCId = '4174';
+            piHostname = 'pi.pardot.com';
+
+            (function () {
+                function async_load() {
+                    var s = document.createElement('script');
+                    s.type = 'text/javascript';
+                    s.src = ('https:' == document.location.protocol ? 'https://pi' : 'http://cdn') + '.pardot.com/pd.js';
+                    var c = document.getElementsByTagName('script')[0];
+                    c.parentNode.insertBefore(s, c);
+                }
+                if (window.attachEvent) {
+                    window.attachEvent('onload', async_load);
+                }
+                else {
+                    window.addEventListener('load', async_load, false);
+                }
+            })();
+</script>
+<!-- End Pardot Website tracking -->
+    
+</body>
+
+
+</html>

@@ -941,21 +941,21 @@ const labCustomerServiceContacts = [
     phone: "877.390.6900",
     email: "customerservice@pacificartisanlabs.com",
     website: "/pacific-artisan-labs",
-    meetHref: "/pacific-artisan-labs",
+    meetHref: "/meet-the-artisans#pacific",
   },
   {
     name: "Peak Artisan Labs",
     phone: "833.690.4321",
     email: "customerservice@peakartisanlabs.com",
     website: "/peak-artisan-labs",
-    meetHref: "/peak-artisan-labs",
+    meetHref: "/meet-the-artisans#peak",
   },
   {
     name: "Pike Artisan Labs",
     phone: "888.239.0303",
     email: "customerservice@pikeartisanlabs.com",
     website: "/pike-artisan-labs",
-    meetHref: "/pike-artisan-labs",
+    meetHref: "/meet-the-artisans#pike",
   },
 ];
 
@@ -2854,7 +2854,7 @@ export default function ProviderResourcesPage({
                         href={lab.website}
                         className="inline-flex min-h-10 items-center justify-center rounded-full border border-white/12 bg-white/8 px-3 py-2 text-center text-xs font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-[#171311]"
                       >
-                        Visit Website
+                        Visit Lab Website
                       </a>
                       <Link
                         href={lab.meetHref}

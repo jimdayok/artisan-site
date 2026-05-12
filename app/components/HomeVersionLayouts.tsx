@@ -86,7 +86,8 @@ const labs = [
     logoTone: "dark",
     address: ["12302 NE Marx St.", "Portland, OR 97230"],
     description: "The original Artisan lab, serving independent practices with full-service production and responsive customer service.",
-    meetHref: "/pacific-artisan-labs",
+    website: "/pacific-artisan-labs",
+    meetHref: "/meet-the-artisans#pacific",
     phone: "877.390.6900",
     phoneHref: "8773906900",
     email: "customerservice@pacificartisanlabs.com",
@@ -102,7 +103,8 @@ const labs = [
     logoTone: "light",
     address: ["3568 Peoria St., Suite 608", "Aurora, CO 80010"],
     description: "A Colorado-based Artisan lab bringing local support, finishing expertise, and practical service to independent practices.",
-    meetHref: "/peak-artisan-labs",
+    website: "/peak-artisan-labs",
+    meetHref: "/meet-the-artisans#peak",
     phone: "833.690.4321",
     phoneHref: "8336904321",
     email: "customerservice@peakartisanlabs.com",
@@ -118,7 +120,8 @@ const labs = [
     logoTone: "light",
     address: ["8902 Vincennes Cir., Suite F", "Indianapolis, IN 46268"],
     description: "The central U.S. Artisan lab, adding speed, flexibility, and personal support for practices that want a better lab relationship.",
-    meetHref: "/pike-artisan-labs",
+    website: "/pike-artisan-labs",
+    meetHref: "/meet-the-artisans#pike",
     phone: "888.239.0303",
     phoneHref: "8882390303",
     email: "customerservice@pikeartisanlabs.com",
@@ -663,9 +666,14 @@ function LabSection({ variant }: { variant: Variant }) {
               <a href={`tel:${activeLab.phoneHref}`} className="block font-semibold transition hover:text-[#d4c09a]">{activeLab.phone}</a>
               <a href={`mailto:${activeLab.email}`} className="block break-words transition hover:text-[#d4c09a]">{activeLab.email}</a>
             </div>
-            <Link href={activeLab.meetHref} className="mt-6 inline-flex min-h-11 items-center justify-center rounded-full bg-[#d4c09a] px-5 py-2.5 text-sm font-semibold text-[#171311] transition hover:bg-[#e2cca2]">
-              Meet Your Lab
-            </Link>
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <Link href={activeLab.website} className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#d4c09a] px-5 py-2.5 text-sm font-semibold text-[#171311] transition hover:-translate-y-0.5 hover:bg-[#e2cca2]">
+                Visit Lab Website
+              </Link>
+              <Link href={activeLab.meetHref} className={`inline-flex min-h-11 items-center justify-center rounded-full border px-5 py-2.5 text-sm font-semibold transition hover:-translate-y-0.5 ${light ? "border-[#d8c6a8] bg-[#fbf8f3] text-[#1f1a17] hover:bg-white" : "border-white/12 bg-white/8 text-white hover:border-[#d4c09a]/55 hover:bg-white/14"}`}>
+                Meet Your Lab
+              </Link>
+            </div>
           </motion.article>
         </div>
       </div>

@@ -351,8 +351,8 @@ export const priceItems: PriceItem[] = [
   item("chemclip-avulux", "ChemClip", "ChemClip by Chemistrie", "Add-On", "ChemClip Avulux", 335),
   item("chemclip-swarovski", "ChemClip", "ChemClip by Chemistrie", "Add-On", "Swarovski Crystal add on", 20),
 
-  item("ship-next-day", "Lab Services", "Shipping", "Service", "Next Day Delivery per Order", 4),
-  item("ship-2-day", "Lab Services", "Shipping", "Service", "2-Day Delivery per Box", 16),
+  item("ship-next-day", "Lab Services", "Shipping", "Service", "Next Day Air", 4),
+  item("ship-2-day", "Lab Services", "Shipping", "Service", "2 Day Shipping", 16),
   item("ship-ground", "Lab Services", "Shipping", "Service", "Ground Delivery per Box", 8),
   item("ship-mail-patient", "Lab Services", "Shipping", "Service", "Mail to Patient", 8, { notes: "Add-on to standard shipping." }),
 

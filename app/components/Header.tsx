@@ -10,6 +10,8 @@ type Theme = "dark" | "light";
 type NavItem = { label: string; href?: string; dividerBefore?: boolean };
 type Dropdown = { label: string; items: NavItem[] };
 
+const CUSTOMER_PORTAL_URL = "https://portal.artisanslabs.com/portal";
+
 function Capsule({
   children,
   href,
@@ -255,7 +257,7 @@ export default function Header({
 
             <DropdownMenu {...resources} theme={theme} onAnyClick={() => setMobileOpen(false)} />
 
-            <Capsule href="/portal" theme={theme}>
+            <Capsule href={CUSTOMER_PORTAL_URL} theme={theme}>
               Customer Portal
             </Capsule>
 
@@ -388,13 +390,14 @@ export default function Header({
                 })}
               </div>
 
-              <Link
+              <a
                 className="block text-sm font-semibold mt-3"
-                href="/portal"
+                href={CUSTOMER_PORTAL_URL}
                 onClick={() => setMobileOpen(false)}
               >
                 Customer Portal
-              </Link>
+              </a>
+              <p className="text-xs opacity-60">Secure customer portal</p>
 
               <button
                 type="button"

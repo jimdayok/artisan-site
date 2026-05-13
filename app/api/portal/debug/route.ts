@@ -3,6 +3,7 @@ import {
   CLOUDFLARE_ACCESS_EMAIL_HEADER,
   getAuthenticatedEmailFromHeaders,
   getCloudflareAccessEmailFromHeaders,
+  isLocalhostDevelopmentRequest,
 } from "@/lib/portal/auth";
 
 export const dynamic = "force-dynamic";
@@ -37,13 +38,14 @@ function jsonResponse(body: unknown, status = 200) {
 
 export async function GET(request: NextRequest) {
   const isDevelopment = process.env.NODE_ENV === "development";
+  const isLocalhostDevelopment = isLocalhostDevelopmentRequest(request.headers);
   const detectedEmail = getAuthenticatedEmailFromHeaders(request.headers);
   const cloudflareAccessEmail =
     getCloudflareAccessEmailFromHeaders(request.headers);
   const normalizedEmail = detectedEmail.toLowerCase();
   const isAllowedEmail = DEBUG_ALLOWED_EMAILS.has(normalizedEmail);
 
-  if (!isDevelopment && !isAllowedEmail) {
+  if (!isLocalhostDevelopment && !isAllowedEmail) {
     return jsonResponse({ error: "Not found" }, 404);
   }
 
@@ -55,6 +57,7 @@ export async function GET(request: NextRequest) {
   return jsonResponse({
     detectedEmail,
     isDevelopment,
+    isLocalhostDevelopment,
     hasCloudflareAccessEmailHeader: Boolean(cloudflareAccessEmail),
     nonSensitiveHeaderNames: [...new Set(headerNames)],
   });

@@ -76,7 +76,7 @@ export default async function PortalPage() {
 
   if (!authenticatedEmail) {
     return (
-      <PortalMessage message="Unable to verify your login. Please access this page through the secure portal login." />
+      <PortalMessage message="Unable to verify your secure login. Please sign in through the protected portal." />
     );
   }
 

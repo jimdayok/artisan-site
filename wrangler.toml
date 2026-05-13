@@ -1,3 +1,6 @@
+name = "artisan-portal"
+compatibility_date = "2026-05-13"
+
 [[r2_buckets]]
 binding = "PRACTICE_FILES"
 bucket_name = "artisan-practice-files"

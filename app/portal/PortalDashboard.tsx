@@ -5,6 +5,8 @@ import { getPriceListByCode, type PortalPriceList } from "@/lib/portal/priceList
 
 const PORTAL_ACCESS_LOGIN_URL =
   "https://portal.artisanslabs.com/cdn-cgi/access/login/portal.artisanslabs.com?redirect_url=https%3A%2F%2Fportal.artisanslabs.com";
+const PORTAL_ACCESS_LOGOUT_URL =
+  "https://portal.artisanslabs.com/cdn-cgi/access/logout?returnTo=https%3A%2F%2Fportal.artisanslabs.com";
 
 function PortalShell({
   children,
@@ -28,6 +30,9 @@ function PortalShell({
           </Link>
 
           <div className="mb-5 h-px w-24 bg-[#b89a61]" />
+          <h1 className="mb-5 text-3xl font-semibold tracking-[-0.03em] text-[#172a28] sm:text-4xl">
+            Artisan Lab Network Customer Portal
+          </h1>
           <p className="mb-5 text-xs font-semibold uppercase tracking-[0.32em] text-[#7c6b48]">
             {eyebrow}
           </p>
@@ -81,6 +86,34 @@ function DownloadCard({ priceList }: { priceList: PortalPriceList }) {
         Download {priceList.code}
       </a>
     </div>
+  );
+}
+
+function PortalHelpSection() {
+  return (
+    <section className="mt-10 border-t border-[#d8c49b] pt-6">
+      <h2 className="text-xl font-semibold tracking-[-0.02em] text-[#172a28]">
+        Help and sign out
+      </h2>
+      <p className="mt-3 max-w-2xl text-sm leading-6 text-[#706759]">
+        Need help with portal access or assigned price sheets? Contact Artisan Lab
+        Network and include your practice name and account number.
+      </p>
+      <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+        <a
+          href="mailto:info@artisanlabnetwork.com?subject=Customer%20Portal%20Help"
+          className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#d8c49b] bg-[#fffaf1] px-5 py-2 text-sm font-semibold text-[#172a28] transition hover:bg-white"
+        >
+          Get portal help
+        </a>
+        <a
+          href={PORTAL_ACCESS_LOGOUT_URL}
+          className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#172a28]/20 bg-transparent px-5 py-2 text-sm font-semibold text-[#172a28] transition hover:bg-[#172a28] hover:text-white"
+        >
+          Sign out
+        </a>
+      </div>
+    </section>
   );
 }
 
@@ -155,6 +188,8 @@ export default function PortalDashboard({ headerList }: { headerList: Headers })
               No price sheets have been assigned to this account yet.
             </p>
           )}
+
+          <PortalHelpSection />
         </section>
       </div>
     </PortalShell>

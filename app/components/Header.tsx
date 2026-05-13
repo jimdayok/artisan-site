@@ -255,6 +255,10 @@ export default function Header({
 
             <DropdownMenu {...resources} theme={theme} onAnyClick={() => setMobileOpen(false)} />
 
+            <Capsule href="/portal" theme={theme}>
+              Customer Portal
+            </Capsule>
+
             <Capsule theme={theme} onClick={onContactClick}>
               Contact Us
             </Capsule>
@@ -383,6 +387,14 @@ export default function Header({
                   );
                 })}
               </div>
+
+              <Link
+                className="block text-sm font-semibold mt-3"
+                href="/portal"
+                onClick={() => setMobileOpen(false)}
+              >
+                Customer Portal
+              </Link>
 
               <button
                 type="button"

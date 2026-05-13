@@ -1,0 +1,146 @@
+import Link from "next/link";
+import { headers } from "next/headers";
+import { getCustomerByEmail } from "@/lib/portal/customers";
+import { getPriceListByCode, type PortalPriceList } from "@/lib/portal/priceLists";
+
+export const dynamic = "force-dynamic";
+
+function PortalShell({
+  children,
+  eyebrow = "Customer Portal",
+}: {
+  children: React.ReactNode;
+  eyebrow?: string;
+}) {
+  return (
+    <main className="min-h-screen bg-[#f4efe6] text-[#172a28]">
+      <section className="relative isolate overflow-hidden px-5 py-10 sm:px-8 lg:px-10">
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_12%,rgba(47,89,98,0.16),transparent_34%),linear-gradient(135deg,#f7f2e9_0%,#efe6d8_55%,#dfe9e8_100%)]" />
+        <div className="absolute inset-0 -z-10 opacity-[0.08] [background-image:linear-gradient(rgba(23,42,40,0.55)_1px,transparent_1px),linear-gradient(90deg,rgba(23,42,40,0.55)_1px,transparent_1px)] [background-size:42px_42px]" />
+
+        <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-6xl flex-col justify-center">
+          <Link
+            href="/"
+            className="mb-14 inline-flex w-fit items-center text-xs font-semibold uppercase tracking-[0.32em] text-[#6f5f3f] transition hover:text-[#172a28]"
+          >
+            Artisan Lab Network
+          </Link>
+
+          <div className="mb-5 h-px w-24 bg-[#b89a61]" />
+          <p className="mb-5 text-xs font-semibold uppercase tracking-[0.32em] text-[#7c6b48]">
+            {eyebrow}
+          </p>
+          {children}
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function PortalMessage({ message }: { message: string }) {
+  return (
+    <PortalShell>
+      <div className="max-w-2xl rounded-[2px] border border-[#d9c9aa] bg-[#fffaf1]/82 p-8 shadow-[0_24px_80px_rgba(23,42,40,0.12)] backdrop-blur">
+        <h1 className="mb-5 text-4xl font-semibold tracking-[-0.03em] text-[#172a28] sm:text-5xl">
+          Secure portal access
+        </h1>
+        <p className="text-lg leading-8 text-[#5d5548]">{message}</p>
+      </div>
+    </PortalShell>
+  );
+}
+
+function DownloadCard({ priceList }: { priceList: PortalPriceList }) {
+  return (
+    <div className="group flex flex-col justify-between border-t border-[#d8c49b] py-6 sm:flex-row sm:items-center">
+      <div>
+        <p className="text-2xl font-semibold tracking-[-0.02em] text-[#172a28]">
+          {priceList.label}
+        </p>
+        <p className="mt-2 text-sm text-[#706759]">{priceList.fileName}</p>
+      </div>
+      <a
+        href={`/api/portal/download?code=${encodeURIComponent(priceList.code)}`}
+        className="mt-5 inline-flex w-fit items-center justify-center rounded-full bg-[#172a28] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#27433f] sm:mt-0"
+      >
+        Download {priceList.code}
+      </a>
+    </div>
+  );
+}
+
+export default async function PortalPage() {
+  const headerList = await headers();
+  const authenticatedEmail =
+    headerList.get("CF-Access-Authenticated-User-Email")?.trim() ?? "";
+
+  if (!authenticatedEmail) {
+    return (
+      <PortalMessage message="Unable to verify your login. Please access this page through the secure portal login." />
+    );
+  }
+
+  const customer = getCustomerByEmail(authenticatedEmail);
+
+  if (!customer) {
+    return (
+      <PortalMessage message="Your login was verified, but your account has not yet been assigned portal access. Please contact Artisan Lab Network." />
+    );
+  }
+
+  const availablePriceLists = customer.priceLists
+    .map(getPriceListByCode)
+    .filter((priceList): priceList is PortalPriceList => Boolean(priceList));
+
+  return (
+    <PortalShell eyebrow="Verified Customer Portal">
+      <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
+        <div>
+          <h1 className="text-5xl font-semibold tracking-[-0.045em] text-[#172a28] sm:text-6xl lg:text-7xl">
+            Welcome,
+            <br />
+            {customer.practiceName}
+          </h1>
+          <div className="mt-8 space-y-3 text-base leading-7 text-[#5b5245]">
+            <p>
+              <span className="font-semibold text-[#172a28]">Account Number:</span>{" "}
+              {customer.accountNumber}
+            </p>
+            <p>
+              <span className="font-semibold text-[#172a28]">Logged in as:</span>{" "}
+              {authenticatedEmail}
+            </p>
+          </div>
+        </div>
+
+        <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9">
+          <div className="mb-6 flex flex-col gap-3 border-b border-[#d8c49b] pb-6 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
+                Secure Downloads
+              </p>
+              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.03em] text-[#172a28]">
+                Your Available Price Sheets
+              </h2>
+            </div>
+            <p className="max-w-xs text-sm leading-6 text-[#706759]">
+              Files are assigned by account and served through the secure portal only.
+            </p>
+          </div>
+
+          {availablePriceLists.length > 0 ? (
+            <div>
+              {availablePriceLists.map((priceList) => (
+                <DownloadCard key={priceList.code} priceList={priceList} />
+              ))}
+            </div>
+          ) : (
+            <p className="border-t border-[#d8c49b] py-6 text-[#5b5245]">
+              No price sheets have been assigned to this account yet.
+            </p>
+          )}
+        </section>
+      </div>
+    </PortalShell>
+  );
+}

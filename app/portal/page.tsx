@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { headers } from "next/headers";
+import { getAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
 import { getCustomerByEmail } from "@/lib/portal/customers";
 import { getPriceListByCode, type PortalPriceList } from "@/lib/portal/priceLists";
 
@@ -71,12 +72,7 @@ function DownloadCard({ priceList }: { priceList: PortalPriceList }) {
 
 export default async function PortalPage() {
   const headerList = await headers();
-
-const authenticatedEmail =
-  (headerList.get("cf-access-authenticated-user-email") ??
-    headerList.get("CF-Access-Authenticated-User-Email") ??
-    headerList.get("Cf-Access-Authenticated-User-Email") ??
-    headerList.get("CF-ACCESS-AUTHENTICATED-USER-EMAIL"))?.trim() ?? "";
+  const authenticatedEmail = getAuthenticatedEmailFromHeaders(headerList);
 
   if (!authenticatedEmail) {
     return (

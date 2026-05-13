@@ -8,9 +8,9 @@ export type PortalCustomer = {
 export const customers: PortalCustomer[] = [
   {
     accountNumber: "0001",
-    practiceName: "Artisan Lab Network Test",
+    practiceName: "Artisan Lab Network Test Account",
     emails: ["jimdayok@me.com", "jim.day@artisanlabnetwork.com"],
-    priceLists: ["P6", "B5"],
+    priceLists: ["P6", "G6", "B5", "A6", "S5", "VD"],
   },
   {
     accountNumber: "1000",

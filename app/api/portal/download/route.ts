@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { getAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
 import { getCustomerByEmail } from "@/lib/portal/customers";
 import { getPriceListByCode } from "@/lib/portal/priceLists";
 
@@ -39,32 +40,36 @@ function textResponse(message: string, status: number) {
 }
 
 export async function GET(request: NextRequest) {
- const authenticatedEmail =
-  (request.headers.get("cf-access-authenticated-user-email") ??
-    request.headers.get("CF-Access-Authenticated-User-Email") ??
-    request.headers.get("Cf-Access-Authenticated-User-Email") ??
-    request.headers.get("CF-ACCESS-AUTHENTICATED-USER-EMAIL"))?.trim() ?? "";
+  const authenticatedEmail = getAuthenticatedEmailFromHeaders(request.headers);
   const requestedCode =
     request.nextUrl.searchParams.get("code")?.trim().toUpperCase() ?? "";
 
   if (!authenticatedEmail) {
-    return textResponse("Unable to verify your login.", 403);
+    return textResponse("Unable to verify your login.", 401);
+  }
+
+  const customer = getCustomerByEmail(authenticatedEmail);
+
+  if (!customer) {
+    return textResponse("You are not allowed to access this portal.", 403);
   }
 
   if (!requestedCode) {
     return textResponse("Missing price list code.", 400);
   }
 
-  const customer = getCustomerByEmail(authenticatedEmail);
-
-  if (!customer || !customer.priceLists.includes(requestedCode)) {
-    return textResponse("You are not allowed to access this file.", 403);
-  }
-
   const priceList = getPriceListByCode(requestedCode);
 
   if (!priceList) {
     return textResponse("Price sheet not found.", 404);
+  }
+
+  const assignedPriceListCodes = customer.priceLists.map((code) =>
+    code.trim().toUpperCase()
+  );
+
+  if (!assignedPriceListCodes.includes(priceList.code)) {
+    return textResponse("You are not allowed to access this file.", 403);
   }
 
   const bucket = getPracticeFilesBucket();

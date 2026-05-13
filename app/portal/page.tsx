@@ -71,8 +71,12 @@ function DownloadCard({ priceList }: { priceList: PortalPriceList }) {
 
 export default async function PortalPage() {
   const headerList = await headers();
-  const authenticatedEmail =
-    headerList.get("CF-Access-Authenticated-User-Email")?.trim() ?? "";
+
+const authenticatedEmail =
+  (headerList.get("cf-access-authenticated-user-email") ??
+    headerList.get("CF-Access-Authenticated-User-Email") ??
+    headerList.get("Cf-Access-Authenticated-User-Email") ??
+    headerList.get("CF-ACCESS-AUTHENTICATED-USER-EMAIL"))?.trim() ?? "";
 
   if (!authenticatedEmail) {
     return (

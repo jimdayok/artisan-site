@@ -39,8 +39,11 @@ function textResponse(message: string, status: number) {
 }
 
 export async function GET(request: NextRequest) {
-  const authenticatedEmail =
-    request.headers.get("CF-Access-Authenticated-User-Email")?.trim() ?? "";
+ const authenticatedEmail =
+  (request.headers.get("cf-access-authenticated-user-email") ??
+    request.headers.get("CF-Access-Authenticated-User-Email") ??
+    request.headers.get("Cf-Access-Authenticated-User-Email") ??
+    request.headers.get("CF-ACCESS-AUTHENTICATED-USER-EMAIL"))?.trim() ?? "";
   const requestedCode =
     request.nextUrl.searchParams.get("code")?.trim().toUpperCase() ?? "";
 

@@ -3,6 +3,9 @@ import { getAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
 import { getCustomerByEmail } from "@/lib/portal/customers";
 import { getPriceListByCode, type PortalPriceList } from "@/lib/portal/priceLists";
 
+const PORTAL_ACCESS_LOGIN_URL =
+  "https://portal.artisanslabs.com/cdn-cgi/access/login/portal.artisanslabs.com?redirect_url=https%3A%2F%2Fportal.artisanslabs.com";
+
 function PortalShell({
   children,
   eyebrow = "Customer Portal",
@@ -35,7 +38,13 @@ function PortalShell({
   );
 }
 
-function PortalMessage({ message }: { message: string }) {
+function PortalMessage({
+  message,
+  showLoginLink = false,
+}: {
+  message: string;
+  showLoginLink?: boolean;
+}) {
   return (
     <PortalShell>
       <div className="max-w-2xl rounded-[2px] border border-[#d9c9aa] bg-[#fffaf1]/82 p-8 shadow-[0_24px_80px_rgba(23,42,40,0.12)] backdrop-blur">
@@ -43,6 +52,14 @@ function PortalMessage({ message }: { message: string }) {
           Secure portal access
         </h1>
         <p className="text-lg leading-8 text-[#5d5548]">{message}</p>
+        {showLoginLink ? (
+          <a
+            href={PORTAL_ACCESS_LOGIN_URL}
+            className="mt-7 inline-flex min-h-12 items-center justify-center rounded-full bg-[#172a28] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#27433f]"
+          >
+            Sign in to Customer Portal
+          </a>
+        ) : null}
       </div>
     </PortalShell>
   );
@@ -72,7 +89,10 @@ export default function PortalDashboard({ headerList }: { headerList: Headers })
 
   if (!authenticatedEmail) {
     return (
-      <PortalMessage message="Unable to verify your secure login. Please sign in through the protected portal." />
+      <PortalMessage
+        message="Unable to verify your secure login. Please sign in through the protected portal."
+        showLoginLink
+      />
     );
   }
 

@@ -3,6 +3,8 @@ import {
   CLOUDFLARE_ACCESS_EMAIL_HEADER,
   getAuthenticatedEmailFromHeaders,
   getCloudflareAccessEmailFromHeaders,
+  getRequestHostnames,
+  isPortalHostRequest,
   isLocalhostDevelopmentRequest,
 } from "@/lib/portal/auth";
 
@@ -58,7 +60,9 @@ export async function GET(request: NextRequest) {
     detectedEmail,
     isDevelopment,
     isLocalhostDevelopment,
+    isPortalHost: isPortalHostRequest(request.headers),
     hasCloudflareAccessEmailHeader: Boolean(cloudflareAccessEmail),
+    detectedHostnames: getRequestHostnames(request.headers),
     nonSensitiveHeaderNames: [...new Set(headerNames)],
   });
 }

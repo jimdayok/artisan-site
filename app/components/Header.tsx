@@ -10,7 +10,7 @@ type Theme = "dark" | "light";
 type NavItem = { label: string; href?: string; dividerBefore?: boolean };
 type Dropdown = { label: string; items: NavItem[] };
 
-const CUSTOMER_PORTAL_URL = "https://portal.artisanslabs.com";
+const CUSTOMER_PORTAL_URL = "/portal";
 
 function Capsule({
   children,

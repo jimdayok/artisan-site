@@ -6,25 +6,6 @@ export function proxy(request: NextRequest) {
   const response = NextResponse.next();
   response.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive, nosnippet");
 
-  const isAssetRequest =
-    pathname.startsWith("/_next") ||
-    pathname.startsWith("/cdn-cgi") ||
-    pathname.includes(".");
-  const isPortalRoute =
-    pathname === "/" ||
-    pathname === "/portal" ||
-    pathname.startsWith("/api/portal");
-
-  if (!isAssetRequest && !isPortalRoute) {
-    const portalUrl = request.nextUrl.clone();
-    portalUrl.pathname = "/";
-    portalUrl.search = "";
-
-    const redirect = NextResponse.redirect(portalUrl);
-    redirect.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive, nosnippet");
-    return redirect;
-  }
-
   const configuredPassword = privatePriceListPassword();
   const token = request.cookies.get(privatePriceListCookieName)?.value;
 
@@ -52,5 +33,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/((?!_next/static|_next/image).*)",
+  matcher: "/private/:path*",
 };

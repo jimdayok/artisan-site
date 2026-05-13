@@ -4,9 +4,9 @@ import { getCustomerByEmail } from "@/lib/portal/customers";
 import { getPriceListByCode, type PortalPriceList } from "@/lib/portal/priceLists";
 
 const PORTAL_ACCESS_LOGIN_URL =
-  "https://portal.artisanslabs.com/cdn-cgi/access/login/portal.artisanslabs.com?redirect_url=https%3A%2F%2Fportal.artisanslabs.com";
+  "/portal";
 const PORTAL_ACCESS_LOGOUT_URL =
-  "https://portal.artisanslabs.com/cdn-cgi/access/logout?returnTo=https%3A%2F%2Fportal.artisanslabs.com";
+  "/cdn-cgi/access/logout?returnTo=%2Fportal";
 
 function PortalShell({
   children,
@@ -62,7 +62,7 @@ function PortalMessage({
             href={PORTAL_ACCESS_LOGIN_URL}
             className="mt-7 inline-flex min-h-12 items-center justify-center rounded-full bg-[#172a28] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#27433f]"
           >
-            Sign in to Customer Portal
+            Sign in through secure access
           </a>
         ) : null}
       </div>

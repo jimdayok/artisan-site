@@ -1,10 +1,5 @@
-import { headers } from "next/headers";
-import PortalDashboard from "./portal/PortalDashboard";
+import HomePageClient from "./HomePageClient";
 
-export const dynamic = "force-dynamic";
-
-export default async function HomePage() {
-  const headerList = await headers();
-
-  return <PortalDashboard headerList={headerList} />;
+export default function HomePage() {
+  return <HomePageClient />;
 }

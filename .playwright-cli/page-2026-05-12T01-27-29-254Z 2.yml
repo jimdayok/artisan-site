@@ -1,0 +1,366 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e5]:
+      - link "Home" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img "Artisan Lab Network" [ref=e7]
+      - navigation [ref=e8]:
+        - link "Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - link "About Us" [ref=e10] [cursor=pointer]:
+          - /url: /about
+        - button "Our Labs ▼" [ref=e12]:
+          - text: Our Labs
+          - generic [ref=e13]: ▼
+        - button "Resources ▼" [ref=e15]:
+          - text: Resources
+          - generic [ref=e16]: ▼
+        - button "Contact Us" [ref=e17]
+        - link "Get Started" [ref=e18] [cursor=pointer]:
+          - /url: https://newaccount.artisanlabnetwork.com/
+    - generic [ref=e19]:
+      - img "Peak Artisan Labs mountain-inspired hero background" [ref=e21]
+      - generic: ELEVATE
+      - generic [ref=e24]:
+        - img "Peak Artisan Labs logo" [ref=e25]
+        - generic [ref=e26]:
+          - img [ref=e27]
+          - text: Peak Artisan Labs | Denver, Colorado
+        - heading "Crafted at Elevation." [level=1] [ref=e29]
+        - generic [ref=e30]: ELEVATE
+        - paragraph [ref=e31]: Peak Artisan Labs delivers premium lens technology, sharp service, and independent partnership from the heart of Colorado.
+        - generic [ref=e32]:
+          - link "Become an Artisan Partner" [ref=e33] [cursor=pointer]:
+            - /url: https://newaccount.artisanlabnetwork.com/
+          - link "Contact the Lab" [ref=e34] [cursor=pointer]:
+            - /url: https://wkf.ms/43N58Nx
+    - generic [ref=e35]:
+      - generic: BUILT DIFFERENT
+      - generic [ref=e36]:
+        - img "Peak Artisan Labs optical brand photography" [ref=e40]
+        - generic [ref=e41]:
+          - paragraph [ref=e42]:
+            - img [ref=e43]
+            - text: Built for Practices That Aim Higher
+          - heading "Denver energy, artisan precision, and a cooler standard of service." [level=2] [ref=e46]
+          - generic [ref=e47]:
+            - paragraph [ref=e48]: Peak brings a clean, elevated feel to the Artisan Lab Network. The work is confident and performance-minded, with a lab team focused on helping practices move with clarity.
+            - paragraph [ref=e49]: From Denver, Peak supports independent eye care with premium lens options, modern production, and service standards that stay steady when the day gets demanding.
+    - generic [ref=e50]:
+      - generic: PEAK
+      - generic [ref=e51]:
+        - generic [ref=e52]:
+          - paragraph [ref=e53]:
+            - img [ref=e54]
+            - text: Denver, Colorado
+          - heading "Built at Elevation" [level=2] [ref=e57]
+        - generic [ref=e58]:
+          - paragraph [ref=e59]: "Peak carries a sharper Colorado posture: bold, elevated, daring, and modern, with the discipline premium lab work deserves."
+          - generic [ref=e60]:
+            - generic [ref=e61]: ELEVATE
+            - generic [ref=e62]: PEAK
+            - generic [ref=e63]: BOLD
+          - paragraph [ref=e64]: Own the craft.
+    - generic [ref=e65]:
+      - generic: ARTISAN QUALITY
+      - generic [ref=e66]:
+        - generic [ref=e67]:
+          - generic [ref=e68]:
+            - paragraph [ref=e69]:
+              - img [ref=e70]
+              - text: Network Strength
+            - heading "Local lab character with connected network advantages." [level=2] [ref=e73]
+            - paragraph [ref=e74]: Peak brings Colorado confidence, clean production discipline, and doctor-owned alignment to independent practices that want a lab built to perform.
+          - generic [ref=e75]:
+            - generic [ref=e76]:
+              - paragraph [ref=e77]: Brand Access
+              - generic [ref=e78]: Partner Choice
+            - generic [ref=e79]: Hoya
+        - generic [ref=e82]:
+          - article [ref=e83]:
+            - img [ref=e85]
+            - generic [ref=e90]: "15"
+            - paragraph [ref=e91]: Equity Ownership Partner Locations
+          - article [ref=e92]:
+            - img [ref=e94]
+            - generic [ref=e97]:
+              - text: "Yes"
+              - img [ref=e98]
+            - paragraph [ref=e101]: VSP
+          - article [ref=e102]:
+            - img [ref=e104]
+            - generic [ref=e107]:
+              - text: "Yes"
+              - img [ref=e108]
+            - paragraph [ref=e111]: NBN
+        - generic [ref=e112]:
+          - generic [ref=e113]: Doctor owned network
+          - generic [ref=e114]: Independent lab model
+          - generic [ref=e115]: Premium lens production
+          - generic [ref=e116]: Service first support
+          - generic [ref=e117]: Built for independent practices
+    - generic [ref=e119]:
+      - generic [ref=e120]:
+        - paragraph [ref=e121]:
+          - img [ref=e122]
+          - text: Meet Your Artisans
+        - heading "Real people, real craft, real service behind every order." [level=2] [ref=e127]
+        - paragraph [ref=e128]: Behind every prescription is a team that cares about the result. Meet the people who bring craft, service, and independent values to your lab experience.
+      - generic [ref=e129]:
+        - link "Visit Lab Website" [ref=e130] [cursor=pointer]:
+          - /url: /peak-artisan-labs
+        - link "Meet Your Lab" [ref=e131] [cursor=pointer]:
+          - /url: /meet-the-artisans#peak
+    - generic [ref=e132]:
+      - generic: PRECISION
+      - generic [ref=e133]:
+        - generic [ref=e134]:
+          - paragraph [ref=e135]: Denver Energy. Artisan Precision.
+          - heading "A lab experience shaped by altitude, clarity, and momentum." [level=2] [ref=e136]
+        - generic [ref=e137]:
+          - article [ref=e138]:
+            - img [ref=e140]
+            - heading "Elevated Perspective" [level=3] [ref=e142]
+            - paragraph [ref=e143]: "Peak brings a Colorado point of view: focused, capable, and comfortable with ambitious practices."
+          - article [ref=e144]:
+            - img [ref=e146]
+            - heading "Performance Mindset" [level=3] [ref=e149]
+            - paragraph [ref=e150]: Production support is built to keep quality high and communication crisp.
+          - article [ref=e151]:
+            - img [ref=e153]
+            - heading "Confident Follow-Through" [level=3] [ref=e156]
+            - paragraph [ref=e157]: The team works to make each order feel handled, from submission to final delivery.
+    - generic [ref=e158]:
+      - generic: BOLD
+      - generic [ref=e159]:
+        - generic [ref=e160]:
+          - paragraph [ref=e161]:
+            - img [ref=e162]
+            - text: Elevated Service Standards
+          - heading "Cool-headed production for high-quality results." [level=2] [ref=e164]
+          - paragraph [ref=e165]: Peak is designed for practices that need a lab partner with control, composure, and premium execution. The workflow favors precision, service visibility, and the confidence to keep orders moving.
+          - generic [ref=e166]:
+            - generic [ref=e167]:
+              - img [ref=e169]
+              - heading "Daring Energy" [level=3] [ref=e171]
+              - paragraph [ref=e172]: A sharper, more forward lab personality.
+            - generic [ref=e173]:
+              - img [ref=e175]
+              - heading "Clear Direction" [level=3] [ref=e178]
+              - paragraph [ref=e179]: Support that helps practices know the next step.
+            - generic [ref=e180]:
+              - img [ref=e182]
+              - heading "Premium Lens Work" [level=3] [ref=e188]
+              - paragraph [ref=e189]: Technology and craft applied with discipline.
+            - generic [ref=e190]:
+              - img [ref=e192]
+              - heading "Denver Reach" [level=3] [ref=e195]
+              - paragraph [ref=e196]: Regional service with network backing.
+        - img "Cream mountain graphic for Peak Artisan Labs" [ref=e198]
+    - generic [ref=e199]:
+      - generic: CRAFTED
+      - generic [ref=e200]:
+        - generic [ref=e201]:
+          - img "Colorado mountain landscape representing Peak Artisan Labs" [ref=e203]
+          - generic [ref=e204]:
+            - article [ref=e205]:
+              - img [ref=e207]
+              - heading "Sharp Detail" [level=3] [ref=e212]
+              - paragraph [ref=e213]: Digital production support for accurate lens work.
+            - article [ref=e214]:
+              - img [ref=e216]
+              - heading "Steady Systems" [level=3] [ref=e227]
+              - paragraph [ref=e228]: Processes built to reduce drag and maintain quality.
+        - generic [ref=e229]:
+          - paragraph [ref=e230]:
+            - img [ref=e231]
+            - text: Technology That Performs Under Pressure
+          - heading "Modern production built for clean execution." [level=2] [ref=e236]
+          - paragraph [ref=e237]: Peak pairs advanced lab capability with a practical service model. The technology supports consistency, while the team brings the judgment needed to keep the experience premium.
+    - generic [ref=e238]:
+      - img "Mauve mountain cover artwork for Peak Artisan Labs" [ref=e239]
+      - generic: OWNERSHIP
+      - generic [ref=e241]:
+        - generic [ref=e242]:
+          - paragraph [ref=e243]: Independent Strength at Altitude
+          - heading "A premium Colorado lab for practices that value choice." [level=2] [ref=e244]
+          - paragraph [ref=e245]: "Peak supports independent practices with a stronger kind of lab relationship: responsive, modern, and aligned with doctors who want product choice and service that shows up."
+          - generic [ref=e246]:
+            - link "Become an Artisan Partner" [ref=e247] [cursor=pointer]:
+              - /url: https://newaccount.artisanlabnetwork.com/
+            - link "Explore Practice Resources" [ref=e248] [cursor=pointer]:
+              - /url: /provider-resources
+        - generic [ref=e249]:
+          - generic [ref=e250]:
+            - img [ref=e251]
+            - generic [ref=e254]: DEN
+            - paragraph [ref=e255]: Denver-based regional energy
+          - generic [ref=e256]:
+            - img [ref=e257]
+            - generic [ref=e260]: High
+            - paragraph [ref=e261]: Performance-minded production
+          - generic [ref=e262]:
+            - img [ref=e263]
+            - generic [ref=e268]: Open
+            - paragraph [ref=e269]: Independent practice support
+    - generic [ref=e270]:
+      - generic: INDEPENDENT
+      - generic [ref=e271]:
+        - generic [ref=e272]:
+          - paragraph [ref=e273]:
+            - img [ref=e274]
+            - text: Premium Performance
+          - heading "Peak is built to feel focused, capable, and elevated." [level=2] [ref=e277]
+        - generic [ref=e278]:
+          - article [ref=e279]:
+            - img [ref=e281]
+            - heading "Elevated Precision" [level=3] [ref=e285]
+            - paragraph [ref=e286]: Disciplined lens work with a polished service rhythm.
+          - article [ref=e287]:
+            - img [ref=e289]
+            - heading "Denver Driven" [level=3] [ref=e292]
+            - paragraph [ref=e293]: A local identity with Colorado confidence.
+          - article [ref=e294]:
+            - img [ref=e296]
+            - heading "Cool Under Pressure" [level=3] [ref=e299]
+            - paragraph [ref=e300]: Calm support when production details matter.
+          - article [ref=e301]:
+            - img [ref=e303]
+            - heading "Premium Performance" [level=3] [ref=e306]
+            - paragraph [ref=e307]: A lab experience shaped around consistency and control.
+          - article [ref=e308]:
+            - img [ref=e310]
+            - heading "Mountain Strong" [level=3] [ref=e312]
+            - paragraph [ref=e313]: Durable partnership for ambitious independent practices.
+          - article [ref=e314]:
+            - img [ref=e316]
+            - heading "Independent Focus" [level=3] [ref=e319]
+            - paragraph [ref=e320]: More choice, better alignment, and practical guidance.
+    - generic [ref=e321]:
+      - generic: ELEVATE
+      - generic [ref=e322]:
+        - img "Colorado lab location artwork for Peak Artisan Labs" [ref=e324]
+        - generic [ref=e325]:
+          - paragraph [ref=e326]:
+            - img [ref=e327]
+            - text: Peak Lab Culture
+          - heading "Clean, confident, and ready for demanding days." [level=2] [ref=e332]
+          - paragraph [ref=e333]: Peak’s culture is modern and steady. The team brings focus to production, clarity to service, and a sense of momentum that fits Colorado practices looking for a stronger lab partner.
+          - generic [ref=e334]:
+            - generic [ref=e335]:
+              - img [ref=e337]
+              - paragraph [ref=e339]: Crisp communication that helps teams plan with confidence.
+            - generic [ref=e340]:
+              - img [ref=e342]
+              - paragraph [ref=e344]: A premium performance mindset without unnecessary drama.
+            - generic [ref=e345]:
+              - img [ref=e347]
+              - paragraph [ref=e349]: Independent support backed by Artisan Lab Network resources.
+    - generic [ref=e350]:
+      - img "Peak Artisan Labs hero background" [ref=e351]
+      - generic: BUILT DIFFERENT
+      - generic [ref=e353]:
+        - img [ref=e355]
+        - heading "Partner with a lab built to perform at a higher level." [level=2] [ref=e357]
+        - paragraph [ref=e358]: Peak Artisan Labs gives independent practices a Colorado lab partner with precision, modern production, and service that keeps its footing.
+        - generic [ref=e359]:
+          - link "Become an Artisan Partner" [ref=e360] [cursor=pointer]:
+            - /url: https://newaccount.artisanlabnetwork.com/
+          - link "Contact the Lab" [ref=e361] [cursor=pointer]:
+            - /url: https://wkf.ms/43N58Nx
+          - link "Explore Practice Resources" [ref=e362] [cursor=pointer]:
+            - /url: /provider-resources
+    - generic [ref=e363]:
+      - generic [ref=e365]:
+        - generic [ref=e366]:
+          - paragraph [ref=e367]: Artisan Lab Network
+          - heading "Independent eye care deserves a better lab model." [level=2] [ref=e368]
+        - link "Get Started" [ref=e369] [cursor=pointer]:
+          - /url: https://newaccount.artisanlabnetwork.com/
+      - generic [ref=e370]:
+        - generic [ref=e371]:
+          - generic [ref=e372]:
+            - button "Artisan Lab Network" [ref=e373]
+            - generic [ref=e374]:
+              - generic [ref=e375]: Artisan Lab Network
+              - generic [ref=e376]: Doctor-owned network
+          - paragraph [ref=e377]:
+            - text: Artisan Lab Network is the parent organization supporting
+            - link "Pacific Artisan Labs" [ref=e378] [cursor=pointer]:
+              - /url: /pacific-artisan-labs
+            - text: ","
+            - link "Peak Artisan Labs" [ref=e379] [cursor=pointer]:
+              - /url: /peak-artisan-labs
+            - text: ", and"
+            - link "Pike Artisan Labs" [ref=e380] [cursor=pointer]:
+              - /url: /pike-artisan-labs
+            - text: ", built to serve independent eye care with more choice, more control, and better partnership."
+          - generic [ref=e381]:
+            - link "Facebook" [ref=e382] [cursor=pointer]:
+              - /url: https://www.facebook.com/artisanlabnetwork
+            - link "Instagram" [ref=e383] [cursor=pointer]:
+              - /url: https://www.instagram.com/artisanlabnetwork
+            - link "LinkedIn" [ref=e384] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/artisan-lab-network/
+        - generic [ref=e385]:
+          - heading "Explore" [level=3] [ref=e386]
+          - list [ref=e387]:
+            - listitem [ref=e388]:
+              - link "Home" [ref=e389] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=e390]:
+              - link "About Us" [ref=e391] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e392]:
+              - link "Meet the Artisans" [ref=e393] [cursor=pointer]:
+                - /url: /meet-the-artisans
+            - listitem [ref=e394]:
+              - link "Our Labs" [ref=e395] [cursor=pointer]:
+                - /url: /#labs
+            - listitem [ref=e396]:
+              - link "Resources" [ref=e397] [cursor=pointer]:
+                - /url: /provider-resources
+            - listitem [ref=e398]:
+              - button "Contact Us" [ref=e399]
+        - generic [ref=e400]:
+          - heading "Company" [level=3] [ref=e401]
+          - list [ref=e402]:
+            - listitem [ref=e403]:
+              - link "Careers" [ref=e404] [cursor=pointer]:
+                - /url: /careers
+            - listitem [ref=e405]:
+              - link "Press Releases" [ref=e406] [cursor=pointer]:
+                - /url: /about#press-releases
+            - listitem [ref=e407]:
+              - link "Newsletter" [ref=e408] [cursor=pointer]:
+                - /url: /newsletter
+        - generic [ref=e409]:
+          - heading "Contact" [level=3] [ref=e410]
+          - generic [ref=e411]:
+            - paragraph [ref=e412]:
+              - link "12302 NE Marx St. Portland, OR 97230" [ref=e413] [cursor=pointer]:
+                - /url: https://www.google.com/maps/search/?api=1&query=12302%20NE%20Marx%20St%20Portland%20OR%2097230
+                - text: 12302 NE Marx St.
+                - text: Portland, OR 97230
+              - link "Open in Maps" [ref=e414] [cursor=pointer]:
+                - /url: https://www.google.com/maps/search/?api=1&query=12302%20NE%20Marx%20St%20Portland%20OR%2097230
+            - paragraph [ref=e415]:
+              - link "877.390.6900" [ref=e416] [cursor=pointer]:
+                - /url: tel:8773906900
+            - paragraph [ref=e417]:
+              - link "info@artisanlabnetwork.com" [ref=e418] [cursor=pointer]:
+                - /url: mailto:info@artisanlabnetwork.com
+      - generic [ref=e420]:
+        - generic [ref=e421]:
+          - paragraph [ref=e422]: © 2026 Artisan Lab Network
+          - paragraph [ref=e423]:
+            - text: Privacy is not a game (
+            - button "this is" [ref=e424]
+            - text: ), and we respect your privacy. Information submitted through this site is used only to respond to your inquiry and support your relationship with Artisan Lab Network.
+        - generic [ref=e425]:
+          - link "Terms & Conditions" [ref=e426] [cursor=pointer]:
+            - /url: /terms-and-conditions
+          - link "Privacy Policy" [ref=e427] [cursor=pointer]:
+            - /url: /privacy-policy
+  - button "Open Next.js Dev Tools" [ref=e433] [cursor=pointer]:
+    - img [ref=e434]

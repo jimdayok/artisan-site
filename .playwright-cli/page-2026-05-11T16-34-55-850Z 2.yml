@@ -1,0 +1,492 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e5]:
+      - link "Home" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img "Artisan Lab Network" [ref=e7]
+      - button "Toggle menu" [ref=e8]:
+        - img "Menu" [ref=e9]
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - paragraph [ref=e17]: Provider Resources
+        - heading "Practice resources that are easy to use." [level=1] [ref=e18]
+        - paragraph [ref=e19]: Clean access to practice systems, ordering tools, training, and support.
+        - generic [ref=e21]:
+          - link "Systems" [ref=e22] [cursor=pointer]:
+            - /url: "#systems"
+          - link "Ordering Tools" [ref=e23] [cursor=pointer]:
+            - /url: "#tools-ordering"
+          - link "Pricing" [ref=e24] [cursor=pointer]:
+            - /url: "#pricing-access"
+          - link "Training" [ref=e25] [cursor=pointer]:
+            - /url: "#training-education"
+          - link "Customer Service" [ref=e26] [cursor=pointer]:
+            - /url: "#lab-customer-service"
+        - button "Need help finding something? Contact support" [ref=e27]
+      - img "Eyewear brochure meeting for practice education and support" [ref=e29]
+    - generic [ref=e31]:
+      - generic [ref=e32]:
+        - paragraph [ref=e33]: Partner Resources
+        - heading "Partner Pricing and Artisan Policies" [level=2] [ref=e34]
+        - paragraph [ref=e35]: Use these links for confidential partner pricing and official Artisan policy guidance. Private pricing pages require the current partner password. Artisan Policies are available as the official guide for lab policies, warranties, remakes, redos, shipping, frame handling, and account support.
+      - generic [ref=e36]:
+        - link "Confidential Resource Access Private Price List Confidential pricing for authorized Artisan partners. Password required. Open Price List" [ref=e37] [cursor=pointer]:
+          - /url: /private/price-list
+          - paragraph [ref=e38]: Confidential Resource
+          - heading "Access Private Price List" [level=2] [ref=e39]
+          - paragraph [ref=e40]: Confidential pricing for authorized Artisan partners. Password required.
+          - generic [ref=e41]: Open Price List
+        - link "Confidential Resource Artisan Policies Official policy guide for warranties, remakes, redos, shipping, frame handling, coatings, canceled orders, multiple pair programs, and account support. Open Artisan Policies" [ref=e42] [cursor=pointer]:
+          - /url: /private/price-list/policies
+          - paragraph [ref=e43]: Confidential Resource
+          - heading "Artisan Policies" [level=2] [ref=e44]
+          - paragraph [ref=e45]: Official policy guide for warranties, remakes, redos, shipping, frame handling, coatings, canceled orders, multiple pair programs, and account support.
+          - generic [ref=e46]: Open Artisan Policies
+    - generic [ref=e48]:
+      - generic [ref=e49]:
+        - paragraph [ref=e50]: Systems
+        - heading "Three balanced systems for practice support." [level=2] [ref=e51]
+        - paragraph [ref=e52]: Each system has a clear role, clear next step, and enough context for your team to use it confidently.
+      - generic [ref=e53]:
+        - article [ref=e54]:
+          - img "Artisan Lab Network" [ref=e56]
+          - heading "Artisan Lens Systems" [level=3] [ref=e57]
+          - generic [ref=e58]:
+            - paragraph [ref=e59]: Best-practice lens bundles with premium technology and cleaner pricing paths.
+            - paragraph [ref=e60]: Artisan Lens Systems capture best-practice bundles using premium lens technologies, premium AR treatments, premium materials, and bundled pricing advantages. They are designed to help teams recommend with confidence and protect value without turning every sale into a custom spreadsheet.
+          - link "Learn More About IOT Lens System and Technologies" [ref=e61] [cursor=pointer]:
+            - /url: "#iot"
+        - article [ref=e62]:
+          - generic [ref=e63]:
+            - img "Frame Systems"
+          - heading "Frame Systems" [level=3] [ref=e64]
+          - generic [ref=e65]:
+            - paragraph [ref=e66]: Simpler complete-pair pricing and easier patient product paths.
+            - paragraph [ref=e67]: Frame systems help practices simplify complete pair pricing and create easy product paths for patients. Modern Optical is one example of a frame system that can support a clearer retail experience.
+          - link "View Resources" [ref=e68] [cursor=pointer]:
+            - /url: "#tools-ordering"
+        - article [ref=e69]:
+          - generic [ref=e70]:
+            - img "Safety Systems"
+          - heading "Safety Systems" [level=3] [ref=e71]
+          - generic [ref=e72]:
+            - paragraph [ref=e73]: A more complete path for practices serving employer-driven and occupational safety needs.
+            - paragraph [ref=e74]: Safety Systems helps practices support employers, workers, and occupational eyewear programs with clearer ordering, demonstration materials, approved product paths, and program guidance.
+          - link "Order Your Free Safety Kit" [ref=e75] [cursor=pointer]:
+            - /url: "#tools-ordering"
+    - generic [ref=e77]:
+      - generic [ref=e78]:
+        - paragraph [ref=e79]: Tools and Ordering
+        - heading "Ordering tools without the clutter." [level=2] [ref=e80]
+        - paragraph [ref=e81]: Quick access to the tools practices use most often.
+      - generic [ref=e82]:
+        - link "SpecCheck SpecCheck Account payment and lab workflow support. Open" [ref=e83] [cursor=pointer]:
+          - /url: https://www.speccheckrx.com/
+          - generic [ref=e84]:
+            - img "SpecCheck"
+          - heading "SpecCheck" [level=3] [ref=e85]
+          - paragraph [ref=e86]: Account payment and lab workflow support.
+          - generic [ref=e87]: Open
+        - link "Rx Wizard Rx Wizard Ordering support for cleaner prescription workflows. Open" [ref=e88] [cursor=pointer]:
+          - /url: https://www.dvirx.com/
+          - generic [ref=e89]:
+            - img "Rx Wizard"
+          - heading "Rx Wizard" [level=3] [ref=e90]
+          - paragraph [ref=e91]: Ordering support for cleaner prescription workflows.
+          - generic [ref=e92]: Open
+        - link "GoStock GoStock Search and source stock lenses through GoStock. Open" [ref=e93] [cursor=pointer]:
+          - /url: https://www.globalopticsinc.com/gostock
+          - generic [ref=e94]:
+            - img "GoStock"
+          - heading "GoStock" [level=3] [ref=e95]
+          - paragraph [ref=e96]: Search and source stock lenses through GoStock.
+          - generic [ref=e97]: Open
+        - link "Safety Systems Safety Demonstration Frames Safety Systems, ArmourRx, and SafeVision support for practice demonstrations. Order Demo Frames" [ref=e98] [cursor=pointer]:
+          - /url: https://form.typeform.com/to/rDUQssNn?typeform-source=www.artisanlabnetwork.com
+          - generic [ref=e99]:
+            - img "Safety Systems"
+          - heading "Safety Demonstration Frames" [level=3] [ref=e100]
+          - paragraph [ref=e101]: Safety Systems, ArmourRx, and SafeVision support for practice demonstrations.
+          - generic [ref=e102]: Order Demo Frames
+    - generic [ref=e104]:
+      - generic [ref=e105]:
+        - paragraph [ref=e106]: VSP Setup
+        - heading "How to connect Artisan for VSP orders." [level=2] [ref=e107]
+        - paragraph [ref=e108]: VSP setup has one important naming detail. Follow these steps so orders route correctly.
+      - generic [ref=e109]:
+        - generic [ref=e110]:
+          - img "VSP Vision"
+          - img "VSP heart icon" [ref=e111]
+        - generic [ref=e112]:
+          - article [ref=e113]:
+            - generic [ref=e114]:
+              - generic [ref=e115]: "1"
+              - generic [ref=e116]:
+                - heading "Tell customer service first" [level=3] [ref=e117]
+                - paragraph [ref=e118]:
+                  - text: Practices should
+                  - link "inform customer service" [ref=e119] [cursor=pointer]:
+                    - /url: "#lab-customer-service"
+                  - text: they want to use Artisan Lab Network for VSP so the lab can set their account up.
+          - article [ref=e120]:
+            - generic [ref=e121]:
+              - generic [ref=e122]: "2"
+              - generic [ref=e123]:
+                - heading "Add the lab in VSP" [level=3] [ref=e124]
+                - paragraph [ref=e125]: After setup, add the lab inside VSP. In all instances, add Pacific Artisan Labs, even if you are using Pike Artisan Labs.
+          - article [ref=e126]:
+            - generic [ref=e127]:
+              - generic [ref=e128]: "3"
+              - generic [ref=e129]:
+                - heading "Orders still route correctly" [level=3] [ref=e130]
+                - paragraph [ref=e131]: VSP lists the Artisan labs under Pacific Artisan Labs. Orders will still route to the correct Artisan lab just like private pay orders.
+    - generic [ref=e133]:
+      - generic [ref=e134]:
+        - paragraph [ref=e135]: Lens Brand Library
+        - heading "Find the brand first. Then find the exact resource." [level=2] [ref=e136]
+        - paragraph [ref=e137]: Curated by brand so your team does not have to sort through a giant pile of files.
+      - generic [ref=e138]:
+        - generic [ref=e139]:
+          - button "Artisan Designs & Training −" [expanded] [ref=e140]:
+            - generic [ref=e141]: Artisan Designs & Training
+            - generic [ref=e142]: −
+          - generic [ref=e144]:
+            - generic [ref=e145]:
+              - img "Artisan Lab Network" [ref=e147]
+              - paragraph [ref=e148]: Brand Resources
+            - paragraph [ref=e149]: Download centration charts and fitting references for Artisan lens designs. These tools help confirm measurements, placement, and design selection before ordering.
+            - generic [ref=e150]:
+              - article [ref=e151]:
+                - generic [ref=e152]:
+                  - generic [ref=e154]: Download
+                  - generic [ref=e155]: →
+                - heading "CDS Bifocal" [level=3] [ref=e156]
+                - paragraph [ref=e157]: Centration and fitting reference for CDS Bifocal orders.
+                - link "Download PDF →" [ref=e158] [cursor=pointer]:
+                  - /url: /files/ArtisanDesigns/cds_bifocal.pdf
+                  - text: Download PDF
+                  - generic [ref=e159]: →
+              - article [ref=e160]:
+                - generic [ref=e161]:
+                  - generic [ref=e163]: Download
+                  - generic [ref=e164]: →
+                - heading "Diamond Series" [level=3] [ref=e165]
+                - paragraph [ref=e166]: Measurement and placement guide for Diamond Series designs.
+                - link "Download PDF →" [ref=e167] [cursor=pointer]:
+                  - /url: /files/ArtisanDesigns/diamond_series.pdf
+                  - text: Download PDF
+                  - generic [ref=e168]: →
+              - article [ref=e169]:
+                - generic [ref=e170]:
+                  - generic [ref=e172]: Download
+                  - generic [ref=e173]: →
+                - heading "Gold Series" [level=3] [ref=e174]
+                - paragraph [ref=e175]: Fitting reference for Gold Series lens design selection.
+                - link "Download PDF →" [ref=e176] [cursor=pointer]:
+                  - /url: /files/ArtisanDesigns/gold_series.pdf
+                  - text: Download PDF
+                  - generic [ref=e177]: →
+              - article [ref=e178]:
+                - generic [ref=e179]:
+                  - generic [ref=e181]: Download
+                  - generic [ref=e182]: →
+                - heading "Platinum Series" [level=3] [ref=e183]
+                - paragraph [ref=e184]: Centration chart for Platinum Series ordering support.
+                - link "Download PDF →" [ref=e185] [cursor=pointer]:
+                  - /url: /files/ArtisanDesigns/platinum_series.pdf
+                  - text: Download PDF
+                  - generic [ref=e186]: →
+              - article [ref=e187]:
+                - generic [ref=e188]:
+                  - generic [ref=e190]: Download
+                  - generic [ref=e191]: →
+                - heading "PS Ultra Short" [level=3] [ref=e192]
+                - paragraph [ref=e193]: Fitting reference for PS Ultra Short measurements and placement.
+                - link "Download PDF →" [ref=e194] [cursor=pointer]:
+                  - /url: /files/ArtisanDesigns/ps_ultra_short.pdf
+                  - text: Download PDF
+                  - generic [ref=e195]: →
+              - article [ref=e196]:
+                - generic [ref=e197]:
+                  - generic [ref=e199]: Download
+                  - generic [ref=e200]: →
+                - heading "SD Concept" [level=3] [ref=e201]
+                - paragraph [ref=e202]: Centration chart for SD Concept lens designs.
+                - link "Download PDF →" [ref=e203] [cursor=pointer]:
+                  - /url: /files/ArtisanDesigns/sd_concept.pdf
+                  - text: Download PDF
+                  - generic [ref=e204]: →
+              - article [ref=e205]:
+                - generic [ref=e206]:
+                  - generic [ref=e208]: Download
+                  - generic [ref=e209]: →
+                - heading "SD Digital" [level=3] [ref=e210]
+                - paragraph [ref=e211]: Fitting reference for SD Digital lens design placement.
+                - link "Download PDF →" [ref=e212] [cursor=pointer]:
+                  - /url: /files/ArtisanDesigns/sd_digital.pdf
+                  - text: Download PDF
+                  - generic [ref=e213]: →
+              - article [ref=e214]:
+                - generic [ref=e215]:
+                  - generic [ref=e217]: Download
+                  - generic [ref=e218]: →
+                - heading "SD Radius" [level=3] [ref=e219]
+                - paragraph [ref=e220]: Centration guide for SD Radius ordering support.
+                - link "Download PDF →" [ref=e221] [cursor=pointer]:
+                  - /url: /files/ArtisanDesigns/sd_radius.pdf
+                  - text: Download PDF
+                  - generic [ref=e222]: →
+              - article [ref=e223]:
+                - generic [ref=e224]:
+                  - generic [ref=e226]: Download
+                  - generic [ref=e227]: →
+                - heading "SD Reach" [level=3] [ref=e228]
+                - paragraph [ref=e229]: Fitting reference for SD Reach design selection and measurements.
+                - link "Download PDF →" [ref=e230] [cursor=pointer]:
+                  - /url: /files/ArtisanDesigns/sd_reach.pdf
+                  - text: Download PDF
+                  - generic [ref=e231]: →
+              - article [ref=e232]:
+                - generic [ref=e233]:
+                  - generic [ref=e235]: External
+                  - generic [ref=e236]: →
+                - heading "IOT Camber Steady Plus Training Video" [level=3] [ref=e237]
+                - paragraph [ref=e238]: Training for Camber Steady Plus positioning, fitting, and practical dispensing conversations.
+                - link "View Video →" [ref=e239] [cursor=pointer]:
+                  - /url: https://youtu.be/phvH3ahy2e4
+                  - text: View Video
+                  - generic [ref=e240]: →
+        - button "IOT +" [ref=e242]:
+          - generic [ref=e243]: IOT
+          - generic [ref=e244]: +
+        - button "Tokai +" [ref=e246]:
+          - generic [ref=e247]: Tokai
+          - generic [ref=e248]: +
+        - button "Varilux / Crizal +" [ref=e250]:
+          - generic [ref=e251]: Varilux / Crizal
+          - generic [ref=e252]: +
+        - button "Hoya +" [ref=e254]:
+          - generic [ref=e255]: Hoya
+          - generic [ref=e256]: +
+        - button "Shamir +" [ref=e258]:
+          - generic [ref=e259]: Shamir
+          - generic [ref=e260]: +
+        - button "Unity / VSP +" [ref=e262]:
+          - generic [ref=e263]: Unity / VSP
+          - generic [ref=e264]: +
+        - button "Newton +" [ref=e266]:
+          - generic [ref=e267]: Newton
+          - generic [ref=e268]: +
+        - button "Frame Systems +" [ref=e270]:
+          - generic [ref=e271]: Frame Systems
+          - generic [ref=e272]: +
+        - button "Safety Systems +" [ref=e274]:
+          - generic [ref=e275]: Safety Systems
+          - generic [ref=e276]: +
+        - button "Chemistrie +" [ref=e278]:
+          - generic [ref=e279]: Chemistrie
+          - generic [ref=e280]: +
+    - generic [ref=e282]:
+      - generic [ref=e283]:
+        - generic [ref=e284]:
+          - paragraph [ref=e285]: Training & Education
+          - heading "Insights and Training" [level=2] [ref=e286]
+        - paragraph [ref=e287]: Real education. Real tools. Built for independent practices.
+      - generic [ref=e288]:
+        - button "All" [ref=e289]
+        - button "Training" [ref=e290]
+        - button "Product" [ref=e291]
+      - generic [ref=e292]:
+        - link "▶ Training IOT Camber Steady Plus Training Video Training for Camber Steady Plus positioning, fitting, and practical dispensing conversations." [ref=e293] [cursor=pointer]:
+          - /url: https://youtu.be/phvH3ahy2e4
+          - generic [ref=e297]: ▶
+          - generic [ref=e298]:
+            - generic [ref=e300]: Training
+            - heading "IOT Camber Steady Plus Training Video" [level=3] [ref=e301]
+            - paragraph [ref=e302]: Training for Camber Steady Plus positioning, fitting, and practical dispensing conversations.
+        - link "▶ Training ALN | Camber Pure Training Webinar A practical lens training session built to help independent practices understand positioning, fitting, and patient conversations." [ref=e303] [cursor=pointer]:
+          - /url: https://youtu.be/eFw7BzI1SZY
+          - generic [ref=e307]: ▶
+          - generic [ref=e308]:
+            - generic [ref=e310]: Training
+            - heading "ALN | Camber Pure Training Webinar" [level=3] [ref=e311]
+            - paragraph [ref=e312]: A practical lens training session built to help independent practices understand positioning, fitting, and patient conversations.
+        - link "▶ Product ALN | IOT Product Training Webinar IOT product education for teams comparing modern lens platforms and recommending options with confidence." [ref=e313] [cursor=pointer]:
+          - /url: https://youtu.be/cLhLfThS7Gs
+          - generic [ref=e317]: ▶
+          - generic [ref=e318]:
+            - generic [ref=e320]: Product
+            - heading "ALN | IOT Product Training Webinar" [level=3] [ref=e321]
+            - paragraph [ref=e322]: IOT product education for teams comparing modern lens platforms and recommending options with confidence.
+        - link "▶ Training ALN | Chemistrie Product Training Webinar A guided training resource for Chemistrie conversations, clip options, and practical dispensing support." [ref=e323] [cursor=pointer]:
+          - /url: https://youtu.be/9P7VEmI0ZwY
+          - generic [ref=e327]: ▶
+          - generic [ref=e328]:
+            - generic [ref=e330]: Training
+            - heading "ALN | Chemistrie Product Training Webinar" [level=3] [ref=e331]
+            - paragraph [ref=e332]: A guided training resource for Chemistrie conversations, clip options, and practical dispensing support.
+      - button "See More Videos" [ref=e334]
+    - generic [ref=e336]:
+      - generic [ref=e337]:
+        - paragraph [ref=e338]: Customer Service
+        - heading "Lab Customer Service Contacts" [level=2] [ref=e339]
+        - paragraph [ref=e340]: For practical order support, contact the lab team closest to your account.
+      - generic [ref=e341]:
+        - article [ref=e342]:
+          - heading "Pacific Artisan Labs" [level=3] [ref=e343]
+          - generic [ref=e344]:
+            - generic [ref=e345]:
+              - paragraph [ref=e346]: Phone
+              - link "877.390.6900" [ref=e347] [cursor=pointer]:
+                - /url: tel:8773906900
+            - generic [ref=e348]:
+              - link "Email Customer Service" [ref=e349] [cursor=pointer]:
+                - /url: mailto:customerservice@pacificartisanlabs.com
+              - link "Visit Lab Website" [ref=e350] [cursor=pointer]:
+                - /url: /pacific-artisan-labs
+              - link "Meet Your Lab" [ref=e351] [cursor=pointer]:
+                - /url: /meet-the-artisans#pacific
+        - article [ref=e352]:
+          - heading "Peak Artisan Labs" [level=3] [ref=e353]
+          - generic [ref=e354]:
+            - generic [ref=e355]:
+              - paragraph [ref=e356]: Phone
+              - link "833.690.4321" [ref=e357] [cursor=pointer]:
+                - /url: tel:8336904321
+            - generic [ref=e358]:
+              - link "Email Customer Service" [ref=e359] [cursor=pointer]:
+                - /url: mailto:customerservice@peakartisanlabs.com
+              - link "Visit Lab Website" [ref=e360] [cursor=pointer]:
+                - /url: /peak-artisan-labs
+              - link "Meet Your Lab" [ref=e361] [cursor=pointer]:
+                - /url: /meet-the-artisans#peak
+        - article [ref=e362]:
+          - heading "Pike Artisan Labs" [level=3] [ref=e363]
+          - generic [ref=e364]:
+            - generic [ref=e365]:
+              - paragraph [ref=e366]: Phone
+              - link "888.239.0303" [ref=e367] [cursor=pointer]:
+                - /url: tel:8882390303
+            - generic [ref=e368]:
+              - link "Email Customer Service" [ref=e369] [cursor=pointer]:
+                - /url: mailto:customerservice@pikeartisanlabs.com
+              - link "Visit Lab Website" [ref=e370] [cursor=pointer]:
+                - /url: /pike-artisan-labs
+              - link "Meet Your Lab" [ref=e371] [cursor=pointer]:
+                - /url: /meet-the-artisans#pike
+    - generic [ref=e373]:
+      - paragraph [ref=e374]: Support
+      - heading "Need a fast answer from the right team?" [level=2] [ref=e375]
+      - paragraph [ref=e376]: Tell us what you are trying to solve and we will point you to the clearest next step quickly.
+      - generic [ref=e377]:
+        - button "Contact Support" [ref=e378]
+        - link "Schedule Training" [ref=e379] [cursor=pointer]:
+          - /url: mailto:sales@artisanlabnetwork.com?subject=Training%20Request
+        - link "Request Account Help" [ref=e380] [cursor=pointer]:
+          - /url: mailto:customerservice@artisanlabnetwork.com?subject=Account%20Help%20Request
+    - generic [ref=e381]:
+      - generic [ref=e383]:
+        - generic [ref=e384]:
+          - paragraph [ref=e385]: Artisan Lab Network
+          - heading "Independent eye care deserves a better lab model." [level=2] [ref=e386]
+        - link "Get Started" [ref=e387] [cursor=pointer]:
+          - /url: https://form.typeform.com/to/quuPCSff
+      - generic [ref=e388]:
+        - generic [ref=e389]:
+          - generic [ref=e390]:
+            - button "Artisan Lab Network" [ref=e391]
+            - generic [ref=e392]:
+              - generic [ref=e393]: Artisan Lab Network
+              - generic [ref=e394]: Doctor-owned network
+          - paragraph [ref=e395]:
+            - text: Artisan Lab Network is the parent organization supporting
+            - link "Pacific Artisan Labs" [ref=e396] [cursor=pointer]:
+              - /url: /pacific-artisan-labs
+            - text: ","
+            - link "Peak Artisan Labs" [ref=e397] [cursor=pointer]:
+              - /url: /peak-artisan-labs
+            - text: ", and"
+            - link "Pike Artisan Labs" [ref=e398] [cursor=pointer]:
+              - /url: /pike-artisan-labs
+            - text: ", built to serve independent eye care with more choice, more control, and better partnership."
+          - generic [ref=e399]:
+            - link "Facebook" [ref=e400] [cursor=pointer]:
+              - /url: https://www.facebook.com/artisanlabnetwork
+            - link "Instagram" [ref=e401] [cursor=pointer]:
+              - /url: https://www.instagram.com/artisanlabnetwork
+            - link "LinkedIn" [ref=e402] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/artisan-lab-network/
+        - generic [ref=e403]:
+          - heading "Explore" [level=3] [ref=e404]
+          - list [ref=e405]:
+            - listitem [ref=e406]:
+              - link "Home" [ref=e407] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=e408]:
+              - link "About Us" [ref=e409] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e410]:
+              - link "Meet the Artisans" [ref=e411] [cursor=pointer]:
+                - /url: /meet-the-artisans
+            - listitem [ref=e412]:
+              - link "Our Labs" [ref=e413] [cursor=pointer]:
+                - /url: /#labs
+            - listitem [ref=e414]:
+              - link "Resources" [ref=e415] [cursor=pointer]:
+                - /url: /provider-resources
+            - listitem [ref=e416]:
+              - button "Contact Us" [ref=e417]
+        - generic [ref=e418]:
+          - heading "Company" [level=3] [ref=e419]
+          - list [ref=e420]:
+            - listitem [ref=e421]:
+              - link "Careers" [ref=e422] [cursor=pointer]:
+                - /url: /careers
+            - listitem [ref=e423]:
+              - link "Press Releases" [ref=e424] [cursor=pointer]:
+                - /url: /about#press-releases
+            - listitem [ref=e425]:
+              - link "Newsletter" [ref=e426] [cursor=pointer]:
+                - /url: /newsletter
+        - generic [ref=e427]:
+          - heading "Contact" [level=3] [ref=e428]
+          - generic [ref=e429]:
+            - paragraph [ref=e430]:
+              - link "12302 NE Marx St. Portland, OR 97230" [ref=e431] [cursor=pointer]:
+                - /url: https://www.google.com/maps/search/?api=1&query=12302%20NE%20Marx%20St%20Portland%20OR%2097230
+                - text: 12302 NE Marx St.
+                - text: Portland, OR 97230
+              - link "Open in Maps" [ref=e432] [cursor=pointer]:
+                - /url: https://www.google.com/maps/search/?api=1&query=12302%20NE%20Marx%20St%20Portland%20OR%2097230
+            - paragraph [ref=e433]:
+              - link "877.390.6900" [ref=e434] [cursor=pointer]:
+                - /url: tel:8773906900
+            - paragraph [ref=e435]:
+              - link "info@artisanlabnetwork.com" [ref=e436] [cursor=pointer]:
+                - /url: mailto:info@artisanlabnetwork.com
+      - generic [ref=e438]:
+        - generic [ref=e439]:
+          - paragraph [ref=e440]: © 2026 Artisan Lab Network
+          - paragraph [ref=e441]:
+            - text: Privacy is not a game (
+            - button "this is" [ref=e442]
+            - text: ), and we respect your privacy. Information submitted through this site is used only to respond to your inquiry and support your relationship with Artisan Lab Network.
+        - generic [ref=e443]:
+          - link "Terms & Conditions" [ref=e444] [cursor=pointer]:
+            - /url: /terms-and-conditions
+          - link "Privacy Policy" [ref=e445] [cursor=pointer]:
+            - /url: /privacy-policy
+    - dialog "Your Artisan Experience" [ref=e446]:
+      - button "Close Artisan Experience modal" [ref=e447]
+      - generic [ref=e448]:
+        - button "Close Artisan Experience modal" [ref=e449]: X
+        - generic [ref=e450]:
+          - paragraph [ref=e451]: Recognition
+          - heading "Your Artisan Experience" [level=2] [ref=e452]
+        - generic [ref=e453]:
+          - paragraph [ref=e454]: Behind every great patient experience is a team working together. Your opticians lead the way, and our team supports by crafting lenses and helping solve vision challenges.
+          - paragraph [ref=e455]: When someone on our team makes your job easier or improves a patient’s experience, we want to recognize them.
+          - paragraph [ref=e456]: Share your Artisan Experience with our leadership team so we can celebrate great work and continue delivering exceptional outcomes.
+        - link "Share Your Experience" [ref=e457] [cursor=pointer]:
+          - /url: https://form.typeform.com/to/iGoDcWlY
+  - alert [ref=e458]

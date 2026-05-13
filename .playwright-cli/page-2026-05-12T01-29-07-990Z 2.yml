@@ -1,0 +1,366 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e5]:
+      - link "Home" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img "Artisan Lab Network" [ref=e7]
+      - navigation [ref=e8]:
+        - link "Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - link "About Us" [ref=e10] [cursor=pointer]:
+          - /url: /about
+        - button "Our Labs ▼" [ref=e12]:
+          - text: Our Labs
+          - generic [ref=e13]: ▼
+        - button "Resources ▼" [ref=e15]:
+          - text: Resources
+          - generic [ref=e16]: ▼
+        - button "Contact Us" [ref=e17]
+        - link "Get Started" [ref=e18] [cursor=pointer]:
+          - /url: https://newaccount.artisanlabnetwork.com/
+    - generic [ref=e19]:
+      - img "Pike Artisan Labs original Indianapolis hero background" [ref=e21]
+      - generic: SPEED
+      - generic [ref=e24]:
+        - img "Pike Artisan Labs logo" [ref=e25]
+        - generic [ref=e26]:
+          - img [ref=e27]
+          - text: Pike Artisan Labs | Indianapolis, Indiana
+        - heading "Precision at Full Speed." [level=1] [ref=e30]
+        - generic [ref=e31]: SPEED
+        - paragraph [ref=e32]: Pike Artisan Labs brings Midwestern work ethic, modern production, and independent lab partnership together for practices that need quality without slowing down.
+        - generic [ref=e33]:
+          - link "Become an Artisan Partner" [ref=e34] [cursor=pointer]:
+            - /url: https://newaccount.artisanlabnetwork.com/
+          - link "Contact the Lab" [ref=e35] [cursor=pointer]:
+            - /url: https://wkf.ms/43N58Nx
+    - generic [ref=e36]:
+      - generic: PRECISION
+      - generic [ref=e37]:
+        - img "Pike Artisan Labs quality and production imagery" [ref=e41]
+        - generic [ref=e42]:
+          - paragraph [ref=e43]:
+            - img [ref=e44]
+            - text: Built for Momentum
+          - heading "Indianapolis speed, artisan accuracy, and service that follows through." [level=2] [ref=e48]
+          - generic [ref=e49]:
+            - paragraph [ref=e50]: Pike brings a practical, high-output mindset to the Artisan Lab Network. The energy is fast and precise, but never flashy for its own sake.
+            - paragraph [ref=e51]: From Indianapolis, Pike supports independent practices with production discipline, reliable service, and a steady focus on getting quality orders where they need to go.
+    - generic [ref=e52]:
+      - generic: RELIABILITY
+      - generic [ref=e53]:
+        - generic [ref=e54]:
+          - paragraph [ref=e55]:
+            - img [ref=e56]
+            - text: Indianapolis, Indiana
+          - heading "Precision in Motion" [level=2] [ref=e59]
+        - generic [ref=e60]:
+          - paragraph [ref=e61]: "Direct, quick, and reliable: Pike brings Indianapolis speed, Midwestern follow-through, and serious attention to the finished result."
+          - generic [ref=e62]:
+            - generic [ref=e63]: SPEED
+            - generic [ref=e64]: PRECISION
+            - generic [ref=e65]: RELIABILITY
+          - paragraph [ref=e66]: Own the craft.
+    - generic [ref=e67]:
+      - generic: ARTISAN QUALITY
+      - generic [ref=e68]:
+        - generic [ref=e69]:
+          - generic [ref=e70]:
+            - paragraph [ref=e71]:
+              - img [ref=e72]
+              - text: Network Strength
+            - heading "Local lab character with connected network advantages." [level=2] [ref=e75]
+            - paragraph [ref=e76]: Pike pairs Indianapolis momentum and Midwestern follow-through with modern production support for independent practices that need quality to keep moving.
+          - generic [ref=e77]:
+            - generic [ref=e78]:
+              - paragraph [ref=e79]: Brand Access
+              - generic [ref=e80]: Partner Choice
+            - generic [ref=e81]: Hoya
+        - generic [ref=e84]:
+          - article [ref=e85]:
+            - img [ref=e87]
+            - generic [ref=e92]: "25"
+            - paragraph [ref=e93]: Equity Ownership Partner Locations
+          - article [ref=e94]:
+            - img [ref=e96]
+            - generic [ref=e99]:
+              - text: "Yes"
+              - img [ref=e100]
+            - paragraph [ref=e103]: VSP
+          - article [ref=e104]:
+            - img [ref=e106]
+            - generic [ref=e109]:
+              - text: "Yes"
+              - img [ref=e110]
+            - paragraph [ref=e113]: NBN
+        - generic [ref=e114]:
+          - generic [ref=e115]: Doctor owned network
+          - generic [ref=e116]: Independent lab model
+          - generic [ref=e117]: Premium lens production
+          - generic [ref=e118]: Service first support
+          - generic [ref=e119]: Built for independent practices
+    - generic [ref=e121]:
+      - generic [ref=e122]:
+        - paragraph [ref=e123]:
+          - img [ref=e124]
+          - text: Meet Your Artisans
+        - heading "Real people, real craft, real service behind every order." [level=2] [ref=e129]
+        - paragraph [ref=e130]: Behind every prescription is a team that cares about the result. Meet the people who bring craft, service, and independent values to your lab experience.
+      - generic [ref=e131]:
+        - link "Visit Lab Website" [ref=e132] [cursor=pointer]:
+          - /url: /pike-artisan-labs
+        - link "Meet Your Lab" [ref=e133] [cursor=pointer]:
+          - /url: /meet-the-artisans#pike
+    - generic [ref=e134]:
+      - generic: BUILT DIFFERENT
+      - generic [ref=e135]:
+        - generic [ref=e136]:
+          - paragraph [ref=e137]: Fast Service Without Cutting Corners
+          - heading "A premium lab experience built for movement and reliability." [level=2] [ref=e138]
+        - generic [ref=e139]:
+          - article [ref=e140]:
+            - img [ref=e142]
+            - heading "Built for Speed" [level=3] [ref=e145]
+            - paragraph [ref=e146]: Pike keeps momentum visible with production habits that help practices stay on schedule.
+          - article [ref=e147]:
+            - img [ref=e149]
+            - heading "Precision First" [level=3] [ref=e153]
+            - paragraph [ref=e154]: The focus stays on accuracy, fit, and finishing even when the pace is high.
+          - article [ref=e155]:
+            - img [ref=e157]
+            - heading "Midwest Reliable" [level=3] [ref=e160]
+            - paragraph [ref=e161]: Straightforward support, practical problem solving, and follow-through your team can trust.
+    - generic [ref=e162]:
+      - generic: PRECISION
+      - generic [ref=e163]:
+        - generic [ref=e164]:
+          - paragraph [ref=e165]:
+            - img [ref=e166]
+            - text: Precision Production for Independent Practices
+          - heading "Modern production that keeps orders moving." [level=2] [ref=e168]
+          - paragraph [ref=e169]: Pike is shaped for practices that value speed, communication, and consistency. The lab experience is direct, efficient, and grounded in service that helps the practice day run cleaner.
+          - generic [ref=e170]:
+            - generic [ref=e171]:
+              - img [ref=e173]
+              - heading "Turnaround Focus" [level=3] [ref=e176]
+              - paragraph [ref=e177]: A production mindset centered on timely movement.
+            - generic [ref=e178]:
+              - img [ref=e180]
+              - heading "Accurate Execution" [level=3] [ref=e184]
+              - paragraph [ref=e185]: Precision matters from order entry through finishing.
+            - generic [ref=e186]:
+              - img [ref=e188]
+              - heading "Production Rhythm" [level=3] [ref=e199]
+              - paragraph [ref=e200]: Clean handoffs help work move without confusion.
+            - generic [ref=e201]:
+              - img [ref=e203]
+              - heading "Practical Support" [level=3] [ref=e208]
+              - paragraph [ref=e209]: Service built around what practices actually need.
+        - img "Pike Artisan Labs glasses production background" [ref=e211]
+    - generic [ref=e212]:
+      - generic: SPEED
+      - generic [ref=e213]:
+        - generic [ref=e214]:
+          - img "Modern production technology representing Pike Artisan Labs" [ref=e216]
+          - generic [ref=e217]:
+            - article [ref=e218]:
+              - img [ref=e220]
+              - heading "Order Flow" [level=3] [ref=e224]
+              - paragraph [ref=e225]: A practical process for keeping jobs moving.
+            - article [ref=e226]:
+              - img [ref=e228]
+              - heading "High-Output Ready" [level=3] [ref=e230]
+              - paragraph [ref=e231]: Production support for busy independent practices.
+        - generic [ref=e232]:
+          - paragraph [ref=e233]:
+            - img [ref=e234]
+            - text: Technology That Keeps Orders Moving
+          - heading "Systems, people, and process aligned around reliable output." [level=2] [ref=e239]
+          - paragraph [ref=e240]: Pike uses modern lab technology to support speed and precision while keeping people in the loop. The result is a lab partner that moves quickly and still pays attention.
+    - generic [ref=e241]:
+      - img "Pike Artisan Labs Indianapolis regional visual" [ref=e242]
+      - generic: OWNERSHIP
+      - generic [ref=e244]:
+        - generic [ref=e245]:
+          - paragraph [ref=e246]: A Lab Partner That Shows Up
+          - heading "Fast, practical support for independent practices." [level=2] [ref=e247]
+          - paragraph [ref=e248]: Pike gives practices a lab relationship built around reliability. It is a strong fit for teams that want clear answers, steady production, and an independent partner that understands urgency.
+          - generic [ref=e249]:
+            - link "Become an Artisan Partner" [ref=e250] [cursor=pointer]:
+              - /url: https://newaccount.artisanlabnetwork.com/
+            - link "Explore Practice Resources" [ref=e251] [cursor=pointer]:
+              - /url: /provider-resources
+        - generic [ref=e252]:
+          - generic [ref=e253]:
+            - img [ref=e254]
+            - generic [ref=e257]: IND
+            - paragraph [ref=e258]: Indianapolis-based lab energy
+          - generic [ref=e259]:
+            - img [ref=e260]
+            - generic [ref=e263]: Fast
+            - paragraph [ref=e264]: Momentum-minded production
+          - generic [ref=e265]:
+            - img [ref=e266]
+            - generic [ref=e269]: Steady
+            - paragraph [ref=e270]: Service-driven reliability
+    - generic [ref=e271]:
+      - generic: INDEPENDENT
+      - generic [ref=e272]:
+        - generic [ref=e273]:
+          - paragraph [ref=e274]:
+            - img [ref=e275]
+            - text: Midwestern Reliability
+          - heading "Pike is precise, practical, and built to move." [level=2] [ref=e278]
+        - generic [ref=e279]:
+          - article [ref=e280]:
+            - img [ref=e282]
+            - heading "Built for Speed" [level=3] [ref=e285]
+            - paragraph [ref=e286]: Momentum without turning quality into an afterthought.
+          - article [ref=e287]:
+            - img [ref=e289]
+            - heading "Precision First" [level=3] [ref=e293]
+            - paragraph [ref=e294]: Accurate lens work that keeps the patient result in view.
+          - article [ref=e295]:
+            - img [ref=e297]
+            - heading "Midwest Reliable" [level=3] [ref=e300]
+            - paragraph [ref=e301]: Clear communication and dependable follow-through.
+          - article [ref=e302]:
+            - img [ref=e304]
+            - heading "Orders in Motion" [level=3] [ref=e308]
+            - paragraph [ref=e309]: A workflow designed to keep jobs from sitting still.
+          - article [ref=e310]:
+            - img [ref=e312]
+            - heading "Technology Powered" [level=3] [ref=e323]
+            - paragraph [ref=e324]: Modern systems that support efficient production.
+          - article [ref=e325]:
+            - img [ref=e327]
+            - heading "Partner Focused" [level=3] [ref=e332]
+            - paragraph [ref=e333]: A practical lab relationship for independent practices.
+    - generic [ref=e334]:
+      - generic: RELIABILITY
+      - generic [ref=e335]:
+        - img "Pike Artisan Labs branded artwork" [ref=e337]
+        - generic [ref=e338]:
+          - paragraph [ref=e339]:
+            - img [ref=e340]
+            - text: Pike Lab Culture
+          - heading "Direct, capable, and serious about follow-through." [level=2] [ref=e345]
+          - paragraph [ref=e346]: "Pike’s culture reflects Indianapolis at its best: hardworking, precise, and built around motion. The page has speed in its posture, but the lab’s promise is reliability."
+          - generic [ref=e347]:
+            - generic [ref=e348]:
+              - img [ref=e350]
+              - paragraph [ref=e352]: Practical service for busy teams that need answers.
+            - generic [ref=e353]:
+              - img [ref=e355]
+              - paragraph [ref=e357]: Production discipline that supports speed and quality together.
+            - generic [ref=e358]:
+              - img [ref=e360]
+              - paragraph [ref=e362]: Doctor-owned alignment with the strength of the network behind it.
+    - generic [ref=e363]:
+      - img "Pike Artisan Labs original hero background" [ref=e364]
+      - generic: PRECISION
+      - generic [ref=e366]:
+        - img [ref=e368]
+        - heading "Move forward with a lab built for speed, precision, and follow-through." [level=2] [ref=e371]
+        - paragraph [ref=e372]: Pike Artisan Labs helps independent practices keep quality moving with modern production, clear service, and a practical Indianapolis mindset.
+        - generic [ref=e373]:
+          - link "Become an Artisan Partner" [ref=e374] [cursor=pointer]:
+            - /url: https://newaccount.artisanlabnetwork.com/
+          - link "Contact the Lab" [ref=e375] [cursor=pointer]:
+            - /url: https://wkf.ms/43N58Nx
+          - link "Explore Practice Resources" [ref=e376] [cursor=pointer]:
+            - /url: /provider-resources
+    - generic [ref=e377]:
+      - generic [ref=e379]:
+        - generic [ref=e380]:
+          - paragraph [ref=e381]: Artisan Lab Network
+          - heading "Independent eye care deserves a better lab model." [level=2] [ref=e382]
+        - link "Get Started" [ref=e383] [cursor=pointer]:
+          - /url: https://newaccount.artisanlabnetwork.com/
+      - generic [ref=e384]:
+        - generic [ref=e385]:
+          - generic [ref=e386]:
+            - button "Artisan Lab Network" [ref=e387]
+            - generic [ref=e388]:
+              - generic [ref=e389]: Artisan Lab Network
+              - generic [ref=e390]: Doctor-owned network
+          - paragraph [ref=e391]:
+            - text: Artisan Lab Network is the parent organization supporting
+            - link "Pacific Artisan Labs" [ref=e392] [cursor=pointer]:
+              - /url: /pacific-artisan-labs
+            - text: ","
+            - link "Peak Artisan Labs" [ref=e393] [cursor=pointer]:
+              - /url: /peak-artisan-labs
+            - text: ", and"
+            - link "Pike Artisan Labs" [ref=e394] [cursor=pointer]:
+              - /url: /pike-artisan-labs
+            - text: ", built to serve independent eye care with more choice, more control, and better partnership."
+          - generic [ref=e395]:
+            - link "Facebook" [ref=e396] [cursor=pointer]:
+              - /url: https://www.facebook.com/artisanlabnetwork
+            - link "Instagram" [ref=e397] [cursor=pointer]:
+              - /url: https://www.instagram.com/artisanlabnetwork
+            - link "LinkedIn" [ref=e398] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/artisan-lab-network/
+        - generic [ref=e399]:
+          - heading "Explore" [level=3] [ref=e400]
+          - list [ref=e401]:
+            - listitem [ref=e402]:
+              - link "Home" [ref=e403] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=e404]:
+              - link "About Us" [ref=e405] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e406]:
+              - link "Meet the Artisans" [ref=e407] [cursor=pointer]:
+                - /url: /meet-the-artisans
+            - listitem [ref=e408]:
+              - link "Our Labs" [ref=e409] [cursor=pointer]:
+                - /url: /#labs
+            - listitem [ref=e410]:
+              - link "Resources" [ref=e411] [cursor=pointer]:
+                - /url: /provider-resources
+            - listitem [ref=e412]:
+              - button "Contact Us" [ref=e413]
+        - generic [ref=e414]:
+          - heading "Company" [level=3] [ref=e415]
+          - list [ref=e416]:
+            - listitem [ref=e417]:
+              - link "Careers" [ref=e418] [cursor=pointer]:
+                - /url: /careers
+            - listitem [ref=e419]:
+              - link "Press Releases" [ref=e420] [cursor=pointer]:
+                - /url: /about#press-releases
+            - listitem [ref=e421]:
+              - link "Newsletter" [ref=e422] [cursor=pointer]:
+                - /url: /newsletter
+        - generic [ref=e423]:
+          - heading "Contact" [level=3] [ref=e424]
+          - generic [ref=e425]:
+            - paragraph [ref=e426]:
+              - link "12302 NE Marx St. Portland, OR 97230" [ref=e427] [cursor=pointer]:
+                - /url: https://www.google.com/maps/search/?api=1&query=12302%20NE%20Marx%20St%20Portland%20OR%2097230
+                - text: 12302 NE Marx St.
+                - text: Portland, OR 97230
+              - link "Open in Maps" [ref=e428] [cursor=pointer]:
+                - /url: https://www.google.com/maps/search/?api=1&query=12302%20NE%20Marx%20St%20Portland%20OR%2097230
+            - paragraph [ref=e429]:
+              - link "877.390.6900" [ref=e430] [cursor=pointer]:
+                - /url: tel:8773906900
+            - paragraph [ref=e431]:
+              - link "info@artisanlabnetwork.com" [ref=e432] [cursor=pointer]:
+                - /url: mailto:info@artisanlabnetwork.com
+      - generic [ref=e434]:
+        - generic [ref=e435]:
+          - paragraph [ref=e436]: © 2026 Artisan Lab Network
+          - paragraph [ref=e437]:
+            - text: Privacy is not a game (
+            - button "this is" [ref=e438]
+            - text: ), and we respect your privacy. Information submitted through this site is used only to respond to your inquiry and support your relationship with Artisan Lab Network.
+        - generic [ref=e439]:
+          - link "Terms & Conditions" [ref=e440] [cursor=pointer]:
+            - /url: /terms-and-conditions
+          - link "Privacy Policy" [ref=e441] [cursor=pointer]:
+            - /url: /privacy-policy
+  - button "Open Next.js Dev Tools" [ref=e447] [cursor=pointer]:
+    - img [ref=e448]

@@ -4,7 +4,7 @@ import { getCustomerByEmail } from "@/lib/portal/customers";
 import { getPriceListByCode, type PortalPriceList } from "@/lib/portal/priceLists";
 
 const PORTAL_ACCESS_LOGIN_URL =
-  "/portal";
+  "/cdn-cgi/access/login/www.artisanslabs.com?redirect_url=https%3A%2F%2Fwww.artisanslabs.com%2Fportal";
 const PORTAL_ACCESS_LOGOUT_URL =
   "/cdn-cgi/access/logout?returnTo=%2Fportal";
 

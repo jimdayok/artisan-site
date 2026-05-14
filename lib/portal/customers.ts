@@ -32,8 +32,8 @@ export const customerPortalAccess: PortalCustomerAccess[] = [
   {
     email: "jimdayok@me.com",
     accountNumber: "0001",
-    practiceName: "Artisan Lab Network Test Account",
-    allowedPriceLists: ["P6", "G6", "B5", "A6", "S5", "VD"],
+    practiceName: "Optical Jim Day",
+    allowedPriceLists: ["G6", "B5"],
     portalSections: [
       "pricing",
       "packages",
@@ -46,8 +46,8 @@ export const customerPortalAccess: PortalCustomerAccess[] = [
   {
     email: "jim.day@artisanlabnetwork.com",
     accountNumber: "0001",
-    practiceName: "Artisan Lab Network Test Account",
-    allowedPriceLists: ["P6", "G6", "B5", "A6", "S5", "VD"],
+    practiceName: "Artisan Optical Store",
+    allowedPriceLists: ["P6", "S5", "VD"],
     portalSections: [
       "pricing",
       "packages",

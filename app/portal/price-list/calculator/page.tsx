@@ -1,4 +1,5 @@
 import { getAuthorizedPriceListForPage } from "@/lib/portal/priceListAccess";
+import { customerHasPortalSection } from "@/lib/portal/customers";
 import PriceListAccessMessage from "../PriceListAccessMessage";
 import PricingHeader from "../../../../src/components/private-price/PricingHeader";
 import QuoteBuilder from "../../../../src/components/private-price/QuoteBuilder";
@@ -12,7 +13,10 @@ export default async function PrivatePriceCalculatorPage() {
     );
   }
 
-  if (access.status !== "authorized") {
+  if (
+    access.status !== "authorized" ||
+    !customerHasPortalSection(access.customer, "calculator")
+  ) {
     return (
       <PriceListAccessMessage message="You do not have access to this price list." />
     );

@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { getAuthenticatedEmailFromHeadersWithAccessJwt } from "@/lib/portal/auth";
 import { getCustomerByEmail } from "@/lib/portal/customers";
 import { getPriceListByCode } from "@/lib/portal/priceLists";
+import { getBundledPortalPriceSheet } from "@/src/data/portalPriceSheetFiles";
 
 export const dynamic = "force-dynamic";
 export const runtime = "edge";
@@ -39,6 +40,23 @@ function textResponse(message: string, status: number) {
   });
 }
 
+function base64ToBytes(contentBase64: string) {
+  const binary = atob(contentBase64);
+
+  return Uint8Array.from(binary, (character) => character.charCodeAt(0));
+}
+
+function pdfResponse(body: BodyInit, fileName: string) {
+  return new Response(body, {
+    status: 200,
+    headers: {
+      "Content-Type": "application/pdf",
+      "Content-Disposition": `attachment; filename="${fileName}"`,
+      "Cache-Control": "private, no-store",
+    },
+  });
+}
+
 export async function GET(request: NextRequest) {
   const authenticatedEmail =
     await getAuthenticatedEmailFromHeadersWithAccessJwt(request.headers);
@@ -46,7 +64,7 @@ export async function GET(request: NextRequest) {
     request.nextUrl.searchParams.get("code")?.trim().toUpperCase() ?? "";
 
   if (!authenticatedEmail) {
-    return textResponse("Unable to verify your login.", 401);
+    return textResponse("Secure portal authentication is required.", 401);
   }
 
   const customer = getCustomerByEmail(authenticatedEmail);
@@ -79,27 +97,37 @@ export async function GET(request: NextRequest) {
 
   const bucket = getPracticeFilesBucket();
 
-  if (!bucket) {
-    return textResponse("File storage is not configured.", 500);
+  if (bucket) {
+    const file = await bucket.get(priceList.r2Key);
+
+    if (file) {
+      const responseHeaders = new Headers();
+      file.writeHttpMetadata(responseHeaders);
+      responseHeaders.set(
+        "Content-Type",
+        responseHeaders.get("Content-Type") ?? "application/pdf"
+      );
+      responseHeaders.set(
+        "Content-Disposition",
+        `attachment; filename="${priceList.fileName}"`
+      );
+      responseHeaders.set("Cache-Control", "private, no-store");
+
+      return new Response(file.body, {
+        status: 200,
+        headers: responseHeaders,
+      });
+    }
   }
 
-  const file = await bucket.get(priceList.r2Key);
+  const bundledPriceSheet = getBundledPortalPriceSheet(priceList.code);
 
-  if (!file) {
+  if (!bundledPriceSheet) {
     return textResponse("File not found.", 404);
   }
 
-  const responseHeaders = new Headers();
-  file.writeHttpMetadata(responseHeaders);
-  responseHeaders.set("Content-Type", responseHeaders.get("Content-Type") ?? "application/pdf");
-  responseHeaders.set(
-    "Content-Disposition",
-    `attachment; filename="${priceList.fileName}"`
+  return pdfResponse(
+    base64ToBytes(bundledPriceSheet.contentBase64),
+    bundledPriceSheet.fileName
   );
-  responseHeaders.set("Cache-Control", "private, no-store");
-
-  return new Response(file.body, {
-    status: 200,
-    headers: responseHeaders,
-  });
 }

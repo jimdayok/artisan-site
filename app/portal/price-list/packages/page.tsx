@@ -1,4 +1,5 @@
 import { getAuthorizedPriceListForPage } from "@/lib/portal/priceListAccess";
+import { customerHasPortalSection } from "@/lib/portal/customers";
 import PriceListAccessMessage from "../PriceListAccessMessage";
 import PackageQuoteBuilder from "../../../../src/components/private-price/PackageQuoteBuilder";
 import PricingCard from "../../../../src/components/private-price/PricingCard";
@@ -55,7 +56,10 @@ export default async function PrivatePricePackagesPage({
     );
   }
 
-  if (access.status !== "authorized") {
+  if (
+    access.status !== "authorized" ||
+    !customerHasPortalSection(access.customer, "packages")
+  ) {
     return (
       <PriceListAccessMessage message="You do not have access to this price list." />
     );

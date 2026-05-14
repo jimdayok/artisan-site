@@ -1,6 +1,11 @@
 import Link from "next/link";
 import { getAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
-import { getCustomerByEmail } from "@/lib/portal/customers";
+import {
+  customerHasPortalSection,
+  getCustomerByEmail,
+  type PortalCustomer,
+  type PortalSection,
+} from "@/lib/portal/customers";
 import { getPriceListByCode, type PortalPriceList } from "@/lib/portal/priceLists";
 
 const PORTAL_ACCESS_LOGIN_URL =
@@ -101,6 +106,85 @@ function PriceListCard({ priceList }: { priceList: PortalPriceList }) {
   );
 }
 
+type PortalSectionCard = {
+  section: PortalSection;
+  title: string;
+  body: string;
+  href: string;
+  cta: string;
+  requiresPriceList?: string;
+};
+
+const portalSectionCards: PortalSectionCard[] = [
+  {
+    section: "packages",
+    title: "Package Pricing",
+    body: "View IOT Lens System package pricing and package quote tools.",
+    href: "/portal/price-list/packages",
+    cta: "Open Packages",
+    requiresPriceList: "B5",
+  },
+  {
+    section: "calculator",
+    title: "Quote Builder",
+    body: "Build an estimated lab price from assigned online pricing.",
+    href: "/portal/price-list/calculator",
+    cta: "Open Calculator",
+    requiresPriceList: "G6",
+  },
+  {
+    section: "catalog",
+    title: "Catalog",
+    body: "Browse pricing by brand, product family, and AR compatibility.",
+    href: "/portal/price-list/catalog",
+    cta: "Open Catalog",
+    requiresPriceList: "G6",
+  },
+  {
+    section: "policies",
+    title: "Artisan Policies",
+    body: "Review warranties, remakes, shipping, frame handling, and support policies.",
+    href: "/portal/price-list/policies",
+    cta: "Open Policies",
+  },
+  {
+    section: "exports",
+    title: "Pricing Exports",
+    body: "Use the G6 pricing page export tools for filtered PDF exports.",
+    href: "/portal/price-list/g6",
+    cta: "Open G6 Pricing",
+    requiresPriceList: "G6",
+  },
+];
+
+function visiblePortalSectionCards(customer: PortalCustomer) {
+  const assignedCodes = new Set(customer.priceLists.map((code) => code.toUpperCase()));
+
+  return portalSectionCards.filter((card) => {
+    if (!customerHasPortalSection(customer, card.section)) return false;
+    if (!card.requiresPriceList) return true;
+
+    return assignedCodes.has(card.requiresPriceList);
+  });
+}
+
+function PortalResourceCard({ card }: { card: PortalSectionCard }) {
+  return (
+    <Link
+      href={card.href}
+      className="group block border-t border-[#d8c49b] py-5 transition hover:border-[#172a28]"
+    >
+      <p className="text-xl font-semibold tracking-[-0.02em] text-[#172a28]">
+        {card.title}
+      </p>
+      <p className="mt-2 text-sm leading-6 text-[#706759]">{card.body}</p>
+      <span className="mt-4 inline-flex text-sm font-semibold text-[#172a28] underline decoration-[#d8c49b] underline-offset-4 transition group-hover:decoration-[#172a28]">
+        {card.cta}
+      </span>
+    </Link>
+  );
+}
+
 function PortalHelpSection() {
   return (
     <section className="mt-10 border-t border-[#d8c49b] pt-6">
@@ -152,6 +236,7 @@ export default function PortalDashboard({ headerList }: { headerList: Headers })
   const availablePriceLists = customer.priceLists
     .map(getPriceListByCode)
     .filter((priceList): priceList is PortalPriceList => Boolean(priceList));
+  const availablePortalSections = visiblePortalSectionCards(customer);
 
   return (
     <PortalShell eyebrow="Verified Customer Portal">
@@ -203,6 +288,27 @@ export default function PortalDashboard({ headerList }: { headerList: Headers })
 
           <PortalHelpSection />
         </section>
+
+        {availablePortalSections.length > 0 ? (
+          <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9 lg:col-start-2">
+            <div className="mb-6 border-b border-[#d8c49b] pb-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
+                Assigned Tools
+              </p>
+              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.03em] text-[#172a28]">
+                Your Portal Sections
+              </h2>
+              <p className="mt-3 max-w-xl text-sm leading-6 text-[#706759]">
+                These sections are available based on your account permissions.
+              </p>
+            </div>
+            <div>
+              {availablePortalSections.map((card) => (
+                <PortalResourceCard key={card.title} card={card} />
+              ))}
+            </div>
+          </section>
+        ) : null}
       </div>
     </PortalShell>
   );

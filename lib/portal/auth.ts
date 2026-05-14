@@ -44,6 +44,13 @@ let cachedAccessJwks:
     }
   | undefined;
 
+// Configure these in Cloudflare Pages environment variables:
+// CLOUDFLARE_ACCESS_TEAM_DOMAIN should be your Access team domain, for example
+// "your-team.cloudflareaccess.com". CLOUDFLARE_ACCESS_AUD is the Access
+// application audience tag. They are required only when an API request does not
+// receive the cf-access-authenticated-user-email header and must instead verify
+// the CF_Authorization JWT cookie.
+
 function normalizeHostname(host: string) {
   return host.trim().split(",")[0]?.split(":")[0]?.toLowerCase() ?? "";
 }

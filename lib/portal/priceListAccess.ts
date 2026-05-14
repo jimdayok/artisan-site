@@ -1,6 +1,11 @@
 import { headers } from "next/headers";
 import { getAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
-import { getCustomerByEmail, type PortalCustomer } from "@/lib/portal/customers";
+import {
+  customerHasPortalSection,
+  getCustomerByEmail,
+  type PortalCustomer,
+  type PortalSection,
+} from "@/lib/portal/customers";
 import {
   getPriceListByCode,
   type PortalPriceList,
@@ -59,4 +64,21 @@ export function getAuthorizedPriceListFromHeaders(
 
 export async function getAuthorizedPriceListForPage(code: PriceListCode) {
   return getAuthorizedPriceListFromHeaders(await headers(), code);
+}
+
+export async function getAuthorizedPortalSectionForPage(section: PortalSection) {
+  const headerList = await headers();
+  const authenticatedEmail = getAuthenticatedEmailFromHeaders(headerList);
+
+  if (!authenticatedEmail) {
+    return { status: "unauthenticated" as const, authenticatedEmail: "" };
+  }
+
+  const customer = getCustomerByEmail(authenticatedEmail);
+
+  if (!customer || !customerHasPortalSection(customer, section)) {
+    return { status: "forbidden" as const, authenticatedEmail, customer };
+  }
+
+  return { status: "authorized" as const, authenticatedEmail, customer };
 }

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { getAuthorizedPriceListForPage } from "@/lib/portal/priceListAccess";
+import { customerHasPortalSection } from "@/lib/portal/customers";
 import PriceListAccessMessage from "../PriceListAccessMessage";
 import PricingCard from "../../../../src/components/private-price/PricingCard";
 import PricingHeader from "../../../../src/components/private-price/PricingHeader";
@@ -46,7 +47,10 @@ export default async function PrivatePriceCatalogPage() {
     );
   }
 
-  if (access.status !== "authorized") {
+  if (
+    access.status !== "authorized" ||
+    !customerHasPortalSection(access.customer, "catalog")
+  ) {
     return (
       <PriceListAccessMessage message="You do not have access to this price list." />
     );

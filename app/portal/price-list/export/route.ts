@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthorizedPriceListFromHeaders } from "@/lib/portal/priceListAccess";
+import { customerHasPortalSection } from "@/lib/portal/customers";
 import { itemMatchesARGroup } from "../../../../src/data/arCompatibility";
 import {
   calculatedPrice,
@@ -84,7 +85,10 @@ export function GET(request: NextRequest) {
     });
   }
 
-  if (access.status !== "authorized") {
+  if (
+    access.status !== "authorized" ||
+    !customerHasPortalSection(access.customer, "exports")
+  ) {
     return new NextResponse("You do not have access to this price list.", {
       status: 403,
       headers: { "Cache-Control": "private, no-store" },

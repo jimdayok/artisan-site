@@ -16,7 +16,10 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { getAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
-import { getCustomerByEmail } from "@/lib/portal/customers";
+import {
+  customerHasPortalSection,
+  getCustomerByEmail,
+} from "@/lib/portal/customers";
 import PriceListAccessMessage from "../PriceListAccessMessage";
 
 export const metadata: Metadata = {
@@ -216,7 +219,7 @@ export default async function ArtisanPoliciesPage() {
     );
   }
 
-  if (!customer) {
+  if (!customer || !customerHasPortalSection(customer, "policies")) {
     return (
       <PriceListAccessMessage message="You do not have access to this private resource." />
     );

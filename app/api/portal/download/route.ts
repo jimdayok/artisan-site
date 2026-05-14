@@ -22,6 +22,17 @@ type R2S3Config = {
   bucketName: string;
 };
 
+type DownloadDiagnostics = {
+  requestedCode: string;
+  resolvedR2Key?: string;
+  bucketName?: string;
+  hasR2AccountId: boolean;
+  hasR2AccessKeyId: boolean;
+  hasR2SecretAccessKey: boolean;
+  hasR2BucketName: boolean;
+  hasAuthenticatedEmail: boolean;
+};
+
 let cachedR2S3Client: S3Client | undefined;
 
 function isR2Bucket(bucket: unknown): bucket is R2Bucket {
@@ -60,6 +71,36 @@ function getR2S3Config(): R2S3Config | undefined {
     secretAccessKey,
     bucketName,
   };
+}
+
+function getR2Diagnostics(
+  requestedCode: string,
+  hasAuthenticatedEmail: boolean,
+  resolvedR2Key?: string
+): DownloadDiagnostics {
+  return {
+    requestedCode,
+    resolvedR2Key,
+    bucketName: process.env.R2_BUCKET_NAME?.trim() || "artisan-practice-files",
+    hasR2AccountId: Boolean(process.env.R2_ACCOUNT_ID?.trim()),
+    hasR2AccessKeyId: Boolean(process.env.R2_ACCESS_KEY_ID?.trim()),
+    hasR2SecretAccessKey: Boolean(process.env.R2_SECRET_ACCESS_KEY?.trim()),
+    hasR2BucketName: Boolean(
+      process.env.R2_BUCKET_NAME?.trim() || "artisan-practice-files"
+    ),
+    hasAuthenticatedEmail,
+  };
+}
+
+function logDownloadDiagnostic(
+  message: string,
+  diagnostics: DownloadDiagnostics,
+  extra?: Record<string, unknown>
+) {
+  console.error("[portal-download]", message, {
+    ...diagnostics,
+    ...extra,
+  });
 }
 
 function getR2S3Client(config: R2S3Config) {
@@ -103,6 +144,44 @@ function bytesToBlob(bytes: Uint8Array) {
   return new Blob([arrayBuffer]);
 }
 
+function r2ErrorResponse(error: unknown, diagnostics: DownloadDiagnostics) {
+  if (error instanceof S3ServiceException) {
+    const statusCode = error.$metadata.httpStatusCode;
+    const errorName = error.name;
+    logDownloadDiagnostic("R2 S3 error", diagnostics, {
+      errorName,
+      statusCode,
+    });
+
+    if (errorName === "AccessDenied") {
+      return textResponse("R2 AccessDenied.", 403);
+    }
+
+    if (errorName === "NoSuchBucket") {
+      return textResponse("R2 NoSuchBucket.", 502);
+    }
+
+    if (errorName === "NoSuchKey" || statusCode === 404) {
+      return textResponse("R2 NoSuchKey.", 404);
+    }
+
+    if (errorName === "SignatureDoesNotMatch") {
+      return textResponse("R2 SignatureDoesNotMatch.", 502);
+    }
+
+    if (errorName === "InvalidAccessKeyId") {
+      return textResponse("R2 InvalidAccessKeyId.", 502);
+    }
+  }
+
+  logDownloadDiagnostic("Unhandled portal download error", diagnostics, {
+    errorName: error instanceof Error ? error.name : "UnknownError",
+    errorMessage: error instanceof Error ? error.message : "Unknown error",
+  });
+
+  return textResponse("Unable to retrieve file.", 502);
+}
+
 async function s3BodyToBodyInit(body: unknown): Promise<BodyInit> {
   const transformableBody = body as {
     transformToByteArray?: () => Promise<Uint8Array>;
@@ -131,77 +210,108 @@ async function s3BodyToBodyInit(body: unknown): Promise<BodyInit> {
 }
 
 export async function GET(request: NextRequest) {
-  const authenticatedEmail =
-    getCloudflareAccessEmailFromHeaders(request.headers);
   const requestedCode =
     request.nextUrl.searchParams.get("code")?.trim().toUpperCase() ?? "";
-
-  if (!authenticatedEmail) {
-    return textResponse("Secure portal authentication is required.", 401);
-  }
-
-  const customer = getCustomerByEmail(authenticatedEmail);
-
-  if (!customer) {
-    return textResponse("You are not allowed to access this portal.", 403);
-  }
-
-  if (!requestedCode) {
-    return textResponse("Missing price list code.", 400);
-  }
-
-  const priceList = getPriceListByCode(requestedCode);
-
-  if (!priceList) {
-    return textResponse("Price sheet not found.", 404);
-  }
-
-  if (!priceList.r2Key) {
-    return textResponse("PDF download is not available for this price sheet.", 404);
-  }
-
-  const assignedPriceListCodes = customer.priceLists.map((code) =>
-    code.trim().toUpperCase()
-  );
-
-  if (!assignedPriceListCodes.includes(priceList.code)) {
-    return textResponse("You are not allowed to access this file.", 403);
-  }
-
-  const bucket = getPracticeFilesBucket();
-
-  if (bucket) {
-    const file = await bucket.get(priceList.r2Key);
-
-    if (!file) {
-      return textResponse("File not found.", 404);
-    }
-
-    const responseHeaders = new Headers();
-    file.writeHttpMetadata(responseHeaders);
-    responseHeaders.set(
-      "Content-Type",
-      responseHeaders.get("Content-Type") ?? "application/pdf"
-    );
-    responseHeaders.set(
-      "Content-Disposition",
-      `attachment; filename="${priceList.fileName}"`
-    );
-    responseHeaders.set("Cache-Control", "private, no-store");
-
-    return new Response(file.body, {
-      status: 200,
-      headers: responseHeaders,
-    });
-  }
-
-  const r2S3Config = getR2S3Config();
-
-  if (!r2S3Config) {
-    return textResponse("File storage is not configured.", 500);
-  }
+  let diagnostics = getR2Diagnostics(requestedCode, false);
 
   try {
+    const authenticatedEmail =
+      getCloudflareAccessEmailFromHeaders(request.headers);
+    diagnostics = getR2Diagnostics(requestedCode, Boolean(authenticatedEmail));
+
+    if (!authenticatedEmail) {
+      logDownloadDiagnostic("Missing authenticated email", diagnostics);
+
+      return textResponse("Missing authenticated email.", 401);
+    }
+
+    const customer = getCustomerByEmail(authenticatedEmail);
+
+    if (!customer) {
+      logDownloadDiagnostic("Unknown portal customer", diagnostics);
+
+      return textResponse("You are not allowed to access this portal.", 403);
+    }
+
+    if (!requestedCode) {
+      logDownloadDiagnostic("Missing price list code", diagnostics);
+
+      return textResponse("Missing price list code.", 400);
+    }
+
+    const priceList = getPriceListByCode(requestedCode);
+
+    if (!priceList) {
+      logDownloadDiagnostic("Unknown price list code", diagnostics);
+
+      return textResponse("Price sheet not found.", 404);
+    }
+
+    diagnostics = getR2Diagnostics(
+      requestedCode,
+      true,
+      priceList.r2Key ?? undefined
+    );
+
+    if (!priceList.r2Key) {
+      logDownloadDiagnostic("Missing R2 key for price list", diagnostics);
+
+      return textResponse("PDF download is not available for this price sheet.", 404);
+    }
+
+    const assignedPriceListCodes = customer.priceLists.map((code) =>
+      code.trim().toUpperCase()
+    );
+
+    if (!assignedPriceListCodes.includes(priceList.code)) {
+      logDownloadDiagnostic("Unauthorized price list", diagnostics, {
+        accountNumber: customer.accountNumber,
+      });
+
+      return textResponse("Unauthorized price list.", 403);
+    }
+
+    const bucket = getPracticeFilesBucket();
+
+    if (bucket) {
+      const file = await bucket.get(priceList.r2Key);
+
+      if (!file) {
+        logDownloadDiagnostic("R2 binding file not found", diagnostics);
+
+        return textResponse("R2 NoSuchKey.", 404);
+      }
+
+      const responseHeaders = new Headers();
+      file.writeHttpMetadata(responseHeaders);
+      responseHeaders.set(
+        "Content-Type",
+        responseHeaders.get("Content-Type") ?? "application/pdf"
+      );
+      responseHeaders.set(
+        "Content-Disposition",
+        `attachment; filename="${priceList.fileName}"`
+      );
+      responseHeaders.set("Cache-Control", "private, no-store");
+
+      return new Response(file.body, {
+        status: 200,
+        headers: responseHeaders,
+      });
+    }
+
+    const r2S3Config = getR2S3Config();
+
+    if (!r2S3Config) {
+      logDownloadDiagnostic("Missing R2 environment variables", diagnostics);
+
+      return textResponse("Missing R2 environment variables.", 500);
+    }
+
+    diagnostics = {
+      ...diagnostics,
+      bucketName: r2S3Config.bucketName,
+    };
     const s3Client = getR2S3Client(r2S3Config);
     const file = await s3Client.send(
       new GetObjectCommand({
@@ -211,7 +321,9 @@ export async function GET(request: NextRequest) {
     );
 
     if (!file.Body) {
-      return textResponse("File not found.", 404);
+      logDownloadDiagnostic("R2 returned empty body", diagnostics);
+
+      return textResponse("R2 NoSuchKey.", 404);
     }
 
     return new Response(await s3BodyToBodyInit(file.Body), {
@@ -219,13 +331,6 @@ export async function GET(request: NextRequest) {
       headers: pdfHeaders(priceList.fileName),
     });
   } catch (error) {
-    if (
-      error instanceof S3ServiceException &&
-      (error.name === "NoSuchKey" || error.$metadata.httpStatusCode === 404)
-    ) {
-      return textResponse("File not found.", 404);
-    }
-
-    return textResponse("Unable to retrieve file.", 502);
+    return r2ErrorResponse(error, diagnostics);
   }
 }

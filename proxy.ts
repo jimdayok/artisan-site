@@ -1,33 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { privatePriceListCookieName, privatePriceListPassword, privatePriceListToken } from "./src/lib/privatePriceAuth";
 
-export function proxy(request: NextRequest) {
-  const pathname = request.nextUrl.pathname;
+export function proxy(_request: NextRequest) {
   const response = NextResponse.next();
   response.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive, nosnippet");
-
-  const configuredPassword = privatePriceListPassword();
-  const token = request.cookies.get(privatePriceListCookieName)?.value;
-
-  if (
-    token === privatePriceListToken(configuredPassword) ||
-    pathname === "/private/price-list/access" ||
-    pathname === "/private/price-list/policies"
-  ) {
-    return response;
-  }
-
-  // This page is hidden from indexing and protected by password, but true long term privacy should be handled through the future customer portal authentication system.
-  if (pathname.startsWith("/private/price-list")) {
-    const accessUrl = request.nextUrl.clone();
-    accessUrl.pathname = "/private/price-list/access";
-    accessUrl.search = "";
-    accessUrl.searchParams.set("next", `${pathname}${request.nextUrl.search}`);
-
-    const redirect = NextResponse.redirect(accessUrl);
-    redirect.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive, nosnippet");
-    return redirect;
-  }
 
   return response;
 }

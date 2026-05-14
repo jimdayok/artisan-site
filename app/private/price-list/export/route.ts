@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getAuthorizedPriceListFromHeaders } from "@/lib/portal/priceListAccess";
 import { itemMatchesARGroup } from "../../../../src/data/arCompatibility";
 import {
   calculatedPrice,
@@ -74,6 +75,22 @@ function makePdf(pageLines: string[], title: string, mode: ExportMode, generated
 }
 
 export function GET(request: NextRequest) {
+  const access = getAuthorizedPriceListFromHeaders(request.headers, "G6");
+
+  if (access.status === "unauthenticated") {
+    return new NextResponse("Unable to verify your secure login.", {
+      status: 401,
+      headers: { "Cache-Control": "private, no-store" },
+    });
+  }
+
+  if (access.status !== "authorized") {
+    return new NextResponse("You do not have access to this price list.", {
+      status: 403,
+      headers: { "Cache-Control": "private, no-store" },
+    });
+  }
+
   const params = request.nextUrl.searchParams;
   const mode = (params.get("mode") || "Combined") as ExportMode;
   const scope = (params.get("scope") || "filtered") as ExportScope;

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { headers } from "next/headers";
 import {
   AlertTriangle,
   BadgeCheck,
@@ -14,6 +15,9 @@ import {
   Wrench,
   type LucideIcon,
 } from "lucide-react";
+import { getAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
+import { getCustomerByEmail } from "@/lib/portal/customers";
+import PriceListAccessMessage from "../PriceListAccessMessage";
 
 export const metadata: Metadata = {
   title: "Artisan Policies | Artisan Lab Network",
@@ -202,7 +206,22 @@ const policySections: PolicySection[] = [
   },
 ];
 
-export default function ArtisanPoliciesPage() {
+export default async function ArtisanPoliciesPage() {
+  const authenticatedEmail = getAuthenticatedEmailFromHeaders(await headers());
+  const customer = authenticatedEmail ? getCustomerByEmail(authenticatedEmail) : undefined;
+
+  if (!authenticatedEmail) {
+    return (
+      <PriceListAccessMessage message="Unable to verify your secure login. Please sign in through the protected customer portal." />
+    );
+  }
+
+  if (!customer) {
+    return (
+      <PriceListAccessMessage message="You do not have access to this private resource." />
+    );
+  }
+
   return (
     <main className="min-h-screen bg-[#f4eee4] text-[#122033]">
       <section data-theme="dark" className="relative isolate overflow-hidden bg-[#111d2c] px-5 pb-16 pt-28 text-white md:px-10 md:pb-20 md:pt-36">

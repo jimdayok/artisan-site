@@ -1,4 +1,6 @@
 import Image from "next/image";
+import { getAuthorizedPriceListForPage } from "@/lib/portal/priceListAccess";
+import PriceListAccessMessage from "../PriceListAccessMessage";
 import PricingCard from "../../../../src/components/private-price/PricingCard";
 import PricingHeader from "../../../../src/components/private-price/PricingHeader";
 import { catalogBrands, logoByBrand, priceItems, type PriceBrand } from "../../../../src/data/privatePriceList";
@@ -35,7 +37,21 @@ function BrandMark({ brand }: { brand: PriceBrand }) {
   );
 }
 
-export default function PrivatePriceCatalogPage() {
+export default async function PrivatePriceCatalogPage() {
+  const access = await getAuthorizedPriceListForPage("G6");
+
+  if (access.status === "unauthenticated") {
+    return (
+      <PriceListAccessMessage message="Unable to verify your secure login. Please sign in through the protected customer portal." />
+    );
+  }
+
+  if (access.status !== "authorized") {
+    return (
+      <PriceListAccessMessage message="You do not have access to this price list." />
+    );
+  }
+
   return (
     <main className="min-h-screen bg-[#f4eee4] px-4 py-8 text-[#122033] md:px-8">
       <div className="mx-auto max-w-7xl">

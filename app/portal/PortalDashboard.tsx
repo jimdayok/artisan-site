@@ -70,21 +70,33 @@ function PortalMessage({
   );
 }
 
-function DownloadCard({ priceList }: { priceList: PortalPriceList }) {
+function PriceListCard({ priceList }: { priceList: PortalPriceList }) {
   return (
-    <div className="group flex flex-col justify-between border-t border-[#d8c49b] py-6 sm:flex-row sm:items-center">
+    <div className="group flex flex-col justify-between gap-5 border-t border-[#d8c49b] py-6 sm:flex-row sm:items-center">
       <div>
         <p className="text-2xl font-semibold tracking-[-0.02em] text-[#172a28]">
           {priceList.label}
         </p>
         <p className="mt-2 text-sm text-[#706759]">{priceList.fileName}</p>
       </div>
-      <a
-        href={`/api/portal/download?code=${encodeURIComponent(priceList.code)}`}
-        className="mt-5 inline-flex w-fit items-center justify-center rounded-full bg-[#172a28] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#27433f] sm:mt-0"
-      >
-        Download {priceList.code}
-      </a>
+      <div className="flex flex-col gap-3 sm:items-end">
+        {priceList.r2Key ? (
+          <a
+            href={`/api/portal/download?code=${encodeURIComponent(priceList.code)}`}
+            className="inline-flex w-fit items-center justify-center rounded-full bg-[#172a28] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#27433f]"
+          >
+            Download {priceList.code} PDF
+          </a>
+        ) : null}
+        {priceList.onlineUrl ? (
+          <Link
+            href={priceList.onlineUrl}
+            className="inline-flex w-fit items-center justify-center rounded-full border border-[#d8c49b] bg-[#fffaf1] px-6 py-3 text-sm font-semibold text-[#172a28] transition hover:bg-white"
+          >
+            View {priceList.code} Online Pricing
+          </Link>
+        ) : null}
+      </div>
     </div>
   );
 }
@@ -180,7 +192,7 @@ export default function PortalDashboard({ headerList }: { headerList: Headers })
           {availablePriceLists.length > 0 ? (
             <div>
               {availablePriceLists.map((priceList) => (
-                <DownloadCard key={priceList.code} priceList={priceList} />
+                <PriceListCard key={priceList.code} priceList={priceList} />
               ))}
             </div>
           ) : (

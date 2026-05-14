@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import Lenis from "lenis";
 import gsap from "gsap";
@@ -315,14 +314,6 @@ export default function AcquiosLandingPage() {
         <div className="relative z-10 mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
           <div data-acquios-reveal>
             <div className="mb-10 flex flex-col items-start gap-4">
-              <Image
-                src="/aln-white-logo.png"
-                alt="Artisan Lab Network"
-                width={1000}
-                height={471}
-                className="h-auto w-40 md:w-48"
-                priority
-              />
               <div className="flex flex-wrap items-center gap-3">
                 <div className="rounded-full border border-[#d4c09a]/35 bg-[#d4c09a]/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-[#ead8b4]">
                   Acquios Alliance member invitation

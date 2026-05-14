@@ -334,14 +334,6 @@ export default function UoaLandingPage() {
 
         <div className="relative z-10 mx-auto max-w-7xl">
           <div data-uoa-reveal className="mb-10 flex max-w-4xl flex-col items-start gap-4">
-            <Image
-              src="/aln-white-logo.png"
-              alt="Artisan Lab Network"
-              width={1000}
-              height={471}
-              className="h-auto w-40 md:w-48"
-              priority
-            />
             <div className="flex flex-wrap items-center gap-3">
               <div className="rounded-full border border-[#d4c09a]/35 bg-[#d4c09a]/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-[#ead8b4]">
                 For UOA attendees

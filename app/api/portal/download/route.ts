@@ -64,6 +64,10 @@ export async function GET(request: NextRequest) {
     return textResponse("Price sheet not found.", 404);
   }
 
+  if (!priceList.r2Key) {
+    return textResponse("PDF download is not available for this price sheet.", 404);
+  }
+
   const assignedPriceListCodes = customer.priceLists.map((code) =>
     code.trim().toUpperCase()
   );

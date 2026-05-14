@@ -1,3 +1,5 @@
+import { getAuthorizedPriceListForPage } from "@/lib/portal/priceListAccess";
+import PriceListAccessMessage from "../PriceListAccessMessage";
 import PackageQuoteBuilder from "../../../../src/components/private-price/PackageQuoteBuilder";
 import PricingCard from "../../../../src/components/private-price/PricingCard";
 import PricingHeader from "../../../../src/components/private-price/PricingHeader";
@@ -45,6 +47,20 @@ export default async function PrivatePricePackagesPage({
 }: {
   searchParams: Promise<{ product?: string }>;
 }) {
+  const access = await getAuthorizedPriceListForPage("B5");
+
+  if (access.status === "unauthenticated") {
+    return (
+      <PriceListAccessMessage message="Unable to verify your secure login. Please sign in through the protected customer portal." />
+    );
+  }
+
+  if (access.status !== "authorized") {
+    return (
+      <PriceListAccessMessage message="You do not have access to this price list." />
+    );
+  }
+
   const params = await searchParams;
   const initialLensId = params.product ? packageProductMap[params.product] : undefined;
 

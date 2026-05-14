@@ -1,7 +1,17 @@
 import Link from "next/link";
 import { priceListMeta } from "../../data/privatePriceList";
 
-export default function PricingHeader({ eyebrow, title, description }: { eyebrow: string; title: string; description: string }) {
+export default function PricingHeader({
+  eyebrow,
+  title,
+  description,
+  showNavigation = true,
+}: {
+  eyebrow: string;
+  title: string;
+  description: string;
+  showNavigation?: boolean;
+}) {
   return (
     <header className="rounded-3xl border border-[#dfd2bf] bg-[#fbf7ef]/88 p-4 shadow-[0_14px_38px_rgba(18,32,51,0.06)] backdrop-blur md:p-5">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
@@ -23,19 +33,21 @@ export default function PricingHeader({ eyebrow, title, description }: { eyebrow
           </div>
         </div>
       </div>
-      <nav className="mt-4 flex gap-2 overflow-x-auto pb-1 sm:flex-wrap">
-        {[
-          ["/private/price-list", "Dashboard"],
-          ["/private/price-list/catalog", "Catalog"],
-          ["/private/price-list/calculator", "Quote Builder"],
-          ["/private/price-list/packages", "Packages"],
-          ["/private/price-list/policies", "Artisan Policies"],
-        ].map(([href, label]) => (
-          <Link key={href} href={href} className="inline-flex min-h-9 shrink-0 items-center justify-center rounded-full border border-[#d7c5a8] bg-white/90 px-3.5 py-1.5 text-sm font-semibold text-[#122033] transition hover:bg-[#eadcc6]">
-            {label}
-          </Link>
-        ))}
-      </nav>
+      {showNavigation ? (
+        <nav className="mt-4 flex gap-2 overflow-x-auto pb-1 sm:flex-wrap">
+          {[
+            ["/private/price-list/g6", "Dashboard"],
+            ["/private/price-list/catalog", "Catalog"],
+            ["/private/price-list/calculator", "Quote Builder"],
+            ["/private/price-list/b5", "B5 Pricing"],
+            ["/private/price-list/policies", "Artisan Policies"],
+          ].map(([href, label]) => (
+            <Link key={href} href={href} className="inline-flex min-h-9 shrink-0 items-center justify-center rounded-full border border-[#d7c5a8] bg-white/90 px-3.5 py-1.5 text-sm font-semibold text-[#122033] transition hover:bg-[#eadcc6]">
+              {label}
+            </Link>
+          ))}
+        </nav>
+      ) : null}
     </header>
   );
 }

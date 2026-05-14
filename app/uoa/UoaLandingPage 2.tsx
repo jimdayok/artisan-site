@@ -225,14 +225,6 @@ export default function UoaLandingPage() {
           <div className="relative">
             <div className="absolute -inset-6 rounded-[32px] border border-[#d4c09a]/18 bg-[#d4c09a]/8 blur-2xl" />
             <div className="relative overflow-hidden rounded-[28px] border border-white/14 bg-white/[0.06] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.24)] backdrop-blur-md">
-              <Image
-                src="/aln-white-logo.png"
-                alt="Artisan Lab Network"
-                width={1000}
-                height={471}
-                className="h-auto w-56"
-                priority
-              />
               <div className="mt-10 grid gap-4">
                 {["Product choice", "Clinical freedom", "Independent success"].map((item) => (
                   <div

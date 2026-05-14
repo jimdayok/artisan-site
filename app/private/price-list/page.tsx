@@ -1,5 +1,4 @@
-import PricingHeader from "../../../src/components/private-price/PricingHeader";
-import PrivatePriceDashboard from "../../../src/components/private-price/PrivatePriceDashboard";
+import { redirect } from "next/navigation";
 
 export default async function PrivatePriceListPage({
   searchParams,
@@ -7,19 +6,9 @@ export default async function PrivatePriceListPage({
   searchParams: Promise<{ coating?: string }>;
 }) {
   const params = await searchParams;
+  const coatingQuery = params.coating
+    ? `?coating=${encodeURIComponent(params.coating)}`
+    : "";
 
-  return (
-    <main className="min-h-screen overflow-x-hidden bg-[#f4eee4] px-3 py-5 text-[#122033] md:px-6">
-      <div className="mx-auto w-full max-w-[1680px]">
-        <PricingHeader
-          eyebrow="Premium Pricing Portal"
-          title="2026 Price List"
-          description="Compact search, filters, live material pricing, AR compatibility, package availability, MSRP guidance, and PDF exports."
-        />
-        <div className="mt-7">
-          <PrivatePriceDashboard initialCoatingId={params.coating} />
-        </div>
-      </div>
-    </main>
-  );
+  redirect(`/private/price-list/g6${coatingQuery}`);
 }

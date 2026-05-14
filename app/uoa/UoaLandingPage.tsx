@@ -346,20 +346,6 @@ export default function UoaLandingPage() {
               <div className="rounded-full border border-[#d4c09a]/35 bg-[#d4c09a]/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-[#ead8b4]">
                 For UOA attendees
               </div>
-              <div className="flex items-center gap-3 rounded-full border border-white/14 bg-white px-3 py-2">
-                <Image
-                  src="/uoa-logo.jpg"
-                  alt="United Opticians Association"
-                  width={180}
-                  height={62}
-                  className="h-7 w-auto object-contain"
-                  priority
-                />
-                <span className="h-6 w-px bg-[#d8c8a7]" />
-                <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#12364a]">
-                  ALN
-                </span>
-              </div>
             </div>
           </div>
 

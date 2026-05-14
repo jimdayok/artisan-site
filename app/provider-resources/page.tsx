@@ -2333,6 +2333,24 @@ export default function ProviderResourcesPage({
             >
               Need help finding something? Contact support
             </button>
+
+            <div className="mt-6 max-w-2xl rounded-[24px] border border-[#d8c6a8]/80 bg-white/72 p-5 shadow-[0_16px_42px_rgba(24,18,13,0.08)] backdrop-blur">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8a7654]">
+                Secure access
+              </p>
+              <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-sm leading-6 text-[#625b53]">
+                  Access your assigned price sheets, programs, and customer
+                  resources securely.
+                </p>
+                <Link
+                  href="/portal"
+                  className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-full bg-[#1f1a17] px-5 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#d4c09a] hover:text-[#171311]"
+                >
+                  Customer Portal Login
+                </Link>
+              </div>
+            </div>
           </div>
           <motion.div
             {...fadeInSection}

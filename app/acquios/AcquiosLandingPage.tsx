@@ -327,16 +327,6 @@ export default function AcquiosLandingPage() {
                 <div className="rounded-full border border-[#d4c09a]/35 bg-[#d4c09a]/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-[#ead8b4]">
                   Acquios Alliance member invitation
                 </div>
-                <div className="rounded-full border border-white/14 bg-white px-4 py-2">
-                  <Image
-                    src="/logos/acquios-alliance.png"
-                    alt="Acquios Alliance"
-                    width={220}
-                    height={72}
-                    className="h-7 w-auto object-contain"
-                    priority
-                  />
-                </div>
               </div>
             </div>
 

@@ -131,6 +131,7 @@ export default function Footer({
             <li><Link href="/meet-the-artisans" className="transition hover:text-white">Meet the Artisans</Link></li>
             <li><Link href="/#labs" className="transition hover:text-white">Our Labs</Link></li>
             <li><Link href="/provider-resources" className="transition hover:text-white">Resources</Link></li>
+            <li><Link href="/portal" className="transition hover:text-white">Customer Portal</Link></li>
             <li>
               <button type="button" onClick={onContactClick} className="transition hover:text-white">
                 Contact Us

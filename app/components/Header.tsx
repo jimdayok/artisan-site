@@ -167,6 +167,7 @@ export default function Header({
         { label: "Professional Resources", href: "/provider-resources" },
         { label: "Patient Resources", href: "/patient-resources" },
         { label: "Lab Ownership & Partnership", href: "/artisan-model" },
+        { label: "Customer Portal", href: CUSTOMER_PORTAL_URL, dividerBefore: true },
       ],
     }),
     []
@@ -256,10 +257,6 @@ export default function Header({
             <DropdownMenu {...labs} theme={theme} onAnyClick={() => setMobileOpen(false)} />
 
             <DropdownMenu {...resources} theme={theme} onAnyClick={() => setMobileOpen(false)} />
-
-            <Capsule href={CUSTOMER_PORTAL_URL} theme={theme}>
-              Customer Portal
-            </Capsule>
 
             <Capsule theme={theme} onClick={onContactClick}>
               Contact Us
@@ -389,15 +386,6 @@ export default function Header({
                   );
                 })}
               </div>
-
-              <a
-                className="block text-sm font-semibold mt-3"
-                href={CUSTOMER_PORTAL_URL}
-                onClick={() => setMobileOpen(false)}
-              >
-                Customer Portal
-              </a>
-              <p className="text-xs opacity-60">Secure customer portal</p>
 
               <button
                 type="button"

@@ -48,7 +48,7 @@ export default function PDFExportButton({
       coatingId: filters.coatingId,
     });
     if (selectedIds.length) params.set("selected", selectedIds.join(","));
-    window.open(`/private/price-list/export?${params.toString()}`, "_blank", "noopener,noreferrer");
+    window.open(`/portal/price-list/export?${params.toString()}`, "_blank", "noopener,noreferrer");
   };
 
   return (

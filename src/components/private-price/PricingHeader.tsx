@@ -36,11 +36,11 @@ export default function PricingHeader({
       {showNavigation ? (
         <nav className="mt-4 flex gap-2 overflow-x-auto pb-1 sm:flex-wrap">
           {[
-            ["/private/price-list/g6", "Dashboard"],
-            ["/private/price-list/catalog", "Catalog"],
-            ["/private/price-list/calculator", "Quote Builder"],
-            ["/private/price-list/b5", "B5 Pricing"],
-            ["/private/price-list/policies", "Artisan Policies"],
+            ["/portal/price-list/g6", "Dashboard"],
+            ["/portal/price-list/catalog", "Catalog"],
+            ["/portal/price-list/calculator", "Quote Builder"],
+            ["/portal/price-list/b5", "B5 Pricing"],
+            ["/portal/price-list/policies", "Artisan Policies"],
           ].map(([href, label]) => (
             <Link key={href} href={href} className="inline-flex min-h-9 shrink-0 items-center justify-center rounded-full border border-[#d7c5a8] bg-white/90 px-3.5 py-1.5 text-sm font-semibold text-[#122033] transition hover:bg-[#eadcc6]">
               {label}

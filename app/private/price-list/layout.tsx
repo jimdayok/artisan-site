@@ -25,6 +25,6 @@ export default async function PrivatePriceListLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // This page is hidden from indexing and protected by password, but true long term privacy should be handled through the future customer portal authentication system.
+  // Legacy private URLs redirect into the secure portal namespace.
   return <>{children}</>;
 }

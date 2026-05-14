@@ -35,8 +35,8 @@ export default function CompactEmptyState({
         <BrandChips value="All" onChange={(brand) => brand !== "All" && onBrand(brand)} />
       </div>
       <div className="mt-4 flex flex-wrap gap-2">
-        <Link href="/private/price-list/packages" className="rounded-full bg-[#122033] px-3 py-1.5 text-xs font-bold text-white">Packages</Link>
-        <Link href="/private/price-list/policies" className="rounded-full border border-[#d7c5a8] bg-white px-3 py-1.5 text-xs font-bold text-[#122033]">Policies</Link>
+        <Link href="/portal/price-list/packages" className="rounded-full bg-[#122033] px-3 py-1.5 text-xs font-bold text-white">Packages</Link>
+        <Link href="/portal/price-list/policies" className="rounded-full border border-[#d7c5a8] bg-white px-3 py-1.5 text-xs font-bold text-[#122033]">Policies</Link>
       </div>
       {recentlyViewed.length ? (
         <div className="mt-4 border-t border-[#eadfce] pt-4">

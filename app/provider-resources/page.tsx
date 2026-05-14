@@ -924,13 +924,13 @@ const pricingAccessCards = [
   {
     title: "Access Private Price List",
     body: "Confidential pricing for authorized Artisan partners. Password required.",
-    href: "/private/price-list",
+    href: "/portal/price-list/g6",
     cta: "Open Price List",
   },
   {
     title: "Artisan Policies",
     body: "Official policy guide for warranties, remakes, redos, shipping, frame handling, coatings, canceled orders, multiple pair programs, and account support.",
-    href: "/private/price-list/policies",
+    href: "/portal/price-list/policies",
     cta: "Open Artisan Policies",
   },
 ];

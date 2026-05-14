@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-export default async function PrivatePriceListPage({
+export default async function PortalPriceListPage({
   searchParams,
 }: {
   searchParams: Promise<{ coating?: string }>;

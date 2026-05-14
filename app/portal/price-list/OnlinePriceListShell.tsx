@@ -1,6 +1,7 @@
 import Link from "next/link";
 import PricingHeader from "../../../src/components/private-price/PricingHeader";
 import type { PortalPriceList } from "@/lib/portal/priceLists";
+import PortalPriceListScrollReset from "./PortalPriceListScrollReset";
 
 export function OnlinePriceListShell({
   priceList,
@@ -10,7 +11,8 @@ export function OnlinePriceListShell({
   children: React.ReactNode;
 }) {
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#f4eee4] px-3 py-5 text-[#122033] md:px-6">
+    <main className="min-h-screen overflow-x-hidden overflow-y-auto bg-[#f4eee4] px-3 py-5 text-[#122033] md:px-6">
+      <PortalPriceListScrollReset />
       <div className="mx-auto w-full max-w-[1680px]">
         <PricingHeader
           eyebrow="Private Online Pricing"

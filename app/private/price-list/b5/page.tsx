@@ -1,5 +1,5 @@
-import PdfDerivedPriceListPage from "../PdfDerivedPriceListPage";
+import { redirect } from "next/navigation";
 
-export default function PrivatePriceListB5Page() {
-  return <PdfDerivedPriceListPage code="B5" />;
+export default function LegacyPrivateB5Page() {
+  redirect("/portal/price-list/b5");
 }

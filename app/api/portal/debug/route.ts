@@ -1,8 +1,11 @@
 import { NextRequest } from "next/server";
 import {
   CLOUDFLARE_ACCESS_EMAIL_HEADER,
+  getAuthenticatedEmailFromHeadersWithAccessJwt,
   getAuthenticatedEmailFromHeaders,
   getCloudflareAccessEmailFromHeaders,
+  getCloudflareAccessJwtCookieFromHeaders,
+  getCloudflareAccessJwtFromHeaders,
   getRequestHostnames,
   isPortalHostRequest,
   isLocalhostDevelopmentRequest,
@@ -41,9 +44,15 @@ function jsonResponse(body: unknown, status = 200) {
 export async function GET(request: NextRequest) {
   const isDevelopment = process.env.NODE_ENV === "development";
   const isLocalhostDevelopment = isLocalhostDevelopmentRequest(request.headers);
-  const detectedEmail = getAuthenticatedEmailFromHeaders(request.headers);
+  const headerOrDevelopmentEmail = getAuthenticatedEmailFromHeaders(request.headers);
+  const detectedEmail =
+    await getAuthenticatedEmailFromHeadersWithAccessJwt(request.headers);
   const cloudflareAccessEmail =
     getCloudflareAccessEmailFromHeaders(request.headers);
+  const cloudflareAccessJwt =
+    getCloudflareAccessJwtFromHeaders(request.headers);
+  const cloudflareAccessJwtCookie =
+    getCloudflareAccessJwtCookieFromHeaders(request.headers);
   const normalizedEmail = detectedEmail.toLowerCase();
   const isAllowedEmail = DEBUG_ALLOWED_EMAILS.has(normalizedEmail);
 
@@ -61,7 +70,11 @@ export async function GET(request: NextRequest) {
     isDevelopment,
     isLocalhostDevelopment,
     isPortalHost: isPortalHostRequest(request.headers),
+    hasDetectedEmail: Boolean(detectedEmail),
     hasCloudflareAccessEmailHeader: Boolean(cloudflareAccessEmail),
+    hasCloudflareAccessJwtCookieOrHeader: Boolean(cloudflareAccessJwt),
+    hasCloudflareAccessJwtCookie: Boolean(cloudflareAccessJwtCookie),
+    usedHeaderOrDevelopmentFallback: Boolean(headerOrDevelopmentEmail),
     detectedHostnames: getRequestHostnames(request.headers),
     nonSensitiveHeaderNames: [...new Set(headerNames)],
   });

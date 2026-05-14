@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { getAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
+import { getAuthenticatedEmailFromHeadersWithAccessJwt } from "@/lib/portal/auth";
 import { getCustomerByEmail } from "@/lib/portal/customers";
 import { getPriceListByCode } from "@/lib/portal/priceLists";
 
@@ -40,7 +40,8 @@ function textResponse(message: string, status: number) {
 }
 
 export async function GET(request: NextRequest) {
-  const authenticatedEmail = getAuthenticatedEmailFromHeaders(request.headers);
+  const authenticatedEmail =
+    await getAuthenticatedEmailFromHeadersWithAccessJwt(request.headers);
   const requestedCode =
     request.nextUrl.searchParams.get("code")?.trim().toUpperCase() ?? "";
 

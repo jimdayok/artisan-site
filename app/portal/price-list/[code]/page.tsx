@@ -1,7 +1,7 @@
 import PrivatePriceDashboard from "@/src/components/private-price/PrivatePriceDashboard";
-import PdfDerivedPriceListPage from "../../../private/price-list/PdfDerivedPriceListPage";
-import PriceListAccessMessage from "../../../private/price-list/PriceListAccessMessage";
-import { OnlinePriceListShell } from "../../../private/price-list/OnlinePriceListShell";
+import PdfDerivedPriceListPage from "../PdfDerivedPriceListPage";
+import PriceListAccessMessage from "../PriceListAccessMessage";
+import { OnlinePriceListShell } from "../OnlinePriceListShell";
 import { getAuthorizedPriceListForPage } from "@/lib/portal/priceListAccess";
 import { getPriceListByCode, type PriceListCode } from "@/lib/portal/priceLists";
 import { notFound } from "next/navigation";

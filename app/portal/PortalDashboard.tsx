@@ -148,6 +148,13 @@ const portalSectionCards: PortalSectionCard[] = [
     cta: "Open Policies",
   },
   {
+    section: "performance",
+    title: "Performance Review",
+    body: "Review monthly lens pairs, sales mix, premium adoption, and remake activity.",
+    href: "/portal/performance",
+    cta: "Open Performance",
+  },
+  {
     section: "exports",
     title: "Pricing Exports",
     body: "Use the G6 pricing page export tools for filtered PDF exports.",

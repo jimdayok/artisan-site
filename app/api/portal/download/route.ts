@@ -1,4 +1,9 @@
 import { NextRequest } from "next/server";
+import {
+  GetObjectCommand,
+  S3Client,
+  S3ServiceException,
+} from "@aws-sdk/client-s3";
 import { getCloudflareAccessEmailFromHeaders } from "@/lib/portal/auth";
 import { getCustomerByEmail } from "@/lib/portal/customers";
 import { getPriceListByCode } from "@/lib/portal/priceLists";
@@ -9,6 +14,15 @@ export const runtime = "nodejs";
 type CloudflarePortalEnv = {
   PRACTICE_FILES?: unknown;
 };
+
+type R2S3Config = {
+  accountId: string;
+  accessKeyId: string;
+  secretAccessKey: string;
+  bucketName: string;
+};
+
+let cachedR2S3Client: S3Client | undefined;
 
 function isR2Bucket(bucket: unknown): bucket is R2Bucket {
   return Boolean(bucket && typeof (bucket as R2Bucket).get === "function");
@@ -29,6 +43,41 @@ function getPracticeFilesBucket() {
   return undefined;
 }
 
+function getR2S3Config(): R2S3Config | undefined {
+  const accountId = process.env.R2_ACCOUNT_ID?.trim() ?? "";
+  const accessKeyId = process.env.R2_ACCESS_KEY_ID?.trim() ?? "";
+  const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY?.trim() ?? "";
+  const bucketName =
+    process.env.R2_BUCKET_NAME?.trim() || "artisan-practice-files";
+
+  if (!accountId || !accessKeyId || !secretAccessKey || !bucketName) {
+    return undefined;
+  }
+
+  return {
+    accountId,
+    accessKeyId,
+    secretAccessKey,
+    bucketName,
+  };
+}
+
+function getR2S3Client(config: R2S3Config) {
+  if (cachedR2S3Client) return cachedR2S3Client;
+
+  cachedR2S3Client = new S3Client({
+    region: "auto",
+    endpoint: `https://${config.accountId}.r2.cloudflarestorage.com`,
+    forcePathStyle: true,
+    credentials: {
+      accessKeyId: config.accessKeyId,
+      secretAccessKey: config.secretAccessKey,
+    },
+  });
+
+  return cachedR2S3Client;
+}
+
 function textResponse(message: string, status: number) {
   return new Response(message, {
     status,
@@ -37,6 +86,48 @@ function textResponse(message: string, status: number) {
       "Cache-Control": "private, no-store",
     },
   });
+}
+
+function pdfHeaders(fileName: string) {
+  return {
+    "Content-Type": "application/pdf",
+    "Content-Disposition": `attachment; filename="${fileName}"`,
+    "Cache-Control": "private, no-store",
+  };
+}
+
+function bytesToBlob(bytes: Uint8Array) {
+  const arrayBuffer = new ArrayBuffer(bytes.byteLength);
+  new Uint8Array(arrayBuffer).set(bytes);
+
+  return new Blob([arrayBuffer]);
+}
+
+async function s3BodyToBodyInit(body: unknown): Promise<BodyInit> {
+  const transformableBody = body as {
+    transformToByteArray?: () => Promise<Uint8Array>;
+    transformToWebStream?: () => ReadableStream;
+  };
+
+  if (typeof transformableBody.transformToWebStream === "function") {
+    return transformableBody.transformToWebStream();
+  }
+
+  if (typeof transformableBody.transformToByteArray === "function") {
+    const bytes = await transformableBody.transformToByteArray();
+
+    return bytesToBlob(bytes);
+  }
+
+  if (body instanceof Uint8Array) {
+    return bytesToBlob(body);
+  }
+
+  if (body instanceof Blob) {
+    return body;
+  }
+
+  throw new Error("Unsupported R2 response body.");
 }
 
 export async function GET(request: NextRequest) {
@@ -79,30 +170,62 @@ export async function GET(request: NextRequest) {
 
   const bucket = getPracticeFilesBucket();
 
-  if (!bucket) {
+  if (bucket) {
+    const file = await bucket.get(priceList.r2Key);
+
+    if (!file) {
+      return textResponse("File not found.", 404);
+    }
+
+    const responseHeaders = new Headers();
+    file.writeHttpMetadata(responseHeaders);
+    responseHeaders.set(
+      "Content-Type",
+      responseHeaders.get("Content-Type") ?? "application/pdf"
+    );
+    responseHeaders.set(
+      "Content-Disposition",
+      `attachment; filename="${priceList.fileName}"`
+    );
+    responseHeaders.set("Cache-Control", "private, no-store");
+
+    return new Response(file.body, {
+      status: 200,
+      headers: responseHeaders,
+    });
+  }
+
+  const r2S3Config = getR2S3Config();
+
+  if (!r2S3Config) {
     return textResponse("File storage is not configured.", 500);
   }
 
-  const file = await bucket.get(priceList.r2Key);
+  try {
+    const s3Client = getR2S3Client(r2S3Config);
+    const file = await s3Client.send(
+      new GetObjectCommand({
+        Bucket: r2S3Config.bucketName,
+        Key: priceList.r2Key,
+      })
+    );
 
-  if (!file) {
-    return textResponse("File not found.", 404);
+    if (!file.Body) {
+      return textResponse("File not found.", 404);
+    }
+
+    return new Response(await s3BodyToBodyInit(file.Body), {
+      status: 200,
+      headers: pdfHeaders(priceList.fileName),
+    });
+  } catch (error) {
+    if (
+      error instanceof S3ServiceException &&
+      (error.name === "NoSuchKey" || error.$metadata.httpStatusCode === 404)
+    ) {
+      return textResponse("File not found.", 404);
+    }
+
+    return textResponse("Unable to retrieve file.", 502);
   }
-
-  const responseHeaders = new Headers();
-  file.writeHttpMetadata(responseHeaders);
-  responseHeaders.set(
-    "Content-Type",
-    responseHeaders.get("Content-Type") ?? "application/pdf"
-  );
-  responseHeaders.set(
-    "Content-Disposition",
-    `attachment; filename="${priceList.fileName}"`
-  );
-  responseHeaders.set("Cache-Control", "private, no-store");
-
-  return new Response(file.body, {
-    status: 200,
-    headers: responseHeaders,
-  });
 }

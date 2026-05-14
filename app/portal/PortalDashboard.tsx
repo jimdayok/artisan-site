@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
+import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
 import {
   customerHasPortalSection,
   getCustomerByEmail,
@@ -214,7 +214,7 @@ function PortalHelpSection() {
 }
 
 export default function PortalDashboard({ headerList }: { headerList: Headers }) {
-  const authenticatedEmail = getAuthenticatedEmailFromHeaders(headerList);
+  const authenticatedEmail = getPortalAuthenticatedEmailFromHeaders(headerList);
 
   if (!authenticatedEmail) {
     return (

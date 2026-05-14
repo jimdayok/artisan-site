@@ -2,12 +2,17 @@ export const CLOUDFLARE_ACCESS_EMAIL_HEADER =
   "cf-access-authenticated-user-email";
 
 const DEVELOPMENT_FALLBACK_EMAIL = "jimdayok@me.com";
-const LOCALHOST_NAMES = new Set(["localhost", "127.0.0.1"]);
+const LOCALHOST_NAMES = new Set(["localhost", "127.0.0.1", "::1"]);
 const PORTAL_HOSTNAME = "portal.artisanslabs.com";
 export const CLOUDFLARE_ACCESS_JWT_COOKIE = "CF_Authorization";
 
 function normalizeHostname(host: string) {
-  return host.trim().split(",")[0]?.split(":")[0]?.toLowerCase() ?? "";
+  const firstHost = host.trim().split(",")[0]?.toLowerCase() ?? "";
+
+  if (firstHost.startsWith("[::1]")) return "::1";
+  if (firstHost === "::1") return "::1";
+
+  return firstHost.split(":")[0] ?? "";
 }
 
 function getForwardedHost(headers: Headers) {
@@ -52,11 +57,17 @@ export function getCloudflareAccessEmailFromHeaders(headers: Headers) {
   return headers.get(CLOUDFLARE_ACCESS_EMAIL_HEADER)?.trim().toLowerCase() ?? "";
 }
 
-export function getAuthenticatedEmailFromHeaders(headers: Headers) {
+export function getVerifiedCloudflareAccessEmailFromHeaders(headers: Headers) {
+  return getCloudflareAccessEmailFromHeaders(headers);
+}
+
+export function getPortalAuthenticatedEmailFromHeaders(headers: Headers) {
   const cloudflareAccessEmail = getCloudflareAccessEmailFromHeaders(headers);
 
   if (cloudflareAccessEmail) return cloudflareAccessEmail;
 
+  // Localhost-only developer convenience. Production requests never receive a
+  // default customer email; they must include Cloudflare Access' verified header.
   return getDevelopmentFallbackEmail(headers);
 }
 

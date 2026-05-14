@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
 import {
   CLOUDFLARE_ACCESS_EMAIL_HEADER,
-  getAuthenticatedEmailFromHeaders,
   getCloudflareAccessEmailFromHeaders,
+  getPortalAuthenticatedEmailFromHeaders,
   hasCloudflareAccessJwtCookie,
   getRequestHostnames,
   isPortalHostRequest,
@@ -42,7 +42,7 @@ function jsonResponse(body: unknown, status = 200) {
 export async function GET(request: NextRequest) {
   const isDevelopment = process.env.NODE_ENV === "development";
   const isLocalhostDevelopment = isLocalhostDevelopmentRequest(request.headers);
-  const detectedEmail = getAuthenticatedEmailFromHeaders(request.headers);
+  const detectedEmail = getPortalAuthenticatedEmailFromHeaders(request.headers);
   const cloudflareAccessEmail =
     getCloudflareAccessEmailFromHeaders(request.headers);
   const cloudflareAccessJwtCookie = hasCloudflareAccessJwtCookie(request.headers);

@@ -15,7 +15,7 @@ import {
   Wrench,
   type LucideIcon,
 } from "lucide-react";
-import { getAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
+import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
 import {
   customerHasPortalSection,
   getCustomerByEmail,
@@ -210,7 +210,7 @@ const policySections: PolicySection[] = [
 ];
 
 export default async function ArtisanPoliciesPage() {
-  const authenticatedEmail = getAuthenticatedEmailFromHeaders(await headers());
+  const authenticatedEmail = getPortalAuthenticatedEmailFromHeaders(await headers());
   const customer = authenticatedEmail ? getCustomerByEmail(authenticatedEmail) : undefined;
 
   if (!authenticatedEmail) {

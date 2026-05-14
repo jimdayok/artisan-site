@@ -4,7 +4,7 @@ import {
   S3Client,
   S3ServiceException,
 } from "@aws-sdk/client-s3";
-import { getCloudflareAccessEmailFromHeaders } from "@/lib/portal/auth";
+import { getVerifiedCloudflareAccessEmailFromHeaders } from "@/lib/portal/auth";
 import { getCustomerByEmail } from "@/lib/portal/customers";
 import { getPriceListByCode } from "@/lib/portal/priceLists";
 
@@ -216,7 +216,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const authenticatedEmail =
-      getCloudflareAccessEmailFromHeaders(request.headers);
+      getVerifiedCloudflareAccessEmailFromHeaders(request.headers);
     diagnostics = getR2Diagnostics(requestedCode, Boolean(authenticatedEmail));
 
     if (!authenticatedEmail) {

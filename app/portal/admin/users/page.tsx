@@ -37,8 +37,10 @@ export default async function PortalAdminUsersPage({
                 "Email",
                 "Organization",
                 "Account",
+                "Customer Type",
                 "Status",
                 "Invitations",
+                "Package Warning",
                 "Price Lists",
                 "Sections",
                 "Preview",
@@ -62,6 +64,11 @@ export default async function PortalAdminUsersPage({
                 <td className="px-4 py-4 text-[#706759]">
                   {row.person.accountNumber}
                 </td>
+                <td className="px-4 py-4 text-[#706759]">
+                  {row.customerTypeLabel
+                    ? `${row.customerTypeLabel} (${row.customerTypeCode})`
+                    : "Not mapped"}
+                </td>
                 <td className="px-4 py-4">
                   <span className={row.isApproved ? "font-semibold text-[#1d5a45]" : "font-semibold text-[#8b7650]"}>
                     {row.isApproved ? "Approved" : "Workbook only"}
@@ -72,6 +79,15 @@ export default async function PortalAdminUsersPage({
                     values={
                       row.hasSequelRebateInvitation
                         ? ["Sequel Artisan Rewards"]
+                        : []
+                    }
+                  />
+                </td>
+                <td className="px-4 py-4">
+                  <PillList
+                    values={
+                      row.hasModernPackageSavingsWarning
+                        ? ["Missing Package Savings"]
                         : []
                     }
                   />

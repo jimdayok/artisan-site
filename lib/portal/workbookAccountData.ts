@@ -3,6 +3,7 @@ import "server-only";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import * as XLSX from "xlsx";
+import { getPortalCustomerTypeInfo } from "@/lib/portal/customerTypes";
 
 const PORTAL_SOURCE_DIR = path.join(
   process.cwd(),
@@ -284,6 +285,24 @@ export function getPortalWorkbookPeopleByAccountNumber(accountNumber: string) {
     (person) =>
       normalizePortalAccountNumber(person.accountNumber) === normalizedAccountNumber
   );
+}
+
+export function getCustomerTypeCodeForWorkbookProfile(
+  profile?: PortalWorkbookProfile
+) {
+  return (
+    profile?.account?.division ||
+    profile?.person.division ||
+    ""
+  )
+    .trim()
+    .toUpperCase();
+}
+
+export function getCustomerTypeInfoForWorkbookProfile(
+  profile?: PortalWorkbookProfile
+) {
+  return getPortalCustomerTypeInfo(getCustomerTypeCodeForWorkbookProfile(profile));
 }
 
 export function personHasSequelRebateInvitation(person?: PortalWorkbookPerson) {

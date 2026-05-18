@@ -1,5 +1,10 @@
 import Link from "next/link";
 import { isPortalAdminEmail } from "@/lib/portal/admin";
+import {
+  getCustomerTypeInfoFromProfile,
+  hasModernPackageSavingsWarning,
+  hasProgramUsage,
+} from "@/lib/portal/accountInsights";
 import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
 import {
   customerHasPortalSection,
@@ -48,6 +53,33 @@ function formatPortalDate(value: string) {
     day: "numeric",
     year: "numeric",
   }).format(date);
+}
+
+function correctionHref({
+  subject,
+  practiceName,
+  accountNumber,
+  details,
+}: {
+  subject: string;
+  practiceName: string;
+  accountNumber: string;
+  details: string;
+}) {
+  const body = [
+    `Practice: ${practiceName || "Not available"}`,
+    `Account Number: ${accountNumber || "Not available"}`,
+    "",
+    details,
+  ].join("\n");
+
+  return `mailto:sales@artisanlabnetwork.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+function formatPercent(value: number) {
+  const normalizedValue = value <= 1 ? value * 100 : value;
+
+  return Math.max(0, Math.min(100, Math.round(normalizedValue)));
 }
 
 function PortalShell({
@@ -253,15 +285,24 @@ function SequelRewardsInvitationCard() {
   );
 }
 
-function AccountStatCard({ label, value }: { label: string; value: string }) {
+function AccountStatCard({
+  label,
+  value,
+  detail,
+}: {
+  label: string;
+  value: string;
+  detail?: string;
+}) {
   return (
-    <div className="border border-[#d8c49b] bg-[#fffaf1] p-5">
+    <div className="border border-[#d8c49b] bg-[#fffaf1] p-5 shadow-[0_14px_38px_rgba(23,42,40,0.07)]">
       <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8b7650]">
         {label}
       </p>
       <p className="mt-4 text-3xl font-semibold tracking-[-0.035em] text-[#172a28]">
         {value}
       </p>
+      {detail ? <p className="mt-2 text-xs leading-5 text-[#706759]">{detail}</p> : null}
     </div>
   );
 }
@@ -272,6 +313,141 @@ function UsageRow({ label, value }: { label: string; value: string }) {
       <span className="font-semibold text-[#172a28]">{label}</span>
       <span className="text-[#706759]">{value || "Not available"}</span>
     </div>
+  );
+}
+
+function ComparisonBars({
+  title,
+  values,
+  suffix = "",
+}: {
+  title: string;
+  values: { label: string; value: number }[];
+  suffix?: string;
+}) {
+  const maxValue = Math.max(...values.map((item) => item.value), 1);
+
+  return (
+    <div className="border border-[#d8c49b] bg-[#fffaf1] p-5">
+      <h3 className="text-lg font-semibold tracking-[-0.02em] text-[#172a28]">
+        {title}
+      </h3>
+      <div className="mt-5 space-y-4">
+        {values.map((item) => {
+          const width = Math.max(4, Math.round((item.value / maxValue) * 100));
+
+          return (
+            <div key={item.label}>
+              <div className="mb-2 flex items-center justify-between gap-4 text-sm">
+                <span className="font-semibold text-[#172a28]">{item.label}</span>
+                <span className="text-[#706759]">
+                  {formatNumber(item.value)}
+                  {suffix}
+                </span>
+              </div>
+              <div className="h-2 bg-[#e8ddca]">
+                <div className="h-full bg-[#172a28]" style={{ width: `${width}%` }} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function ShareOfWalletChart({
+  label,
+  value,
+  accent = "#172a28",
+}: {
+  label: string;
+  value: number;
+  accent?: string;
+}) {
+  const percent = formatPercent(value);
+  const nonPercent = Math.max(0, 100 - percent);
+
+  return (
+    <div className="border border-[#d8c49b] bg-[#fffaf1] p-5">
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8b7650]">
+            {label}
+          </p>
+          <p className="mt-3 text-3xl font-semibold tracking-[-0.035em] text-[#172a28]">
+            {percent}%
+          </p>
+        </div>
+        <p className="text-sm text-[#706759]">{nonPercent}% Other</p>
+      </div>
+      <div className="mt-5 flex h-3 overflow-hidden bg-[#e8ddca]">
+        <div style={{ width: `${percent}%`, backgroundColor: accent }} />
+        <div style={{ width: `${nonPercent}%` }} />
+      </div>
+    </div>
+  );
+}
+
+function ProgramUsageCard({
+  label,
+  value,
+  href,
+}: {
+  label: string;
+  value: string;
+  href: string;
+}) {
+  const active = hasProgramUsage(value);
+
+  return (
+    <Link
+      href={href}
+      className="block border border-[#d8c49b] bg-[#fffaf1] p-5 transition hover:border-[#172a28] hover:bg-white"
+    >
+      <div className="flex items-start justify-between gap-4">
+        <h3 className="text-base font-semibold tracking-[-0.01em] text-[#172a28]">
+          {label}
+        </h3>
+        <span
+          className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
+            active
+              ? "bg-[#172a28] text-white"
+              : "border border-[#d8c49b] text-[#706759]"
+          }`}
+        >
+          {active ? "Using" : "Not active"}
+        </span>
+      </div>
+      <p className="mt-3 text-sm text-[#706759]">{value || "Not available"}</p>
+      <span className="mt-4 inline-flex text-sm font-semibold text-[#172a28] underline decoration-[#d8c49b] underline-offset-4">
+        Learn more
+      </span>
+    </Link>
+  );
+}
+
+function ModernPackageSavingsAlert() {
+  return (
+    <section className="border border-[#b89a61] bg-[#172a28] p-6 text-white shadow-[0_24px_90px_rgba(23,42,40,0.16)] sm:p-8 lg:col-span-2">
+      <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#d8c49b]">
+        Package Opportunity
+      </p>
+      <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em]">
+        You May Be Missing Package Savings
+      </h2>
+      <p className="mt-4 max-w-3xl text-sm leading-7 text-white/76">
+        Your account shows Modern Frame System usage, but not Modern Package
+        System usage. You may be missing reduced costs available through our
+        package program.
+      </p>
+      <Link
+        href="/provider-resources#modern-package-system"
+        className="mt-6 inline-flex min-h-12 items-center justify-center rounded-full bg-[#d8c49b] px-6 py-3 text-sm font-semibold text-[#172a28] transition hover:bg-white"
+      >
+        Learn About Modern Package Savings
+      </Link>
+    </section>
   );
 }
 
@@ -310,13 +486,48 @@ function AccountPerformanceSection({
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        <AccountStatCard label="CM Sales" value={formatCurrency(account.cmSales)} />
-        <AccountStatCard label="PM Sales" value={formatCurrency(account.pmSales)} />
-        <AccountStatCard label="CM Jobs" value={formatNumber(account.cmJobs)} />
-        <AccountStatCard label="PM Jobs" value={formatNumber(account.pmJobs)} />
+        <AccountStatCard
+          label="Current Month Purchases"
+          value={formatCurrency(account.cmSales)}
+        />
+        <AccountStatCard
+          label="Previous Month Purchases"
+          value={formatCurrency(account.pmSales)}
+        />
+        <AccountStatCard
+          label="Current Month Rx Orders"
+          value={formatNumber(account.cmJobs)}
+        />
+        <AccountStatCard
+          label="Previous Month Rx Orders"
+          value={formatNumber(account.pmJobs)}
+        />
         <AccountStatCard
           label="Last Shipped"
           value={formatPortalDate(account.lastShippedDate)}
+        />
+      </div>
+      <p className="mt-4 text-xs leading-5 text-[#706759]">
+        Purchases include the VSP portion paid directly to the lab when
+        applicable.
+      </p>
+
+      <div className="mt-8 grid gap-4 lg:grid-cols-2">
+        <ComparisonBars
+          title="Rx Orders Per Day"
+          values={[
+            { label: "Current Month", value: account.cmJpd },
+            { label: "Previous Month", value: account.pmJpd },
+            { label: "Prior Previous Month", value: account.ppmJpd },
+          ]}
+        />
+        <ComparisonBars
+          title="Rx Order Volume"
+          values={[
+            { label: "Current Month Rx Orders", value: account.cmJobs },
+            { label: "Previous Month Rx Orders", value: account.pmJobs },
+            { label: "Prior Previous Month Rx Orders", value: account.ppmJobs },
+          ]}
         />
       </div>
 
@@ -326,45 +537,193 @@ function AccountPerformanceSection({
             Monthly Activity
           </h3>
           <div className="mt-4">
-            <UsageRow label="Current Month Jobs" value={formatNumber(account.cmJobs)} />
+            <UsageRow label="Current Month Rx Orders" value={formatNumber(account.cmJobs)} />
             <UsageRow
-              label="Current Month Sales"
+              label="Current Month Purchases"
               value={formatCurrency(account.cmSales)}
             />
-            <UsageRow label="Previous Month Jobs" value={formatNumber(account.pmJobs)} />
+            <UsageRow label="Previous Month Rx Orders" value={formatNumber(account.pmJobs)} />
             <UsageRow
-              label="Previous Month Sales"
+              label="Previous Month Purchases"
               value={formatCurrency(account.pmSales)}
             />
             <UsageRow
-              label="Prior Previous Month Jobs"
+              label="Prior Previous Month Rx Orders"
               value={formatNumber(account.ppmJobs)}
             />
             <UsageRow
-              label="Prior Previous Month Sales"
+              label="Prior Previous Month Purchases"
               value={formatCurrency(account.ppmSales)}
             />
-            <UsageRow label="CM NL Jobs" value={formatNumber(account.cmNlJobs)} />
-            <UsageRow label="CM VSP Jobs" value={formatNumber(account.cmVspJobs)} />
-            <UsageRow label="CM SQL Jobs" value={formatNumber(account.cmSqlJobs)} />
+            <UsageRow
+              label="Current Month Rx Orders Per Day"
+              value={formatNumber(account.cmJpd)}
+            />
           </div>
         </div>
 
         <div>
           <h3 className="text-xl font-semibold tracking-[-0.02em] text-[#172a28]">
-            Product and Program Usage
+            VSP, Neurolens, and Sequel Mix
           </h3>
           <div className="mt-4">
-            <UsageRow label="Modern Package Usage" value={account.modernPkgUsage} />
-            <UsageRow label="Modern Frame Usage" value={account.modernFrmUsage} />
-            <UsageRow label="ChemClip Usage" value={account.chemClipUsage} />
-            <UsageRow label="SpecCheck Usage" value={account.specCheckUsage} />
-            <UsageRow label="Tokai Usage" value={account.tokaiUsage} />
-            <UsageRow label="Primary PAL Private Pay" value={account.primaryPalPrivatePay} />
-            <UsageRow label="Primary PAL VSP" value={account.primaryPalVsp} />
-            <UsageRow label="Last Lab" value={account.lastLabName} />
+            <UsageRow label="VSP Rx Orders" value={formatNumber(account.cmVspJobs)} />
+            <UsageRow label="Neurolens Rx Orders" value={formatNumber(account.cmNlJobs)} />
+            <UsageRow label="Sequel Rx Orders" value={formatNumber(account.cmSqlJobs)} />
           </div>
         </div>
+      </div>
+
+      <div className="mt-8 grid gap-4 lg:grid-cols-3">
+        <ShareOfWalletChart label="VSP Order Mix" value={account.cmVspSow} />
+        <ShareOfWalletChart
+          label="Neurolens Order Mix"
+          value={account.cmNlSow}
+          accent="#315f58"
+        />
+        <ShareOfWalletChart
+          label="Sequel Order Mix"
+          value={account.cmJobs > 0 ? account.cmSqlJobs / account.cmJobs : 0}
+          accent="#8b7650"
+        />
+      </div>
+    </section>
+  );
+}
+
+function AccountProfileSection({
+  account,
+  practiceName,
+  accountNumber,
+  customerTypeLabel,
+}: {
+  account?: PortalWorkbookAccount;
+  practiceName: string;
+  accountNumber: string;
+  customerTypeLabel?: string;
+}) {
+  if (!account && !practiceName && !accountNumber) return null;
+
+  const correctionLink = correctionHref({
+    subject: "Portal Account Information Correction",
+    practiceName,
+    accountNumber,
+    details: "Please describe the account information that should be corrected.",
+  });
+
+  return (
+    <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9">
+      <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
+        Account Profile
+      </p>
+      <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em] text-[#172a28]">
+        {practiceName}
+      </h2>
+      <div className="mt-6 grid gap-4 text-sm leading-6 text-[#706759]">
+        <UsageRow label="Account Number" value={accountNumber} />
+        <UsageRow label="Customer Type" value={customerTypeLabel || "Not available"} />
+        <UsageRow label="Division" value={account?.division ?? ""} />
+        <UsageRow label="Sales Rep" value={account?.salesRep ?? ""} />
+        <UsageRow label="Address" value={account?.fullAddress ?? ""} />
+        <UsageRow label="State" value={account?.state ?? ""} />
+        <UsageRow label="Zip Code" value={account?.zipCode ?? ""} />
+        <UsageRow label="Phone Number" value={account?.phoneNumber ?? ""} />
+        <UsageRow
+          label="Last Shipped Date"
+          value={formatPortalDate(account?.lastShippedDate ?? "")}
+        />
+        <UsageRow label="Lab Name" value={account?.lastLabName ?? ""} />
+      </div>
+      <a
+        href={correctionLink}
+        className="mt-6 inline-flex text-sm font-semibold text-[#172a28] underline decoration-[#d8c49b] underline-offset-4 transition hover:decoration-[#172a28]"
+      >
+        Is this information incorrect?
+      </a>
+    </section>
+  );
+}
+
+function UserContactSection({
+  workbookProfile,
+  authenticatedEmail,
+  practiceName,
+  accountNumber,
+}: {
+  workbookProfile?: PortalWorkbookProfile;
+  authenticatedEmail: string;
+  practiceName: string;
+  accountNumber: string;
+}) {
+  const correctionLink = correctionHref({
+    subject: "Portal User Information Correction",
+    practiceName,
+    accountNumber,
+    details: "Please describe the user/contact information that should be corrected.",
+  });
+
+  return (
+    <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9">
+      <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
+        Portal User
+      </p>
+      <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em] text-[#172a28]">
+        {workbookProfile?.person.name || "Portal Contact"}
+      </h2>
+      <div className="mt-6">
+        <UsageRow label="Signed In Email" value={authenticatedEmail} />
+        <UsageRow
+          label="Workbook Emails"
+          value={workbookProfile?.person.emails.join(", ") ?? authenticatedEmail}
+        />
+      </div>
+      <a
+        href={correctionLink}
+        className="mt-6 inline-flex text-sm font-semibold text-[#172a28] underline decoration-[#d8c49b] underline-offset-4 transition hover:decoration-[#172a28]"
+      >
+        Is this contact information incorrect?
+      </a>
+    </section>
+  );
+}
+
+function ProgramUsageSection({ account }: { account: PortalWorkbookAccount }) {
+  return (
+    <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9 lg:col-span-2">
+      <div className="mb-7 border-b border-[#d8c49b] pb-6">
+        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
+          Programs and Tools
+        </p>
+        <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em] text-[#172a28]">
+          System usage
+        </h2>
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+        <ProgramUsageCard
+          label="Modern Package System Usage"
+          value={account.modernPkgUsage}
+          href="/provider-resources#modern-package-system"
+        />
+        <ProgramUsageCard
+          label="Modern Frame System Usage"
+          value={account.modernFrmUsage}
+          href="/provider-resources#modern-frame-system"
+        />
+        <ProgramUsageCard
+          label="Chemistrie/ChemClip Usage"
+          value={account.chemClipUsage}
+          href="/provider-resources#specialty-systems"
+        />
+        <ProgramUsageCard
+          label="SpecCheck Usage"
+          value={account.specCheckUsage}
+          href="/provider-resources#speccheck"
+        />
+        <ProgramUsageCard
+          label="Tokai Usage"
+          value={account.tokaiUsage}
+          href="/provider-resources#tokai"
+        />
       </div>
     </section>
   );
@@ -430,6 +789,10 @@ export function PortalDashboardContent({
     workbookProfile?.person.accountNumber ||
     customer?.accountNumber ||
     "";
+  const customerTypeInfo = getCustomerTypeInfoFromProfile(workbookProfile);
+  const customerTypeCode = customerTypeInfo?.code || customer?.customerTypeCode || "";
+  const customerTypeLabel =
+    customerTypeInfo?.label || customer?.customerTypeLabel || "";
   const hasSequelRebateInvitation =
     profileHasSequelRebateInvitation(workbookProfile);
 
@@ -449,6 +812,16 @@ export function PortalDashboardContent({
             <br />
             {practiceName}
           </h1>
+          {customerTypeLabel ? (
+            <div className="mt-6 inline-flex items-center gap-3 border border-[#d8c49b] bg-[#fffaf1]/86 px-4 py-2 text-sm font-semibold text-[#172a28]">
+              <span>{customerTypeLabel}</span>
+              {customerTypeCode ? (
+                <span className="text-xs uppercase tracking-[0.2em] text-[#8b7650]">
+                  {customerTypeCode}
+                </span>
+              ) : null}
+            </div>
+          ) : null}
           <div className="mt-8 space-y-3 text-base leading-7 text-[#5b5245]">
             {accountNumber ? (
               <p>
@@ -522,9 +895,33 @@ export function PortalDashboardContent({
           </section>
         ) : null}
 
+        <AccountProfileSection
+          account={account}
+          practiceName={practiceName}
+          accountNumber={accountNumber}
+          customerTypeLabel={
+            customerTypeLabel && customerTypeCode
+              ? `${customerTypeLabel} (${customerTypeCode})`
+              : customerTypeLabel
+          }
+        />
+
+        <UserContactSection
+          workbookProfile={workbookProfile}
+          authenticatedEmail={authenticatedEmail}
+          practiceName={practiceName}
+          accountNumber={accountNumber}
+        />
+
         {hasSequelRebateInvitation ? <SequelRewardsInvitationCard /> : null}
 
+        {account && hasModernPackageSavingsWarning(account) ? (
+          <ModernPackageSavingsAlert />
+        ) : null}
+
         {account ? <AccountPerformanceSection account={account} /> : null}
+
+        {account ? <ProgramUsageSection account={account} /> : null}
       </div>
     </PortalShell>
   );

@@ -6,6 +6,10 @@ import {
   type PortalCustomerAccess,
   type PortalSection,
 } from "@/lib/portal/customers";
+import {
+  getCustomerTypeInfoFromAccountData,
+  hasModernPackageSavingsWarning,
+} from "@/lib/portal/accountInsights";
 import type { PriceListCode } from "@/lib/portal/priceLists";
 import {
   accountHasSequelRebateInvitation,
@@ -23,6 +27,9 @@ export type AdminUserRow = {
   email: string;
   isApproved: boolean;
   hasSequelRebateInvitation: boolean;
+  hasModernPackageSavingsWarning: boolean;
+  customerTypeCode: string;
+  customerTypeLabel: string;
   assignedPriceLists: PriceListCode[];
   assignedSections: PortalSection[];
 };
@@ -31,6 +38,9 @@ export type AdminAccountRow = {
   account: PortalWorkbookAccount;
   users: PortalWorkbookPerson[];
   hasSequelRebateInvitation: boolean;
+  hasModernPackageSavingsWarning: boolean;
+  customerTypeCode: string;
+  customerTypeLabel: string;
   assignedPriceLists: PriceListCode[];
   assignedSections: PortalSection[];
 };
@@ -65,6 +75,12 @@ function assignedSections(records: PortalCustomerAccess[]) {
 export function getAdminUserRows() {
   return getPortalWorkbookPeople().flatMap((person) => {
     const emails = person.emails.length > 0 ? person.emails : [""];
+    const account = getPortalWorkbookAccounts().find(
+      (entry) =>
+        normalizePortalAccountNumber(entry.accountNumber) ===
+        normalizePortalAccountNumber(person.accountNumber)
+    );
+    const customerType = getCustomerTypeInfoFromAccountData({ account, person });
 
     return emails.map((email) => {
       const directAccess = accessForEmail(email);
@@ -76,6 +92,10 @@ export function getAdminUserRows() {
         email,
         isApproved: Boolean(directAccess),
         hasSequelRebateInvitation: personHasSequelRebateInvitation(person),
+        hasModernPackageSavingsWarning:
+          hasModernPackageSavingsWarning(account),
+        customerTypeCode: customerType?.code ?? "",
+        customerTypeLabel: customerType?.label ?? "",
         assignedPriceLists: assignedPriceLists(records),
         assignedSections: assignedSections(records),
       } satisfies AdminUserRow;
@@ -86,6 +106,7 @@ export function getAdminUserRows() {
 export function getAdminAccountRows() {
   return getPortalWorkbookAccounts().map((account) => {
     const records = accessForAccount(account.accountNumber);
+    const customerType = getCustomerTypeInfoFromAccountData({ account });
 
     return {
       account,
@@ -93,6 +114,9 @@ export function getAdminAccountRows() {
       hasSequelRebateInvitation: accountHasSequelRebateInvitation(
         account.accountNumber
       ),
+      hasModernPackageSavingsWarning: hasModernPackageSavingsWarning(account),
+      customerTypeCode: customerType?.code ?? "",
+      customerTypeLabel: customerType?.label ?? "",
       assignedPriceLists: assignedPriceLists(records),
       assignedSections: assignedSections(records),
     } satisfies AdminAccountRow;
@@ -144,6 +168,8 @@ export function filterAdminUserRows(rows: AdminUserRow[], query: string) {
       row.email,
       row.person.organization,
       row.person.accountNumber,
+      row.customerTypeCode,
+      row.customerTypeLabel,
       row.assignedPriceLists.join(", "),
       row.assignedSections.join(", "),
     ]
@@ -164,6 +190,8 @@ export function filterAdminAccountRows(rows: AdminAccountRow[], query: string) {
       row.account.accountNumber,
       row.account.division,
       row.account.salesRep,
+      row.customerTypeCode,
+      row.customerTypeLabel,
       row.users.flatMap((user) => user.emails).join(", "),
       row.assignedPriceLists.join(", "),
       row.assignedSections.join(", "),

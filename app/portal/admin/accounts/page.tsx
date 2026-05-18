@@ -60,15 +60,17 @@ export default async function PortalAdminAccountsPage({
               {[
                 "Account",
                 "Number",
+                "Customer Type",
                 "Division",
                 "Sales Rep",
                 "Last Shipped",
-                "CM Sales",
-                "PM Sales",
-                "CM Jobs",
-                "PM Jobs",
+                "CM Purchases",
+                "PM Purchases",
+                "CM Rx Orders",
+                "PM Rx Orders",
                 "Users",
                 "Invitations",
+                "Package Warning",
                 "Price Lists",
                 "Preview",
               ].map((heading) => (
@@ -86,6 +88,11 @@ export default async function PortalAdminAccountsPage({
                 </td>
                 <td className="px-4 py-4 text-[#706759]">
                   {row.account.accountNumber}
+                </td>
+                <td className="px-4 py-4 text-[#706759]">
+                  {row.customerTypeLabel
+                    ? `${row.customerTypeLabel} (${row.customerTypeCode})`
+                    : "Not mapped"}
                 </td>
                 <td className="px-4 py-4 text-[#706759]">
                   {row.account.division || "Not available"}
@@ -118,6 +125,15 @@ export default async function PortalAdminAccountsPage({
                     values={
                       row.hasSequelRebateInvitation
                         ? ["Sequel Artisan Rewards"]
+                        : []
+                    }
+                  />
+                </td>
+                <td className="px-4 py-4">
+                  <PillList
+                    values={
+                      row.hasModernPackageSavingsWarning
+                        ? ["Missing Package Savings"]
                         : []
                     }
                   />

@@ -2285,6 +2285,9 @@ export default function ProviderResourcesPage({
   return (
     <main className="min-h-screen bg-[#f5f1eb] text-[#1f1a17]">
       <Header onContactClick={() => setContactOpen(true)} />
+      <span id="modern-frame-system" className="sr-only" aria-hidden="true" />
+      <span id="modern-package-system" className="sr-only" aria-hidden="true" />
+      <span id="speccheck" className="sr-only" aria-hidden="true" />
 
       <section
         data-theme="light"

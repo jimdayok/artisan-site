@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { isPortalAdminEmail } from "@/lib/portal/admin";
 import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
 import {
   customerHasPortalSection,
@@ -9,6 +10,7 @@ import {
 import { getPriceListByCode, type PortalPriceList } from "@/lib/portal/priceLists";
 import {
   getPortalWorkbookProfileByEmail,
+  type PortalWorkbookProfile,
   type PortalWorkbookAccount,
 } from "@/lib/portal/workbookAccountData";
 
@@ -371,21 +373,17 @@ function PortalHelpSection() {
   );
 }
 
-export default function PortalDashboard({ headerList }: { headerList: Headers }) {
-  const authenticatedEmail = getPortalAuthenticatedEmailFromHeaders(headerList);
-
-  if (!authenticatedEmail) {
-    return (
-      <PortalMessage
-        message="Unable to verify your secure login. Please sign in through the protected portal."
-        showLoginLink
-      />
-    );
-  }
-
-  const customer = getCustomerByEmail(authenticatedEmail);
-  const workbookProfile = getPortalWorkbookProfileByEmail(authenticatedEmail);
-
+export function PortalDashboardContent({
+  authenticatedEmail,
+  customer,
+  workbookProfile,
+  adminPreviewAccountName,
+}: {
+  authenticatedEmail: string;
+  customer?: PortalCustomer;
+  workbookProfile?: PortalWorkbookProfile;
+  adminPreviewAccountName?: string;
+}) {
   if (!customer && !workbookProfile) {
     return (
       <PortalMessage message="Your login was verified, but your account has not yet been assigned portal access. Please contact Artisan Lab Network." />
@@ -410,6 +408,13 @@ export default function PortalDashboard({ headerList }: { headerList: Headers })
 
   return (
     <PortalShell eyebrow="Verified Customer Portal">
+      {adminPreviewAccountName ? (
+        <div className="mb-8 border border-[#b89a61] bg-[#172a28] px-5 py-4 text-sm font-semibold text-white shadow-[0_18px_55px_rgba(23,42,40,0.16)]">
+          Admin preview mode. You are viewing this portal as{" "}
+          {adminPreviewAccountName}.
+        </div>
+      ) : null}
+
       <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
         <div>
           <h1 className="text-5xl font-semibold tracking-[-0.045em] text-[#172a28] sm:text-6xl lg:text-7xl">
@@ -429,6 +434,14 @@ export default function PortalDashboard({ headerList }: { headerList: Headers })
               {authenticatedEmail}
             </p>
           </div>
+          {isPortalAdminEmail(authenticatedEmail) && !adminPreviewAccountName ? (
+            <Link
+              href="/portal/admin"
+              className="mt-6 inline-flex min-h-11 items-center justify-center rounded-full border border-[#d8c49b] bg-[#fffaf1] px-5 py-2 text-sm font-semibold text-[#172a28] transition hover:bg-white"
+            >
+              Admin Portal
+            </Link>
+          ) : null}
         </div>
 
         <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9">
@@ -485,5 +498,26 @@ export default function PortalDashboard({ headerList }: { headerList: Headers })
         {account ? <AccountPerformanceSection account={account} /> : null}
       </div>
     </PortalShell>
+  );
+}
+
+export default function PortalDashboard({ headerList }: { headerList: Headers }) {
+  const authenticatedEmail = getPortalAuthenticatedEmailFromHeaders(headerList);
+
+  if (!authenticatedEmail) {
+    return (
+      <PortalMessage
+        message="Unable to verify your secure login. Please sign in through the protected portal."
+        showLoginLink
+      />
+    );
+  }
+
+  return (
+    <PortalDashboardContent
+      authenticatedEmail={authenticatedEmail}
+      customer={getCustomerByEmail(authenticatedEmail)}
+      workbookProfile={getPortalWorkbookProfileByEmail(authenticatedEmail)}
+    />
   );
 }

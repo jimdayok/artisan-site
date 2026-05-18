@@ -100,7 +100,7 @@ function toAccountNumber(value: unknown) {
   return toText(value).replace(/\.0$/, "");
 }
 
-function accountKey(value: unknown) {
+export function normalizePortalAccountNumber(value: unknown) {
   const accountNumber = toAccountNumber(value);
 
   return accountNumber.replace(/^0+(?=\d)/, "");
@@ -210,7 +210,10 @@ function readAccounts() {
 const people = readPeople();
 const accounts = readAccounts();
 const accountsByNumber = new Map(
-  accounts.map((account) => [accountKey(account.accountNumber), account])
+  accounts.map((account) => [
+    normalizePortalAccountNumber(account.accountNumber),
+    account,
+  ])
 );
 
 export function getPortalWorkbookProfileByEmail(email: string) {
@@ -224,10 +227,52 @@ export function getPortalWorkbookProfileByEmail(email: string) {
 
   return {
     person,
-    account: accountsByNumber.get(accountKey(person.accountNumber)),
+    account: accountsByNumber.get(normalizePortalAccountNumber(person.accountNumber)),
   } satisfies PortalWorkbookProfile;
 }
 
 export function getPortalWorkbookAccountByAccountNumber(accountNumber: string) {
-  return accountsByNumber.get(accountKey(accountNumber));
+  return accountsByNumber.get(normalizePortalAccountNumber(accountNumber));
+}
+
+export function getPortalWorkbookProfileByAccountNumber(accountNumber: string) {
+  const person = people.find(
+    (entry) =>
+      normalizePortalAccountNumber(entry.accountNumber) ===
+      normalizePortalAccountNumber(accountNumber)
+  );
+  const account = getPortalWorkbookAccountByAccountNumber(accountNumber);
+
+  if (!person && !account) return undefined;
+
+  return {
+    person: person ?? {
+      name: "",
+      organization: account?.accountName ?? "",
+      accountNumber,
+      emails: [],
+      division: account?.division ?? "",
+      artisanLab: account?.lastLabName ?? "",
+      targetedPrograms: "",
+      lastOrderShipped: account?.lastShippedDate ?? "",
+    },
+    account,
+  } satisfies PortalWorkbookProfile;
+}
+
+export function getPortalWorkbookPeople() {
+  return people;
+}
+
+export function getPortalWorkbookAccounts() {
+  return accounts;
+}
+
+export function getPortalWorkbookPeopleByAccountNumber(accountNumber: string) {
+  const normalizedAccountNumber = normalizePortalAccountNumber(accountNumber);
+
+  return people.filter(
+    (person) =>
+      normalizePortalAccountNumber(person.accountNumber) === normalizedAccountNumber
+  );
 }

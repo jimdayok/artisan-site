@@ -10,6 +10,7 @@ import {
 import { getPriceListByCode, type PortalPriceList } from "@/lib/portal/priceLists";
 import {
   getPortalWorkbookProfileByEmail,
+  profileHasSequelRebateInvitation,
   type PortalWorkbookProfile,
   type PortalWorkbookAccount,
 } from "@/lib/portal/workbookAccountData";
@@ -228,6 +229,30 @@ function PortalResourceCard({ card }: { card: PortalSectionCard }) {
   );
 }
 
+function SequelRewardsInvitationCard() {
+  return (
+    <section className="border border-[#d8c49b] bg-[#fffaf1]/90 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9 lg:col-span-2">
+      <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
+        Invitation Program
+      </p>
+      <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em] text-[#172a28]">
+        You&apos;ve Been Invited: Sequel Artisan Rewards
+      </h2>
+      <p className="mt-4 max-w-3xl text-sm leading-7 text-[#706759]">
+        Your practice has been invited to participate in the Sequel Artisan
+        Rewards program. Learn how the program works and how your practice can
+        qualify for rewards.
+      </p>
+      <Link
+        href="/programs/sequel-arSQL26"
+        className="mt-6 inline-flex min-h-12 items-center justify-center rounded-full bg-[#172a28] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#27433f]"
+      >
+        Learn About Sequel Artisan Rewards
+      </Link>
+    </section>
+  );
+}
+
 function AccountStatCard({ label, value }: { label: string; value: string }) {
   return (
     <div className="border border-[#d8c49b] bg-[#fffaf1] p-5">
@@ -405,6 +430,8 @@ export function PortalDashboardContent({
     workbookProfile?.person.accountNumber ||
     customer?.accountNumber ||
     "";
+  const hasSequelRebateInvitation =
+    profileHasSequelRebateInvitation(workbookProfile);
 
   return (
     <PortalShell eyebrow="Verified Customer Portal">
@@ -494,6 +521,8 @@ export function PortalDashboardContent({
             </div>
           </section>
         ) : null}
+
+        {hasSequelRebateInvitation ? <SequelRewardsInvitationCard /> : null}
 
         {account ? <AccountPerformanceSection account={account} /> : null}
       </div>

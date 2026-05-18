@@ -38,6 +38,7 @@ export default async function PortalAdminUsersPage({
                 "Organization",
                 "Account",
                 "Status",
+                "Invitations",
                 "Price Lists",
                 "Sections",
                 "Preview",
@@ -65,6 +66,15 @@ export default async function PortalAdminUsersPage({
                   <span className={row.isApproved ? "font-semibold text-[#1d5a45]" : "font-semibold text-[#8b7650]"}>
                     {row.isApproved ? "Approved" : "Workbook only"}
                   </span>
+                </td>
+                <td className="px-4 py-4">
+                  <PillList
+                    values={
+                      row.hasSequelRebateInvitation
+                        ? ["Sequel Artisan Rewards"]
+                        : []
+                    }
+                  />
                 </td>
                 <td className="px-4 py-4">
                   <PillList values={row.assignedPriceLists} />

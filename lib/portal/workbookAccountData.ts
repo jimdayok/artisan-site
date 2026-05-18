@@ -77,6 +77,8 @@ export type PortalWorkbookProfile = {
   account?: PortalWorkbookAccount;
 };
 
+const SEQUEL_REBATE_PROGRAM = "sequel rebate";
+
 function toText(value: unknown) {
   if (value === null || value === undefined) return "";
   if (value instanceof Date) return value.toISOString().slice(0, 10);
@@ -155,6 +157,13 @@ function readPeople() {
       } satisfies PortalWorkbookPerson;
     })
     .filter((person) => person.accountNumber && person.emails.length > 0);
+}
+
+function hasTargetedProgram(value: string, program: string) {
+  return value
+    .split(",")
+    .map((entry) => entry.trim().toLowerCase())
+    .includes(program);
 }
 
 function readAccounts() {
@@ -274,5 +283,30 @@ export function getPortalWorkbookPeopleByAccountNumber(accountNumber: string) {
   return people.filter(
     (person) =>
       normalizePortalAccountNumber(person.accountNumber) === normalizedAccountNumber
+  );
+}
+
+export function personHasSequelRebateInvitation(person?: PortalWorkbookPerson) {
+  return Boolean(
+    person?.targetedPrograms &&
+      hasTargetedProgram(person.targetedPrograms, SEQUEL_REBATE_PROGRAM)
+  );
+}
+
+export function accountHasSequelRebateInvitation(accountNumber: string) {
+  return getPortalWorkbookPeopleByAccountNumber(accountNumber).some(
+    personHasSequelRebateInvitation
+  );
+}
+
+export function profileHasSequelRebateInvitation(
+  profile?: PortalWorkbookProfile
+) {
+  if (!profile) return false;
+
+  if (personHasSequelRebateInvitation(profile.person)) return true;
+
+  return accountHasSequelRebateInvitation(
+    profile.account?.accountNumber || profile.person.accountNumber
   );
 }

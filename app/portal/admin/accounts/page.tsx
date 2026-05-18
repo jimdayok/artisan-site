@@ -68,6 +68,7 @@ export default async function PortalAdminAccountsPage({
                 "CM Jobs",
                 "PM Jobs",
                 "Users",
+                "Invitations",
                 "Price Lists",
                 "Preview",
               ].map((heading) => (
@@ -111,6 +112,15 @@ export default async function PortalAdminAccountsPage({
                   {row.users.length > 0
                     ? row.users.map((user) => user.name || user.emails[0]).join(", ")
                     : "None"}
+                </td>
+                <td className="px-4 py-4">
+                  <PillList
+                    values={
+                      row.hasSequelRebateInvitation
+                        ? ["Sequel Artisan Rewards"]
+                        : []
+                    }
+                  />
                 </td>
                 <td className="px-4 py-4">
                   <PillList values={row.assignedPriceLists} />

@@ -8,10 +8,12 @@ import {
 } from "@/lib/portal/customers";
 import type { PriceListCode } from "@/lib/portal/priceLists";
 import {
+  accountHasSequelRebateInvitation,
   getPortalWorkbookAccounts,
   getPortalWorkbookPeople,
   getPortalWorkbookPeopleByAccountNumber,
   normalizePortalAccountNumber,
+  personHasSequelRebateInvitation,
   type PortalWorkbookAccount,
   type PortalWorkbookPerson,
 } from "@/lib/portal/workbookAccountData";
@@ -20,6 +22,7 @@ export type AdminUserRow = {
   person: PortalWorkbookPerson;
   email: string;
   isApproved: boolean;
+  hasSequelRebateInvitation: boolean;
   assignedPriceLists: PriceListCode[];
   assignedSections: PortalSection[];
 };
@@ -27,6 +30,7 @@ export type AdminUserRow = {
 export type AdminAccountRow = {
   account: PortalWorkbookAccount;
   users: PortalWorkbookPerson[];
+  hasSequelRebateInvitation: boolean;
   assignedPriceLists: PriceListCode[];
   assignedSections: PortalSection[];
 };
@@ -71,6 +75,7 @@ export function getAdminUserRows() {
         person,
         email,
         isApproved: Boolean(directAccess),
+        hasSequelRebateInvitation: personHasSequelRebateInvitation(person),
         assignedPriceLists: assignedPriceLists(records),
         assignedSections: assignedSections(records),
       } satisfies AdminUserRow;
@@ -85,6 +90,9 @@ export function getAdminAccountRows() {
     return {
       account,
       users: getPortalWorkbookPeopleByAccountNumber(account.accountNumber),
+      hasSequelRebateInvitation: accountHasSequelRebateInvitation(
+        account.accountNumber
+      ),
       assignedPriceLists: assignedPriceLists(records),
       assignedSections: assignedSections(records),
     } satisfies AdminAccountRow;

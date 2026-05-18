@@ -7,11 +7,45 @@ import {
   type PortalSection,
 } from "@/lib/portal/customers";
 import { getPriceListByCode, type PortalPriceList } from "@/lib/portal/priceLists";
+import {
+  getPortalWorkbookProfileByEmail,
+  type PortalWorkbookAccount,
+} from "@/lib/portal/workbookAccountData";
 
 const PORTAL_ACCESS_LOGIN_URL =
   "https://artisanslabs.com/portal";
 const PORTAL_ACCESS_LOGOUT_URL =
   "/cdn-cgi/access/logout?returnTo=%2Fportal";
+
+const currencyFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  maximumFractionDigits: 0,
+});
+
+const numberFormatter = new Intl.NumberFormat("en-US");
+
+function formatCurrency(value: number) {
+  return currencyFormatter.format(value);
+}
+
+function formatNumber(value: number) {
+  return numberFormatter.format(value);
+}
+
+function formatPortalDate(value: string) {
+  if (!value) return "Not available";
+
+  const date = new Date(`${value}T00:00:00`);
+
+  if (Number.isNaN(date.getTime())) return value;
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(date);
+}
 
 function PortalShell({
   children,
@@ -192,6 +226,123 @@ function PortalResourceCard({ card }: { card: PortalSectionCard }) {
   );
 }
 
+function AccountStatCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="border border-[#d8c49b] bg-[#fffaf1] p-5">
+      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8b7650]">
+        {label}
+      </p>
+      <p className="mt-4 text-3xl font-semibold tracking-[-0.035em] text-[#172a28]">
+        {value}
+      </p>
+    </div>
+  );
+}
+
+function UsageRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="grid grid-cols-[1fr_auto] gap-5 border-t border-[#d8c49b] py-4 text-sm">
+      <span className="font-semibold text-[#172a28]">{label}</span>
+      <span className="text-[#706759]">{value || "Not available"}</span>
+    </div>
+  );
+}
+
+function AccountPerformanceSection({
+  account,
+}: {
+  account: PortalWorkbookAccount;
+}) {
+  return (
+    <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9 lg:col-span-2">
+      <div className="mb-7 border-b border-[#d8c49b] pb-6">
+        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
+          Account Performance
+        </p>
+        <h2 className="mt-3 text-3xl font-semibold tracking-[-0.03em] text-[#172a28]">
+          {account.accountName}
+        </h2>
+        <div className="mt-5 grid gap-3 text-sm leading-6 text-[#706759] sm:grid-cols-2 lg:grid-cols-4">
+          <p>
+            <span className="font-semibold text-[#172a28]">Account:</span>{" "}
+            {account.accountNumber}
+          </p>
+          <p>
+            <span className="font-semibold text-[#172a28]">Division:</span>{" "}
+            {account.division || "Not available"}
+          </p>
+          <p>
+            <span className="font-semibold text-[#172a28]">Sales Rep:</span>{" "}
+            {account.salesRep || "Not available"}
+          </p>
+          <p>
+            <span className="font-semibold text-[#172a28]">Last Shipped:</span>{" "}
+            {formatPortalDate(account.lastShippedDate)}
+          </p>
+        </div>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <AccountStatCard label="CM Sales" value={formatCurrency(account.cmSales)} />
+        <AccountStatCard label="PM Sales" value={formatCurrency(account.pmSales)} />
+        <AccountStatCard label="CM Jobs" value={formatNumber(account.cmJobs)} />
+        <AccountStatCard label="PM Jobs" value={formatNumber(account.pmJobs)} />
+        <AccountStatCard
+          label="Last Shipped"
+          value={formatPortalDate(account.lastShippedDate)}
+        />
+      </div>
+
+      <div className="mt-8 grid gap-8 lg:grid-cols-2">
+        <div>
+          <h3 className="text-xl font-semibold tracking-[-0.02em] text-[#172a28]">
+            Monthly Activity
+          </h3>
+          <div className="mt-4">
+            <UsageRow label="Current Month Jobs" value={formatNumber(account.cmJobs)} />
+            <UsageRow
+              label="Current Month Sales"
+              value={formatCurrency(account.cmSales)}
+            />
+            <UsageRow label="Previous Month Jobs" value={formatNumber(account.pmJobs)} />
+            <UsageRow
+              label="Previous Month Sales"
+              value={formatCurrency(account.pmSales)}
+            />
+            <UsageRow
+              label="Prior Previous Month Jobs"
+              value={formatNumber(account.ppmJobs)}
+            />
+            <UsageRow
+              label="Prior Previous Month Sales"
+              value={formatCurrency(account.ppmSales)}
+            />
+            <UsageRow label="CM NL Jobs" value={formatNumber(account.cmNlJobs)} />
+            <UsageRow label="CM VSP Jobs" value={formatNumber(account.cmVspJobs)} />
+            <UsageRow label="CM SQL Jobs" value={formatNumber(account.cmSqlJobs)} />
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-xl font-semibold tracking-[-0.02em] text-[#172a28]">
+            Product and Program Usage
+          </h3>
+          <div className="mt-4">
+            <UsageRow label="Modern Package Usage" value={account.modernPkgUsage} />
+            <UsageRow label="Modern Frame Usage" value={account.modernFrmUsage} />
+            <UsageRow label="ChemClip Usage" value={account.chemClipUsage} />
+            <UsageRow label="SpecCheck Usage" value={account.specCheckUsage} />
+            <UsageRow label="Tokai Usage" value={account.tokaiUsage} />
+            <UsageRow label="Primary PAL Private Pay" value={account.primaryPalPrivatePay} />
+            <UsageRow label="Primary PAL VSP" value={account.primaryPalVsp} />
+            <UsageRow label="Last Lab" value={account.lastLabName} />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function PortalHelpSection() {
   return (
     <section className="mt-10 border-t border-[#d8c49b] pt-6">
@@ -233,17 +384,29 @@ export default function PortalDashboard({ headerList }: { headerList: Headers })
   }
 
   const customer = getCustomerByEmail(authenticatedEmail);
+  const workbookProfile = getPortalWorkbookProfileByEmail(authenticatedEmail);
 
-  if (!customer) {
+  if (!customer && !workbookProfile) {
     return (
       <PortalMessage message="Your login was verified, but your account has not yet been assigned portal access. Please contact Artisan Lab Network." />
     );
   }
 
-  const availablePriceLists = customer.priceLists
+  const availablePriceLists = (customer?.priceLists ?? [])
     .map(getPriceListByCode)
     .filter((priceList): priceList is PortalPriceList => Boolean(priceList));
-  const availablePortalSections = visiblePortalSectionCards(customer);
+  const availablePortalSections = customer ? visiblePortalSectionCards(customer) : [];
+  const account = workbookProfile?.account;
+  const practiceName =
+    account?.accountName ||
+    workbookProfile?.person.organization ||
+    customer?.practiceName ||
+    "Customer";
+  const accountNumber =
+    account?.accountNumber ||
+    workbookProfile?.person.accountNumber ||
+    customer?.accountNumber ||
+    "";
 
   return (
     <PortalShell eyebrow="Verified Customer Portal">
@@ -252,13 +415,15 @@ export default function PortalDashboard({ headerList }: { headerList: Headers })
           <h1 className="text-5xl font-semibold tracking-[-0.045em] text-[#172a28] sm:text-6xl lg:text-7xl">
             Welcome,
             <br />
-            {customer.practiceName}
+            {practiceName}
           </h1>
           <div className="mt-8 space-y-3 text-base leading-7 text-[#5b5245]">
-            <p>
-              <span className="font-semibold text-[#172a28]">Account Number:</span>{" "}
-              {customer.accountNumber}
-            </p>
+            {accountNumber ? (
+              <p>
+                <span className="font-semibold text-[#172a28]">Account Number:</span>{" "}
+                {accountNumber}
+              </p>
+            ) : null}
             <p>
               <span className="font-semibold text-[#172a28]">Logged in as:</span>{" "}
               {authenticatedEmail}
@@ -316,6 +481,8 @@ export default function PortalDashboard({ headerList }: { headerList: Headers })
             </div>
           </section>
         ) : null}
+
+        {account ? <AccountPerformanceSection account={account} /> : null}
       </div>
     </PortalShell>
   );

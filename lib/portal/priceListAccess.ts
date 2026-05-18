@@ -3,6 +3,7 @@ import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
 import {
   customerHasPortalSection,
   getCustomerByEmail,
+  getCustomersByEmail,
   type PortalCustomer,
   type PortalSection,
 } from "@/lib/portal/customers";
@@ -41,7 +42,14 @@ export function getAuthorizedPriceListFromHeaders(
     return { status: "unauthenticated", authenticatedEmail: "", priceList };
   }
 
-  const customer = getCustomerByEmail(authenticatedEmail);
+  const customers = getCustomersByEmail(authenticatedEmail);
+  const customer = customers.find((entry) =>
+    priceList
+      ? entry.priceLists
+          .map((priceListCode) => priceListCode.trim().toUpperCase())
+          .includes(priceList.code)
+      : true
+  );
 
   if (!customer) {
     return { status: "forbidden", authenticatedEmail, priceList };

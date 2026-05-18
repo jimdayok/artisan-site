@@ -35,8 +35,7 @@ export default async function PortalAdminUsersPage({
               {[
                 "Person",
                 "Email",
-                "Organization",
-                "Account",
+                "Associated Accounts",
                 "Customer Type",
                 "Status",
                 "Invitations",
@@ -53,21 +52,42 @@ export default async function PortalAdminUsersPage({
           </thead>
           <tbody>
             {rows.map((row) => (
-              <tr key={`${row.person.accountNumber}-${row.email}`} className="border-t border-[#d8c49b] align-top">
+              <tr key={row.email} className="border-t border-[#d8c49b] align-top">
                 <td className="px-4 py-4 font-semibold text-[#172a28]">
-                  {row.person.name || "Unnamed"}
+                  {row.displayName || "Unnamed"}
                 </td>
                 <td className="px-4 py-4 text-[#706759]">{row.email}</td>
                 <td className="px-4 py-4 text-[#706759]">
-                  {row.person.organization}
+                  <div className="space-y-3">
+                    {row.accounts.length > 0 ? (
+                      row.accounts.map((account) => (
+                        <div key={account.accountNumber}>
+                          <p className="font-semibold text-[#172a28]">
+                            {account.accountName || "Unnamed account"}
+                          </p>
+                          <p className="text-xs text-[#706759]">
+                            Account {account.accountNumber}
+                          </p>
+                          <Link
+                            href={`/portal/admin/preview/${encodeURIComponent(account.accountNumber)}`}
+                            className="mt-2 inline-flex w-fit items-center rounded-full border border-[#d8c49b] px-3 py-1 text-xs font-semibold text-[#172a28] transition hover:bg-white"
+                          >
+                            Preview as this account
+                          </Link>
+                        </div>
+                      ))
+                    ) : (
+                      "No account match"
+                    )}
+                  </div>
                 </td>
                 <td className="px-4 py-4 text-[#706759]">
-                  {row.person.accountNumber}
-                </td>
-                <td className="px-4 py-4 text-[#706759]">
-                  {row.customerTypeLabel
-                    ? `${row.customerTypeLabel} (${row.customerTypeCode})`
-                    : "Not mapped"}
+                  <PillList
+                    values={[
+                      ...row.customerTypeLabels,
+                      ...row.customerTypeCodes.map((code) => `Code ${code}`),
+                    ]}
+                  />
                 </td>
                 <td className="px-4 py-4">
                   <span className={row.isApproved ? "font-semibold text-[#1d5a45]" : "font-semibold text-[#8b7650]"}>
@@ -99,12 +119,17 @@ export default async function PortalAdminUsersPage({
                   <PillList values={row.assignedSections} />
                 </td>
                 <td className="px-4 py-4">
-                  <Link
-                    href={`/portal/admin/preview/${encodeURIComponent(row.person.accountNumber)}`}
-                    className={adminButtonClass}
-                  >
-                    Preview
-                  </Link>
+                  <div className="flex flex-col gap-2">
+                    {row.accounts.map((account) => (
+                      <Link
+                        key={account.accountNumber}
+                        href={`/portal/admin/preview/${encodeURIComponent(account.accountNumber)}`}
+                        className={adminButtonClass}
+                      >
+                        {account.accountNumber}
+                      </Link>
+                    ))}
+                  </div>
                 </td>
               </tr>
             ))}

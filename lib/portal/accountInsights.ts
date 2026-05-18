@@ -26,7 +26,9 @@ export function getCustomerTypeInfoFromAccountData({
   account?: PortalWorkbookAccount;
   person?: PortalWorkbookPerson;
 }): PortalCustomerTypeInfo | undefined {
-  return getPortalCustomerTypeInfo(account?.division || person?.division || "");
+  return getPortalCustomerTypeInfo(
+    account?.finalCustomerTypeCode || account?.division || person?.division || ""
+  );
 }
 
 export function getCustomerTypeInfoFromProfile(profile?: PortalWorkbookProfile) {

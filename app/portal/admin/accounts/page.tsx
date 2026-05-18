@@ -60,7 +60,9 @@ export default async function PortalAdminAccountsPage({
               {[
                 "Account",
                 "Number",
+                "Review",
                 "Customer Type",
+                "Detected Types",
                 "Division",
                 "Sales Rep",
                 "Last Shipped",
@@ -89,10 +91,27 @@ export default async function PortalAdminAccountsPage({
                 <td className="px-4 py-4 text-[#706759]">
                   {row.account.accountNumber}
                 </td>
+                <td className="px-4 py-4">
+                  <div className="flex flex-col gap-2">
+                    {row.duplicateRowsMerged ? (
+                      <span className="w-fit rounded-full bg-[#efe2c8] px-3 py-1 text-xs font-semibold text-[#6f5f3f]">
+                        {row.account.mergedRowCount} rows merged
+                      </span>
+                    ) : null}
+                    {row.sameNameDifferentAccountWarning ? (
+                      <span className="w-fit rounded-full bg-[#f2d8c8] px-3 py-1 text-xs font-semibold text-[#7b3f2a]">
+                        Same name also on {row.sameNameAccountNumbers.join(", ")}
+                      </span>
+                    ) : null}
+                  </div>
+                </td>
                 <td className="px-4 py-4 text-[#706759]">
                   {row.customerTypeLabel
                     ? `${row.customerTypeLabel} (${row.customerTypeCode})`
                     : "Not mapped"}
+                </td>
+                <td className="px-4 py-4">
+                  <PillList values={row.detectedCustomerTypeCodes} />
                 </td>
                 <td className="px-4 py-4 text-[#706759]">
                   {row.account.division || "Not available"}

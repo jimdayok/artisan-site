@@ -15,6 +15,7 @@ const typeMap = {
   ACQU: { label: 'Artisan Acquios Partner', priceList: 'A6' },
   NL: { label: 'Artisan Neurolens Partner', priceList: 'G6' },
 };
+const typePriority = ['PART', 'PMP', 'ACQU', 'NL', 'GENL'];
 
 function readSheet(filePath, sheetName) {
   if (!existsSync(filePath)) return [];
@@ -51,13 +52,46 @@ const accounts = readSheet(accountPath, 'Export').map((row) => ({
   accountName: toText(row['Account Name']),
   division: toText(row['Last Division']),
 }));
-const accountsByNumber = new Map(accounts.map((account) => [accountKey(account.accountNumber), account]));
+const accountGroups = new Map();
+for (const account of accounts) {
+  const key = accountKey(account.accountNumber);
+  if (!key) continue;
+  accountGroups.set(key, [...(accountGroups.get(key) || []), account]);
+}
+const normalizedAccounts = [...accountGroups.entries()].map(([key, rows]) => {
+  const detectedCustomerTypeCodes = [
+    ...new Set(
+      rows
+        .map((row) => row.division.trim().toUpperCase())
+        .filter((code) => typeMap[code])
+    ),
+  ];
+  const customerTypeCode =
+    typePriority.find((code) => detectedCustomerTypeCodes.includes(code)) || '';
+  const accountName =
+    rows
+      .map((row) => row.accountName)
+      .filter(Boolean)
+      .sort((a, b) => b.length - a.length)[0] || '';
+
+  return {
+    accountNumber: key,
+    accountName,
+    customerTypeCode,
+    detectedCustomerTypeCodes,
+  };
+});
+const accountsByNumber = new Map(
+  normalizedAccounts.map((account) => [accountKey(account.accountNumber), account])
+);
 
 const access = readSheet(userPath, 'person list')
   .flatMap((row) => {
     const accountNumber = toAccountNumber(row['Organization - Account Number']);
     const account = accountsByNumber.get(accountKey(accountNumber));
-    const customerTypeCode = (account?.division || toText(row['Organization - Division'])).trim().toUpperCase();
+    const workbookTypeCode = account?.customerTypeCode || '';
+    const personTypeCode = toText(row['Organization - Division']).trim().toUpperCase();
+    const customerTypeCode = workbookTypeCode || (typeMap[personTypeCode] ? personTypeCode : '');
     const typeInfo = typeMap[customerTypeCode];
     const emails = [
       ...emailList(row['Person - Email - Work']),
@@ -71,6 +105,7 @@ const access = readSheet(userPath, 'person list')
       practiceName: account?.accountName || toText(row['Person - Organization']),
       customerTypeCode: typeInfo ? customerTypeCode : '',
       customerTypeLabel: typeInfo?.label || '',
+      detectedCustomerTypeCodes: account?.detectedCustomerTypeCodes || [],
       allowedPriceLists: typeInfo ? [typeInfo.priceList] : [],
       portalSections: ['pricing', 'performance'],
       targetedPrograms: toText(row['Organization - Targeted Programs']),

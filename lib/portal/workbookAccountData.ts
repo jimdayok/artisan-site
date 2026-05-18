@@ -4,6 +4,14 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import * as XLSX from "xlsx";
 import { getPortalCustomerTypeInfo } from "@/lib/portal/customerTypes";
+import {
+  calculateDerivedMetrics,
+  getAccountsForUser,
+  getUsersForAccount,
+  groupAccountRows,
+  normalizeAccountNumber,
+  normalizeEmail,
+} from "@/lib/portal/normalizeAccounts";
 
 const PORTAL_SOURCE_DIR = path.join(
   process.cwd(),
@@ -71,6 +79,12 @@ export type PortalWorkbookAccount = {
   pmVspSow: number;
   cmVspSow: number;
   lastShippedDateGlobal: string;
+  detectedCustomerTypeCodes?: string[];
+  finalCustomerTypeCode?: string;
+  mergedRowCount?: number;
+  duplicateRowsMerged?: boolean;
+  sameNameDifferentAccountWarning?: boolean;
+  sameNameAccountNumbers?: string[];
 };
 
 export type PortalWorkbookProfile = {
@@ -104,13 +118,7 @@ function toAccountNumber(value: unknown) {
 }
 
 export function normalizePortalAccountNumber(value: unknown) {
-  const accountNumber = toAccountNumber(value);
-
-  return accountNumber.replace(/^0+(?=\d)/, "");
-}
-
-function normalizeEmail(value: string) {
-  return value.trim().toLowerCase();
+  return normalizeAccountNumber(toAccountNumber(value));
 }
 
 function emailList(value: unknown) {
@@ -218,7 +226,7 @@ function readAccounts() {
 }
 
 const people = readPeople();
-const accounts = readAccounts();
+const accounts = calculateDerivedMetrics(groupAccountRows(readAccounts()));
 const accountsByNumber = new Map(
   accounts.map((account) => [
     normalizePortalAccountNumber(account.accountNumber),
@@ -226,12 +234,25 @@ const accountsByNumber = new Map(
   ])
 );
 
-export function getPortalWorkbookProfileByEmail(email: string) {
+export function getPortalWorkbookProfileByEmail(
+  email: string,
+  accountNumber?: string
+) {
   const normalizedEmail = normalizeEmail(email);
 
   if (!normalizedEmail) return undefined;
 
-  const person = people.find((entry) => entry.emails.includes(normalizedEmail));
+  const matchingPeople = people.filter((entry) =>
+    entry.emails.includes(normalizedEmail)
+  );
+  const person =
+    accountNumber && matchingPeople.length > 0
+      ? matchingPeople.find(
+          (entry) =>
+            normalizePortalAccountNumber(entry.accountNumber) ===
+            normalizePortalAccountNumber(accountNumber)
+        )
+      : matchingPeople[0];
 
   if (!person) return undefined;
 
@@ -239,6 +260,30 @@ export function getPortalWorkbookProfileByEmail(email: string) {
     person,
     account: accountsByNumber.get(normalizePortalAccountNumber(person.accountNumber)),
   } satisfies PortalWorkbookProfile;
+}
+
+export function getPortalWorkbookProfilesByEmail(email: string) {
+  const normalizedEmail = normalizeEmail(email);
+
+  if (!normalizedEmail) return [];
+
+  const accountNumbers = [
+    ...new Set(
+      people
+        .filter((entry) => entry.emails.includes(normalizedEmail))
+        .map((entry) => normalizePortalAccountNumber(entry.accountNumber))
+    ),
+  ];
+
+  return accountNumbers
+    .map((accountNumber) =>
+      getPortalWorkbookProfileByEmail(normalizedEmail, accountNumber)
+    )
+    .filter((profile): profile is PortalWorkbookProfile => Boolean(profile));
+}
+
+export function getPortalWorkbookAccountsForEmail(email: string) {
+  return getAccountsForUser({ email, people, accounts });
 }
 
 export function getPortalWorkbookAccountByAccountNumber(accountNumber: string) {
@@ -279,18 +324,14 @@ export function getPortalWorkbookAccounts() {
 }
 
 export function getPortalWorkbookPeopleByAccountNumber(accountNumber: string) {
-  const normalizedAccountNumber = normalizePortalAccountNumber(accountNumber);
-
-  return people.filter(
-    (person) =>
-      normalizePortalAccountNumber(person.accountNumber) === normalizedAccountNumber
-  );
+  return getUsersForAccount({ accountNumber, people });
 }
 
 export function getCustomerTypeCodeForWorkbookProfile(
   profile?: PortalWorkbookProfile
 ) {
   return (
+    profile?.account?.finalCustomerTypeCode ||
     profile?.account?.division ||
     profile?.person.division ||
     ""

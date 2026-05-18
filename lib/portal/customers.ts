@@ -7,6 +7,7 @@ import { getPriceListByCode } from "@/lib/portal/priceLists";
 import { parseCsvList, readPrivatePortalCsv } from "@/lib/portal/privateCsv";
 import type { PortalCustomerTypeCode } from "@/lib/portal/customerTypes";
 import { getPortalCustomerTypeInfo } from "@/lib/portal/customerTypes";
+import { normalizeAccountNumber, normalizeEmail } from "@/lib/portal/normalizeAccounts";
 
 export type PortalSection =
   | "pricing"
@@ -25,6 +26,7 @@ export type PortalCustomerAccess = {
   portalSections: PortalSection[];
   customerTypeCode?: PortalCustomerTypeCode | "";
   customerTypeLabel?: string;
+  detectedCustomerTypeCodes?: string[];
 };
 
 export type PortalCustomer = {
@@ -36,6 +38,7 @@ export type PortalCustomer = {
   portalSections: PortalSection[];
   customerTypeCode?: PortalCustomerTypeCode | "";
   customerTypeLabel?: string;
+  detectedCustomerTypeCodes?: string[];
 };
 
 type WorkbookAccessRecord = {
@@ -44,6 +47,7 @@ type WorkbookAccessRecord = {
   practiceName: string;
   customerTypeCode?: string;
   customerTypeLabel?: string;
+  detectedCustomerTypeCodes?: string[];
   allowedPriceLists?: string[];
   portalSections?: string[];
 };
@@ -148,6 +152,7 @@ const workbookCustomerPortalAccess: PortalCustomerAccess[] =
         portalSections: toPortalSectionsFromList(entry.portalSections),
         customerTypeCode: customerType?.code ?? "",
         customerTypeLabel: customerType?.label ?? "",
+        detectedCustomerTypeCodes: entry.detectedCustomerTypeCodes ?? [],
       } satisfies PortalCustomerAccess;
     })
     .filter(
@@ -163,7 +168,10 @@ export const customerPortalAccess: PortalCustomerAccess[] = [
   ...manualCustomerPortalAccess.filter(
     (manualEntry) =>
       !workbookCustomerPortalAccess.some(
-        (workbookEntry) => workbookEntry.email === manualEntry.email
+        (workbookEntry) =>
+          workbookEntry.email === manualEntry.email &&
+          normalizeAccountNumber(workbookEntry.accountNumber) ===
+            normalizeAccountNumber(manualEntry.accountNumber)
       )
   ),
 ];
@@ -177,29 +185,68 @@ export const customers: PortalCustomer[] = customerPortalAccess.map((entry) => (
   portalSections: entry.portalSections,
   customerTypeCode: entry.customerTypeCode,
   customerTypeLabel: entry.customerTypeLabel,
+  detectedCustomerTypeCodes: entry.detectedCustomerTypeCodes,
 }));
 
-export function getCustomerByEmail(email: string) {
-  const normalizedEmail = email.trim().toLowerCase();
+function toPortalCustomer(entries: PortalCustomerAccess[]): PortalCustomer | undefined {
+  const primaryEntry = entries[0];
 
-  if (!normalizedEmail) return undefined;
-
-  const entry = customerPortalAccess.find(
-    (customerAccess) => customerAccess.email.toLowerCase() === normalizedEmail
-  );
-
-  if (!entry) return undefined;
+  if (!primaryEntry) return undefined;
 
   return {
-    accountNumber: entry.accountNumber,
-    practiceName: entry.practiceName,
-    emails: [entry.email.toLowerCase()],
-    priceLists: uniqueList(entry.allowedPriceLists),
-    allowedPriceLists: uniqueList(entry.allowedPriceLists),
-    portalSections: uniqueList(entry.portalSections),
-    customerTypeCode: entry.customerTypeCode,
-    customerTypeLabel: entry.customerTypeLabel,
+    accountNumber: primaryEntry.accountNumber,
+    practiceName: primaryEntry.practiceName,
+    emails: uniqueList(entries.map((entry) => entry.email.toLowerCase())),
+    priceLists: uniqueList(entries.flatMap((entry) => entry.allowedPriceLists)),
+    allowedPriceLists: uniqueList(
+      entries.flatMap((entry) => entry.allowedPriceLists)
+    ),
+    portalSections: uniqueList(entries.flatMap((entry) => entry.portalSections)),
+    customerTypeCode: primaryEntry.customerTypeCode,
+    customerTypeLabel: primaryEntry.customerTypeLabel,
+    detectedCustomerTypeCodes: uniqueList(
+      entries.flatMap((entry) => entry.detectedCustomerTypeCodes ?? [])
+    ),
   } satisfies PortalCustomer;
+}
+
+export function getCustomersByEmail(email: string): PortalCustomer[] {
+  const normalizedUserEmail = normalizeEmail(email);
+
+  if (!normalizedUserEmail) return [];
+
+  const entriesByAccount = new Map<string, PortalCustomerAccess[]>();
+
+  for (const entry of customerPortalAccess) {
+    if (entry.email.toLowerCase() !== normalizedUserEmail) continue;
+
+    const accountKey = normalizeAccountNumber(entry.accountNumber);
+
+    entriesByAccount.set(accountKey, [
+      ...(entriesByAccount.get(accountKey) ?? []),
+      entry,
+    ]);
+  }
+
+  return [...entriesByAccount.values()]
+    .map(toPortalCustomer)
+    .filter((customer): customer is PortalCustomer => Boolean(customer));
+}
+
+export function getCustomerByEmailAndAccount(
+  email: string,
+  accountNumber: string
+) {
+  const normalizedAccountNumber = normalizeAccountNumber(accountNumber);
+
+  return getCustomersByEmail(email).find(
+    (customer) =>
+      normalizeAccountNumber(customer.accountNumber) === normalizedAccountNumber
+  );
+}
+
+export function getCustomerByEmail(email: string) {
+  return getCustomersByEmail(email)[0];
 }
 
 export function customerHasPortalSection(

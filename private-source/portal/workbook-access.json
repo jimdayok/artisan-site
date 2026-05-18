@@ -5,6 +5,9 @@
     "practiceName": "Murray Vision Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -20,6 +23,9 @@
     "practiceName": "Murray Vision Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -35,6 +41,9 @@
     "practiceName": "Magnuson Hopkins Eyecare, Pc",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -50,6 +59,9 @@
     "practiceName": "Asterix Eyewear",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -65,6 +77,9 @@
     "practiceName": "Optique Of Denver",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -80,6 +95,9 @@
     "practiceName": "Northern Connecticut Eye Assoc",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -95,6 +113,9 @@
     "practiceName": "River City Eyecare",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -110,6 +131,9 @@
     "practiceName": "Newberg Family Eye Care",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -125,6 +149,9 @@
     "practiceName": "Clear Vision Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -140,6 +167,9 @@
     "practiceName": "Gatti Vision",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -155,6 +185,9 @@
     "practiceName": "Silver Lake Eye Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -170,6 +203,9 @@
     "practiceName": "Clarendon Vision Advanced Eye",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -185,6 +221,9 @@
     "practiceName": "Lumen Optometric",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -200,6 +239,9 @@
     "practiceName": "Palmer Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -215,6 +257,9 @@
     "practiceName": "Premier Vision Clinic",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -230,6 +275,9 @@
     "practiceName": "Swoop Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -245,6 +293,9 @@
     "practiceName": "Byron Eye Care",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -260,6 +311,9 @@
     "practiceName": "Juanita Vision Clinic",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -275,6 +329,7 @@
     "practiceName": "Eye Brain Connection",
     "customerTypeCode": "",
     "customerTypeLabel": "",
+    "detectedCustomerTypeCodes": [],
     "allowedPriceLists": [],
     "portalSections": [
       "pricing",
@@ -288,6 +343,9 @@
     "practiceName": "Vision Care Center Peoria",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -303,6 +361,9 @@
     "practiceName": "Silver Lake Eye Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -318,6 +379,9 @@
     "practiceName": "Silver Lake Eye Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -333,6 +397,9 @@
     "practiceName": "Silver Lake Eye Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -348,6 +415,7 @@
     "practiceName": "Vista Eye Care",
     "customerTypeCode": "",
     "customerTypeLabel": "",
+    "detectedCustomerTypeCodes": [],
     "allowedPriceLists": [],
     "portalSections": [
       "pricing",
@@ -361,6 +429,7 @@
     "practiceName": "Peak Eyecare",
     "customerTypeCode": "",
     "customerTypeLabel": "",
+    "detectedCustomerTypeCodes": [],
     "allowedPriceLists": [],
     "portalSections": [
       "pricing",
@@ -374,6 +443,9 @@
     "practiceName": "Eyestyles Bridgeport",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -389,6 +461,9 @@
     "practiceName": "Portland Eye Care",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -404,6 +479,9 @@
     "practiceName": "Caec - Forest Place Optical",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -419,6 +497,9 @@
     "practiceName": "Caec - Specs Eyewear",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -434,6 +515,9 @@
     "practiceName": "Caec - Eye Contact Vision Ctr",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -449,6 +533,9 @@
     "practiceName": "Downeast 20/20",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -464,6 +551,9 @@
     "practiceName": "Carlin Vision",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -479,6 +569,9 @@
     "practiceName": "Precision Eye Care, P.S",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -494,6 +587,9 @@
     "practiceName": "Precision Eye Care, P.S",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -509,6 +605,9 @@
     "practiceName": "Precision Eye Care, P.S",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -524,6 +623,9 @@
     "practiceName": "Clear Vision Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -539,6 +641,9 @@
     "practiceName": "Vision Source Plattsmouth",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -554,6 +659,9 @@
     "practiceName": "Eyestyles Bridgeport",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -569,6 +677,9 @@
     "practiceName": "Roaring Fork Vision",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -584,6 +695,7 @@
     "practiceName": "Todd'S Optical",
     "customerTypeCode": "",
     "customerTypeLabel": "",
+    "detectedCustomerTypeCodes": [],
     "allowedPriceLists": [],
     "portalSections": [
       "pricing",
@@ -597,6 +709,9 @@
     "practiceName": "Founders Optical Lab",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -612,6 +727,9 @@
     "practiceName": "Founders Optical Lab",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -627,6 +745,9 @@
     "practiceName": "Founders Optical Lab",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -642,6 +763,9 @@
     "practiceName": "Newberg Family Eye Care",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -657,6 +781,9 @@
     "practiceName": "Progressive Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -672,6 +799,9 @@
     "practiceName": "Gailmard Eye Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -687,6 +817,9 @@
     "practiceName": "Eastland Vision Clinic",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -702,6 +835,9 @@
     "practiceName": "Marino Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -717,6 +853,9 @@
     "practiceName": "Pro-Vision Care Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -732,6 +871,9 @@
     "practiceName": "Byron Eye Care",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -747,6 +889,9 @@
     "practiceName": "Marciano Family Vision",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -762,6 +907,9 @@
     "practiceName": "Caec - Walton & Becker Oxford",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -777,6 +925,9 @@
     "practiceName": "Caec - Clarity Birmingham",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -792,6 +943,9 @@
     "practiceName": "Caec - Oakland Vision Of Sl",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -807,6 +961,9 @@
     "practiceName": "Peg - Kirkwood",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -822,6 +979,9 @@
     "practiceName": "Vqec - Greenwood",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -837,6 +997,9 @@
     "practiceName": "Fvc - Ashman",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -852,6 +1015,9 @@
     "practiceName": "Peg - Bedford",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -867,6 +1033,9 @@
     "practiceName": "Vqec - Geist",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -882,6 +1051,9 @@
     "practiceName": "All Eyes Optometry Pllc",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -897,6 +1069,9 @@
     "practiceName": "All Eyes Optometry Pllc",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -912,6 +1087,9 @@
     "practiceName": "Vqec - Greenwood",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -927,6 +1105,9 @@
     "practiceName": "Forsight Vision",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -942,6 +1123,9 @@
     "practiceName": "Agoura Family Optometry",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -957,6 +1141,9 @@
     "practiceName": "Bella Eyecare Optometry",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -972,6 +1159,9 @@
     "practiceName": "Spearfish Eye Care Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -987,6 +1177,9 @@
     "practiceName": "Gatti Vision",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1002,6 +1195,9 @@
     "practiceName": "Barnett Vision Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1017,6 +1213,9 @@
     "practiceName": "Lifetime Vision Center -Auburn",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1032,6 +1231,9 @@
     "practiceName": "East Vancouver Eye Clinic",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1047,6 +1249,9 @@
     "practiceName": "Clarke Eyecare Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1062,6 +1267,9 @@
     "practiceName": "Eyes On Broadway",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1077,6 +1285,9 @@
     "practiceName": "Downtown Family Vision",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1092,6 +1303,9 @@
     "practiceName": "Dostal Eyecare",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1107,6 +1321,9 @@
     "practiceName": "Trendsetter Eyewear",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1122,6 +1339,9 @@
     "practiceName": "Center Vision Clinic",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1137,6 +1357,9 @@
     "practiceName": "Noble Eyes Vision Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1152,6 +1375,9 @@
     "practiceName": "Rocky Mountain Optical",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1167,6 +1393,9 @@
     "practiceName": "Rocky Mountain Optical",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1182,6 +1411,9 @@
     "practiceName": "Nw Eyecare Vancouver",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1197,6 +1429,9 @@
     "practiceName": "Family Vision Of Oregon- Helen",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -1212,6 +1447,9 @@
     "practiceName": "Lifetime Vision Center-Ne City",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1227,6 +1465,9 @@
     "practiceName": "Webb Eyecare Alliance",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1242,6 +1483,9 @@
     "practiceName": "Webb Eyecare Alliance",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1257,6 +1501,9 @@
     "practiceName": "Denver Vision",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -1272,6 +1519,9 @@
     "practiceName": "Maple Valley Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1287,6 +1537,9 @@
     "practiceName": "Alberta Eyecare",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1302,6 +1555,9 @@
     "practiceName": "Ridgeview Optometry",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1317,6 +1573,9 @@
     "practiceName": "Murray Vision Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1332,6 +1591,9 @@
     "practiceName": "Murray Vision Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1347,6 +1609,9 @@
     "practiceName": "Northeast Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1362,6 +1627,9 @@
     "practiceName": "Lifetime Vision Center-Ne City",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1377,6 +1645,9 @@
     "practiceName": "Vision Institute Nw Valley",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1392,6 +1663,9 @@
     "practiceName": "Family Vision Of Oregon",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -1407,6 +1681,9 @@
     "practiceName": "Nike - Zachary Gould",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1422,6 +1699,9 @@
     "practiceName": "Nike - Zachary Gould",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1437,6 +1717,9 @@
     "practiceName": "The Eye Site",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1452,6 +1735,9 @@
     "practiceName": "Family Eye Center-Ontario",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -1467,6 +1753,9 @@
     "practiceName": "Eyecare Associates Of Albany",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -1482,6 +1771,9 @@
     "practiceName": "Eyecare Associates Of Lebanon",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -1497,6 +1789,9 @@
     "practiceName": "Eyecare Professionals P.C",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -1512,6 +1807,9 @@
     "practiceName": "Northern Connecticut Eye Assoc",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1527,6 +1825,9 @@
     "practiceName": "Vail Vision",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -1542,6 +1843,9 @@
     "practiceName": "Evergreen Eye Care",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -1557,6 +1861,9 @@
     "practiceName": "North Star Visionary",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1572,6 +1879,9 @@
     "practiceName": "Casey Eye Optical-Ecec",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1587,6 +1897,9 @@
     "practiceName": "Eyeland Hawaii",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1602,6 +1915,9 @@
     "practiceName": "Ferguson Optics",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1617,6 +1933,9 @@
     "practiceName": "Eye Care Of Blackfoot",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -1632,6 +1951,9 @@
     "practiceName": "Nova Vision Care",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -1647,6 +1969,9 @@
     "practiceName": "Union Eye",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1662,6 +1987,9 @@
     "practiceName": "Fvc - Ashman",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -1677,6 +2005,9 @@
     "practiceName": "The Eye Site",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1692,6 +2023,9 @@
     "practiceName": "Zionsville Eyecare",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -1707,6 +2041,9 @@
     "practiceName": "Multnomah Vision Clinic",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1722,6 +2059,9 @@
     "practiceName": "Troutdale Vision Clinic",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1737,6 +2077,9 @@
     "practiceName": "Family Eye Center-Ontario",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -1752,6 +2095,9 @@
     "practiceName": "Webb Eyecare Alliance",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1767,6 +2113,9 @@
     "practiceName": "Webb Eyecare Alliance",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1782,6 +2131,9 @@
     "practiceName": "Troutdale Vision Clinic",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1797,6 +2149,9 @@
     "practiceName": "Troutdale Vision Clinic",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1812,6 +2167,9 @@
     "practiceName": "Troutdale Vision Clinic",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1827,6 +2185,9 @@
     "practiceName": "Family Eye Center-Ontario",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -1842,6 +2203,9 @@
     "practiceName": "New Visions Eyecare Pc",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1857,6 +2221,9 @@
     "practiceName": "Asterix Eyewear",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1872,6 +2239,9 @@
     "practiceName": "Rodney Leavitt, Md",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1887,6 +2257,9 @@
     "practiceName": "Eye Promise Optical",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1902,6 +2275,9 @@
     "practiceName": "Matthew D. Fullmer",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1917,6 +2293,9 @@
     "practiceName": "Eye Promise Optical",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1932,6 +2311,9 @@
     "practiceName": "Eyecare Focus & Specialties",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1947,6 +2329,9 @@
     "practiceName": "Eyecare Focus & Specialties",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1962,6 +2347,9 @@
     "practiceName": "Oregon Eye Phys & Surgeons",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -1977,6 +2365,9 @@
     "practiceName": "Eyecare Focus & Specialties",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -1992,6 +2383,9 @@
     "practiceName": "Eyecare Associates Nw",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -2007,6 +2401,9 @@
     "practiceName": "Eyecare Associates Of Albany",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -2022,6 +2419,9 @@
     "practiceName": "Eyecare Associates Cvc",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -2037,6 +2437,9 @@
     "practiceName": "Eyecare Associates Nw",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -2052,6 +2455,9 @@
     "practiceName": "Eyecare Associates Cvc",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -2067,6 +2473,9 @@
     "practiceName": "Schmidt Eyecare",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2082,6 +2491,9 @@
     "practiceName": "Eyecare Associates Nw",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -2097,6 +2509,9 @@
     "practiceName": "Eyecare Associates Nw",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -2112,6 +2527,9 @@
     "practiceName": "Baseline Vision Clinic",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2127,6 +2545,9 @@
     "practiceName": "Nw Eyecare Vancouver",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2142,6 +2563,9 @@
     "practiceName": "Nw Eyecare Clackamas",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2157,6 +2581,9 @@
     "practiceName": "Nw Eyecare Vancouver",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2172,6 +2599,9 @@
     "practiceName": "Nw Eyecare Vancouver",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2187,6 +2617,9 @@
     "practiceName": "Agoura Family Optometry",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2202,6 +2635,9 @@
     "practiceName": "Tabor Vision",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -2217,6 +2653,9 @@
     "practiceName": "Bend Ophthalmology, Llc",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2232,6 +2671,9 @@
     "practiceName": "Carbon Valley Eye Care",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -2247,6 +2689,9 @@
     "practiceName": "Bend Ophthalmology, Llc",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2262,6 +2707,9 @@
     "practiceName": "Vail Vision",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -2277,6 +2725,9 @@
     "practiceName": "Vail Vision",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -2292,6 +2743,9 @@
     "practiceName": "Family Vision Of Oregon",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -2307,6 +2761,9 @@
     "practiceName": "Carbon Valley Eye Care",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -2322,6 +2779,9 @@
     "practiceName": "Valley Vision",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -2337,6 +2797,9 @@
     "practiceName": "Vail Vision",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -2352,6 +2815,9 @@
     "practiceName": "Family Vision Of Oregon",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -2367,6 +2833,9 @@
     "practiceName": "Valley Vision",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -2382,6 +2851,9 @@
     "practiceName": "Complete Family Vision Care",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -2397,6 +2869,9 @@
     "practiceName": "Family Vision Of Oregon",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -2412,6 +2887,9 @@
     "practiceName": "Newberg Family Eye Care",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2427,6 +2905,9 @@
     "practiceName": "Family Vision Of Oregon- Helen",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -2442,6 +2923,9 @@
     "practiceName": "Roaring Fork Vision",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -2457,6 +2941,9 @@
     "practiceName": "Brighton Eye Associates",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2472,6 +2959,9 @@
     "practiceName": "Roaring Fork Vision",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -2487,6 +2977,9 @@
     "practiceName": "Family Vision Of Oregon- Helen",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -2502,6 +2995,9 @@
     "practiceName": "Eyestyles Woodstock",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -2517,6 +3013,9 @@
     "practiceName": "Brighton Eye Associates",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2532,6 +3031,9 @@
     "practiceName": "Eyestyles Bridgeport",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -2547,6 +3049,9 @@
     "practiceName": "Eyecare Professionals P.C",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -2562,6 +3067,9 @@
     "practiceName": "Eyestyles Bridgeport",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -2577,6 +3085,9 @@
     "practiceName": "Eyecare Professionals P.C",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -2592,6 +3103,9 @@
     "practiceName": "Carlin Vision",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -2607,6 +3121,9 @@
     "practiceName": "Mt View Eyecare Center",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -2622,6 +3139,9 @@
     "practiceName": "Northern Connecticut Eye Assoc",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2637,6 +3157,9 @@
     "practiceName": "Nike - Zachary Gould",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2652,6 +3175,9 @@
     "practiceName": "Carlin Vision",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -2667,6 +3193,9 @@
     "practiceName": "Mt View Eyecare Center",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -2682,6 +3211,9 @@
     "practiceName": "Northern Connecticut Eye Assoc",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2697,6 +3229,9 @@
     "practiceName": "Nike - Zachary Gould",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2712,6 +3247,9 @@
     "practiceName": "20/20 Eyecare",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -2727,6 +3265,9 @@
     "practiceName": "Nike - Zachary Gould",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2742,6 +3283,9 @@
     "practiceName": "Precision Eye Care, P.S",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2757,6 +3301,9 @@
     "practiceName": "Precision Eye Care, P.S",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2772,6 +3319,9 @@
     "practiceName": "Precision Eye Care, P.S",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2787,6 +3337,9 @@
     "practiceName": "20/20 Eyecare",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -2802,6 +3355,9 @@
     "practiceName": "Portland Eye Care",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -2817,6 +3373,9 @@
     "practiceName": "Modern Eye Care Of Portland",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2832,6 +3391,9 @@
     "practiceName": "Nike - Zachary Gould",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2847,6 +3409,9 @@
     "practiceName": "Precision Eye Care, P.S",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2862,6 +3427,9 @@
     "practiceName": "Evergreen Eye Care",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -2877,6 +3445,9 @@
     "practiceName": "Modern Eye Care Of Portland",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2892,6 +3463,9 @@
     "practiceName": "River City Eyecare",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2907,6 +3481,9 @@
     "practiceName": "Mattawan Family Eye Care",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2922,6 +3499,9 @@
     "practiceName": "Eyecare Of Rigby",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -2937,6 +3517,9 @@
     "practiceName": "Mcculley Optix Gallery",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2952,6 +3535,9 @@
     "practiceName": "Mattawan Family Eye Care",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2967,6 +3553,9 @@
     "practiceName": "Eyecare Of Rigby",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -2982,6 +3571,9 @@
     "practiceName": "Mcculley Optix Gallery",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -2997,6 +3589,9 @@
     "practiceName": "Melzer & Breckenridge",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3012,6 +3607,9 @@
     "practiceName": "Hawthorne Vision Center",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3027,6 +3625,9 @@
     "practiceName": "Magnuson Hopkins Eyecare, Pc",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3042,6 +3643,9 @@
     "practiceName": "Magnuson Hopkins Eyecare, Pc",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3057,6 +3661,9 @@
     "practiceName": "Twin Lakes Vision Clinic",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3072,6 +3679,9 @@
     "practiceName": "Hawthorne Vision Center",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3087,6 +3697,9 @@
     "practiceName": "Casey Eye Optical-Ecec",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3102,6 +3715,9 @@
     "practiceName": "Casey Eye Optical-Ecec",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3117,6 +3733,7 @@
     "practiceName": "Ink Optical",
     "customerTypeCode": "",
     "customerTypeLabel": "",
+    "detectedCustomerTypeCodes": [],
     "allowedPriceLists": [],
     "portalSections": [
       "pricing",
@@ -3130,6 +3747,7 @@
     "practiceName": "Ink Optical",
     "customerTypeCode": "",
     "customerTypeLabel": "",
+    "detectedCustomerTypeCodes": [],
     "allowedPriceLists": [],
     "portalSections": [
       "pricing",
@@ -3143,6 +3761,9 @@
     "practiceName": "Oregon Optometry",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3158,6 +3779,9 @@
     "practiceName": "Luxe Eye & Wellness Llc",
     "customerTypeCode": "ACQU",
     "customerTypeLabel": "Artisan Acquios Partner",
+    "detectedCustomerTypeCodes": [
+      "ACQU"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -3173,6 +3797,9 @@
     "practiceName": "Founders Eye Care",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3188,6 +3815,9 @@
     "practiceName": "Converge Neuro Optometry",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -3203,6 +3833,9 @@
     "practiceName": "Oregon Optometry",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3218,6 +3851,9 @@
     "practiceName": "Invision Eye Health",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3233,6 +3869,9 @@
     "practiceName": "Spearfish Eye Care Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3248,6 +3887,9 @@
     "practiceName": "Eyecare Associates Of Kuna",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3263,6 +3905,9 @@
     "practiceName": "Invision Eye Health",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3278,6 +3923,9 @@
     "practiceName": "Coal Creek Family Vision",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3293,6 +3941,9 @@
     "practiceName": "Newberg Family Eye Care",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3308,6 +3959,9 @@
     "practiceName": "Spearfish Eye Care Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3323,6 +3977,9 @@
     "practiceName": "Converge Neuro Optometry",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -3338,6 +3995,9 @@
     "practiceName": "Hometown Eyecare And Optical",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3353,6 +4013,9 @@
     "practiceName": "Eyecare Associates Of Kuna",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3368,6 +4031,9 @@
     "practiceName": "Sergeant Bluff Eyecare",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3383,6 +4049,9 @@
     "practiceName": "Sergeant Bluff Eyecare",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3398,6 +4067,9 @@
     "practiceName": "Alberta Eyecare",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3413,6 +4085,9 @@
     "practiceName": "Cortez Vision Eye Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3428,6 +4103,9 @@
     "practiceName": "Kiowa Eyecare Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3443,6 +4121,9 @@
     "practiceName": "Clear Vision Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3458,6 +4139,9 @@
     "practiceName": "Clear Vision Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3473,6 +4157,9 @@
     "practiceName": "Eye Care West",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3488,6 +4175,9 @@
     "practiceName": "Gatti Vision",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3503,6 +4193,9 @@
     "practiceName": "Eyecare Associates",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3518,6 +4211,9 @@
     "practiceName": "Kleinwood Vision",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3533,6 +4229,9 @@
     "practiceName": "Ketchum Eyecenter",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3548,6 +4247,9 @@
     "practiceName": "Magnuson Hopkins Eyecare, Pc",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3563,6 +4265,9 @@
     "practiceName": "Issaquah Eyeworks",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3578,6 +4283,9 @@
     "practiceName": "Eyecare Associates",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3593,6 +4301,9 @@
     "practiceName": "Redwood Eye Clinic",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3608,6 +4319,9 @@
     "practiceName": "Redwood Eye Clinic",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3623,6 +4337,9 @@
     "practiceName": "Redwood Eye Clinic",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3638,6 +4355,9 @@
     "practiceName": "Eagle Vision One Eagle",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3653,6 +4373,9 @@
     "practiceName": "First Insight Eyecare",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3668,6 +4391,9 @@
     "practiceName": "Lifetime Vision Source",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3683,6 +4409,9 @@
     "practiceName": "Hayden Vision Source",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3698,6 +4427,9 @@
     "practiceName": "Choate Eye Associates",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3713,6 +4445,9 @@
     "practiceName": "Vision Source Plattsmouth",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3728,6 +4463,9 @@
     "practiceName": "Vibrant Vision + Optical",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3743,6 +4481,9 @@
     "practiceName": "Vision Institute Northwest",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3758,6 +4499,9 @@
     "practiceName": "Battle Born Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3773,6 +4517,9 @@
     "practiceName": "Vision Source Plattsmouth",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3788,6 +4535,9 @@
     "practiceName": "Vibrant Vision + Optical",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3803,6 +4553,9 @@
     "practiceName": "Eye Love Olympia",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3818,6 +4571,9 @@
     "practiceName": "Battle Born Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3833,6 +4589,9 @@
     "practiceName": "Hertneky Vision Source",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3848,6 +4607,9 @@
     "practiceName": "Vision Institute Northwest",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3863,6 +4625,9 @@
     "practiceName": "Vision Institute Northwest",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3878,6 +4643,9 @@
     "practiceName": "Eyecare Specialties",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3893,6 +4661,9 @@
     "practiceName": "Vision Institute Nw Airway Hts",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3908,6 +4679,9 @@
     "practiceName": "Vision Source Plattsmouth",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3923,6 +4697,9 @@
     "practiceName": "Eye Love Olympia",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3938,6 +4715,9 @@
     "practiceName": "Center Vision Clinic",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3953,6 +4733,9 @@
     "practiceName": "Eyes On You",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3968,6 +4751,9 @@
     "practiceName": "Vision Institute Northwest",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3983,6 +4769,9 @@
     "practiceName": "Eye Center Of The Dakotas",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -3998,6 +4787,9 @@
     "practiceName": "Eyecare Specialties",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4013,6 +4805,9 @@
     "practiceName": "Weiss Eyecare Clinic",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4028,6 +4823,9 @@
     "practiceName": "Tree City Eyecare",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4043,6 +4841,9 @@
     "practiceName": "Center Vision Clinic",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4058,6 +4859,9 @@
     "practiceName": "Apple Eyecare",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4073,6 +4877,9 @@
     "practiceName": "Vision Institute Northwest",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4088,6 +4895,9 @@
     "practiceName": "Eye Center Of The Dakotas",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4103,6 +4913,9 @@
     "practiceName": "Feidler Optical Company",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4118,6 +4931,9 @@
     "practiceName": "Barnett Vision Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4133,6 +4949,9 @@
     "practiceName": "Watertown Family Eyecare",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4148,6 +4967,9 @@
     "practiceName": "Center Vision Clinic",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4163,6 +4985,9 @@
     "practiceName": "Apple Eyecare",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4178,6 +5003,9 @@
     "practiceName": "Eyecare Of Blackfoot",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -4193,6 +5021,9 @@
     "practiceName": "Silver Lake Eye Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4208,6 +5039,9 @@
     "practiceName": "Feidler Optical Company",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4223,6 +5057,9 @@
     "practiceName": "A2Z Eyecare",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4238,6 +5075,9 @@
     "practiceName": "Barnett Vision Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4253,6 +5093,9 @@
     "practiceName": "Clarke Eyecare Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4268,6 +5111,9 @@
     "practiceName": "Apple Eyecare",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4283,6 +5129,9 @@
     "practiceName": "Eye Care Of Blackfoot",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -4298,6 +5147,9 @@
     "practiceName": "Piedmont Eyecare",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4313,6 +5165,9 @@
     "practiceName": "Clarke Eyecare Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4328,6 +5183,9 @@
     "practiceName": "Clarke Eyecare Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4343,6 +5201,9 @@
     "practiceName": "Northern Sight Vision Clinic",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4358,6 +5219,9 @@
     "practiceName": "East Vancouver Eye Clinic",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4373,6 +5237,9 @@
     "practiceName": "Clarendon Vision Advanced Eye",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4388,6 +5255,9 @@
     "practiceName": "Trendsetter Eyewear",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4403,6 +5273,9 @@
     "practiceName": "Tomasino Goerss Eyecare",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4418,6 +5291,9 @@
     "practiceName": "Ridgeview Optometry",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4433,6 +5309,9 @@
     "practiceName": "East Vancouver Eye Clinic",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4448,6 +5327,9 @@
     "practiceName": "Primary Eyecare Of Arlington",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4463,6 +5345,9 @@
     "practiceName": "Beachwood Family Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4478,6 +5363,9 @@
     "practiceName": "Progressive Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4493,6 +5381,9 @@
     "practiceName": "Twenty Twenty Family Vision",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4508,6 +5399,9 @@
     "practiceName": "Twenty Twenty Family Vision",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4523,6 +5417,9 @@
     "practiceName": "What A Spectacle Optometry",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4538,6 +5435,9 @@
     "practiceName": "Acuity Eyecare",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4553,6 +5453,9 @@
     "practiceName": "Eyediology Vision Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4568,6 +5471,9 @@
     "practiceName": "Duvall Advanced Family Eyecare",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4583,6 +5489,9 @@
     "practiceName": "Progressive Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4598,6 +5507,9 @@
     "practiceName": "Ridgeview Optometry",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4613,6 +5525,9 @@
     "practiceName": "Omaha Primary Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4628,6 +5543,9 @@
     "practiceName": "Eyediology Vision Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4643,6 +5561,9 @@
     "practiceName": "Eyes For Life",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4658,6 +5579,9 @@
     "practiceName": "Wenatchee Vision Source",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4673,6 +5597,9 @@
     "practiceName": "Piedmont Eyecare",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4688,6 +5615,9 @@
     "practiceName": "Gig Harbor Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4703,6 +5633,9 @@
     "practiceName": "Liberty Lake Eyecare Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4718,6 +5651,9 @@
     "practiceName": "Moderneyes Eyecare",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4733,6 +5669,9 @@
     "practiceName": "East Main Vision Clinic",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4748,6 +5687,9 @@
     "practiceName": "Eyes On Westlake",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4763,6 +5705,9 @@
     "practiceName": "Noble Eyes Vision Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4778,6 +5723,9 @@
     "practiceName": "Webb Eyecare Scottsbluff",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4793,6 +5741,9 @@
     "practiceName": "Palmer Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4808,6 +5759,9 @@
     "practiceName": "East Main Vision Clinic",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4823,6 +5777,9 @@
     "practiceName": "Webb Eyecare Alliance",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4838,6 +5795,9 @@
     "practiceName": "Vision Source Of Chelan",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4853,6 +5813,9 @@
     "practiceName": "Maple Valley Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4868,6 +5831,9 @@
     "practiceName": "Leavenworth Vision Source",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4883,6 +5849,9 @@
     "practiceName": "Lifetime Vision Center-Ne City",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4898,6 +5867,9 @@
     "practiceName": "Webb Eyecare Scottsbluff",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4913,6 +5885,9 @@
     "practiceName": "Webb Eyecare Alliance",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4928,6 +5903,9 @@
     "practiceName": "Webb Eyecare Alliance",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4943,6 +5921,9 @@
     "practiceName": "Lifetime Vision Center -Auburn",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4958,6 +5939,9 @@
     "practiceName": "Mid-Columbia Eyecare",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4973,6 +5957,9 @@
     "practiceName": "Webb Eyecare Scottsbluff",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -4988,6 +5975,9 @@
     "practiceName": "Maple Valley Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5003,6 +5993,9 @@
     "practiceName": "Lifetime Vision Source",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5018,6 +6011,9 @@
     "practiceName": "Mid-Columbia Eyecare",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5033,6 +6029,9 @@
     "practiceName": "Lifetime Vision Source",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5048,6 +6047,9 @@
     "practiceName": "Perception Eyecare",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -5063,6 +6065,9 @@
     "practiceName": "Redmond Eye Doctors",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5078,6 +6083,9 @@
     "practiceName": "The Eye Guys",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5093,6 +6101,9 @@
     "practiceName": "Alpine Vision Clinic",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5108,6 +6119,9 @@
     "practiceName": "Hidden Valley Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5123,6 +6137,9 @@
     "practiceName": "Lifetime Vision Center -Auburn",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5138,6 +6155,9 @@
     "practiceName": "Longview Eye And Vision",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5153,6 +6173,9 @@
     "practiceName": "Alpine Vision Clinic",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5168,6 +6191,9 @@
     "practiceName": "Gailmard Eye Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5183,6 +6209,9 @@
     "practiceName": "Union Eye",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5198,6 +6227,9 @@
     "practiceName": "Totalvision Eyecare Manchester",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5213,6 +6245,9 @@
     "practiceName": "Cascadia Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5228,6 +6263,9 @@
     "practiceName": "Redwood Eye Clinic",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5243,6 +6281,9 @@
     "practiceName": "Redwood Eye Clinic",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5258,6 +6299,9 @@
     "practiceName": "Redwood Eye Clinic",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5273,6 +6317,9 @@
     "practiceName": "Carousel Eyecare",
     "customerTypeCode": "ACQU",
     "customerTypeLabel": "Artisan Acquios Partner",
+    "detectedCustomerTypeCodes": [
+      "ACQU"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -5288,6 +6335,9 @@
     "practiceName": "Miles City Vision",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5303,6 +6353,9 @@
     "practiceName": "Miles City Vision",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5318,6 +6371,9 @@
     "practiceName": "Signature Eyecare",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5333,6 +6389,9 @@
     "practiceName": "Family Vision Assoc. Id Falls",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5348,6 +6407,9 @@
     "practiceName": "San Juan Vision Source",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5363,6 +6425,9 @@
     "practiceName": "San Juan Vision Source",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5378,6 +6443,9 @@
     "practiceName": "East Side Vision",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5393,6 +6461,9 @@
     "practiceName": "Weston Family Eyecare",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5408,6 +6479,9 @@
     "practiceName": "Swoop Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5423,6 +6497,9 @@
     "practiceName": "The Eye Spot",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5438,6 +6515,9 @@
     "practiceName": "The Eye Spot",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5453,6 +6533,9 @@
     "practiceName": "Marciano Family Vision",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5468,6 +6551,9 @@
     "practiceName": "Pro-Vision Care Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5483,6 +6569,9 @@
     "practiceName": "Marino Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5498,6 +6587,9 @@
     "practiceName": "East Side Vision",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5513,6 +6605,9 @@
     "practiceName": "Clear Lake Eye Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5528,6 +6623,9 @@
     "practiceName": "Bass Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5543,6 +6641,9 @@
     "practiceName": "Caec - Eye Contact Vision Ctr",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -5558,6 +6659,9 @@
     "practiceName": "Elevated Eyecare",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5573,6 +6677,9 @@
     "practiceName": "Bass Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5588,6 +6695,9 @@
     "practiceName": "Caec - Clarity Birmingham",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -5603,6 +6713,9 @@
     "practiceName": "Caec - Oakland Vision Wl",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -5618,6 +6731,9 @@
     "practiceName": "Caec - Walton & Becker Oxford",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -5633,6 +6749,9 @@
     "practiceName": "Clear Lake Eye Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5648,6 +6767,9 @@
     "practiceName": "Caec - Visions Optical",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -5663,6 +6785,9 @@
     "practiceName": "Caec - Walton & Becker Oxford",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -5678,6 +6803,9 @@
     "practiceName": "Peg - Bedford",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -5693,6 +6821,9 @@
     "practiceName": "Peg - Kirkwood",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -5708,6 +6839,9 @@
     "practiceName": "Peg - Columbus",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -5723,6 +6857,9 @@
     "practiceName": "Peg - Woodscrest",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -5738,6 +6875,9 @@
     "practiceName": "Peg - Richland Plaza",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -5753,6 +6893,9 @@
     "practiceName": "Webb Eyecare Alliance",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5768,6 +6911,9 @@
     "practiceName": "Webb Eyecare Alliance",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5783,6 +6929,9 @@
     "practiceName": "Vqec - Geist",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -5798,6 +6947,9 @@
     "practiceName": "Zionsville Eyecare",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -5813,6 +6965,9 @@
     "practiceName": "Vqec - Greenwood",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -5828,6 +6983,9 @@
     "practiceName": "Peg - Richland Plaza",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -5843,6 +7001,9 @@
     "practiceName": "Peg - Columbus",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -5858,6 +7019,9 @@
     "practiceName": "The Eye Site",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5873,6 +7037,9 @@
     "practiceName": "Zionsville Eyecare",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -5888,6 +7055,9 @@
     "practiceName": "Peg - Woodscrest",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -5903,6 +7073,9 @@
     "practiceName": "Peg - Woodscrest",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -5918,6 +7091,9 @@
     "practiceName": "Vqec - Geist",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -5933,6 +7109,9 @@
     "practiceName": "Glimpse Vision - Gold Coast",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5948,6 +7127,9 @@
     "practiceName": "Vision Care Center Peoria",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -5963,6 +7145,9 @@
     "practiceName": "Acadia Eye Center",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -5978,6 +7163,9 @@
     "practiceName": "Vqec - Geist",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -5993,6 +7181,9 @@
     "practiceName": "Vqec - Greenwood",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6008,6 +7199,9 @@
     "practiceName": "All Eyes Optometry Pllc",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -6023,6 +7217,9 @@
     "practiceName": "Bella Eyecare Optometry",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -6038,6 +7235,9 @@
     "practiceName": "Forsight Vision",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -6053,6 +7253,9 @@
     "practiceName": "Zionsville Eyecare",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6068,6 +7271,9 @@
     "practiceName": "Fvc - Wink Gallery",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6083,6 +7289,9 @@
     "practiceName": "Vqec - Geist",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6098,6 +7307,9 @@
     "practiceName": "All Eyes Optometry Pllc",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -6113,6 +7325,9 @@
     "practiceName": "Vqec - Greenwood",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6128,6 +7343,9 @@
     "practiceName": "Vqec - Greenwood",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6143,6 +7361,9 @@
     "practiceName": "Vqec - Greenwood",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6158,6 +7379,9 @@
     "practiceName": "Vqec - Greenwood",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6173,6 +7397,9 @@
     "practiceName": "Vqec - Greenwood",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6185,9 +7412,12 @@
   {
     "email": "madison@olsoneye.com",
     "accountNumber": "10054",
-    "practiceName": "Espy Vision",
+    "practiceName": "Epsy Vision",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -6203,6 +7433,9 @@
     "practiceName": "Carmel Eyecare",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6218,6 +7451,9 @@
     "practiceName": "Carmel Eyecare",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6233,6 +7469,9 @@
     "practiceName": "Bella Eyecare Optometry",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -6248,6 +7487,9 @@
     "practiceName": "Eye Care Of Rigby",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6263,6 +7505,9 @@
     "practiceName": "Vqec - Geist",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6278,6 +7523,9 @@
     "practiceName": "The Eye Site",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -6293,6 +7541,9 @@
     "practiceName": "Prairie Vision Wahpeton",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6308,6 +7559,9 @@
     "practiceName": "Williston Basin Eyecare Assoc",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6323,6 +7577,9 @@
     "practiceName": "Williston Basin Eyecare Assoc",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6338,6 +7595,9 @@
     "practiceName": "Pine Creek Vision Clinic",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6353,6 +7613,9 @@
     "practiceName": "Fvc - Wink Gallery",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6368,6 +7631,9 @@
     "practiceName": "Portland Eye Care",
     "customerTypeCode": "PMP",
     "customerTypeLabel": "Artisan PMP Partner",
+    "detectedCustomerTypeCodes": [
+      "PMP"
+    ],
     "allowedPriceLists": [
       "A6"
     ],
@@ -6383,6 +7649,9 @@
     "practiceName": "Eyestyles Bridgeport",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6398,6 +7667,9 @@
     "practiceName": "Ridgeview Eyecare - Lenexa",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6413,6 +7685,9 @@
     "practiceName": "Eyecare Professionals P.C",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6428,6 +7703,9 @@
     "practiceName": "Carbon Valley Eye Care",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6443,6 +7721,9 @@
     "practiceName": "Carbon Valley Eye Care",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6458,6 +7739,9 @@
     "practiceName": "Complete Family Vision Care",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6473,6 +7757,9 @@
     "practiceName": "Eyecare Professionals P.C",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6488,6 +7775,9 @@
     "practiceName": "Family Eye Center-Ontario",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6503,6 +7793,9 @@
     "practiceName": "Family Eye Center-Ontario",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6518,6 +7811,9 @@
     "practiceName": "Roaring Fork Vision",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6533,6 +7829,9 @@
     "practiceName": "Vail Vision",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6548,6 +7847,9 @@
     "practiceName": "Valley Vision",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6563,6 +7865,9 @@
     "practiceName": "20/20 Eyecare",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6578,6 +7883,9 @@
     "practiceName": "20/20 Eyecare",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6593,6 +7901,9 @@
     "practiceName": "Pine Creek Vision Clinic",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6608,6 +7919,9 @@
     "practiceName": "White Spruce Optometry",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6623,6 +7937,9 @@
     "practiceName": "White Spruce Optometry",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6638,6 +7955,9 @@
     "practiceName": "Williston Basin Eyecare Assoc",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6653,6 +7973,9 @@
     "practiceName": "Williston Basin Eyecare Assoc",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6668,6 +7991,9 @@
     "practiceName": "Williston Basin Eyecare Assoc",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6683,6 +8009,9 @@
     "practiceName": "Williston Basin Eyecare Assoc",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6698,6 +8027,9 @@
     "practiceName": "Vqec - Geist",
     "customerTypeCode": "PART",
     "customerTypeLabel": "Artisan Equity Partner",
+    "detectedCustomerTypeCodes": [
+      "PART"
+    ],
     "allowedPriceLists": [
       "P6"
     ],
@@ -6713,6 +8045,9 @@
     "practiceName": "Weiss Eyecare Clinic",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -6728,6 +8063,9 @@
     "practiceName": "Bend Ophthalmology, Llc",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -6743,6 +8081,9 @@
     "practiceName": "Eye Promise Optical",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -6758,6 +8099,9 @@
     "practiceName": "Nw Eyecare Vancouver",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -6773,6 +8117,9 @@
     "practiceName": "Eyes On Broadway",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -6788,6 +8135,9 @@
     "practiceName": "Eyes On Broadway",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -6803,6 +8153,9 @@
     "practiceName": "Eyes On Broadway",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -6818,6 +8171,9 @@
     "practiceName": "Bend Ophthalmology, Llc",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -6833,6 +8189,9 @@
     "practiceName": "Kiowa Eyecare Center",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -6848,6 +8207,9 @@
     "practiceName": "Gig Harbor Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -6863,6 +8225,9 @@
     "practiceName": "Cheyene Eye Center",
     "customerTypeCode": "GENL",
     "customerTypeLabel": "Artisan General Customer",
+    "detectedCustomerTypeCodes": [
+      "GENL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],
@@ -6878,6 +8243,9 @@
     "practiceName": "Hidden Valley Eye Care",
     "customerTypeCode": "NL",
     "customerTypeLabel": "Artisan Neurolens Partner",
+    "detectedCustomerTypeCodes": [
+      "NL"
+    ],
     "allowedPriceLists": [
       "G6"
     ],

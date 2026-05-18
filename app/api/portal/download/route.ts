@@ -5,7 +5,11 @@ import {
   S3ServiceException,
 } from "@aws-sdk/client-s3";
 import { getVerifiedCloudflareAccessEmailFromHeaders } from "@/lib/portal/auth";
-import { getCustomerByEmail } from "@/lib/portal/customers";
+import {
+  getCustomerByEmailAndAccount,
+  getCustomersByEmail,
+} from "@/lib/portal/customers";
+import { normalizeAccountNumber } from "@/lib/portal/normalizeAccounts";
 import { getPriceListByCode } from "@/lib/portal/priceLists";
 
 export const dynamic = "force-dynamic";
@@ -225,12 +229,29 @@ export async function GET(request: NextRequest) {
       return textResponse("Missing authenticated email.", 401);
     }
 
-    const customer = getCustomerByEmail(authenticatedEmail);
+    const requestedAccountNumber =
+      request.nextUrl.searchParams.get("account")?.trim() ?? "";
+    const customers = getCustomersByEmail(authenticatedEmail);
+    const customer = requestedAccountNumber
+      ? getCustomerByEmailAndAccount(authenticatedEmail, requestedAccountNumber)
+      : customers.length === 1
+        ? customers[0]
+        : undefined;
 
     if (!customer) {
-      logDownloadDiagnostic("Unknown portal customer", diagnostics);
+      logDownloadDiagnostic("Unknown portal customer or missing account selection", diagnostics, {
+        requestedAccountNumber: requestedAccountNumber
+          ? normalizeAccountNumber(requestedAccountNumber)
+          : "",
+        accountCount: customers.length,
+      });
 
-      return textResponse("You are not allowed to access this portal.", 403);
+      return textResponse(
+        customers.length > 1
+          ? "Missing account selection."
+          : "You are not allowed to access this portal.",
+        customers.length > 1 ? 400 : 403
+      );
     }
 
     if (!requestedCode) {

@@ -8,17 +8,20 @@ import {
 import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
 import {
   customerHasPortalSection,
-  getCustomerByEmail,
+  getCustomerByEmailAndAccount,
+  getCustomersByEmail,
   type PortalCustomer,
   type PortalSection,
 } from "@/lib/portal/customers";
 import { getPriceListByCode, type PortalPriceList } from "@/lib/portal/priceLists";
 import {
   getPortalWorkbookProfileByEmail,
+  getPortalWorkbookProfilesByEmail,
   profileHasSequelRebateInvitation,
   type PortalWorkbookProfile,
   type PortalWorkbookAccount,
 } from "@/lib/portal/workbookAccountData";
+import { normalizeAccountNumber } from "@/lib/portal/normalizeAccounts";
 
 const PORTAL_ACCESS_LOGIN_URL =
   "https://artisanslabs.com/portal";
@@ -144,7 +147,17 @@ function PortalMessage({
   );
 }
 
-function PriceListCard({ priceList }: { priceList: PortalPriceList }) {
+function PriceListCard({
+  priceList,
+  accountNumber,
+}: {
+  priceList: PortalPriceList;
+  accountNumber?: string;
+}) {
+  const downloadParams = new URLSearchParams({ code: priceList.code });
+
+  if (accountNumber) downloadParams.set("account", accountNumber);
+
   return (
     <div className="group flex flex-col justify-between gap-5 border-t border-[#d8c49b] py-6 sm:flex-row sm:items-center">
       <div>
@@ -156,7 +169,7 @@ function PriceListCard({ priceList }: { priceList: PortalPriceList }) {
       <div className="flex flex-col gap-3 sm:items-end">
         {priceList.r2Key ? (
           <a
-            href={`/api/portal/download?code=${encodeURIComponent(priceList.code)}`}
+            href={`/api/portal/download?${downloadParams.toString()}`}
             className="inline-flex w-fit items-center justify-center rounded-full bg-[#172a28] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#27433f]"
           >
             Download {priceList.code} PDF
@@ -172,6 +185,92 @@ function PriceListCard({ priceList }: { priceList: PortalPriceList }) {
         ) : null}
       </div>
     </div>
+  );
+}
+
+function PortalAccountSelector({
+  authenticatedEmail,
+  profiles,
+  customers,
+}: {
+  authenticatedEmail: string;
+  profiles: PortalWorkbookProfile[];
+  customers: PortalCustomer[];
+}) {
+  const optionsByAccount = new Map<
+    string,
+    {
+      accountNumber: string;
+      practiceName: string;
+      customerTypeLabel?: string;
+    }
+  >();
+
+  for (const customer of customers) {
+    optionsByAccount.set(normalizeAccountNumber(customer.accountNumber), {
+      accountNumber: customer.accountNumber,
+      practiceName: customer.practiceName,
+      customerTypeLabel: customer.customerTypeLabel,
+    });
+  }
+
+  for (const profile of profiles) {
+    const accountNumber =
+      profile.account?.accountNumber || profile.person.accountNumber || "";
+    const key = normalizeAccountNumber(accountNumber);
+
+    if (!key) continue;
+
+    optionsByAccount.set(key, {
+      accountNumber,
+      practiceName:
+        profile.account?.accountName ||
+        profile.person.organization ||
+        optionsByAccount.get(key)?.practiceName ||
+        "Customer account",
+      customerTypeLabel: optionsByAccount.get(key)?.customerTypeLabel,
+    });
+  }
+
+  const options = [...optionsByAccount.values()];
+
+  return (
+    <PortalShell eyebrow="Choose Account">
+      <section className="max-w-4xl border border-[#d8c49b] bg-[#fffaf1]/88 p-7 shadow-[0_24px_80px_rgba(23,42,40,0.12)] sm:p-10">
+        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#8b7650]">
+          Multiple Accounts
+        </p>
+        <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-[#172a28] sm:text-5xl">
+          Select the account you want to view.
+        </h1>
+        <p className="mt-4 max-w-2xl text-base leading-7 text-[#706759]">
+          Logged in as {authenticatedEmail}. Each account is shown separately so
+          pricing, performance, and downloads stay tied to the right practice.
+        </p>
+        <div className="mt-8 grid gap-4">
+          {options.map((option) => (
+            <Link
+              key={option.accountNumber}
+              href={`/portal?account=${encodeURIComponent(option.accountNumber)}`}
+              className="group flex flex-col justify-between gap-4 border border-[#d8c49b] bg-white/70 p-5 transition hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_18px_45px_rgba(23,42,40,0.1)] sm:flex-row sm:items-center"
+            >
+              <span>
+                <span className="block text-2xl font-semibold tracking-[-0.03em] text-[#172a28]">
+                  {option.practiceName}
+                </span>
+                <span className="mt-2 block text-sm text-[#706759]">
+                  Account {option.accountNumber}
+                  {option.customerTypeLabel ? ` · ${option.customerTypeLabel}` : ""}
+                </span>
+              </span>
+              <span className="inline-flex w-fit items-center justify-center rounded-full bg-[#172a28] px-5 py-2 text-sm font-semibold text-white">
+                View Portal
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+    </PortalShell>
   );
 }
 
@@ -762,11 +861,13 @@ export function PortalDashboardContent({
   customer,
   workbookProfile,
   adminPreviewAccountName,
+  adminPreviewAccountNumber,
 }: {
   authenticatedEmail: string;
   customer?: PortalCustomer;
   workbookProfile?: PortalWorkbookProfile;
   adminPreviewAccountName?: string;
+  adminPreviewAccountNumber?: string;
 }) {
   if (!customer && !workbookProfile) {
     return (
@@ -799,9 +900,17 @@ export function PortalDashboardContent({
   return (
     <PortalShell eyebrow="Verified Customer Portal">
       {adminPreviewAccountName ? (
-        <div className="mb-8 border border-[#b89a61] bg-[#172a28] px-5 py-4 text-sm font-semibold text-white shadow-[0_18px_55px_rgba(23,42,40,0.16)]">
-          Admin preview mode. You are viewing this portal as{" "}
-          {adminPreviewAccountName}.
+        <div className="mb-8 flex flex-col gap-4 border border-[#b89a61] bg-[#172a28] px-5 py-4 text-sm font-semibold text-white shadow-[0_18px_55px_rgba(23,42,40,0.16)] sm:flex-row sm:items-center sm:justify-between">
+          <span>
+            Admin preview mode. Viewing as {adminPreviewAccountName} account{" "}
+            {adminPreviewAccountNumber || accountNumber}.
+          </span>
+          <Link
+            href="/portal/admin/accounts"
+            className="inline-flex w-fit items-center justify-center rounded-full border border-white/30 px-4 py-2 text-xs uppercase tracking-[0.18em] transition hover:bg-white hover:text-[#172a28]"
+          >
+            Exit Preview
+          </Link>
         </div>
       ) : null}
 
@@ -862,7 +971,11 @@ export function PortalDashboardContent({
           {availablePriceLists.length > 0 ? (
             <div>
               {availablePriceLists.map((priceList) => (
-                <PriceListCard key={priceList.code} priceList={priceList} />
+                <PriceListCard
+                  key={priceList.code}
+                  priceList={priceList}
+                  accountNumber={accountNumber}
+                />
               ))}
             </div>
           ) : (
@@ -927,7 +1040,13 @@ export function PortalDashboardContent({
   );
 }
 
-export default function PortalDashboard({ headerList }: { headerList: Headers }) {
+export default function PortalDashboard({
+  headerList,
+  selectedAccountNumber,
+}: {
+  headerList: Headers;
+  selectedAccountNumber?: string;
+}) {
   const authenticatedEmail = getPortalAuthenticatedEmailFromHeaders(headerList);
 
   if (!authenticatedEmail) {
@@ -939,11 +1058,44 @@ export default function PortalDashboard({ headerList }: { headerList: Headers })
     );
   }
 
+  const customers = getCustomersByEmail(authenticatedEmail).filter(
+    (customer): customer is PortalCustomer => Boolean(customer)
+  );
+  const profiles = getPortalWorkbookProfilesByEmail(authenticatedEmail);
+  const selectedAccountKey = normalizeAccountNumber(selectedAccountNumber);
+  const matchedCustomer = selectedAccountKey
+    ? getCustomerByEmailAndAccount(authenticatedEmail, selectedAccountKey)
+    : customers[0];
+  const matchedProfile = selectedAccountKey
+    ? getPortalWorkbookProfileByEmail(authenticatedEmail, selectedAccountKey)
+    : profiles[0];
+  const selectableAccountCount = new Set([
+    ...customers.map((customer) => normalizeAccountNumber(customer.accountNumber)),
+    ...profiles.map((profile) =>
+      normalizeAccountNumber(
+        profile.account?.accountNumber || profile.person.accountNumber
+      )
+    ),
+  ]).size;
+
+  if (
+    selectableAccountCount > 1 &&
+    (!selectedAccountKey || (!matchedCustomer && !matchedProfile))
+  ) {
+    return (
+      <PortalAccountSelector
+        authenticatedEmail={authenticatedEmail}
+        customers={customers}
+        profiles={profiles}
+      />
+    );
+  }
+
   return (
     <PortalDashboardContent
       authenticatedEmail={authenticatedEmail}
-      customer={getCustomerByEmail(authenticatedEmail)}
-      workbookProfile={getPortalWorkbookProfileByEmail(authenticatedEmail)}
+      customer={matchedCustomer}
+      workbookProfile={matchedProfile}
     />
   );
 }

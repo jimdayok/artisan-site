@@ -14,6 +14,7 @@ import type { PriceListCode } from "@/lib/portal/priceLists";
 import {
   accountHasSequelRebateInvitation,
   getPortalWorkbookAccounts,
+  getPortalWorkbookAccountsForEmail,
   getPortalWorkbookPeople,
   getPortalWorkbookPeopleByAccountNumber,
   normalizePortalAccountNumber,
@@ -23,13 +24,15 @@ import {
 } from "@/lib/portal/workbookAccountData";
 
 export type AdminUserRow = {
-  person: PortalWorkbookPerson;
+  displayName: string;
   email: string;
+  people: PortalWorkbookPerson[];
+  accounts: PortalWorkbookAccount[];
   isApproved: boolean;
   hasSequelRebateInvitation: boolean;
   hasModernPackageSavingsWarning: boolean;
-  customerTypeCode: string;
-  customerTypeLabel: string;
+  customerTypeCodes: string[];
+  customerTypeLabels: string[];
   assignedPriceLists: PriceListCode[];
   assignedSections: PortalSection[];
 };
@@ -41,6 +44,10 @@ export type AdminAccountRow = {
   hasModernPackageSavingsWarning: boolean;
   customerTypeCode: string;
   customerTypeLabel: string;
+  detectedCustomerTypeCodes: string[];
+  duplicateRowsMerged: boolean;
+  sameNameDifferentAccountWarning: boolean;
+  sameNameAccountNumbers: string[];
   assignedPriceLists: PriceListCode[];
   assignedSections: PortalSection[];
 };
@@ -52,7 +59,7 @@ function uniqueList<T extends string>(values: T[]) {
 function accessForEmail(email: string) {
   const normalizedEmail = email.trim().toLowerCase();
 
-  return customerPortalAccess.find((entry) => entry.email === normalizedEmail);
+  return customerPortalAccess.filter((entry) => entry.email === normalizedEmail);
 }
 
 function accessForAccount(accountNumber: string) {
@@ -73,33 +80,42 @@ function assignedSections(records: PortalCustomerAccess[]) {
 }
 
 export function getAdminUserRows() {
-  return getPortalWorkbookPeople().flatMap((person) => {
-    const emails = person.emails.length > 0 ? person.emails : [""];
-    const account = getPortalWorkbookAccounts().find(
-      (entry) =>
-        normalizePortalAccountNumber(entry.accountNumber) ===
-        normalizePortalAccountNumber(person.accountNumber)
-    );
-    const customerType = getCustomerTypeInfoFromAccountData({ account, person });
+  const peopleByEmail = new Map<string, PortalWorkbookPerson[]>();
 
-    return emails.map((email) => {
-      const directAccess = accessForEmail(email);
-      const accountAccess = accessForAccount(person.accountNumber);
-      const records = directAccess ? [directAccess] : accountAccess;
+  for (const person of getPortalWorkbookPeople()) {
+    for (const email of person.emails) {
+      peopleByEmail.set(email, [...(peopleByEmail.get(email) ?? []), person]);
+    }
+  }
 
-      return {
-        person,
+  return [...peopleByEmail.entries()].map(([email, people]) => {
+    const accounts = getPortalWorkbookAccountsForEmail(email);
+    const records = accessForEmail(email);
+    const customerTypes = accounts
+      .map((account) => getCustomerTypeInfoFromAccountData({ account }))
+      .filter((typeInfo): typeInfo is NonNullable<typeof typeInfo> =>
+        Boolean(typeInfo)
+      );
+
+    return {
+      displayName:
+        people.find((person) => person.name)?.name ||
         email,
-        isApproved: Boolean(directAccess),
-        hasSequelRebateInvitation: personHasSequelRebateInvitation(person),
-        hasModernPackageSavingsWarning:
-          hasModernPackageSavingsWarning(account),
-        customerTypeCode: customerType?.code ?? "",
-        customerTypeLabel: customerType?.label ?? "",
-        assignedPriceLists: assignedPriceLists(records),
-        assignedSections: assignedSections(records),
-      } satisfies AdminUserRow;
-    });
+      email,
+      people,
+      accounts,
+      isApproved: records.length > 0,
+      hasSequelRebateInvitation: people.some(personHasSequelRebateInvitation),
+      hasModernPackageSavingsWarning: accounts.some((account) =>
+        hasModernPackageSavingsWarning(account)
+      ),
+      customerTypeCodes: uniqueList(customerTypes.map((typeInfo) => typeInfo.code)),
+      customerTypeLabels: uniqueList(
+        customerTypes.map((typeInfo) => typeInfo.label)
+      ),
+      assignedPriceLists: assignedPriceLists(records),
+      assignedSections: assignedSections(records),
+    } satisfies AdminUserRow;
   });
 }
 
@@ -117,6 +133,12 @@ export function getAdminAccountRows() {
       hasModernPackageSavingsWarning: hasModernPackageSavingsWarning(account),
       customerTypeCode: customerType?.code ?? "",
       customerTypeLabel: customerType?.label ?? "",
+      detectedCustomerTypeCodes: account.detectedCustomerTypeCodes ?? [],
+      duplicateRowsMerged: Boolean(account.duplicateRowsMerged),
+      sameNameDifferentAccountWarning: Boolean(
+        account.sameNameDifferentAccountWarning
+      ),
+      sameNameAccountNumbers: account.sameNameAccountNumbers ?? [],
       assignedPriceLists: assignedPriceLists(records),
       assignedSections: assignedSections(records),
     } satisfies AdminAccountRow;
@@ -146,6 +168,13 @@ export function getPreviewCustomerByAccountNumber(accountNumber: string) {
   if (records.length === 0) return undefined;
 
   const primaryRecord = records[0];
+  const customerType = getCustomerTypeInfoFromAccountData({
+    account: getPortalWorkbookAccounts().find(
+      (account) =>
+        normalizePortalAccountNumber(account.accountNumber) ===
+        normalizePortalAccountNumber(accountNumber)
+    ),
+  });
 
   return {
     accountNumber: primaryRecord.accountNumber,
@@ -154,6 +183,8 @@ export function getPreviewCustomerByAccountNumber(accountNumber: string) {
     priceLists: assignedPriceLists(records),
     allowedPriceLists: assignedPriceLists(records),
     portalSections: assignedSections(records),
+    customerTypeCode: customerType?.code ?? primaryRecord.customerTypeCode,
+    customerTypeLabel: customerType?.label ?? primaryRecord.customerTypeLabel,
   } satisfies PortalCustomer;
 }
 
@@ -164,12 +195,13 @@ export function filterAdminUserRows(rows: AdminUserRow[], query: string) {
 
   return rows.filter((row) =>
     [
-      row.person.name,
+      row.displayName,
       row.email,
-      row.person.organization,
-      row.person.accountNumber,
-      row.customerTypeCode,
-      row.customerTypeLabel,
+      row.people.map((person) => person.organization).join(", "),
+      row.accounts.map((account) => account.accountName).join(", "),
+      row.accounts.map((account) => account.accountNumber).join(", "),
+      row.customerTypeCodes.join(", "),
+      row.customerTypeLabels.join(", "),
       row.assignedPriceLists.join(", "),
       row.assignedSections.join(", "),
     ]
@@ -192,6 +224,8 @@ export function filterAdminAccountRows(rows: AdminAccountRow[], query: string) {
       row.account.salesRep,
       row.customerTypeCode,
       row.customerTypeLabel,
+      row.detectedCustomerTypeCodes.join(", "),
+      row.sameNameAccountNumbers.join(", "),
       row.users.flatMap((user) => user.emails).join(", "),
       row.assignedPriceLists.join(", "),
       row.assignedSections.join(", "),

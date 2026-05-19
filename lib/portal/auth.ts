@@ -1,7 +1,7 @@
 export const CLOUDFLARE_ACCESS_EMAIL_HEADER =
   "cf-access-authenticated-user-email";
+export const LOCAL_PORTAL_TEST_EMAIL_COOKIE = "portal_dev_email";
 
-const DEVELOPMENT_FALLBACK_EMAIL = "jimdayok@me.com";
 const LOCALHOST_NAMES = new Set(["localhost", "127.0.0.1", "::1"]);
 const PORTAL_HOSTNAME = "portal.artisanslabs.com";
 export const CLOUDFLARE_ACCESS_JWT_COOKIE = "CF_Authorization";
@@ -49,26 +49,12 @@ export function isLocalhostDevelopmentRequest(headers: Headers) {
   return process.env.NODE_ENV === "development" && isLocalhostRequest(headers);
 }
 
-export function getDevelopmentFallbackEmail(headers: Headers) {
-  return isLocalhostDevelopmentRequest(headers) ? DEVELOPMENT_FALLBACK_EMAIL : "";
-}
-
 export function getCloudflareAccessEmailFromHeaders(headers: Headers) {
   return headers.get(CLOUDFLARE_ACCESS_EMAIL_HEADER)?.trim().toLowerCase() ?? "";
 }
 
 export function getVerifiedCloudflareAccessEmailFromHeaders(headers: Headers) {
   return getCloudflareAccessEmailFromHeaders(headers);
-}
-
-export function getPortalAuthenticatedEmailFromHeaders(headers: Headers) {
-  const cloudflareAccessEmail = getCloudflareAccessEmailFromHeaders(headers);
-
-  if (cloudflareAccessEmail) return cloudflareAccessEmail;
-
-  // Localhost-only developer convenience. Production requests never receive a
-  // default customer email; they must include Cloudflare Access' verified header.
-  return getDevelopmentFallbackEmail(headers);
 }
 
 function getCookieValue(headers: Headers, cookieName: string) {
@@ -81,6 +67,30 @@ function getCookieValue(headers: Headers, cookieName: string) {
       .find((cookie) => cookie.startsWith(`${cookieName}=`))
       ?.slice(cookieName.length + 1) ?? ""
   );
+}
+
+export function getLocalDevelopmentPortalEmailFromHeaders(headers: Headers) {
+  if (!isLocalhostDevelopmentRequest(headers)) return "";
+
+  try {
+    return decodeURIComponent(
+      getCookieValue(headers, LOCAL_PORTAL_TEST_EMAIL_COOKIE)
+    )
+      .trim()
+      .toLowerCase();
+  } catch {
+    return "";
+  }
+}
+
+export function getPortalAuthenticatedEmailFromHeaders(headers: Headers) {
+  const cloudflareAccessEmail = getCloudflareAccessEmailFromHeaders(headers);
+
+  if (cloudflareAccessEmail) return cloudflareAccessEmail;
+
+  // Localhost-only explicit test login. Production requests never trust this
+  // cookie; they must include Cloudflare Access' verified email header.
+  return getLocalDevelopmentPortalEmailFromHeaders(headers);
 }
 
 export function hasCloudflareAccessJwtCookie(headers: Headers) {

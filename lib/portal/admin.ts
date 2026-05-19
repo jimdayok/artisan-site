@@ -1,6 +1,6 @@
 import "server-only";
 
-import { getVerifiedCloudflareAccessEmailFromHeaders } from "@/lib/portal/auth";
+import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
 
 export const PORTAL_ADMIN_EMAILS = new Set([
   "jimdayok@me.com",
@@ -12,7 +12,7 @@ export function isPortalAdminEmail(email: string) {
 }
 
 export function getPortalAdminEmailFromHeaders(headers: Headers) {
-  const authenticatedEmail = getVerifiedCloudflareAccessEmailFromHeaders(headers);
+  const authenticatedEmail = getPortalAuthenticatedEmailFromHeaders(headers);
 
   if (!authenticatedEmail || !isPortalAdminEmail(authenticatedEmail)) return "";
 

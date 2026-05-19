@@ -336,6 +336,12 @@ export function getPortalWorkbookPeople() {
   return people;
 }
 
+export function getPortalWorkbookEmails() {
+  return [...new Set(people.flatMap((person) => person.emails))]
+    .filter(Boolean)
+    .sort((a, b) => a.localeCompare(b));
+}
+
 export function getPortalWorkbookAccounts() {
   return accounts;
 }

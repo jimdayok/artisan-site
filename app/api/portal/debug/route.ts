@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import {
   CLOUDFLARE_ACCESS_EMAIL_HEADER,
   getCloudflareAccessEmailFromHeaders,
+  getLocalDevelopmentPortalEmailFromHeaders,
   getPortalAuthenticatedEmailFromHeaders,
   hasCloudflareAccessJwtCookie,
   getRequestHostnames,
@@ -45,6 +46,8 @@ export async function GET(request: NextRequest) {
   const detectedEmail = getPortalAuthenticatedEmailFromHeaders(request.headers);
   const cloudflareAccessEmail =
     getCloudflareAccessEmailFromHeaders(request.headers);
+  const localDevelopmentEmail =
+    getLocalDevelopmentPortalEmailFromHeaders(request.headers);
   const cloudflareAccessJwtCookie = hasCloudflareAccessJwtCookie(request.headers);
   const normalizedEmail = detectedEmail.toLowerCase();
   const isAllowedEmail = DEBUG_ALLOWED_EMAILS.has(normalizedEmail);
@@ -65,8 +68,9 @@ export async function GET(request: NextRequest) {
     isPortalHost: isPortalHostRequest(request.headers),
     hasDetectedEmail: Boolean(detectedEmail),
     hasCloudflareAccessEmailHeader: Boolean(cloudflareAccessEmail),
+    hasLocalDevelopmentEmailCookie: Boolean(localDevelopmentEmail),
     hasCloudflareAccessJwtCookie: cloudflareAccessJwtCookie,
-    usedHeaderOrDevelopmentFallback: Boolean(detectedEmail),
+    usedHeaderOrLocalDevelopmentCookie: Boolean(detectedEmail),
     detectedHostnames: getRequestHostnames(request.headers),
     nonSensitiveHeaderNames: [...new Set(headerNames)],
   });

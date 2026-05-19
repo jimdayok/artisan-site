@@ -5,7 +5,10 @@ import {
   hasModernPackageSavingsWarning,
   hasProgramUsage,
 } from "@/lib/portal/accountInsights";
-import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
+import {
+  getPortalAuthenticatedEmailFromHeaders,
+  isLocalhostDevelopmentRequest,
+} from "@/lib/portal/auth";
 import {
   customerHasPortalSection,
   getCustomerByEmailAndAccount,
@@ -17,6 +20,7 @@ import { getPriceListByCode, type PortalPriceList } from "@/lib/portal/priceList
 import {
   getPortalWorkbookProfileByEmail,
   getPortalWorkbookProfilesByEmail,
+  getPortalWorkbookEmails,
   profileHasSequelRebateInvitation,
   type PortalWorkbookProfile,
   type PortalWorkbookAccount,
@@ -26,7 +30,11 @@ import { normalizeAccountNumber } from "@/lib/portal/normalizeAccounts";
 const PORTAL_ACCESS_LOGIN_URL =
   "https://artisanslabs.com/portal";
 const PORTAL_ACCESS_LOGOUT_URL =
-  "/cdn-cgi/access/logout?returnTo=%2Fportal";
+  "/cdn-cgi/access/logout?returnTo=/portal";
+const LOCAL_TEST_ADMIN_EMAILS = [
+  "jimdayok@me.com",
+  "jim.day@artisanlabnetwork.com",
+];
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -143,6 +151,55 @@ function PortalMessage({
           </a>
         ) : null}
       </div>
+    </PortalShell>
+  );
+}
+
+function LocalTestLoginPanel() {
+  const emails = [
+    ...new Set([...LOCAL_TEST_ADMIN_EMAILS, ...getPortalWorkbookEmails()]),
+  ];
+
+  return (
+    <PortalShell eyebrow="Local Test Login">
+      <section className="max-w-4xl border border-[#d8c49b] bg-[#fffaf1]/88 p-7 shadow-[0_24px_80px_rgba(23,42,40,0.12)] sm:p-10">
+        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#8b7650]">
+          Local Development
+        </p>
+        <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-[#172a28] sm:text-5xl">
+          Choose a portal test user.
+        </h1>
+        <p className="mt-4 max-w-2xl text-base leading-7 text-[#706759]">
+          Cloudflare Access is not present on localhost. Select a workbook user
+          to set a local-only test cookie for this browser.
+        </p>
+        <form
+          action="/portal/local-test-login"
+          method="post"
+          className="mt-8 grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end"
+        >
+          <label className="grid gap-2 text-sm font-semibold text-[#172a28]">
+            Test email
+            <select
+              name="email"
+              className="min-h-12 border border-[#d8c49b] bg-white px-4 text-base font-normal text-[#172a28] outline-none transition focus:border-[#172a28]"
+              defaultValue={LOCAL_TEST_ADMIN_EMAILS[0]}
+            >
+              {emails.map((email) => (
+                <option key={email} value={email}>
+                  {email}
+                </option>
+              ))}
+            </select>
+          </label>
+          <button
+            type="submit"
+            className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#172a28] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#27433f]"
+          >
+            Continue
+          </button>
+        </form>
+      </section>
     </PortalShell>
   );
 }
@@ -828,7 +885,11 @@ function ProgramUsageSection({ account }: { account: PortalWorkbookAccount }) {
   );
 }
 
-function PortalHelpSection() {
+function PortalHelpSection({
+  isLocalhostDevelopment,
+}: {
+  isLocalhostDevelopment?: boolean;
+}) {
   return (
     <section className="mt-10 border-t border-[#d8c49b] pt-6">
       <h2 className="text-xl font-semibold tracking-[-0.02em] text-[#172a28]">
@@ -851,6 +912,14 @@ function PortalHelpSection() {
         >
           Sign out
         </a>
+        {isLocalhostDevelopment ? (
+          <a
+            href="/portal/local-test-login"
+            className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#172a28]/20 bg-transparent px-5 py-2 text-sm font-semibold text-[#172a28] transition hover:bg-[#172a28] hover:text-white"
+          >
+            Switch User / Logout
+          </a>
+        ) : null}
       </div>
     </section>
   );
@@ -862,12 +931,14 @@ export function PortalDashboardContent({
   workbookProfile,
   adminPreviewAccountName,
   adminPreviewAccountNumber,
+  isLocalhostDevelopment,
 }: {
   authenticatedEmail: string;
   customer?: PortalCustomer;
   workbookProfile?: PortalWorkbookProfile;
   adminPreviewAccountName?: string;
   adminPreviewAccountNumber?: string;
+  isLocalhostDevelopment?: boolean;
 }) {
   if (!customer && !workbookProfile) {
     return (
@@ -984,7 +1055,7 @@ export function PortalDashboardContent({
             </p>
           )}
 
-          <PortalHelpSection />
+          <PortalHelpSection isLocalhostDevelopment={isLocalhostDevelopment} />
         </section>
 
         {availablePortalSections.length > 0 ? (
@@ -1048,8 +1119,11 @@ export default function PortalDashboard({
   selectedAccountNumber?: string;
 }) {
   const authenticatedEmail = getPortalAuthenticatedEmailFromHeaders(headerList);
+  const isLocalhostDevelopment = isLocalhostDevelopmentRequest(headerList);
 
   if (!authenticatedEmail) {
+    if (isLocalhostDevelopment) return <LocalTestLoginPanel />;
+
     return (
       <PortalMessage
         message="Unable to verify your secure login. Please sign in through the protected portal."
@@ -1094,6 +1168,7 @@ export default function PortalDashboard({
       authenticatedEmail={authenticatedEmail}
       customer={matchedCustomer}
       workbookProfile={matchedProfile}
+      isLocalhostDevelopment={isLocalhostDevelopment}
     />
   );
 }

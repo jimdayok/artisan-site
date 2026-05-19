@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "npm run portal:generate-access",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -17,6 +18,7 @@
     "@nivo/pie": "^0.99.0",
     "@studio-freight/lenis": "^1.0.42",
     "clsx": "^2.1.1",
+    "exceljs": "^4.4.0",
     "framer-motion": "^12.38.0",
     "gsap": "^3.15.0",
     "lenis": "^1.3.23",
@@ -27,8 +29,7 @@
     "react-dom": "19.2.4",
     "react-wrap-balancer": "^1.1.1",
     "recharts": "^3.8.1",
-    "tailwind-merge": "^3.6.0",
-    "xlsx": "^0.18.5"
+    "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

@@ -1058,9 +1058,7 @@ export default function PortalDashboard({
     );
   }
 
-  const customers = getCustomersByEmail(authenticatedEmail).filter(
-    (customer): customer is PortalCustomer => Boolean(customer)
-  );
+  const customers = getCustomersByEmail(authenticatedEmail);
   const profiles = getPortalWorkbookProfilesByEmail(authenticatedEmail);
   const selectedAccountKey = normalizeAccountNumber(selectedAccountNumber);
   const matchedCustomer = selectedAccountKey

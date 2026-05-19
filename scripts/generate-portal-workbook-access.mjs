@@ -1,12 +1,13 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import XLSX from 'xlsx';
+import ExcelJS from 'exceljs';
 
 const root = process.cwd();
 const portalDir = path.join(root, 'private-source', 'portal');
 const userPath = path.join(portalDir, 'User_Data.xlsx');
 const accountPath = path.join(portalDir, 'Acct_Data.xlsx');
 const outputPath = path.join(portalDir, 'workbook-access.json');
+const workbookDataOutputPath = path.join(portalDir, 'workbook-data.json');
 
 const typeMap = {
   PART: { label: 'Artisan Equity Partner', priceList: 'P6' },
@@ -17,18 +18,61 @@ const typeMap = {
 };
 const typePriority = ['PART', 'PMP', 'ACQU', 'NL', 'GENL'];
 
-function readSheet(filePath, sheetName) {
+async function readSheet(filePath, sheetName) {
   if (!existsSync(filePath)) return [];
-  const workbook = XLSX.read(readFileSync(filePath), { type: 'buffer', cellDates: true });
-  const sheet = workbook.Sheets[sheetName];
+  const workbook = new ExcelJS.Workbook();
+  await workbook.xlsx.load(readFileSync(filePath));
+  const sheet = workbook.getWorksheet(sheetName);
   if (!sheet) return [];
-  return XLSX.utils.sheet_to_json(sheet, { defval: '', raw: true });
+
+  const headers = [];
+  const rows = [];
+
+  sheet.eachRow({ includeEmpty: true }, (row, rowNumber) => {
+    const values = row.values;
+
+    if (rowNumber === 1) {
+      for (let index = 1; index < values.length; index += 1) {
+        headers[index] = toText(values[index]);
+      }
+      return;
+    }
+
+    const record = {};
+    let hasValue = false;
+
+    for (let index = 1; index < headers.length; index += 1) {
+      const header = headers[index];
+      if (!header) continue;
+
+      const value = values[index] ?? '';
+      const textValue = toText(value);
+      record[header] = value;
+      if (textValue) hasValue = true;
+    }
+
+    if (hasValue) rows.push(record);
+  });
+
+  return rows;
 }
 
 function toText(value) {
   if (value === null || value === undefined) return '';
   if (value instanceof Date) return value.toISOString().slice(0, 10);
+  if (typeof value === 'object') {
+    if ('text' in value) return toText(value.text);
+    if ('result' in value) return toText(value.result);
+    if ('richText' in value) return value.richText.map((part) => part.text || '').join('').trim();
+    if ('hyperlink' in value && 'text' in value) return toText(value.text);
+  }
   return String(value).trim();
+}
+
+function toNumber(value) {
+  if (typeof value === 'number') return Number.isFinite(value) ? value : 0;
+  const parsed = Number(toText(value).replace(/[$,%\s]/g, ''));
+  return Number.isFinite(parsed) ? parsed : 0;
 }
 
 function toAccountNumber(value) {
@@ -47,10 +91,88 @@ function emailList(value) {
     .filter((email) => email && email !== '20' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
 }
 
-const accounts = readSheet(accountPath, 'Export').map((row) => ({
-  accountNumber: toAccountNumber(row['Last Account Number']),
-  accountName: toText(row['Account Name']),
-  division: toText(row['Last Division']),
+function parsePeople(rows) {
+  return rows
+    .map((row) => {
+      const emails = [
+        ...emailList(row['Person - Email - Work']),
+        ...emailList(row['Person - Email - Home']),
+        ...emailList(row['Person - Email - Other']),
+      ];
+
+      return {
+        name: toText(row['Person - Name']),
+        organization: toText(row['Person - Organization']),
+        accountNumber: toAccountNumber(row['Organization - Account Number']),
+        emails: [...new Set(emails)],
+        division: toText(row['Organization - Division']),
+        artisanLab: toText(row['Organization - Artisan Lab']),
+        targetedPrograms: toText(row['Organization - Targeted Programs']),
+        lastOrderShipped: toText(row['Organization - Last Order Shipped']),
+      };
+    })
+    .filter((person) => person.accountNumber && person.emails.length > 0);
+}
+
+function parseAccounts(rows) {
+  return rows
+    .map((row) => ({
+      accountName: toText(row['Account Name']),
+      accountNumber: toAccountNumber(row['Last Account Number']),
+      division: toText(row['Last Division']),
+      salesRep: toText(row['Last Sales Rep']),
+      lastShippedDate: toText(row['Last Shipped Date']),
+      primaryPalPrivatePay: toText(row['Primary PAL Brand (Private Pay)']),
+      primaryPalVsp: toText(row['Primary PAL Brand (VSP)']),
+      lastLabName: toText(row['Last Lab Name']),
+      fullAddress: toText(row['Full Address']),
+      phoneNumber: toText(row['Last Phone Number']),
+      state: toText(row['Last State']),
+      zipCode: toText(row['Last Zip Code']),
+      modernPkgUsage: toText(row['Modern Pkg Usage']),
+      modernFrmUsage: toText(row['Modern Frm Usage']),
+      chemClipUsage: toText(row['ChemClip Usage']),
+      specCheckUsage: toText(row['SpecCheck Usage']),
+      tokaiUsage: toText(row['Tokai Usage']),
+      tier: toText(row['CM/PM Tier']),
+      ppmJobs: toNumber(row['PPM Jobs']),
+      pmJobs: toNumber(row['PM Jobs']),
+      cmJobs: toNumber(row['CM Jobs']),
+      ppmSales: toNumber(row['PPM Sales']),
+      pmSales: toNumber(row['PM Sales']),
+      cmSales: toNumber(row['CM Sales']),
+      ppmJpd: toNumber(row['PPM JPD']),
+      pmJpd: toNumber(row['PM JPD']),
+      cmJpd: toNumber(row['CM JPD']),
+      ppmNlJobs: toNumber(row['PPM NL Jobs']),
+      pmNlJobs: toNumber(row['PM NL Jobs']),
+      cmNlJobs: toNumber(row['CM NL Jobs']),
+      pmNlSow: toNumber(row['PM NL SOW']),
+      ppmNlSow: toNumber(row['PPM NL SOW']),
+      cmNlSow: toNumber(row['CM NL SOW']),
+      cmSqlJobs: toNumber(row['CM SQL Jobs']),
+      pmSqlJobs: toNumber(row['PM SQL Jobs']),
+      ppmSqlJobs: toNumber(row['PPM SQL Jobs']),
+      ppmVspJobs: toNumber(row['PPM VSP Jobs']),
+      pmVspJobs: toNumber(row['PM VSP Jobs']),
+      cmVspJobs: toNumber(row['CM VSP Jobs']),
+      ppmVspSow: toNumber(row['PPM VSP SOW']),
+      pmVspSow: toNumber(row['PM VSP SOW']),
+      cmVspSow: toNumber(row['CM VSP SOW']),
+      lastShippedDateGlobal: toText(row['Last Shipped Date (Global)']),
+    }))
+    .filter((account) => account.accountNumber);
+}
+
+const userRows = await readSheet(userPath, 'person list');
+const accountRows = await readSheet(accountPath, 'Export');
+const people = parsePeople(userRows);
+const rawAccounts = parseAccounts(accountRows);
+
+const accounts = rawAccounts.map((account) => ({
+  accountNumber: account.accountNumber,
+  accountName: account.accountName,
+  division: account.division,
 }));
 const accountGroups = new Map();
 for (const account of accounts) {
@@ -85,33 +207,33 @@ const accountsByNumber = new Map(
   normalizedAccounts.map((account) => [accountKey(account.accountNumber), account])
 );
 
-const access = readSheet(userPath, 'person list')
-  .flatMap((row) => {
-    const accountNumber = toAccountNumber(row['Organization - Account Number']);
+const access = people
+  .flatMap((person) => {
+    const accountNumber = toAccountNumber(person.accountNumber);
     const account = accountsByNumber.get(accountKey(accountNumber));
     const workbookTypeCode = account?.customerTypeCode || '';
-    const personTypeCode = toText(row['Organization - Division']).trim().toUpperCase();
+    const personTypeCode = toText(person.division).trim().toUpperCase();
     const customerTypeCode = workbookTypeCode || (typeMap[personTypeCode] ? personTypeCode : '');
     const typeInfo = typeMap[customerTypeCode];
-    const emails = [
-      ...emailList(row['Person - Email - Work']),
-      ...emailList(row['Person - Email - Home']),
-      ...emailList(row['Person - Email - Other']),
-    ];
 
-    return [...new Set(emails)].map((email) => ({
+    return [...new Set(person.emails)].map((email) => ({
       email,
       accountNumber: account?.accountNumber || accountNumber,
-      practiceName: account?.accountName || toText(row['Person - Organization']),
+      practiceName: account?.accountName || person.organization,
       customerTypeCode: typeInfo ? customerTypeCode : '',
       customerTypeLabel: typeInfo?.label || '',
       detectedCustomerTypeCodes: account?.detectedCustomerTypeCodes || [],
       allowedPriceLists: typeInfo ? [typeInfo.priceList] : [],
       portalSections: ['pricing', 'performance'],
-      targetedPrograms: toText(row['Organization - Targeted Programs']),
+      targetedPrograms: person.targetedPrograms,
     }));
   })
   .filter((record) => record.email && record.accountNumber && record.practiceName);
 
+writeFileSync(
+  workbookDataOutputPath,
+  `${JSON.stringify({ people, accounts: rawAccounts }, null, 2)}\n`
+);
 writeFileSync(outputPath, `${JSON.stringify(access, null, 2)}\n`);
+console.log(`Wrote workbook data to ${workbookDataOutputPath}`);
 console.log(`Wrote ${access.length} workbook access records to ${outputPath}`);

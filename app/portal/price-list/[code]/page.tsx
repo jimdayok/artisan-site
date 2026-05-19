@@ -1,4 +1,5 @@
 import PrivatePriceDashboard from "@/src/components/private-price/PrivatePriceDashboard";
+import P6PriceListPage from "../P6PriceListPage";
 import PdfDerivedPriceListPage from "../PdfDerivedPriceListPage";
 import PriceListAccessMessage from "../PriceListAccessMessage";
 import { OnlinePriceListShell } from "../OnlinePriceListShell";
@@ -24,6 +25,10 @@ export default async function PortalPriceListCodePage({
 
   if (!isPriceListCode(normalizedCode)) {
     notFound();
+  }
+
+  if (normalizedCode === "P6") {
+    return <P6PriceListPage />;
   }
 
   if (normalizedCode !== "G6") {

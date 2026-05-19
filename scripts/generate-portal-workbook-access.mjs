@@ -1,6 +1,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import ExcelJS from 'exceljs';
+import JSZip from 'jszip';
+import { XMLParser } from 'fast-xml-parser';
 
 const root = process.cwd();
 const portalDir = path.join(root, 'private-source', 'portal');
@@ -8,6 +9,11 @@ const userPath = path.join(portalDir, 'User_Data.xlsx');
 const accountPath = path.join(portalDir, 'Acct_Data.xlsx');
 const outputPath = path.join(portalDir, 'workbook-access.json');
 const workbookDataOutputPath = path.join(portalDir, 'workbook-data.json');
+const xmlParser = new XMLParser({
+  ignoreAttributes: false,
+  attributeNamePrefix: '',
+  textNodeName: 'text',
+});
 
 const typeMap = {
   PART: { label: 'Artisan Equity Partner', priceList: 'P6' },
@@ -18,21 +24,91 @@ const typeMap = {
 };
 const typePriority = ['PART', 'PMP', 'ACQU', 'NL', 'GENL'];
 
-async function readSheet(filePath, sheetName) {
+function asArray(value) {
+  if (!value) return [];
+  return Array.isArray(value) ? value : [value];
+}
+
+function columnIndex(cellRef) {
+  const letters = String(cellRef || 'A').match(/[A-Z]+/i)?.[0] || 'A';
+
+  return [...letters.toUpperCase()].reduce(
+    (total, letter) => total * 26 + letter.charCodeAt(0) - 64,
+    0
+  ) - 1;
+}
+
+function sharedStringText(sharedString) {
+  if (!sharedString) return '';
+  if (sharedString.t !== undefined && typeof sharedString.t !== 'object') {
+    return toText(sharedString.t);
+  }
+  if (sharedString.t?.text) return sharedString.t.text;
+
+  return asArray(sharedString.r)
+    .map((run) => (typeof run.t === 'string' ? run.t : run.t?.text || ''))
+    .join('');
+}
+
+async function readWorkbookRows(filePath, sheetName) {
   if (!existsSync(filePath)) return [];
-  const workbook = new ExcelJS.Workbook();
-  await workbook.xlsx.load(readFileSync(filePath));
-  const sheet = workbook.getWorksheet(sheetName);
+  const zip = await JSZip.loadAsync(readFileSync(filePath));
+  const workbookXml = await zip.file('xl/workbook.xml')?.async('text');
+  const relsXml = await zip.file('xl/_rels/workbook.xml.rels')?.async('text');
+
+  if (!workbookXml || !relsXml) return [];
+
+  const workbook = xmlParser.parse(workbookXml).workbook;
+  const rels = xmlParser.parse(relsXml).Relationships;
+  const sheet = asArray(workbook.sheets?.sheet).find((entry) => entry.name === sheetName);
+
   if (!sheet) return [];
+
+  const rel = asArray(rels.Relationship).find((entry) => entry.Id === sheet['r:id']);
+  const target = rel?.Target?.replace(/^\/?xl\//, '');
+  const sheetPath = target ? `xl/${target}` : '';
+  const sheetXml = sheetPath ? await zip.file(sheetPath)?.async('text') : '';
+
+  if (!sheetXml) return [];
+
+  const sharedStringsXml = await zip.file('xl/sharedStrings.xml')?.async('text');
+  const sharedStrings = sharedStringsXml
+    ? asArray(xmlParser.parse(sharedStringsXml).sst?.si).map(sharedStringText)
+    : [];
+  const parsedSheet = xmlParser.parse(sheetXml).worksheet;
+
+  return asArray(parsedSheet.sheetData?.row).map((row) => {
+    const output = [];
+
+    for (const cell of asArray(row.c)) {
+      const index = columnIndex(cell.r);
+      let value = '';
+
+      if (cell.t === 's') {
+        value = sharedStrings[Number(cell.v)] ?? '';
+      } else if (cell.t === 'inlineStr') {
+        value = sharedStringText(cell.is);
+      } else if (cell.v !== undefined) {
+        value = cell.v;
+      }
+
+      output[index] = value;
+    }
+
+    return output;
+  });
+}
+
+async function readSheet(filePath, sheetName) {
+  const sheetRows = await readWorkbookRows(filePath, sheetName);
+  if (!sheetRows.length) return [];
 
   const headers = [];
   const rows = [];
 
-  sheet.eachRow({ includeEmpty: true }, (row, rowNumber) => {
-    const values = row.values;
-
-    if (rowNumber === 1) {
-      for (let index = 1; index < values.length; index += 1) {
+  sheetRows.forEach((values, rowIndex) => {
+    if (rowIndex === 0) {
+      for (let index = 0; index < values.length; index += 1) {
         headers[index] = toText(values[index]);
       }
       return;
@@ -41,7 +117,7 @@ async function readSheet(filePath, sheetName) {
     const record = {};
     let hasValue = false;
 
-    for (let index = 1; index < headers.length; index += 1) {
+    for (let index = 0; index < headers.length; index += 1) {
       const header = headers[index];
       if (!header) continue;
 
@@ -75,6 +151,20 @@ function toNumber(value) {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
+function toExcelDateText(value) {
+  const textValue = toText(value);
+  const serial = Number(textValue);
+
+  if (!Number.isFinite(serial) || serial <= 0 || /-/.test(textValue)) {
+    return textValue;
+  }
+
+  const epoch = Date.UTC(1899, 11, 30);
+  const date = new Date(epoch + serial * 24 * 60 * 60 * 1000);
+
+  return date.toISOString().slice(0, 10);
+}
+
 function toAccountNumber(value) {
   if (typeof value === 'number' && Number.isFinite(value)) return String(Math.trunc(value));
   return toText(value).replace(/\.0$/, '');
@@ -105,10 +195,10 @@ function parsePeople(rows) {
         organization: toText(row['Person - Organization']),
         accountNumber: toAccountNumber(row['Organization - Account Number']),
         emails: [...new Set(emails)],
-        division: toText(row['Organization - Division']),
-        artisanLab: toText(row['Organization - Artisan Lab']),
-        targetedPrograms: toText(row['Organization - Targeted Programs']),
-        lastOrderShipped: toText(row['Organization - Last Order Shipped']),
+      division: toText(row['Organization - Division']),
+      artisanLab: toText(row['Organization - Artisan Lab']),
+      targetedPrograms: toText(row['Organization - Targeted Programs']),
+      lastOrderShipped: toExcelDateText(row['Organization - Last Order Shipped']),
       };
     })
     .filter((person) => person.accountNumber && person.emails.length > 0);
@@ -121,7 +211,7 @@ function parseAccounts(rows) {
       accountNumber: toAccountNumber(row['Last Account Number']),
       division: toText(row['Last Division']),
       salesRep: toText(row['Last Sales Rep']),
-      lastShippedDate: toText(row['Last Shipped Date']),
+      lastShippedDate: toExcelDateText(row['Last Shipped Date']),
       primaryPalPrivatePay: toText(row['Primary PAL Brand (Private Pay)']),
       primaryPalVsp: toText(row['Primary PAL Brand (VSP)']),
       lastLabName: toText(row['Last Lab Name']),
@@ -159,7 +249,7 @@ function parseAccounts(rows) {
       ppmVspSow: toNumber(row['PPM VSP SOW']),
       pmVspSow: toNumber(row['PM VSP SOW']),
       cmVspSow: toNumber(row['CM VSP SOW']),
-      lastShippedDateGlobal: toText(row['Last Shipped Date (Global)']),
+      lastShippedDateGlobal: toExcelDateText(row['Last Shipped Date (Global)']),
     }))
     .filter((account) => account.accountNumber);
 }

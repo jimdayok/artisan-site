@@ -2,13 +2,17 @@
   "name": "artisan-site",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "dev": "next dev",
-    "prebuild": "npm run portal:generate-access",
+    "prebuild": "npm run portal:generate-access && npm run pricing:generate",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "portal:generate-access": "node scripts/generate-portal-workbook-access.mjs"
+    "portal:generate-access": "node scripts/generate-portal-workbook-access.mjs",
+    "pricing:generate": "node scripts/generate-price-list-data.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1046.0",

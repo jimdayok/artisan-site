@@ -110,14 +110,10 @@ function MixDonut({ title, data }: { title: string; data: MixDatum[] }) {
 
 export function PortalPerformanceCharts({
   trends,
-  vspMix,
-  nlMix,
-  sqlMix,
+  mixes,
 }: {
   trends: TrendDatum[];
-  vspMix: MixDatum[];
-  nlMix: MixDatum[];
-  sqlMix: MixDatum[];
+  mixes: MixDatum[][];
 }) {
   return (
     <div className="grid gap-5 xl:grid-cols-[1.35fr_0.9fr]">
@@ -155,11 +151,9 @@ export function PortalPerformanceCharts({
         contentClassName="min-h-72"
       >
         <div className="grid gap-3 sm:grid-cols-3">
-          {[
-            { title: "VSP", data: vspMix },
-            { title: "Neurolens", data: nlMix },
-            { title: "Sequel", data: sqlMix },
-          ].map((chart) => <MixDonut key={chart.title} {...chart} />)}
+          {mixes.map((data) => (
+            <MixDonut key={data[0]?.label ?? "mix"} title={data[0]?.label ?? "Mix"} data={data} />
+          ))}
         </div>
       </ChartFrame>
     </div>

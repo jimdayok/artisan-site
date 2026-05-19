@@ -1,5 +1,26 @@
 import Link from "next/link";
+import Image from "next/image";
 import { PortalPerformanceCharts } from "./PortalPerformanceCharts";
+import {
+  Activity,
+  BadgeCheck,
+  BookOpen,
+  ExternalLink,
+  Eye,
+  Glasses,
+  Home,
+  Layers,
+  LogOut,
+  Mail,
+  Minus,
+  Newspaper,
+  Package,
+  ShieldCheck,
+  Sparkles,
+  TrendingDown,
+  TrendingUp,
+  type LucideIcon,
+} from "lucide-react";
 import { isPortalAdminEmail } from "@/lib/portal/admin";
 import {
   getCustomerTypeInfoFromProfile,
@@ -100,6 +121,95 @@ function formatDecimal(value: number) {
   }).format(value);
 }
 
+function containsText(value: string | undefined, match: string) {
+  return Boolean(value?.toLowerCase().includes(match.toLowerCase()));
+}
+
+function getPercentChange(current: number, previous: number) {
+  if (previous === 0) {
+    if (current === 0) return { direction: "flat" as const, label: "No change" };
+
+    return { direction: "up" as const, label: "New activity" };
+  }
+
+  const change = ((current - previous) / Math.abs(previous)) * 100;
+
+  if (Math.abs(change) < 0.1) {
+    return { direction: "flat" as const, label: "Flat vs previous month" };
+  }
+
+  return {
+    direction: change > 0 ? ("up" as const) : ("down" as const),
+    label: `${change > 0 ? "+" : ""}${change.toFixed(1)}% vs previous month`,
+  };
+}
+
+function formatPerDayMetric(value: number, unit: string) {
+  return `${formatDecimal(value)} ${unit}/day`;
+}
+
+function getSalesPerDay(sales: number, jobs: number, jobsPerDay: number) {
+  if (sales <= 0 || jobs <= 0 || jobsPerDay <= 0) return 0;
+
+  return sales / (jobs / jobsPerDay);
+}
+
+function isVisibleSalesRep(value?: string) {
+  return ["OP", "HB"].includes((value ?? "").trim().toUpperCase());
+}
+
+function customerCategoryLabel({
+  customerTypeLabel,
+  account,
+}: {
+  customerTypeLabel?: string;
+  account?: PortalWorkbookAccount;
+}) {
+  if (customerTypeLabel) return customerTypeLabel;
+
+  return getCustomerTypeInfoFromProfile(
+    account
+      ? {
+          person: {
+            name: "",
+            organization: account.accountName,
+            accountNumber: account.accountNumber,
+            emails: [],
+            division: account.division,
+            artisanLab: account.lastLabName,
+            targetedPrograms: "",
+            lastOrderShipped: account.lastShippedDate,
+          },
+          account,
+        }
+      : undefined
+  )?.label;
+}
+
+function showNeurolensContent(account?: PortalWorkbookAccount) {
+  if (!account) return false;
+
+  return (
+    account.division.trim().toUpperCase() === "NL" ||
+    containsText(account.primaryPalPrivatePay, "neurolens") ||
+    account.cmNlJobs + account.pmNlJobs + account.ppmNlJobs > 0
+  );
+}
+
+function showSequelRewardsContent({
+  account,
+  invited,
+}: {
+  account?: PortalWorkbookAccount;
+  invited: boolean;
+}) {
+  return Boolean(
+    invited ||
+      (account &&
+        account.cmSqlJobs + account.pmSqlJobs + account.ppmSqlJobs > 0)
+  );
+}
+
 function mixData({
   activeLabel,
   activePercent,
@@ -117,38 +227,186 @@ function mixData({
   ];
 }
 
+function formatAddressLines(value?: string) {
+  return (value ?? "")
+    .split(/,\s*|\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
 function PortalShell({
   children,
   eyebrow = "Customer Portal",
+  header,
+  footer,
+  showIntro = true,
 }: {
   children: React.ReactNode;
   eyebrow?: string;
+  header?: React.ReactNode;
+  footer?: React.ReactNode;
+  showIntro?: boolean;
 }) {
   return (
     <main className="min-h-screen bg-[#f4efe6] text-[#172a28]">
-      <section className="relative isolate overflow-hidden px-5 py-10 sm:px-8 lg:px-10">
+      <section className="relative isolate overflow-hidden px-5 py-6 sm:px-8 lg:px-10">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_12%,rgba(47,89,98,0.16),transparent_34%),linear-gradient(135deg,#f7f2e9_0%,#efe6d8_55%,#dfe9e8_100%)]" />
         <div className="absolute inset-0 -z-10 opacity-[0.08] [background-image:linear-gradient(rgba(23,42,40,0.55)_1px,transparent_1px),linear-gradient(90deg,rgba(23,42,40,0.55)_1px,transparent_1px)] [background-size:42px_42px]" />
 
-        <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-7xl flex-col">
-          <Link
-            href="/"
-            className="mb-14 inline-flex w-fit items-center text-xs font-semibold uppercase tracking-[0.32em] text-[#6f5f3f] transition hover:text-[#172a28]"
-          >
-            Artisan Lab Network
-          </Link>
+        <div className="mx-auto flex min-h-[calc(100vh-3rem)] max-w-7xl flex-col">
+          {header ?? (
+            <Link
+              href="/"
+              className="mb-14 inline-flex w-fit items-center text-xs font-semibold uppercase tracking-[0.32em] text-[#6f5f3f] transition hover:text-[#172a28]"
+            >
+              Artisan Lab Network
+            </Link>
+          )}
 
-          <div className="mb-5 h-px w-24 bg-[#b89a61]" />
-          <h1 className="mb-5 text-3xl font-semibold tracking-[-0.03em] text-[#172a28] sm:text-4xl">
-            Artisan Lab Network Customer Portal
-          </h1>
-          <p className="mb-5 text-xs font-semibold uppercase tracking-[0.32em] text-[#7c6b48]">
-            {eyebrow}
-          </p>
+          {showIntro ? (
+            <>
+              <div className="mb-5 h-px w-24 bg-[#b89a61]" />
+              <h1 className="mb-5 text-3xl font-semibold tracking-[-0.03em] text-[#172a28] sm:text-4xl">
+                Artisan Lab Network Customer Portal
+              </h1>
+              <p className="mb-5 text-xs font-semibold uppercase tracking-[0.32em] text-[#7c6b48]">
+                {eyebrow}
+              </p>
+            </>
+          ) : null}
           {children}
+          {footer}
         </div>
       </section>
     </main>
+  );
+}
+
+function PortalHeader({
+  practiceName,
+  hasMultipleAccounts,
+  isAdminPreview,
+}: {
+  practiceName: string;
+  hasMultipleAccounts?: boolean;
+  isAdminPreview?: boolean;
+}) {
+  return (
+    <header className="mb-7 border border-[#d8c49b] bg-[#fffaf1]/88 px-4 py-3 shadow-[0_18px_55px_rgba(23,42,40,0.09)] backdrop-blur sm:px-5">
+      <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+        <div className="flex min-w-0 items-center gap-4">
+          <Link
+            href="/"
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#172a28]"
+            aria-label="Artisan Lab Network"
+          >
+            <Image
+              src="/aln-white-logo.png"
+              alt="Artisan Lab Network"
+              width={32}
+              height={32}
+              className="h-8 w-8 object-contain"
+              priority
+            />
+          </Link>
+          <div className="min-w-0">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b7650]">
+              Customer Portal
+            </p>
+            <p className="truncate text-lg font-semibold tracking-[-0.02em] text-[#172a28]">
+              {practiceName}
+            </p>
+          </div>
+        </div>
+
+        <nav className="flex flex-wrap items-center gap-2 text-sm font-semibold text-[#172a28]">
+          <Link
+            href="/portal"
+            className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#d8c49b] bg-white/55 px-4 transition hover:bg-white"
+          >
+            <Home className="h-4 w-4" />
+            Dashboard
+          </Link>
+          <Link
+            href="/provider-resources"
+            className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#d8c49b] bg-white/55 px-4 transition hover:bg-white"
+          >
+            <BookOpen className="h-4 w-4" />
+            Resources
+          </Link>
+          <Link
+            href="/newsletter"
+            className="inline-flex min-h-10 items-center gap-2 rounded-full bg-[#172a28] px-4 text-white shadow-[0_10px_24px_rgba(23,42,40,0.14)] transition hover:bg-[#27433f]"
+          >
+            <Newspaper className="h-4 w-4" />
+            Newsletter
+          </Link>
+          {hasMultipleAccounts ? (
+            <Link
+              href="/portal"
+              className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#b89a61] bg-[#fffaf1] px-4 transition hover:bg-white"
+            >
+              <Layers className="h-4 w-4" />
+              Switch Account
+            </Link>
+          ) : null}
+          {isAdminPreview ? (
+            <span className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#b89a61] bg-[#f3e6c8] px-4 text-[#5c4724]">
+              <ShieldCheck className="h-4 w-4" />
+              Admin Preview
+            </span>
+          ) : null}
+          <a
+            href={PORTAL_ACCESS_LOGOUT_URL}
+            className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#172a28]/20 bg-transparent px-4 transition hover:bg-[#172a28] hover:text-white"
+          >
+            <LogOut className="h-4 w-4" />
+            Sign Out
+          </a>
+        </nav>
+      </div>
+    </header>
+  );
+}
+
+function PortalFooter() {
+  const links = [
+    { label: "Provider Resources", href: "/provider-resources" },
+    { label: "Newsletter", href: "/newsletter" },
+    { label: "Policies", href: "/lab-policies" },
+    { label: "Contact Support", href: "mailto:sales@artisanlabnetwork.com" },
+    { label: "ArtisanLabNetwork.com", href: "/" },
+  ];
+
+  return (
+    <footer className="mt-8 border-t border-[#d8c49b] py-7">
+      <div className="flex flex-col gap-4 text-sm text-[#706759] lg:flex-row lg:items-center lg:justify-between">
+        <p className="font-semibold text-[#172a28]">
+          Artisan Lab Network Customer Portal
+        </p>
+        <nav className="flex flex-wrap gap-x-5 gap-y-2">
+          {links.map((link) =>
+            link.href.startsWith("mailto:") ? (
+              <a
+                key={link.label}
+                href={link.href}
+                className="transition hover:text-[#172a28]"
+              >
+                {link.label}
+              </a>
+            ) : (
+              <Link
+                key={link.label}
+                href={link.href}
+                className="transition hover:text-[#172a28]"
+              >
+                {link.label}
+              </Link>
+            )
+          )}
+        </nav>
+      </div>
+    </footer>
   );
 }
 
@@ -293,7 +551,6 @@ function PortalAccountSelector({
       accountNumber: string;
       practiceName: string;
       customerTypeLabel?: string;
-      division?: string;
       lastShippedDate?: string;
     }
   >();
@@ -320,8 +577,11 @@ function PortalAccountSelector({
         profile.person.organization ||
         optionsByAccount.get(key)?.practiceName ||
         "Customer account",
-      customerTypeLabel: optionsByAccount.get(key)?.customerTypeLabel,
-      division: profile.account?.division || profile.person.division,
+      customerTypeLabel:
+        optionsByAccount.get(key)?.customerTypeLabel ||
+        customerCategoryLabel({
+          account: profile.account,
+        }),
       lastShippedDate:
         profile.account?.lastShippedDate || profile.person.lastOrderShipped,
     });
@@ -358,8 +618,6 @@ function PortalAccountSelector({
                   {option.customerTypeLabel ? ` · ${option.customerTypeLabel}` : ""}
                 </span>
                 <span className="mt-2 block text-xs uppercase tracking-[0.18em] text-[#8b7650]">
-                  {option.division ? `Division ${option.division}` : "Division not available"}
-                  {" · "}
                   Last shipped {formatPortalDate(option.lastShippedDate ?? "")}
                 </span>
               </span>
@@ -463,7 +721,7 @@ function PortalResourceCard({ card }: { card: PortalSectionCard }) {
   );
 }
 
-function SequelRewardsInvitationCard() {
+function SequelRewardsInvitationCard({ invited }: { invited: boolean }) {
   return (
     <section className="relative isolate overflow-hidden border border-[#b89a61] bg-[#172a28] p-6 text-white shadow-[0_24px_90px_rgba(23,42,40,0.18)] sm:p-9 lg:col-span-3">
       <div className="absolute inset-y-0 right-0 -z-10 w-1/2 bg-[radial-gradient(circle_at_70%_35%,rgba(216,196,155,0.22),transparent_42%)]" />
@@ -472,12 +730,14 @@ function SequelRewardsInvitationCard() {
           Invitation Program
         </p>
         <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em]">
-          You&apos;ve Been Invited: Sequel Artisan Rewards
+          {invited
+            ? "You've Been Invited: Sequel Artisan Rewards"
+            : "Sequel Artisan Rewards"}
         </h2>
         <p className="mt-4 text-sm leading-7 text-white/76">
-          Your practice has been invited to participate in the Sequel Artisan
-          Rewards program. Learn how the program works and how your practice can
-          qualify for rewards.
+          {invited
+            ? "Your practice has been invited to participate in the Sequel Artisan Rewards program. Learn how the program works and how your practice can qualify for rewards."
+            : "Your practice has Sequel Artisan Rewards activity. Review program details and see how Artisan supports independent practices using Sequel designs."}
         </p>
       </div>
       <Link
@@ -495,13 +755,35 @@ function AccountStatCard({
   value,
   detail,
   tone = "light",
+  perDay,
+  trend,
 }: {
   label: string;
   value: string;
   detail?: string;
   tone?: "light" | "dark";
+  perDay?: string;
+  trend?: ReturnType<typeof getPercentChange>;
 }) {
   const isDark = tone === "dark";
+  const TrendIcon =
+    trend?.direction === "up"
+      ? TrendingUp
+      : trend?.direction === "down"
+        ? TrendingDown
+        : Minus;
+  const trendClass =
+    trend?.direction === "up"
+      ? isDark
+        ? "text-[#9dbf9a]"
+        : "text-[#315f48]"
+      : trend?.direction === "down"
+        ? isDark
+          ? "text-[#d7aaa2]"
+          : "text-[#9b5148]"
+        : isDark
+          ? "text-white/62"
+          : "text-[#706759]";
 
   return (
     <div
@@ -526,6 +808,17 @@ function AccountStatCard({
       <p className="mt-4 text-3xl font-semibold tracking-[-0.035em]">
         {value}
       </p>
+      {perDay ? (
+        <p className={`mt-2 text-sm font-semibold ${isDark ? "text-white/72" : "text-[#5d5548]"}`}>
+          {perDay}
+        </p>
+      ) : null}
+      {trend ? (
+        <p className={`mt-3 inline-flex items-center gap-1.5 text-xs font-semibold ${trendClass}`}>
+          <TrendIcon className="h-4 w-4" />
+          {trend.label}
+        </p>
+      ) : null}
       {detail ? (
         <p className={`mt-2 text-xs leading-5 ${isDark ? "text-white/68" : "text-[#706759]"}`}>
           {detail}
@@ -537,9 +830,11 @@ function AccountStatCard({
 
 function UsageRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="grid grid-cols-[1fr_auto] gap-5 border-t border-[#d8c49b] py-4 text-sm">
+    <div className="grid gap-2 border-t border-[#d8c49b] py-4 text-sm sm:grid-cols-[minmax(9rem,1fr)_minmax(0,1.35fr)] sm:gap-5">
       <span className="font-semibold text-[#172a28]">{label}</span>
-      <span className="text-[#706759]">{value || "Not available"}</span>
+      <span className="min-w-0 whitespace-pre-line break-words text-[#706759] sm:text-right">
+        {value || "Not available"}
+      </span>
     </div>
   );
 }
@@ -549,18 +844,20 @@ function ProgramUsageCard({
   value,
   href,
   recommendation,
+  icon: Icon,
 }: {
   label: string;
   value: string;
   href: string;
   recommendation?: string;
+  icon: LucideIcon;
 }) {
   const active = hasProgramUsage(value);
 
   return (
     <Link
       href={href}
-      className="group relative block overflow-hidden border border-[#d8c49b] bg-[#fffaf1] p-5 shadow-[0_10px_28px_rgba(23,42,40,0.05)] transition hover:-translate-y-0.5 hover:border-[#172a28] hover:bg-white hover:shadow-[0_16px_38px_rgba(23,42,40,0.09)]"
+      className="group relative flex min-h-56 flex-col overflow-hidden border border-[#d8c49b] bg-[#fffaf1] p-5 shadow-[0_12px_34px_rgba(23,42,40,0.06)] transition hover:-translate-y-0.5 hover:border-[#b89a61] hover:bg-white hover:shadow-[0_20px_46px_rgba(23,42,40,0.1)]"
     >
       <div
         className={`absolute inset-x-0 top-0 h-1 ${
@@ -568,28 +865,42 @@ function ProgramUsageCard({
         }`}
       />
       <div className="flex items-start justify-between gap-4">
-        <h3 className="text-base font-semibold tracking-[-0.01em] text-[#172a28]">
-          {label}
-        </h3>
         <span
-          className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
-            active
-              ? "bg-[#172a28] text-white"
-              : "border border-[#d8c49b] text-[#706759]"
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${
+            active ? "bg-[#172a28] text-white" : "bg-white text-[#8b7650]"
           }`}
         >
-          {active ? "Using" : "Not active"}
+          <Icon className="h-5 w-5" />
+        </span>
+        <span
+          className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${
+            active
+              ? "bg-[#e6f0e7] text-[#315f48]"
+              : "border border-[#d8c49b] bg-white/60 text-[#706759]"
+          }`}
+        >
+          {active ? "Active" : "Available"}
         </span>
       </div>
-      <p className="mt-3 text-sm text-[#706759]">{value || "Not available"}</p>
-      {recommendation ? (
-        <p className="mt-3 border-t border-[#d8c49b] pt-3 text-xs leading-5 text-[#8b7650]">
-          {recommendation}
+      <div className="mt-5 flex flex-1 flex-col">
+        <h3 className="text-xl font-semibold leading-6 tracking-[-0.02em] text-[#172a28]">
+          {label}
+        </h3>
+        <p className="mt-3 min-h-12 text-sm leading-6 text-[#706759]">
+          {value || "No current activity"}
         </p>
-      ) : null}
-      <span className="mt-4 inline-flex text-sm font-semibold text-[#172a28] underline decoration-[#d8c49b] underline-offset-4 transition group-hover:decoration-[#172a28]">
-        Learn more
-      </span>
+        <div className="mt-auto pt-5">
+          {recommendation ? (
+            <p className="mb-4 border-t border-[#d8c49b] pt-4 text-xs leading-5 text-[#8b7650]">
+              {recommendation}
+            </p>
+          ) : null}
+          <span className="inline-flex items-center gap-2 text-sm font-semibold text-[#172a28] underline decoration-[#d8c49b] underline-offset-4 transition group-hover:decoration-[#172a28]">
+            Learn more
+            <ExternalLink className="h-3.5 w-3.5" />
+          </span>
+        </div>
+      </div>
     </Link>
   );
 }
@@ -618,11 +929,53 @@ function ModernPackageSavingsAlert() {
   );
 }
 
+function NeurolensExpansionInvitation() {
+  return (
+    <section className="relative isolate overflow-hidden border border-[#b89a61] bg-[#fffaf1]/90 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] sm:p-9 lg:col-span-3">
+      <div className="absolute right-0 top-0 -z-10 h-full w-1/2 bg-[radial-gradient(circle_at_68%_22%,rgba(49,95,88,0.15),transparent_42%)]" />
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div className="max-w-3xl">
+          <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#172a28] text-white">
+            <Sparkles className="h-5 w-5" />
+          </span>
+          <p className="mt-5 text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
+            Lens Opportunities
+          </p>
+          <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em] text-[#172a28]">
+            Explore More Artisan Lens Options
+          </h2>
+          <p className="mt-4 text-sm leading-7 text-[#706759]">
+            Your account currently utilizes Neurolens as a primary private-pay
+            design. Artisan also offers additional premium lens technologies and
+            independent-exclusive solutions through IOT, Tokai, Artisan Lens
+            Systems, and more.
+          </p>
+        </div>
+        <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
+          <Link
+            href="/provider-resources#lens-systems"
+            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#172a28] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#27433f]"
+          >
+            <BookOpen className="h-4 w-4" />
+            Explore Lens Technologies
+          </Link>
+          <a
+            href="mailto:sales@artisanlabnetwork.com"
+            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#d8c49b] bg-white/65 px-6 py-3 text-sm font-semibold text-[#172a28] transition hover:bg-white"
+          >
+            <Mail className="h-4 w-4" />
+            Contact Artisan Support
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function PortalAccountHero({
   practiceName,
   accountNumber,
   customerTypeLabel,
-  customerTypeCode,
   account,
   authenticatedEmail,
   adminPreviewAccountName,
@@ -630,11 +983,15 @@ function PortalAccountHero({
   practiceName: string;
   accountNumber: string;
   customerTypeLabel?: string;
-  customerTypeCode?: string;
   account?: PortalWorkbookAccount;
   authenticatedEmail: string;
   adminPreviewAccountName?: string;
 }) {
+  const palItems = [
+    { label: "Primary PAL Private", value: account?.primaryPalPrivatePay },
+    { label: "Primary PAL VSP", value: account?.primaryPalVsp },
+  ].filter((item) => item.value);
+
   return (
     <section className="relative isolate overflow-hidden border border-[#b89a61] bg-[#172a28] p-6 text-white shadow-[0_28px_100px_rgba(23,42,40,0.22)] sm:p-8 lg:col-span-3">
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_78%_18%,rgba(216,196,155,0.2),transparent_34%),linear-gradient(135deg,rgba(49,95,88,0.38),transparent_52%)]" />
@@ -650,11 +1007,6 @@ function PortalAccountHero({
             {customerTypeLabel ? (
               <span className="inline-flex items-center gap-2 rounded-full border border-[#d8c49b]/55 bg-[#fffaf1]/10 px-4 py-2 text-sm font-semibold">
                 {customerTypeLabel}
-                {customerTypeCode ? (
-                  <span className="text-xs uppercase tracking-[0.2em] text-[#d8c49b]">
-                    {customerTypeCode}
-                  </span>
-                ) : null}
               </span>
             ) : null}
             {accountNumber ? (
@@ -662,12 +1014,30 @@ function PortalAccountHero({
                 Account {accountNumber}
               </span>
             ) : null}
-            {account?.division ? (
-              <span className="rounded-full border border-white/18 px-4 py-2 text-sm text-white/82">
-                Division {account.division}
+            {account?.tier ? (
+              <span className="inline-flex items-center gap-2 rounded-full border border-[#d8c49b]/70 bg-[#d8c49b] px-4 py-2 text-sm font-semibold text-[#172a28] shadow-[0_10px_28px_rgba(0,0,0,0.12)]">
+                <BadgeCheck className="h-4 w-4" />
+                Current Tier {account.tier}
               </span>
             ) : null}
           </div>
+          {palItems.length > 0 ? (
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              {palItems.map((item) => (
+                <div
+                  key={item.label}
+                  className="border border-white/16 bg-white/[0.06] p-4"
+                >
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d8c49b]">
+                    {item.label}
+                  </p>
+                  <p className="mt-2 text-sm font-semibold leading-6 text-white">
+                    {item.value}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ) : null}
         </div>
 
         <div className="grid gap-3 text-sm leading-6 text-white/78 lg:min-w-80">
@@ -700,14 +1070,42 @@ function PortalAccountHero({
 
 function AccountPerformanceSection({
   account,
+  showNeurolens,
+  showSequelRewards,
 }: {
   account: PortalWorkbookAccount;
+  showNeurolens: boolean;
+  showSequelRewards: boolean;
 }) {
   const vspShare =
     account.cmVspSow || (account.cmJobs > 0 ? account.cmVspJobs / account.cmJobs : 0);
   const nlShare =
     account.cmNlSow || (account.cmJobs > 0 ? account.cmNlJobs / account.cmJobs : 0);
   const sqlShare = account.cmJobs > 0 ? account.cmSqlJobs / account.cmJobs : 0;
+  const mixCharts = [
+    mixData({
+      activeLabel: "VSP",
+      activePercent: vspShare,
+    }),
+    ...(showNeurolens
+      ? [
+          mixData({
+            activeLabel: "Neurolens",
+            activePercent: nlShare,
+            activeColor: "#315f58",
+          }),
+        ]
+      : []),
+    ...(showSequelRewards
+      ? [
+          mixData({
+            activeLabel: "Sequel",
+            activePercent: sqlShare,
+            activeColor: "#8b7650",
+          }),
+        ]
+      : []),
+  ];
   const trendData = [
     {
       label: "PPM",
@@ -750,46 +1148,49 @@ function AccountPerformanceSection({
           label="Current Month Purchases"
           value={formatCurrency(account.cmSales)}
           tone="dark"
+          perDay={formatPerDayMetric(
+            getSalesPerDay(account.cmSales, account.cmJobs, account.cmJpd),
+            "purchases"
+          )}
+          trend={getPercentChange(account.cmSales, account.pmSales)}
         />
         <AccountStatCard
           label="Previous Month Purchases"
           value={formatCurrency(account.pmSales)}
+          perDay={formatPerDayMetric(
+            getSalesPerDay(account.pmSales, account.pmJobs, account.pmJpd),
+            "purchases"
+          )}
+          trend={getPercentChange(account.pmSales, account.ppmSales)}
         />
         <AccountStatCard
           label="Current Month Rx Orders"
           value={formatNumber(account.cmJobs)}
+          perDay={formatPerDayMetric(account.cmJpd, "orders")}
+          trend={getPercentChange(account.cmJobs, account.pmJobs)}
         />
         <AccountStatCard
           label="Previous Month Rx Orders"
           value={formatNumber(account.pmJobs)}
+          perDay={formatPerDayMetric(account.pmJpd, "orders")}
+          trend={getPercentChange(account.pmJobs, account.ppmJobs)}
         />
         <AccountStatCard
-          label="Current Month Rx Orders Per Day"
-          value={formatDecimal(account.cmJpd)}
+          label="Current Month Redo %"
+          value="TBD"
+          detail="Live redo data will appear here when available."
         />
         <AccountStatCard
-          label="Previous Month Rx Orders Per Day"
-          value={formatDecimal(account.pmJpd)}
+          label="Previous Month Redo %"
+          value="TBD"
+          detail="Live redo data will appear here when available."
         />
       </div>
 
       <div className="mt-8">
         <PortalPerformanceCharts
           trends={trendData}
-          vspMix={mixData({
-            activeLabel: "VSP",
-            activePercent: vspShare,
-          })}
-          nlMix={mixData({
-            activeLabel: "Neurolens",
-            activePercent: nlShare,
-            activeColor: "#315f58",
-          })}
-          sqlMix={mixData({
-            activeLabel: "Sequel",
-            activePercent: sqlShare,
-            activeColor: "#8b7650",
-          })}
+          mixes={mixCharts}
         />
       </div>
 
@@ -799,16 +1200,20 @@ function AccountPerformanceSection({
           value={formatNumber(account.cmVspJobs)}
           detail={`${formatPercent(vspShare)}% VSP · ${100 - formatPercent(vspShare)}% Non-VSP`}
         />
-        <AccountStatCard
-          label="Neurolens Rx Orders"
-          value={formatNumber(account.cmNlJobs)}
-          detail={`${formatPercent(nlShare)}% of current Rx order mix`}
-        />
-        <AccountStatCard
-          label="Sequel Rx Orders"
-          value={formatNumber(account.cmSqlJobs)}
-          detail={`${formatPercent(sqlShare)}% of current Rx order mix`}
-        />
+        {showNeurolens ? (
+          <AccountStatCard
+            label="Neurolens Rx Orders"
+            value={formatNumber(account.cmNlJobs)}
+            detail={`${formatPercent(nlShare)}% of current Rx order mix`}
+          />
+        ) : null}
+        {showSequelRewards ? (
+          <AccountStatCard
+            label="Sequel Rx Orders"
+            value={formatNumber(account.cmSqlJobs)}
+            detail={`${formatPercent(sqlShare)}% of current Rx order mix`}
+          />
+        ) : null}
       </div>
     </section>
   );
@@ -831,6 +1236,8 @@ function AccountProfileSection({
     accountNumber,
     details: "Please describe the account information that should be corrected.",
   });
+  const addressLines = formatAddressLines(account?.fullAddress);
+  const stateZip = [account?.state, account?.zipCode].filter(Boolean).join(" ");
 
   return (
     <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9">
@@ -845,10 +1252,15 @@ function AccountProfileSection({
         program eligibility.
       </p>
       <div className="mt-6 grid gap-4 text-sm leading-6 text-[#706759]">
-        <UsageRow label="Sales Rep" value={account?.salesRep ?? ""} />
-        <UsageRow label="Address" value={account?.fullAddress ?? ""} />
+        {isVisibleSalesRep(account?.salesRep) ? (
+          <UsageRow label="Sales Rep" value={account?.salesRep ?? ""} />
+        ) : null}
+        <UsageRow
+          label="Address"
+          value={addressLines.length > 0 ? addressLines.join("\n") : ""}
+        />
         <UsageRow label="Phone Number" value={account?.phoneNumber ?? ""} />
-        <UsageRow label="State / ZIP" value={[account?.state, account?.zipCode].filter(Boolean).join(" ") || ""} />
+        <UsageRow label="State / ZIP" value={stateZip} />
       </div>
       <a
         href={correctionLink}
@@ -903,8 +1315,84 @@ function UserContactSection({
   );
 }
 
-function ProgramUsageSection({ account }: { account: PortalWorkbookAccount }) {
+function ProgramUsageSection({
+  account,
+  showNeurolens,
+  showSequelRewards,
+  hasSequelRebateInvitation,
+}: {
+  account: PortalWorkbookAccount;
+  showNeurolens: boolean;
+  showSequelRewards: boolean;
+  hasSequelRebateInvitation: boolean;
+}) {
   const missingPackageSavings = hasModernPackageSavingsWarning(account);
+  const programCards: Array<{
+    label: string;
+    value: string;
+    href: string;
+    icon: LucideIcon;
+    recommendation?: string;
+  }> = [
+    {
+      label: "Modern Package System",
+      value: account.modernPkgUsage,
+      href: "/provider-resources#modern-package-system",
+      icon: Package,
+      recommendation: missingPackageSavings
+        ? "Recommended: compare package savings for accounts already using Modern Frame."
+        : undefined,
+    },
+    {
+      label: "Modern Frame System",
+      value: account.modernFrmUsage,
+      href: "/provider-resources#modern-frame-system",
+      icon: Layers,
+    },
+    {
+      label: "Chemistrie/ChemClip",
+      value: account.chemClipUsage,
+      href: "/provider-resources#specialty-systems",
+      icon: Glasses,
+    },
+    {
+      label: "SpecCheck",
+      value: account.specCheckUsage,
+      href: "/provider-resources#speccheck",
+      icon: Eye,
+    },
+    {
+      label: "Tokai",
+      value: account.tokaiUsage,
+      href: "/provider-resources#tokai",
+      icon: Sparkles,
+    },
+    ...(showNeurolens
+      ? [
+          {
+            label: "Neurolens",
+            value:
+              account.cmNlJobs + account.pmNlJobs + account.ppmNlJobs > 0
+                ? `${formatNumber(account.cmNlJobs)} current month orders`
+                : account.primaryPalPrivatePay,
+            href: "/provider-resources#lens-systems",
+            icon: Activity,
+          },
+        ]
+      : []),
+    ...(showSequelRewards
+      ? [
+          {
+            label: "Sequel Artisan Rewards",
+            value: hasSequelRebateInvitation
+              ? "Invited account"
+              : `${formatNumber(account.cmSqlJobs)} current month orders`,
+            href: "/programs#sequel-artisan-rewards",
+            icon: BadgeCheck,
+          },
+        ]
+      : []),
+  ];
 
   return (
     <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9 lg:col-span-3">
@@ -916,37 +1404,10 @@ function ProgramUsageSection({ account }: { account: PortalWorkbookAccount }) {
           System usage
         </h2>
       </div>
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-        <ProgramUsageCard
-          label="Modern Package System Usage"
-          value={account.modernPkgUsage}
-          href="/provider-resources#modern-package-system"
-          recommendation={
-            missingPackageSavings
-              ? "Recommended: compare package savings for accounts already using Modern Frame."
-              : undefined
-          }
-        />
-        <ProgramUsageCard
-          label="Modern Frame System Usage"
-          value={account.modernFrmUsage}
-          href="/provider-resources#modern-frame-system"
-        />
-        <ProgramUsageCard
-          label="Chemistrie/ChemClip Usage"
-          value={account.chemClipUsage}
-          href="/provider-resources#specialty-systems"
-        />
-        <ProgramUsageCard
-          label="SpecCheck Usage"
-          value={account.specCheckUsage}
-          href="/provider-resources#speccheck"
-        />
-        <ProgramUsageCard
-          label="Tokai Usage"
-          value={account.tokaiUsage}
-          href="/provider-resources#tokai"
-        />
+      <div className="grid items-stretch gap-4 md:grid-cols-2 xl:grid-cols-4">
+        {programCards.map((card) => (
+          <ProgramUsageCard key={card.label} {...card} />
+        ))}
       </div>
     </section>
   );
@@ -1000,6 +1461,7 @@ export function PortalDashboardContent({
   adminPreviewAccountNumber,
   adminPreviewEmail,
   isLocalhostDevelopment,
+  selectableAccountCount = 1,
 }: {
   authenticatedEmail: string;
   customer?: PortalCustomer;
@@ -1008,6 +1470,7 @@ export function PortalDashboardContent({
   adminPreviewAccountNumber?: string;
   adminPreviewEmail?: string;
   isLocalhostDevelopment?: boolean;
+  selectableAccountCount?: number;
 }) {
   if (!customer && !workbookProfile) {
     return (
@@ -1031,14 +1494,32 @@ export function PortalDashboardContent({
     customer?.accountNumber ||
     "";
   const customerTypeInfo = getCustomerTypeInfoFromProfile(workbookProfile);
-  const customerTypeCode = customerTypeInfo?.code || customer?.customerTypeCode || "";
   const customerTypeLabel =
     customerTypeInfo?.label || customer?.customerTypeLabel || "";
   const hasSequelRebateInvitation =
     profileHasSequelRebateInvitation(workbookProfile);
+  const shouldShowNeurolens = showNeurolensContent(account);
+  const shouldShowSequelRewards = showSequelRewardsContent({
+    account,
+    invited: hasSequelRebateInvitation,
+  });
+  const shouldShowNeurolensInvitation = containsText(
+    account?.primaryPalPrivatePay,
+    "neurolens"
+  );
 
   return (
-    <PortalShell eyebrow="Verified Customer Portal">
+    <PortalShell
+      showIntro={false}
+      header={
+        <PortalHeader
+          practiceName={practiceName}
+          hasMultipleAccounts={selectableAccountCount > 1}
+          isAdminPreview={Boolean(adminPreviewAccountName)}
+        />
+      }
+      footer={<PortalFooter />}
+    >
       {adminPreviewAccountName ? (
         <div className="sticky top-4 z-20 mb-8 border border-[#b89a61] bg-[#172a28]/96 px-5 py-4 text-white shadow-[0_18px_55px_rgba(23,42,40,0.22)] backdrop-blur sm:px-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -1075,7 +1556,6 @@ export function PortalDashboardContent({
           practiceName={practiceName}
           accountNumber={accountNumber}
           customerTypeLabel={customerTypeLabel}
-          customerTypeCode={customerTypeCode}
           account={account}
           authenticatedEmail={authenticatedEmail}
           adminPreviewAccountName={adminPreviewAccountName}
@@ -1103,13 +1583,23 @@ export function PortalDashboardContent({
           </section>
         ) : null}
 
-        {account ? <AccountPerformanceSection account={account} /> : null}
+        {account ? (
+          <AccountPerformanceSection
+            account={account}
+            showNeurolens={shouldShowNeurolens}
+            showSequelRewards={shouldShowSequelRewards}
+          />
+        ) : null}
 
-        {hasSequelRebateInvitation ? <SequelRewardsInvitationCard /> : null}
+        {shouldShowSequelRewards ? (
+          <SequelRewardsInvitationCard invited={hasSequelRebateInvitation} />
+        ) : null}
 
         {account && hasModernPackageSavingsWarning(account) ? (
           <ModernPackageSavingsAlert />
         ) : null}
+
+        {shouldShowNeurolensInvitation ? <NeurolensExpansionInvitation /> : null}
 
         <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9 lg:col-span-2">
           <div className="mb-6 flex flex-col gap-3 border-b border-[#d8c49b] pb-6 sm:flex-row sm:items-end sm:justify-between">
@@ -1179,7 +1669,14 @@ export function PortalDashboardContent({
           accountNumber={accountNumber}
         />
 
-        {account ? <ProgramUsageSection account={account} /> : null}
+        {account ? (
+          <ProgramUsageSection
+            account={account}
+            showNeurolens={shouldShowNeurolens}
+            showSequelRewards={shouldShowSequelRewards}
+            hasSequelRebateInvitation={hasSequelRebateInvitation}
+          />
+        ) : null}
       </div>
     </PortalShell>
   );
@@ -1243,6 +1740,7 @@ export default function PortalDashboard({
       customer={matchedCustomer}
       workbookProfile={matchedProfile}
       isLocalhostDevelopment={isLocalhostDevelopment}
+      selectableAccountCount={selectableAccountCount}
     />
   );
 }

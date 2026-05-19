@@ -40,20 +40,70 @@ function ChartFrame({
   title,
   eyebrow,
   children,
+  contentClassName = "h-72",
 }: {
   title: string;
   eyebrow: string;
   children: React.ReactNode;
+  contentClassName?: string;
 }) {
   return (
-    <div className="border border-[#d8c49b] bg-[#fffaf1] p-5 shadow-[0_14px_38px_rgba(23,42,40,0.07)]">
+    <div className="relative overflow-hidden border border-[#d8c49b] bg-[#fffaf1] p-5 shadow-[0_14px_38px_rgba(23,42,40,0.07)]">
+      <div className="absolute inset-x-0 top-0 h-1 bg-[#b89a61]" />
       <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8b7650]">
         {eyebrow}
       </p>
       <h3 className="mt-3 text-xl font-semibold tracking-[-0.025em] text-[#172a28]">
         {title}
       </h3>
-      <div className="mt-5 h-72 min-w-0">{children}</div>
+      <div className={`mt-5 min-w-0 ${contentClassName}`}>{children}</div>
+    </div>
+  );
+}
+
+function MixDonut({ title, data }: { title: string; data: MixDatum[] }) {
+  const active = data[0]?.value ?? 0;
+
+  return (
+    <div className="min-w-0 border border-[#e3d6bd] bg-white/52 p-3">
+      <div className="h-44 sm:h-36 xl:h-40">
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie
+              data={data}
+              dataKey="value"
+              nameKey="label"
+              innerRadius="58%"
+              outerRadius="82%"
+              stroke="none"
+            >
+              {data.map((entry) => (
+                <Cell key={`${title}-${entry.label}`} fill={entry.color} />
+              ))}
+            </Pie>
+            <Tooltip
+              formatter={(value, name) => [
+                `${Math.round(Number(value))}%`,
+                name,
+              ]}
+              contentStyle={{
+                background: "#fffaf1",
+                border: "1px solid #d8c49b",
+                borderRadius: 0,
+                color: "#172a28",
+              }}
+            />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+      <div className="mt-2 text-center">
+        <p className="text-2xl font-semibold tracking-[-0.035em] text-[#172a28]">
+          {Math.round(active)}%
+        </p>
+        <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#706759]">
+          {title}
+        </p>
+      </div>
     </div>
   );
 }
@@ -99,47 +149,17 @@ export function PortalPerformanceCharts({
         </ResponsiveContainer>
       </ChartFrame>
 
-      <ChartFrame eyebrow="Order Mix" title="Current Month Mix">
-        <div className="grid h-full grid-cols-3 gap-3">
+      <ChartFrame
+        eyebrow="Order Mix"
+        title="Current Month Mix"
+        contentClassName="min-h-72"
+      >
+        <div className="grid gap-3 sm:grid-cols-3">
           {[
             { title: "VSP", data: vspMix },
             { title: "Neurolens", data: nlMix },
             { title: "Sequel", data: sqlMix },
-          ].map((chart) => (
-            <div key={chart.title} className="min-w-0">
-              <ResponsiveContainer width="100%" height="78%">
-                <PieChart>
-                  <Pie
-                    data={chart.data}
-                    dataKey="value"
-                    nameKey="label"
-                    innerRadius="58%"
-                    outerRadius="82%"
-                    stroke="none"
-                  >
-                    {chart.data.map((entry) => (
-                      <Cell key={`${chart.title}-${entry.label}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    formatter={(value, name) => [
-                      `${Math.round(Number(value))}%`,
-                      name,
-                    ]}
-                    contentStyle={{
-                      background: "#fffaf1",
-                      border: "1px solid #d8c49b",
-                      borderRadius: 0,
-                      color: "#172a28",
-                    }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-              <p className="text-center text-xs font-semibold uppercase tracking-[0.18em] text-[#706759]">
-                {chart.title}
-              </p>
-            </div>
-          ))}
+          ].map((chart) => <MixDonut key={chart.title} {...chart} />)}
         </div>
       </ChartFrame>
     </div>

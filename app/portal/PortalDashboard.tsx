@@ -240,7 +240,8 @@ function PriceListCard({
   if (accountNumber) downloadParams.set("account", accountNumber);
 
   return (
-    <div className="group border border-[#d8c49b] bg-white/64 p-5 shadow-[0_12px_34px_rgba(23,42,40,0.06)] transition hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_18px_44px_rgba(23,42,40,0.1)]">
+    <div className="group relative overflow-hidden border border-[#d8c49b] bg-white/64 p-5 shadow-[0_12px_34px_rgba(23,42,40,0.06)] transition hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_18px_44px_rgba(23,42,40,0.1)]">
+      <div className="absolute inset-x-0 top-0 h-1 bg-[#b89a61] opacity-0 transition group-hover:opacity-100" />
       <div>
         <div className="flex items-center justify-between gap-4">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b7650]">
@@ -504,12 +505,17 @@ function AccountStatCard({
 
   return (
     <div
-      className={`border p-5 shadow-[0_14px_38px_rgba(23,42,40,0.07)] ${
+      className={`relative overflow-hidden border p-5 shadow-[0_14px_38px_rgba(23,42,40,0.07)] ${
         isDark
           ? "border-[#172a28] bg-[#172a28] text-white"
           : "border-[#d8c49b] bg-[#fffaf1] text-[#172a28]"
       }`}
     >
+      <div
+        className={`absolute inset-x-0 top-0 h-1 ${
+          isDark ? "bg-[#d8c49b]" : "bg-[#b89a61]"
+        }`}
+      />
       <p
         className={`text-xs font-semibold uppercase tracking-[0.22em] ${
           isDark ? "text-[#d8c49b]" : "text-[#8b7650]"
@@ -538,79 +544,6 @@ function UsageRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-function ComparisonBars({
-  title,
-  values,
-  suffix = "",
-}: {
-  title: string;
-  values: { label: string; value: number }[];
-  suffix?: string;
-}) {
-  const maxValue = Math.max(...values.map((item) => item.value), 1);
-
-  return (
-    <div className="border border-[#d8c49b] bg-[#fffaf1] p-5">
-      <h3 className="text-lg font-semibold tracking-[-0.02em] text-[#172a28]">
-        {title}
-      </h3>
-      <div className="mt-5 space-y-4">
-        {values.map((item) => {
-          const width = Math.max(4, Math.round((item.value / maxValue) * 100));
-
-          return (
-            <div key={item.label}>
-              <div className="mb-2 flex items-center justify-between gap-4 text-sm">
-                <span className="font-semibold text-[#172a28]">{item.label}</span>
-                <span className="text-[#706759]">
-                  {formatNumber(item.value)}
-                  {suffix}
-                </span>
-              </div>
-              <div className="h-2 bg-[#e8ddca]">
-                <div className="h-full bg-[#172a28]" style={{ width: `${width}%` }} />
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function ShareOfWalletChart({
-  label,
-  value,
-  accent = "#172a28",
-}: {
-  label: string;
-  value: number;
-  accent?: string;
-}) {
-  const percent = formatPercent(value);
-  const nonPercent = Math.max(0, 100 - percent);
-
-  return (
-    <div className="border border-[#d8c49b] bg-[#fffaf1] p-5">
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8b7650]">
-            {label}
-          </p>
-          <p className="mt-3 text-3xl font-semibold tracking-[-0.035em] text-[#172a28]">
-            {percent}%
-          </p>
-        </div>
-        <p className="text-sm text-[#706759]">{nonPercent}% Other</p>
-      </div>
-      <div className="mt-5 flex h-3 overflow-hidden bg-[#e8ddca]">
-        <div style={{ width: `${percent}%`, backgroundColor: accent }} />
-        <div style={{ width: `${nonPercent}%` }} />
-      </div>
-    </div>
-  );
-}
-
 function ProgramUsageCard({
   label,
   value,
@@ -627,8 +560,13 @@ function ProgramUsageCard({
   return (
     <Link
       href={href}
-      className="block border border-[#d8c49b] bg-[#fffaf1] p-5 transition hover:border-[#172a28] hover:bg-white"
+      className="group relative block overflow-hidden border border-[#d8c49b] bg-[#fffaf1] p-5 shadow-[0_10px_28px_rgba(23,42,40,0.05)] transition hover:-translate-y-0.5 hover:border-[#172a28] hover:bg-white hover:shadow-[0_16px_38px_rgba(23,42,40,0.09)]"
     >
+      <div
+        className={`absolute inset-x-0 top-0 h-1 ${
+          active ? "bg-[#172a28]" : "bg-[#d8c49b]"
+        }`}
+      />
       <div className="flex items-start justify-between gap-4">
         <h3 className="text-base font-semibold tracking-[-0.01em] text-[#172a28]">
           {label}
@@ -649,7 +587,7 @@ function ProgramUsageCard({
           {recommendation}
         </p>
       ) : null}
-      <span className="mt-4 inline-flex text-sm font-semibold text-[#172a28] underline decoration-[#d8c49b] underline-offset-4">
+      <span className="mt-4 inline-flex text-sm font-semibold text-[#172a28] underline decoration-[#d8c49b] underline-offset-4 transition group-hover:decoration-[#172a28]">
         Learn more
       </span>
     </Link>
@@ -705,7 +643,7 @@ function PortalAccountHero({
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#d8c49b]">
             Customer Intelligence
           </p>
-          <h1 className="mt-5 text-5xl font-semibold tracking-[-0.055em] sm:text-6xl lg:text-7xl">
+          <h1 className="mt-5 break-words text-4xl font-semibold tracking-[-0.055em] sm:text-6xl lg:text-7xl">
             {practiceName}
           </h1>
           <div className="mt-6 flex flex-wrap gap-3">

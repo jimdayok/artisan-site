@@ -51,7 +51,10 @@ export default async function PortalAdminAccountsPage({
 
   return (
     <AdminShell title="Portal Accounts" adminEmail={adminEmail}>
-      <SearchBox query={query} placeholder="Search accounts, reps, users, permissions..." />
+      <SearchBox
+        query={query}
+        placeholder="Search by practice, account number, or email"
+      />
 
       <section className="mt-8 overflow-x-auto border border-[#d8c49b] bg-[#fffaf1]/88 shadow-[0_18px_55px_rgba(23,42,40,0.08)]">
         <table className="min-w-[1400px] w-full border-collapse text-left text-sm">
@@ -177,9 +180,9 @@ export default async function PortalAdminAccountsPage({
                 <td className="px-4 py-4">
                   <Link
                     href={`/portal/admin/preview/${encodeURIComponent(row.account.accountNumber)}`}
-                    className={adminButtonClass}
+                    className={`${adminButtonClass} bg-[#172a28] text-white hover:bg-[#27433f]`}
                   >
-                    Preview
+                    Preview Customer Portal
                   </Link>
                 </td>
               </tr>

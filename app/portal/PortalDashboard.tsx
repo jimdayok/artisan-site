@@ -260,6 +260,8 @@ function PortalAccountSelector({
       accountNumber: string;
       practiceName: string;
       customerTypeLabel?: string;
+      division?: string;
+      lastShippedDate?: string;
     }
   >();
 
@@ -286,6 +288,9 @@ function PortalAccountSelector({
         optionsByAccount.get(key)?.practiceName ||
         "Customer account",
       customerTypeLabel: optionsByAccount.get(key)?.customerTypeLabel,
+      division: profile.account?.division || profile.person.division,
+      lastShippedDate:
+        profile.account?.lastShippedDate || profile.person.lastOrderShipped,
     });
   }
 
@@ -318,6 +323,11 @@ function PortalAccountSelector({
                 <span className="mt-2 block text-sm text-[#706759]">
                   Account {option.accountNumber}
                   {option.customerTypeLabel ? ` · ${option.customerTypeLabel}` : ""}
+                </span>
+                <span className="mt-2 block text-xs uppercase tracking-[0.18em] text-[#8b7650]">
+                  {option.division ? `Division ${option.division}` : "Division not available"}
+                  {" · "}
+                  Last shipped {formatPortalDate(option.lastShippedDate ?? "")}
                 </span>
               </span>
               <span className="inline-flex w-fit items-center justify-center rounded-full bg-[#172a28] px-5 py-2 text-sm font-semibold text-white">
@@ -931,6 +941,7 @@ export function PortalDashboardContent({
   workbookProfile,
   adminPreviewAccountName,
   adminPreviewAccountNumber,
+  adminPreviewEmail,
   isLocalhostDevelopment,
 }: {
   authenticatedEmail: string;
@@ -938,6 +949,7 @@ export function PortalDashboardContent({
   workbookProfile?: PortalWorkbookProfile;
   adminPreviewAccountName?: string;
   adminPreviewAccountNumber?: string;
+  adminPreviewEmail?: string;
   isLocalhostDevelopment?: boolean;
 }) {
   if (!customer && !workbookProfile) {
@@ -971,17 +983,33 @@ export function PortalDashboardContent({
   return (
     <PortalShell eyebrow="Verified Customer Portal">
       {adminPreviewAccountName ? (
-        <div className="mb-8 flex flex-col gap-4 border border-[#b89a61] bg-[#172a28] px-5 py-4 text-sm font-semibold text-white shadow-[0_18px_55px_rgba(23,42,40,0.16)] sm:flex-row sm:items-center sm:justify-between">
-          <span>
-            Admin preview mode. Viewing as {adminPreviewAccountName} account{" "}
-            {adminPreviewAccountNumber || accountNumber}.
-          </span>
-          <Link
-            href="/portal/admin/accounts"
-            className="inline-flex w-fit items-center justify-center rounded-full border border-white/30 px-4 py-2 text-xs uppercase tracking-[0.18em] transition hover:bg-white hover:text-[#172a28]"
-          >
-            Exit Preview
-          </Link>
+        <div className="sticky top-4 z-20 mb-8 border border-[#b89a61] bg-[#172a28]/96 px-5 py-4 text-white shadow-[0_18px_55px_rgba(23,42,40,0.22)] backdrop-blur sm:px-6">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#d8c49b]">
+                Admin Preview Mode
+              </p>
+              <p className="mt-2 text-sm leading-6 text-white/88">
+                You are viewing the portal as {adminPreviewAccountName}, account{" "}
+                {adminPreviewAccountNumber || accountNumber}. Your admin
+                identity is still {adminPreviewEmail || authenticatedEmail}.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href="/portal/admin"
+                className="inline-flex min-h-10 w-fit items-center justify-center rounded-full bg-[#d8c49b] px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#172a28] transition hover:bg-white"
+              >
+                Back to Admin
+              </Link>
+              <Link
+                href="/portal/admin/accounts"
+                className="inline-flex min-h-10 w-fit items-center justify-center rounded-full border border-white/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] transition hover:bg-white hover:text-[#172a28]"
+              >
+                Exit Preview
+              </Link>
+            </div>
+          </div>
         </div>
       ) : null}
 

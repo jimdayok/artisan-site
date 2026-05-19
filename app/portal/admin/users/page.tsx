@@ -7,7 +7,6 @@ import {
   AdminShell,
   PillList,
   SearchBox,
-  adminButtonClass,
 } from "../AdminShell";
 
 export const dynamic = "force-dynamic";
@@ -26,7 +25,10 @@ export default async function PortalAdminUsersPage({
 
   return (
     <AdminShell title="Portal Users" adminEmail={adminEmail}>
-      <SearchBox query={query} placeholder="Search users, emails, accounts, permissions..." />
+      <SearchBox
+        query={query}
+        placeholder="Search by practice, account number, or email"
+      />
 
       <section className="mt-8 overflow-x-auto border border-[#d8c49b] bg-[#fffaf1]/88 shadow-[0_18px_55px_rgba(23,42,40,0.08)]">
         <table className="min-w-[1100px] w-full border-collapse text-left text-sm">
@@ -42,7 +44,6 @@ export default async function PortalAdminUsersPage({
                 "Package Warning",
                 "Price Lists",
                 "Sections",
-                "Preview",
               ].map((heading) => (
                 <th key={heading} className="px-4 py-3 font-semibold">
                   {heading}
@@ -70,9 +71,9 @@ export default async function PortalAdminUsersPage({
                           </p>
                           <Link
                             href={`/portal/admin/preview/${encodeURIComponent(account.accountNumber)}`}
-                            className="mt-2 inline-flex w-fit items-center rounded-full border border-[#d8c49b] px-3 py-1 text-xs font-semibold text-[#172a28] transition hover:bg-white"
+                            className="mt-2 inline-flex w-fit items-center rounded-full bg-[#172a28] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#27433f]"
                           >
-                            Preview as this account
+                            Preview as This Account
                           </Link>
                         </div>
                       ))
@@ -117,19 +118,6 @@ export default async function PortalAdminUsersPage({
                 </td>
                 <td className="px-4 py-4">
                   <PillList values={row.assignedSections} />
-                </td>
-                <td className="px-4 py-4">
-                  <div className="flex flex-col gap-2">
-                    {row.accounts.map((account) => (
-                      <Link
-                        key={account.accountNumber}
-                        href={`/portal/admin/preview/${encodeURIComponent(account.accountNumber)}`}
-                        className={adminButtonClass}
-                      >
-                        {account.accountNumber}
-                      </Link>
-                    ))}
-                  </div>
                 </td>
               </tr>
             ))}

@@ -53,6 +53,7 @@ export default async function PortalAdminPreviewPage({
       workbookProfile={workbookProfile}
       adminPreviewAccountName={accountName}
       adminPreviewAccountNumber={accountNumber}
+      adminPreviewEmail={adminEmail}
     />
   );
 }

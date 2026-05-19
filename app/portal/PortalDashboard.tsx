@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PortalPerformanceCharts } from "./PortalPerformanceCharts";
 import { isPortalAdminEmail } from "@/lib/portal/admin";
 import {
   getCustomerTypeInfoFromProfile,
@@ -93,6 +94,29 @@ function formatPercent(value: number) {
   return Math.max(0, Math.min(100, Math.round(normalizedValue)));
 }
 
+function formatDecimal(value: number) {
+  return new Intl.NumberFormat("en-US", {
+    maximumFractionDigits: 1,
+  }).format(value);
+}
+
+function mixData({
+  activeLabel,
+  activePercent,
+  activeColor = "#172a28",
+}: {
+  activeLabel: string;
+  activePercent: number;
+  activeColor?: string;
+}) {
+  const active = formatPercent(activePercent);
+
+  return [
+    { label: activeLabel, value: active, color: activeColor },
+    { label: `Non-${activeLabel}`, value: Math.max(0, 100 - active), color: "#e8ddca" },
+  ];
+}
+
 function PortalShell({
   children,
   eyebrow = "Customer Portal",
@@ -106,7 +130,7 @@ function PortalShell({
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_12%,rgba(47,89,98,0.16),transparent_34%),linear-gradient(135deg,#f7f2e9_0%,#efe6d8_55%,#dfe9e8_100%)]" />
         <div className="absolute inset-0 -z-10 opacity-[0.08] [background-image:linear-gradient(rgba(23,42,40,0.55)_1px,transparent_1px),linear-gradient(90deg,rgba(23,42,40,0.55)_1px,transparent_1px)] [background-size:42px_42px]" />
 
-        <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-6xl flex-col justify-center">
+        <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-7xl flex-col">
           <Link
             href="/"
             className="mb-14 inline-flex w-fit items-center text-xs font-semibold uppercase tracking-[0.32em] text-[#6f5f3f] transition hover:text-[#172a28]"
@@ -216,29 +240,37 @@ function PriceListCard({
   if (accountNumber) downloadParams.set("account", accountNumber);
 
   return (
-    <div className="group flex flex-col justify-between gap-5 border-t border-[#d8c49b] py-6 sm:flex-row sm:items-center">
+    <div className="group border border-[#d8c49b] bg-white/64 p-5 shadow-[0_12px_34px_rgba(23,42,40,0.06)] transition hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_18px_44px_rgba(23,42,40,0.1)]">
       <div>
-        <p className="text-2xl font-semibold tracking-[-0.02em] text-[#172a28]">
+        <div className="flex items-center justify-between gap-4">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b7650]">
+            {priceList.code}
+          </p>
+          <span className="rounded-full border border-[#d8c49b] px-3 py-1 text-xs font-semibold text-[#706759]">
+            Assigned
+          </span>
+        </div>
+        <p className="mt-4 text-2xl font-semibold tracking-[-0.025em] text-[#172a28]">
           {priceList.label}
         </p>
-        <p className="mt-2 text-sm text-[#706759]">{priceList.fileName}</p>
+        <p className="mt-2 break-all text-sm text-[#706759]">{priceList.fileName}</p>
       </div>
-      <div className="flex flex-col gap-3 sm:items-end">
-        {priceList.r2Key ? (
-          <a
-            href={`/api/portal/download?${downloadParams.toString()}`}
-            className="inline-flex w-fit items-center justify-center rounded-full bg-[#172a28] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#27433f]"
-          >
-            Download {priceList.code} PDF
-          </a>
-        ) : null}
+      <div className="mt-6 flex flex-col gap-3">
         {priceList.onlineUrl ? (
           <Link
             href={priceList.onlineUrl}
-            className="inline-flex w-fit items-center justify-center rounded-full border border-[#d8c49b] bg-[#fffaf1] px-6 py-3 text-sm font-semibold text-[#172a28] transition hover:bg-white"
+            className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[#172a28] px-5 py-2 text-sm font-semibold text-white transition hover:bg-[#27433f]"
           >
             View {priceList.code} Online Pricing
           </Link>
+        ) : null}
+        {priceList.r2Key ? (
+          <a
+            href={`/api/portal/download?${downloadParams.toString()}`}
+            className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#d8c49b] bg-[#fffaf1] px-5 py-2 text-sm font-semibold text-[#172a28] transition hover:bg-white"
+          >
+            Download PDF
+          </a>
         ) : null}
       </div>
     </div>
@@ -414,8 +446,11 @@ function PortalResourceCard({ card }: { card: PortalSectionCard }) {
   return (
     <Link
       href={card.href}
-      className="group block border-t border-[#d8c49b] py-5 transition hover:border-[#172a28]"
+      className="group block border border-[#d8c49b] bg-white/60 p-5 transition hover:-translate-y-0.5 hover:border-[#172a28] hover:bg-white"
     >
+      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8b7650]">
+        {card.section}
+      </p>
       <p className="text-xl font-semibold tracking-[-0.02em] text-[#172a28]">
         {card.title}
       </p>
@@ -429,21 +464,24 @@ function PortalResourceCard({ card }: { card: PortalSectionCard }) {
 
 function SequelRewardsInvitationCard() {
   return (
-    <section className="border border-[#d8c49b] bg-[#fffaf1]/90 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9 lg:col-span-2">
-      <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
-        Invitation Program
-      </p>
-      <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em] text-[#172a28]">
-        You&apos;ve Been Invited: Sequel Artisan Rewards
-      </h2>
-      <p className="mt-4 max-w-3xl text-sm leading-7 text-[#706759]">
-        Your practice has been invited to participate in the Sequel Artisan
-        Rewards program. Learn how the program works and how your practice can
-        qualify for rewards.
-      </p>
+    <section className="relative isolate overflow-hidden border border-[#b89a61] bg-[#172a28] p-6 text-white shadow-[0_24px_90px_rgba(23,42,40,0.18)] sm:p-9 lg:col-span-3">
+      <div className="absolute inset-y-0 right-0 -z-10 w-1/2 bg-[radial-gradient(circle_at_70%_35%,rgba(216,196,155,0.22),transparent_42%)]" />
+      <div className="max-w-3xl">
+        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#d8c49b]">
+          Invitation Program
+        </p>
+        <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em]">
+          You&apos;ve Been Invited: Sequel Artisan Rewards
+        </h2>
+        <p className="mt-4 text-sm leading-7 text-white/76">
+          Your practice has been invited to participate in the Sequel Artisan
+          Rewards program. Learn how the program works and how your practice can
+          qualify for rewards.
+        </p>
+      </div>
       <Link
-        href="/programs/sequel-arSQL26"
-        className="mt-6 inline-flex min-h-12 items-center justify-center rounded-full bg-[#172a28] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#27433f]"
+        href="/programs#sequel-artisan-rewards"
+        className="mt-6 inline-flex min-h-12 items-center justify-center rounded-full bg-[#d8c49b] px-6 py-3 text-sm font-semibold text-[#172a28] transition hover:bg-white"
       >
         Learn About Sequel Artisan Rewards
       </Link>
@@ -455,20 +493,38 @@ function AccountStatCard({
   label,
   value,
   detail,
+  tone = "light",
 }: {
   label: string;
   value: string;
   detail?: string;
+  tone?: "light" | "dark";
 }) {
+  const isDark = tone === "dark";
+
   return (
-    <div className="border border-[#d8c49b] bg-[#fffaf1] p-5 shadow-[0_14px_38px_rgba(23,42,40,0.07)]">
-      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8b7650]">
+    <div
+      className={`border p-5 shadow-[0_14px_38px_rgba(23,42,40,0.07)] ${
+        isDark
+          ? "border-[#172a28] bg-[#172a28] text-white"
+          : "border-[#d8c49b] bg-[#fffaf1] text-[#172a28]"
+      }`}
+    >
+      <p
+        className={`text-xs font-semibold uppercase tracking-[0.22em] ${
+          isDark ? "text-[#d8c49b]" : "text-[#8b7650]"
+        }`}
+      >
         {label}
       </p>
-      <p className="mt-4 text-3xl font-semibold tracking-[-0.035em] text-[#172a28]">
+      <p className="mt-4 text-3xl font-semibold tracking-[-0.035em]">
         {value}
       </p>
-      {detail ? <p className="mt-2 text-xs leading-5 text-[#706759]">{detail}</p> : null}
+      {detail ? (
+        <p className={`mt-2 text-xs leading-5 ${isDark ? "text-white/68" : "text-[#706759]"}`}>
+          {detail}
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -559,10 +615,12 @@ function ProgramUsageCard({
   label,
   value,
   href,
+  recommendation,
 }: {
   label: string;
   value: string;
   href: string;
+  recommendation?: string;
 }) {
   const active = hasProgramUsage(value);
 
@@ -586,6 +644,11 @@ function ProgramUsageCard({
         </span>
       </div>
       <p className="mt-3 text-sm text-[#706759]">{value || "Not available"}</p>
+      {recommendation ? (
+        <p className="mt-3 border-t border-[#d8c49b] pt-3 text-xs leading-5 text-[#8b7650]">
+          {recommendation}
+        </p>
+      ) : null}
       <span className="mt-4 inline-flex text-sm font-semibold text-[#172a28] underline decoration-[#d8c49b] underline-offset-4">
         Learn more
       </span>
@@ -617,44 +680,138 @@ function ModernPackageSavingsAlert() {
   );
 }
 
+function PortalAccountHero({
+  practiceName,
+  accountNumber,
+  customerTypeLabel,
+  customerTypeCode,
+  account,
+  authenticatedEmail,
+  adminPreviewAccountName,
+}: {
+  practiceName: string;
+  accountNumber: string;
+  customerTypeLabel?: string;
+  customerTypeCode?: string;
+  account?: PortalWorkbookAccount;
+  authenticatedEmail: string;
+  adminPreviewAccountName?: string;
+}) {
+  return (
+    <section className="relative isolate overflow-hidden border border-[#b89a61] bg-[#172a28] p-6 text-white shadow-[0_28px_100px_rgba(23,42,40,0.22)] sm:p-8 lg:col-span-3">
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_78%_18%,rgba(216,196,155,0.2),transparent_34%),linear-gradient(135deg,rgba(49,95,88,0.38),transparent_52%)]" />
+      <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+        <div className="max-w-4xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#d8c49b]">
+            Customer Intelligence
+          </p>
+          <h1 className="mt-5 text-5xl font-semibold tracking-[-0.055em] sm:text-6xl lg:text-7xl">
+            {practiceName}
+          </h1>
+          <div className="mt-6 flex flex-wrap gap-3">
+            {customerTypeLabel ? (
+              <span className="inline-flex items-center gap-2 rounded-full border border-[#d8c49b]/55 bg-[#fffaf1]/10 px-4 py-2 text-sm font-semibold">
+                {customerTypeLabel}
+                {customerTypeCode ? (
+                  <span className="text-xs uppercase tracking-[0.2em] text-[#d8c49b]">
+                    {customerTypeCode}
+                  </span>
+                ) : null}
+              </span>
+            ) : null}
+            {accountNumber ? (
+              <span className="rounded-full border border-white/18 px-4 py-2 text-sm text-white/82">
+                Account {accountNumber}
+              </span>
+            ) : null}
+            {account?.division ? (
+              <span className="rounded-full border border-white/18 px-4 py-2 text-sm text-white/82">
+                Division {account.division}
+              </span>
+            ) : null}
+          </div>
+        </div>
+
+        <div className="grid gap-3 text-sm leading-6 text-white/78 lg:min-w-80">
+          <p>
+            <span className="text-[#d8c49b]">Last shipped</span>
+            <br />
+            <span className="font-semibold text-white">
+              {formatPortalDate(account?.lastShippedDate ?? "")}
+            </span>
+          </p>
+          <p>
+            <span className="text-[#d8c49b]">Primary lab</span>
+            <br />
+            <span className="font-semibold text-white">
+              {account?.lastLabName || "Not available"}
+            </span>
+          </p>
+          <p>
+            <span className="text-[#d8c49b]">
+              {adminPreviewAccountName ? "Admin preview identity" : "Logged in as"}
+            </span>
+            <br />
+            <span className="font-semibold text-white">{authenticatedEmail}</span>
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function AccountPerformanceSection({
   account,
 }: {
   account: PortalWorkbookAccount;
 }) {
+  const vspShare =
+    account.cmVspSow || (account.cmJobs > 0 ? account.cmVspJobs / account.cmJobs : 0);
+  const nlShare =
+    account.cmNlSow || (account.cmJobs > 0 ? account.cmNlJobs / account.cmJobs : 0);
+  const sqlShare = account.cmJobs > 0 ? account.cmSqlJobs / account.cmJobs : 0;
+  const trendData = [
+    {
+      label: "PPM",
+      purchases: account.ppmSales,
+      rxOrders: account.ppmJobs,
+      rxOrdersPerDay: account.ppmJpd,
+    },
+    {
+      label: "PM",
+      purchases: account.pmSales,
+      rxOrders: account.pmJobs,
+      rxOrdersPerDay: account.pmJpd,
+    },
+    {
+      label: "CM",
+      purchases: account.cmSales,
+      rxOrders: account.cmJobs,
+      rxOrdersPerDay: account.cmJpd,
+    },
+  ];
+
   return (
-    <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9 lg:col-span-2">
+    <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9 lg:col-span-3">
       <div className="mb-7 border-b border-[#d8c49b] pb-6">
         <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
           Account Performance
         </p>
         <h2 className="mt-3 text-3xl font-semibold tracking-[-0.03em] text-[#172a28]">
-          {account.accountName}
+          Performance snapshot
         </h2>
-        <div className="mt-5 grid gap-3 text-sm leading-6 text-[#706759] sm:grid-cols-2 lg:grid-cols-4">
-          <p>
-            <span className="font-semibold text-[#172a28]">Account:</span>{" "}
-            {account.accountNumber}
-          </p>
-          <p>
-            <span className="font-semibold text-[#172a28]">Division:</span>{" "}
-            {account.division || "Not available"}
-          </p>
-          <p>
-            <span className="font-semibold text-[#172a28]">Sales Rep:</span>{" "}
-            {account.salesRep || "Not available"}
-          </p>
-          <p>
-            <span className="font-semibold text-[#172a28]">Last Shipped:</span>{" "}
-            {formatPortalDate(account.lastShippedDate)}
-          </p>
-        </div>
+        <p className="mt-3 max-w-3xl text-sm leading-6 text-[#706759]">
+          Purchases include the VSP portion paid directly to the lab when
+          applicable. Rx Orders are shown as current, previous, and prior
+          previous month views.
+        </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
         <AccountStatCard
           label="Current Month Purchases"
           value={formatCurrency(account.cmSales)}
+          tone="dark"
         />
         <AccountStatCard
           label="Previous Month Purchases"
@@ -669,88 +826,50 @@ function AccountPerformanceSection({
           value={formatNumber(account.pmJobs)}
         />
         <AccountStatCard
-          label="Last Shipped"
-          value={formatPortalDate(account.lastShippedDate)}
+          label="Current Month Rx Orders Per Day"
+          value={formatDecimal(account.cmJpd)}
         />
-      </div>
-      <p className="mt-4 text-xs leading-5 text-[#706759]">
-        Purchases include the VSP portion paid directly to the lab when
-        applicable.
-      </p>
-
-      <div className="mt-8 grid gap-4 lg:grid-cols-2">
-        <ComparisonBars
-          title="Rx Orders Per Day"
-          values={[
-            { label: "Current Month", value: account.cmJpd },
-            { label: "Previous Month", value: account.pmJpd },
-            { label: "Prior Previous Month", value: account.ppmJpd },
-          ]}
-        />
-        <ComparisonBars
-          title="Rx Order Volume"
-          values={[
-            { label: "Current Month Rx Orders", value: account.cmJobs },
-            { label: "Previous Month Rx Orders", value: account.pmJobs },
-            { label: "Prior Previous Month Rx Orders", value: account.ppmJobs },
-          ]}
+        <AccountStatCard
+          label="Previous Month Rx Orders Per Day"
+          value={formatDecimal(account.pmJpd)}
         />
       </div>
 
-      <div className="mt-8 grid gap-8 lg:grid-cols-2">
-        <div>
-          <h3 className="text-xl font-semibold tracking-[-0.02em] text-[#172a28]">
-            Monthly Activity
-          </h3>
-          <div className="mt-4">
-            <UsageRow label="Current Month Rx Orders" value={formatNumber(account.cmJobs)} />
-            <UsageRow
-              label="Current Month Purchases"
-              value={formatCurrency(account.cmSales)}
-            />
-            <UsageRow label="Previous Month Rx Orders" value={formatNumber(account.pmJobs)} />
-            <UsageRow
-              label="Previous Month Purchases"
-              value={formatCurrency(account.pmSales)}
-            />
-            <UsageRow
-              label="Prior Previous Month Rx Orders"
-              value={formatNumber(account.ppmJobs)}
-            />
-            <UsageRow
-              label="Prior Previous Month Purchases"
-              value={formatCurrency(account.ppmSales)}
-            />
-            <UsageRow
-              label="Current Month Rx Orders Per Day"
-              value={formatNumber(account.cmJpd)}
-            />
-          </div>
-        </div>
-
-        <div>
-          <h3 className="text-xl font-semibold tracking-[-0.02em] text-[#172a28]">
-            VSP, Neurolens, and Sequel Mix
-          </h3>
-          <div className="mt-4">
-            <UsageRow label="VSP Rx Orders" value={formatNumber(account.cmVspJobs)} />
-            <UsageRow label="Neurolens Rx Orders" value={formatNumber(account.cmNlJobs)} />
-            <UsageRow label="Sequel Rx Orders" value={formatNumber(account.cmSqlJobs)} />
-          </div>
-        </div>
+      <div className="mt-8">
+        <PortalPerformanceCharts
+          trends={trendData}
+          vspMix={mixData({
+            activeLabel: "VSP",
+            activePercent: vspShare,
+          })}
+          nlMix={mixData({
+            activeLabel: "Neurolens",
+            activePercent: nlShare,
+            activeColor: "#315f58",
+          })}
+          sqlMix={mixData({
+            activeLabel: "Sequel",
+            activePercent: sqlShare,
+            activeColor: "#8b7650",
+          })}
+        />
       </div>
 
       <div className="mt-8 grid gap-4 lg:grid-cols-3">
-        <ShareOfWalletChart label="VSP Order Mix" value={account.cmVspSow} />
-        <ShareOfWalletChart
-          label="Neurolens Order Mix"
-          value={account.cmNlSow}
-          accent="#315f58"
+        <AccountStatCard
+          label="VSP Rx Orders"
+          value={formatNumber(account.cmVspJobs)}
+          detail={`${formatPercent(vspShare)}% VSP · ${100 - formatPercent(vspShare)}% Non-VSP`}
         />
-        <ShareOfWalletChart
-          label="Sequel Order Mix"
-          value={account.cmJobs > 0 ? account.cmSqlJobs / account.cmJobs : 0}
-          accent="#8b7650"
+        <AccountStatCard
+          label="Neurolens Rx Orders"
+          value={formatNumber(account.cmNlJobs)}
+          detail={`${formatPercent(nlShare)}% of current Rx order mix`}
+        />
+        <AccountStatCard
+          label="Sequel Rx Orders"
+          value={formatNumber(account.cmSqlJobs)}
+          detail={`${formatPercent(sqlShare)}% of current Rx order mix`}
         />
       </div>
     </section>
@@ -761,12 +880,10 @@ function AccountProfileSection({
   account,
   practiceName,
   accountNumber,
-  customerTypeLabel,
 }: {
   account?: PortalWorkbookAccount;
   practiceName: string;
   accountNumber: string;
-  customerTypeLabel?: string;
 }) {
   if (!account && !practiceName && !accountNumber) return null;
 
@@ -780,29 +897,24 @@ function AccountProfileSection({
   return (
     <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9">
       <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
-        Account Profile
+        Account Details
       </p>
       <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em] text-[#172a28]">
-        {practiceName}
+        Profile and support
       </h2>
+      <p className="mt-3 text-sm leading-6 text-[#706759]">
+        Review the account details Artisan uses for service, support, and
+        program eligibility.
+      </p>
       <div className="mt-6 grid gap-4 text-sm leading-6 text-[#706759]">
-        <UsageRow label="Account Number" value={accountNumber} />
-        <UsageRow label="Customer Type" value={customerTypeLabel || "Not available"} />
-        <UsageRow label="Division" value={account?.division ?? ""} />
         <UsageRow label="Sales Rep" value={account?.salesRep ?? ""} />
         <UsageRow label="Address" value={account?.fullAddress ?? ""} />
-        <UsageRow label="State" value={account?.state ?? ""} />
-        <UsageRow label="Zip Code" value={account?.zipCode ?? ""} />
         <UsageRow label="Phone Number" value={account?.phoneNumber ?? ""} />
-        <UsageRow
-          label="Last Shipped Date"
-          value={formatPortalDate(account?.lastShippedDate ?? "")}
-        />
-        <UsageRow label="Lab Name" value={account?.lastLabName ?? ""} />
+        <UsageRow label="State / ZIP" value={[account?.state, account?.zipCode].filter(Boolean).join(" ") || ""} />
       </div>
       <a
         href={correctionLink}
-        className="mt-6 inline-flex text-sm font-semibold text-[#172a28] underline decoration-[#d8c49b] underline-offset-4 transition hover:decoration-[#172a28]"
+        className="mt-6 inline-flex min-h-11 items-center justify-center rounded-full border border-[#d8c49b] bg-white/62 px-5 py-2 text-sm font-semibold text-[#172a28] transition hover:bg-white"
       >
         Is this information incorrect?
       </a>
@@ -854,8 +966,10 @@ function UserContactSection({
 }
 
 function ProgramUsageSection({ account }: { account: PortalWorkbookAccount }) {
+  const missingPackageSavings = hasModernPackageSavingsWarning(account);
+
   return (
-    <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9 lg:col-span-2">
+    <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9 lg:col-span-3">
       <div className="mb-7 border-b border-[#d8c49b] pb-6">
         <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
           Programs and Tools
@@ -869,6 +983,11 @@ function ProgramUsageSection({ account }: { account: PortalWorkbookAccount }) {
           label="Modern Package System Usage"
           value={account.modernPkgUsage}
           href="/provider-resources#modern-package-system"
+          recommendation={
+            missingPackageSavings
+              ? "Recommended: compare package savings for accounts already using Modern Frame."
+              : undefined
+          }
         />
         <ProgramUsageCard
           label="Modern Frame System Usage"
@@ -1013,46 +1132,48 @@ export function PortalDashboardContent({
         </div>
       ) : null}
 
-      <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
-        <div>
-          <h1 className="text-5xl font-semibold tracking-[-0.045em] text-[#172a28] sm:text-6xl lg:text-7xl">
-            Welcome,
-            <br />
-            {practiceName}
-          </h1>
-          {customerTypeLabel ? (
-            <div className="mt-6 inline-flex items-center gap-3 border border-[#d8c49b] bg-[#fffaf1]/86 px-4 py-2 text-sm font-semibold text-[#172a28]">
-              <span>{customerTypeLabel}</span>
-              {customerTypeCode ? (
-                <span className="text-xs uppercase tracking-[0.2em] text-[#8b7650]">
-                  {customerTypeCode}
-                </span>
-              ) : null}
-            </div>
-          ) : null}
-          <div className="mt-8 space-y-3 text-base leading-7 text-[#5b5245]">
-            {accountNumber ? (
-              <p>
-                <span className="font-semibold text-[#172a28]">Account Number:</span>{" "}
-                {accountNumber}
-              </p>
-            ) : null}
-            <p>
-              <span className="font-semibold text-[#172a28]">Logged in as:</span>{" "}
-              {authenticatedEmail}
-            </p>
-          </div>
-          {isPortalAdminEmail(authenticatedEmail) && !adminPreviewAccountName ? (
-            <Link
-              href="/portal/admin"
-              className="mt-6 inline-flex min-h-11 items-center justify-center rounded-full border border-[#d8c49b] bg-[#fffaf1] px-5 py-2 text-sm font-semibold text-[#172a28] transition hover:bg-white"
-            >
-              Admin Portal
-            </Link>
-          ) : null}
-        </div>
+      <div className="grid gap-7 lg:grid-cols-3">
+        <PortalAccountHero
+          practiceName={practiceName}
+          accountNumber={accountNumber}
+          customerTypeLabel={customerTypeLabel}
+          customerTypeCode={customerTypeCode}
+          account={account}
+          authenticatedEmail={authenticatedEmail}
+          adminPreviewAccountName={adminPreviewAccountName}
+        />
 
-        <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9">
+        {isPortalAdminEmail(authenticatedEmail) && !adminPreviewAccountName ? (
+          <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-5 shadow-[0_18px_55px_rgba(23,42,40,0.08)] lg:col-span-3">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b7650]">
+                  Admin Tools
+                </p>
+                <p className="mt-2 text-sm text-[#706759]">
+                  Open admin views without changing the current customer portal
+                  context.
+                </p>
+              </div>
+              <Link
+                href="/portal/admin"
+                className="inline-flex min-h-11 w-fit items-center justify-center rounded-full bg-[#172a28] px-5 py-2 text-sm font-semibold text-white transition hover:bg-[#27433f]"
+              >
+                Admin Portal
+              </Link>
+            </div>
+          </section>
+        ) : null}
+
+        {account ? <AccountPerformanceSection account={account} /> : null}
+
+        {hasSequelRebateInvitation ? <SequelRewardsInvitationCard /> : null}
+
+        {account && hasModernPackageSavingsWarning(account) ? (
+          <ModernPackageSavingsAlert />
+        ) : null}
+
+        <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9 lg:col-span-2">
           <div className="mb-6 flex flex-col gap-3 border-b border-[#d8c49b] pb-6 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
@@ -1068,7 +1189,7 @@ export function PortalDashboardContent({
           </div>
 
           {availablePriceLists.length > 0 ? (
-            <div>
+            <div className="grid gap-4 md:grid-cols-2">
               {availablePriceLists.map((priceList) => (
                 <PriceListCard
                   key={priceList.code}
@@ -1087,7 +1208,7 @@ export function PortalDashboardContent({
         </section>
 
         {availablePortalSections.length > 0 ? (
-          <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9 lg:col-start-2">
+          <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9">
             <div className="mb-6 border-b border-[#d8c49b] pb-6">
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
                 Assigned Tools
@@ -1099,7 +1220,7 @@ export function PortalDashboardContent({
                 These sections are available based on your account permissions.
               </p>
             </div>
-            <div>
+            <div className="grid gap-4">
               {availablePortalSections.map((card) => (
                 <PortalResourceCard key={card.title} card={card} />
               ))}
@@ -1111,11 +1232,6 @@ export function PortalDashboardContent({
           account={account}
           practiceName={practiceName}
           accountNumber={accountNumber}
-          customerTypeLabel={
-            customerTypeLabel && customerTypeCode
-              ? `${customerTypeLabel} (${customerTypeCode})`
-              : customerTypeLabel
-          }
         />
 
         <UserContactSection
@@ -1124,14 +1240,6 @@ export function PortalDashboardContent({
           practiceName={practiceName}
           accountNumber={accountNumber}
         />
-
-        {hasSequelRebateInvitation ? <SequelRewardsInvitationCard /> : null}
-
-        {account && hasModernPackageSavingsWarning(account) ? (
-          <ModernPackageSavingsAlert />
-        ) : null}
-
-        {account ? <AccountPerformanceSection account={account} /> : null}
 
         {account ? <ProgramUsageSection account={account} /> : null}
       </div>

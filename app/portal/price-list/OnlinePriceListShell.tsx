@@ -7,10 +7,12 @@ export function OnlinePriceListShell({
   priceList,
   children,
   title,
+  description,
 }: {
   priceList: PortalPriceList;
   children: React.ReactNode;
   title?: string;
+  description?: string;
 }) {
   return (
     <main className="min-h-screen overflow-x-hidden overflow-y-auto bg-[#f4eee4] px-3 py-5 text-[#122033] md:px-6">
@@ -19,7 +21,7 @@ export function OnlinePriceListShell({
         <PricingHeader
           eyebrow="Private Online Pricing"
           title={title ?? `${priceList.code} Online Pricing`}
-          description="Account-assigned pricing tools are available only through secure portal access."
+          description={description ?? "Account-assigned pricing tools are available only through secure portal access."}
           showNavigation={priceList.code === "G6"}
         />
         <div className="mt-7">{children}</div>

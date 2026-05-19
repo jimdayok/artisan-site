@@ -24,6 +24,7 @@ export default async function P6PriceListPage() {
     <OnlinePriceListShell
       priceList={access.priceList}
       title="Artisan Equity Partner Pricing"
+      description="Interactive private pricing guide for assigned Artisan Equity Partner accounts."
     >
       <InteractivePriceListDashboard
         priceList={p6PricingData as GeneratedPriceListData}

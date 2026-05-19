@@ -32,10 +32,25 @@ export type PriceListArCoating = {
   outsourced: boolean;
 };
 
+export type PriceListAddOnItem = {
+  name: string;
+  price: number | string;
+  notes?: string;
+  recommended?: boolean;
+  outsourced?: boolean;
+};
+
+export type PriceListAddOnSection = {
+  title: string;
+  items: PriceListAddOnItem[];
+};
+
 export type PriceListGenerationReport = {
   sourceFiles: string[];
   rowCount: number;
   rawSourceRowsProcessed: number;
+  rowsExcludedMissingLookup: number;
+  displayRowCount: number;
   generatedAt: string;
   rawColumns: string[];
   mappedColumns: string[];
@@ -53,5 +68,6 @@ export type GeneratedPriceListData = {
   code: PriceListCode;
   rows: PriceListPricingRow[];
   arCoatings: PriceListArCoating[];
+  addOnSections: PriceListAddOnSection[];
   report: PriceListGenerationReport;
 };

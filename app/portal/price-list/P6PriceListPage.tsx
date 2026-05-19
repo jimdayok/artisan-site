@@ -1,9 +1,7 @@
 import p6PricingData from "@/private-source/pricing/generated/p6-pricing.json";
 import InteractivePriceListDashboard from "@/src/components/private-price/InteractivePriceListDashboard";
-import PdfDerivedPriceDashboard from "@/src/components/private-price/PdfDerivedPriceDashboard";
 import { getAuthorizedPriceListForPage } from "@/lib/portal/priceListAccess";
 import type { GeneratedPriceListData } from "@/lib/pricing/types";
-import { getPdfDerivedPriceList } from "@/src/data/pdfDerivedPriceLists";
 import { OnlinePriceListShell } from "./OnlinePriceListShell";
 import PriceListAccessMessage from "./PriceListAccessMessage";
 
@@ -22,18 +20,11 @@ export default async function P6PriceListPage() {
     );
   }
 
-  const pdfDerivedPriceList = getPdfDerivedPriceList("P6");
-
   return (
     <OnlinePriceListShell priceList={access.priceList}>
       <InteractivePriceListDashboard
         priceList={p6PricingData as GeneratedPriceListData}
       />
-      {pdfDerivedPriceList ? (
-        <div className="mt-8">
-          <PdfDerivedPriceDashboard priceList={pdfDerivedPriceList} />
-        </div>
-      ) : null}
     </OnlinePriceListShell>
   );
 }

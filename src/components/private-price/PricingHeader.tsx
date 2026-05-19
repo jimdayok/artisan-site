@@ -28,8 +28,8 @@ export default function PricingHeader({
           </div>
           <div className="grid gap-1.5 rounded-2xl border border-[#d8c6a8] bg-[#fffaf2] p-3 text-xs text-[#4d5664]">
             <span><strong className="text-[#122033]">Shipping Rates</strong></span>
-            <span>Next Day Air: <strong className="text-[#122033]">$4</strong></span>
-            <span>2 Day Shipping: <strong className="text-[#122033]">$16</strong></span>
+            <span>Next Day Air: <strong className="text-[#122033]">$4 per job</strong></span>
+            <span>2-Day Shipping: <strong className="text-[#122033]">$16 per box</strong></span>
           </div>
         </div>
       </div>

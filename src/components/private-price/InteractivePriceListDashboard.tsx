@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import type {
   GeneratedPriceListData,
+  PriceListArCoating,
   PriceListPricingRow,
 } from "@/lib/pricing/types";
 
@@ -29,16 +30,32 @@ function matchesQuery(row: PriceListPricingRow, query: string) {
 
   return [
     row.brand,
-    row.productName,
-    row.productNameRaw,
+    row.designType,
+    row.designStyle,
+    row.rawProductNames.join(" "),
     row.material,
     row.materialRaw,
-    row.color,
-    row.colorRaw,
+    row.materialColor,
+    row.colorBrand,
+    row.colorRaw.join(" "),
   ]
     .join(" ")
     .toLowerCase()
     .includes(query);
+}
+
+function Badge({ children, tone = "neutral" }: { children: React.ReactNode; tone?: "neutral" | "recommended" | "outsourced" }) {
+  const classes = {
+    neutral: "border-[#dfd2bf] bg-white text-[#625b53]",
+    recommended: "border-[#c7ad7b] bg-[#fff6df] text-[#7a5a18]",
+    outsourced: "border-[#dec6b8] bg-[#fff1ec] text-[#8a4f28]",
+  };
+
+  return (
+    <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-bold ${classes[tone]}`}>
+      {children}
+    </span>
+  );
 }
 
 function SelectFilter({
@@ -79,19 +96,24 @@ export default function InteractivePriceListDashboard({
   priceList: GeneratedPriceListData;
 }) {
   const [brand, setBrand] = useState("All");
-  const [product, setProduct] = useState("All");
+  const [designType, setDesignType] = useState("All");
+  const [designStyle, setDesignStyle] = useState("All");
   const [material, setMaterial] = useState("All");
-  const [color, setColor] = useState("All");
+  const [materialColor, setMaterialColor] = useState("All");
+  const [colorBrand, setColorBrand] = useState("All");
   const [query, setQuery] = useState("");
   const [priceMode, setPriceMode] = useState<PriceMode>("edged");
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const normalizedQuery = query.trim().toLowerCase();
 
   const options = useMemo(
     () => ({
       brands: uniqueValues(priceList.rows, "brand"),
-      products: uniqueValues(priceList.rows, "productName"),
+      designTypes: uniqueValues(priceList.rows, "designType"),
+      designStyles: uniqueValues(priceList.rows, "designStyle"),
       materials: uniqueValues(priceList.rows, "material"),
-      colors: uniqueValues(priceList.rows, "color"),
+      materialColors: uniqueValues(priceList.rows, "materialColor"),
+      colorBrands: uniqueValues(priceList.rows, "colorBrand"),
     }),
     [priceList.rows]
   );
@@ -99,17 +121,28 @@ export default function InteractivePriceListDashboard({
   const filteredRows = useMemo(() => {
     return priceList.rows.filter((row) => {
       if (brand !== "All" && row.brand !== brand) return false;
-      if (product !== "All" && row.productName !== product) return false;
+      if (designType !== "All" && row.designType !== designType) return false;
+      if (designStyle !== "All" && row.designStyle !== designStyle) return false;
       if (material !== "All" && row.material !== material) return false;
-      if (color !== "All" && row.color !== color) return false;
+      if (materialColor !== "All" && row.materialColor !== materialColor) return false;
+      if (colorBrand !== "All" && row.colorBrand !== colorBrand) return false;
       return matchesQuery(row, normalizedQuery);
     });
-  }, [brand, color, material, normalizedQuery, priceList.rows, product]);
+  }, [brand, colorBrand, designStyle, designType, material, materialColor, normalizedQuery, priceList.rows]);
 
   const visibleRows = filteredRows.slice(0, maxVisibleRows);
   const showingLimitedRows = filteredRows.length > visibleRows.length;
+  const toggleExpanded = (id: string) => {
+    setExpandedIds((current) => {
+      const next = new Set(current);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
   return (
+    <div className="grid gap-8">
     <section className="rounded-[2px] border border-[#dfd2bf] bg-[#fbf8f3]/94 shadow-[0_22px_60px_rgba(18,32,51,0.08)]">
       <div className="grid gap-5 border-b border-[#dfd2bf] p-4 md:p-6 xl:grid-cols-[0.9fr_1.1fr] xl:items-end">
         <div>
@@ -120,8 +153,9 @@ export default function InteractivePriceListDashboard({
             {priceList.code} Interactive Price List
           </h2>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-[#4d5664]">
-            Search and filter normalized P6 product, material, and color pricing.
-            Prices are generated at build time from the private source workbook.
+            Search and filter normalized P6 designs, materials, and color
+            groups. Prices are generated at build time from the private source
+            workbook.
           </p>
         </div>
 
@@ -134,7 +168,7 @@ export default function InteractivePriceListDashboard({
               type="search"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search product, brand, material, color..."
+              placeholder="Search design style, brand, material, material color, color brand..."
               className="h-11 rounded-full border border-[#d7c5a8] bg-white px-4 text-sm font-semibold text-[#122033] outline-none transition placeholder:text-[#8b8171] focus:border-[#8a7654] focus:ring-2 focus:ring-[#d4c09a]/45"
             />
           </label>
@@ -163,16 +197,22 @@ export default function InteractivePriceListDashboard({
 
       <div className="grid gap-3 border-b border-[#eadfce] p-4 md:grid-cols-2 md:p-6 xl:grid-cols-4">
         <SelectFilter
+          label="Design Type"
+          value={designType}
+          options={options.designTypes}
+          onChange={setDesignType}
+        />
+        <SelectFilter
           label="Brand"
           value={brand}
           options={options.brands}
           onChange={setBrand}
         />
         <SelectFilter
-          label="Product / Design"
-          value={product}
-          options={options.products}
-          onChange={setProduct}
+          label="Design Style"
+          value={designStyle}
+          options={options.designStyles}
+          onChange={setDesignStyle}
         />
         <SelectFilter
           label="Material"
@@ -181,10 +221,16 @@ export default function InteractivePriceListDashboard({
           onChange={setMaterial}
         />
         <SelectFilter
-          label="Color"
-          value={color}
-          options={options.colors}
-          onChange={setColor}
+          label="Material Color"
+          value={materialColor}
+          options={options.materialColors}
+          onChange={setMaterialColor}
+        />
+        <SelectFilter
+          label="Color Brand"
+          value={colorBrand}
+          options={options.colorBrands}
+          onChange={setColorBrand}
         />
       </div>
 
@@ -193,24 +239,28 @@ export default function InteractivePriceListDashboard({
           Showing {visibleRows.length.toLocaleString()} of{" "}
           {filteredRows.length.toLocaleString()} matching rows
         </span>
+        {priceMode === "uncut" ? (
+          <span>Uncut price reflects the listed uncut deduction.</span>
+        ) : null}
         <span>
           Generated {new Date(priceList.report.generatedAt).toLocaleDateString("en-US")} from{" "}
-          {priceList.report.rowCount.toLocaleString()} source rows
+          {priceList.report.rawSourceRowsProcessed.toLocaleString()} source rows
         </span>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-[980px] w-full border-separate border-spacing-0 text-left text-sm">
+        <table className="min-w-[1080px] w-full border-separate border-spacing-0 text-left text-sm">
           <thead>
             <tr className="bg-[#122033] text-white">
               {[
-                "Product / Design",
+                "",
+                "Design Type",
+                "Design Style",
                 "Brand",
                 "Material",
-                "Color",
-                "Edged and Assembled",
-                "Uncut",
-                "Deduct",
+                "Material Color",
+                "Color Brand",
+                "Price",
               ].map((heading) => (
                 <th
                   key={heading}
@@ -222,43 +272,75 @@ export default function InteractivePriceListDashboard({
             </tr>
           </thead>
           <tbody>
-            {visibleRows.map((row, index) => (
-              <tr
-                key={`${row.materialRaw}-${row.productNameRaw}-${row.colorRaw}-${index}`}
-                className={index % 2 === 0 ? "bg-white/82" : "bg-[#fffaf2]/82"}
-              >
-                <td className="border-b border-r border-[#eadfce] px-3 py-3 align-top font-semibold text-[#122033]">
-                  {row.productName}
-                </td>
-                <td className="border-b border-r border-[#eadfce] px-3 py-3 align-top text-[#2f3744]">
-                  {row.brand}
-                </td>
-                <td className="border-b border-r border-[#eadfce] px-3 py-3 align-top text-[#2f3744]">
-                  {row.material}
-                </td>
-                <td className="border-b border-r border-[#eadfce] px-3 py-3 align-top text-[#2f3744]">
-                  <span className="font-semibold">{row.color}</span>
-                  <span className="ml-2 text-xs text-[#776f63]">{row.colorRaw}</span>
-                </td>
-                <td
-                  className={`border-b border-r border-[#eadfce] px-3 py-3 align-top font-bold ${
-                    priceMode === "edged" ? "text-[#122033]" : "text-[#625b53]"
-                  }`}
-                >
-                  {currency(row.edgedPrice)}
-                </td>
-                <td
-                  className={`border-b border-r border-[#eadfce] px-3 py-3 align-top font-bold ${
-                    priceMode === "uncut" ? "text-[#122033]" : "text-[#625b53]"
-                  }`}
-                >
-                  {currency(row.uncutPrice)}
-                </td>
-                <td className="border-b border-[#eadfce] px-3 py-3 align-top text-[#2f3744]">
-                  {currency(row.uncutDeduct)}
-                </td>
-              </tr>
-            ))}
+            {visibleRows.map((row, index) => {
+              const expanded = expandedIds.has(row.id);
+              return (
+                <Fragment key={row.id}>
+                  <tr
+                    key={row.id}
+                    className={index % 2 === 0 ? "bg-white/82" : "bg-[#fffaf2]/82"}
+                  >
+                    <td className="w-12 border-b border-r border-[#eadfce] px-2 py-2 align-top">
+                      <button
+                        type="button"
+                        onClick={() => toggleExpanded(row.id)}
+                        className="h-8 w-8 rounded-full border border-[#d7c5a8] bg-white text-sm font-bold text-[#122033] transition hover:bg-[#eadcc6]"
+                        aria-label={expanded ? "Collapse row details" : "Expand row details"}
+                      >
+                        {expanded ? "-" : "+"}
+                      </button>
+                    </td>
+                    <td className="border-b border-r border-[#eadfce] px-3 py-2 align-top text-[#2f3744]">
+                      {row.designType}
+                    </td>
+                    <td className="border-b border-r border-[#eadfce] px-3 py-2 align-top font-semibold text-[#122033]">
+                      <span>{row.designStyle}</span>
+                      <span className="mt-1 flex flex-wrap gap-1.5">
+                        {row.recommended ? <Badge tone="recommended">Recommended for Best Service</Badge> : null}
+                        {row.outsourced ? <Badge tone="outsourced">Outsourced Product</Badge> : null}
+                      </span>
+                    </td>
+                    <td className="border-b border-r border-[#eadfce] px-3 py-2 align-top text-[#2f3744]">
+                      {row.brand}
+                    </td>
+                    <td className="border-b border-r border-[#eadfce] px-3 py-2 align-top text-[#2f3744]">
+                      {row.material}
+                    </td>
+                    <td className="border-b border-r border-[#eadfce] px-3 py-2 align-top text-[#2f3744]">
+                      {row.materialColor}
+                    </td>
+                    <td className="border-b border-r border-[#eadfce] px-3 py-2 align-top text-[#2f3744]">
+                      {row.colorBrand}
+                    </td>
+                    <td className="border-b border-[#eadfce] px-3 py-2 align-top text-base font-bold text-[#122033]">
+                      {currency(priceMode === "edged" ? row.edgedPrice : row.uncutPrice)}
+                    </td>
+                  </tr>
+                  {expanded ? (
+                    <tr key={`${row.id}-details`} className="bg-[#f9f2e8]">
+                      <td className="border-b border-[#eadfce]" />
+                      <td colSpan={7} className="border-b border-[#eadfce] px-3 py-3">
+                        <div className="grid gap-3 text-xs text-[#4d5664] md:grid-cols-3">
+                          <div>
+                            <p className="font-bold uppercase tracking-[0.14em] text-[#8a7654]">Raw names normalized here</p>
+                            <p className="mt-1 leading-5">{row.rawProductNames.join(", ")}</p>
+                          </div>
+                          <div>
+                            <p className="font-bold uppercase tracking-[0.14em] text-[#8a7654]">Source details</p>
+                            <p className="mt-1 leading-5">Codes: {row.sourceCodes.join(", ")} | Raw colors: {row.colorRaw.join(", ")}</p>
+                            <p className="leading-5">Deduct: {currency(row.uncutDeduct)} | Duplicates collapsed: {row.duplicateSourceRows}</p>
+                          </div>
+                          <div>
+                            <p className="font-bold uppercase tracking-[0.14em] text-[#8a7654]">Notes</p>
+                            <p className="mt-1 leading-5">{row.serviceNotes.length ? row.serviceNotes.join(" ") : "No additional source notes for this row."}</p>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : null}
+                </Fragment>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -270,6 +352,45 @@ export default function InteractivePriceListDashboard({
           performance.
         </p>
       ) : null}
+    </section>
+
+    <ArCoatingsSection coatings={priceList.arCoatings} />
+    </div>
+  );
+}
+
+function ArCoatingsSection({ coatings }: { coatings: PriceListArCoating[] }) {
+  return (
+    <section className="rounded-[2px] border border-[#dfd2bf] bg-[#fbf8f3]/94 p-4 shadow-[0_22px_60px_rgba(18,32,51,0.08)] md:p-6">
+      <div className="flex flex-col gap-2 border-b border-[#dfd2bf] pb-4 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">P6 add-ons</p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[#122033]">AR Coatings</h2>
+        </div>
+        <p className="max-w-2xl text-sm leading-6 text-[#4d5664]">
+          Coating prices are sourced from the existing P6 PDF-derived data until
+          the full AR raw import is rebuilt.
+        </p>
+      </div>
+
+      <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+        {coatings.map((coating) => (
+          <article key={`${coating.brandFamily}-${coating.name}`} className="rounded-[2px] border border-[#eadfce] bg-white/82 p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h3 className="text-base font-bold text-[#122033]">{coating.name}</h3>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-[0.14em] text-[#8a7654]">{coating.brandFamily}</p>
+              </div>
+              <p className="text-lg font-bold text-[#122033]">{currency(coating.price)}</p>
+            </div>
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {coating.recommended ? <Badge tone="recommended">Preferred</Badge> : null}
+              {coating.outsourced ? <Badge tone="outsourced">Outsourced</Badge> : null}
+            </div>
+            {coating.notes ? <p className="mt-3 text-xs leading-5 text-[#625b53]">{coating.notes}</p> : null}
+          </article>
+        ))}
+      </div>
     </section>
   );
 }

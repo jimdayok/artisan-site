@@ -86,6 +86,7 @@ export type PortalWorkbookAccount = {
   duplicateRowsMerged?: boolean;
   sameNameDifferentAccountWarning?: boolean;
   sameNameAccountNumbers?: string[];
+  sourceRows?: PortalWorkbookAccount[];
 };
 
 export type PortalWorkbookProfile = {

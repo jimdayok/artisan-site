@@ -254,6 +254,7 @@ export function mergeAccountRows(rows: PortalWorkbookAccount[]) {
   merged.division = finalCustomerTypeCode || merged.division;
   merged.mergedRowCount = rows.length;
   merged.duplicateRowsMerged = rows.length > 1;
+  merged.sourceRows = rows;
 
   return merged;
 }

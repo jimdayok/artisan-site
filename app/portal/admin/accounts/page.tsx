@@ -100,7 +100,8 @@ export default async function PortalAdminAccountsPage({
                     ) : null}
                     {row.sameNameDifferentAccountWarning ? (
                       <span className="w-fit rounded-full bg-[#f2d8c8] px-3 py-1 text-xs font-semibold text-[#7b3f2a]">
-                        Same name also on {row.sameNameAccountNumbers.join(", ")}
+                        Same practice name appears across multiple account
+                        numbers: {row.sameNameAccountNumbers.join(", ")}
                       </span>
                     ) : null}
                   </div>
@@ -135,9 +136,22 @@ export default async function PortalAdminAccountsPage({
                   {numberFormatter.format(row.account.pmJobs)}
                 </td>
                 <td className="px-4 py-4 text-[#706759]">
-                  {row.users.length > 0
-                    ? row.users.map((user) => user.name || user.emails[0]).join(", ")
-                    : "None"}
+                  {row.users.length > 0 ? (
+                    <div className="space-y-2">
+                      {row.users.map((user) => (
+                        <div key={`${user.accountNumber}-${user.emails.join("-")}`}>
+                          <p className="font-semibold text-[#172a28]">
+                            {user.name || user.emails[0]}
+                          </p>
+                          <p className="text-xs text-[#706759]">
+                            {user.emails.join(", ")}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    "None"
+                  )}
                 </td>
                 <td className="px-4 py-4">
                   <PillList

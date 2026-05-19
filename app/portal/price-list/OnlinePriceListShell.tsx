@@ -6,9 +6,11 @@ import PortalPriceListScrollReset from "./PortalPriceListScrollReset";
 export function OnlinePriceListShell({
   priceList,
   children,
+  title,
 }: {
   priceList: PortalPriceList;
   children: React.ReactNode;
+  title?: string;
 }) {
   return (
     <main className="min-h-screen overflow-x-hidden overflow-y-auto bg-[#f4eee4] px-3 py-5 text-[#122033] md:px-6">
@@ -16,7 +18,7 @@ export function OnlinePriceListShell({
       <div className="mx-auto w-full max-w-[1680px]">
         <PricingHeader
           eyebrow="Private Online Pricing"
-          title={`${priceList.code} Online Pricing`}
+          title={title ?? `${priceList.code} Online Pricing`}
           description="Account-assigned pricing tools are available only through secure portal access."
           showNavigation={priceList.code === "G6"}
         />

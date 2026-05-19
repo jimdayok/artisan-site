@@ -8,6 +8,15 @@ import type {
 } from "@/lib/pricing/types";
 
 type PriceMode = "edged" | "uncut";
+type SortKey =
+  | "designType"
+  | "designStyle"
+  | "brand"
+  | "material"
+  | "materialColor"
+  | "colorBrand"
+  | "price";
+type SortDirection = "asc" | "desc";
 
 const maxVisibleRows = 300;
 
@@ -90,6 +99,14 @@ function SelectFilter({
   );
 }
 
+function compareText(a: string, b: string) {
+  return a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
+}
+
+function rowPrice(row: PriceListPricingRow, priceMode: PriceMode) {
+  return priceMode === "edged" ? row.edgedPrice : row.uncutPrice;
+}
+
 export default function InteractivePriceListDashboard({
   priceList,
 }: {
@@ -103,6 +120,7 @@ export default function InteractivePriceListDashboard({
   const [colorBrand, setColorBrand] = useState("All");
   const [query, setQuery] = useState("");
   const [priceMode, setPriceMode] = useState<PriceMode>("edged");
+  const [sort, setSort] = useState<{ key: SortKey; direction: SortDirection } | null>(null);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const normalizedQuery = query.trim().toLowerCase();
 
@@ -119,7 +137,7 @@ export default function InteractivePriceListDashboard({
   );
 
   const filteredRows = useMemo(() => {
-    return priceList.rows.filter((row) => {
+    const rows = priceList.rows.filter((row) => {
       if (brand !== "All" && row.brand !== brand) return false;
       if (designType !== "All" && row.designType !== designType) return false;
       if (designStyle !== "All" && row.designStyle !== designStyle) return false;
@@ -128,7 +146,27 @@ export default function InteractivePriceListDashboard({
       if (colorBrand !== "All" && row.colorBrand !== colorBrand) return false;
       return matchesQuery(row, normalizedQuery);
     });
-  }, [brand, colorBrand, designStyle, designType, material, materialColor, normalizedQuery, priceList.rows]);
+
+    return rows.sort((a, b) => {
+      if (!sort) {
+        return (
+          compareText(a.brand, b.brand) ||
+          compareText(a.designStyle, b.designStyle) ||
+          compareText(a.material, b.material) ||
+          compareText(a.materialColor, b.materialColor) ||
+          rowPrice(a, priceMode) - rowPrice(b, priceMode)
+        );
+      }
+
+      const direction = sort.direction === "asc" ? 1 : -1;
+      const value =
+        sort.key === "price"
+          ? rowPrice(a, priceMode) - rowPrice(b, priceMode)
+          : compareText(String(a[sort.key]), String(b[sort.key]));
+
+      return direction * value || compareText(a.designStyle, b.designStyle);
+    });
+  }, [brand, colorBrand, designStyle, designType, material, materialColor, normalizedQuery, priceList.rows, priceMode, sort]);
 
   const visibleRows = filteredRows.slice(0, maxVisibleRows);
   const showingLimitedRows = filteredRows.length > visibleRows.length;
@@ -140,6 +178,23 @@ export default function InteractivePriceListDashboard({
       return next;
     });
   };
+  const toggleSort = (key: SortKey) => {
+    setSort((current) =>
+      current?.key === key
+        ? { key, direction: current.direction === "asc" ? "desc" : "asc" }
+        : { key, direction: "asc" }
+    );
+  };
+  const sortableHeaders: Array<{ key?: SortKey; label: string }> = [
+    { label: "" },
+    { key: "designType", label: "Design Type" },
+    { key: "designStyle", label: "Design Style" },
+    { key: "brand", label: "Brand" },
+    { key: "material", label: "Material" },
+    { key: "materialColor", label: "Material Color" },
+    { key: "colorBrand", label: "Color Brand" },
+    { key: "price", label: "Price" },
+  ];
 
   return (
     <div className="grid gap-8">
@@ -252,21 +307,23 @@ export default function InteractivePriceListDashboard({
         <table className="min-w-[1080px] w-full border-separate border-spacing-0 text-left text-sm">
           <thead>
             <tr className="bg-[#122033] text-white">
-              {[
-                "",
-                "Design Type",
-                "Design Style",
-                "Brand",
-                "Material",
-                "Material Color",
-                "Color Brand",
-                "Price",
-              ].map((heading) => (
+              {sortableHeaders.map((heading) => (
                 <th
-                  key={heading}
+                  key={heading.label || "expand"}
                   className="border-r border-[#34455a] px-3 py-3 text-xs font-semibold uppercase tracking-[0.12em]"
                 >
-                  {heading}
+                  {heading.key ? (
+                    <button
+                      type="button"
+                      onClick={() => toggleSort(heading.key as SortKey)}
+                      className="flex w-full items-center justify-between gap-2 text-left"
+                    >
+                      <span>{heading.label}</span>
+                      <span className="text-[10px] text-[#d9c8aa]">
+                        {sort?.key === heading.key ? (sort.direction === "asc" ? "▲" : "▼") : "↕"}
+                      </span>
+                    </button>
+                  ) : null}
                 </th>
               ))}
             </tr>
@@ -326,11 +383,13 @@ export default function InteractivePriceListDashboard({
                             <p className="mt-1 leading-5">{row.rawProductNames.join(", ")}</p>
                           </div>
                           <div>
-                            <p className="font-bold uppercase tracking-[0.14em] text-[#8a7654]">Source details</p>
-                            <p className="mt-1 leading-5">Codes: {row.sourceCodes.join(", ")} | Raw colors: {row.colorRaw.join(", ")}</p>
-                            <p className="leading-5">Deduct: {currency(row.uncutDeduct)} | Duplicates collapsed: {row.duplicateSourceRows}</p>
+                            <p className="font-bold uppercase tracking-[0.14em] text-[#8a7654]">Available Colors</p>
+                            <p className="mt-1 leading-5">{row.availableColors.join(", ")}</p>
                           </div>
                           <div>
+                            <p className="font-bold uppercase tracking-[0.14em] text-[#8a7654]">Source details</p>
+                            <p className="mt-1 leading-5">Codes: {row.sourceCodes.join(", ")} | Raw color codes: {row.colorRaw.join(", ")}</p>
+                            <p className="leading-5">Deduct: {currency(row.uncutDeduct)} | Duplicates collapsed: {row.duplicateSourceRows}</p>
                             <p className="font-bold uppercase tracking-[0.14em] text-[#8a7654]">Notes</p>
                             <p className="mt-1 leading-5">{row.serviceNotes.length ? row.serviceNotes.join(" ") : "No additional source notes for this row."}</p>
                           </div>
@@ -360,6 +419,16 @@ export default function InteractivePriceListDashboard({
 }
 
 function ArCoatingsSection({ coatings }: { coatings: PriceListArCoating[] }) {
+  const groupedCoatings = useMemo(() => {
+    const order = ["Artisan AR", "TechShield", "Crizal", "Hoya", "Shamir", "Other"];
+    return order
+      .map((family) => ({
+        family,
+        items: coatings.filter((coating) => coating.brandFamily === family),
+      }))
+      .filter((group) => group.items.length > 0);
+  }, [coatings]);
+
   return (
     <section className="rounded-[2px] border border-[#dfd2bf] bg-[#fbf8f3]/94 p-4 shadow-[0_22px_60px_rgba(18,32,51,0.08)] md:p-6">
       <div className="flex flex-col gap-2 border-b border-[#dfd2bf] pb-4 md:flex-row md:items-end md:justify-between">
@@ -373,22 +442,26 @@ function ArCoatingsSection({ coatings }: { coatings: PriceListArCoating[] }) {
         </p>
       </div>
 
-      <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-        {coatings.map((coating) => (
-          <article key={`${coating.brandFamily}-${coating.name}`} className="rounded-[2px] border border-[#eadfce] bg-white/82 p-4">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <h3 className="text-base font-bold text-[#122033]">{coating.name}</h3>
-                <p className="mt-1 text-xs font-semibold uppercase tracking-[0.14em] text-[#8a7654]">{coating.brandFamily}</p>
-              </div>
-              <p className="text-lg font-bold text-[#122033]">{currency(coating.price)}</p>
+      <div className="mt-4 grid gap-5">
+        {groupedCoatings.map((group) => (
+          <div key={group.family}>
+            <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-[#8a7654]">{group.family}</h3>
+            <div className="mt-2 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+              {group.items.map((coating) => (
+                <article key={`${coating.brandFamily}-${coating.name}`} className="rounded-[2px] border border-[#eadfce] bg-white/82 p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <h4 className="text-base font-bold text-[#122033]">{coating.name}</h4>
+                    <p className="text-lg font-bold text-[#122033]">{currency(coating.price)}</p>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {coating.recommended ? <Badge tone="recommended">Preferred</Badge> : null}
+                    {coating.outsourced ? <Badge tone="outsourced">Outsourced</Badge> : null}
+                  </div>
+                  {coating.notes ? <p className="mt-3 text-xs leading-5 text-[#625b53]">{coating.notes}</p> : null}
+                </article>
+              ))}
             </div>
-            <div className="mt-3 flex flex-wrap gap-1.5">
-              {coating.recommended ? <Badge tone="recommended">Preferred</Badge> : null}
-              {coating.outsourced ? <Badge tone="outsourced">Outsourced</Badge> : null}
-            </div>
-            {coating.notes ? <p className="mt-3 text-xs leading-5 text-[#625b53]">{coating.notes}</p> : null}
-          </article>
+          </div>
         ))}
       </div>
     </section>

@@ -12,6 +12,7 @@ export type PriceListPricingRow = {
   material: string;
   materialColor: string;
   colorRaw: string[];
+  availableColors: string[];
   colorBrand: string;
   edgedPrice: number;
   uncutDeduct: number;
@@ -44,6 +45,7 @@ export type PriceListGenerationReport = {
   unmappedColors: string[];
   duplicatePriceConflictCount: number;
   duplicatePriceConflicts: string[];
+  colorVariantsCollapsedCount: number;
   assumptions: string[];
 };
 

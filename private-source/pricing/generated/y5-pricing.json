@@ -32159,8 +32159,37 @@
       "title": "Safety Vendor Tier Guide",
       "items": [
         {
-          "name": "Safety Systems Resource Center",
-          "price": "Reference",
+          "name": "Frame Tier 1",
+          "price": "Included"
+        },
+        {
+          "name": "Frame Tier 2",
+          "price": "$15"
+        },
+        {
+          "name": "Frame Tier 3",
+          "price": "$30"
+        },
+        {
+          "name": "Frame Tier 4",
+          "price": "$45"
+        },
+        {
+          "name": "Frame Tier 5",
+          "price": "$55"
+        },
+        {
+          "name": "Frame Tier 6",
+          "price": "$70"
+        },
+        {
+          "name": "Side shields",
+          "price": "Included at no additional fee",
+          "recommended": true
+        },
+        {
+          "name": "Safety Package Details",
+          "price": "More details and sample kits",
           "href": "/provider-resources#safety-systems"
         },
         {
@@ -32334,7 +32363,7 @@
     "rawSourceRowsProcessed": 4623,
     "rowsExcludedMissingLookup": 383,
     "displayRowCount": 143,
-    "generatedAt": "2026-05-20T20:00:07.067Z",
+    "generatedAt": "2026-05-20T20:48:08.026Z",
     "rawColumns": [
       "PL",
       "Mat",

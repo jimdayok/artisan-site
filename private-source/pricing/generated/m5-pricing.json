@@ -54598,13 +54598,37 @@
       "title": "Frame Tier Guide",
       "items": [
         {
-          "name": "Modern Optical Frame Tier Guide",
-          "price": "Reference",
+          "name": "Green Group",
+          "price": "Included"
+        },
+        {
+          "name": "Lime Group",
+          "price": "Included"
+        },
+        {
+          "name": "Blue Group",
+          "price": "$8"
+        },
+        {
+          "name": "Red Group",
+          "price": "$24"
+        },
+        {
+          "name": "Yellow Group",
+          "price": "$29"
+        },
+        {
+          "name": "Black Diamond",
+          "price": "$33"
+        },
+        {
+          "name": "Modern Package Details",
+          "price": "View frame details",
           "href": "/provider-resources#modern-frame-system"
         },
         {
           "name": "Frame Systems Resource Center",
-          "price": "Reference",
+          "price": "Provider Resources",
           "href": "/provider-resources#frame-systems"
         }
       ]
@@ -54773,7 +54797,7 @@
     "rawSourceRowsProcessed": 7714,
     "rowsExcludedMissingLookup": 755,
     "displayRowCount": 226,
-    "generatedAt": "2026-05-20T20:00:05.840Z",
+    "generatedAt": "2026-05-20T20:48:05.948Z",
     "rawColumns": [
       "PL",
       "Mat",

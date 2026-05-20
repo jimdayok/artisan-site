@@ -15786,12 +15786,45 @@
       "items": [
         {
           "name": "Included AR",
-          "price": "Artisan Emerald",
+          "price": "Artisan Emerald, Artisan Standard, Diamond Sun, Backside AR (included)"
+        },
+        {
+          "name": "Products not listed",
+          "price": "Not available"
+        }
+      ]
+    },
+    {
+      "title": "AR Upgrade Pricing",
+      "items": [
+        {
+          "name": "Nytopia",
+          "price": "$21"
+        },
+        {
+          "name": "Armour",
+          "price": "$11"
+        },
+        {
+          "name": "Azure",
+          "price": "$21"
+        },
+        {
+          "name": "Artisan Emerald",
+          "price": "Included",
           "recommended": true
         },
         {
-          "name": "Package pricing",
-          "price": "Edged and assembled package price"
+          "name": "Artisan Standard",
+          "price": "Included"
+        },
+        {
+          "name": "Diamond Sun",
+          "price": "Included"
+        },
+        {
+          "name": "Backside AR",
+          "price": "Included"
         }
       ]
     },
@@ -15959,7 +15992,7 @@
     "rawSourceRowsProcessed": 2743,
     "rowsExcludedMissingLookup": 195,
     "displayRowCount": 63,
-    "generatedAt": "2026-05-20T20:00:03.419Z",
+    "generatedAt": "2026-05-20T20:48:02.396Z",
     "rawColumns": [
       "PL",
       "Mat",

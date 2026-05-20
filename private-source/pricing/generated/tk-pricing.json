@@ -1,0 +1,1981 @@
+{
+  "code": "TK",
+  "rows": [
+    {
+      "code": "TK",
+      "id": "tk-anti-fatigue-rest-tokai-hi-index-1-60-clear-clear-113-8",
+      "brand": "Tokai",
+      "designType": "Anti-Fatigue",
+      "designStyle": "Rest",
+      "rawProductNames": [
+        "REST-W *"
+      ],
+      "sourceCodes": [
+        "TK",
+        "H60"
+      ],
+      "materialRaw": "H60",
+      "material": "Hi-Index 1.60",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "CLR"
+      ],
+      "availableColors": [
+        "Clear"
+      ],
+      "colorBrand": "Clear",
+      "edgedPrice": 113,
+      "uncutDeduct": 8,
+      "uncutPrice": 105,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 1
+    },
+    {
+      "code": "TK",
+      "id": "tk-anti-fatigue-rest-tokai-hi-index-1-60-clear-standard-color-128-8",
+      "brand": "Tokai",
+      "designType": "Anti-Fatigue",
+      "designStyle": "Rest",
+      "rawProductNames": [
+        "REST-W *"
+      ],
+      "sourceCodes": [
+        "TK",
+        "H60"
+      ],
+      "materialRaw": "H60",
+      "material": "Hi-Index 1.60",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LBF"
+      ],
+      "availableColors": [
+        "Lbf"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 128,
+      "uncutDeduct": 8,
+      "uncutPrice": 120,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 1
+    },
+    {
+      "code": "TK",
+      "id": "tk-anti-fatigue-rest-tokai-hi-index-1-60-photochromic-standard-color-173-8",
+      "brand": "Tokai",
+      "designType": "Anti-Fatigue",
+      "designStyle": "Rest",
+      "rawProductNames": [
+        "REST-W *"
+      ],
+      "sourceCodes": [
+        "S60",
+        "TK"
+      ],
+      "materialRaw": "S60",
+      "material": "Hi-Index 1.60",
+      "materialColor": "Photochromic",
+      "colorRaw": [
+        "LTB",
+        "LTG"
+      ],
+      "availableColors": [
+        "Ltb",
+        "Ltg"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 173,
+      "uncutDeduct": 8,
+      "uncutPrice": 165,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 2
+    },
+    {
+      "code": "TK",
+      "id": "tk-anti-fatigue-rest-tokai-hi-index-1-67-clear-clear-131-8",
+      "brand": "Tokai",
+      "designType": "Anti-Fatigue",
+      "designStyle": "Rest",
+      "rawProductNames": [
+        "REST-W *"
+      ],
+      "sourceCodes": [
+        "TK",
+        "H67"
+      ],
+      "materialRaw": "H67",
+      "material": "Hi-Index 1.67",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "CLR"
+      ],
+      "availableColors": [
+        "Clear"
+      ],
+      "colorBrand": "Clear",
+      "edgedPrice": 131,
+      "uncutDeduct": 8,
+      "uncutPrice": 123,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 1
+    },
+    {
+      "code": "TK",
+      "id": "tk-anti-fatigue-rest-tokai-hi-index-1-67-clear-standard-color-146-8",
+      "brand": "Tokai",
+      "designType": "Anti-Fatigue",
+      "designStyle": "Rest",
+      "rawProductNames": [
+        "REST-W *"
+      ],
+      "sourceCodes": [
+        "TK",
+        "H67"
+      ],
+      "materialRaw": "H67",
+      "material": "Hi-Index 1.67",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LBF"
+      ],
+      "availableColors": [
+        "Lbf"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 146,
+      "uncutDeduct": 8,
+      "uncutPrice": 138,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 1
+    },
+    {
+      "code": "TK",
+      "id": "tk-anti-fatigue-rest-tokai-hi-index-1-67-photochromic-standard-color-173-8",
+      "brand": "Tokai",
+      "designType": "Anti-Fatigue",
+      "designStyle": "Rest",
+      "rawProductNames": [
+        "REST-W *"
+      ],
+      "sourceCodes": [
+        "S67",
+        "TK"
+      ],
+      "materialRaw": "S67",
+      "material": "Hi-Index 1.67",
+      "materialColor": "Photochromic",
+      "colorRaw": [
+        "LTB",
+        "LTG"
+      ],
+      "availableColors": [
+        "Ltb",
+        "Ltg"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 173,
+      "uncutDeduct": 8,
+      "uncutPrice": 165,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 2
+    },
+    {
+      "code": "TK",
+      "id": "tk-anti-fatigue-rest-tokai-hi-index-1-70-clear-clear-131-8",
+      "brand": "Tokai",
+      "designType": "Anti-Fatigue",
+      "designStyle": "Rest",
+      "rawProductNames": [
+        "REST-W *"
+      ],
+      "sourceCodes": [
+        "TK",
+        "H70"
+      ],
+      "materialRaw": "H70",
+      "material": "Hi-Index 1.70",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "CLR"
+      ],
+      "availableColors": [
+        "Clear"
+      ],
+      "colorBrand": "Clear",
+      "edgedPrice": 131,
+      "uncutDeduct": 8,
+      "uncutPrice": 123,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 1
+    },
+    {
+      "code": "TK",
+      "id": "tk-anti-fatigue-rest-tokai-hi-index-1-70-clear-standard-color-146-8",
+      "brand": "Tokai",
+      "designType": "Anti-Fatigue",
+      "designStyle": "Rest",
+      "rawProductNames": [
+        "REST-W *"
+      ],
+      "sourceCodes": [
+        "TK",
+        "H70"
+      ],
+      "materialRaw": "H70",
+      "material": "Hi-Index 1.70",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LBF"
+      ],
+      "availableColors": [
+        "Lbf"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 146,
+      "uncutDeduct": 8,
+      "uncutPrice": 138,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 1
+    },
+    {
+      "code": "TK",
+      "id": "tk-anti-fatigue-rest-tokai-hi-index-1-76-clear-clear-176-8",
+      "brand": "Tokai",
+      "designType": "Anti-Fatigue",
+      "designStyle": "Rest",
+      "rawProductNames": [
+        "REST-W *"
+      ],
+      "sourceCodes": [
+        "TK",
+        "H76"
+      ],
+      "materialRaw": "H76",
+      "material": "Hi-Index 1.76",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "CLR"
+      ],
+      "availableColors": [
+        "Clear"
+      ],
+      "colorBrand": "Clear",
+      "edgedPrice": 176,
+      "uncutDeduct": 8,
+      "uncutPrice": 168,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 1
+    },
+    {
+      "code": "TK",
+      "id": "tk-anti-fatigue-rest-tokai-hi-index-1-76-clear-standard-color-191-8",
+      "brand": "Tokai",
+      "designType": "Anti-Fatigue",
+      "designStyle": "Rest",
+      "rawProductNames": [
+        "REST-W *"
+      ],
+      "sourceCodes": [
+        "TK",
+        "H76"
+      ],
+      "materialRaw": "H76",
+      "material": "Hi-Index 1.76",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LBF"
+      ],
+      "availableColors": [
+        "Lbf"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 191,
+      "uncutDeduct": 8,
+      "uncutPrice": 183,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 1
+    },
+    {
+      "code": "TK",
+      "id": "tk-anti-fatigue-rest-tokai-s76-clear-standard-color-173-8",
+      "brand": "Tokai",
+      "designType": "Anti-Fatigue",
+      "designStyle": "Rest",
+      "rawProductNames": [
+        "REST-W *"
+      ],
+      "sourceCodes": [
+        "S76",
+        "TK"
+      ],
+      "materialRaw": "S76",
+      "material": "S76",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LTB",
+        "LTG"
+      ],
+      "availableColors": [
+        "Ltb",
+        "Ltg"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 173,
+      "uncutDeduct": 8,
+      "uncutPrice": 165,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 2
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-5x-tokai-hi-index-1-60-clear-clear-128-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 5X",
+      "rawProductNames": [
+        "TS 5X DL",
+        "TS 5X DL *",
+        "TS 5X HM WD",
+        "TS 5X HM WD *"
+      ],
+      "sourceCodes": [
+        "H60",
+        "TK"
+      ],
+      "materialRaw": "H60",
+      "material": "Hi-Index 1.60",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "CLR"
+      ],
+      "availableColors": [
+        "Clear"
+      ],
+      "colorBrand": "Clear",
+      "edgedPrice": 128,
+      "uncutDeduct": 8,
+      "uncutPrice": 120,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 4
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-5x-tokai-hi-index-1-60-clear-standard-color-143-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 5X",
+      "rawProductNames": [
+        "TS 5X DL",
+        "TS 5X DL *",
+        "TS 5X HM WD",
+        "TS 5X HM WD *"
+      ],
+      "sourceCodes": [
+        "H60",
+        "TK"
+      ],
+      "materialRaw": "H60",
+      "material": "Hi-Index 1.60",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LBF"
+      ],
+      "availableColors": [
+        "Lbf"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 143,
+      "uncutDeduct": 8,
+      "uncutPrice": 135,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 4
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-5x-tokai-hi-index-1-60-photochromic-standard-color-188-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 5X",
+      "rawProductNames": [
+        "TS 5X DL",
+        "TS 5X DL *",
+        "TS 5X HM WD",
+        "TS 5X HM WD *"
+      ],
+      "sourceCodes": [
+        "S60",
+        "TK"
+      ],
+      "materialRaw": "S60",
+      "material": "Hi-Index 1.60",
+      "materialColor": "Photochromic",
+      "colorRaw": [
+        "LTB",
+        "LTG"
+      ],
+      "availableColors": [
+        "Ltb",
+        "Ltg"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 188,
+      "uncutDeduct": 8,
+      "uncutPrice": 180,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 8
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-5x-tokai-hi-index-1-67-clear-clear-146-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 5X",
+      "rawProductNames": [
+        "TS 5X DL",
+        "TS 5X DL *",
+        "TS 5X HM WD",
+        "TS 5X HM WD *"
+      ],
+      "sourceCodes": [
+        "H67",
+        "TK"
+      ],
+      "materialRaw": "H67",
+      "material": "Hi-Index 1.67",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "CLR"
+      ],
+      "availableColors": [
+        "Clear"
+      ],
+      "colorBrand": "Clear",
+      "edgedPrice": 146,
+      "uncutDeduct": 8,
+      "uncutPrice": 138,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 4
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-5x-tokai-hi-index-1-67-clear-standard-color-161-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 5X",
+      "rawProductNames": [
+        "TS 5X DL",
+        "TS 5X DL *",
+        "TS 5X HM WD",
+        "TS 5X HM WD *"
+      ],
+      "sourceCodes": [
+        "H67",
+        "TK"
+      ],
+      "materialRaw": "H67",
+      "material": "Hi-Index 1.67",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LBF"
+      ],
+      "availableColors": [
+        "Lbf"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 161,
+      "uncutDeduct": 8,
+      "uncutPrice": 153,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 4
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-5x-tokai-hi-index-1-67-photochromic-standard-color-188-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 5X",
+      "rawProductNames": [
+        "TS 5X DL",
+        "TS 5X DL *",
+        "TS 5X HM WD",
+        "TS 5X HM WD *"
+      ],
+      "sourceCodes": [
+        "S67",
+        "TK"
+      ],
+      "materialRaw": "S67",
+      "material": "Hi-Index 1.67",
+      "materialColor": "Photochromic",
+      "colorRaw": [
+        "LTB",
+        "LTG"
+      ],
+      "availableColors": [
+        "Ltb",
+        "Ltg"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 188,
+      "uncutDeduct": 8,
+      "uncutPrice": 180,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 8
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-5x-tokai-hi-index-1-70-clear-clear-146-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 5X",
+      "rawProductNames": [
+        "TS 5X DL",
+        "TS 5X DL *",
+        "TS 5X HM WD",
+        "TS 5X HM WD *"
+      ],
+      "sourceCodes": [
+        "H70",
+        "TK"
+      ],
+      "materialRaw": "H70",
+      "material": "Hi-Index 1.70",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "CLR"
+      ],
+      "availableColors": [
+        "Clear"
+      ],
+      "colorBrand": "Clear",
+      "edgedPrice": 146,
+      "uncutDeduct": 8,
+      "uncutPrice": 138,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 4
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-5x-tokai-hi-index-1-70-clear-standard-color-161-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 5X",
+      "rawProductNames": [
+        "TS 5X DL",
+        "TS 5X DL *",
+        "TS 5X HM WD",
+        "TS 5X HM WD *"
+      ],
+      "sourceCodes": [
+        "H70",
+        "TK"
+      ],
+      "materialRaw": "H70",
+      "material": "Hi-Index 1.70",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LBF"
+      ],
+      "availableColors": [
+        "Lbf"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 161,
+      "uncutDeduct": 8,
+      "uncutPrice": 153,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 4
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-5x-tokai-hi-index-1-76-clear-clear-191-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 5X",
+      "rawProductNames": [
+        "TS 5X DL",
+        "TS 5X DL *",
+        "TS 5X HM WD",
+        "TS 5X HM WD *"
+      ],
+      "sourceCodes": [
+        "H76",
+        "TK"
+      ],
+      "materialRaw": "H76",
+      "material": "Hi-Index 1.76",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "CLR"
+      ],
+      "availableColors": [
+        "Clear"
+      ],
+      "colorBrand": "Clear",
+      "edgedPrice": 191,
+      "uncutDeduct": 8,
+      "uncutPrice": 183,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 4
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-5x-tokai-hi-index-1-76-clear-standard-color-206-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 5X",
+      "rawProductNames": [
+        "TS 5X DL",
+        "TS 5X DL *",
+        "TS 5X HM WD",
+        "TS 5X HM WD *"
+      ],
+      "sourceCodes": [
+        "H76",
+        "TK"
+      ],
+      "materialRaw": "H76",
+      "material": "Hi-Index 1.76",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LBF"
+      ],
+      "availableColors": [
+        "Lbf"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 206,
+      "uncutDeduct": 8,
+      "uncutPrice": 198,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 4
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-5x-tokai-s76-clear-standard-color-188-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 5X",
+      "rawProductNames": [
+        "TS 5X DL",
+        "TS 5X DL *",
+        "TS 5X HM WD",
+        "TS 5X HM WD *"
+      ],
+      "sourceCodes": [
+        "S76",
+        "TK"
+      ],
+      "materialRaw": "S76",
+      "material": "S76",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LTB",
+        "LTG"
+      ],
+      "availableColors": [
+        "Ltb",
+        "Ltg"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 188,
+      "uncutDeduct": 8,
+      "uncutPrice": 180,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 8
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-7x-tokai-hi-index-1-60-clear-clear-147-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 7X",
+      "rawProductNames": [
+        "TS 7X DL",
+        "TS 7X DL *",
+        "TS 7X HM LG",
+        "TS 7X HM LG *",
+        "TS 7X HM WD",
+        "TS 7X HM WD *",
+        "TS 7X TW",
+        "TS 7X TW *"
+      ],
+      "sourceCodes": [
+        "H60",
+        "TK"
+      ],
+      "materialRaw": "H60",
+      "material": "Hi-Index 1.60",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "CLR"
+      ],
+      "availableColors": [
+        "Clear"
+      ],
+      "colorBrand": "Clear",
+      "edgedPrice": 147,
+      "uncutDeduct": 8,
+      "uncutPrice": 139,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 8
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-7x-tokai-hi-index-1-60-clear-standard-color-162-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 7X",
+      "rawProductNames": [
+        "TS 7X DL",
+        "TS 7X DL *",
+        "TS 7X HM LG",
+        "TS 7X HM LG *",
+        "TS 7X HM WD",
+        "TS 7X HM WD *",
+        "TS 7X TW",
+        "TS 7X TW *"
+      ],
+      "sourceCodes": [
+        "H60",
+        "TK"
+      ],
+      "materialRaw": "H60",
+      "material": "Hi-Index 1.60",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LBF"
+      ],
+      "availableColors": [
+        "Lbf"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 162,
+      "uncutDeduct": 8,
+      "uncutPrice": 154,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 8
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-7x-tokai-hi-index-1-60-photochromic-standard-color-207-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 7X",
+      "rawProductNames": [
+        "TS 7X DL",
+        "TS 7X DL *",
+        "TS 7X HM LG",
+        "TS 7X HM LG *",
+        "TS 7X HM WD",
+        "TS 7X HM WD *",
+        "TS 7X TW",
+        "TS 7X TW *"
+      ],
+      "sourceCodes": [
+        "S60",
+        "TK"
+      ],
+      "materialRaw": "S60",
+      "material": "Hi-Index 1.60",
+      "materialColor": "Photochromic",
+      "colorRaw": [
+        "LTB",
+        "LTG"
+      ],
+      "availableColors": [
+        "Ltb",
+        "Ltg"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 207,
+      "uncutDeduct": 8,
+      "uncutPrice": 199,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 16
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-7x-tokai-hi-index-1-67-clear-clear-165-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 7X",
+      "rawProductNames": [
+        "TS 7X DL",
+        "TS 7X DL *",
+        "TS 7X HM LG",
+        "TS 7X HM LG *",
+        "TS 7X HM WD",
+        "TS 7X HM WD *",
+        "TS 7X TW",
+        "TS 7X TW *"
+      ],
+      "sourceCodes": [
+        "H67",
+        "TK"
+      ],
+      "materialRaw": "H67",
+      "material": "Hi-Index 1.67",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "CLR"
+      ],
+      "availableColors": [
+        "Clear"
+      ],
+      "colorBrand": "Clear",
+      "edgedPrice": 165,
+      "uncutDeduct": 8,
+      "uncutPrice": 157,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 8
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-7x-tokai-hi-index-1-67-clear-standard-color-180-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 7X",
+      "rawProductNames": [
+        "TS 7X DL",
+        "TS 7X DL *",
+        "TS 7X HM LG",
+        "TS 7X HM LG *",
+        "TS 7X HM WD",
+        "TS 7X HM WD *",
+        "TS 7X TW",
+        "TS 7X TW *"
+      ],
+      "sourceCodes": [
+        "H67",
+        "TK"
+      ],
+      "materialRaw": "H67",
+      "material": "Hi-Index 1.67",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LBF"
+      ],
+      "availableColors": [
+        "Lbf"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 180,
+      "uncutDeduct": 8,
+      "uncutPrice": 172,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 8
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-7x-tokai-hi-index-1-67-photochromic-standard-color-207-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 7X",
+      "rawProductNames": [
+        "TS 7X DL",
+        "TS 7X DL *",
+        "TS 7X HM LG",
+        "TS 7X HM LG *",
+        "TS 7X HM WD",
+        "TS 7X HM WD *",
+        "TS 7X TW",
+        "TS 7X TW *"
+      ],
+      "sourceCodes": [
+        "S67",
+        "TK"
+      ],
+      "materialRaw": "S67",
+      "material": "Hi-Index 1.67",
+      "materialColor": "Photochromic",
+      "colorRaw": [
+        "LTB",
+        "LTG"
+      ],
+      "availableColors": [
+        "Ltb",
+        "Ltg"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 207,
+      "uncutDeduct": 8,
+      "uncutPrice": 199,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 16
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-7x-tokai-hi-index-1-70-clear-clear-165-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 7X",
+      "rawProductNames": [
+        "TS 7X DL",
+        "TS 7X DL *",
+        "TS 7X HM LG",
+        "TS 7X HM LG *",
+        "TS 7X HM WD",
+        "TS 7X HM WD *",
+        "TS 7X TW",
+        "TS 7X TW *"
+      ],
+      "sourceCodes": [
+        "H70",
+        "TK"
+      ],
+      "materialRaw": "H70",
+      "material": "Hi-Index 1.70",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "CLR"
+      ],
+      "availableColors": [
+        "Clear"
+      ],
+      "colorBrand": "Clear",
+      "edgedPrice": 165,
+      "uncutDeduct": 8,
+      "uncutPrice": 157,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 8
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-7x-tokai-hi-index-1-70-clear-standard-color-180-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 7X",
+      "rawProductNames": [
+        "TS 7X DL",
+        "TS 7X DL *",
+        "TS 7X HM LG",
+        "TS 7X HM LG *",
+        "TS 7X HM WD",
+        "TS 7X HM WD *",
+        "TS 7X TW",
+        "TS 7X TW *"
+      ],
+      "sourceCodes": [
+        "H70",
+        "TK"
+      ],
+      "materialRaw": "H70",
+      "material": "Hi-Index 1.70",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LBF"
+      ],
+      "availableColors": [
+        "Lbf"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 180,
+      "uncutDeduct": 8,
+      "uncutPrice": 172,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 8
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-7x-tokai-hi-index-1-76-clear-clear-210-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 7X",
+      "rawProductNames": [
+        "TS 7X DL",
+        "TS 7X DL *",
+        "TS 7X HM LG",
+        "TS 7X HM LG *",
+        "TS 7X HM WD",
+        "TS 7X HM WD *",
+        "TS 7X TW",
+        "TS 7X TW *"
+      ],
+      "sourceCodes": [
+        "H76",
+        "TK"
+      ],
+      "materialRaw": "H76",
+      "material": "Hi-Index 1.76",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "CLR"
+      ],
+      "availableColors": [
+        "Clear"
+      ],
+      "colorBrand": "Clear",
+      "edgedPrice": 210,
+      "uncutDeduct": 8,
+      "uncutPrice": 202,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 8
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-7x-tokai-hi-index-1-76-clear-standard-color-225-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 7X",
+      "rawProductNames": [
+        "TS 7X DL",
+        "TS 7X DL *",
+        "TS 7X HM LG",
+        "TS 7X HM LG *",
+        "TS 7X HM WD",
+        "TS 7X HM WD *",
+        "TS 7X TW",
+        "TS 7X TW *"
+      ],
+      "sourceCodes": [
+        "H76",
+        "TK"
+      ],
+      "materialRaw": "H76",
+      "material": "Hi-Index 1.76",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LBF"
+      ],
+      "availableColors": [
+        "Lbf"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 225,
+      "uncutDeduct": 8,
+      "uncutPrice": 217,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 8
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-7x-tokai-s76-clear-standard-color-207-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 7X",
+      "rawProductNames": [
+        "TS 7X DL",
+        "TS 7X DL *",
+        "TS 7X HM LG",
+        "TS 7X HM LG *",
+        "TS 7X HM WD",
+        "TS 7X HM WD *",
+        "TS 7X TW",
+        "TS 7X TW *"
+      ],
+      "sourceCodes": [
+        "S76",
+        "TK"
+      ],
+      "materialRaw": "S76",
+      "material": "S76",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LTB",
+        "LTG"
+      ],
+      "availableColors": [
+        "Ltb",
+        "Ltg"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 207,
+      "uncutDeduct": 8,
+      "uncutPrice": 199,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 16
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-9x-tokai-hi-index-1-60-clear-clear-176-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 9X",
+      "rawProductNames": [
+        "TS 9X DL",
+        "TS 9X DL *",
+        "TS 9X HM LG",
+        "TS 9X HM LG *"
+      ],
+      "sourceCodes": [
+        "H60",
+        "TK"
+      ],
+      "materialRaw": "H60",
+      "material": "Hi-Index 1.60",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "CLR"
+      ],
+      "availableColors": [
+        "Clear"
+      ],
+      "colorBrand": "Clear",
+      "edgedPrice": 176,
+      "uncutDeduct": 8,
+      "uncutPrice": 168,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 4
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-9x-tokai-hi-index-1-60-clear-standard-color-191-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 9X",
+      "rawProductNames": [
+        "TS 9X DL",
+        "TS 9X DL *",
+        "TS 9X HM LG",
+        "TS 9X HM LG *"
+      ],
+      "sourceCodes": [
+        "H60",
+        "TK"
+      ],
+      "materialRaw": "H60",
+      "material": "Hi-Index 1.60",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LBF"
+      ],
+      "availableColors": [
+        "Lbf"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 191,
+      "uncutDeduct": 8,
+      "uncutPrice": 183,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 4
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-9x-tokai-hi-index-1-60-photochromic-standard-color-236-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 9X",
+      "rawProductNames": [
+        "TS 9X DL",
+        "TS 9X DL *",
+        "TS 9X HM LG",
+        "TS 9X HM LG *"
+      ],
+      "sourceCodes": [
+        "S60",
+        "TK"
+      ],
+      "materialRaw": "S60",
+      "material": "Hi-Index 1.60",
+      "materialColor": "Photochromic",
+      "colorRaw": [
+        "LTB",
+        "LTG"
+      ],
+      "availableColors": [
+        "Ltb",
+        "Ltg"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 236,
+      "uncutDeduct": 8,
+      "uncutPrice": 228,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 8
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-9x-tokai-hi-index-1-67-clear-clear-194-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 9X",
+      "rawProductNames": [
+        "TS 9X DL",
+        "TS 9X DL *",
+        "TS 9X HM LG",
+        "TS 9X HM LG *"
+      ],
+      "sourceCodes": [
+        "H67",
+        "TK"
+      ],
+      "materialRaw": "H67",
+      "material": "Hi-Index 1.67",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "CLR"
+      ],
+      "availableColors": [
+        "Clear"
+      ],
+      "colorBrand": "Clear",
+      "edgedPrice": 194,
+      "uncutDeduct": 8,
+      "uncutPrice": 186,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 4
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-9x-tokai-hi-index-1-67-clear-standard-color-209-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 9X",
+      "rawProductNames": [
+        "TS 9X DL",
+        "TS 9X DL *",
+        "TS 9X HM LG",
+        "TS 9X HM LG *"
+      ],
+      "sourceCodes": [
+        "H67",
+        "TK"
+      ],
+      "materialRaw": "H67",
+      "material": "Hi-Index 1.67",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LBF"
+      ],
+      "availableColors": [
+        "Lbf"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 209,
+      "uncutDeduct": 8,
+      "uncutPrice": 201,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 4
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-9x-tokai-hi-index-1-67-photochromic-standard-color-236-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 9X",
+      "rawProductNames": [
+        "TS 9X DL",
+        "TS 9X DL *",
+        "TS 9X HM LG",
+        "TS 9X HM LG *"
+      ],
+      "sourceCodes": [
+        "S67",
+        "TK"
+      ],
+      "materialRaw": "S67",
+      "material": "Hi-Index 1.67",
+      "materialColor": "Photochromic",
+      "colorRaw": [
+        "LTB",
+        "LTG"
+      ],
+      "availableColors": [
+        "Ltb",
+        "Ltg"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 236,
+      "uncutDeduct": 8,
+      "uncutPrice": 228,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 8
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-9x-tokai-hi-index-1-70-clear-clear-194-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 9X",
+      "rawProductNames": [
+        "TS 9X DL",
+        "TS 9X DL *",
+        "TS 9X HM LG",
+        "TS 9X HM LG *"
+      ],
+      "sourceCodes": [
+        "H70",
+        "TK"
+      ],
+      "materialRaw": "H70",
+      "material": "Hi-Index 1.70",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "CLR"
+      ],
+      "availableColors": [
+        "Clear"
+      ],
+      "colorBrand": "Clear",
+      "edgedPrice": 194,
+      "uncutDeduct": 8,
+      "uncutPrice": 186,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 4
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-9x-tokai-hi-index-1-70-clear-standard-color-209-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 9X",
+      "rawProductNames": [
+        "TS 9X DL",
+        "TS 9X DL *",
+        "TS 9X HM LG",
+        "TS 9X HM LG *"
+      ],
+      "sourceCodes": [
+        "H70",
+        "TK"
+      ],
+      "materialRaw": "H70",
+      "material": "Hi-Index 1.70",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LBF"
+      ],
+      "availableColors": [
+        "Lbf"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 209,
+      "uncutDeduct": 8,
+      "uncutPrice": 201,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 4
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-9x-tokai-hi-index-1-76-clear-clear-239-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 9X",
+      "rawProductNames": [
+        "TS 9X DL",
+        "TS 9X DL *",
+        "TS 9X HM LG",
+        "TS 9X HM LG *"
+      ],
+      "sourceCodes": [
+        "H76",
+        "TK"
+      ],
+      "materialRaw": "H76",
+      "material": "Hi-Index 1.76",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "CLR"
+      ],
+      "availableColors": [
+        "Clear"
+      ],
+      "colorBrand": "Clear",
+      "edgedPrice": 239,
+      "uncutDeduct": 8,
+      "uncutPrice": 231,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 4
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-9x-tokai-hi-index-1-76-clear-standard-color-254-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 9X",
+      "rawProductNames": [
+        "TS 9X DL",
+        "TS 9X DL *",
+        "TS 9X HM LG",
+        "TS 9X HM LG *"
+      ],
+      "sourceCodes": [
+        "H76",
+        "TK"
+      ],
+      "materialRaw": "H76",
+      "material": "Hi-Index 1.76",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LBF"
+      ],
+      "availableColors": [
+        "Lbf"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 254,
+      "uncutDeduct": 8,
+      "uncutPrice": 246,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 4
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokaiselect-9x-tokai-s76-clear-standard-color-236-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "TokaiSelect 9X",
+      "rawProductNames": [
+        "TS 9X DL",
+        "TS 9X DL *",
+        "TS 9X HM LG",
+        "TS 9X HM LG *"
+      ],
+      "sourceCodes": [
+        "S76",
+        "TK"
+      ],
+      "materialRaw": "S76",
+      "material": "S76",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LTB",
+        "LTG"
+      ],
+      "availableColors": [
+        "Ltb",
+        "Ltg"
+      ],
+      "colorBrand": "Standard Color",
+      "edgedPrice": 236,
+      "uncutDeduct": 8,
+      "uncutPrice": 228,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 8
+    }
+  ],
+  "arCoatings": [
+    {
+      "notes": "Recommended for best service.",
+      "name": "Nytopia",
+      "brandFamily": "Artisan Coatings",
+      "price": 62,
+      "recommended": true,
+      "outsourced": false
+    },
+    {
+      "notes": "Recommended for best service.",
+      "name": "Armour",
+      "brandFamily": "Artisan Coatings",
+      "price": 62,
+      "recommended": true,
+      "outsourced": false
+    },
+    {
+      "notes": "Recommended for best service.",
+      "name": "Azure (Blue Light)",
+      "brandFamily": "Artisan Coatings",
+      "price": 70,
+      "recommended": true,
+      "outsourced": false
+    },
+    {
+      "notes": "Recommended for best service.",
+      "name": "Artisan Emerald",
+      "brandFamily": "Artisan Coatings",
+      "price": 55,
+      "recommended": true,
+      "outsourced": false
+    },
+    {
+      "notes": "PDF-derived AR coating price.",
+      "name": "Diamond Sun",
+      "brandFamily": "Artisan Coatings",
+      "price": 37,
+      "recommended": false,
+      "outsourced": false
+    },
+    {
+      "notes": "PDF-derived AR coating price.",
+      "name": "Backside AR",
+      "brandFamily": "Artisan Coatings",
+      "price": 20,
+      "recommended": false,
+      "outsourced": false
+    },
+    {
+      "notes": "Recommended for best service.",
+      "name": "TechShield Elite UVR",
+      "brandFamily": "TechShield Coatings",
+      "price": 70,
+      "recommended": true,
+      "outsourced": false
+    },
+    {
+      "notes": "Recommended for best service.",
+      "name": "TechShield Blue",
+      "brandFamily": "TechShield Coatings",
+      "price": 75,
+      "recommended": true,
+      "outsourced": false
+    },
+    {
+      "notes": "This product is outsourced and will take additional processing time.",
+      "name": "No Reflection Coating",
+      "brandFamily": "Tokai AR Coatings",
+      "price": 89,
+      "recommended": false,
+      "outsourced": true
+    },
+    {
+      "notes": "This product is outsourced and will take additional processing time.",
+      "name": "Meiryo EX4",
+      "brandFamily": "Hoya AR Coatings",
+      "price": 85,
+      "recommended": false,
+      "outsourced": true
+    },
+    {
+      "notes": "This product is outsourced and will take additional processing time.",
+      "name": "Natural",
+      "brandFamily": "Crizal AR Coatings",
+      "price": 104,
+      "recommended": false,
+      "outsourced": true
+    },
+    {
+      "notes": "This product is outsourced and will take additional processing time.",
+      "name": "Glacier Expressions",
+      "brandFamily": "Shamir AR Coatings",
+      "price": 96,
+      "recommended": false,
+      "outsourced": true
+    },
+    {
+      "notes": "This product is outsourced and will take additional processing time.",
+      "name": "Standard Mirror",
+      "brandFamily": "Mirror Coatings",
+      "price": 52,
+      "recommended": false,
+      "outsourced": true
+    }
+  ],
+  "addOnSections": [
+    {
+      "title": "Add for Material",
+      "items": [
+        {
+          "name": "Plastic",
+          "price": "-$8"
+        },
+        {
+          "name": "Polycarbonate",
+          "price": "$0"
+        },
+        {
+          "name": "Trivex",
+          "price": "$7"
+        },
+        {
+          "name": "High Index 1.60",
+          "price": "$24"
+        },
+        {
+          "name": "High Index 1.67",
+          "price": "$43"
+        },
+        {
+          "name": "High Index 1.70",
+          "price": "$60"
+        },
+        {
+          "name": "High Index 1.74",
+          "price": "$56"
+        },
+        {
+          "name": "High Index 1.76",
+          "price": "$65",
+          "recommended": true
+        }
+      ]
+    },
+    {
+      "title": "Blue Light Filter Options",
+      "items": [
+        {
+          "name": "General Blue Filter",
+          "price": "$8",
+          "recommended": true
+        },
+        {
+          "name": "BluTech Clear 430",
+          "price": "$15"
+        },
+        {
+          "name": "BluTech Ultra",
+          "price": "$51"
+        },
+        {
+          "name": "BluTech Classic",
+          "price": "$32"
+        },
+        {
+          "name": "Tokai Lutina Blue Filter",
+          "price": "$15",
+          "outsourced": true
+        }
+      ]
+    },
+    {
+      "title": "Photochromic Options",
+      "items": [
+        {
+          "name": "Neochromes",
+          "price": "$46",
+          "recommended": true
+        },
+        {
+          "name": "Neochromes Dark",
+          "price": "$46",
+          "recommended": true
+        },
+        {
+          "name": "SunSync",
+          "price": "See lens option"
+        },
+        {
+          "name": "Sensity",
+          "price": "See lens option"
+        },
+        {
+          "name": "Transitions",
+          "price": "See lens option"
+        }
+      ]
+    },
+    {
+      "title": "Polarized Options",
+      "items": [
+        {
+          "name": "Polarized Mirrors",
+          "price": "$52",
+          "recommended": true
+        },
+        {
+          "name": "Polarized Solid",
+          "price": "$61"
+        },
+        {
+          "name": "Polarized Gradient",
+          "price": "$71"
+        }
+      ]
+    },
+    {
+      "title": "Finishing Services",
+      "items": [
+        {
+          "name": "Edge & Mount",
+          "price": "Included"
+        },
+        {
+          "name": "Add for Groove Rimless",
+          "price": "$9"
+        },
+        {
+          "name": "Add for Full Metal Groove",
+          "price": "$15"
+        },
+        {
+          "name": "Add for Drill up to four holes",
+          "price": "$24"
+        }
+      ]
+    },
+    {
+      "title": "Shipping",
+      "items": [
+        {
+          "name": "Next Day Air",
+          "price": "$4 per job"
+        },
+        {
+          "name": "2-Day Shipping",
+          "price": "$16 per box"
+        },
+        {
+          "name": "Ground Delivery",
+          "price": "$8 per box"
+        },
+        {
+          "name": "Mail to Patient",
+          "price": "$8"
+        }
+      ]
+    }
+  ],
+  "report": {
+    "sourceFiles": [
+      "/Users/jimday/Documents/GitHub/artisan-site/private-source/price-lists/m5-tk-b5-s5-y5raw.xlsx",
+      "/Users/jimday/Documents/GitHub/artisan-site/private-source/price-lists/Lookup.xlsx",
+      "/Users/jimday/Documents/GitHub/artisan-site/private-source/price-lists/Lookup_Mat.xlsx",
+      "/Users/jimday/Documents/GitHub/artisan-site/private-source/price-lists/colors.txt"
+    ],
+    "rowCount": 44,
+    "rawSourceRowsProcessed": 406,
+    "rowsExcludedMissingLookup": 168,
+    "displayRowCount": 20,
+    "generatedAt": "2026-05-20T19:30:19.412Z",
+    "rawColumns": [
+      "PL",
+      "Mat",
+      "Style",
+      "Color",
+      "F",
+      "Sz",
+      "Sphere",
+      "Compound",
+      "Deduct",
+      "Pow",
+      "Prs",
+      "Osz",
+      "Add",
+      "Bcv",
+      "Tnt",
+      "Cot",
+      "Edg",
+      "Frm",
+      "Hrd"
+    ],
+    "mappedColumns": [
+      "PL",
+      "Mat",
+      "Style",
+      "Color",
+      "Sphere",
+      "Deduct"
+    ],
+    "ignoredColumns": [
+      "F",
+      "Sz",
+      "Compound",
+      "Pow",
+      "Prs",
+      "Osz",
+      "Add",
+      "Bcv",
+      "Tnt",
+      "Cot",
+      "Edg",
+      "Frm",
+      "Hrd"
+    ],
+    "unmappedProducts": [
+      "BI-AS *",
+      "LARGO WS *",
+      "TOKAI AS SV",
+      "TOKAI EASYONE *",
+      "TS 5X HM LG",
+      "TS 5X HM LG *",
+      "TS 5X TW",
+      "TS 5X TW *",
+      "TS 9X HM WD",
+      "TS 9X HM WD *",
+      "TS 9X TW",
+      "TS 9X TW *"
+    ],
+    "unmappedMaterials": [
+      "S76"
+    ],
+    "unmappedColors": [
+      "LBF",
+      "LTB",
+      "LTG"
+    ],
+    "duplicatePriceConflictCount": 0,
+    "duplicatePriceConflicts": [],
+    "colorVariantsCollapsedCount": 362,
+    "assumptions": [
+      "Raw Style is the product/design key for Lookup.xlsx lenstyle.",
+      "Rows with no lookup.xlsx product match are excluded from the customer-facing table.",
+      "Lookup.xlsx styleconsollidated is the customer-facing product/design label.",
+      "Lookup.xlsx Type Revised is displayed as Design Type.",
+      "Lookup.xlsx lensbrand is the customer-facing brand.",
+      "Raw Mat is the material key for Lookup_Mat.xlsx lensmat.",
+      "Lookup_Mat.xlsx Material Name is the customer-facing material label.",
+      "Lookup_Mat.xlsx Material Color is displayed as Material Color.",
+      "Lookup_Mat.xlsx Material Color Brand is preferred for Color Brand, with colors.txt used when the material lookup is blank.",
+      "Sphere is the edged and assembled price.",
+      "Uncut is calculated as Sphere minus Deduct.",
+      "Duplicate normalized rows with identical prices are collapsed and retain their raw source names for expanded detail.",
+      "TK pulled from mixed workbook rows where PL code is TK."
+    ]
+  }
+}

@@ -5,6 +5,10 @@ import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
 export const PORTAL_ADMIN_EMAILS = new Set([
   "jimdayok@me.com",
   "jim.day@artisanlabnetwork.com",
+  "rick@pacificartisanlabs.com",
+  "brandon.butler@artisanlabnetwork.com",
+  "rahlson@artisanlabnetwork.com",
+  "switmer@artisanlabnetwork.com",
 ]);
 
 export function isPortalAdminEmail(email: string) {

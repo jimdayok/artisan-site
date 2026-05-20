@@ -38,7 +38,7 @@ const p6ArCoatings = [
   { name: "Mirror Match", brandFamily: "Mirror Coatings", price: 79, recommended: false, outsourced: true },
 ].map((coating) => ({
   notes: coating.outsourced
-    ? "Marked as outsourced in the P6 PDF-derived source."
+    ? "This product is outsourced and will take additional processing time."
     : coating.recommended
       ? "Marked as recommended in the P6 PDF-derived source."
       : "P6 PDF-derived AR coating price.",

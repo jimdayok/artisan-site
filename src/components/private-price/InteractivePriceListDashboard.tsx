@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import type {
   GeneratedPriceListData,
   PriceListAddOnSection,
@@ -131,12 +131,106 @@ const brandLogoMap: Record<string, string> = {
   tokai: "/tokai-logo.png",
   unity: "/unity-logo.png",
   varilux: "/varilux-logo.png",
+  eyezen: "/varilux-logo.png",
   younger: "/younger-optics-logo.png",
   sequel: "/logos/Sequel_Wordmark_RGB_Charcoal.png",
 };
 
 function brandLogoSrc(brand: string) {
   return brandLogoMap[brand.trim().toLowerCase()] ?? "";
+}
+
+function normalizePhotoFamily(value: string) {
+  const raw = value.trim();
+  const upper = raw.toUpperCase();
+  if (upper.includes("XTRAACTIVE 2") || upper.includes("XTRACTIVE") || upper.includes("XTRA ACTIVE")) return "Transitions Xtra Active";
+  if (upper.includes("TRANSITIONS POLAR")) return "Transitions Xtra Active Polarized";
+  if (upper.includes("TRANSITIONS(S)") || upper.includes("GEN S")) return "Transitions Gen S";
+  if (upper.includes("SUNSYNC ELITE XT")) return "SunSync Elite XT";
+  if (upper.includes("NEOCHROMES DARK")) return "Neochromes Dark";
+  if (upper.includes("SENSITY 2")) return "Sensity 2";
+  if (upper.includes("SENSITY FAST")) return "Sensity Fast";
+  if (upper.includes("TOKAI LUTINA PHOTO V2")) return "Tokai Lutina Photo V2";
+  if (upper.includes("DRIVEWEAR")) return "Transitions Drivewear";
+  if (upper.includes("TRANSITIONS COLORS")) return "Transitions Colors";
+  if (upper.includes("TRANSITIONS")) return "Transitions";
+  if (upper.includes("SUNSYNC")) return "SunSync";
+  if (upper.includes("SENSITY")) return "Sensity";
+  if (upper.includes("NEOCHROMES")) return "Neochromes";
+  return raw;
+}
+
+function extractDesignVersions(rows: PriceListPricingRow[]) {
+  return [...new Set(rows.flatMap((row) => row.rawProductNames.map((value) => value.trim())).filter(Boolean))]
+    .map((value) => value.replace(/\s+/g, " ").replace(/\*/g, "").trim().toUpperCase())
+    .sort(compareText)
+    .slice(0, 8);
+}
+
+function inferCorridors(rows: PriceListPricingRow[]) {
+  const source = rows.flatMap((row) => [...row.rawProductNames, ...row.sourceCodes]).join(" ");
+  return [...new Set((source.match(/\b1[1-9]\b/g) ?? []))].sort(compareText);
+}
+
+function productCodeSummary(row: PriceListPricingRow | undefined) {
+  if (!row) return { design: "Code unavailable", color: "Code unavailable", material: "Code unavailable" };
+  const source = [row.designStyle, ...row.sourceCodes, ...row.rawProductNames]
+    .join(" ")
+    .toUpperCase();
+  const designPatterns = [
+    /\bST\d{1,2}X\d{2}\b/,
+    /\bST\d{2}\b/,
+    /\bTRIFOCAL\s*\dX\d{2}\b/,
+    /\bUNITY\d?\s*ELITE\b/,
+    /\bUNITY\d?\b/,
+    /\bXR\s*TRACK\b/,
+    /\bPHYSIO\s*EXTENSEE(?:\s*CLASSIC)?\b/,
+    /\b[A-Z]{2,6}\d{0,2}\b/,
+  ];
+  let design = "";
+  for (const pattern of designPatterns) {
+    const match = source.match(pattern);
+    if (match?.[0]) {
+      design = match[0].replace(/\s+/g, "");
+      break;
+    }
+  }
+  if (!design) design = "Code unavailable";
+
+  const color = row.colorRaw.join(" ").match(/\b([A-Z]{2,6})\b/i)?.[1]?.toUpperCase() ?? "Code unavailable";
+  const material = row.material.toUpperCase().includes("POLY")
+    ? "P"
+    : row.material.toUpperCase().includes("TRIVEX")
+      ? "T"
+      : row.material.toUpperCase().includes("HIGH INDEX")
+        ? "HI"
+        : row.material.toUpperCase().includes("PLASTIC")
+          ? "PLS"
+          : "Code unavailable";
+  return { design, color, material };
+}
+
+type CompatStatus = "Required" | "Compatible" | "Not compatible" | "Confirm availability";
+function arCompatibility(brand: string, coatingFamily: string): CompatStatus {
+  const b = brand.toLowerCase();
+  const c = coatingFamily.toLowerCase();
+  if (b.includes("varilux") || b.includes("essilor")) {
+    if (c.includes("crizal")) return "Required";
+    if (c.includes("hoya")) return "Not compatible";
+    if (c.includes("tokai")) return "Not compatible";
+    return "Compatible";
+  }
+  if (b.includes("hoya")) {
+    if (c.includes("crizal")) return "Not compatible";
+    if (c.includes("hoya")) return "Compatible";
+    if (c.includes("tokai")) return "Not compatible";
+    return "Confirm availability";
+  }
+  if (b.includes("tokai")) {
+    if (c.includes("tokai")) return "Required";
+    return "Not compatible";
+  }
+  return "Confirm availability";
 }
 
 function minRow(rows: PriceListPricingRow[], group: MaterialGroup, mode: PriceMode) {
@@ -318,11 +412,6 @@ function BrandGroupHeader({ label }: { label: string }) {
       <span className="text-xs font-bold uppercase tracking-[0.16em] text-[#8a7654]">
         {label}
       </span>
-      {src ? null : (
-        <span className="text-[10px] uppercase tracking-[0.14em] text-[#b09a7c]">
-          Logo unavailable
-        </span>
-      )}
     </div>
   );
 }
@@ -343,12 +432,13 @@ export default function InteractivePriceListDashboard({
   const [colorBrand, setColorBrand] = useState("All");
   const [priceMode, setPriceMode] = useState<PriceMode>("edged");
   const [sort, setSort] = useState<{ key: SortKey; direction: SortDirection } | null>(null);
-  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const queryText = query.trim().toLowerCase();
 
   const baseFilteredRows = useMemo(
     () =>
       priceList.rows.filter((row) => {
+        if (materialDisplay(row.material) === "PFT") return false;
         if (designType !== "All" && row.designType !== designType) return false;
         if (brand !== "All" && row.brand !== brand) return false;
         if (designStyle !== "All" && row.designStyle !== designStyle) return false;
@@ -443,12 +533,7 @@ export default function InteractivePriceListDashboard({
   }, [designRows, viewBy]);
 
   const toggleExpanded = (id: string) => {
-    setExpandedIds((current) => {
-      const next = new Set(current);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
+    setExpandedId((current) => (current === id ? null : id));
   };
 
   const toggleSort = (key: SortKey) => {
@@ -471,6 +556,29 @@ export default function InteractivePriceListDashboard({
 
   return (
     <div className="grid gap-8">
+      <section className="rounded-[2px] border border-[#dfd2bf] bg-[#fff8ef] p-4 shadow-[0_10px_26px_rgba(18,32,51,0.06)]">
+        <div className="flex flex-wrap gap-2">
+          {[
+            ["ar-coatings", "View Anti-Reflective Coatings"],
+            ["edging-services", "View Edging Services"],
+          ].map(([target, label]) => (
+            <button
+              key={target}
+              type="button"
+              onClick={() =>
+                document.getElementById(target)?.scrollIntoView({ behavior: "smooth", block: "start" })
+              }
+              className="inline-flex min-h-9 items-center rounded-full border border-[#cfb88d] bg-[#122033] px-4 text-xs font-bold text-white transition hover:shadow-[0_0_18px_rgba(18,32,51,0.28)]"
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <p className="mt-3 text-xs leading-5 text-[#625b53]">
+          This online price guide is provided for convenience and may contain errors or omissions. Artisan Lab Network reserves the right to correct pricing errors, update product availability, and change pricing at any time without notice. Final pricing is determined by the active lab billing system and confirmed order details.
+        </p>
+      </section>
+
       <section className="rounded-[2px] border border-[#dfd2bf] bg-[#fbf8f3]/94 shadow-[0_22px_60px_rgba(18,32,51,0.08)]">
         <div className="grid gap-5 border-b border-[#dfd2bf] p-4 md:p-6 xl:grid-cols-[0.9fr_1.1fr] xl:items-end">
           <div>
@@ -590,15 +698,13 @@ export default function InteractivePriceListDashboard({
           <span>
             Showing {designRows.length.toLocaleString()} top-level design rows
           </span>
-          {priceMode === "uncut" ? (
-            <span>Uncut price reflects the listed uncut deduction.</span>
-          ) : null}
+          {priceMode === "uncut" ? <span>Uncut mode active.</span> : null}
           <span>
             Source rows: {priceList.report.rawSourceRowsProcessed.toLocaleString()}
           </span>
         </div>
 
-        <div className="grid gap-5 p-4 md:p-6">
+        <div className="grid gap-3 p-4 md:p-5">
           {groupedSections.map((section) => (
             <section key={section.section} className="rounded-[2px] border border-[#e7dccb] bg-white/70">
               <header className="border-b border-[#eadfce] bg-[#f8f1e6] px-4 py-3">
@@ -608,20 +714,31 @@ export default function InteractivePriceListDashboard({
                   <h3 className="text-base font-semibold text-[#122033]">{section.section}</h3>
                 )}
               </header>
-              <div className="grid gap-4 p-3 md:p-4">
+              <div className="grid gap-2 p-3 md:p-3">
                 {section.nestedGroups.map((nested) => (
                   <div key={`${section.section}-${nested.label}`} className="rounded-[2px] border border-[#eadfce] bg-white/82">
                     <div className="border-b border-[#f0e6d8] px-3 py-2">
                       <BrandGroupHeader label={nested.label} />
                     </div>
                     <div className="overflow-x-auto">
-                      <table className="min-w-[980px] w-full border-separate border-spacing-0 text-left text-sm">
+                      <table className="min-w-[980px] w-full table-fixed border-separate border-spacing-0 text-left text-sm">
+                        <colgroup>
+                          <col className="w-[14%]" />
+                          <col className="w-[13%]" />
+                          <col className="w-[27%]" />
+                          <col className="w-[13%]" />
+                          <col className="w-[13%]" />
+                          <col className="w-[13%]" />
+                          <col className="w-[7%]" />
+                        </colgroup>
                         <thead>
                           <tr className="bg-[#122033] text-white">
                             {sortableHeaders.map((heading) => (
                               <th
                                 key={heading.label}
-                                className="border-r border-[#34455a] px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.12em]"
+                                className={`border-r border-[#34455a] px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] ${
+                                  heading.label === "Actions" ? "text-center" : ""
+                                }`}
                               >
                                 {heading.key ? (
                                   <button
@@ -643,57 +760,56 @@ export default function InteractivePriceListDashboard({
                         </thead>
                         <tbody>
                           {nested.rows.map((row, index) => {
-                            const expanded = expandedIds.has(row.id);
-
+                            const expanded = expandedId === row.id;
                             return (
-                              <tr
-                                key={row.id}
-                                className={index % 2 === 0 ? "bg-white/82" : "bg-[#fffaf2]/82"}
-                              >
-                                <td className="border-b border-r border-[#eadfce] px-3 py-2 text-[#2f3744]">
-                                  {formatGroupTitle(row.designType)}
-                                </td>
-                                <td className="border-b border-r border-[#eadfce] px-3 py-2 text-[#2f3744]">
-                                  {row.brand}
-                                </td>
-                                <td className="border-b border-r border-[#eadfce] px-3 py-2 font-semibold text-[#122033]">
-                                  {inlineMarker(row.designStyle, row.recommended, row.outsourced)}
-                                </td>
-                                <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
-                                  {startingPriceLabel(row.clearFrom, priceMode)}
-                                </td>
-                                <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
-                                  {startingPriceLabel(row.photoFrom, priceMode)}
-                                </td>
-                                <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
-                                  {startingPriceLabel(row.polarizedFrom, priceMode)}
-                                </td>
-                                <td className="border-b border-[#eadfce] px-3 py-2">
-                                  <button
-                                    type="button"
-                                    onClick={() => toggleExpanded(row.id)}
-                                    className="rounded-full border border-[#c9b186] bg-[#122033] px-3.5 py-2 text-xs font-bold text-white transition hover:bg-[#22364f]"
-                                  >
-                                    {expanded ? "Hide Builder" : "Build Price"}
-                                  </button>
-                                </td>
-                              </tr>
+                              <Fragment key={row.id}>
+                                <tr className={index % 2 === 0 ? "bg-white/82" : "bg-[#fffaf2]/82"}>
+                                  <td className="border-b border-r border-[#eadfce] px-3 py-2 text-[#2f3744]">
+                                    {formatGroupTitle(row.designType)}
+                                  </td>
+                                  <td className="border-b border-r border-[#eadfce] px-3 py-2 text-[#2f3744]">
+                                    {row.brand}
+                                  </td>
+                                  <td className="border-b border-r border-[#eadfce] px-3 py-2 font-semibold text-[#122033]">
+                                    {inlineMarker(row.designStyle, row.recommended, row.outsourced)}
+                                  </td>
+                                  <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
+                                    {startingPriceLabel(row.clearFrom, priceMode)}
+                                  </td>
+                                  <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
+                                    {startingPriceLabel(row.photoFrom, priceMode)}
+                                  </td>
+                                  <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
+                                    {startingPriceLabel(row.polarizedFrom, priceMode)}
+                                  </td>
+                                  <td className="border-b border-[#eadfce] px-2 py-2">
+                                    <button
+                                      type="button"
+                                      onClick={() => toggleExpanded(row.id)}
+                                      className="mx-auto inline-flex h-9 w-[110px] items-center justify-center rounded-full border border-[#c9b186] bg-[#122033] px-0 py-0 text-xs font-bold text-white transition hover:bg-[#22364f]"
+                                    >
+                                      {expanded ? "Hide Builder" : "Build Price"}
+                                    </button>
+                                  </td>
+                                </tr>
+                                {expanded ? (
+                                  <tr className="bg-[#f9f2e8]">
+                                    <td colSpan={7} className="border-b border-[#eadfce] px-3 py-3">
+                                      <ExpandedDesignBuilder
+                                        designRow={row}
+                                        priceMode={priceMode}
+                                        addOnSections={priceList.addOnSections}
+                                        allArCoatings={priceList.arCoatings}
+                                      />
+                                    </td>
+                                  </tr>
+                                ) : null}
+                              </Fragment>
                             );
                           })}
                         </tbody>
                       </table>
                     </div>
-                    {nested.rows.map((row) =>
-                      expandedIds.has(row.id) ? (
-                        <div key={`${row.id}-expanded`} className="border-t border-[#eadfce] bg-[#f9f2e8] px-4 py-4">
-                          <ExpandedDesignBuilder
-                            designRow={row}
-                            priceMode={priceMode}
-                            addOnSections={priceList.addOnSections}
-                          />
-                        </div>
-                      ) : null
-                    )}
                   </div>
                 ))}
               </div>
@@ -703,7 +819,12 @@ export default function InteractivePriceListDashboard({
       </section>
 
       <ArCoatingsSection coatings={priceList.arCoatings} />
+      <ChemClipSection />
+      <ShippingSection />
       <AddOnSections sections={priceList.addOnSections} />
+      <section className="rounded-[2px] border border-[#dfd2bf] bg-white/80 p-4 text-xs leading-5 text-[#625b53]">
+        This online price guide is provided for convenience and may contain errors or omissions. Artisan Lab Network reserves the right to correct pricing errors, update product availability, and change pricing at any time without notice. Final pricing is determined by the active lab billing system and confirmed order details.
+      </section>
       <ReferenceKey />
     </div>
   );
@@ -713,14 +834,26 @@ function ExpandedDesignBuilder({
   designRow,
   priceMode,
   addOnSections,
+  allArCoatings,
 }: {
   designRow: DesignRow;
   priceMode: PriceMode;
   addOnSections: PriceListAddOnSection[];
+  allArCoatings: PriceListArCoating[];
 }) {
+  const [blueLightEnabled, setBlueLightEnabled] = useState(false);
   const materialOptions = useMemo(() => {
     const map = new Map<string, MaterialOption>();
-    for (const row of designRow.rows) {
+    const filteredRows = blueLightEnabled
+      ? designRow.rows.filter((row) =>
+          [...row.sourceCodes, ...row.rawProductNames, row.materialRaw]
+            .join(" ")
+            .toUpperCase()
+            .match(/\b(B50|BPY|B53|B60|B67)\b/)
+        )
+      : designRow.rows;
+
+    for (const row of filteredRows) {
       const current = map.get(row.material) ?? {
         material: row.material,
         rows: [],
@@ -736,8 +869,9 @@ function ExpandedDesignBuilder({
         photochromic: minRow(entry.rows, "Photochromic", priceMode),
         polarized: minRow(entry.rows, "Polarized", priceMode),
       }))
+      .filter((entry) => materialDisplay(entry.material) !== "PFT")
       .sort((a, b) => compareMaterial(a.material, b.material));
-  }, [designRow.rows, priceMode]);
+  }, [designRow.rows, priceMode, blueLightEnabled]);
 
   const photoFamilies = useMemo(
     () => buildOptionFamilies(designRow.rows, "Photochromic", priceMode),
@@ -781,6 +915,25 @@ function ExpandedDesignBuilder({
     () => [...new Set(designRow.rows.flatMap((row) => row.rawProductNames))].sort(compareText),
     [designRow.rows]
   );
+  const versions = useMemo(() => extractDesignVersions(designRow.rows), [designRow.rows]);
+  const corridors = useMemo(() => inferCorridors(designRow.rows), [designRow.rows]);
+  const codeRow = selectedPriceRow ?? designRow.rows[0];
+  const code = productCodeSummary(codeRow);
+  const lowestPhoto = photoFamilies[0]?.family ?? "";
+  const lowestPhotoNote =
+    lowestPhoto.includes("Transitions")
+      ? "For this design, Transitions is the lowest available photochromic option."
+      : "Photochromic pricing shown in this table reflects the lowest available photochromic option, typically Neochromes unless another product is the only available or lowest available option.";
+
+  const arCompat = useMemo(
+    () =>
+      allArCoatings.map((coating) => ({
+        name: coating.name,
+        family: coating.brandFamily,
+        status: arCompatibility(designRow.brand, coating.brandFamily),
+      })),
+    [allArCoatings, designRow.brand]
+  );
 
   const relatedAddOnTitles = new Set([
     "AR Coatings",
@@ -797,6 +950,39 @@ function ExpandedDesignBuilder({
 
   return (
     <div className="grid gap-6">
+      <section className="rounded-[2px] border border-[#e4d5c0] bg-[#fff8ef] p-4">
+        <h4 className="text-sm font-bold uppercase tracking-[0.18em] text-[#8a7654]">Product Code Summary</h4>
+        <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-sm">
+          <p><span className="font-semibold text-[#122033]">Design:</span> {code.design}</p>
+          <p><span className="font-semibold text-[#122033]">Color:</span> {code.color}</p>
+          <p><span className="font-semibold text-[#122033]">Material:</span> {code.material}</p>
+        </div>
+        {versions.length > 1 ? (
+          <div className="mt-3">
+            <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#8a7654]">Available Designs</p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {versions.map((version) => (
+                <span key={version} className="rounded-full border border-[#decdb0] bg-white px-3 py-1 text-xs font-semibold text-[#122033]">
+                  {version}
+                </span>
+              ))}
+            </div>
+          </div>
+        ) : null}
+        {corridors.length ? (
+          <div className="mt-3">
+            <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#8a7654]">Available Corridors</p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {corridors.map((corridor) => (
+                <span key={corridor} className="rounded-full border border-[#decdb0] bg-white px-3 py-1 text-xs font-semibold text-[#625b53]">
+                  {corridor}
+                </span>
+              ))}
+            </div>
+          </div>
+        ) : null}
+      </section>
+
       <div className="grid gap-4 rounded-[2px] border border-[#e4d5c0] bg-white/85 p-4 md:grid-cols-2 xl:grid-cols-4">
         <label className="grid gap-1.5">
           <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#8a7654]">Material</span>
@@ -875,8 +1061,23 @@ function ExpandedDesignBuilder({
         ))}
       </div>
 
-      <section className="rounded-[2px] border border-[#eadfce] bg-white/85 p-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={() => setBlueLightEnabled((value) => !value)}
+          className={`inline-flex min-h-9 items-center rounded-full border px-4 text-xs font-bold transition ${
+            blueLightEnabled
+              ? "border-[#4f6ea0] bg-[#1a345a] text-white shadow-[0_0_16px_rgba(74,132,215,0.35)]"
+              : "border-[#d7c5a8] bg-white text-[#122033] hover:bg-[#f4eee4]"
+          }`}
+        >
+          {blueLightEnabled ? "Blue Light Substrate Enabled" : "Enable Blue Light Material"}
+        </button>
+      </div>
+
+      <section id="materials" className="rounded-[2px] border border-[#eadfce] bg-white/85 p-4">
         <h4 className="text-sm font-bold uppercase tracking-[0.18em] text-[#8a7654]">Materials</h4>
+        <p className="mt-2 text-xs leading-5 text-[#625b53]">{lowestPhotoNote}</p>
         <div className="mt-3 grid gap-2">
           {materialOptions.map((materialOption) => (
             <div
@@ -907,8 +1108,20 @@ function ExpandedDesignBuilder({
       </section>
 
       <section className="grid gap-4 xl:grid-cols-2">
-        <OptionFamilyPanel title="Photochromic Options" families={photoFamilies} priceMode={builderMode} />
-        <OptionFamilyPanel title="Polarized Options" families={polarizedFamilies} priceMode={builderMode} />
+        <OptionFamilyPanel id="photo-options" title="Photochromic Options" families={photoFamilies} priceMode={builderMode} />
+        <OptionFamilyPanel id="polar-options" title="Polarized Options" families={polarizedFamilies} priceMode={builderMode} />
+      </section>
+
+      <section className="rounded-[2px] border border-[#eadfce] bg-white/85 p-4">
+        <h4 className="text-sm font-bold uppercase tracking-[0.18em] text-[#8a7654]">Compatible AR Coatings</h4>
+        <div className="mt-3 grid gap-2 md:grid-cols-2">
+          {arCompat.map((item) => (
+            <div key={`${designRow.id}-${item.name}`} className="flex items-center justify-between rounded-[2px] border border-[#eadfce] bg-[#fffaf4] px-3 py-2">
+              <p className="text-sm font-semibold text-[#122033]">{item.name}</p>
+              <p className="text-xs font-bold text-[#6d6252]">{item.status}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
       <details className="rounded-[2px] border border-[#eadfce] bg-white/85 p-4">
@@ -975,7 +1188,7 @@ function buildOptionFamilies(
   const map = new Map<string, OptionFamily>();
   for (const row of rows) {
     if (row.materialColor !== group) continue;
-    const key = row.colorBrand || "Other";
+    const key = group === "Photochromic" ? normalizePhotoFamily(row.colorBrand || "Other Photo") : row.colorBrand || "Other";
     const current =
       map.get(key) ||
       ({
@@ -999,16 +1212,18 @@ function buildOptionFamilies(
 }
 
 function OptionFamilyPanel({
+  id,
   title,
   families,
   priceMode,
 }: {
+  id?: string;
   title: string;
   families: OptionFamily[];
   priceMode: PriceMode;
 }) {
   return (
-    <section className="rounded-[2px] border border-[#eadfce] bg-white/85 p-4">
+    <section id={id} className="rounded-[2px] border border-[#eadfce] bg-white/85 p-4">
       <h4 className="text-sm font-bold uppercase tracking-[0.18em] text-[#8a7654]">{title}</h4>
       <div className="mt-3 grid gap-2">
         {families.length === 0 ? (
@@ -1054,7 +1269,7 @@ function ArCoatingsSection({ coatings }: { coatings: PriceListArCoating[] }) {
   }, [coatings]);
 
   return (
-    <section className="rounded-[2px] border border-[#dfd2bf] bg-[#fbf8f3]/94 p-4 shadow-[0_22px_60px_rgba(18,32,51,0.08)] md:p-6">
+    <section id="ar-coatings" className="rounded-[2px] border border-[#dfd2bf] bg-[#fbf8f3]/94 p-4 shadow-[0_22px_60px_rgba(18,32,51,0.08)] md:p-6">
       <SectionHeading title="AR Coatings" eyebrow="P6 Add-Ons" />
       <div className="mt-4 grid gap-5">
         {groupedCoatings.map((group) => (
@@ -1088,12 +1303,17 @@ function ArCoatingsSection({ coatings }: { coatings: PriceListArCoating[] }) {
 }
 
 function AddOnSections({ sections }: { sections: PriceListAddOnSection[] }) {
+  const sectionId = (title: string) => {
+    const lower = title.toLowerCase();
+    if (lower.includes("finishing")) return "edging-services";
+    return undefined;
+  };
   return (
     <section className="rounded-[2px] border border-[#dfd2bf] bg-[#fbf8f3]/94 p-4 shadow-[0_22px_60px_rgba(18,32,51,0.08)] md:p-6">
       <SectionHeading title="Materials, Options, Finishing, and Shipping" eyebrow="Price Builder Add-Ons" />
       <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {sections.map((section) => (
-          <article key={section.title} className="rounded-[2px] border border-[#eadfce] bg-white/82 p-4">
+          <article id={sectionId(section.title)} key={section.title} className="rounded-[2px] border border-[#eadfce] bg-white/82 p-4">
             <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-[#8a7654]">
               {section.title}
             </h3>
@@ -1116,6 +1336,62 @@ function AddOnSections({ sections }: { sections: PriceListAddOnSection[] }) {
               ))}
             </div>
           </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ChemClipSection() {
+  const items = [
+    ["ChemClip Solid Sunlens", 85],
+    ["ChemClip Drive", 117],
+    ["ChemClip Solid Sunlens with Backside AR", 88],
+    ["ChemClip Gradient Sunlens with Backside AR", 90],
+    ["ChemClip Mirror Sunlens", 92],
+    ["ChemClip Color", 117],
+    ["ChemClip Readers Blue", 95],
+    ["ChemClip Therapeutic", 130],
+    ["ChemClip Avulux", 335],
+    ["Swarovski Crystal add on", 20],
+  ] as const;
+
+  return (
+    <section className="rounded-[2px] border border-[#dfd2bf] bg-[#fbf8f3]/94 p-4 shadow-[0_22px_60px_rgba(18,32,51,0.08)] md:p-6">
+      <SectionHeading title="ChemClip by Chemistrie" eyebrow="PDF Source Pricing" />
+      <div className="mt-4 flex items-center gap-3">
+        <Image src="/chemistrie-logo.png" alt="Chemistrie logo" width={160} height={40} className="h-8 w-auto object-contain" />
+      </div>
+      <div className="mt-4 grid gap-2 md:grid-cols-2">
+        {items.map(([name, value]) => (
+          <div key={name} className="flex items-center justify-between rounded-[2px] border border-[#eadfce] bg-white/82 px-3 py-2">
+            <span className="font-semibold text-[#122033]">{name}</span>
+            <span className="font-bold text-[#122033]">{currency(value)}</span>
+          </div>
+        ))}
+      </div>
+      <p className="mt-3 text-xs text-[#625b53]">ChemClip demonstration kits are available for purchase.</p>
+    </section>
+  );
+}
+
+function ShippingSection() {
+  const rows = [
+    ["Next Day Delivery per Order", "$4"],
+    ["2-Day Delivery per Box", "$16"],
+    ["Ground Delivery per Box", "$8"],
+    ["Mail to Patient, add-on to standard shipping", "$8"],
+  ] as const;
+
+  return (
+    <section id="shipping" className="rounded-[2px] border border-[#dfd2bf] bg-[#fbf8f3]/94 p-4 shadow-[0_22px_60px_rgba(18,32,51,0.08)] md:p-6">
+      <SectionHeading title="Shipping" eyebrow="PDF Source Rates" />
+      <div className="mt-4 grid gap-2">
+        {rows.map(([label, value]) => (
+          <div key={label} className="flex items-center justify-between rounded-[2px] border border-[#eadfce] bg-white/82 px-3 py-2">
+            <span className="font-semibold text-[#122033]">{label}</span>
+            <span className="font-bold text-[#122033]">{value}</span>
+          </div>
         ))}
       </div>
     </section>

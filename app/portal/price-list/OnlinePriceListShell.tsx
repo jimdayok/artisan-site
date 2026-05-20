@@ -42,13 +42,15 @@ function CompactPortalHeader() {
     <header className="mb-4 rounded-[2px] border border-[#dfd2bf] bg-[#fbf7ef]/92 px-4 py-3 shadow-[0_12px_28px_rgba(18,32,51,0.06)]">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-3">
-          <Image
-            src="/rings.png"
-            alt="Artisan Lab Network ring logo"
-            width={34}
-            height={34}
-            className="h-8 w-8 object-contain"
-          />
+          <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#ccb48a] bg-[#122033] shadow-[0_10px_22px_rgba(18,32,51,0.24)]">
+            <Image
+              src="/aln-icon.png"
+              alt="Artisan Lab Network ring logo"
+              width={22}
+              height={22}
+              className="h-[22px] w-[22px] object-contain"
+            />
+          </span>
           <div className="leading-tight">
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8a7654]">
               Artisan Lab Network
@@ -93,7 +95,12 @@ function CompactPortalFooter() {
   return (
     <footer className="mt-8 border-t border-[#d8c49b] py-7">
       <div className="flex flex-col gap-4 text-sm text-[#706759] lg:flex-row lg:items-center lg:justify-between">
-        <p className="font-semibold text-[#172a28]">Artisan Lab Network</p>
+        <p className="flex items-center gap-2 font-semibold text-[#172a28]">
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#ccb48a] bg-[#122033] shadow-[0_8px_18px_rgba(18,32,51,0.24)]">
+            <Image src="/aln-icon.png" alt="Artisan ring icon" width={17} height={17} className="h-[17px] w-[17px] object-contain" />
+          </span>
+          Artisan Lab Network
+        </p>
         <nav className="flex flex-wrap gap-x-5 gap-y-2">
           {links.map((link) =>
             link.href.startsWith("mailto:") ? (

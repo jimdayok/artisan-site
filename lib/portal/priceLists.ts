@@ -1,4 +1,13 @@
-export type PriceListCode = "P6" | "G6" | "A6" | "B5" | "S5" | "VD";
+export type PriceListCode =
+  | "P6"
+  | "G6"
+  | "A6"
+  | "B5"
+  | "S5"
+  | "VD"
+  | "M5"
+  | "Y5"
+  | "TK";
 
 export type PortalPriceList = {
   code: PriceListCode;
@@ -50,6 +59,27 @@ export const priceLists: PortalPriceList[] = [
     fileName: "alnpricing_2026_VD.pdf",
     r2Key: "price-sheets/alnpricing_2026_VD.pdf",
     onlineUrl: "/portal/price-list/vd",
+  },
+  {
+    code: "M5",
+    label: "M5 Price Sheet",
+    fileName: "2025 Price List - Modern Frame System M5.pdf",
+    r2Key: null,
+    onlineUrl: "/portal/price-list/m5",
+  },
+  {
+    code: "Y5",
+    label: "Y5 Price Sheet",
+    fileName: "2025 Price List - Artisan Safety System Y5.pdf",
+    r2Key: null,
+    onlineUrl: "/portal/price-list/y5",
+  },
+  {
+    code: "TK",
+    label: "TK Price Sheet",
+    fileName: "Tokai Pricing.pdf",
+    r2Key: null,
+    onlineUrl: "/portal/price-list/tk",
   },
 ];
 

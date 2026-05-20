@@ -1,9 +1,6 @@
-import PrivatePriceDashboard from "@/src/components/private-price/PrivatePriceDashboard";
 import P6PriceListPage from "../P6PriceListPage";
+import GeneratedInteractivePriceListPage from "../GeneratedInteractivePriceListPage";
 import PdfDerivedPriceListPage from "../PdfDerivedPriceListPage";
-import PriceListAccessMessage from "../PriceListAccessMessage";
-import { OnlinePriceListShell } from "../OnlinePriceListShell";
-import { getAuthorizedPriceListForPage } from "@/lib/portal/priceListAccess";
 import { getPriceListByCode, type PriceListCode } from "@/lib/portal/priceLists";
 import { notFound } from "next/navigation";
 
@@ -15,10 +12,8 @@ function isPriceListCode(code: string): code is PriceListCode {
 
 export default async function PortalPriceListCodePage({
   params,
-  searchParams,
 }: {
   params: Promise<{ code: string }>;
-  searchParams: Promise<{ coating?: string }>;
 }) {
   const { code } = await params;
   const normalizedCode = code.trim().toUpperCase();
@@ -31,29 +26,9 @@ export default async function PortalPriceListCodePage({
     return <P6PriceListPage />;
   }
 
-  if (normalizedCode !== "G6") {
+  if (normalizedCode === "VD") {
     return <PdfDerivedPriceListPage code={normalizedCode} />;
   }
 
-  const access = await getAuthorizedPriceListForPage("G6");
-
-  if (access.status === "unauthenticated") {
-    return (
-      <PriceListAccessMessage message="Unable to verify your secure login. Please sign in through the protected customer portal." />
-    );
-  }
-
-  if (access.status !== "authorized") {
-    return (
-      <PriceListAccessMessage message="You do not have access to this price list." />
-    );
-  }
-
-  const query = await searchParams;
-
-  return (
-    <OnlinePriceListShell priceList={access.priceList}>
-      <PrivatePriceDashboard initialCoatingId={query.coating} />
-    </OnlinePriceListShell>
-  );
+  return <GeneratedInteractivePriceListPage code={normalizedCode} />;
 }

@@ -115,8 +115,8 @@ export async function getAuthorizedPortalSectionForPage(section: PortalSection) 
         accountNumber: "ADMIN",
         practiceName: "Portal Administrator",
         emails: [authenticatedEmail],
-        priceLists: ["P6", "G6", "A6", "B5", "S5", "VD"],
-        allowedPriceLists: ["P6", "G6", "A6", "B5", "S5", "VD"],
+        priceLists: ["P6", "G6", "A6", "B5", "S5", "VD", "M5", "Y5", "TK"],
+        allowedPriceLists: ["P6", "G6", "A6", "B5", "S5", "VD", "M5", "Y5", "TK"],
         portalSections: [
           "pricing",
           "packages",

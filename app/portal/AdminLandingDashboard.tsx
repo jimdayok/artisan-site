@@ -16,6 +16,9 @@ const customerFacingPriceListLabels: Record<PriceListCode, string> = {
   B5: "B5 Price Sheet",
   S5: "S5 Price Sheet",
   VD: "VD Price Sheet",
+  M5: "Artisan Frame System Pricing",
+  Y5: "Artisan Safety System Pricing",
+  TK: "Tokai Pricing",
 };
 
 function money(value: number) {

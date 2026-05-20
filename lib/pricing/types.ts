@@ -1,4 +1,13 @@
-export type PriceListCode = "P6" | "G6" | "A6" | "B5" | "S5" | "VD";
+export type PriceListCode =
+  | "P6"
+  | "G6"
+  | "A6"
+  | "B5"
+  | "S5"
+  | "VD"
+  | "M5"
+  | "Y5"
+  | "TK";
 
 export type PriceListPricingRow = {
   code: PriceListCode;

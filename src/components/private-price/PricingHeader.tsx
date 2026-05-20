@@ -22,8 +22,8 @@ export default function PricingHeader({
         </div>
         <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[520px]">
           <div className="grid gap-1.5 rounded-2xl border border-[#dfd2bf] bg-white/80 p-3 text-xs text-[#4d5664]">
-            <span><strong className="text-[#122033]">General Pricing</strong></span>
-            <span>{priceListMeta.guideLabel}</span>
+            <span><strong className="text-[#122033]">Confidential Partner Pricing</strong></span>
+            <span>Private pricing for assigned Artisan Equity Partner accounts.</span>
             <span className="font-semibold text-[#8a4f28]">{priceListMeta.distributionNotice}</span>
           </div>
           <div className="grid gap-1.5 rounded-2xl border border-[#d8c6a8] bg-[#fffaf2] p-3 text-xs text-[#4d5664]">

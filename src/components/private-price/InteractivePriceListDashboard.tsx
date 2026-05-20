@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useMemo, useState } from "react";
 import type {
   GeneratedPriceListData,
@@ -67,9 +68,75 @@ function priceFor(row: PriceListPricingRow | undefined, mode: PriceMode) {
   return mode === "edged" ? row.edgedPrice : row.uncutPrice;
 }
 
-function priceLabel(row: PriceListPricingRow | undefined, mode: PriceMode, prefix = false) {
+function startingPriceLabel(row: PriceListPricingRow | undefined, mode: PriceMode) {
   if (!row) return "—";
-  return `${prefix ? "From " : ""}${currency(priceFor(row, mode))}`;
+  return `${currency(priceFor(row, mode))}+`;
+}
+
+function exactPriceLabel(row: PriceListPricingRow | undefined, mode: PriceMode) {
+  if (!row) return "—";
+  return currency(priceFor(row, mode));
+}
+
+const materialDisplayMap: Record<string, string> = {
+  plastic: "Plastic",
+  polycarb: "Polycarbonate",
+  polycarbonate: "Polycarbonate",
+  trivex: "Trivex",
+  "mid index 1.56": "Mid Index 1.56",
+  "hi-index 1.60": "High Index 1.60",
+  "hi-index 1.67": "High Index 1.67",
+  "hi-index 1.70": "High Index 1.70",
+  "hi-index 1.74": "High Index 1.74",
+  "hi-index 1.76": "High Index 1.76",
+  pft: "PFT",
+  ppc: "PPC",
+  s76: "S76",
+};
+
+const materialOrder = [
+  "Plastic",
+  "Polycarbonate",
+  "Trivex",
+  "High Index 1.60",
+  "High Index 1.67",
+  "High Index 1.70",
+  "High Index 1.74",
+  "High Index 1.76",
+];
+
+const materialRank = new Map(materialOrder.map((value, index) => [value, index]));
+
+function materialDisplay(value: string) {
+  return materialDisplayMap[value.trim().toLowerCase()] ?? value;
+}
+
+function compareMaterial(a: string, b: string) {
+  const aDisplay = materialDisplay(a);
+  const bDisplay = materialDisplay(b);
+  const aRank = materialRank.get(aDisplay);
+  const bRank = materialRank.get(bDisplay);
+
+  if (aRank !== undefined && bRank !== undefined) return aRank - bRank;
+  if (aRank !== undefined) return -1;
+  if (bRank !== undefined) return 1;
+  return compareText(aDisplay, bDisplay);
+}
+
+const brandLogoMap: Record<string, string> = {
+  artisan: "/rings.png",
+  hoya: "/hoya-logo.png",
+  iot: "/iot-logo.png",
+  shamir: "/shamir-logo.png",
+  tokai: "/tokai-logo.png",
+  unity: "/unity-logo.png",
+  varilux: "/varilux-logo.png",
+  younger: "/younger-optics-logo.png",
+  sequel: "/logos/Sequel_Wordmark_RGB_Charcoal.png",
+};
+
+function brandLogoSrc(brand: string) {
+  return brandLogoMap[brand.trim().toLowerCase()] ?? "";
 }
 
 function minRow(rows: PriceListPricingRow[], group: MaterialGroup, mode: PriceMode) {
@@ -167,13 +234,6 @@ function inlineMarker(label: string, recommended: boolean, outsourced: boolean) 
   );
 }
 
-function markerText(recommended: boolean, outsourced: boolean) {
-  if (recommended && outsourced) return "★ Recommended · ➜ Outsourced";
-  if (recommended) return "★ Recommended";
-  if (outsourced) return "➜ Outsourced";
-  return "";
-}
-
 function SelectFilter({
   label,
   value,
@@ -198,7 +258,7 @@ function SelectFilter({
         <option value="All">All</option>
         {options.map((option) => (
           <option key={option} value={option}>
-            {option}
+            {label.toLowerCase().includes("material") ? materialDisplay(option) : option}
           </option>
         ))}
       </select>
@@ -241,6 +301,32 @@ function formatGroupTitle(value: string) {
   return map[value.toUpperCase()] ?? value;
 }
 
+function BrandGroupHeader({ label }: { label: string }) {
+  const src = brandLogoSrc(label);
+
+  return (
+    <div className="flex items-center gap-3">
+      {src ? (
+        <Image
+          src={src}
+          alt={`${label} logo`}
+          width={120}
+          height={28}
+          className="h-7 w-auto object-contain"
+        />
+      ) : null}
+      <span className="text-xs font-bold uppercase tracking-[0.16em] text-[#8a7654]">
+        {label}
+      </span>
+      {src ? null : (
+        <span className="text-[10px] uppercase tracking-[0.14em] text-[#b09a7c]">
+          Logo unavailable
+        </span>
+      )}
+    </div>
+  );
+}
+
 export default function InteractivePriceListDashboard({
   priceList,
 }: {
@@ -275,7 +361,7 @@ export default function InteractivePriceListDashboard({
   const designRows = useMemo(() => {
     const grouped = sortDesignRows(groupDesignRows(baseFilteredRows, priceMode), sort, priceMode);
     return grouped.filter((row) => {
-      if (materialAvailable !== "All" && !row.rows.some((entry) => entry.material === materialAvailable)) return false;
+      if (materialAvailable !== "All" && !row.rows.some((entry) => materialDisplay(entry.material) === materialAvailable)) return false;
       if (colorBrand !== "All" && !row.rows.some((entry) => entry.colorBrand === colorBrand)) return false;
 
       const hasPhoto = row.rows.some((entry) => entry.materialColor === "Photochromic");
@@ -325,7 +411,7 @@ export default function InteractivePriceListDashboard({
       ),
       (row) => row.designStyle
     );
-    const materialOptions = uniqueValues(baseFilteredRows, (row) => row.material);
+    const materialOptions = uniqueValues(baseFilteredRows, (row) => materialDisplay(row.material)).sort(compareMaterial);
     const colorBrandOptions = uniqueValues(baseFilteredRows, (row) => row.colorBrand);
     return {
       brands: dependentBrands,
@@ -377,10 +463,9 @@ export default function InteractivePriceListDashboard({
     { key: "designType", label: "Design Type" },
     { key: "brand", label: "Brand" },
     { key: "designStyle", label: "Design Style" },
-    { key: "clear", label: "Clear From" },
-    { key: "photochromic", label: "Photochromic From" },
-    { key: "polarized", label: "Polarized From" },
-    { label: "Markers" },
+    { key: "clear", label: "Clear" },
+    { key: "photochromic", label: "Photochromic" },
+    { key: "polarized", label: "Polarized" },
     { label: "Actions" },
   ];
 
@@ -437,7 +522,7 @@ export default function InteractivePriceListDashboard({
           </div>
         </div>
 
-        <div className="grid gap-3 border-b border-[#eadfce] p-4 md:grid-cols-2 md:p-6 xl:grid-cols-5">
+        <div className="grid gap-3 border-b border-[#eadfce] p-4 md:grid-cols-2 md:p-6 xl:grid-cols-4">
           <SelectFilter
             label="Step 1: Design Type"
             value={designType}
@@ -467,35 +552,6 @@ export default function InteractivePriceListDashboard({
             >
               <option value="designType">Design Type</option>
               <option value="brand">Brand</option>
-            </select>
-          </label>
-          <label className="grid gap-1.5 rounded-[2px] border border-[#eadfce] bg-white/80 p-3">
-            <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#8a7654]">
-              Sort
-            </span>
-            <select
-              value={sort ? `${sort.key}:${sort.direction}` : "default"}
-              onChange={(event) => {
-                const value = event.target.value;
-                if (value === "default") {
-                  setSort(null);
-                  return;
-                }
-                const [key, direction] = value.split(":");
-                setSort({ key: key as SortKey, direction: direction as SortDirection });
-              }}
-              className="h-10 rounded-full border border-[#d7c5a8] bg-white px-3 text-sm font-semibold text-[#122033] outline-none transition focus:border-[#8a7654] focus:ring-2 focus:ring-[#d4c09a]/45"
-            >
-              <option value="default">Default</option>
-              <option value="designType:asc">Design Type A-Z</option>
-              <option value="brand:asc">Brand A-Z</option>
-              <option value="designStyle:asc">Design Style A-Z</option>
-              <option value="clear:asc">Clear From Low-High</option>
-              <option value="clear:desc">Clear From High-Low</option>
-              <option value="photochromic:asc">Photochromic From Low-High</option>
-              <option value="photochromic:desc">Photochromic From High-Low</option>
-              <option value="polarized:asc">Polarized From Low-High</option>
-              <option value="polarized:desc">Polarized From High-Low</option>
             </select>
           </label>
         </div>
@@ -546,13 +602,17 @@ export default function InteractivePriceListDashboard({
           {groupedSections.map((section) => (
             <section key={section.section} className="rounded-[2px] border border-[#e7dccb] bg-white/70">
               <header className="border-b border-[#eadfce] bg-[#f8f1e6] px-4 py-3">
-                <h3 className="text-base font-semibold text-[#122033]">{section.section}</h3>
+                {viewBy === "brand" ? (
+                  <BrandGroupHeader label={section.section} />
+                ) : (
+                  <h3 className="text-base font-semibold text-[#122033]">{section.section}</h3>
+                )}
               </header>
               <div className="grid gap-4 p-3 md:p-4">
                 {section.nestedGroups.map((nested) => (
                   <div key={`${section.section}-${nested.label}`} className="rounded-[2px] border border-[#eadfce] bg-white/82">
-                    <div className="border-b border-[#f0e6d8] px-3 py-2 text-xs font-bold uppercase tracking-[0.16em] text-[#8a7654]">
-                      {nested.label}
+                    <div className="border-b border-[#f0e6d8] px-3 py-2">
+                      <BrandGroupHeader label={nested.label} />
                     </div>
                     <div className="overflow-x-auto">
                       <table className="min-w-[980px] w-full border-separate border-spacing-0 text-left text-sm">
@@ -584,7 +644,6 @@ export default function InteractivePriceListDashboard({
                         <tbody>
                           {nested.rows.map((row, index) => {
                             const expanded = expandedIds.has(row.id);
-                            const marker = markerText(row.recommended, row.outsourced);
 
                             return (
                               <tr
@@ -601,22 +660,19 @@ export default function InteractivePriceListDashboard({
                                   {inlineMarker(row.designStyle, row.recommended, row.outsourced)}
                                 </td>
                                 <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
-                                  {priceLabel(row.clearFrom, priceMode, true)}
+                                  {startingPriceLabel(row.clearFrom, priceMode)}
                                 </td>
                                 <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
-                                  {priceLabel(row.photoFrom, priceMode, true)}
+                                  {startingPriceLabel(row.photoFrom, priceMode)}
                                 </td>
                                 <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
-                                  {priceLabel(row.polarizedFrom, priceMode, true)}
-                                </td>
-                                <td className="border-b border-r border-[#eadfce] px-3 py-2 text-xs font-semibold text-[#6d6252]">
-                                  {marker || "—"}
+                                  {startingPriceLabel(row.polarizedFrom, priceMode)}
                                 </td>
                                 <td className="border-b border-[#eadfce] px-3 py-2">
                                   <button
                                     type="button"
                                     onClick={() => toggleExpanded(row.id)}
-                                    className="rounded-full border border-[#d7c5a8] bg-white px-3 py-1.5 text-xs font-bold text-[#122033] transition hover:bg-[#eadcc6]"
+                                    className="rounded-full border border-[#c9b186] bg-[#122033] px-3.5 py-2 text-xs font-bold text-white transition hover:bg-[#22364f]"
                                   >
                                     {expanded ? "Hide Builder" : "Build Price"}
                                   </button>
@@ -680,7 +736,7 @@ function ExpandedDesignBuilder({
         photochromic: minRow(entry.rows, "Photochromic", priceMode),
         polarized: minRow(entry.rows, "Polarized", priceMode),
       }))
-      .sort((a, b) => compareText(a.material, b.material));
+      .sort((a, b) => compareMaterial(a.material, b.material));
   }, [designRow.rows, priceMode]);
 
   const photoFamilies = useMemo(
@@ -695,6 +751,7 @@ function ExpandedDesignBuilder({
   const [selectedMaterial, setSelectedMaterial] = useState(materialOptions[0]?.material ?? "");
   const [selectedCategory, setSelectedCategory] = useState<MaterialGroup>("Clear");
   const [selectedColorFamily, setSelectedColorFamily] = useState("All");
+  const [builderMode, setBuilderMode] = useState<PriceMode>(priceMode);
 
   const selectedRows = useMemo(() => {
     return designRow.rows.filter((row) => {
@@ -707,8 +764,8 @@ function ExpandedDesignBuilder({
 
   const selectedPriceRow = useMemo(
     () =>
-      [...selectedRows].sort((a, b) => priceFor(a, priceMode) - priceFor(b, priceMode))[0],
-    [selectedRows, priceMode]
+      [...selectedRows].sort((a, b) => priceFor(a, builderMode) - priceFor(b, builderMode))[0],
+    [selectedRows, builderMode]
   );
 
   const selectedColorFamilies = useMemo(
@@ -750,7 +807,7 @@ function ExpandedDesignBuilder({
           >
             {materialOptions.map((option) => (
               <option key={option.material} value={option.material}>
-                {option.material}
+                {materialDisplay(option.material)}
               </option>
             ))}
           </select>
@@ -792,13 +849,30 @@ function ExpandedDesignBuilder({
             Current Price
           </p>
           <p className="mt-1 text-lg font-bold text-[#122033]">
-            {selectedPriceRow ? currency(priceFor(selectedPriceRow, priceMode)) : "—"}
+            {selectedPriceRow ? exactPriceLabel(selectedPriceRow, builderMode) : "—"}
           </p>
           <p className="mt-1 text-xs text-[#6d6252]">
-            {priceMode === "edged" ? "Edged and Assembled" : "Uncut"}
-            {selectedPriceRow ? ` · Deduct ${currency(selectedPriceRow.uncutDeduct)}` : ""}
+            {builderMode === "edged" ? "Edged and Assembled" : "Uncut"}
           </p>
         </div>
+      </div>
+
+      <div className="inline-grid max-w-[280px] grid-cols-2 rounded-full border border-[#d7c5a8] bg-white p-1">
+        {[
+          ["edged", "Edged and Assembled"],
+          ["uncut", "Uncut"],
+        ].map(([mode, label]) => (
+          <button
+            key={`${designRow.id}-${mode}`}
+            type="button"
+            onClick={() => setBuilderMode(mode as PriceMode)}
+            className={`min-h-9 rounded-full px-3 text-xs font-bold transition ${
+              builderMode === mode ? "bg-[#122033] text-white" : "text-[#4d5664] hover:bg-[#f4eee4]"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
       <section className="rounded-[2px] border border-[#eadfce] bg-white/85 p-4">
@@ -813,30 +887,28 @@ function ExpandedDesignBuilder({
                   : "border-[#eadfce] bg-white"
               }`}
             >
-              <div className="font-semibold text-[#122033]">{materialOption.material}</div>
+              <div className="font-semibold text-[#122033]">{materialDisplay(materialOption.material)}</div>
               <div>
                 <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8a7654]">Clear</p>
-                <p className="font-bold text-[#122033]">{priceLabel(materialOption.clear, priceMode, true)}</p>
+                <p className="font-bold text-[#122033]">{startingPriceLabel(materialOption.clear, builderMode)}</p>
               </div>
               <div>
                 <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8a7654]">Photochromic</p>
-                <p className="font-bold text-[#122033]">{priceLabel(materialOption.photochromic, priceMode, true)}</p>
+                <p className="font-bold text-[#122033]">{startingPriceLabel(materialOption.photochromic, builderMode)}</p>
               </div>
               <div>
                 <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8a7654]">Polarized</p>
-                <p className="font-bold text-[#122033]">{priceLabel(materialOption.polarized, priceMode, true)}</p>
+                <p className="font-bold text-[#122033]">{startingPriceLabel(materialOption.polarized, builderMode)}</p>
               </div>
-              <div className="text-xs text-[#6d6252]">
-                {materialOption.clear ? `Deduct ${currency(materialOption.clear.uncutDeduct)}` : "—"}
-              </div>
+              <div />
             </div>
           ))}
         </div>
       </section>
 
       <section className="grid gap-4 xl:grid-cols-2">
-        <OptionFamilyPanel title="Photochromic Options" families={photoFamilies} priceMode={priceMode} />
-        <OptionFamilyPanel title="Polarized Options" families={polarizedFamilies} priceMode={priceMode} />
+        <OptionFamilyPanel title="Photochromic Options" families={photoFamilies} priceMode={builderMode} />
+        <OptionFamilyPanel title="Polarized Options" families={polarizedFamilies} priceMode={builderMode} />
       </section>
 
       <details className="rounded-[2px] border border-[#eadfce] bg-white/85 p-4">
@@ -875,7 +947,7 @@ function ExpandedDesignBuilder({
           </p>
           <p>
             <span className="font-semibold text-[#122033]">Selected material:</span>{" "}
-            {selectedMaterial || "—"}
+            {selectedMaterial ? materialDisplay(selectedMaterial) : "—"}
           </p>
           <p>
             <span className="font-semibold text-[#122033]">Selected color option:</span>{" "}
@@ -914,7 +986,7 @@ function buildOptionFamilies(
       } satisfies OptionFamily);
     current.rows.push(row);
     current.colors = [...new Set([...current.colors, ...row.availableColors])].sort(compareText);
-    current.materials = [...new Set([...current.materials, row.material])].sort(compareText);
+    current.materials = [...new Set([...current.materials, row.material])].sort(compareMaterial);
     map.set(key, current);
   }
 
@@ -946,10 +1018,10 @@ function OptionFamilyPanel({
             <div key={`${title}-${family.family}`} className="rounded-[2px] border border-[#eadfce] bg-[#fffaf4] p-3">
               <div className="flex items-start justify-between gap-2">
                 <h5 className="font-semibold text-[#122033]">{family.family}</h5>
-                <p className="font-bold text-[#122033]">{priceLabel(family.from, priceMode, true)}</p>
+                <p className="font-bold text-[#122033]">{startingPriceLabel(family.from, priceMode)}</p>
               </div>
               <p className="mt-1 text-xs text-[#6d6252]">
-                Materials: {family.materials.join(", ") || "—"}
+                Materials: {family.materials.map((material) => materialDisplay(material)).join(", ") || "—"}
               </p>
               <p className="mt-1 text-xs text-[#6d6252]">
                 Available colors: {family.colors.join(", ") || "—"}

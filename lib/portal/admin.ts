@@ -8,6 +8,7 @@ export const PORTAL_ADMIN_EMAILS = new Set([
   "jim.day@artisanlabnetwork.com",
   "rick@pacificartisanlabs.com",
   "brandon.butler@artisanlabnetwork.com",
+  "rahson@artisanlabnetwork.com",
   "rahlson@artisanlabnetwork.com",
   "switmer@artisanlabnetwork.com",
 ]);

@@ -78,6 +78,18 @@ function exactPriceLabel(row: PriceListPricingRow | undefined, mode: PriceMode) 
   return currency(priceFor(row, mode));
 }
 
+const titleByCode: Record<GeneratedPriceListData["code"], string> = {
+  P6: "Artisan Equity Partner Pricing",
+  G6: "Artisan General Pricing",
+  A6: "Artisan PMP Partner Pricing",
+  B5: "Artisan Lens System Pricing",
+  S5: "Shamir Lens System Pricing",
+  M5: "Artisan Frame System Pricing",
+  Y5: "Artisan Safety System Pricing",
+  TK: "Tokai Pricing",
+  VD: "VD Pricing",
+};
+
 const materialDisplayMap: Record<string, string> = {
   plastic: "Plastic",
   polycarb: "Polycarbonate",
@@ -421,6 +433,7 @@ export default function InteractivePriceListDashboard({
 }: {
   priceList: GeneratedPriceListData;
 }) {
+  const isPackageList = ["B5", "S5", "M5", "Y5"].includes(priceList.code);
   const [viewBy, setViewBy] = useState<ViewBy>("designType");
   const [designType, setDesignType] = useState("All");
   const [brand, setBrand] = useState("All");
@@ -548,9 +561,9 @@ export default function InteractivePriceListDashboard({
     { key: "designType", label: "Design Type" },
     { key: "brand", label: "Brand" },
     { key: "designStyle", label: "Design Style" },
-    { key: "clear", label: "Clear" },
-    { key: "photochromic", label: "Photochromic" },
-    { key: "polarized", label: "Polarized" },
+    { key: "clear", label: isPackageList ? "Package Price" : "Clear" },
+    { key: "photochromic", label: isPackageList ? "Photo Upgrade" : "Photochromic" },
+    { key: "polarized", label: isPackageList ? "Polar Upgrade" : "Polarized" },
     { label: "Actions" },
   ];
 
@@ -583,7 +596,7 @@ export default function InteractivePriceListDashboard({
         <div className="grid gap-5 border-b border-[#dfd2bf] p-4 md:p-6 xl:grid-cols-[0.9fr_1.1fr] xl:items-end">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">
-              Artisan Equity Partner Pricing
+              {titleByCode[priceList.code]}
             </p>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[#122033] md:text-3xl">
               Guided Lens Pricing Builder
@@ -800,6 +813,7 @@ export default function InteractivePriceListDashboard({
                                         priceMode={priceMode}
                                         addOnSections={priceList.addOnSections}
                                         allArCoatings={priceList.arCoatings}
+                                        listCode={priceList.code}
                                       />
                                     </td>
                                   </tr>
@@ -835,12 +849,16 @@ function ExpandedDesignBuilder({
   priceMode,
   addOnSections,
   allArCoatings,
+  listCode,
 }: {
   designRow: DesignRow;
   priceMode: PriceMode;
   addOnSections: PriceListAddOnSection[];
   allArCoatings: PriceListArCoating[];
+  listCode: GeneratedPriceListData["code"];
 }) {
+  const isPackageList = ["B5", "S5", "M5", "Y5"].includes(listCode);
+  const includesFrame = ["M5", "Y5"].includes(listCode);
   const [blueLightEnabled, setBlueLightEnabled] = useState(false);
   const materialOptions = useMemo(() => {
     const map = new Map<string, MaterialOption>();
@@ -950,6 +968,29 @@ function ExpandedDesignBuilder({
 
   return (
     <div className="grid gap-6">
+      {isPackageList ? (
+        <section className="rounded-[2px] border border-[#e4d5c0] bg-[#fff8ef] p-4">
+          <h4 className="text-sm font-bold uppercase tracking-[0.18em] text-[#8a7654]">Package Summary</h4>
+          <div className="mt-2 grid gap-1 text-sm text-[#4d5664]">
+            <p>
+              <span className="font-semibold text-[#122033]">Base package price:</span>{" "}
+              {selectedPriceRow ? exactPriceLabel(selectedPriceRow, builderMode) : "—"}
+            </p>
+            <p>
+              <span className="font-semibold text-[#122033]">Included AR:</span> Artisan Emerald
+            </p>
+            {includesFrame ? (
+              <p>
+                <span className="font-semibold text-[#122033]">Frame package:</span>{" "}
+                {listCode === "M5"
+                  ? "Includes frame and polycarbonate lenses bundled at reduced package pricing."
+                  : "Includes safety frame package and side shields at no additional fee."}
+              </p>
+            ) : null}
+          </div>
+        </section>
+      ) : null}
+
       <section className="rounded-[2px] border border-[#e4d5c0] bg-[#fff8ef] p-4">
         <h4 className="text-sm font-bold uppercase tracking-[0.18em] text-[#8a7654]">Product Code Summary</h4>
         <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-sm">
@@ -1325,7 +1366,18 @@ function AddOnSections({ sections }: { sections: PriceListAddOnSection[] }) {
                 >
                   <div>
                     <p className="font-semibold text-[#122033]">
-                      {inlineMarker(item.name, Boolean(item.recommended), Boolean(item.outsourced))}
+                      {item.href ? (
+                        <a
+                          href={item.href}
+                          target={item.href.startsWith("http") ? "_blank" : undefined}
+                          rel={item.href.startsWith("http") ? "noreferrer" : undefined}
+                          className="underline decoration-[#c9b186] underline-offset-4 hover:decoration-[#122033]"
+                        >
+                          {inlineMarker(item.name, Boolean(item.recommended), Boolean(item.outsourced))}
+                        </a>
+                      ) : (
+                        inlineMarker(item.name, Boolean(item.recommended), Boolean(item.outsourced))
+                      )}
                     </p>
                     {item.notes ? <p className="text-xs text-[#625b53]">{item.notes}</p> : null}
                   </div>

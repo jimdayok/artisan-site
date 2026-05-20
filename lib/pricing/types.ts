@@ -44,6 +44,7 @@ export type PriceListArCoating = {
 export type PriceListAddOnItem = {
   name: string;
   price: number | string;
+  href?: string;
   notes?: string;
   recommended?: boolean;
   outsourced?: boolean;

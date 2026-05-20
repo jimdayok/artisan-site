@@ -123,6 +123,21 @@ const m5AddOns = [
       { name: "Frame shipping", price: "Frames are drop-shipped to the lab with no additional frame shipping fees." },
     ],
   },
+  {
+    title: "Frame Tier Guide",
+    items: [
+      {
+        name: "Modern Optical Frame Tier Guide",
+        price: "Reference",
+        href: "/provider-resources#modern-frame-system",
+      },
+      {
+        name: "Frame Systems Resource Center",
+        price: "Reference",
+        href: "/provider-resources#frame-systems",
+      },
+    ],
+  },
   ...fullServiceAddOns,
 ];
 
@@ -137,6 +152,21 @@ const y5AddOns = [
       },
       { name: "Side shields", price: "Included at no additional fee", recommended: true },
       { name: "Warranty policy", price: "See safety vendor tier and warranty section" },
+    ],
+  },
+  {
+    title: "Safety Vendor Tier Guide",
+    items: [
+      {
+        name: "Safety Systems Resource Center",
+        price: "Reference",
+        href: "/provider-resources#safety-systems",
+      },
+      {
+        name: "OnGuard Safety Frame Catalog",
+        price: "External",
+        href: "https://www.hilcovision.com/cp/eyewear-accessories/prescription-safety-glasses",
+      },
     ],
   },
   ...fullServiceAddOns,

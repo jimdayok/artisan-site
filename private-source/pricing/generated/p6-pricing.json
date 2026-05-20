@@ -276884,7 +276884,7 @@
   ],
   "arCoatings": [
     {
-      "notes": "Marked as recommended in the P6 PDF-derived source.",
+      "notes": "Recommended for best service.",
       "name": "Nytopia",
       "brandFamily": "Artisan Coatings",
       "price": 62,
@@ -276892,7 +276892,7 @@
       "outsourced": false
     },
     {
-      "notes": "Marked as recommended in the P6 PDF-derived source.",
+      "notes": "Recommended for best service.",
       "name": "Armour",
       "brandFamily": "Artisan Coatings",
       "price": 62,
@@ -276900,7 +276900,7 @@
       "outsourced": false
     },
     {
-      "notes": "Marked as recommended in the P6 PDF-derived source.",
+      "notes": "Recommended for best service.",
       "name": "Azure (Blue Light)",
       "brandFamily": "Artisan Coatings",
       "price": 70,
@@ -276908,7 +276908,7 @@
       "outsourced": false
     },
     {
-      "notes": "Marked as recommended in the P6 PDF-derived source.",
+      "notes": "Recommended for best service.",
       "name": "Artisan Emerald",
       "brandFamily": "Artisan Coatings",
       "price": 55,
@@ -276916,7 +276916,7 @@
       "outsourced": false
     },
     {
-      "notes": "P6 PDF-derived AR coating price.",
+      "notes": "PDF-derived AR coating price.",
       "name": "Diamond Sun",
       "brandFamily": "Artisan Coatings",
       "price": 37,
@@ -276924,7 +276924,7 @@
       "outsourced": false
     },
     {
-      "notes": "P6 PDF-derived AR coating price.",
+      "notes": "PDF-derived AR coating price.",
       "name": "Backside AR",
       "brandFamily": "Artisan Coatings",
       "price": 20,
@@ -276932,15 +276932,7 @@
       "outsourced": false
     },
     {
-      "notes": "P6 PDF-derived AR coating price.",
-      "name": "Diamond Shield",
-      "brandFamily": "Artisan Coatings",
-      "price": 18,
-      "recommended": false,
-      "outsourced": false
-    },
-    {
-      "notes": "Marked as recommended in the P6 PDF-derived source.",
+      "notes": "Recommended for best service.",
       "name": "TechShield Elite UVR",
       "brandFamily": "TechShield Coatings",
       "price": 70,
@@ -276948,26 +276940,10 @@
       "outsourced": false
     },
     {
-      "notes": "Marked as recommended in the P6 PDF-derived source.",
+      "notes": "Recommended for best service.",
       "name": "TechShield Blue",
       "brandFamily": "TechShield Coatings",
       "price": 75,
-      "recommended": true,
-      "outsourced": false
-    },
-    {
-      "notes": "Marked as recommended in the P6 PDF-derived source.",
-      "name": "TechShield Plus UVR",
-      "brandFamily": "TechShield Coatings",
-      "price": 62,
-      "recommended": true,
-      "outsourced": false
-    },
-    {
-      "notes": "Marked as recommended in the P6 PDF-derived source.",
-      "name": "TechShield SUN",
-      "brandFamily": "TechShield Coatings",
-      "price": 70,
       "recommended": true,
       "outsourced": false
     },
@@ -276981,49 +276957,9 @@
     },
     {
       "notes": "This product is outsourced and will take additional processing time.",
-      "name": "Ultimate Shield Coating",
-      "brandFamily": "Tokai AR Coatings",
-      "price": 89,
-      "recommended": false,
-      "outsourced": true
-    },
-    {
-      "notes": "This product is outsourced and will take additional processing time.",
-      "name": "Super Power Shield",
-      "brandFamily": "Tokai AR Coatings",
-      "price": 85,
-      "recommended": false,
-      "outsourced": true
-    },
-    {
-      "notes": "This product is outsourced and will take additional processing time.",
-      "name": "Technical Blue Cut",
-      "brandFamily": "Tokai AR Coatings",
-      "price": 85,
-      "recommended": false,
-      "outsourced": true
-    },
-    {
-      "notes": "This product is outsourced and will take additional processing time.",
       "name": "Meiryo EX4",
       "brandFamily": "Hoya AR Coatings",
       "price": 85,
-      "recommended": false,
-      "outsourced": true
-    },
-    {
-      "notes": "This product is outsourced and will take additional processing time.",
-      "name": "EX3+",
-      "brandFamily": "Hoya AR Coatings",
-      "price": 81,
-      "recommended": false,
-      "outsourced": true
-    },
-    {
-      "notes": "This product is outsourced and will take additional processing time.",
-      "name": "Recharge",
-      "brandFamily": "Hoya AR Coatings",
-      "price": 79,
       "recommended": false,
       "outsourced": true
     },
@@ -277037,65 +276973,9 @@
     },
     {
       "notes": "This product is outsourced and will take additional processing time.",
-      "name": "Sapphire HR",
-      "brandFamily": "Crizal AR Coatings",
-      "price": 104,
-      "recommended": false,
-      "outsourced": true
-    },
-    {
-      "notes": "This product is outsourced and will take additional processing time.",
-      "name": "Prevencia",
-      "brandFamily": "Crizal AR Coatings",
-      "price": 104,
-      "recommended": false,
-      "outsourced": true
-    },
-    {
-      "notes": "This product is outsourced and will take additional processing time.",
-      "name": "Rock",
-      "brandFamily": "Crizal AR Coatings",
-      "price": 97,
-      "recommended": false,
-      "outsourced": true
-    },
-    {
-      "notes": "This product is outsourced and will take additional processing time.",
-      "name": "EasyPro",
-      "brandFamily": "Crizal AR Coatings",
-      "price": 79,
-      "recommended": false,
-      "outsourced": true
-    },
-    {
-      "notes": "This product is outsourced and will take additional processing time.",
-      "name": "Sharpview",
-      "brandFamily": "Crizal AR Coatings",
-      "price": 89,
-      "recommended": false,
-      "outsourced": true
-    },
-    {
-      "notes": "This product is outsourced and will take additional processing time.",
-      "name": "OptiFog",
-      "brandFamily": "Crizal AR Coatings",
-      "price": 96,
-      "recommended": false,
-      "outsourced": true
-    },
-    {
-      "notes": "This product is outsourced and will take additional processing time.",
       "name": "Glacier Expressions",
       "brandFamily": "Shamir AR Coatings",
       "price": 96,
-      "recommended": false,
-      "outsourced": true
-    },
-    {
-      "notes": "This product is outsourced and will take additional processing time.",
-      "name": "Glacier Plus",
-      "brandFamily": "Shamir AR Coatings",
-      "price": 89,
       "recommended": false,
       "outsourced": true
     },
@@ -277106,14 +276986,6 @@
       "price": 52,
       "recommended": false,
       "outsourced": true
-    },
-    {
-      "notes": "This product is outsourced and will take additional processing time.",
-      "name": "Mirror Match",
-      "brandFamily": "Mirror Coatings",
-      "price": 79,
-      "recommended": false,
-      "outsourced": true
     }
   ],
   "addOnSections": [
@@ -277121,31 +276993,35 @@
       "title": "Add for Material",
       "items": [
         {
-          "name": "Plastic P",
+          "name": "Plastic",
           "price": "-$8"
         },
         {
-          "name": "Polycarb PL",
+          "name": "Polycarbonate",
           "price": "$0"
         },
         {
-          "name": "Trivex H53",
+          "name": "Trivex",
           "price": "$7"
         },
         {
-          "name": "Hi Index 1.60 H60",
+          "name": "High Index 1.60",
           "price": "$24"
         },
         {
-          "name": "Hi Index 1.67 H67",
+          "name": "High Index 1.67",
           "price": "$43"
         },
         {
-          "name": "Hi Index 1.74 H74",
-          "price": "$65"
+          "name": "High Index 1.70",
+          "price": "$60"
         },
         {
-          "name": "Hi Index 1.76 H76",
+          "name": "High Index 1.74",
+          "price": "$56"
+        },
+        {
+          "name": "High Index 1.76",
           "price": "$65",
           "recommended": true
         }
@@ -277172,10 +277048,6 @@
           "price": "$32"
         },
         {
-          "name": "BluTech Outdoor",
-          "price": "$120"
-        },
-        {
           "name": "Tokai Lutina Blue Filter",
           "price": "$15",
           "outsourced": true
@@ -277196,11 +277068,15 @@
           "recommended": true
         },
         {
-          "name": "Sensity / SunSync families",
+          "name": "SunSync",
           "price": "See lens option"
         },
         {
-          "name": "Transitions families",
+          "name": "Sensity",
+          "price": "See lens option"
+        },
+        {
+          "name": "Transitions",
           "price": "See lens option"
         }
       ]
@@ -277210,16 +277086,6 @@
       "items": [
         {
           "name": "Polarized Mirrors",
-          "price": "$52",
-          "recommended": true
-        },
-        {
-          "name": "Polar Matt Mirrors",
-          "price": "$52",
-          "recommended": true
-        },
-        {
-          "name": "Nupolar Polarized Mirrors",
           "price": "$52",
           "recommended": true
         },
@@ -277251,11 +277117,6 @@
         {
           "name": "Add for Drill up to four holes",
           "price": "$24"
-        },
-        {
-          "name": "Tint with AR",
-          "price": "$5",
-          "notes": "Additional fee."
         }
       ]
     },
@@ -277292,7 +277153,7 @@
     "rawSourceRowsProcessed": 32542,
     "rowsExcludedMissingLookup": 2825,
     "displayRowCount": 736,
-    "generatedAt": "2026-05-20T12:58:01.675Z",
+    "generatedAt": "2026-05-20T18:04:07.090Z",
     "rawColumns": [
       "PL",
       "Mat",
@@ -277905,7 +277766,8 @@
       "Lookup_Mat.xlsx Material Color Brand is preferred for Color Brand, with colors.txt used when the material lookup is blank.",
       "Sphere is the edged and assembled price.",
       "Uncut is calculated as Sphere minus Deduct.",
-      "Duplicate normalized rows with identical prices are collapsed and retain their raw source names for expanded detail."
+      "Duplicate normalized rows with identical prices are collapsed and retain their raw source names for expanded detail.",
+      "P6 AR/add-on content sourced from P6 PDF-derived baseline."
     ]
   }
 }

@@ -5,6 +5,7 @@ import {
   S3ServiceException,
 } from "@aws-sdk/client-s3";
 import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
+import { isPortalAdminEmail } from "@/lib/portal/admin";
 import {
   getCustomerByEmailAndAccount,
   getCustomersByEmail,
@@ -238,7 +239,9 @@ export async function GET(request: NextRequest) {
         ? customers[0]
         : undefined;
 
-    if (!customer) {
+    const isAdmin = isPortalAdminEmail(authenticatedEmail);
+
+    if (!customer && !isAdmin) {
       logDownloadDiagnostic("Unknown portal customer or missing account selection", diagnostics, {
         requestedAccountNumber: requestedAccountNumber
           ? normalizeAccountNumber(requestedAccountNumber)
@@ -280,13 +283,13 @@ export async function GET(request: NextRequest) {
       return textResponse("PDF download is not available for this price sheet.", 404);
     }
 
-    const assignedPriceListCodes = customer.priceLists.map((code) =>
+    const assignedPriceListCodes = (customer?.priceLists ?? []).map((code) =>
       code.trim().toUpperCase()
     );
 
-    if (!assignedPriceListCodes.includes(priceList.code)) {
+    if (!isAdmin && !assignedPriceListCodes.includes(priceList.code)) {
       logDownloadDiagnostic("Unauthorized price list", diagnostics, {
-        accountNumber: customer.accountNumber,
+        accountNumber: customer?.accountNumber ?? "",
       });
 
       return textResponse("Unauthorized price list.", 403);

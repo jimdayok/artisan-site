@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
+import { isPortalAdminEmail } from "@/lib/portal/admin";
 import {
   customerHasPortalSection,
   getCustomerByEmail,
@@ -42,6 +43,30 @@ export function getAuthorizedPriceListFromHeaders(
     return { status: "unauthenticated", authenticatedEmail: "", priceList };
   }
 
+  if (priceList && isPortalAdminEmail(authenticatedEmail)) {
+    return {
+      status: "authorized",
+      authenticatedEmail,
+      customer: {
+        accountNumber: "ADMIN",
+        practiceName: "Portal Administrator",
+        emails: [authenticatedEmail],
+        priceLists: [priceList.code],
+        allowedPriceLists: [priceList.code],
+        portalSections: [
+          "pricing",
+          "packages",
+          "calculator",
+          "catalog",
+          "policies",
+          "exports",
+          "performance",
+        ],
+      },
+      priceList,
+    };
+  }
+
   const customers = getCustomersByEmail(authenticatedEmail);
   const customer = customers.find((entry) =>
     priceList
@@ -80,6 +105,29 @@ export async function getAuthorizedPortalSectionForPage(section: PortalSection) 
 
   if (!authenticatedEmail) {
     return { status: "unauthenticated" as const, authenticatedEmail: "" };
+  }
+
+  if (isPortalAdminEmail(authenticatedEmail)) {
+    return {
+      status: "authorized" as const,
+      authenticatedEmail,
+      customer: {
+        accountNumber: "ADMIN",
+        practiceName: "Portal Administrator",
+        emails: [authenticatedEmail],
+        priceLists: ["P6", "G6", "A6", "B5", "S5", "VD"],
+        allowedPriceLists: ["P6", "G6", "A6", "B5", "S5", "VD"],
+        portalSections: [
+          "pricing",
+          "packages",
+          "calculator",
+          "catalog",
+          "policies",
+          "exports",
+          "performance",
+        ],
+      },
+    };
   }
 
   const customer = getCustomerByEmail(authenticatedEmail);

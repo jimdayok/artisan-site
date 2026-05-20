@@ -720,16 +720,16 @@ export default function InteractivePriceListDashboard({
                     <div className="border-b border-[#f0e6d8] px-3 py-2">
                       <BrandGroupHeader label={nested.label} />
                     </div>
-                    <div className="overflow-x-auto">
-                      <table className="min-w-[980px] w-full table-fixed border-separate border-spacing-0 text-left text-sm">
+                    <div className="overflow-x-auto md:overflow-visible">
+                      <table className="w-full min-w-[760px] table-fixed border-separate border-spacing-0 text-left text-sm md:min-w-0">
                         <colgroup>
                           <col className="w-[14%]" />
                           <col className="w-[13%]" />
-                          <col className="w-[27%]" />
-                          <col className="w-[13%]" />
-                          <col className="w-[13%]" />
-                          <col className="w-[13%]" />
-                          <col className="w-[7%]" />
+                          <col className="w-[28%]" />
+                          <col className="w-[11%]" />
+                          <col className="w-[11%]" />
+                          <col className="w-[11%]" />
+                          <col className="w-[12%]" />
                         </colgroup>
                         <thead>
                           <tr className="bg-[#122033] text-white">

@@ -1,5 +1,6 @@
 export const CLOUDFLARE_ACCESS_EMAIL_HEADER =
   "cf-access-authenticated-user-email";
+export const TRUSTED_PORTAL_EMAIL_HEADER = "x-portal-auth-email";
 export const LOCAL_PORTAL_TEST_EMAIL_COOKIE = "portal_dev_email";
 
 const LOCALHOST_NAMES = new Set(["localhost", "127.0.0.1", "::1"]);
@@ -84,9 +85,15 @@ export function getLocalDevelopmentPortalEmailFromHeaders(headers: Headers) {
 }
 
 export function getPortalAuthenticatedEmailFromHeaders(headers: Headers) {
+  const trustedEmail =
+    headers.get(TRUSTED_PORTAL_EMAIL_HEADER)?.trim().toLowerCase() ?? "";
+  if (trustedEmail) return trustedEmail;
+
   const cloudflareAccessEmail = getCloudflareAccessEmailFromHeaders(headers);
 
-  if (cloudflareAccessEmail) return cloudflareAccessEmail;
+  if (cloudflareAccessEmail && hasCloudflareAccessJwtCookie(headers)) {
+    return cloudflareAccessEmail;
+  }
 
   // Localhost-only explicit test login. Production requests never trust this
   // cookie; they must include Cloudflare Access' verified email header.

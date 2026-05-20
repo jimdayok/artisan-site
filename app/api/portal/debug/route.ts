@@ -13,10 +13,6 @@ import {
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-const DEBUG_ALLOWED_EMAILS = new Set([
-  "jimdayok@me.com",
-  "jim.day@artisanlabnetwork.com",
-]);
 
 const NON_SENSITIVE_HEADER_NAMES = new Set([
   CLOUDFLARE_ACCESS_EMAIL_HEADER,
@@ -49,10 +45,7 @@ export async function GET(request: NextRequest) {
   const localDevelopmentEmail =
     getLocalDevelopmentPortalEmailFromHeaders(request.headers);
   const cloudflareAccessJwtCookie = hasCloudflareAccessJwtCookie(request.headers);
-  const normalizedEmail = detectedEmail.toLowerCase();
-  const isAllowedEmail = DEBUG_ALLOWED_EMAILS.has(normalizedEmail);
-
-  if (!isLocalhostDevelopment && !isAllowedEmail) {
+  if (!isLocalhostDevelopment) {
     return jsonResponse({ error: "Not found" }, 404);
   }
 

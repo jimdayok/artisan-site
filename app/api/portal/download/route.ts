@@ -12,6 +12,7 @@ import {
 } from "@/lib/portal/customers";
 import { normalizeAccountNumber } from "@/lib/portal/normalizeAccounts";
 import { getPriceListByCode } from "@/lib/portal/priceLists";
+import { checkRateLimit } from "@/lib/portal/rateLimit";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -220,6 +221,14 @@ export async function GET(request: NextRequest) {
   let diagnostics = getR2Diagnostics(requestedCode, false);
 
   try {
+    const ip = request.headers.get("cf-connecting-ip") || request.headers.get("x-forwarded-for") || "unknown";
+    const ipRate = checkRateLimit({
+      key: `portal-download-ip:${ip}`,
+      limit: 60,
+      windowMs: 60_000,
+    });
+    if (!ipRate.allowed) return textResponse("Too many requests.", 429);
+
     const authenticatedEmail =
       getPortalAuthenticatedEmailFromHeaders(request.headers);
     diagnostics = getR2Diagnostics(requestedCode, Boolean(authenticatedEmail));
@@ -229,6 +238,13 @@ export async function GET(request: NextRequest) {
 
       return textResponse("Missing authenticated email.", 401);
     }
+
+    const userRate = checkRateLimit({
+      key: `portal-download-user:${authenticatedEmail}`,
+      limit: 120,
+      windowMs: 60_000,
+    });
+    if (!userRate.allowed) return textResponse("Too many requests.", 429);
 
     const requestedAccountNumber =
       request.nextUrl.searchParams.get("account")?.trim() ?? "";

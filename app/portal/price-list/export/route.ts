@@ -15,6 +15,7 @@ import {
   type PriceBrand,
 } from "../../../../src/data/privatePriceList";
 import { msrpForItem } from "../../../../src/data/msrpPriceList";
+import { checkRateLimit } from "@/lib/portal/rateLimit";
 
 type ExportMode = "Wholesale" | "MSRP" | "Combined";
 type ExportScope = "full" | "filtered" | "selected";
@@ -76,6 +77,19 @@ function makePdf(pageLines: string[], title: string, mode: ExportMode, generated
 }
 
 export function GET(request: NextRequest) {
+  const ip = request.headers.get("cf-connecting-ip") || request.headers.get("x-forwarded-for") || "unknown";
+  const ipRate = checkRateLimit({
+    key: `portal-export-ip:${ip}`,
+    limit: 20,
+    windowMs: 60_000,
+  });
+  if (!ipRate.allowed) {
+    return new NextResponse("Too many requests.", {
+      status: 429,
+      headers: { "Cache-Control": "private, no-store" },
+    });
+  }
+
   const access = getAuthorizedPriceListFromHeaders(request.headers, "G6");
 
   if (access.status === "unauthenticated") {

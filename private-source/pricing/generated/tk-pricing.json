@@ -1623,106 +1623,10 @@
   ],
   "arCoatings": [
     {
-      "notes": "Recommended for best service.",
-      "name": "Nytopia",
-      "brandFamily": "Artisan Coatings",
-      "price": 62,
-      "recommended": true,
-      "outsourced": false
-    },
-    {
-      "notes": "Recommended for best service.",
-      "name": "Armour",
-      "brandFamily": "Artisan Coatings",
-      "price": 62,
-      "recommended": true,
-      "outsourced": false
-    },
-    {
-      "notes": "Recommended for best service.",
-      "name": "Azure (Blue Light)",
-      "brandFamily": "Artisan Coatings",
-      "price": 70,
-      "recommended": true,
-      "outsourced": false
-    },
-    {
-      "notes": "Recommended for best service.",
-      "name": "Artisan Emerald",
-      "brandFamily": "Artisan Coatings",
-      "price": 55,
-      "recommended": true,
-      "outsourced": false
-    },
-    {
-      "notes": "PDF-derived AR coating price.",
-      "name": "Diamond Sun",
-      "brandFamily": "Artisan Coatings",
-      "price": 37,
-      "recommended": false,
-      "outsourced": false
-    },
-    {
-      "notes": "PDF-derived AR coating price.",
-      "name": "Backside AR",
-      "brandFamily": "Artisan Coatings",
-      "price": 20,
-      "recommended": false,
-      "outsourced": false
-    },
-    {
-      "notes": "Recommended for best service.",
-      "name": "TechShield Elite UVR",
-      "brandFamily": "TechShield Coatings",
-      "price": 70,
-      "recommended": true,
-      "outsourced": false
-    },
-    {
-      "notes": "Recommended for best service.",
-      "name": "TechShield Blue",
-      "brandFamily": "TechShield Coatings",
-      "price": 75,
-      "recommended": true,
-      "outsourced": false
-    },
-    {
       "notes": "This product is outsourced and will take additional processing time.",
       "name": "No Reflection Coating",
       "brandFamily": "Tokai AR Coatings",
       "price": 89,
-      "recommended": false,
-      "outsourced": true
-    },
-    {
-      "notes": "This product is outsourced and will take additional processing time.",
-      "name": "Meiryo EX4",
-      "brandFamily": "Hoya AR Coatings",
-      "price": 85,
-      "recommended": false,
-      "outsourced": true
-    },
-    {
-      "notes": "This product is outsourced and will take additional processing time.",
-      "name": "Natural",
-      "brandFamily": "Crizal AR Coatings",
-      "price": 104,
-      "recommended": false,
-      "outsourced": true
-    },
-    {
-      "notes": "This product is outsourced and will take additional processing time.",
-      "name": "Glacier Expressions",
-      "brandFamily": "Shamir AR Coatings",
-      "price": 96,
-      "recommended": false,
-      "outsourced": true
-    },
-    {
-      "notes": "This product is outsourced and will take additional processing time.",
-      "name": "Standard Mirror",
-      "brandFamily": "Mirror Coatings",
-      "price": 52,
       "recommended": false,
       "outsourced": true
     }
@@ -1892,7 +1796,7 @@
     "rawSourceRowsProcessed": 406,
     "rowsExcludedMissingLookup": 168,
     "displayRowCount": 20,
-    "generatedAt": "2026-05-20T19:30:19.412Z",
+    "generatedAt": "2026-05-20T20:00:08.200Z",
     "rawColumns": [
       "PL",
       "Mat",
@@ -1975,7 +1879,8 @@
       "Sphere is the edged and assembled price.",
       "Uncut is calculated as Sphere minus Deduct.",
       "Duplicate normalized rows with identical prices are collapsed and retain their raw source names for expanded detail.",
-      "TK pulled from mixed workbook rows where PL code is TK."
+      "TK pulled from mixed workbook rows where PL code is TK.",
+      "TK interactive AR list is restricted to Tokai AR coatings."
     ]
   }
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Fragment, useMemo, useState } from "react";
 import type {
   GeneratedPriceListData,
@@ -70,11 +71,13 @@ function priceFor(row: PriceListPricingRow | undefined, mode: PriceMode) {
 
 function startingPriceLabel(row: PriceListPricingRow | undefined, mode: PriceMode) {
   if (!row) return "—";
+  if (priceFor(row, mode) <= 0) return "Not Available";
   return `${currency(priceFor(row, mode))}+`;
 }
 
 function exactPriceLabel(row: PriceListPricingRow | undefined, mode: PriceMode) {
   if (!row) return "—";
+  if (priceFor(row, mode) <= 0) return "Not Available";
   return currency(priceFor(row, mode));
 }
 
@@ -88,6 +91,90 @@ const titleByCode: Record<GeneratedPriceListData["code"], string> = {
   Y5: "Artisan Safety System Pricing",
   TK: "Tokai Pricing",
   VD: "VD Pricing",
+};
+
+type ProgramMeta = {
+  multiplePairEligible: boolean;
+  packageNotes: string[];
+  ruleNotes: string[];
+  titleLogoSrc?: string;
+};
+
+const metaByCode: Record<GeneratedPriceListData["code"], ProgramMeta> = {
+  P6: {
+    multiplePairEligible: true,
+    packageNotes: [],
+    ruleNotes: ["Products not listed are not available."],
+  },
+  G6: {
+    multiplePairEligible: true,
+    packageNotes: [],
+    ruleNotes: ["Products not listed are not available."],
+  },
+  A6: {
+    multiplePairEligible: true,
+    packageNotes: [],
+    ruleNotes: ["Products not listed are not available."],
+  },
+  B5: {
+    multiplePairEligible: true,
+    packageNotes: [
+      "Package includes Artisan Emerald AR.",
+      "Upgrades are available only at source-listed pricing.",
+      "Products not listed are not available.",
+    ],
+    ruleNotes: [],
+    titleLogoSrc: "/iot-logo.png",
+  },
+  S5: {
+    multiplePairEligible: true,
+    packageNotes: [
+      "Package includes Artisan Emerald AR.",
+      "Upgrades are available only at source-listed pricing.",
+      "Products not listed are not available.",
+    ],
+    ruleNotes: [],
+    titleLogoSrc: "/shamir-logo.png",
+  },
+  TK: {
+    multiplePairEligible: false,
+    packageNotes: [],
+    ruleNotes: [
+      "Tokai Lens System pricing includes eligible Tokai AR coatings.",
+      "Artisan coatings are not available with this program.",
+      "TK is not eligible for the Artisan Multiple Pair Program.",
+    ],
+    titleLogoSrc: "/tokai-logo.png",
+  },
+  VD: {
+    multiplePairEligible: false,
+    packageNotes: [],
+    ruleNotes: [
+      "This program does not permit usage of Artisan coatings.",
+      "Artisan Standard is available for $21.",
+      "No included AR on Value Systems.",
+      "Products not listed are not available.",
+    ],
+  },
+  M5: {
+    multiplePairEligible: false,
+    packageNotes: [
+      "Modern Frame System packages include frames at Tier 1.",
+      "Additional frame tiers and add-on prices are listed below.",
+      "No included AR on M5 packages.",
+    ],
+    ruleNotes: ["Products not listed are not available."],
+  },
+  Y5: {
+    multiplePairEligible: false,
+    packageNotes: [
+      "Safety Systems packages include frames at Tier 1.",
+      "Additional frame tiers and add-on prices are listed below.",
+      "No included AR on Y5 packages.",
+      "Side shields are included at no additional fee.",
+    ],
+    ruleNotes: ["Products not listed are not available."],
+  },
 };
 
 const materialDisplayMap: Record<string, string> = {
@@ -434,6 +521,7 @@ export default function InteractivePriceListDashboard({
   priceList: GeneratedPriceListData;
 }) {
   const isPackageList = ["B5", "S5", "M5", "Y5"].includes(priceList.code);
+  const programMeta = metaByCode[priceList.code];
   const [viewBy, setViewBy] = useState<ViewBy>("designType");
   const [designType, setDesignType] = useState("All");
   const [brand, setBrand] = useState("All");
@@ -601,10 +689,54 @@ export default function InteractivePriceListDashboard({
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[#122033] md:text-3xl">
               Guided Lens Pricing Builder
             </h2>
+            {programMeta.titleLogoSrc ? (
+              <div className="mt-3">
+                <Image
+                  src={programMeta.titleLogoSrc}
+                  alt={`${titleByCode[priceList.code]} logo`}
+                  width={140}
+                  height={40}
+                  className="h-8 w-auto object-contain"
+                />
+              </div>
+            ) : null}
             <p className="mt-3 max-w-3xl text-sm leading-6 text-[#4d5664]">
               Start with design, then open each row to build price by material and
               clear/photochromic/polarized options.
             </p>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <span
+                className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold ${
+                  programMeta.multiplePairEligible
+                    ? "border-[#3f6a5a] bg-[#e9f6ef] text-[#1f4f3f]"
+                    : "border-[#8f6f50] bg-[#f8eee2] text-[#6f4f34]"
+                }`}
+              >
+                {programMeta.multiplePairEligible
+                  ? "Eligible for Artisan Multiple Pair Program"
+                  : "Not eligible for Artisan Multiple Pair Program"}
+              </span>
+              <Link
+                href="/portal/price-list/policies"
+                className="inline-flex items-center rounded-full border border-[#d7c5a8] bg-white px-3 py-1 text-xs font-semibold text-[#122033] hover:bg-[#f7f0e6]"
+              >
+                View Lab Policies Guide
+              </Link>
+            </div>
+            {programMeta.packageNotes.length ? (
+              <div className="mt-3 rounded-[2px] border border-[#e2d3bf] bg-[#fff9ef] p-3 text-xs leading-5 text-[#5f5547]">
+                {programMeta.packageNotes.map((note) => (
+                  <p key={`${priceList.code}-pkg-note-${note}`}>{note}</p>
+                ))}
+              </div>
+            ) : null}
+            {programMeta.ruleNotes.length ? (
+              <div className="mt-2 rounded-[2px] border border-[#eadfce] bg-white/80 p-3 text-xs leading-5 text-[#5f5547]">
+                {programMeta.ruleNotes.map((note) => (
+                  <p key={`${priceList.code}-rule-note-${note}`}>{note}</p>
+                ))}
+              </div>
+            ) : null}
           </div>
 
           <div className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
@@ -711,6 +843,9 @@ export default function InteractivePriceListDashboard({
           <span>
             Showing {designRows.length.toLocaleString()} top-level design rows
           </span>
+          {isPackageList ? (
+            <span>Package pricing shown below includes program package rules.</span>
+          ) : null}
           {priceMode === "uncut" ? <span>Uncut mode active.</span> : null}
           <span>
             Source rows: {priceList.report.rawSourceRowsProcessed.toLocaleString()}
@@ -718,7 +853,8 @@ export default function InteractivePriceListDashboard({
         </div>
 
         <div className="grid gap-3 p-4 md:p-5">
-          {groupedSections.map((section) => (
+          <div className="max-h-[66vh] overflow-y-auto pr-1">
+            {groupedSections.map((section) => (
             <section key={section.section} className="rounded-[2px] border border-[#e7dccb] bg-white/70">
               <header className="border-b border-[#eadfce] bg-[#f8f1e6] px-4 py-3">
                 {viewBy === "brand" ? (
@@ -828,7 +964,8 @@ export default function InteractivePriceListDashboard({
                 ))}
               </div>
             </section>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
@@ -1291,6 +1428,7 @@ function OptionFamilyPanel({
 }
 
 function ArCoatingsSection({ coatings }: { coatings: PriceListArCoating[] }) {
+  const [showOtherCoatings, setShowOtherCoatings] = useState(false);
   const groupedCoatings = useMemo(() => {
     const order = [
       "Artisan Coatings",
@@ -1308,17 +1446,20 @@ function ArCoatingsSection({ coatings }: { coatings: PriceListArCoating[] }) {
       }))
       .filter((group) => group.items.length > 0);
   }, [coatings]);
+  const preferredFamilies = new Set(["Artisan Coatings", "TechShield Coatings", "Tokai AR Coatings"]);
+  const primaryGroups = groupedCoatings.filter((group) => preferredFamilies.has(group.family));
+  const otherGroups = groupedCoatings.filter((group) => !preferredFamilies.has(group.family));
 
   return (
     <section id="ar-coatings" className="rounded-[2px] border border-[#dfd2bf] bg-[#fbf8f3]/94 p-4 shadow-[0_22px_60px_rgba(18,32,51,0.08)] md:p-6">
       <SectionHeading title="AR Coatings" eyebrow="P6 Add-Ons" />
       <div className="mt-4 grid gap-5">
-        {groupedCoatings.map((group) => (
+        {primaryGroups.map((group) => (
           <div key={group.family}>
             <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-[#8a7654]">
               {group.family}
             </h3>
-            <div className="mt-2 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-2 grid gap-3 rounded-[2px] border border-[#eadfce] bg-white/72 p-3 md:grid-cols-2 xl:grid-cols-3">
               {group.items.map((coating) => (
                 <article
                   key={`${coating.brandFamily}-${coating.name}`}
@@ -1338,6 +1479,46 @@ function ArCoatingsSection({ coatings }: { coatings: PriceListArCoating[] }) {
             </div>
           </div>
         ))}
+        {otherGroups.length ? (
+          <div className="rounded-[2px] border border-[#eadfce] bg-white/72 p-3">
+            <button
+              type="button"
+              onClick={() => setShowOtherCoatings((value) => !value)}
+              className="inline-flex min-h-9 items-center rounded-full border border-[#d7c5a8] bg-white px-4 text-xs font-bold text-[#122033] transition hover:bg-[#f4eee4]"
+            >
+              {showOtherCoatings ? "Hide Other Available Coatings" : "Other Available Coatings"}
+            </button>
+            {showOtherCoatings ? (
+              <div className="mt-4 grid gap-4">
+                {otherGroups.map((group) => (
+                  <div key={`other-${group.family}`}>
+                    <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-[#8a7654]">
+                      {group.family}
+                    </h3>
+                    <div className="mt-2 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                      {group.items.map((coating) => (
+                        <article
+                          key={`${coating.brandFamily}-${coating.name}`}
+                          className="rounded-[2px] border border-[#eadfce] bg-white/82 p-4"
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <h4 className="text-base font-bold text-[#122033]">
+                              {inlineMarker(coating.name, coating.recommended, coating.outsourced)}
+                            </h4>
+                            <p className="text-lg font-bold text-[#122033]">{currency(coating.price)}</p>
+                          </div>
+                          {coating.notes ? (
+                            <p className="mt-3 text-xs leading-5 text-[#625b53]">{coating.notes}</p>
+                          ) : null}
+                        </article>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+          </div>
+        ) : null}
       </div>
     </section>
   );

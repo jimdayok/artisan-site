@@ -1,10 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
+import { headers } from "next/headers";
+import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
+import { isPortalAdminEmail } from "@/lib/portal/admin";
 import PricingHeader from "../../../src/components/private-price/PricingHeader";
 import type { PortalPriceList } from "@/lib/portal/priceLists";
 import PortalPriceListScrollReset from "./PortalPriceListScrollReset";
 
-export function OnlinePriceListShell({
+export async function OnlinePriceListShell({
   priceList,
   children,
   title,
@@ -15,13 +18,15 @@ export function OnlinePriceListShell({
   title?: string;
   description?: string;
 }) {
-  const showPortalChrome = priceList.code === "P6";
+  const requestHeaders = await headers();
+  const authenticatedEmail = getPortalAuthenticatedEmailFromHeaders(requestHeaders);
+  const isAdmin = Boolean(authenticatedEmail && isPortalAdminEmail(authenticatedEmail));
 
   return (
     <main className="min-h-screen overflow-x-hidden overflow-y-auto bg-[#f4eee4] px-3 py-5 text-[#122033] md:px-6">
       <PortalPriceListScrollReset />
       <div className="mx-auto w-full max-w-[1680px]">
-        {showPortalChrome ? <CompactPortalHeader /> : null}
+        <CompactPortalHeader isAdmin={isAdmin} />
         <PricingHeader
           eyebrow="Private Online Pricing"
           title={title ?? `${priceList.code} Online Pricing`}
@@ -29,7 +34,7 @@ export function OnlinePriceListShell({
           showNavigation={priceList.code === "G6"}
         />
         <div className="mt-7">{children}</div>
-        {showPortalChrome ? <CompactPortalFooter /> : null}
+        <CompactPortalFooter />
       </div>
     </main>
   );
@@ -37,7 +42,7 @@ export function OnlinePriceListShell({
 
 const PORTAL_ACCESS_LOGOUT_URL = "/cdn-cgi/access/logout?returnTo=/portal";
 
-function CompactPortalHeader() {
+function CompactPortalHeader({ isAdmin }: { isAdmin: boolean }) {
   return (
     <header className="mb-4 rounded-[2px] border border-[#dfd2bf] bg-[#fbf7ef]/92 px-4 py-3 shadow-[0_12px_28px_rgba(18,32,51,0.06)]">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -66,6 +71,14 @@ function CompactPortalHeader() {
           >
             Back to Portal
           </Link>
+          {isAdmin ? (
+            <Link
+              href="/portal/admin"
+              className="inline-flex min-h-9 items-center rounded-full border border-[#d7c5a8] bg-white/85 px-3 text-xs font-semibold text-[#122033] transition hover:bg-white"
+            >
+              Admin Dashboard
+            </Link>
+          ) : null}
           <Link
             href="/provider-resources"
             className="inline-flex min-h-9 items-center rounded-full border border-[#d7c5a8] bg-white/85 px-3 text-xs font-semibold text-[#122033] transition hover:bg-white"

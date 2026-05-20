@@ -6,6 +6,7 @@ import s5PricingData from "@/private-source/pricing/generated/s5-pricing.json";
 import m5PricingData from "@/private-source/pricing/generated/m5-pricing.json";
 import y5PricingData from "@/private-source/pricing/generated/y5-pricing.json";
 import tkPricingData from "@/private-source/pricing/generated/tk-pricing.json";
+import vdPricingData from "@/private-source/pricing/generated/vd-pricing.json";
 import InteractivePriceListDashboard from "@/src/components/private-price/InteractivePriceListDashboard";
 import { getAuthorizedPriceListForPage } from "@/lib/portal/priceListAccess";
 import { isLocalhostDevelopmentRequest } from "@/lib/portal/auth";
@@ -21,10 +22,10 @@ const generatedPriceDataByCode: Record<PriceListCode, GeneratedPriceListData | n
   A6: a6PricingData as GeneratedPriceListData,
   B5: b5PricingData as GeneratedPriceListData,
   S5: s5PricingData as GeneratedPriceListData,
-  VD: null,
   M5: m5PricingData as GeneratedPriceListData,
   Y5: y5PricingData as GeneratedPriceListData,
   TK: tkPricingData as GeneratedPriceListData,
+  VD: vdPricingData as GeneratedPriceListData,
 };
 
 const customerTitleByCode: Record<PriceListCode, string> = {
@@ -36,7 +37,7 @@ const customerTitleByCode: Record<PriceListCode, string> = {
   M5: "Artisan Frame System Pricing",
   Y5: "Artisan Safety System Pricing",
   TK: "Tokai Pricing",
-  VD: "VD Price Sheet",
+  VD: "Value Systems",
 };
 
 export default async function GeneratedInteractivePriceListPage({

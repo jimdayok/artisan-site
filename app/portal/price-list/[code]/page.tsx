@@ -26,9 +26,5 @@ export default async function PortalPriceListCodePage({
     return <P6PriceListPage />;
   }
 
-  if (normalizedCode === "VD") {
-    return <PdfDerivedPriceListPage code={normalizedCode} />;
-  }
-
   return <GeneratedInteractivePriceListPage code={normalizedCode} />;
 }

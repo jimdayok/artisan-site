@@ -38,6 +38,14 @@ const sharedArCoatings = [
   ...coating,
 }));
 
+const tokaiOnlyArCoatings = sharedArCoatings.filter((item) =>
+  item.brandFamily === "Tokai AR Coatings"
+);
+
+const noArtisanArCoatings = sharedArCoatings.filter(
+  (item) => item.brandFamily !== "Artisan Coatings"
+);
+
 const fullServiceAddOns = [
   {
     title: "Add for Material",
@@ -229,9 +237,32 @@ const configs = [
   {
     code: "TK",
     rawPath: resolveSourceFile(["m5-tk-b5-s5-y5raw.xlsx"]),
-    arCoatings: sharedArCoatings,
+    arCoatings: tokaiOnlyArCoatings,
     addOnSections: fullServiceAddOns,
-    assumptions: ["TK pulled from mixed workbook rows where PL code is TK."],
+    assumptions: [
+      "TK pulled from mixed workbook rows where PL code is TK.",
+      "TK interactive AR list is restricted to Tokai AR coatings.",
+    ],
+  },
+  {
+    code: "VD",
+    rawPath: resolveSourceFile(["rawp6.xlsx", "p6raw.xlsx"]),
+    arCoatings: noArtisanArCoatings,
+    addOnSections: [
+      {
+        title: "Program Notes",
+        items: [
+          { name: "Included AR", price: "None" },
+          { name: "Artisan Standard", price: "$21" },
+          { name: "Products not listed", price: "Not available" },
+        ],
+      },
+      ...fullServiceAddOns,
+    ],
+    assumptions: [
+      "VD rows are sourced from the same raw workbook family as standard designs.",
+      "VD excludes Artisan coatings; only non-Artisan options are surfaced.",
+    ],
   },
 ];
 

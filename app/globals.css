@@ -191,6 +191,11 @@ body {
   font-weight: 400;
 }
 
+.font-alfons-impact {
+  font-family: var(--font-alfons-display);
+  font-weight: 400;
+}
+
 .font-alfons-brush {
   font-family: var(--font-alfons-brush);
 }

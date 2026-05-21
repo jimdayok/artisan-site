@@ -42,7 +42,7 @@ const systems = [
   },
   {
     title: "Frame Systems",
-    logo: "/images/framesystems.png",
+    logo: "/rings.png",
     logoAlt: "Frame Systems",
     body: "Complete-pair structure and frame program support for cleaner patient conversations.",
     detail:
@@ -52,7 +52,7 @@ const systems = [
   },
   {
     title: "Safety Systems",
-    logo: "/logos/safetysystems.png",
+    logo: "/rings.png",
     logoAlt: "Safety Systems",
     body: "Occupational eyewear support, demonstration materials, and approved ordering paths.",
     detail:
@@ -89,7 +89,7 @@ const orderingTools = [
   },
   {
     title: "Safety Demonstration Frames",
-    logo: "/logos/safetysystems.png",
+    logo: "/rings.png",
     logoAlt: "Safety Systems",
     body: "Request demonstration frames and safety program materials for your practice.",
     href: SAFETY_KIT_URL,
@@ -346,6 +346,22 @@ function SystemsSection({ version }: { version: Version }) {
 }
 
 function LogoBox({ src, alt, large = false }: { src: string; alt: string; large?: boolean }) {
+  if (alt === "Frame Systems" || alt === "Safety Systems") {
+    return (
+      <div className={`relative flex items-center justify-center overflow-hidden rounded-2xl border border-[#e4d7c6] bg-[#fbf8f3] px-5 ${large ? "h-28" : "h-20 w-32 shrink-0"}`}>
+        <Image src="/rings.png" alt="" width={180} height={180} className="absolute -right-8 -top-10 h-32 w-32 object-contain opacity-[0.16]" aria-hidden="true" />
+        <div className="relative text-center">
+          <p className="font-alfons-brush text-2xl leading-none text-[#8a7654]">
+            Artisan
+          </p>
+          <p className={`${large ? "text-4xl" : "text-2xl"} font-alfons-impact mt-1 leading-none tracking-normal text-[#1f1a17]`}>
+            {alt}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={`flex items-center justify-center rounded-2xl border border-[#e4d7c6] bg-[#fbf8f3] px-5 ${large ? "h-28" : "h-20 w-32 shrink-0"}`}>
       <Image src={src} alt={alt} width={360} height={140} className={`${alt === "Artisan Lab Network" ? "h-16 w-16" : "max-h-20"} w-auto max-w-full object-contain`} />
@@ -362,7 +378,11 @@ function ToolsSection({ version }: { version: Version }) {
           {orderingTools.map((tool) => (
             <a key={tool.title} href={tool.href} target="_blank" rel="noreferrer" className="group flex min-h-[330px] flex-col rounded-[24px] border border-white/10 bg-white/[0.06] p-6 shadow-[0_18px_54px_rgba(0,0,0,0.22)] transition hover:-translate-y-1.5 hover:border-[#d4c09a]/60 hover:bg-white/[0.09]">
               <div className="flex h-28 items-center justify-center rounded-2xl bg-white px-5">
-                <Image src={tool.logo} alt={tool.logoAlt} width={360} height={140} className="max-h-20 w-auto max-w-full object-contain" />
+                {tool.logoAlt === "Safety Systems" ? (
+                  <LogoBox src="/rings.png" alt="Safety Systems" large />
+                ) : (
+                  <Image src={tool.logo} alt={tool.logoAlt} width={360} height={140} className="max-h-20 w-auto max-w-full object-contain" />
+                )}
               </div>
               {tool.supporting ? (
                 <div className="mt-4 grid grid-cols-3 gap-2">

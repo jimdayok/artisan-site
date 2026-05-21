@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 
 export type VideoGalleryCategory =
@@ -32,21 +31,6 @@ export default function VideoGallery({
   subheadline = "Real education. Real tools. Built for independent practices.",
   videos,
 }: VideoGalleryProps) {
-  const [activeFilter, setActiveFilter] = useState<"All" | VideoGalleryCategory>("All");
-  const [showAllVideos, setShowAllVideos] = useState(false);
-  const filterTabs = useMemo<Array<"All" | VideoGalleryCategory>>(() => {
-    const categories = videos.map((video) => video.category);
-    return ["All", ...Array.from(new Set(categories))];
-  }, [videos]);
-
-  const visibleVideos = useMemo(() => {
-    if (activeFilter === "All") return videos;
-    return videos.filter((video) => video.category === activeFilter);
-  }, [activeFilter, videos]);
-
-  const displayedVideos = showAllVideos ? visibleVideos : visibleVideos.slice(0, 4);
-  const hasMoreVideos = visibleVideos.length > 4;
-
   return (
     <section id="training-education" data-theme="light" className="bg-[#f5f1eb] px-6 py-20 md:px-10 md:py-24">
       <div className="mx-auto max-w-7xl">
@@ -72,26 +56,6 @@ export default function VideoGallery({
           </p>
         </motion.div>
 
-        <div className="mt-8 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:thin]">
-          {filterTabs.map((tab) => (
-            <button
-              key={tab}
-              type="button"
-              onClick={() => {
-                setActiveFilter(tab);
-                setShowAllVideos(false);
-              }}
-              className={`shrink-0 rounded-full border px-4 py-2 text-sm font-semibold transition ${
-                activeFilter === tab
-                  ? "border-[#1f1a17] bg-[#1f1a17] text-white shadow-[0_12px_28px_rgba(24,18,13,0.18)]"
-                  : "border-black/10 bg-white/70 text-[#625b53] hover:border-[#d4c09a] hover:bg-white hover:text-[#1f1a17]"
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
-
         <motion.div
           initial="hidden"
           whileInView="show"
@@ -100,9 +64,9 @@ export default function VideoGallery({
             hidden: {},
             show: { transition: { staggerChildren: 0.07 } },
           }}
-          className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-4"
+          className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-4"
         >
-          {displayedVideos.map((video) => (
+          {videos.map((video) => (
             <motion.a
               key={video.id}
               href={video.href ?? `https://youtu.be/${video.id}`}
@@ -145,17 +109,6 @@ export default function VideoGallery({
           ))}
         </motion.div>
 
-        {hasMoreVideos ? (
-          <div className="mt-10 flex justify-center">
-            <button
-              type="button"
-              onClick={() => setShowAllVideos((current) => !current)}
-              className="inline-flex min-h-12 items-center justify-center rounded-full border border-black/10 bg-white px-6 py-3 text-sm font-semibold text-[#1f1a17] shadow-sm transition hover:-translate-y-0.5 hover:border-[#d4c09a] hover:bg-[#d4c09a]"
-            >
-              {showAllVideos ? "Show Fewer Videos" : "See More Videos"}
-            </button>
-          </div>
-        ) : null}
       </div>
     </section>
   );

@@ -313,10 +313,10 @@ export const programs: ProgramPageData[] = [
       "Any eligible non-Neurolens product",
     ],
     arLogos: [
-      { name: "Armour", src: "/ar/armour.png" },
-      { name: "Azure", src: "/ar/azure.png" },
-      { name: "Emerald", src: "/ar/emerald.png" },
-      { name: "Nytopia", src: "/ar/nytopia.png" },
+      { name: "Artisan Armour", src: "/ar/armour.png" },
+      { name: "Artisan Azure", src: "/ar/azure.png" },
+      { name: "Artisan Emerald", src: "/ar/emerald.png" },
+      { name: "Artisan Nytopia", src: "/ar/nytopia.png" },
     ],
     detailsTitle: "Requirements",
     details: [

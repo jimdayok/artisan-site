@@ -11,7 +11,7 @@ export type ArTreatment = {
 export const arTreatments: ArTreatment[] = [
   {
     slug: "armour",
-    name: "Armour",
+    name: "Artisan Armour",
     logo: "/ar/armour.png",
     headline: "Durable everyday AR performance.",
     overview:
@@ -21,7 +21,7 @@ export const arTreatments: ArTreatment[] = [
   },
   {
     slug: "azure",
-    name: "Azure",
+    name: "Artisan Azure",
     logo: "/ar/azure.png",
     headline: "Balanced clarity and appearance.",
     overview:
@@ -31,7 +31,7 @@ export const arTreatments: ArTreatment[] = [
   },
   {
     slug: "emerald",
-    name: "Emerald",
+    name: "Artisan Emerald",
     logo: "/ar/emerald.png",
     headline: "Premium clarity and comfort.",
     overview:
@@ -41,7 +41,7 @@ export const arTreatments: ArTreatment[] = [
   },
   {
     slug: "nytopia",
-    name: "Nytopia",
+    name: "Artisan Nytopia",
     logo: "/ar/nytopia.png",
     headline: "Artisan’s premium AR experience.",
     overview:

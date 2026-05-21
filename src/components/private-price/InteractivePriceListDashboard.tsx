@@ -969,7 +969,7 @@ export default function InteractivePriceListDashboard({
         </div>
       </section>
 
-      <ArCoatingsSection coatings={priceList.arCoatings} />
+      <ArCoatingsSection coatings={priceList.arCoatings} listCode={priceList.code} />
       <ChemClipSection />
       <ShippingSection />
       <AddOnSections sections={priceList.addOnSections} />
@@ -1427,7 +1427,13 @@ function OptionFamilyPanel({
   );
 }
 
-function ArCoatingsSection({ coatings }: { coatings: PriceListArCoating[] }) {
+function ArCoatingsSection({
+  coatings,
+  listCode,
+}: {
+  coatings: PriceListArCoating[];
+  listCode: GeneratedPriceListData["code"];
+}) {
   const [showOtherCoatings, setShowOtherCoatings] = useState(false);
   const groupedCoatings = useMemo(() => {
     const order = [
@@ -1446,7 +1452,10 @@ function ArCoatingsSection({ coatings }: { coatings: PriceListArCoating[] }) {
       }))
       .filter((group) => group.items.length > 0);
   }, [coatings]);
-  const preferredFamilies = new Set(["Artisan Coatings", "TechShield Coatings", "Tokai AR Coatings"]);
+  const preferredFamilies =
+    listCode === "TK"
+      ? new Set(["Tokai AR Coatings"])
+      : new Set(["Artisan Coatings", "TechShield Coatings"]);
   const primaryGroups = groupedCoatings.filter((group) => preferredFamilies.has(group.family));
   const otherGroups = groupedCoatings.filter((group) => !preferredFamilies.has(group.family));
 

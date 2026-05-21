@@ -119,6 +119,54 @@ const packageAddOns = [
   ...fullServiceAddOns,
 ];
 
+const b5PackageAddOns = [
+  {
+    title: "Package Notes",
+    items: [
+      { name: "Included AR", price: "Artisan Emerald, Artisan Standard, Diamond Sun, Backside AR (included)" },
+      { name: "Products not listed", price: "Not available" },
+    ],
+  },
+  {
+    title: "AR Upgrade Pricing",
+    items: [
+      { name: "Nytopia", price: "$21" },
+      { name: "Armour", price: "$11" },
+      { name: "Azure", price: "$21" },
+      { name: "Artisan Emerald", price: "Included", recommended: true },
+      { name: "Artisan Standard", price: "Included" },
+      { name: "Diamond Sun", price: "Included" },
+      { name: "Backside AR", price: "Included" },
+    ],
+  },
+  ...fullServiceAddOns,
+];
+
+const s5PackageAddOns = [
+  {
+    title: "Package Notes",
+    items: [
+      { name: "Included AR", price: "Artisan Emerald, Artisan Standard, Diamond Sun, Backside AR (included)" },
+      { name: "Products not listed", price: "Not available" },
+    ],
+  },
+  {
+    title: "AR Upgrade Pricing",
+    items: [
+      { name: "Nytopia", price: "$21" },
+      { name: "Armour", price: "$11" },
+      { name: "Azure", price: "$21" },
+      { name: "Artisan Emerald", price: "Included", recommended: true },
+      { name: "Artisan Standard", price: "Included" },
+      { name: "Diamond Sun", price: "Included" },
+      { name: "Backside AR", price: "Included" },
+      { name: "Glacier Expressions", price: "$53" },
+      { name: "Glacier Plus", price: "$44" },
+    ],
+  },
+  ...fullServiceAddOns,
+];
+
 const m5AddOns = [
   {
     title: "Package Notes",
@@ -134,14 +182,20 @@ const m5AddOns = [
   {
     title: "Frame Tier Guide",
     items: [
+      { name: "Green Group", price: "Included" },
+      { name: "Lime Group", price: "Included" },
+      { name: "Blue Group", price: "$8" },
+      { name: "Red Group", price: "$24" },
+      { name: "Yellow Group", price: "$29" },
+      { name: "Black Diamond", price: "$33" },
       {
-        name: "Modern Optical Frame Tier Guide",
-        price: "Reference",
+        name: "Modern Package Details",
+        price: "View frame details",
         href: "/provider-resources#modern-frame-system",
       },
       {
         name: "Frame Systems Resource Center",
-        price: "Reference",
+        price: "Provider Resources",
         href: "/provider-resources#frame-systems",
       },
     ],
@@ -165,9 +219,16 @@ const y5AddOns = [
   {
     title: "Safety Vendor Tier Guide",
     items: [
+      { name: "Frame Tier 1", price: "Included" },
+      { name: "Frame Tier 2", price: "$15" },
+      { name: "Frame Tier 3", price: "$30" },
+      { name: "Frame Tier 4", price: "$45" },
+      { name: "Frame Tier 5", price: "$55" },
+      { name: "Frame Tier 6", price: "$70" },
+      { name: "Side shields", price: "Included at no additional fee", recommended: true },
       {
-        name: "Safety Systems Resource Center",
-        price: "Reference",
+        name: "Safety Package Details",
+        price: "More details and sample kits",
         href: "/provider-resources#safety-systems",
       },
       {
@@ -210,14 +271,14 @@ const configs = [
     code: "B5",
     rawPath: resolveSourceFile(["m5-tk-b5-s5-y5raw.xlsx"]),
     arCoatings: sharedArCoatings,
-    addOnSections: packageAddOns,
+    addOnSections: b5PackageAddOns,
     assumptions: ["B5 treated as package pricing; Included AR is Artisan Emerald unless overridden by source row notes."],
   },
   {
     code: "S5",
     rawPath: resolveSourceFile(["m5-tk-b5-s5-y5raw.xlsx"]),
     arCoatings: sharedArCoatings,
-    addOnSections: packageAddOns,
+    addOnSections: s5PackageAddOns,
     assumptions: ["S5 treated as Shamir package pricing with included Artisan Emerald package behavior."],
   },
   {

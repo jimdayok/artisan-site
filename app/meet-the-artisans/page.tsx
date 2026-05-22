@@ -69,7 +69,7 @@ const customerServicePhotos: Record<LabKey, ServicePhoto[]> = {
     {
       src: "/images/storefront-group-photo-2025-1.jpg",
       alt: "Pacific Artisan Labs customer service group",
-      caption: "Jill, Noelle, Clareta, and Shelley",
+      caption: "Jill, Leanne, Clareta, and Shelley",
     },
   ],
   peak: [

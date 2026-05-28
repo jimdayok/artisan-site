@@ -6,6 +6,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import ImmersiveTimeline from "../components/ImmersiveTimeline";
 import RingsAccent from "../components/RingsAccent";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
@@ -99,48 +100,6 @@ const pressArticles = [
     source: "Vision Monday",
     href: "https://www.visionmonday.com/latest-news/article/pacific-artisan-labs-partners-with-independent-optical-lab-continuing-lab-network-expansion-strategy/",
     body: "A partnership strategy designed to counter industry consolidation and strengthen independent optical lab collaboration across the country.",
-  },
-];
-
-type TimelineEvent = {
-  year: string;
-  title: string;
-  body: string;
-  logos: Array<{ src: string; alt: string }>;
-  href?: string;
-  meetHref?: string;
-};
-
-const timelineEvents: TimelineEvent[] = [
-  {
-    year: "2018",
-    title: "Pacific Artisan Labs",
-    body: "Foundation of the Artisan model and independent lab vision.",
-    logos: [{ src: "/logos/PAL_2CTan.png", alt: "Pacific Artisan Labs" }],
-    href: "/pacific-artisan-labs",
-    meetHref: "/meet-the-artisans#pacific",
-  },
-  {
-    year: "2019",
-    title: "IOT Launch",
-    body: "Artisan begins partnership with IOT and launches Artisan lens technologies.",
-    logos: [{ src: "/iot-logo.png", alt: "IOT" }],
-  },
-  {
-    year: "2023",
-    title: "Peak Artisan Labs",
-    body: "Expansion into Colorado strengthens the Artisan model across another regional lab relationship.",
-    logos: [{ src: "/logos/Peak_Artisan_Logo 9-1-23_FINAL.png", alt: "Peak Artisan Labs" }],
-    href: "/peak-artisan-labs",
-    meetHref: "/meet-the-artisans#peak",
-  },
-  {
-    year: "2025",
-    title: "Pike Artisan Labs",
-    body: "Expansion into Indianapolis adds another Artisan lab serving independent practices.",
-    logos: [{ src: "/logos/Pike_Labs_Logo-4C.png", alt: "Pike Artisan Labs" }],
-    href: "/pike-artisan-labs",
-    meetHref: "/meet-the-artisans#pike",
   },
 ];
 
@@ -484,82 +443,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section
-        id="timeline"
-        data-theme="light"
-        className="relative scroll-mt-24 overflow-hidden border-b border-[#d8c6a8]/35 bg-[#f5f1eb] px-5 py-14 md:px-8 md:py-[72px] lg:px-10"
-      >
-        <RingsAccent position="top-right" size="lg" opacity="opacity-[0.055]" />
-        <div className="relative z-10 mx-auto max-w-7xl">
-          <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[#8c7d68]">
-              Timeline
-            </p>
-            <h2 className="mt-4 text-4xl font-semibold leading-tight text-[#1f1a17] md:text-5xl">
-              Built With Intention. Proven Through Growth.
-            </h2>
-            <p className="mt-5 text-lg leading-8 text-[#5c544d]">
-              Growth is measured by the labs and practices that choose to build a stronger independent model together.
-            </p>
-          </div>
-          <p className="mt-5 text-sm font-semibold text-[#8a7654]">
-            Scroll left to explore the timeline.
-          </p>
-          <div className="relative mt-8">
-            <div className="absolute left-0 right-0 top-[3.25rem] hidden h-px bg-[#d8c6a8] md:block" />
-            <div
-              data-about-timeline-scroll
-              className="flex snap-x gap-3 overflow-x-auto pb-3 [scrollbar-width:thin]"
-            >
-              {timelineEvents.map((event) => (
-                <article
-                  key={`${event.year}-${event.title}`}
-                  className="group relative min-w-[278px] snap-start border border-[#d8c6a8]/65 bg-[#fffaf2]/82 p-5 shadow-[0_12px_36px_rgba(49,39,26,0.07)] transition duration-200 hover:scale-[1.015] hover:border-[#c9b28b] hover:bg-white hover:shadow-[0_20px_55px_rgba(49,39,26,0.13)] md:min-w-[360px]"
-                >
-                  <div className="mb-4 h-2 w-2 rounded-full bg-[#d4c09a] shadow-[0_0_18px_rgba(212,192,154,0.85)]" />
-                  <div className="text-4xl font-semibold leading-none tracking-tight text-[#9a8564]">
-                    {event.year}
-                  </div>
-                  <div className="mt-5 flex h-20 items-center justify-center rounded-2xl border border-[#e7ddd0] bg-white px-4">
-                    {event.logos?.map((logo) => (
-                      <Image
-                        key={logo.src}
-                        src={logo.src}
-                        alt={logo.alt}
-                        width={240}
-                        height={100}
-                        className="max-h-14 w-auto max-w-full object-contain"
-                      />
-                    ))}
-                  </div>
-                  <div className="mt-4 text-lg font-semibold leading-6 text-[#1f1a17]">
-                    {event.title}
-                  </div>
-                  <p className="mt-3 text-sm leading-6 text-[#5c544d]">
-                    {event.body}
-                  </p>
-                  {event.href ? (
-                    <div className="mt-5 grid gap-2 sm:grid-cols-2">
-                      <Link
-                        href={event.href}
-                        className="inline-flex min-h-10 items-center justify-center rounded-full bg-[#1f1a17] px-3 text-center text-xs font-semibold text-white transition hover:-translate-y-0.5 hover:bg-black"
-                      >
-                        Visit Lab Website
-                      </Link>
-                      <Link
-                        href={event.meetHref ?? event.href}
-                        className="inline-flex min-h-10 items-center justify-center rounded-full border border-[#d8c6a8] bg-[#fbf8f3] px-3 text-center text-xs font-semibold text-[#1f1a17] transition hover:-translate-y-0.5 hover:border-[#c9b28b] hover:bg-white"
-                      >
-                        Meet Your Lab
-                      </Link>
-                    </div>
-                  ) : null}
-                </article>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <ImmersiveTimeline />
 
       <section
         data-theme="light"

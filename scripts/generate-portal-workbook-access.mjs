@@ -5,14 +5,15 @@ import { XMLParser } from 'fast-xml-parser';
 
 const root = process.cwd();
 const portalDir = path.join(root, 'private-source', 'portal');
-const userPath = path.join(portalDir, 'User_Data.xlsx');
-const accountPath = path.join(portalDir, 'Acct_Data.xlsx');
+const userPath = path.join(portalDir, 'user_data.xlsx');
+const accountPath = path.join(portalDir, 'acct_data.xlsx');
 const outputPath = path.join(portalDir, 'workbook-access.json');
 const workbookDataOutputPath = path.join(portalDir, 'workbook-data.json');
 const xmlParser = new XMLParser({
   ignoreAttributes: false,
   attributeNamePrefix: '',
   textNodeName: 'text',
+  removeNsPrefix: true,
 });
 
 const typeMap = {
@@ -40,27 +41,44 @@ function columnIndex(cellRef) {
 
 function sharedStringText(sharedString) {
   if (!sharedString) return '';
-  if (sharedString.t !== undefined && typeof sharedString.t !== 'object') {
-    return toText(sharedString.t);
+  const textElem = sharedString.t || sharedString['x:t'];
+  if (textElem !== undefined && typeof textElem !== 'object') {
+    return toText(textElem);
   }
-  if (sharedString.t?.text) return sharedString.t.text;
+  if (textElem?.text) return textElem.text;
 
-  return asArray(sharedString.r)
-    .map((run) => (typeof run.t === 'string' ? run.t : run.t?.text || ''))
+  const runs = asArray(sharedString.r || sharedString['x:r']);
+  return runs
+    .map((run) => {
+      const t = run.t || run['x:t'];
+      return typeof t === 'string' ? t : t?.text || '';
+    })
     .join('');
 }
 
 async function readWorkbookRows(filePath, sheetName) {
-  if (!existsSync(filePath)) return [];
+  if (!existsSync(filePath)) {
+    console.warn(`File not found: ${filePath}`);
+    return [];
+  }
   const zip = await JSZip.loadAsync(readFileSync(filePath));
   const workbookXml = await zip.file('xl/workbook.xml')?.async('text');
   const relsXml = await zip.file('xl/_rels/workbook.xml.rels')?.async('text');
 
-  if (!workbookXml || !relsXml) return [];
+  if (!workbookXml || !relsXml) {
+    console.warn(`Excel XML files missing in ${filePath}`);
+    return [];
+  }
 
-  const workbook = xmlParser.parse(workbookXml).workbook;
+  const workbookParsed = xmlParser.parse(workbookXml);
+  const workbook = workbookParsed.workbook || workbookParsed['x:workbook'];
+  if (!workbook) {
+    console.warn(`No sheets found in ${filePath}. Workbook structure: ${JSON.stringify(workbookParsed)}`);
+    return [];
+  }
   const rels = xmlParser.parse(relsXml).Relationships;
-  const sheet = asArray(workbook.sheets?.sheet).find((entry) => entry.name === sheetName);
+  const sheets = workbook.sheets?.sheet || workbook['x:sheets']?.['x:sheet'];
+  const sheet = asArray(sheets).find((entry) => entry.name === sheetName);
 
   if (!sheet) return [];
 
@@ -72,22 +90,30 @@ async function readWorkbookRows(filePath, sheetName) {
   if (!sheetXml) return [];
 
   const sharedStringsXml = await zip.file('xl/sharedStrings.xml')?.async('text');
-  const sharedStrings = sharedStringsXml
-    ? asArray(xmlParser.parse(sharedStringsXml).sst?.si).map(sharedStringText)
+  const sharedStringsParsed = sharedStringsXml ? xmlParser.parse(sharedStringsXml) : {};
+  const sst = sharedStringsParsed.sst || sharedStringsParsed['x:sst'];
+  const sharedStrings = sst
+    ? asArray(sst.si || sst['x:si']).map(sharedStringText)
     : [];
-  const parsedSheet = xmlParser.parse(sheetXml).worksheet;
+  const sheetParsed = xmlParser.parse(sheetXml);
+  const parsedSheet = sheetParsed.worksheet || sheetParsed['x:worksheet'];
+  if (!parsedSheet) {
+    console.warn(`No worksheet found in sheet XML`);
+    return [];
+  }
+  const sheetData = parsedSheet.sheetData || parsedSheet['x:sheetData'];
 
-  return asArray(parsedSheet.sheetData?.row).map((row) => {
+  return asArray(sheetData?.row || sheetData?.['x:row']).map((row) => {
     const output = [];
 
-    for (const cell of asArray(row.c)) {
+    for (const cell of asArray(row.c || row['x:c'])) {
       const index = columnIndex(cell.r);
       let value = '';
 
       if (cell.t === 's') {
         value = sharedStrings[Number(cell.v)] ?? '';
       } else if (cell.t === 'inlineStr') {
-        value = sharedStringText(cell.is);
+        value = sharedStringText(cell.is || cell['x:is']);
       } else if (cell.v !== undefined) {
         value = cell.v;
       }
@@ -254,8 +280,18 @@ function parseAccounts(rows) {
     .filter((account) => account.accountNumber);
 }
 
+console.log(`Reading user data from ${userPath}...`);
 const userRows = await readSheet(userPath, 'person list');
+if (!userRows.length) {
+  console.warn(`No rows found in user_data.xlsx. Expected file at ${userPath}`);
+}
+
+console.log(`Reading account data from ${accountPath}...`);
 const accountRows = await readSheet(accountPath, 'Export');
+if (!accountRows.length) {
+  console.warn(`No rows found in acct_data.xlsx. Expected file at ${accountPath}`);
+}
+
 const people = parsePeople(userRows);
 const rawAccounts = parseAccounts(accountRows);
 
@@ -325,5 +361,8 @@ writeFileSync(
   `${JSON.stringify({ people, accounts: rawAccounts }, null, 2)}\n`
 );
 writeFileSync(outputPath, `${JSON.stringify(access, null, 2)}\n`);
-console.log(`Wrote workbook data to ${workbookDataOutputPath}`);
-console.log(`Wrote ${access.length} workbook access records to ${outputPath}`);
+console.log(`✓ Wrote workbook data to ${workbookDataOutputPath}`);
+console.log(`✓ Wrote ${access.length} workbook access records to ${outputPath}`);
+if (access.length === 0) {
+  console.warn('WARNING: No portal access records generated. Portal may be inaccessible.');
+}

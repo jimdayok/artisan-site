@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const nunito = localFont({
@@ -19,16 +20,6 @@ export const metadata: Metadata = {
   icons: {
     icon: "/aln-icon.png",
   },
-  robots: {
-    index: false,
-    follow: false,
-    nocache: true,
-    googleBot: {
-      index: false,
-      follow: false,
-      noimageindex: true,
-    },
-  },
 };
 
 export default function RootLayout({
@@ -40,6 +31,7 @@ export default function RootLayout({
     <html lang="en" className={nunito.variable}>
       <body className="min-h-screen antialiased">
         {children}
+        <Analytics />
       </body>
     </html>
   );

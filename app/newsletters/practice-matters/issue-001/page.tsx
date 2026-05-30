@@ -193,7 +193,7 @@ export default function PracticeMattersIssue001Page() {
               }}
               productLink={{
                 label: "View Unity Resources",
-                href: "/practice-resources#unity",
+                href: "/provider-resources#unity-vsp",
               }}
               readNext={{ label: "Fragments", href: "#fragments" }}
             >
@@ -306,7 +306,7 @@ export default function PracticeMattersIssue001Page() {
               }}
               productLink={{
                 label: "View Tokai Resources",
-                href: "/practice-resources#tokai",
+                href: "/provider-resources#tokai",
               }}
             >
               <p>
@@ -404,7 +404,7 @@ export default function PracticeMattersIssue001Page() {
                   Contact Customer Service
                 </Link>
                 <Link
-                  href="/practice-resources"
+                  href="/provider-resources"
                   className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#dfd2bf] px-5 py-2 text-center text-sm font-semibold text-[#142033] transition hover:-translate-y-0.5 hover:bg-[#f2eadf] sm:w-auto"
                 >
                   Practice Resources

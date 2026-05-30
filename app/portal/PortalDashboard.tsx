@@ -48,9 +48,13 @@ import {
   type PortalWorkbookAccount,
 } from "@/lib/portal/workbookAccountData";
 import { normalizeAccountNumber } from "@/lib/portal/normalizeAccounts";
+import {
+  getPortalDashboardV1ByAccount,
+  type PortalDashboardV1Account,
+  type PortalDashboardV1State,
+} from "@/lib/portal/dashboardV1";
 
-const PORTAL_ACCESS_LOGIN_URL =
-  "https://artisanslabs.com/portal";
+const PORTAL_ACCESS_LOGIN_URL = portalAccessLoginUrl();
 const PORTAL_ACCESS_LOGOUT_URL =
   "/cdn-cgi/access/logout?returnTo=/portal";
 const LOCAL_TEST_ADMIN_EMAILS = [
@@ -148,10 +152,23 @@ function formatPerDayMetric(value: number, unit: string) {
   return `${formatDecimal(value)} ${unit}/day`;
 }
 
+function formatCurrencyPerDay(value: number) {
+  if (!Number.isFinite(value) || value <= 0) return "$0/day";
+  return `${currencyFormatter.format(value)}/day`;
+}
+
 function getSalesPerDay(sales: number, jobs: number, jobsPerDay: number) {
   if (sales <= 0 || jobs <= 0 || jobsPerDay <= 0) return 0;
 
+  // days = total jobs / jobs-per-day, then dollars-per-day = sales / days.
   return sales / (jobs / jobsPerDay);
+}
+
+function loyaltyTierLabel(value?: string) {
+  const raw = (value ?? "").trim();
+  if (!raw) return "";
+  const withoutPrefix = raw.replace(/^tier\s*/i, "").trim();
+  return withoutPrefix ? `Loyalty Tier ${withoutPrefix}` : "Loyalty Tier";
 }
 
 function isVisibleSalesRep(value?: string) {
@@ -513,6 +530,11 @@ function PriceListCard({
           {priceList.label}
         </p>
         <p className="mt-2 break-all text-sm text-[#706759]">{priceList.fileName}</p>
+        {!priceList.r2Key ? (
+          <p className="mt-2 text-sm font-semibold text-[#172a28]">
+            Interactive pricing available in portal.
+          </p>
+        ) : null}
       </div>
       <div className="mt-6 flex flex-col gap-3">
         {priceList.onlineUrl ? (
@@ -534,6 +556,16 @@ function PriceListCard({
       </div>
     </div>
   );
+}
+
+function portalAccessLoginUrl() {
+  const configuredPortalUrl = process.env.NEXT_PUBLIC_PORTAL_LOGIN_URL?.trim();
+  if (configuredPortalUrl) return configuredPortalUrl;
+
+  const configuredHost = process.env.NEXT_PUBLIC_SITE_DOMAIN?.trim();
+  if (configuredHost) return `https://${configuredHost.replace(/^https?:\/\//, "")}/portal`;
+
+  return "/portal";
 }
 
 function PortalAccountSelector({
@@ -977,6 +1009,7 @@ function PortalAccountHero({
   accountNumber,
   customerTypeLabel,
   account,
+  dashboardAccount,
   authenticatedEmail,
   adminPreviewAccountName,
 }: {
@@ -984,6 +1017,7 @@ function PortalAccountHero({
   accountNumber: string;
   customerTypeLabel?: string;
   account?: PortalWorkbookAccount;
+  dashboardAccount?: PortalDashboardV1Account;
   authenticatedEmail: string;
   adminPreviewAccountName?: string;
 }) {
@@ -998,10 +1032,10 @@ function PortalAccountHero({
       <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-4xl">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#d8c49b]">
-            Customer Intelligence
+            Acct ID {dashboardAccount?.account_id || accountNumber || "Unavailable"}
           </p>
           <h1 className="mt-5 break-words text-4xl font-semibold tracking-[-0.055em] sm:text-6xl lg:text-7xl">
-            {practiceName}
+            {dashboardAccount?.business_name || practiceName}
           </h1>
           <div className="mt-6 flex flex-wrap gap-3">
             {customerTypeLabel ? (
@@ -1009,15 +1043,17 @@ function PortalAccountHero({
                 {customerTypeLabel}
               </span>
             ) : null}
-            {accountNumber ? (
+            {(dashboardAccount?.all_account_numbers || accountNumber) ? (
               <span className="rounded-full border border-white/18 px-4 py-2 text-sm text-white/82">
-                Account {accountNumber}
+                Accounts {dashboardAccount?.all_account_numbers || accountNumber}
               </span>
             ) : null}
-            {account?.tier ? (
+            {(dashboardAccount?.tier_status?.previous_month_tier_rank_by_acct_id || account?.tier) ? (
               <span className="inline-flex items-center gap-2 rounded-full border border-[#d8c49b]/70 bg-[#d8c49b] px-4 py-2 text-sm font-semibold text-[#172a28] shadow-[0_10px_28px_rgba(0,0,0,0.12)]">
                 <BadgeCheck className="h-4 w-4" />
-                Current Tier {account.tier}
+                {loyaltyTierLabel(
+                  dashboardAccount?.tier_status?.previous_month_tier_rank_by_acct_id || account?.tier
+                )}
               </span>
             ) : null}
           </div>
@@ -1148,18 +1184,16 @@ function AccountPerformanceSection({
           label="Current Month Purchases"
           value={formatCurrency(account.cmSales)}
           tone="dark"
-          perDay={formatPerDayMetric(
-            getSalesPerDay(account.cmSales, account.cmJobs, account.cmJpd),
-            "purchases"
+          perDay={formatCurrencyPerDay(
+            getSalesPerDay(account.cmSales, account.cmJobs, account.cmJpd)
           )}
           trend={getPercentChange(account.cmSales, account.pmSales)}
         />
         <AccountStatCard
           label="Previous Month Purchases"
           value={formatCurrency(account.pmSales)}
-          perDay={formatPerDayMetric(
-            getSalesPerDay(account.pmSales, account.pmJobs, account.pmJpd),
-            "purchases"
+          perDay={formatCurrencyPerDay(
+            getSalesPerDay(account.pmSales, account.pmJobs, account.pmJpd)
           )}
           trend={getPercentChange(account.pmSales, account.ppmSales)}
         />
@@ -1453,22 +1487,214 @@ function PortalHelpSection({
   );
 }
 
+function DashboardV1Card({
+  label,
+  value,
+  detail,
+}: {
+  label: string;
+  value: string;
+  detail?: string;
+}) {
+  return (
+    <div className="border border-[#d8c49b] bg-white/70 p-4">
+      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8b7650]">
+        {label}
+      </p>
+      <p className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-[#172a28]">
+        {value}
+      </p>
+      {detail ? <p className="mt-2 text-xs text-[#706759]">{detail}</p> : null}
+    </div>
+  );
+}
+
+function formatMoney(value: unknown) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return "$0";
+  return currencyFormatter.format(numeric);
+}
+
+function formatCount(value: unknown) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return "0";
+  return numberFormatter.format(numeric);
+}
+
+function formatShare(value: unknown) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return "0%";
+  const percentage = numeric <= 1 ? numeric * 100 : numeric;
+  return `${Math.round(percentage)}%`;
+}
+
+function growthLabel(value: unknown) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return "0.0%";
+  const percent = numeric * 100;
+  return `${percent >= 0 ? "+" : ""}${percent.toFixed(1)}%`;
+}
+
+function DashboardV1Panel({
+  dashboardState,
+}: {
+  dashboardState: PortalDashboardV1State;
+}) {
+  const dashboard = dashboardState.account;
+  if (!dashboard) return null;
+  const jobs = dashboard.purchase_summary.jobs;
+  const sales = dashboard.purchase_summary.sales;
+  const cmJobs = Number(jobs.cm ?? 0);
+  const pmJobs = Number(jobs.pm ?? 0);
+  const cmSales = Number(sales.cm ?? 0);
+  const pmSales = Number(sales.pm ?? 0);
+  const jobsGrowth = pmJobs === 0 ? (cmJobs > 0 ? 1 : 0) : (cmJobs - pmJobs) / Math.abs(pmJobs);
+  const salesGrowth = pmSales === 0 ? (cmSales > 0 ? 1 : 0) : (cmSales - pmSales) / Math.abs(pmSales);
+  const jobsTrend = cmJobs > pmJobs ? "up" : cmJobs < pmJobs ? "down" : "flat";
+  const salesTrend = cmSales > pmSales ? "up" : cmSales < pmSales ? "down" : "flat";
+  const mix = dashboard.vsp_private_pay_mix;
+  const productMix = dashboard.product_mix;
+  const programUsage = dashboard.program_usage;
+  const userSummary = dashboard.authorized_users_summary;
+  const insights = dashboard.customer_insights?.suggestions ?? [];
+
+  return (
+    <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur lg:col-span-3 sm:p-9">
+      <div className="mb-6 border-b border-[#d8c49b] pb-6">
+        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
+          Customer Dashboard v1
+        </p>
+        <h2 className="mt-3 text-3xl font-semibold tracking-[-0.03em] text-[#172a28]">
+          {dashboard.business_name || "Account Dashboard"}
+        </h2>
+        <p className="mt-2 text-sm text-[#706759]">
+          {dashboard.lab_name || "Unknown lab"} · {dashboard.division || "Unknown division"} ·{" "}
+          {dashboard.state || "Unknown state"} · Latest ship date {dashboard.latest_ship_date || "Not available"} · Tier{" "}
+          {dashboard.tier_status.previous_month_tier_rank_by_acct_id || "Unranked"}
+        </p>
+        <p className="mt-2 text-xs text-[#706759]">
+          Pipedrive ID: {dashboard.pipedrive_id || "N/A"} · Account numbers: {dashboard.all_account_numbers || "N/A"}
+        </p>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <DashboardV1Card
+          label="PPM / PM / CM Jobs"
+          value={`${formatCount(jobs.ppm)} / ${formatCount(jobs.pm)} / ${formatCount(jobs.cm)}`}
+          detail={`Trend ${growthLabel(jobsGrowth)} (${jobsTrend})`}
+        />
+        <DashboardV1Card
+          label="PPM / PM / CM Sales"
+          value={`${formatMoney(sales.ppm)} / ${formatMoney(sales.pm)} / ${formatMoney(sales.cm)}`}
+          detail={`Trend ${growthLabel(salesGrowth)} (${salesTrend})`}
+        />
+        <DashboardV1Card
+          label="Net Lens Share"
+          value={formatShare(mix.net_lens_share)}
+          detail={`CM Net Lens jobs ${formatCount(productMix.net_lens_jobs.cm)}`}
+        />
+        <DashboardV1Card
+          label="VSP / SQL Share"
+          value={`${formatShare(mix.vsp_share)} / ${formatShare(mix.sql_share)}`}
+          detail={`Private pay mix ${formatShare(mix.private_pay_mix)}`}
+        />
+      </div>
+
+      <div className="mt-6 grid gap-5 lg:grid-cols-3">
+        <div className="border border-[#d8c49b] bg-white/70 p-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8b7650]">
+            Product Mix
+          </p>
+          <ul className="mt-3 space-y-1 text-sm text-[#172a28]">
+            <li>Net Lens jobs (CM): {formatCount(productMix.net_lens_jobs.cm)}</li>
+            <li>SQL jobs (CM): {formatCount(productMix.sql_jobs.cm)}</li>
+            <li>VSP jobs (CM): {formatCount(mix.vsp_jobs.cm)}</li>
+            <li>Private pay brand: {dashboard.primary_pal_brand_private_pay || "N/A"}</li>
+            <li>VSP brand: {dashboard.primary_pal_brand_vsp || "N/A"}</li>
+          </ul>
+        </div>
+
+        <div className="border border-[#d8c49b] bg-white/70 p-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8b7650]">
+            Program Usage
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {[
+              ["Modern Pkg", programUsage.flags.modern_package],
+              ["Modern Frame", programUsage.flags.modern_frame],
+              ["ChemClip", programUsage.flags.chemclip],
+              ["SpecCheck", programUsage.flags.speccheck],
+              ["Tokai", programUsage.flags.tokai],
+            ].map(([label, active]) => (
+              <span
+                key={String(label)}
+                className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold ${
+                  active
+                    ? "border-[#172a28] bg-[#172a28] text-white"
+                    : "border-[#d8c49b] bg-[#fffaf1] text-[#706759]"
+                }`}
+              >
+                {label}
+              </span>
+            ))}
+          </div>
+          <p className="mt-3 text-xs text-[#706759]">
+            Values: Modern Pkg {programUsage.modern_package_usage || "blank"} · Modern Frame {programUsage.modern_frame_usage || "blank"} · ChemClip {programUsage.chemclip_usage || "blank"} · SpecCheck {programUsage.speccheck_usage || "blank"} · Tokai {programUsage.tokai_usage || "blank"}
+          </p>
+        </div>
+
+        <div className="border border-[#d8c49b] bg-white/70 p-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8b7650]">
+            Customer Insights
+          </p>
+          {insights.length > 0 ? (
+            <ul className="mt-3 space-y-2 text-sm text-[#172a28]">
+              {insights.map((insight) => (
+                <li key={insight}>• {insight}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-3 text-sm text-[#706759]">
+              No insights generated for this snapshot.
+            </p>
+          )}
+          <p className="mt-4 text-xs text-[#706759]">
+            Authorized users: {formatCount(userSummary.authorized_user_count)} · Primary emails: {userSummary.primary_emails.slice(0, 3).join(", ") || "None"}
+          </p>
+          <p className="mt-1 text-xs text-[#706759]">
+            Marketing statuses: {Object.entries(userSummary.marketing_status_summary)
+              .map(([status, count]) => `${status} (${count})`)
+              .join(", ") || "None"}
+          </p>
+          <p className="mt-4 text-xs text-[#706759]">
+            Data refresh date: {dashboard.data_refresh_date || "Unknown"}
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function PortalDashboardContent({
   authenticatedEmail,
   customer,
   workbookProfile,
+  dashboardState,
   adminPreviewAccountName,
   adminPreviewAccountNumber,
   adminPreviewEmail,
+  adminReturnTo = "/portal/admin",
   isLocalhostDevelopment,
   selectableAccountCount = 1,
 }: {
   authenticatedEmail: string;
   customer?: PortalCustomer;
   workbookProfile?: PortalWorkbookProfile;
+  dashboardState?: PortalDashboardV1State;
   adminPreviewAccountName?: string;
   adminPreviewAccountNumber?: string;
   adminPreviewEmail?: string;
+  adminReturnTo?: string;
   isLocalhostDevelopment?: boolean;
   selectableAccountCount?: number;
 }) {
@@ -1507,6 +1733,10 @@ export function PortalDashboardContent({
     account?.primaryPalPrivatePay,
     "neurolens"
   );
+  const showDashboardV1 = dashboardState?.status === "ok";
+  const isAdmin = isPortalAdminEmail(authenticatedEmail);
+  const shouldShowDashboardWarnings =
+    isAdmin && Boolean(dashboardState) && (!showDashboardV1 || Boolean(dashboardState?.stale));
 
   return (
     <PortalShell
@@ -1535,16 +1765,16 @@ export function PortalDashboardContent({
             </div>
             <div className="flex flex-wrap gap-3">
               <Link
-                href="/portal/admin"
+                href={adminReturnTo}
                 className="inline-flex min-h-10 w-fit items-center justify-center rounded-full bg-[#d8c49b] px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#172a28] transition hover:bg-white"
               >
                 Back to Admin
               </Link>
               <Link
-                href="/portal/admin/accounts"
+                href={adminReturnTo}
                 className="inline-flex min-h-10 w-fit items-center justify-center rounded-full border border-white/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] transition hover:bg-white hover:text-[#172a28]"
               >
-                Exit Preview
+                Go Back
               </Link>
             </div>
           </div>
@@ -1552,16 +1782,43 @@ export function PortalDashboardContent({
       ) : null}
 
       <div className="grid gap-7 lg:grid-cols-3">
+        {showDashboardV1 ? (
+          <DashboardV1Panel dashboardState={dashboardState} />
+        ) : null}
+
+        {shouldShowDashboardWarnings ? (
+          <section className="border border-[#b89a61] bg-[#fff4dd] p-5 text-[#172a28] shadow-[0_14px_40px_rgba(23,42,40,0.08)] lg:col-span-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b7650]">
+              Dashboard Snapshot Status
+            </p>
+            <p className="mt-2 text-sm">
+              {showDashboardV1
+                ? `Snapshot ${dashboardState?.manifest?.snapshot_id ?? "unknown"} is loaded.`
+                : "Dashboard v1 data is missing for this account. Falling back to legacy portal view."}
+            </p>
+            {dashboardState?.stale ? (
+              <p className="mt-1 text-sm">
+                Warning: {dashboardState.staleReason || "Snapshot may be stale."}
+              </p>
+            ) : null}
+            <p className="mt-1 text-xs text-[#706759]">
+              Data refresh date: {dashboardState?.manifest?.data_refresh_date || "Unknown"} ·
+              Accounts in snapshot: {dashboardState?.manifest?.row_count_output_accounts ?? 0}
+            </p>
+          </section>
+        ) : null}
+
         <PortalAccountHero
           practiceName={practiceName}
           accountNumber={accountNumber}
           customerTypeLabel={customerTypeLabel}
           account={account}
+          dashboardAccount={dashboardState?.account}
           authenticatedEmail={authenticatedEmail}
           adminPreviewAccountName={adminPreviewAccountName}
         />
 
-        {isPortalAdminEmail(authenticatedEmail) && !adminPreviewAccountName ? (
+        {isAdmin && !adminPreviewAccountName ? (
           <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-5 shadow-[0_18px_55px_rgba(23,42,40,0.08)] lg:col-span-3">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
@@ -1712,6 +1969,12 @@ export default function PortalDashboard({
   const matchedProfile = selectedAccountKey
     ? getPortalWorkbookProfileByEmail(authenticatedEmail, selectedAccountKey)
     : profiles[0];
+  const resolvedAccountNumber =
+    matchedProfile?.account?.accountNumber ||
+    matchedProfile?.person.accountNumber ||
+    matchedCustomer?.accountNumber ||
+    "";
+  const dashboardState = getPortalDashboardV1ByAccount(resolvedAccountNumber);
   const selectableAccountCount = new Set([
     ...customers.map((customer) => normalizeAccountNumber(customer.accountNumber)),
     ...profiles.map((profile) =>
@@ -1739,6 +2002,7 @@ export default function PortalDashboard({
       authenticatedEmail={authenticatedEmail}
       customer={matchedCustomer}
       workbookProfile={matchedProfile}
+      dashboardState={dashboardState}
       isLocalhostDevelopment={isLocalhostDevelopment}
       selectableAccountCount={selectableAccountCount}
     />

@@ -4,8 +4,8 @@ export const TRUSTED_PORTAL_EMAIL_HEADER = "x-portal-auth-email";
 export const LOCAL_PORTAL_TEST_EMAIL_COOKIE = "portal_dev_email";
 
 const LOCALHOST_NAMES = new Set(["localhost", "127.0.0.1", "::1"]);
-const PORTAL_HOSTNAME = "portal.artisanslabs.com";
 export const CLOUDFLARE_ACCESS_JWT_COOKIE = "CF_Authorization";
+let hasLoggedMissingCloudflareEnv = false;
 
 function normalizeHostname(host: string) {
   const firstHost = host.trim().split(",")[0]?.toLowerCase() ?? "";
@@ -37,7 +37,11 @@ export function getRequestHostnames(headers: Headers) {
 }
 
 export function isPortalHostRequest(headers: Headers) {
-  return getRequestHostnames(headers).includes(PORTAL_HOSTNAME);
+  const expectedHostnames = getPortalExpectedHostnames();
+
+  return getRequestHostnames(headers).some((hostname) =>
+    expectedHostnames.has(hostname)
+  );
 }
 
 export function isLocalhostRequest(headers: Headers) {
@@ -87,7 +91,12 @@ export function getLocalDevelopmentPortalEmailFromHeaders(headers: Headers) {
 export function getPortalAuthenticatedEmailFromHeaders(headers: Headers) {
   const trustedEmail =
     headers.get(TRUSTED_PORTAL_EMAIL_HEADER)?.trim().toLowerCase() ?? "";
-  if (trustedEmail) return trustedEmail;
+  if (trustedEmail && isLocalhostDevelopmentRequest(headers)) return trustedEmail;
+
+  if (!isCloudflareAccessConfigured()) {
+    logMissingCloudflareAccessEnv(headers);
+    return "";
+  }
 
   const cloudflareAccessEmail = getCloudflareAccessEmailFromHeaders(headers);
 
@@ -102,4 +111,48 @@ export function getPortalAuthenticatedEmailFromHeaders(headers: Headers) {
 
 export function hasCloudflareAccessJwtCookie(headers: Headers) {
   return Boolean(getCookieValue(headers, CLOUDFLARE_ACCESS_JWT_COOKIE));
+}
+
+function getPortalExpectedHostnames() {
+  const configuredPortalHost = process.env.PORTAL_HOSTNAME?.trim().toLowerCase();
+  const configuredSiteHost = process.env.NEXT_PUBLIC_SITE_DOMAIN?.trim().toLowerCase();
+  const fallbackSiteHost = "artisanlabnetwork.com";
+
+  return new Set(
+    [
+      configuredPortalHost,
+      configuredSiteHost,
+      fallbackSiteHost,
+      `www.${fallbackSiteHost}`,
+    ].filter(Boolean) as string[]
+  );
+}
+
+function isCloudflareAccessConfigured() {
+  if (process.env.NODE_ENV !== "production") return true;
+
+  const teamDomain =
+    process.env.CLOUDFLARE_ACCESS_TEAM_DOMAIN?.trim() ||
+    process.env.CF_ACCESS_TEAM_DOMAIN?.trim() ||
+    "";
+  const audience =
+    process.env.CLOUDFLARE_ACCESS_AUD?.trim() ||
+    process.env.CF_ACCESS_AUD?.trim() ||
+    "";
+
+  return Boolean(teamDomain && audience);
+}
+
+function logMissingCloudflareAccessEnv(headers: Headers) {
+  if (process.env.NODE_ENV !== "production" || hasLoggedMissingCloudflareEnv) {
+    return;
+  }
+
+  hasLoggedMissingCloudflareEnv = true;
+  console.error(
+    "[portal-auth] Missing Cloudflare Access environment variables. Set CLOUDFLARE_ACCESS_TEAM_DOMAIN (or CF_ACCESS_TEAM_DOMAIN) and CLOUDFLARE_ACCESS_AUD (or CF_ACCESS_AUD). Portal auth is fail-closed.",
+    {
+      hostnames: getRequestHostnames(headers),
+    }
+  );
 }

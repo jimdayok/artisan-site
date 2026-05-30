@@ -2,6 +2,8 @@ import { headers } from "next/headers";
 import { getPortalAdminEmailFromHeaders } from "@/lib/portal/admin";
 import { getPreviewCustomerByAccountNumber } from "@/lib/portal/adminData";
 import { getPortalWorkbookProfileByAccountNumber } from "@/lib/portal/workbookAccountData";
+import { getPortalDashboardV1ByAccount } from "@/lib/portal/dashboardV1";
+import { resolveDashboardV1AcctId } from "@/lib/portal/adminDashboardV1";
 import { PortalDashboardContent } from "../../../PortalDashboard";
 import { AdminAccessRequired } from "../../AdminShell";
 
@@ -28,32 +30,46 @@ function PreviewNotFound() {
 
 export default async function PortalAdminPreviewPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ accountNumber: string }>;
+  searchParams?: Promise<{ returnTo?: string }>;
 }) {
   const adminEmail = getPortalAdminEmailFromHeaders(await headers());
 
   if (!adminEmail) return <AdminAccessRequired />;
 
   const { accountNumber } = await params;
-  const workbookProfile = getPortalWorkbookProfileByAccountNumber(accountNumber);
-  const customer = getPreviewCustomerByAccountNumber(accountNumber);
+  const resolved = resolveDashboardV1AcctId(accountNumber);
+  const effectiveAccountId = resolved.acctId || accountNumber;
+  const legacyAccountNumber = resolved.legacyAccountNumber || accountNumber;
+  const query = (await searchParams) ?? {};
+  const returnTo =
+    query.returnTo && query.returnTo.startsWith("/portal/admin")
+      ? query.returnTo
+      : "/portal/admin";
+
+  const workbookProfile = getPortalWorkbookProfileByAccountNumber(legacyAccountNumber);
+  const customer = getPreviewCustomerByAccountNumber(legacyAccountNumber);
   const accountName =
     workbookProfile?.account?.accountName ||
     workbookProfile?.person.organization ||
     customer?.practiceName ||
-    accountNumber;
+    effectiveAccountId;
 
   if (!workbookProfile && !customer) return <PreviewNotFound />;
+  const dashboardState = getPortalDashboardV1ByAccount(effectiveAccountId);
 
   return (
     <PortalDashboardContent
       authenticatedEmail={adminEmail}
       customer={customer}
       workbookProfile={workbookProfile}
+      dashboardState={dashboardState}
       adminPreviewAccountName={accountName}
-      adminPreviewAccountNumber={accountNumber}
+      adminPreviewAccountNumber={effectiveAccountId}
       adminPreviewEmail={adminEmail}
+      adminReturnTo={returnTo}
     />
   );
 }

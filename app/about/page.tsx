@@ -262,6 +262,27 @@ function ContactModal({
 
 export default function AboutPage() {
   const [contactOpen, setContactOpen] = useState(false);
+  const [disableTimelineEffects, setDisableTimelineEffects] = useState(false);
+
+  useEffect(() => {
+    const syncHashState = () => {
+      const hash = window.location.hash.toLowerCase();
+      setDisableTimelineEffects(Boolean(hash && hash !== "#timeline"));
+
+      if (!hash) return;
+      const target = document.querySelector(hash);
+      if (!target) return;
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          target.scrollIntoView({ behavior: "auto", block: "start" });
+        });
+      });
+    };
+
+    syncHashState();
+    window.addEventListener("hashchange", syncHashState);
+    return () => window.removeEventListener("hashchange", syncHashState);
+  }, []);
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#f5f1eb] text-[#1f1a17]">
@@ -443,7 +464,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <ImmersiveTimeline />
+      <ImmersiveTimeline disableDesktopScrollEffects={disableTimelineEffects} />
 
       <section
         data-theme="light"

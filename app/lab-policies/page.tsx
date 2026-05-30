@@ -84,7 +84,7 @@ const commonQuestions = [
     label: "Shipping",
     title: "How does shipping work?",
     body: "Inbound shipping is covered. Outbound shipping is structured per job or per box.",
-    href: "#shipping-policies",
+    href: "#shipping",
     icon: "/icons/site/truck.svg",
   },
 ];
@@ -380,10 +380,10 @@ const policySections: PolicySection[] = [
     keywords: ["cancelled", "canceled", "uncut", "charge", "order started", "production"],
   },
   {
-    id: "shipping-policies",
+    id: "shipping",
     navLabel: "Shipping",
     icon: "truck",
-    title: "Shipping Policies",
+    title: "Shipping and Delivery",
     summary: "Inbound shipping is covered, with clear outbound rates for next-day and 2 day service.",
     whatThisMeans:
       "Shipping policy is designed to keep orders moving predictably while allowing the lab to choose the method that best supports next-day delivery intent.",
@@ -481,7 +481,7 @@ const quickNav = [
   { label: "AR & Scratch", href: "#ar-policies", icon: "/icons/site/shield.svg" },
   { label: "VSP & Unity", href: "#vsp-unity", icon: "/icons/site/file-check.svg" },
   { label: "Frames", href: "#frame-policies", icon: "/icons/site/file-check.svg" },
-  { label: "Shipping", href: "#shipping-policies", icon: "/icons/site/truck.svg" },
+  { label: "Shipping", href: "#shipping", icon: "/icons/site/truck.svg" },
   { label: "Specialty", href: "#specialty-outsourced", icon: "/icons/site/alert-circle.svg" },
   { label: "Examples", href: "#real-world-examples", icon: "/icons/site/handshake.svg" },
 ];
@@ -712,6 +712,9 @@ function PolicyPanel({
       variants={fadeUp}
       className="scroll-mt-40 rounded-[30px] border border-black/10 bg-white p-5 shadow-[0_18px_54px_rgba(24,18,13,0.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(24,18,13,0.1)] md:p-6"
     >
+      {section.id === "shipping" ? (
+        <span id="shipping-policies" className="block scroll-mt-40" aria-hidden="true" />
+      ) : null}
       <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-start">
         <div>
           <div className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8a7654]">

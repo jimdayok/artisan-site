@@ -1581,6 +1581,10 @@ function resourceIsAvailable(resource: DownloadResourceItem) {
   return resource.filename ? localResourceFiles.has(resource.filename) : Boolean(resource.externalHref);
 }
 
+function availableResources(resources: DownloadResourceItem[]) {
+  return resources.filter(resourceIsAvailable);
+}
+
 function resourceToItem(resource: DownloadResourceItem): ResourceItem {
   const available = resourceIsAvailable(resource);
   const isVideo = resource.externalHref?.includes("youtu") || resource.cta?.toLowerCase().includes("video");
@@ -1630,9 +1634,13 @@ function SelectedResourceSection({ section }: { section: DownloadResourceSection
   const treatmentsRef = useRef<HTMLDivElement | null>(null);
   const unityRewardsRef = useRef<HTMLDivElement | null>(null);
   const [activeGroup, setActiveGroup] = useState<"designs" | "treatments" | "layoutCharts" | "unityRewards">("designs");
-  const hasLayoutCharts = Boolean(section.layoutCharts?.length);
-  const hasTreatments = Boolean(section.treatments?.length);
-  const hasUnityRewards = Boolean(section.unityRewards?.length);
+  const designResources = availableResources(section.resources);
+  const treatmentResources = availableResources(section.treatments ?? []);
+  const layoutChartResources = availableResources(section.layoutCharts ?? []);
+  const unityRewardsResources = availableResources(section.unityRewards ?? []);
+  const hasLayoutCharts = layoutChartResources.length > 0;
+  const hasTreatments = treatmentResources.length > 0;
+  const hasUnityRewards = unityRewardsResources.length > 0;
 
   useEffect(() => {
     setActiveGroup("designs");
@@ -1706,33 +1714,33 @@ function SelectedResourceSection({ section }: { section: DownloadResourceSection
               ref={designsRef}
               eyebrow={section.eyebrow}
               title="Lens Designs"
-              resources={section.resources}
+              resources={designResources}
               sectionId={section.id}
             />
-            {section.treatments?.length ? (
+            {treatmentResources.length ? (
               <ResourceGroup
                 ref={treatmentsRef}
                 eyebrow="AR Treatments"
                 title="Treatments"
-                resources={section.treatments}
+                resources={treatmentResources}
                 sectionId={`${section.id}-treatments`}
               />
             ) : null}
-            {section.layoutCharts?.length ? (
+            {layoutChartResources.length ? (
               <ResourceGroup
                 ref={layoutChartsRef}
                 eyebrow="Layout Charts"
                 title="Layout Charts"
-                resources={section.layoutCharts}
+                resources={layoutChartResources}
                 sectionId={`${section.id}-layout-charts`}
               />
             ) : null}
-            {section.unityRewards?.length ? (
+            {unityRewardsResources.length ? (
               <ResourceGroup
                 ref={unityRewardsRef}
                 eyebrow="VSP Unity Rewards"
                 title="Unity Rewards"
-                resources={section.unityRewards}
+                resources={unityRewardsResources}
                 sectionId={`${section.id}-unity-rewards`}
               />
             ) : null}
@@ -1813,6 +1821,7 @@ function SystemResourceContainer({
   onToggle: () => void;
 }) {
   const isBrandedSystem = title === "Frame Systems" || title === "Safety Systems";
+  const launchReadyResources = availableResources(resources);
 
   return (
     <div
@@ -1851,7 +1860,7 @@ function SystemResourceContainer({
           </span>
         </span>
         <span className="text-sm font-medium text-[#75664e]">
-          {resources.length} {resources.length === 1 ? "resource" : "resources"}
+          {launchReadyResources.length} {launchReadyResources.length === 1 ? "resource" : "resources"}
         </span>
         <span className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-[#d8c6a8] bg-[#fbf8f3] px-4 py-2 text-sm font-semibold text-[#1f1a17] transition group-hover:border-[#c9b28b] group-hover:bg-[#efe3d1]">
           {isOpen ? "Hide Resources" : "View Resources"}
@@ -1870,7 +1879,7 @@ function SystemResourceContainer({
           >
             <div className="border-t border-[#eadfce] bg-[#fbf8f3]/70 p-5 md:p-6">
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {resources.map((resource) => (
+                {launchReadyResources.map((resource) => (
                   <ResourceCard
                     key={`${id}-${resource.title}`}
                     item={resourceToItem(resource)}
@@ -2860,8 +2869,10 @@ export default function ProviderResourcesPage({
     <main className="min-h-screen bg-[#f5f1eb] text-[#1f1a17]">
       <Header onContactClick={() => setContactOpen(true)} />
       <span id="modern-frame-system" className="sr-only" aria-hidden="true" />
+      <span id="frame-systems" className="sr-only" aria-hidden="true" />
       <span id="modern-package-system" className="sr-only" aria-hidden="true" />
       <span id="speccheck" className="sr-only" aria-hidden="true" />
+      <span id="safety-systems" className="sr-only" aria-hidden="true" />
 
       <section
         data-theme="light"
@@ -3385,19 +3396,19 @@ export default function ProviderResourcesPage({
                             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8a7654]">
                               Lens Designs
                             </p>
-                            {section.resources.map((resource) => (
+                            {availableResources(section.resources).map((resource) => (
                               <ResourceCard
                                 key={`${section.id}-mobile-${resource.title}`}
                                 item={resourceToItem(resource)}
                                 compact
                               />
                             ))}
-                            {section.treatments?.length ? (
+                            {availableResources(section.treatments ?? []).length ? (
                               <>
                                 <p className="pt-3 text-xs font-semibold uppercase tracking-[0.22em] text-[#8a7654]">
                                   Treatments
                                 </p>
-                                {section.treatments.map((resource) => (
+                                {availableResources(section.treatments ?? []).map((resource) => (
                                   <ResourceCard
                                     key={`${section.id}-mobile-treatment-${resource.title}`}
                                     item={resourceToItem(resource)}
@@ -3406,12 +3417,12 @@ export default function ProviderResourcesPage({
                                 ))}
                               </>
                             ) : null}
-                            {section.layoutCharts?.length ? (
+                            {availableResources(section.layoutCharts ?? []).length ? (
                               <>
                                 <p className="pt-3 text-xs font-semibold uppercase tracking-[0.22em] text-[#8a7654]">
                                   Layout Charts
                                 </p>
-                                {section.layoutCharts.map((resource) => (
+                                {availableResources(section.layoutCharts ?? []).map((resource) => (
                                   <ResourceCard
                                     key={`${section.id}-mobile-layout-${resource.title}`}
                                     item={resourceToItem(resource)}
@@ -3420,12 +3431,12 @@ export default function ProviderResourcesPage({
                                 ))}
                               </>
                             ) : null}
-                            {section.unityRewards?.length ? (
+                            {availableResources(section.unityRewards ?? []).length ? (
                               <>
                                 <p className="pt-3 text-xs font-semibold uppercase tracking-[0.22em] text-[#8a7654]">
                                   Unity Rewards
                                 </p>
-                                {section.unityRewards.map((resource) => (
+                                {availableResources(section.unityRewards ?? []).map((resource) => (
                                   <ResourceCard
                                     key={`${section.id}-mobile-unity-rewards-${resource.title}`}
                                     item={resourceToItem(resource)}

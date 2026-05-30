@@ -12,7 +12,11 @@
     "start": "next start",
     "lint": "eslint",
     "portal:generate-access": "node scripts/generate-portal-workbook-access.mjs",
-    "pricing:generate": "node scripts/generate-price-list-data.mjs"
+    "portal:generate-dashboard-v1": "node scripts/generate-portal-dashboard-v1.mjs",
+    "portal:generate-dashboard-v1:launch": "node scripts/generate-portal-dashboard-v1.mjs --ignore-empty-summary-rows --allow-duplicate-acct-id --allow-invalid-user-account-links",
+    "portal:generate-dashboard-v1:launch-safe": "node scripts/generate-portal-dashboard-v1.mjs --ignore-empty-summary-rows --allow-duplicate-acct-id --allow-invalid-user-account-links",
+    "pricing:generate": "node scripts/generate-price-list-data.mjs",
+    "launch:verify": "node scripts/verify-launch-readiness.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1046.0",
@@ -21,6 +25,7 @@
     "@nivo/line": "^0.99.0",
     "@nivo/pie": "^0.99.0",
     "@studio-freight/lenis": "^1.0.42",
+    "@vercel/analytics": "^2.0.1",
     "clsx": "^2.1.1",
     "exceljs": "^4.4.0",
     "framer-motion": "^12.39.0",

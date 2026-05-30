@@ -3,13 +3,12 @@ import "server-only";
 import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
 
 export const PORTAL_ADMIN_EMAILS = new Set([
-  "jimdayok@.com",
-  "jimdayok@me.com",
-  "jim.day@artisanlabnetwork.com",
-  "rick@pacificartisanlabs.com",
   "brandon.butler@artisanlabnetwork.com",
+  "jim.day@artisanlabnetwork.com",
+  "jimdayok@me.com",
   "rahson@artisanlabnetwork.com",
   "rahlson@artisanlabnetwork.com",
+  "rick@pacificartisanlabs.com",
   "switmer@artisanlabnetwork.com",
 ]);
 

@@ -1,17 +1,15 @@
-import { createRemoteJWKSet, jwtVerify, type JWTPayload } from "jose";
+import { createRemoteJWKSet, jwtVerify, type JWTPayload, type JWTVerifyGetKey } from "jose";
 
 type VerifiedPortalJwt = {
   email: string;
   payload: JWTPayload;
 };
 
-const DEFAULT_TEAM_DOMAIN = "artisanslabs.cloudflareaccess.com";
-
 function teamDomain() {
   return (
     process.env.CLOUDFLARE_ACCESS_TEAM_DOMAIN?.trim() ||
     process.env.CF_ACCESS_TEAM_DOMAIN?.trim() ||
-    DEFAULT_TEAM_DOMAIN
+    ""
   );
 }
 
@@ -27,24 +25,34 @@ function issuer() {
   return `https://${teamDomain()}`;
 }
 
-function certsUrl() {
-  return new URL(`${issuer()}/cdn-cgi/access/certs`);
-}
+let cachedJwks: JWTVerifyGetKey | null = null;
 
-const JWKS = createRemoteJWKSet(certsUrl());
+function getJwks() {
+  if (cachedJwks) return cachedJwks;
+  cachedJwks = createRemoteJWKSet(new URL(`${issuer()}/cdn-cgi/access/certs`));
+  return cachedJwks;
+}
 
 export async function verifyCloudflareAccessJwt(
   token: string
 ): Promise<VerifiedPortalJwt | null> {
   if (!token) return null;
 
+  const verificationAudience = audience();
+  const verificationTeamDomain = teamDomain();
+
+  if (!verificationAudience || !verificationTeamDomain) {
+    if (process.env.NODE_ENV === "production") {
+      console.error(
+        "[portal-auth] Missing Cloudflare Access JWT verification env. Expected CLOUDFLARE_ACCESS_TEAM_DOMAIN (or CF_ACCESS_TEAM_DOMAIN) and CLOUDFLARE_ACCESS_AUD (or CF_ACCESS_AUD)."
+      );
+    }
+    return null;
+  }
+
   try {
-    const verificationAudience = audience();
-    const options =
-      verificationAudience.length > 0
-        ? { issuer: issuer(), audience: verificationAudience }
-        : { issuer: issuer() };
-    const { payload } = await jwtVerify(token, JWKS, options);
+    const options = { issuer: `https://${verificationTeamDomain}`, audience: verificationAudience };
+    const { payload } = await jwtVerify(token, getJwks(), options);
     const email =
       String(payload.email ?? payload.sub ?? "")
         .trim()

@@ -53,13 +53,7 @@ export function AdminShell({
           </div>
           <nav className="flex flex-wrap gap-3">
             <Link href="/portal/admin" className={adminButtonClass}>
-              Overview
-            </Link>
-            <Link href="/portal/admin/users" className={adminButtonClass}>
-              Users
-            </Link>
-            <Link href="/portal/admin/accounts" className={adminButtonClass}>
-              Accounts
+              Admin Dashboard
             </Link>
             <Link href="/portal" className={adminButtonClass}>
               Customer Portal

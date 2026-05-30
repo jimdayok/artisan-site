@@ -147,7 +147,7 @@ function TimelinePanel({
 }) {
   return (
     <article
-      className="timeline-panel relative flex min-h-[100svh] w-full shrink-0 flex-col justify-center overflow-hidden border-b border-[#d8bf7a]/16 px-5 py-20 md:w-screen md:border-b-0 md:border-r md:px-10 lg:px-14"
+      className="timeline-panel relative flex min-h-[100svh] w-full shrink-0 flex-col justify-center overflow-visible border-b border-[#d8bf7a]/16 px-5 py-20 md:w-screen md:overflow-hidden md:border-b-0 md:border-r md:px-10 lg:px-14"
       data-panel-index={index}
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_72%_30%,rgba(216,191,122,0.16),transparent_30%),linear-gradient(90deg,rgba(255,247,232,0.035),transparent_35%)]" />
@@ -225,7 +225,11 @@ function TimelinePanel({
   );
 }
 
-export default function ImmersiveTimeline() {
+export default function ImmersiveTimeline({
+  disableDesktopScrollEffects = false,
+}: {
+  disableDesktopScrollEffects?: boolean;
+}) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
   const progressRef = useRef<HTMLDivElement | null>(null);
@@ -241,7 +245,11 @@ export default function ImmersiveTimeline() {
     const track = trackRef.current;
     const progress = progressRef.current;
 
-    if (!section || !track || !progress || prefersReducedMotion) return;
+    if (!section || !track || !progress) return;
+    if (prefersReducedMotion || disableDesktopScrollEffects) {
+      progress.style.transform = "scaleX(0)";
+      return;
+    }
 
     gsap.registerPlugin(ScrollTrigger);
 
@@ -319,14 +327,14 @@ export default function ImmersiveTimeline() {
       media.revert();
       context.revert();
     };
-  }, [prefersReducedMotion]);
+  }, [disableDesktopScrollEffects, prefersReducedMotion]);
 
   return (
     <section
       ref={sectionRef}
       id="timeline"
       data-theme="dark"
-      className="relative scroll-mt-24 overflow-hidden bg-[#0d0a08] text-[#fff7e8] md:h-screen"
+      className="relative scroll-mt-24 overflow-visible bg-[#0d0a08] text-[#fff7e8] md:h-screen md:overflow-hidden"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_16%,rgba(216,191,122,0.15),transparent_28%),linear-gradient(180deg,#0d0a08,#17120f_48%,#0d0a08)]" />
 
@@ -347,7 +355,7 @@ export default function ImmersiveTimeline() {
 
       <div
         ref={trackRef}
-        className="relative z-10 flex flex-col md:flex-row md:[will-change:transform]"
+        className="relative z-10 flex flex-col overflow-visible md:flex-row md:[will-change:transform]"
       >
         {timelineMilestones.map((milestone, index) => (
           <TimelinePanel

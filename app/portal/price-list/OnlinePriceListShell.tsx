@@ -144,9 +144,9 @@ export function PendingOnlinePriceList({ priceList }: { priceList: PortalPriceLi
             {priceList.label}
           </h2>
           <p className="mt-4 text-sm leading-6 text-[#4d5664]">
-            The official PDF remains the current source of truth for this price
-            list while the interactive web table is prepared from the source
-            document.
+            This price list is being migrated to interactive portal pricing.
+            Use the online pricing experience when available for your assigned
+            account.
           </p>
         </div>
         <div className="rounded-[2px] border border-[#d7c5a8] bg-white/82 p-5">
@@ -154,8 +154,8 @@ export function PendingOnlinePriceList({ priceList }: { priceList: PortalPriceLi
             Online pricing table in progress
           </h3>
           <p className="mt-3 text-sm leading-6 text-[#4d5664]">
-            Pricing has not been transcribed into structured web data for this
-            code yet. No pricing has been guessed or approximated on this page.
+            Interactive pricing data is not published for this code yet. No
+            pricing is shown until validated source data is ready.
           </p>
           {priceList.r2Key ? (
             <a

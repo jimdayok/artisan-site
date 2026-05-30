@@ -16,11 +16,7 @@ const publicRoutes = [
   "/patient-resources",
   "/peak-artisan-labs",
   "/pike-artisan-labs",
-  "/policies",
-  "/practice-resources",
-  "/programs",
   "/provider-resources",
-  "/provider-resources/professional-resources",
   "/privacy-policy",
   "/terms-and-conditions",
 ];

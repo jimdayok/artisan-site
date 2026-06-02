@@ -115,6 +115,8 @@ type DownloadResourceItem = {
   logo?: string;
   logoAlt?: string;
   placeholder?: boolean;
+  category?: ResourceCategory;
+  vendor?: ResourceVendor;
 };
 
 type DownloadResourceSection = {
@@ -132,6 +134,34 @@ type DownloadResourceSection = {
   training?: DownloadResourceItem[];
 };
 
+type ResourceCategory =
+  | "Ordering"
+  | "Pricing"
+  | "Product Guides"
+  | "Technical Guides"
+  | "Safety"
+  | "Training"
+  | "Policies"
+  | "Videos";
+
+type ResourceVendor =
+  | "Artisan"
+  | "IOT"
+  | "Tokai"
+  | "HOYA"
+  | "Unity"
+  | "Neurolens"
+  | "Shamir"
+  | "Crizal"
+  | "Varilux"
+  | "TechShield"
+  | "ChemClip";
+
+type SearchableResource = ResourceItem & {
+  category: ResourceCategory;
+  vendor: ResourceVendor;
+};
+
 const localResourceFiles = new Set([
   "ArtisanDesigns/cds_bifocal.pdf",
   "ArtisanDesigns/diamond_series.pdf",
@@ -142,6 +172,12 @@ const localResourceFiles = new Set([
   "ArtisanDesigns/sd_digital.pdf",
   "ArtisanDesigns/sd_radius.pdf",
   "ArtisanDesigns/sd_reach.pdf",
+  "Artisan Deisgn Series .pdf",
+  "Camber Diamond Family Leaflet-Artisan-draft1.pdf",
+  "Universal Gold Family Leaflet-Artisan-draft1.pdf",
+  "Ultimate Platinum Family Leaflet-Artisan-draft1.pdf",
+  "Office Reader II SD Reach Individual Leaflet-Artisan-draft1.pdf",
+  "SD Reach ALN 2025.pdf",
   "modern-frame-book.pdf",
   "armou-rx-frame-book.pdf",
   "dvx-wileyx-frame-book.pdf",
@@ -155,13 +191,13 @@ const localResourceFiles = new Set([
   "tokai-tint-guide.pdf",
   "varilux-product-guide.pdf",
   "varilux-comfort.pdf",
-  "varilux-xr-series.pdf",
-  "varilux-x-series.pdf",
-  "varilux-comfort-max.pdf",
-  "crizal-product-guide.pdf",
+  "404700_PRO_VAR.pdf",
+  "401050_PRO_VAR-Varilux_Physio_Extensee_Scientific_Paper_FNL.pdf",
+  "456102_PRO_ZAL.pdf",
+  "462850_PRO_ZAL-Crizal_Product_Guide_2026_Update_with_Crizal_Natural_Look_LR.pdf",
   "hoya-product-guide.pdf",
   "hoya-centration-charts.pdf",
-  "hoya-id-lifestyle-4.pdf",
+  "id-lifestyle-4-sales-aid_final_pn8159387.pdf",
   "iot-centration-charts.pdf",
   "iot-portfolio-guide.pdf",
   "iot-camber-pure.pdf",
@@ -173,19 +209,15 @@ const localResourceFiles = new Set([
   "endless-plus.pdf",
   "endless-office-degression-chart.pdf",
   "neochromes-guide.pdf",
-  "shamir-quick-reference.pdf",
-  "shamir-dispensing-guide.pdf",
-  "shamir-driver-intelligence.pdf",
+  "Shamir-Driver-Intelligence-Technical-Sheet.pdf",
   "unity-v3-sales-guide.pdf",
-  "unity-v3-whitepaper.pdf",
-  "unity-v3-product-guide.pdf",
-  "techshield-ar-guide.pdf",
-  "sunsync-product-guide.pdf",
+  "5688bc8-2e3-c061-3d27-251215283ac_Unity_V3_Whitepaper.pdf",
+  "TechShield_AR_Coatings_Sales_Sheet_2023.pdf",
+  "unity-performance-coatings_retirement_faqs.pdf",
   "unity-rewards-flyer.pdf",
   "unity-rewards-pecaa.pdf",
-  "neurolens-provider-brochure.pdf",
-  "sequel-lens-overview.pdf",
-  "chemistrie-clip-system.pdf",
+  "Neurolenses-proven-to-reduce-headache-symptoms.pdf",
+  "chemcliporderform.pdf",
 ]);
 
 const downloadResourceSections: DownloadResourceSection[] = [
@@ -201,45 +233,39 @@ const downloadResourceSections: DownloadResourceSection[] = [
     resources: [
       {
         title: "Diamond Series",
-        description: "Product guide placeholder for Diamond Series lens conversations.",
+        description: "Product leaflet for Diamond Series lens conversations and staff reference.",
         label: "Product Guide",
-        cta: "PDF Pending",
-        placeholder: true,
+        filename: "Camber Diamond Family Leaflet-Artisan-draft1.pdf",
       },
       {
         title: "Gold Series",
-        description: "Product guide placeholder for Gold Series positioning and recommendations.",
+        description: "Product leaflet for Gold Series positioning and recommendations.",
         label: "Product Guide",
-        cta: "PDF Pending",
-        placeholder: true,
+        filename: "Universal Gold Family Leaflet-Artisan-draft1.pdf",
       },
       {
         title: "Platinum Series",
-        description: "Product guide placeholder for Platinum Series premium design support.",
+        description: "Product leaflet for Platinum Series premium design support.",
         label: "Product Guide",
-        cta: "PDF Pending",
-        placeholder: true,
+        filename: "Ultimate Platinum Family Leaflet-Artisan-draft1.pdf",
       },
       {
-        title: "CFB",
-        description: "Product guide placeholder for CFB ordering and dispensing support.",
+        title: "Artisan Design Series",
+        description: "Overview guide for Artisan design families and recommendation support.",
         label: "Product Guide",
-        cta: "PDF Pending",
-        placeholder: true,
+        filename: "Artisan Deisgn Series .pdf",
       },
       {
-        title: "SD Concept",
-        description: "Product guide placeholder for SD Concept design recommendations.",
+        title: "SD Reach Individual Leaflet",
+        description: "Individual leaflet for SD Reach positioning and office-reader conversations.",
         label: "Product Guide",
-        cta: "PDF Pending",
-        placeholder: true,
+        filename: "Office Reader II SD Reach Individual Leaflet-Artisan-draft1.pdf",
       },
       {
         title: "SD Reach",
-        description: "Product guide placeholder for SD Reach design recommendations.",
+        description: "Current SD Reach guide for design recommendations and fitting context.",
         label: "Product Guide",
-        cta: "PDF Pending",
-        placeholder: true,
+        filename: "SD Reach ALN 2025.pdf",
       },
     ],
     layoutCharts: [
@@ -423,13 +449,6 @@ const downloadResourceSections: DownloadResourceSection[] = [
         label: "Layout Chart",
         filename: "iot-centration-charts.pdf",
       },
-      {
-        title: "IOT Specialty Layout Charts",
-        description: "Placeholder for additional IOT layout charts and fitting references.",
-        label: "Layout Chart",
-        cta: "PDF Pending",
-        placeholder: true,
-      },
     ],
   },
   {
@@ -481,17 +500,6 @@ const downloadResourceSections: DownloadResourceSection[] = [
         cta: "View Video",
       },
     ],
-    treatments: [
-      {
-        title: "Tokai AR Treatment Resources",
-        description: "Placeholder for Tokai AR treatment guides and dispensing support resources.",
-        label: "Placeholder",
-        cta: "PDF Pending",
-        placeholder: true,
-        logo: "/tokai-logo.png",
-        logoAlt: "Tokai",
-      },
-    ],
   },
   {
     id: "varilux-crizal",
@@ -515,30 +523,32 @@ const downloadResourceSections: DownloadResourceSection[] = [
         filename: "varilux-comfort.pdf",
       },
       {
-        title: "Varilux XR Series",
-        description: "XR Series guide for premium progressive positioning and selection.",
+        title: "Varilux Immersia Sales Aid",
+        description: "Sales aid for positioning Varilux Immersia and guiding premium progressive conversations.",
         label: "Varilux",
-        filename: "varilux-xr-series.pdf",
+        filename: "404700_PRO_VAR.pdf",
       },
       {
-        title: "Varilux X Series",
-        description: "X Series resource for design benefits and patient conversations.",
+        title: "Varilux Physio Extensee Scientific Paper",
+        description: "Scientific paper for Varilux Physio Extensee design context and clinical support.",
         label: "Varilux",
-        filename: "varilux-x-series.pdf",
-      },
-      {
-        title: "Varilux Comfort Max",
-        description: "Comfort Max product guide for everyday progressive recommendations.",
-        label: "Varilux",
-        filename: "varilux-comfort-max.pdf",
+        filename: "401050_PRO_VAR-Varilux_Physio_Extensee_Scientific_Paper_FNL.pdf",
       },
     ],
     treatments: [
       {
-        title: "Crizal Product Guide",
-        description: "Crizal treatment guide for AR positioning and lens protection conversations.",
+        title: "Crizal Natural Product Information Sheet",
+        description: "Product information sheet for Crizal Natural Look positioning and treatment conversations.",
         label: "Crizal",
-        filename: "crizal-product-guide.pdf",
+        filename: "456102_PRO_ZAL.pdf",
+        logo: "/varilux-logo.png",
+        logoAlt: "Crizal",
+      },
+      {
+        title: "Crizal Product Guide 2026",
+        description: "Updated 2026 Crizal product guide including Crizal Natural Look.",
+        label: "Crizal",
+        filename: "462850_PRO_ZAL-Crizal_Product_Guide_2026_Update_with_Crizal_Natural_Look_LR.pdf",
         logo: "/varilux-logo.png",
         logoAlt: "Crizal",
       },
@@ -563,7 +573,7 @@ const downloadResourceSections: DownloadResourceSection[] = [
         title: "Hoya iD LifeStyle 4",
         description: "Product guide for Hoya iD LifeStyle 4 positioning and selection.",
         label: "Hoya",
-        filename: "hoya-id-lifestyle-4.pdf",
+        filename: "id-lifestyle-4-sales-aid_final_pn8159387.pdf",
       },
     ],
     layoutCharts: [
@@ -572,24 +582,6 @@ const downloadResourceSections: DownloadResourceSection[] = [
         description: "Fitting and centration charts for Hoya lens dispensing.",
         label: "Layout Chart",
         filename: "hoya-centration-charts.pdf",
-      },
-      {
-        title: "Hoya Layout Chart Library",
-        description: "Placeholder for additional Hoya layout charts and fitting references.",
-        label: "Layout Chart",
-        cta: "PDF Pending",
-        placeholder: true,
-      },
-    ],
-    treatments: [
-      {
-        title: "Hoya AR Treatment Resources",
-        description: "Placeholder for Hoya AR treatment guides, warranty references, and recommendation support.",
-        label: "Placeholder",
-        cta: "PDF Pending",
-        placeholder: true,
-        logo: "/hoya-logo.png",
-        logoAlt: "Hoya",
       },
     ],
   },
@@ -603,42 +595,10 @@ const downloadResourceSections: DownloadResourceSection[] = [
     logoClass: "max-h-14 max-w-[190px]",
     resources: [
       {
-        title: "Quick Reference Guide",
-        description: "Fast Shamir reference for design selection and team conversations.",
+        title: "Driver Intelligence Technical Guide",
+        description: "Technical guide for Shamir Driver Intelligence recommendations and dispensing context.",
         label: "Shamir",
-        filename: "shamir-quick-reference.pdf",
-      },
-      {
-        title: "Dispensing Guide",
-        description: "Fitting and dispensing guide for Shamir product success.",
-        label: "Shamir",
-        filename: "shamir-dispensing-guide.pdf",
-      },
-      {
-        title: "Driver Intelligence Sun / Moon",
-        description: "Product guide for Shamir Driver Intelligence Sun and Moon options.",
-        label: "Shamir",
-        filename: "shamir-driver-intelligence.pdf",
-      },
-    ],
-    treatments: [
-      {
-        title: "Glacier Expressions",
-        description: "Placeholder for Glacier Expressions treatment positioning and recommendation resources.",
-        label: "Glacier",
-        cta: "PDF Pending",
-        placeholder: true,
-        logo: "/shamir-logo.png",
-        logoAlt: "Glacier",
-      },
-      {
-        title: "Glacier Plus",
-        description: "Placeholder for Glacier Plus AR treatment resources and dispensing support.",
-        label: "Glacier",
-        cta: "PDF Pending",
-        placeholder: true,
-        logo: "/shamir-logo.png",
-        logoAlt: "Glacier",
+        filename: "Shamir-Driver-Intelligence-Technical-Sheet.pdf",
       },
     ],
   },
@@ -661,13 +621,7 @@ const downloadResourceSections: DownloadResourceSection[] = [
         title: "Unity V3 White Paper",
         description: "Technical white paper for Unity V3 performance and product context.",
         label: "Unity",
-        filename: "unity-v3-whitepaper.pdf",
-      },
-      {
-        title: "Unity V3 Product Guide",
-        description: "Product guide for Unity V3 options and dispensing support.",
-        label: "Unity",
-        filename: "unity-v3-product-guide.pdf",
+        filename: "5688bc8-2e3-c061-3d27-251215283ac_Unity_V3_Whitepaper.pdf",
       },
     ],
     unityRewards: [
@@ -690,20 +644,20 @@ const downloadResourceSections: DownloadResourceSection[] = [
     ],
     treatments: [
       {
-        title: "TechShield AR Guide",
+        title: "TechShield AR Coatings Guide",
         description: "Treatment guide for TechShield AR recommendations.",
         label: "TechShield",
-        filename: "techshield-ar-guide.pdf",
+        filename: "TechShield_AR_Coatings_Sales_Sheet_2023.pdf",
         logo: "/logos/VSP_Vision_Logotype_RGB_Blk.png",
         logoAlt: "TechShield",
       },
       {
-        title: "SunSync Product Guide",
-        description: "SunSync guide for photochromic product positioning.",
-        label: "SunSync",
-        filename: "sunsync-product-guide.pdf",
+        title: "TechShield FAQ",
+        description: "FAQ for the Unity performance coatings retirement and TechShield transition.",
+        label: "TechShield",
+        filename: "unity-performance-coatings_retirement_faqs.pdf",
         logo: "/unity-logo.png",
-        logoAlt: "SunSync",
+        logoAlt: "TechShield",
       },
     ],
     training: [
@@ -724,16 +678,10 @@ const downloadResourceSections: DownloadResourceSection[] = [
       "Newton products help practices support patients with visual comfort solutions, including Neurolens and Sequel lens technologies.",
     resources: [
       {
-        title: "Neurolens Provider Guide",
-        description: "Provider guide for Neurolens conversations and practice positioning.",
+        title: "Neurolens Clinical Study",
+        description: "Clinical study showing Neurolenses proven to reduce headache symptoms.",
         label: "Neurolens",
-        filename: "neurolens-provider-brochure.pdf",
-      },
-      {
-        title: "Sequel Lens Overview",
-        description: "Overview guide for Sequel lens options and patient conversations.",
-        label: "Sequel",
-        filename: "sequel-lens-overview.pdf",
+        filename: "Neurolenses-proven-to-reduce-headache-symptoms.pdf",
       },
     ],
   },
@@ -747,10 +695,17 @@ const downloadResourceSections: DownloadResourceSection[] = [
     logoClass: "max-h-14 max-w-[190px]",
     resources: [
       {
-        title: "Chemistrie Clip System",
-        description: "Guide for Chemistrie magnetic clip system ordering, fitting, and demos.",
-        label: "Chemistrie",
-        filename: "chemistrie-clip-system.pdf",
+        title: "ChemClip Order Form",
+        description: "Used to accompany ChemClip orders to ensure clips are produced accurately.",
+        label: "ChemClip",
+        filename: "chemcliporderform.pdf",
+      },
+      {
+        title: "Request ChemClip Demo Kit",
+        description: "Request a ChemClip demo kit to support staff training and in-office patient conversations.",
+        label: "ChemClip",
+        externalHref: "https://form.typeform.com/to/XlZhJX5K",
+        cta: "Request Demo Kit",
       },
     ],
   },
@@ -964,44 +919,54 @@ const featuredCards: FeaturedCard[] = [
 
 const mostUsedResources: ResourceItem[] = [
   {
-    title: "Request Pricing Guide",
-    icon: "/icons/site/file-text.svg",
-    type: "Form",
-    description: "Get the current pricing guide and program details for your account.",
-    cta: "Request Guide",
-    href: "mailto:sales@artisanlabnetwork.com?subject=Pricing%20Guide%20Request",
-  },
-  {
-    title: "Schedule Training",
-    icon: "/icons/site/users.svg",
-    type: "Form",
-    description: "Set up team training, onboarding, or a focused account review.",
-    cta: "Schedule",
-    href: "mailto:sales@artisanlabnetwork.com?subject=Training%20Request",
-  },
-  {
-    title: "SpecCheck Lab Pay",
+    title: "SpecCheck",
     icon: "/icons/site/monitor.svg",
     type: "Tool",
-    description: "Access SpecCheck tools for account payment and lab workflow support.",
+    description: "Open SpecCheck for lab workflow, billing, account payment, and support tools.",
     cta: "Open Tool",
     href: "https://www.speccheckrx.com/",
   },
   {
-    title: "IOT Comparison Sheet",
-    icon: "/icons/site/library.svg",
-    type: "Download",
-    description: "Compare Artisan Series options for daily dispensing conversations.",
-    cta: "View Resource",
-    href: "/files/iot-comparison-guide.pdf",
+    title: "DVI RxWizard",
+    icon: "/icons/site/monitor.svg",
+    type: "Tool",
+    description: "Access RxWizard for online ordering and prescription workflow support.",
+    cta: "Open RxWizard",
+    href: "https://www.dvirx.com/",
   },
   {
-    title: "Shipping Label Request",
-    icon: "/icons/site/wrench.svg",
+    title: "GoStock",
+    icon: "/icons/site/library.svg",
+    logo: "/logos/gostock_logo.png",
+    logoAlt: "GoStock",
+    type: "Tool",
+    description: "Search and source stock lenses through GoStock and Global Optics.",
+    cta: "Open GoStock",
+    href: "https://www.globalopticsinc.com/gostock",
+  },
+  {
+    title: "Price Lists",
+    icon: "/icons/site/file-text.svg",
+    type: "Tool",
+    description: "Open confidential partner price lists for authorized Artisan customers.",
+    cta: "Open Price Lists",
+    href: "/portal/price-list/g6",
+  },
+  {
+    title: "Policies",
+    icon: "/icons/site/file-check.svg",
+    type: "Tool",
+    description: "Review Artisan policy guidance for remakes, redos, warranties, shipping, and frames.",
+    cta: "Review Policies",
+    href: "/portal/price-list/policies",
+  },
+  {
+    title: "Contact Support",
+    icon: "/icons/site/message-circle.svg",
     type: "Form",
-    description: "Request the labels and logistics support your practice needs.",
-    cta: "Request Labels",
-    href: "mailto:customerservice@artisanlabnetwork.com?subject=Shipping%20Label%20Request",
+    description: "Reach the right customer service path when an order or account question needs help.",
+    cta: "Contact Support",
+    href: "#lab-customer-service",
   },
 ];
 
@@ -1031,28 +996,20 @@ const accountTools: ResourceItem[] = [
     href: "mailto:customerservice@artisanlabnetwork.com?subject=Shipping%20Label%20Request",
   },
   {
-    title: "Merch Shop",
-    icon: "/icons/site/library.svg",
-    type: "External",
-    description: "Access branded practice and team materials when available.",
-    cta: "Open Shop",
-    href: "#",
-  },
-  {
-    title: "Chemistrie Order Form",
+    title: "ChemClip Order Form",
     icon: "/icons/site/file-text.svg",
-    type: "Form",
-    description: "Submit Chemistrie orders with the details needed for clean processing.",
-    cta: "Open Form",
-    href: "#",
+    type: "Download",
+    description: "Download the order form used to accompany ChemClip orders for accurate clip production.",
+    cta: "Download Form",
+    href: "/files/chemcliporderform.pdf",
   },
   {
-    title: "Chemistrie Demo Kit Request",
+    title: "Request ChemClip Demo Kit",
     icon: "/icons/site/wrench.svg",
     type: "Form",
-    description: "Request a kit to support in-office demonstrations and patient education.",
+    description: "Request a demo kit to support in-office ChemClip demonstrations and staff training.",
     cta: "Request Kit",
-    href: "#",
+    href: "https://form.typeform.com/to/XlZhJX5K",
   },
   {
     title: "SpecCheck Lab Pay",
@@ -1374,6 +1331,163 @@ const youtubeVideos: VideoGalleryItem[] = [
   },
 ];
 
+const resourceCategories: ResourceCategory[] = [
+  "Ordering",
+  "Pricing",
+  "Product Guides",
+  "Technical Guides",
+  "Safety",
+  "Training",
+  "Policies",
+  "Videos",
+];
+
+const resourceVendors: ResourceVendor[] = [
+  "Artisan",
+  "IOT",
+  "Tokai",
+  "HOYA",
+  "Unity",
+  "Neurolens",
+  "Shamir",
+  "Crizal",
+  "Varilux",
+  "TechShield",
+  "ChemClip",
+];
+
+const troubleshootingResources: SearchableResource[] = [
+  {
+    title: "Non-Adapts",
+    type: "Tool",
+    category: "Technical Guides",
+    vendor: "Artisan",
+    description: "Practical triage for progressive, occupational, and specialty-lens non-adapts.",
+    cta: "Read Guide",
+    href: "/provider-resources/troubleshooting/non-adapts",
+    icon: "/icons/site/wrench.svg",
+  },
+  {
+    title: "Corridor Issues",
+    type: "Tool",
+    category: "Technical Guides",
+    vendor: "Artisan",
+    description: "Diagnose narrow corridors, swim, blur zones, and near/intermediate access complaints.",
+    cta: "Read Guide",
+    href: "/provider-resources/troubleshooting/corridor-issues",
+    icon: "/icons/site/eye.svg",
+  },
+  {
+    title: "Coating Concerns",
+    type: "Tool",
+    category: "Technical Guides",
+    vendor: "TechShield",
+    description: "Support for crazing, peeling, scratches, cleaning problems, and coating expectations.",
+    cta: "Read Guide",
+    href: "/provider-resources/troubleshooting/coating-concerns",
+    icon: "/icons/site/shield-check.svg",
+  },
+  {
+    title: "Frame Compatibility",
+    type: "Tool",
+    category: "Safety",
+    vendor: "Artisan",
+    description: "Check frame choice, groove depth, wrap, drill mounts, safety frames, and lens limits before ordering.",
+    cta: "Read Guide",
+    href: "/provider-resources/troubleshooting/frame-compatibility",
+    icon: "/icons/site/layers.svg",
+  },
+  {
+    title: "Measurement Errors",
+    type: "Tool",
+    category: "Technical Guides",
+    vendor: "Artisan",
+    description: "Find common PD, OC, seg-height, pantoscopic tilt, wrap, and vertex issues before they become remakes.",
+    cta: "Read Guide",
+    href: "/provider-resources/troubleshooting/measurement-errors",
+    icon: "/icons/site/alert-circle.svg",
+  },
+  {
+    title: "Progressive Troubleshooting",
+    type: "Tool",
+    category: "Technical Guides",
+    vendor: "Artisan",
+    description: "Step-by-step support for progressive complaints, fit verification, measurements, and remake decisions.",
+    cta: "Read Guide",
+    href: "/provider-resources/troubleshooting/progressive-troubleshooting",
+    icon: "/icons/site/book-open.svg",
+  },
+];
+
+const comingSoonMarketingResources = [
+  "Social Posts",
+  "Email Templates",
+  "Posters",
+  "Counter Cards",
+  "Recall Campaigns",
+  "Multiple-Pair Promotions",
+];
+
+function inferVendor(resource: DownloadResourceItem, section: DownloadResourceSection): ResourceVendor {
+  const text = `${resource.title} ${resource.label} ${section.title}`.toLowerCase();
+  if (text.includes("chem")) return "ChemClip";
+  if (text.includes("techshield")) return "TechShield";
+  if (text.includes("varilux")) return "Varilux";
+  if (text.includes("crizal")) return "Crizal";
+  if (text.includes("shamir")) return "Shamir";
+  if (text.includes("neurolens") || text.includes("newton")) return "Neurolens";
+  if (text.includes("unity") || text.includes("vsp")) return "Unity";
+  if (text.includes("hoya")) return "HOYA";
+  if (text.includes("tokai")) return "Tokai";
+  if (text.includes("iot") || text.includes("camber") || text.includes("endless") || text.includes("neochromes")) return "IOT";
+  return "Artisan";
+}
+
+function inferCategory(resource: DownloadResourceItem, groupTitle: string): ResourceCategory {
+  const text = `${resource.title} ${resource.label} ${groupTitle}`.toLowerCase();
+  if (text.includes("video") || resource.externalHref?.includes("youtu")) return "Videos";
+  if (text.includes("training")) return "Training";
+  if (text.includes("policy")) return "Policies";
+  if (text.includes("price")) return "Pricing";
+  if (text.includes("safety") || text.includes("frame book")) return "Safety";
+  if (text.includes("centration") || text.includes("layout") || text.includes("technical") || text.includes("white paper") || text.includes("scientific") || text.includes("faq")) return "Technical Guides";
+  if (text.includes("order") || text.includes("demo kit")) return "Ordering";
+  return "Product Guides";
+}
+
+function downloadResourceToSearchable(
+  resource: DownloadResourceItem,
+  section: DownloadResourceSection,
+  groupTitle: string
+): SearchableResource {
+  return {
+    ...resourceToItem(resource),
+    category: resource.category ?? inferCategory(resource, groupTitle),
+    vendor: resource.vendor ?? inferVendor(resource, section),
+  };
+}
+
+function buildSearchableResources(): SearchableResource[] {
+  const downloadResources = downloadResourceSections.flatMap((section) => [
+    ...availableResources(section.resources).map((resource) => downloadResourceToSearchable(resource, section, section.eyebrow)),
+    ...availableResources(section.treatments ?? []).map((resource) => downloadResourceToSearchable(resource, section, "Treatments")),
+    ...availableResources(section.layoutCharts ?? []).map((resource) => downloadResourceToSearchable(resource, section, "Layout Charts")),
+    ...availableResources(section.unityRewards ?? []).map((resource) => downloadResourceToSearchable(resource, section, "Unity Rewards")),
+    ...(section.training ?? []).map((resource) => downloadResourceToSearchable(resource, section, "Training")),
+  ]);
+
+  const quickResources: SearchableResource[] = [
+    ...mostUsedResources.map((resource) => ({
+      ...resource,
+      category: resource.title.includes("Price") ? "Pricing" as ResourceCategory : resource.title.includes("Policies") ? "Policies" as ResourceCategory : "Ordering" as ResourceCategory,
+      vendor: "Artisan" as ResourceVendor,
+    })),
+    ...troubleshootingResources,
+  ];
+
+  return [...quickResources, ...downloadResources];
+}
+
 function openExternal(href: string) {
   return href.startsWith("http") || href.startsWith("mailto:");
 }
@@ -1416,6 +1530,163 @@ function ResourceLabel({ type }: { type: ResourceType }) {
     <span className="inline-flex rounded-full border border-[#dbcdb9] bg-[#f8f2e9] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8a7654] shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
       {type}
     </span>
+  );
+}
+
+function FilterChip({
+  label,
+  active,
+  onClick,
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
+        active
+          ? "border-[#1f1a17] bg-[#1f1a17] text-white shadow-[0_10px_22px_rgba(24,18,13,0.14)]"
+          : "border-[#d8cab7] bg-white text-[#625b53] hover:border-[#c9b28b] hover:bg-[#f3eadb] hover:text-[#1f1a17]"
+      }`}
+    >
+      {label}
+    </button>
+  );
+}
+
+function ResourceDiscovery({ resources }: { resources: SearchableResource[] }) {
+  const [query, setQuery] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState<ResourceCategory[]>([]);
+  const [selectedVendors, setSelectedVendors] = useState<ResourceVendor[]>([]);
+
+  const toggleCategory = (category: ResourceCategory) => {
+    setSelectedCategories((current) =>
+      current.includes(category)
+        ? current.filter((item) => item !== category)
+        : [...current, category]
+    );
+  };
+
+  const toggleVendor = (vendor: ResourceVendor) => {
+    setSelectedVendors((current) =>
+      current.includes(vendor)
+        ? current.filter((item) => item !== vendor)
+        : [...current, vendor]
+    );
+  };
+
+  const filteredResources = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+
+    return resources.filter((resource) => {
+      const matchesQuery =
+        !normalizedQuery ||
+        `${resource.title} ${resource.vendor} ${resource.category} ${resource.description}`
+          .toLowerCase()
+          .includes(normalizedQuery);
+      const matchesCategory =
+        selectedCategories.length === 0 || selectedCategories.includes(resource.category);
+      const matchesVendor =
+        selectedVendors.length === 0 || selectedVendors.includes(resource.vendor);
+
+      return matchesQuery && matchesCategory && matchesVendor;
+    });
+  }, [query, resources, selectedCategories, selectedVendors]);
+
+  const clearFilters = () => {
+    setQuery("");
+    setSelectedCategories([]);
+    setSelectedVendors([]);
+  };
+
+  return (
+    <div className="mt-10 rounded-[34px] border border-[#d8cab7] bg-[#fbf8f3] p-5 shadow-[0_20px_54px_rgba(24,18,13,0.08)] md:p-7">
+      <label className="block text-sm font-semibold uppercase tracking-[0.22em] text-[#8a7654]" htmlFor="provider-resource-search">
+        Search Resources
+      </label>
+      <input
+        id="provider-resource-search"
+        type="search"
+        value={query}
+        onChange={(event) => setQuery(event.target.value)}
+        placeholder="Search by title, vendor, category, or description"
+        className="mt-3 min-h-14 w-full rounded-2xl border border-[#d8cab7] bg-white px-5 text-base text-[#1f1a17] outline-none transition placeholder:text-[#9b9186] focus:border-[#8a7654] focus:ring-4 focus:ring-[#d4c09a]/20"
+      />
+
+      <div className="mt-6 grid gap-5 lg:grid-cols-2">
+        <div>
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-[#8a7654]">
+            Categories
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {resourceCategories.map((category) => (
+              <FilterChip
+                key={category}
+                label={category}
+                active={selectedCategories.includes(category)}
+                onClick={() => toggleCategory(category)}
+              />
+            ))}
+          </div>
+        </div>
+        <div>
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-[#8a7654]">
+            Vendors
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {resourceVendors.map((vendor) => (
+              <FilterChip
+                key={vendor}
+                label={vendor}
+                active={selectedVendors.includes(vendor)}
+                onClick={() => toggleVendor(vendor)}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-6 flex flex-col gap-3 border-t border-[#e4d7c6] pt-5 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm font-semibold text-[#625b53]">
+          Showing {filteredResources.length} of {resources.length} resources
+        </p>
+        {query || selectedCategories.length || selectedVendors.length ? (
+          <button
+            type="button"
+            onClick={clearFilters}
+            className="inline-flex w-fit items-center rounded-full border border-[#d8cab7] bg-white px-4 py-2 text-sm font-semibold text-[#1f1a17] transition hover:border-[#c9b28b] hover:bg-[#f3eadb]"
+          >
+            Clear filters
+          </button>
+        ) : null}
+      </div>
+
+      <div className="mt-7 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        {filteredResources.slice(0, 18).map((resource) => (
+          <ResourceCard
+            key={`${resource.vendor}-${resource.category}-${resource.title}-${resource.href}`}
+            item={{
+              ...resource,
+              description: `${resource.vendor} · ${resource.category}. ${resource.description}`,
+            }}
+            compact
+          />
+        ))}
+      </div>
+      {filteredResources.length > 18 ? (
+        <p className="mt-5 text-sm leading-6 text-[#75664e]">
+          Narrow the search or add filters to reduce the list. The first 18 matching resources are shown to keep the page fast on mobile.
+        </p>
+      ) : null}
+      {filteredResources.length === 0 ? (
+        <div className="mt-7 rounded-2xl border border-[#e4d7c6] bg-white p-6 text-sm leading-7 text-[#625b53]">
+          No resources match those filters. Try removing one vendor or category, or contact support if you expected to find something specific.
+        </div>
+      ) : null}
+    </div>
   );
 }
 
@@ -1669,7 +1940,7 @@ function SelectedResourceSection({ section }: { section: DownloadResourceSection
   };
 
   return (
-    <div id={section.id} className="scroll-mt-28">
+    <div id={`selected-resource-${section.id}`} className="scroll-mt-28">
       <div className="mt-8 hidden rounded-[34px] border border-black/10 bg-white p-6 shadow-[0_24px_64px_rgba(24,18,13,0.08)] md:block md:p-8">
         <div className="grid gap-8 lg:grid-cols-[0.78fr_1.22fr]">
           <div>
@@ -2802,6 +3073,7 @@ export default function ProviderResourcesPage({
   const selectedResourceSection =
     downloadResourceSections.find((section) => section.id === openResourceSection) ??
     downloadResourceSections[0];
+  const searchableResources = useMemo(() => buildSearchableResources(), []);
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -2832,7 +3104,7 @@ export default function ProviderResourcesPage({
       setOpenResourceSection(section.id);
       window.setTimeout(() => {
         document
-          .getElementById(section.id)
+          .getElementById(`selected-resource-${section.id}`)
           ?.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 80);
     };
@@ -2878,6 +3150,9 @@ export default function ProviderResourcesPage({
       <span id="modern-package-system" className="sr-only" aria-hidden="true" />
       <span id="speccheck" className="sr-only" aria-hidden="true" />
       <span id="safety-systems" className="sr-only" aria-hidden="true" />
+      {downloadResourceSections.map((section) => (
+        <span key={`anchor-${section.id}`} id={section.id} className="sr-only" aria-hidden="true" />
+      ))}
 
       <section
         data-theme="light"
@@ -2957,6 +3232,24 @@ export default function ProviderResourcesPage({
               className="object-cover"
             />
           </motion.div>
+        </div>
+      </section>
+
+      <section id="most-used-resources" className="border-b border-[#e7ddd0] bg-[#fbf8f3] px-6 py-16 md:px-10 md:py-20">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+            <SectionHeader
+              eyebrow="Most Used Resources"
+              title="Fast paths for existing customers."
+              description="Start here for the tools practices use every day: ordering, pricing, policies, and support."
+            />
+
+            <div className="grid gap-4 md:grid-cols-2">
+              {mostUsedResources.map((item) => (
+                <ResourceCard key={item.title} item={item} compact />
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -3475,6 +3768,60 @@ export default function ProviderResourcesPage({
                 </div>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      <section id="resource-directory" className="bg-[#f6f1e9] px-6 py-20 md:px-10 md:py-24">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeader
+            eyebrow="Resource Search"
+            title="Search and filter the full resource library."
+            description="Use this lightweight directory when you know the resource type, vendor, product name, or workflow you need."
+          />
+          <ResourceDiscovery resources={searchableResources} />
+        </div>
+      </section>
+
+      <section id="troubleshooting-best-practices" className="border-y border-[#e7ddd0] bg-[#fbf8f3] px-6 py-20 md:px-10 md:py-24">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeader
+            eyebrow="Troubleshooting & Best Practices"
+            title="Practical support before a job becomes a remake."
+            description="First-pass guides for independent opticians and office staff handling common fit, measurement, coating, and progressive lens questions."
+          />
+          <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {troubleshootingResources.map((resource) => (
+              <ResourceCard key={resource.href} item={resource} compact />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="marketing-practice-growth" className="bg-[#f6f1e9] px-6 py-20 md:px-10 md:py-24">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeader
+            eyebrow="Marketing & Practice Growth Resources"
+            title="Roadmap items coming soon."
+            description="These resources are visible as a Phase 2 roadmap only. No placeholder links are attached until the assets are ready."
+          />
+          <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {comingSoonMarketingResources.map((title) => (
+              <article
+                key={title}
+                className="rounded-[24px] border border-[#e4d7c6] bg-white p-6 shadow-[0_16px_40px_rgba(24,18,13,0.06)]"
+              >
+                <span className="inline-flex rounded-full border border-[#e5d2b2] bg-[#fbf3df] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8a7654]">
+                  Coming Soon
+                </span>
+                <h3 className="mt-5 text-xl font-semibold leading-tight text-[#1f1a17]">
+                  {title}
+                </h3>
+                <p className="mt-3 text-sm leading-7 text-[#625b53]">
+                  Planned practice-growth asset. This card is intentionally not linked until the resource is complete.
+                </p>
+              </article>
+            ))}
           </div>
         </div>
       </section>

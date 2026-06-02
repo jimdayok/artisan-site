@@ -20,8 +20,7 @@ function PreviewNotFound() {
           Account not found
         </h1>
         <p className="mt-4 text-base leading-7 text-[#706759]">
-          No workbook account or portal assignment was found for this account
-          number.
+          No dashboard account was found for this Acct ID or legacy account number.
         </p>
       </div>
     </main>
@@ -51,14 +50,16 @@ export default async function PortalAdminPreviewPage({
 
   const workbookProfile = getPortalWorkbookProfileByAccountNumber(legacyAccountNumber);
   const customer = getPreviewCustomerByAccountNumber(legacyAccountNumber);
+  const dashboardState = getPortalDashboardV1ByAccount(effectiveAccountId);
   const accountName =
+    dashboardState.account?.business_name ||
     workbookProfile?.account?.accountName ||
     workbookProfile?.person.organization ||
     customer?.practiceName ||
     effectiveAccountId;
-
-  if (!workbookProfile && !customer) return <PreviewNotFound />;
-  const dashboardState = getPortalDashboardV1ByAccount(effectiveAccountId);
+  if (dashboardState.status !== "ok" && !workbookProfile && !customer) {
+    return <PreviewNotFound />;
+  }
 
   return (
     <PortalDashboardContent

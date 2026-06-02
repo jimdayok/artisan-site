@@ -543,7 +543,7 @@ export default function AboutPage() {
               </h2>
             </div>
             <p className="text-lg leading-8 text-[#625b53]">
-              Artisan's community work is rooted in practical opportunity, workforce development, and local relationships. These commitments are distinct from production, but connected to the same belief: people and independent businesses deserve a stronger path forward.
+              Artisan&apos;s community work is rooted in practical opportunity, workforce development, and local relationships. These commitments are distinct from production, but connected to the same belief: people and independent businesses deserve a stronger path forward.
             </p>
           </div>
 

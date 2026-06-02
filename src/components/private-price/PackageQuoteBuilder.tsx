@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { AlertTriangle, PackageCheck } from "lucide-react";
 import {
   adjustmentLabel,
@@ -58,16 +58,15 @@ export default function PackageQuoteBuilder({ initialLensId }: { initialLensId?:
   const [showUnavailableMaterials, setShowUnavailableMaterials] = useState(false);
   const availableMaterials = useMemo(() => packageMaterials.filter(isPackageMaterialAvailable), []);
 
-  useEffect(() => {
-    const current = packageMaterials.find((entry) => entry.id === materialId);
-    if (!current || !isPackageMaterialAvailable(current)) {
-      setMaterialId("pkg-material-polycarb");
-    }
-  }, [materialId]);
-
   const lens = selectItem(packageLensItems, lensId) ?? packageLensItems[0];
   const material = selectItem(packageMaterials, materialId);
-  const safeMaterial = material && isPackageMaterialAvailable(material) ? material : undefined;
+  const effectiveMaterialId =
+    material && isPackageMaterialAvailable(material) ? material.id : "pkg-material-polycarb";
+  const effectiveMaterial =
+    selectItem(packageMaterials, effectiveMaterialId) ?? packageMaterials[0];
+  const safeMaterial = isPackageMaterialAvailable(effectiveMaterial)
+    ? effectiveMaterial
+    : undefined;
   const coating = selectItem(packageCoatings, coatingId);
   const photo = selectItem(packagePhotochromics, photoId);
   const blue = selectItem(packageBlueFilters, blueId);
@@ -105,7 +104,7 @@ export default function PackageQuoteBuilder({ initialLensId }: { initialLensId?:
                     disabled={!available}
                     onClick={() => available && setMaterialId(entry.id)}
                     className={`inline-flex min-h-10 items-center gap-1.5 rounded-full border px-3 text-xs font-bold transition ${
-                      materialId === entry.id
+                      effectiveMaterialId === entry.id
                         ? "border-[#c7ad7b] bg-[#122033] text-white"
                         : available
                           ? "border-[#dfd2bf] bg-white text-[#122033] hover:bg-[#f4ead9]"

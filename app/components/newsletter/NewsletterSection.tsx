@@ -137,7 +137,7 @@ export default function NewsletterSection({
                   ? "border-[#d8bb7a] bg-white/62 text-[#122033]"
                   : "border-[#dfd2bf] bg-[#f8f3eb] text-[#122033]"
             }`}>
-              "{pullQuote}"
+              &quot;{pullQuote}&quot;
             </blockquote>
           ) : null}
 

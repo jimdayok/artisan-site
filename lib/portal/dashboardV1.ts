@@ -48,6 +48,7 @@ export type PortalDashboardV1Account = {
   lab_name: string;
   phone: string;
   state: string;
+  used_price_lists?: string[];
   data_refresh_date: string;
   tier_status: {
     previous_month_tier_rank_by_acct_id: string;
@@ -83,6 +84,17 @@ export type PortalDashboardV1Account = {
       tokai: boolean;
     };
   };
+  quality_metrics?: {
+    lab_redo_pct: { ppm: number; pm: number; cm: number };
+    office_redo_pct: { ppm: number; pm: number; cm: number };
+    warranty_pct: { ppm: number; pm: number; cm: number };
+    non_adapt_pct: { ppm: number; pm: number; cm: number };
+  };
+  program_enrollment?: {
+    arsql26: boolean;
+    arpmp26: boolean;
+    aruty26: boolean;
+  };
   customer_insights: {
     suggestions?: string[];
     metrics?: Record<string, number | string>;
@@ -92,6 +104,13 @@ export type PortalDashboardV1Account = {
     primary_emails: string[];
     marketing_status_summary: Record<string, number>;
   };
+  authorized_users?: Array<{
+    name: string;
+    email: string;
+    role_type: string;
+    marketing_status: string;
+    organization: string;
+  }>;
 };
 
 export type PortalDashboardV1State = {
@@ -113,6 +132,44 @@ function readJson<T>(filePath: string): T | undefined {
 
 function accountFileName(value: string) {
   return value.replace(/[^a-zA-Z0-9_-]/g, "_");
+}
+
+type DashboardV1IndexRow = {
+  account_id?: string;
+  all_account_numbers?: string;
+};
+
+function getAccountsIndex() {
+  return (
+    readJson<DashboardV1IndexRow[]>(
+      path.join(DASHBOARD_V1_DIR, "accounts_index.json")
+    ) ?? []
+  );
+}
+
+function normalizeAcctId(value: string) {
+  return String(value || "").trim().toUpperCase();
+}
+
+function resolveAccountId(input: string) {
+  const normalizedInput = normalizeAcctId(input);
+  if (!normalizedInput) return "";
+
+  const index = getAccountsIndex();
+  const direct = index.find(
+    (row) => normalizeAcctId(row.account_id || "") === normalizedInput
+  );
+  if (direct?.account_id) return direct.account_id;
+
+  const byLegacy = index.find((row) =>
+    String(row.all_account_numbers || "")
+      .split(",")
+      .map((entry) => normalizeAccountNumber(entry))
+      .some((entry) => entry && entry === normalizeAccountNumber(normalizedInput))
+  );
+  if (byLegacy?.account_id) return byLegacy.account_id;
+
+  return normalizedInput;
 }
 
 function getManifest() {
@@ -154,7 +211,7 @@ export function getPortalDashboardV1ByAccount(accountNumber?: string): PortalDas
     };
   }
 
-  const normalized = normalizeAccountNumber(accountNumber ?? "");
+  const normalized = resolveAccountId(accountNumber ?? "");
   if (!normalized) {
     return {
       status: "missing-account",

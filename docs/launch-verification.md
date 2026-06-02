@@ -14,6 +14,12 @@ Optional target:
 node scripts/verify-launch-readiness.mjs --base-url https://preview.artisanslabs.com
 ```
 
+Cloudflare Access-aware mode (recommended for staging/edge-protected hosts):
+
+```bash
+node scripts/verify-launch-readiness.mjs --base-url https://artisanslabs.com --access-aware
+```
+
 ## What it tests
 
 1. Public route status:
@@ -62,6 +68,12 @@ Default base URL is `http://127.0.0.1:3000`.
 node scripts/verify-launch-readiness.mjs --base-url https://preview.artisanslabs.com
 ```
 
+If staging host is behind Cloudflare Access edge redirects, use:
+
+```bash
+node scripts/verify-launch-readiness.mjs --base-url https://preview.artisanslabs.com --access-aware
+```
+
 ## How to run after DNS cutover
 
 ```bash
@@ -71,6 +83,9 @@ node scripts/verify-launch-readiness.mjs --base-url https://www.artisanlabnetwor
 Run both:
 - `https://www.artisanlabnetwork.com`
 - `https://artisanlabnetwork.com` (if apex serves directly)
+
+For final production go/no-go, prefer non-`--access-aware` mode on canonical hosts
+so redirect/robots/sitemap assertions are strict.
 
 ## Output format
 

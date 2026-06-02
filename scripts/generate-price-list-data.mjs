@@ -1,10 +1,12 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import ExcelJS from "exceljs";
 import { parsePriceList } from "../lib/pricing/parsePriceList.mjs";
 
 const root = process.cwd();
 const priceListSourceDir = path.join(root, "private-source", "price-lists");
+const portalLookupDir = path.join(root, "private-source", "portal", "lookup_docs");
 const outputDir = path.join(root, "private-source", "pricing", "generated");
 
 function resolveSourceFile(candidates) {
@@ -13,6 +15,68 @@ function resolveSourceFile(candidates) {
     if (existsSync(fullPath)) return fullPath;
   }
   throw new Error(`Missing source file. Tried: ${candidates.join(", ")}`);
+}
+
+function resolveLookupFile(candidates) {
+  const roots = [portalLookupDir, priceListSourceDir];
+  for (const base of roots) {
+    for (const candidate of candidates) {
+      const fullPath = path.join(base, candidate);
+      if (existsSync(fullPath)) return fullPath;
+    }
+  }
+  throw new Error(`Missing lookup file. Tried: ${candidates.join(", ")} in ${roots.map((p) => path.relative(root, p)).join(", ")}`);
+}
+
+async function readLookupArMap(filePath) {
+  const workbook = new ExcelJS.Workbook();
+  await workbook.xlsx.readFile(filePath);
+  const worksheet = workbook.worksheets[0];
+  if (!worksheet) return new Map();
+
+  const headerRow = worksheet.getRow(1).values.slice(1).map((value) => String(value ?? "").trim().toLowerCase());
+  const dviIndex = headerRow.findIndex((h) => h.includes("dvi") || h.includes("column a"));
+  const nameIndex = headerRow.findIndex((h) => h === "name" || h.includes("column b"));
+  const brandIndex = headerRow.findIndex((h) => h === "brand" || h.includes("column c"));
+
+  const map = new Map();
+  const byCode = new Map();
+  worksheet.eachRow((row, rowNumber) => {
+    if (rowNumber === 1) return;
+    const values = row.values.slice(1);
+    const dvi = String(values[dviIndex >= 0 ? dviIndex : 0] ?? "").trim();
+    const name = String(values[nameIndex >= 0 ? nameIndex : 1] ?? "").trim();
+    const brand = String(values[brandIndex >= 0 ? brandIndex : 2] ?? "").trim();
+    if (!dvi) return;
+    const normalizedCode = dvi.toUpperCase();
+    const entry = {
+      name: name || dvi,
+      brand,
+      brandFamily: brand ? `${brand} AR Coatings` : "Other AR Coatings",
+    };
+    map.set(normalizedCode, entry);
+    if (entry.name) map.set(normalizeKey(entry.name), entry);
+    byCode.set(normalizedCode, entry);
+  });
+  return { byName: map, byCode };
+}
+
+function normalizeKey(value) {
+  return String(value ?? "").trim().toUpperCase().replace(/[™®]/g, "").replace(/\s+/g, " ");
+}
+
+function applyArLookup(arCoatings, lookupMap) {
+  if (!lookupMap.size) return arCoatings;
+  return arCoatings.map((coating) => {
+    const key = normalizeKey(coating.name);
+    const entry = lookupMap.get(key);
+    if (!entry) return coating;
+    return {
+      ...coating,
+      name: entry.name || coating.name,
+      brandFamily: entry.brand ? `${entry.brand} AR Coatings` : coating.brandFamily,
+    };
+  });
 }
 
 const sharedArCoatings = [
@@ -241,9 +305,22 @@ const y5AddOns = [
   ...fullServiceAddOns,
 ];
 
-const productLookupPath = resolveSourceFile(["Lookup.xlsx", "lookup.xlsx"]);
-const materialLookupPath = resolveSourceFile(["Lookup_Mat.xlsx", "lookup_mat.xlsx"]);
+const productLookupPath = resolveLookupFile(["Lookup.xlsx", "lookup.xlsx"]);
+const materialLookupPath = resolveLookupFile(["Lookup_Mat.xlsx", "lookup_mat.xlsx"]);
+const arLookupPath = resolveLookupFile(["Lookup_AR.xlsx", "lookup_ar.xlsx"]);
 const colorLookupPath = resolveSourceFile(["colors.txt"]);
+const arLookupMaps = await readLookupArMap(arLookupPath);
+
+function loadDviRowsByCode(code) {
+  const filePath = path.join(outputDir, `dvi-${code.toLowerCase()}-pricing.json`);
+  if (!existsSync(filePath)) return [];
+  try {
+    const parsed = JSON.parse(readFileSync(filePath, "utf8"));
+    return Array.isArray(parsed.rows) ? parsed.rows : [];
+  } catch {
+    return [];
+  }
+}
 
 const configs = [
   {
@@ -330,17 +407,66 @@ const configs = [
 await mkdir(outputDir, { recursive: true });
 
 for (const config of configs) {
+  const mappedArCoatings = applyArLookup(config.arCoatings, arLookupMaps.byName);
+  const dviRows = loadDviRowsByCode(config.code);
   const parsed = await parsePriceList({
     code: config.code,
     rawPath: config.rawPath,
     productLookupPath,
     materialLookupPath,
     colorLookupPath,
-    arCoatings: config.arCoatings,
+    arCoatings: mappedArCoatings,
+    arLookupByCode: arLookupMaps.byCode,
+    dviRows,
     addOnSections: config.addOnSections,
   });
 
+  const dviDerivedAr = new Map();
+  let unresolvedArCount = 0;
+  for (const row of parsed.rows) {
+    for (const coating of row.coatingOptions ?? []) {
+      if (coating.unresolved) {
+        unresolvedArCount += 1;
+        continue;
+      }
+      const key = `${coating.code}|${coating.name}|${coating.sourceSchedule}`;
+      const current = dviDerivedAr.get(key);
+      if (!current || coating.price < current.price) {
+        dviDerivedAr.set(key, {
+          code: coating.code,
+          name: coating.name,
+          brandFamily: coating.brandFamily,
+          price: coating.price,
+          sourceSchedule: coating.sourceSchedule,
+          unresolved: false,
+          notes: `Price sourced from COT schedule ${coating.sourceSchedule}.`,
+          recommended: false,
+          outsourced: false,
+        });
+      }
+    }
+  }
+  if (dviDerivedAr.size > 0) {
+    parsed.arCoatings = [...dviDerivedAr.values()].sort((a, b) =>
+      a.brandFamily.localeCompare(b.brandFamily) || a.name.localeCompare(b.name)
+    );
+  } else if ((parsed.arCoatings?.length ?? 0) === 0) {
+    parsed.report.assumptions.push(
+      "No AR coatings were resolved from DVI-linked COT schedules for this list."
+    );
+  }
+  if (unresolvedArCount > 0) {
+    parsed.report.assumptions.push(
+      `${unresolvedArCount} unresolved AR rows were ignored for customer display.`
+    );
+  }
+
   parsed.report.assumptions = [...parsed.report.assumptions, ...config.assumptions];
+  parsed.report.sourceFiles = [...parsed.report.sourceFiles, arLookupPath];
+  if (dviRows.length > 0) {
+    parsed.report.sourceFiles.push(path.join(outputDir, `dvi-${config.code.toLowerCase()}-pricing.json`));
+    parsed.report.assumptions.push("AR coating prices are sourced from DVI COT schedules matched by Style + Material + Price List.");
+  }
 
   const outputName = `${config.code.toLowerCase()}-pricing.json`;
   await writeFile(

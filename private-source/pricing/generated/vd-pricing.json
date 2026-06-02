@@ -233,15 +233,16 @@
   "report": {
     "sourceFiles": [
       "/Users/jimday/Documents/GitHub/artisan-site/private-source/price-lists/rawp6.xlsx",
-      "/Users/jimday/Documents/GitHub/artisan-site/private-source/price-lists/Lookup.xlsx",
-      "/Users/jimday/Documents/GitHub/artisan-site/private-source/price-lists/Lookup_Mat.xlsx",
-      "/Users/jimday/Documents/GitHub/artisan-site/private-source/price-lists/colors.txt"
+      "/Users/jimday/Documents/GitHub/artisan-site/private-source/portal/lookup_docs/Lookup.xlsx",
+      "/Users/jimday/Documents/GitHub/artisan-site/private-source/portal/lookup_docs/Lookup_Mat.xlsx",
+      "/Users/jimday/Documents/GitHub/artisan-site/private-source/price-lists/colors.txt",
+      "/Users/jimday/Documents/GitHub/artisan-site/private-source/portal/lookup_docs/Lookup_AR.xlsx"
     ],
     "rowCount": 0,
     "rawSourceRowsProcessed": 0,
     "rowsExcludedMissingLookup": 0,
     "displayRowCount": 0,
-    "generatedAt": "2026-05-30T23:58:12.085Z",
+    "generatedAt": "2026-06-01T23:41:01.928Z",
     "rawColumns": [
       "PL",
       "Mat",
@@ -289,6 +290,9 @@
     "unmappedProducts": [],
     "unmappedMaterials": [],
     "unmappedColors": [],
+    "hiddenBronzeRowsCount": 0,
+    "unmappedArCodes": [],
+    "missingCoatSchedules": [],
     "duplicatePriceConflictCount": 0,
     "duplicatePriceConflicts": [],
     "colorVariantsCollapsedCount": 0,

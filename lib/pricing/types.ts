@@ -1,13 +1,4 @@
-export type PriceListCode =
-  | "P6"
-  | "G6"
-  | "A6"
-  | "B5"
-  | "S5"
-  | "VD"
-  | "M5"
-  | "Y5"
-  | "TK";
+export type PriceListCode = string;
 
 export type PriceListPricingRow = {
   code: PriceListCode;
@@ -30,12 +21,24 @@ export type PriceListPricingRow = {
   outsourced: boolean;
   serviceNotes: string[];
   duplicateSourceRows: number;
+  coatingScheduleRef?: string;
+  coatingOptions?: Array<{
+    code: string;
+    name: string;
+    brandFamily: string;
+    price: number;
+    sourceSchedule: string;
+    unresolved?: boolean;
+  }>;
 };
 
 export type PriceListArCoating = {
+  code?: string;
   name: string;
   brandFamily: string;
   price: number;
+  sourceSchedule?: string;
+  unresolved?: boolean;
   notes?: string;
   recommended: boolean;
   outsourced: boolean;
@@ -71,13 +74,22 @@ export type PriceListGenerationReport = {
   duplicatePriceConflictCount: number;
   duplicatePriceConflicts: string[];
   colorVariantsCollapsedCount: number;
+  hiddenBronzeRowsCount?: number;
+  unmappedArCodes?: string[];
+  missingCoatSchedules?: string[];
   assumptions: string[];
 };
 
 export type GeneratedPriceListData = {
   code: PriceListCode;
+  canonicalCode?: string;
+  sourceCodesMerged?: string[];
   rows: PriceListPricingRow[];
   arCoatings: PriceListArCoating[];
+  materialAddOns?: Array<{
+    material: string;
+    addOn: number;
+  }>;
   addOnSections: PriceListAddOnSection[];
   report: PriceListGenerationReport;
 };

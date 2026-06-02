@@ -717,7 +717,7 @@ function EventsAndIndustry({ variant, onContactClick }: { variant: Variant; onCo
         <div className="mx-auto max-w-7xl">
           <motion.div {...fadeUp} className="grid gap-6 lg:grid-cols-[0.82fr_1.18fr] lg:items-end">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#8a7654]">Where We'll Be</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#8a7654]">Where We&apos;ll Be</p>
               <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">Meet the Artisan team.</h2>
             </div>
             <p className="max-w-3xl text-base leading-8 text-[#625b53] md:text-lg">
@@ -771,7 +771,7 @@ function FinalCta({ onContactClick }: { onContactClick: () => void }) {
       <motion.div {...fadeUp} className="mx-auto max-w-4xl">
         <h2 className="text-4xl font-semibold tracking-tight md:text-5xl">Ready for a Better Lab Relationship?</h2>
         <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-white/70">
-          Start with a conversation. We'll help you find the right path for your practice.
+          Start with a conversation. We&apos;ll help you find the right path for your practice.
         </p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
           <a href={ACCOUNT_APPLICATION_URL} target="_blank" rel="noreferrer" className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#d4c09a] px-7 py-3 text-sm font-semibold text-[#171311]">

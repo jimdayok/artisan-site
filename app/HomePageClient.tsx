@@ -151,7 +151,7 @@ const partnerBrands = [
   {
     name: "Tokai",
     logo: "/tokai-logo.png",
-    href: "/provider-resources/professional-resources#tokai",
+    href: "/provider-resources#tokai",
     logoClass: "max-h-16 w-[80%]",
   },
   {
@@ -480,8 +480,10 @@ function AnimatedStatValue({
       if (progress < 1) raf = requestAnimationFrame(tick);
     };
 
-    setDisplay(start);
-    raf = requestAnimationFrame(tick);
+    raf = requestAnimationFrame(() => {
+      setDisplay(start);
+      tick();
+    });
     return () => cancelAnimationFrame(raf);
   }, [active, stat]);
 

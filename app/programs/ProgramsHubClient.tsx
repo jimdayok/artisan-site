@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import Header from "../components/Header";
@@ -48,15 +48,13 @@ function GateShell({ children }: { children: React.ReactNode }) {
 
 export default function ProgramsHubClient() {
   const searchParams = useSearchParams();
-  const [unlocked, setUnlocked] = useState(false);
+  const [unlocked, setUnlocked] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.localStorage.getItem(UNLOCK_KEY) === "true";
+  });
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    setUnlocked(window.localStorage.getItem(UNLOCK_KEY) === "true");
-    setLoaded(true);
-  }, []);
+  const [loaded] = useState(true);
 
   const orderedPrograms = useMemo(
     () =>

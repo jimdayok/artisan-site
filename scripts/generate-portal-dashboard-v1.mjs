@@ -110,6 +110,22 @@ const ACCOUNT_HEADER_ALIASES = {
   "PPM VSP Jobs": ["PPM VSP Jobs"],
   "PM VSP Jobs": ["PM VSP Jobs"],
   "CM VSP Jobs": ["CM VSP Jobs"],
+  "Used Price Lists": ["Used Price Lists", "Used Price List", "Price Lists", "Associated Price Lists"],
+  "PPM Lab Redo %": ["PPM Lab Redo %"],
+  "PM Lab Redo %": ["PM Lab Redo %"],
+  "CM Lab Redo %": ["CM Lab Redo %"],
+  "PPM Office Redo %": ["PPM Office Redo %", "PPM Office Redo%"],
+  "PM Office Redo %": ["PM Office Redo %", "PM Office Redo%"],
+  "CM Office Redo %": ["CM Office Redo %", "CM Office Redo%"],
+  "PPM Warranty %": ["PPM Warranty %"],
+  "PM Warranty %": ["PM Warranty %"],
+  "CM Warranty %": ["CM Warranty %"],
+  "PPM Non-Adapt %": ["PPM Non-Adapt %", "PPM Non Adapt %"],
+  "PM Non-Adapt %": ["PM Non-Adapt %", "PM Non Adapt %"],
+  "CM Non-Adapt %": ["CM Non-Adapt %", "CM Non Adapt %"],
+  "Is Enrolled in ARSQL26": ["Is Enrolled in ARSQL26"],
+  "Is Enrolled in ARPMP26": ["Is Enrolled in ARPMP26"],
+  "Is Enrolled in ARUTY26": ["Is Enrolled in ARUTY26"],
   "Data Refresh Date": ["Data Refresh Date", "Last Shipped Date (Global)"],
 };
 
@@ -348,6 +364,16 @@ function truthyUsage(value) {
   return !["no", "none", "0", "0%", "false", "n/a", "na"].includes(normalized);
 }
 
+function parseUsedPriceLists(value) {
+  return [...new Set(
+    toText(value)
+      .split(/[;,|/]/)
+      .flatMap((entry) => entry.split(/\s+/))
+      .map((entry) => entry.trim().toUpperCase())
+      .filter((entry) => /^[A-Z0-9]{2,4}$/.test(entry))
+  )];
+}
+
 function isPowerBiArtifactText(value) {
   const text = toText(value).toLowerCase();
   return (
@@ -582,6 +608,35 @@ function classifyAccount(row) {
     tokai_usage: toText(row["Tokai Usage"]),
   };
 
+  const qualityRates = {
+    lab_redo_pct: {
+      ppm: toNumber(row["PPM Lab Redo %"]),
+      pm: toNumber(row["PM Lab Redo %"]),
+      cm: toNumber(row["CM Lab Redo %"]),
+    },
+    office_redo_pct: {
+      ppm: toNumber(row["PPM Office Redo %"]),
+      pm: toNumber(row["PM Office Redo %"]),
+      cm: toNumber(row["CM Office Redo %"]),
+    },
+    warranty_pct: {
+      ppm: toNumber(row["PPM Warranty %"]),
+      pm: toNumber(row["PM Warranty %"]),
+      cm: toNumber(row["CM Warranty %"]),
+    },
+    non_adapt_pct: {
+      ppm: toNumber(row["PPM Non-Adapt %"]),
+      pm: toNumber(row["PM Non-Adapt %"]),
+      cm: toNumber(row["CM Non-Adapt %"]),
+    },
+  };
+
+  const programEnrollment = {
+    arsql26: truthyUsage(row["Is Enrolled in ARSQL26"]),
+    arpmp26: truthyUsage(row["Is Enrolled in ARPMP26"]),
+    aruty26: truthyUsage(row["Is Enrolled in ARUTY26"]),
+  };
+
   const metrics = {
     jobs_trend: trendDirection(cmJobs, pmJobs),
     sales_trend: trendDirection(cmSales, pmSales),
@@ -617,6 +672,7 @@ function classifyAccount(row) {
     lab_name: toText(row["Last Lab Name"]),
     phone: toText(row["Last Phone Number"]),
     state: toText(row["Last State"]),
+    used_price_lists: parseUsedPriceLists(row["Used Price Lists"]),
     data_refresh_date: toIsoDate(row["Data Refresh Date"]),
     tier_status: {
       previous_month_tier_rank_by_acct_id: toText(row["Previous Month Tier Rank by Acct ID"]) || "Unranked",
@@ -648,6 +704,8 @@ function classifyAccount(row) {
         tokai: truthyUsage(programUsage.tokai_usage),
       },
     },
+    quality_metrics: qualityRates,
+    program_enrollment: programEnrollment,
     customer_insights: {
       suggestions: insights,
       metrics,
@@ -771,6 +829,24 @@ function summarizeAuthorizedUsers(users = []) {
   };
 }
 
+function detailedAuthorizedUsers(users = []) {
+  const byEmail = new Map();
+  for (const user of users) {
+    const email = toText(user.email).toLowerCase();
+    if (!email) continue;
+    if (!byEmail.has(email)) {
+      byEmail.set(email, {
+        name: toText(user.name),
+        email,
+        role_type: toText(user.role_type),
+        marketing_status: toText(user.marketing_status),
+        organization: toText(user.organization),
+      });
+    }
+  }
+  return [...byEmail.values()].sort((a, b) => a.email.localeCompare(b.email));
+}
+
 function writeJson(filePath, data) {
   mkdirSync(path.dirname(filePath), { recursive: true });
   writeFileSync(filePath, `${JSON.stringify(data, null, 2)}\n`);
@@ -821,18 +897,28 @@ async function main() {
     const accountOutput = {
       ...account,
       authorized_users_summary: summarizeAuthorizedUsers(usersForAccount),
+      authorized_users: detailedAuthorizedUsers(usersForAccount),
     };
 
     accountsIndex.push({
       account_id: account.account_id,
+      business_name: account.business_name,
       account_name: account.business_name,
       pipedrive_id: account.pipedrive_id,
+      all_account_numbers: account.all_account_numbers,
       last_lab_name: account.lab_name,
+      lab: account.lab_name,
       state: account.state,
       division: account.division,
       latest_date_shipped: account.latest_ship_date,
       data_refresh_date: account.data_refresh_date,
+      customer_type: account.division || "",
+      sales_rep: "",
+      cm_sales: Number(account.purchase_summary?.sales?.cm ?? 0),
+      cm_jobs: Number(account.purchase_summary?.jobs?.cm ?? 0),
+      cm_jpd: null,
       authorized_user_count: accountOutput.authorized_users_summary.authorized_user_count,
+      price_lists: account.used_price_lists ?? [],
     });
 
     writeJson(path.join(releaseDir, "accounts", `${safeFileName(account.account_id)}.json`), accountOutput);

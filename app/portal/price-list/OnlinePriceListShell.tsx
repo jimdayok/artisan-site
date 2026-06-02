@@ -9,11 +9,15 @@ import PortalPriceListScrollReset from "./PortalPriceListScrollReset";
 
 export async function OnlinePriceListShell({
   priceList,
+  accountPriceListCodes = [],
+  previewAccountNumber,
   children,
   title,
   description,
 }: {
   priceList: PortalPriceList;
+  accountPriceListCodes?: string[];
+  previewAccountNumber?: string;
   children: React.ReactNode;
   title?: string;
   description?: string;
@@ -33,6 +37,32 @@ export async function OnlinePriceListShell({
           description={description ?? "Account-assigned pricing tools are available only through secure portal access."}
           showNavigation={priceList.code === "G6"}
         />
+        {accountPriceListCodes.length > 1 ? (
+          <section className="mt-4 rounded-[2px] border border-[#dfd2bf] bg-[#fbf8f3]/92 p-4">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8a7654]">
+              Available Price Lists
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {accountPriceListCodes.map((code) => (
+                <Link
+                  key={code}
+                  href={
+                    previewAccountNumber
+                      ? `/portal/price-list/${code.toLowerCase()}?account=${encodeURIComponent(previewAccountNumber)}`
+                      : `/portal/price-list/${code.toLowerCase()}`
+                  }
+                  className={`inline-flex min-h-9 items-center rounded-full border px-3 text-xs font-semibold transition ${
+                    code === priceList.code
+                      ? "border-[#122033] bg-[#122033] text-white"
+                      : "border-[#d7c5a8] bg-white/85 text-[#122033] hover:bg-white"
+                  }`}
+                >
+                  {code} Pricing
+                </Link>
+              ))}
+            </div>
+          </section>
+        ) : null}
         <div className="mt-7">{children}</div>
         <CompactPortalFooter />
       </div>

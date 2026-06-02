@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "prebuild": "npm run portal:generate-access && npm run pricing:generate",
+    "prebuild": "npm run pricing:generate && npm run pricing:normalize",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -16,7 +16,12 @@
     "portal:generate-dashboard-v1:launch": "node scripts/generate-portal-dashboard-v1.mjs --ignore-empty-summary-rows --allow-duplicate-acct-id --allow-invalid-user-account-links",
     "portal:generate-dashboard-v1:launch-safe": "node scripts/generate-portal-dashboard-v1.mjs --ignore-empty-summary-rows --allow-duplicate-acct-id --allow-invalid-user-account-links",
     "pricing:generate": "node scripts/generate-price-list-data.mjs",
-    "launch:verify": "node scripts/verify-launch-readiness.mjs"
+    "pricing:normalize": "node scripts/generate-normalized-pricing.mjs",
+    "pricing:inspect-dvi": "node scripts/pricing-inspect-dvi.mjs",
+    "pricing:generate-dvi": "node scripts/generate-price-list-data-dvi.mjs",
+    "pricing:validate-ar": "node scripts/generate-ar-price-guide-validation.mjs",
+    "launch:verify": "node scripts/verify-launch-readiness.mjs",
+    "typecheck": "NODE_OPTIONS='--max-old-space-size=12288' tsc --noEmit"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1046.0",

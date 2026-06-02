@@ -1643,7 +1643,9 @@ function SelectedResourceSection({ section }: { section: DownloadResourceSection
   const hasUnityRewards = unityRewardsResources.length > 0;
 
   useEffect(() => {
-    setActiveGroup("designs");
+    requestAnimationFrame(() => {
+      setActiveGroup("designs");
+    });
     if (contentRef.current) contentRef.current.scrollTop = 0;
   }, [section.id]);
 
@@ -2359,7 +2361,9 @@ export function PracticeLookupMap() {
   }, [activeState, featuredPractices, normalizedSearch]);
 
   useEffect(() => {
-    setVisibleCount(5);
+    requestAnimationFrame(() => {
+      setVisibleCount(5);
+    });
   }, [activeState, normalizedSearch]);
 
   const activeMapDots = useMemo(() => {
@@ -2800,12 +2804,13 @@ export default function ProviderResourcesPage({
     downloadResourceSections[0];
 
   useEffect(() => {
-    if (!showProfessionalEnhancements || hasDismissedExperiencePopup()) {
-      setShowExperienceModal(false);
-      return;
-    }
-
-    setShowExperienceModal(true);
+    requestAnimationFrame(() => {
+      if (!showProfessionalEnhancements || hasDismissedExperiencePopup()) {
+        setShowExperienceModal(false);
+        return;
+      }
+      setShowExperienceModal(true);
+    });
   }, [showProfessionalEnhancements]);
 
   const dismissExperienceModal = () => {
@@ -3333,9 +3338,12 @@ export default function ProviderResourcesPage({
                 ) : null}
                 <h3 className="text-xl font-semibold leading-tight">{program.title}</h3>
                 <p className="mt-4 text-sm leading-7 text-white/68">{program.body}</p>
-                <a href="#" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#c9b28b] transition group-hover:translate-x-1">
+                <Link
+                  href="/programs"
+                  className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#c9b28b] transition group-hover:translate-x-1"
+                >
                   Learn More <span>→</span>
-                </a>
+                </Link>
               </article>
             ))}
           </div>

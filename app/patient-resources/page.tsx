@@ -197,7 +197,7 @@ export default function PatientResources() {
           </div>
           <SectionIntro eyebrow="The Better Path" title="A Better Way to See">
             <p>
-              Independent eye doctors have the freedom to recommend what's best
+              Independent eye doctors have the freedom to recommend what&apos;s best
               for you, not what they are required to use. That means better
               lenses, better materials, and solutions designed for your life.
             </p>

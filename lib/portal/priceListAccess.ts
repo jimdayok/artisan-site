@@ -3,13 +3,16 @@ import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
 import { isPortalAdminEmail } from "@/lib/portal/admin";
 import {
   customerHasPortalSection,
+  getCustomerByAccountNumber,
   getCustomerByEmail,
   getCustomersByEmail,
   type PortalCustomer,
   type PortalSection,
 } from "@/lib/portal/customers";
 import {
+  canonicalPriceListCode,
   getPriceListByCode,
+  priceLists,
   type PortalPriceList,
   type PriceListCode,
 } from "@/lib/portal/priceLists";
@@ -34,7 +37,8 @@ export type PriceListAccessResult =
 
 export function getAuthorizedPriceListFromHeaders(
   headerList: Headers,
-  code: string
+  code: string,
+  options?: { previewAccountNumber?: string }
 ): PriceListAccessResult {
   const authenticatedEmail = getPortalAuthenticatedEmailFromHeaders(headerList);
   const priceList = getPriceListByCode(code);
@@ -44,6 +48,41 @@ export function getAuthorizedPriceListFromHeaders(
   }
 
   if (priceList && isPortalAdminEmail(authenticatedEmail)) {
+    const previewAccountNumber = options?.previewAccountNumber?.trim();
+    const previewCustomer = previewAccountNumber
+      ? getCustomerByAccountNumber(previewAccountNumber)
+      : undefined;
+    if (previewCustomer) {
+      const previewPriceLists = [...new Set(previewCustomer.priceLists.map((entry) => canonicalPriceListCode(entry)))]
+        .filter(Boolean)
+        .sort((a, b) => a.localeCompare(b));
+      if (!previewPriceLists.includes(priceList.code)) {
+        return {
+          status: "forbidden",
+          authenticatedEmail,
+          customer: {
+            ...previewCustomer,
+            priceLists: previewPriceLists,
+            allowedPriceLists: previewPriceLists,
+          },
+          priceList,
+        };
+      }
+      return {
+        status: "authorized",
+        authenticatedEmail,
+        customer: {
+          ...previewCustomer,
+          priceLists: previewPriceLists,
+          allowedPriceLists: previewPriceLists,
+        },
+        priceList,
+      };
+    }
+
+    const adminAccessiblePriceLists = [...new Set(priceLists.map((entry) => canonicalPriceListCode(entry.code)))]
+      .filter(Boolean)
+      .sort((a, b) => a.localeCompare(b));
     return {
       status: "authorized",
       authenticatedEmail,
@@ -51,8 +90,8 @@ export function getAuthorizedPriceListFromHeaders(
         accountNumber: "ADMIN",
         practiceName: "Portal Administrator",
         emails: [authenticatedEmail],
-        priceLists: [priceList.code],
-        allowedPriceLists: [priceList.code],
+        priceLists: adminAccessiblePriceLists,
+        allowedPriceLists: adminAccessiblePriceLists,
         portalSections: [
           "pricing",
           "packages",
@@ -68,12 +107,12 @@ export function getAuthorizedPriceListFromHeaders(
   }
 
   const customers = getCustomersByEmail(authenticatedEmail);
-  const customer = customers.find((entry) =>
-    priceList
-      ? entry.priceLists
-          .map((priceListCode) => priceListCode.trim().toUpperCase())
+    const customer = customers.find((entry) =>
+      priceList
+        ? entry.priceLists
+          .map((priceListCode) => canonicalPriceListCode(priceListCode))
           .includes(priceList.code)
-      : true
+        : true
   );
 
   if (!customer) {
@@ -85,7 +124,7 @@ export function getAuthorizedPriceListFromHeaders(
   }
 
   const assignedPriceListCodes = customer.priceLists.map((priceListCode) =>
-    priceListCode.trim().toUpperCase()
+    canonicalPriceListCode(priceListCode)
   );
 
   if (!assignedPriceListCodes.includes(priceList.code)) {

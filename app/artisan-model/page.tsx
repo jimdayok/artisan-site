@@ -693,7 +693,7 @@ export default function ArtisanModelPage() {
               onClick={() => setContactOpen(true)}
               className="inline-flex min-h-12 items-center rounded-full bg-[#d4c09a] px-6 py-3 text-sm font-semibold text-[#171311] shadow-sm transition hover:-translate-y-0.5 hover:bg-[#e2cca2]"
             >
-              See If There's a Fit
+              See If There&apos;s a Fit
             </button>
             <button
               type="button"

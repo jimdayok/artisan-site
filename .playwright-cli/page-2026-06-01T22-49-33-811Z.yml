@@ -1,0 +1,413 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e5]:
+      - link "Home" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img "Artisan Lab Network" [ref=e7]
+      - navigation [ref=e8]:
+        - link "Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - link "About Us" [ref=e10] [cursor=pointer]:
+          - /url: /about
+        - button "Our Labs ▼" [ref=e12]:
+          - text: Our Labs
+          - generic [ref=e13]: ▼
+        - button "Resources ▼" [ref=e15]:
+          - text: Resources
+          - generic [ref=e16]: ▼
+        - button "Contact Us" [ref=e17]
+        - link "Get Started" [ref=e18] [cursor=pointer]:
+          - /url: https://form.typeform.com/to/quuPCSff
+    - generic [ref=e19]:
+      - generic [ref=e23]:
+        - button "Close hero message and watch the video" [ref=e24]:
+          - generic [ref=e25]: ×
+        - generic [ref=e26]:
+          - paragraph [ref=e27]: Artisan Lab Network
+          - heading "What brought you to Artisan?" [level=1] [ref=e28]
+          - paragraph [ref=e29]: Choose the path that fits you best and we'll help you find the right next step.
+        - generic [ref=e30]:
+          - link "I’m learning about the Artisan Lab Network See how our connected labs support independent practices with more choice, better service, and stronger partnership. Explore the Network →" [ref=e31] [cursor=pointer]:
+            - /url: "#proof"
+            - heading "I’m learning about the Artisan Lab Network" [level=2] [ref=e32]
+            - paragraph [ref=e33]: See how our connected labs support independent practices with more choice, better service, and stronger partnership.
+            - generic [ref=e34]:
+              - text: Explore the Network
+              - generic [ref=e35]: →
+          - link "I’m an Artisan Partner looking for resources Find product guides, training, ordering tools, patient resources, and support materials. Visit Partner Resources →" [ref=e36] [cursor=pointer]:
+            - /url: /provider-resources
+            - heading "I’m an Artisan Partner looking for resources" [level=2] [ref=e37]
+            - paragraph [ref=e38]: Find product guides, training, ordering tools, patient resources, and support materials.
+            - generic [ref=e39]:
+              - text: Visit Partner Resources
+              - generic [ref=e40]: →
+        - generic [ref=e41]:
+          - link "Open An Account" [ref=e42] [cursor=pointer]:
+            - /url: https://form.typeform.com/to/quuPCSff
+          - paragraph [ref=e43]:
+            - text: Are you a doctor interested in deeper partnership?
+            - link "Learn About Lab Ownership." [ref=e44] [cursor=pointer]:
+              - /url: /artisan-model
+      - link "Scroll to Why We Win section" [ref=e45] [cursor=pointer]:
+        - /url: "#proof"
+        - generic [ref=e47]: Scroll
+    - generic [ref=e51]:
+      - generic [ref=e52]:
+        - paragraph [ref=e53]: Why We Win
+        - heading "Why We Win." [level=2] [ref=e54]
+        - paragraph [ref=e55]: Practices need a lab relationship they can feel in turnaround, communication, quality, and control.
+      - generic [ref=e56]:
+        - generic [ref=e57]:
+          - article "3.5 Average Turnaround. 3.5 business day average turnaround across the entire network - April 2026" [ref=e58]:
+            - generic [ref=e60]: "9.9"
+            - paragraph [ref=e61]: Average Turnaround
+          - article "84 Orders Shipped by the 4th Day. 84% of all orders shipped by the fourth business day - April 2026" [ref=e62]:
+            - generic [ref=e65]: 50%
+            - paragraph [ref=e66]: Orders Shipped by the 4th Day
+          - article "98.5 Quality Standard. 1.5% lab remake rate, approximately half of typical labs - YTD 2026" [ref=e67]:
+            - generic [ref=e70]: 75.0%
+            - paragraph [ref=e71]: Quality Standard
+          - article "4.9/5.0 Customer Service. Based on 2024-2025 customer feedback survey" [ref=e72]:
+            - generic [ref=e74]: 4.9/5.0
+            - generic "4.5 out of 5 stars" [ref=e76]:
+              - img [ref=e77]
+              - img [ref=e79]
+              - img [ref=e81]
+              - img [ref=e83]
+              - img [ref=e85]
+            - paragraph [ref=e87]: Customer Service
+          - article "U.S. U.S. Production Focus. Core production is handled in the United States with a focus on quality, service, and control." [ref=e88]:
+            - img [ref=e90]
+            - paragraph [ref=e95]: U.S. Production Focus
+        - generic [ref=e97]:
+          - paragraph [ref=e98]: Average Turnaround
+          - paragraph [ref=e99]: 3.5 business day average turnaround across the entire network - April 2026
+    - generic [ref=e101]:
+      - generic [ref=e102]:
+        - paragraph [ref=e103]: Corporate Lab Problem
+        - heading "Corporate systems were never built for your independence." [level=2] [ref=e104]
+        - paragraph [ref=e105]: Corporate labs can look safe from the outside. But many are owned by multinational corporations built to protect their own systems, not your independence.
+      - generic [ref=e106]:
+        - generic [ref=e107]:
+          - generic [ref=e108]: You feel it
+          - generic [ref=e109]: Restricted product choice
+        - generic [ref=e110]:
+          - generic [ref=e111]: You feel it
+          - generic [ref=e112]: Pricing pressure that keeps pushing down
+        - generic [ref=e113]:
+          - generic [ref=e114]: You feel it
+          - generic [ref=e115]: Slow or inconsistent turnaround
+        - generic [ref=e116]:
+          - generic [ref=e117]: You feel it
+          - generic [ref=e118]: Poor communication and surprise delays
+        - generic [ref=e119]:
+          - generic [ref=e120]: You feel it
+          - generic [ref=e121]: Policies that make your team feel boxed in
+    - generic [ref=e124]:
+      - generic [ref=e125]:
+        - generic [ref=e126]:
+          - paragraph [ref=e127]: The Better Model
+          - heading "Built for practices that want control back." [level=2] [ref=e128]
+          - paragraph [ref=e129]: Artisan Lab Network gives you freedom of choice, real partnership, and a modern system that fits the way you run your practice.
+        - img "Independent practice partnership discussion" [ref=e131]
+      - generic [ref=e132]:
+        - generic [ref=e134]:
+          - img [ref=e135]
+          - paragraph [ref=e136]: U.S. Based
+        - generic [ref=e137]:
+          - heading "Made Here. Built for Independent Practices." [level=3] [ref=e138]
+          - paragraph [ref=e139]: Artisan Lab Network is based in the United States and focused on producing as much work as possible through U.S. labs. We are not chasing cheap offshore labor at the expense of quality, service, or the people who make great optical work possible.
+      - generic [ref=e140]:
+        - article [ref=e141]:
+          - button "Freedom to Choose More lens options. Less forcing you into one path. Expand to see our brand choices. +" [ref=e142]:
+            - generic [ref=e143]:
+              - img [ref=e145]
+              - generic [ref=e146]:
+                - generic [ref=e147]: Freedom to Choose
+                - generic [ref=e148]: More lens options. Less forcing you into one path.
+                - generic [ref=e149]: Expand to see our brand choices.
+            - generic [ref=e150]: +
+        - article [ref=e151]:
+          - button "Transparent Outcomes Clear reporting, timing, cost, and performance expectations. Expand to see the supporting data. +" [ref=e152]:
+            - generic [ref=e153]:
+              - img [ref=e155]
+              - generic [ref=e156]:
+                - generic [ref=e157]: Transparent Outcomes
+                - generic [ref=e158]: Clear reporting, timing, cost, and performance expectations.
+                - generic [ref=e159]: Expand to see the supporting data.
+            - generic [ref=e160]: +
+        - article [ref=e161]:
+          - button "Flexibility Systems designed to support your process, not punish it. Expand to see how this works. +" [ref=e162]:
+            - generic [ref=e163]:
+              - img [ref=e165]
+              - generic [ref=e166]:
+                - generic [ref=e167]: Flexibility
+                - generic [ref=e168]: Systems designed to support your process, not punish it.
+                - generic [ref=e169]: Expand to see how this works.
+            - generic [ref=e170]: +
+    - generic [ref=e172]:
+      - generic [ref=e173]:
+        - generic [ref=e174]:
+          - generic [ref=e175]: Capabilities
+          - heading "Built for Real Practice Control." [level=2] [ref=e176]
+        - paragraph [ref=e177]: Click a capability to expand details. The selected capability comes forward while the rest stay in view.
+      - generic [ref=e178]:
+        - button "Capability Freeform lens options Open" [ref=e180] [cursor=pointer]:
+          - generic [ref=e181]:
+            - generic [ref=e182]:
+              - img [ref=e184]
+              - generic [ref=e185]:
+                - generic [ref=e186]: Capability
+                - generic [ref=e187]: Freeform lens options
+            - generic [ref=e188]: Open
+        - button "Capability AR treatments Open" [ref=e190] [cursor=pointer]:
+          - generic [ref=e191]:
+            - generic [ref=e192]:
+              - img [ref=e194]
+              - generic [ref=e195]:
+                - generic [ref=e196]: Capability
+                - generic [ref=e197]: AR treatments
+            - generic [ref=e198]: Open
+        - button "Capability Fast turnaround Open" [ref=e200] [cursor=pointer]:
+          - generic [ref=e201]:
+            - generic [ref=e202]:
+              - img [ref=e204]
+              - generic [ref=e205]:
+                - generic [ref=e206]: Capability
+                - generic [ref=e207]: Fast turnaround
+            - generic [ref=e208]: Open
+        - button "Capability Systems integrations Open" [ref=e210] [cursor=pointer]:
+          - generic [ref=e211]:
+            - generic [ref=e212]:
+              - img [ref=e214]
+              - generic [ref=e215]:
+                - generic [ref=e216]: Capability
+                - generic [ref=e217]: Systems integrations
+            - generic [ref=e218]: Open
+        - button "Capability Clear communication Open" [ref=e220] [cursor=pointer]:
+          - generic [ref=e221]:
+            - generic [ref=e222]:
+              - img [ref=e224]
+              - generic [ref=e225]:
+                - generic [ref=e226]: Capability
+                - generic [ref=e227]: Clear communication
+            - generic [ref=e228]: Open
+        - button "Capability Quality control you can count on Open" [ref=e230] [cursor=pointer]:
+          - generic [ref=e231]:
+            - generic [ref=e232]:
+              - img [ref=e234]
+              - generic [ref=e235]:
+                - generic [ref=e236]: Capability
+                - generic [ref=e237]: Quality control you can count on
+            - generic [ref=e238]: Open
+        - button "Capability Support that scales with you Open" [ref=e240] [cursor=pointer]:
+          - generic [ref=e241]:
+            - generic [ref=e242]:
+              - img [ref=e244]
+              - generic [ref=e245]:
+                - generic [ref=e246]: Capability
+                - generic [ref=e247]: Support that scales with you
+            - generic [ref=e248]: Open
+        - button "Capability A partner mindset Open" [ref=e250] [cursor=pointer]:
+          - generic [ref=e251]:
+            - generic [ref=e252]:
+              - img [ref=e254]
+              - generic [ref=e255]:
+                - generic [ref=e256]: Capability
+                - generic [ref=e257]: A partner mindset
+            - generic [ref=e258]: Open
+    - generic [ref=e260]:
+      - generic [ref=e261]:
+        - paragraph [ref=e262]: Our Labs
+        - heading "Three Labs. One Connected Standard." [level=2] [ref=e263]
+        - paragraph [ref=e264]: View the full network, then choose a lab for local contact details and team information.
+      - generic [ref=e265]:
+        - generic [ref=e267]:
+          - img "Artisan Lab Network map" [ref=e268]
+          - button "Show Pacific Artisan Labs" [ref=e269]:
+            - generic [ref=e272]: Pacific Artisan Labs
+          - button "Show Peak Artisan Labs" [ref=e273]:
+            - generic [ref=e276]: Peak Artisan Labs
+          - button "Show Pike Artisan Labs" [ref=e277]:
+            - generic [ref=e280]: Pike Artisan Labs
+        - article [ref=e281]:
+          - paragraph [ref=e282]: Network View
+          - heading "All Artisan Labs" [level=3] [ref=e283]
+          - paragraph [ref=e284]: Three regional labs operate with one connected standard for service, quality, and independent practice support.
+          - generic [ref=e285]:
+            - button "Pacific Artisan Labs Portland, OR" [ref=e286]:
+              - generic [ref=e287]:
+                - generic [ref=e288]: Pacific Artisan Labs
+                - generic [ref=e289]: Portland, OR
+              - generic [ref=e290]: →
+            - button "Peak Artisan Labs Aurora, CO" [ref=e291]:
+              - generic [ref=e292]:
+                - generic [ref=e293]: Peak Artisan Labs
+                - generic [ref=e294]: Aurora, CO
+              - generic [ref=e295]: →
+            - button "Pike Artisan Labs Indianapolis, IN" [ref=e296]:
+              - generic [ref=e297]:
+                - generic [ref=e298]: Pike Artisan Labs
+                - generic [ref=e299]: Indianapolis, IN
+              - generic [ref=e300]: →
+    - generic [ref=e302]:
+      - generic [ref=e303]:
+        - generic [ref=e304]:
+          - paragraph [ref=e305]: Industry Events
+          - heading "Where We'll Be" [level=2] [ref=e306]
+        - paragraph [ref=e307]: Meet with our team at upcoming industry events and shows where we connect with customers, partners, and independent eye care professionals.
+      - generic [ref=e308]:
+        - article [ref=e309]:
+          - generic [ref=e310]:
+            - generic [ref=e311]:
+              - img "UOA Leadership Conference logo"
+            - generic [ref=e312]:
+              - paragraph [ref=e313]: June 25–27, 2026
+              - heading "UOA Leadership Conference" [level=3] [ref=e314]
+              - paragraph [ref=e315]: Chicago, IL
+          - paragraph [ref=e316]: Opticians and industry leaders gather to explore innovation, leadership, and the future of opticianry.
+          - generic [ref=e317]:
+            - link "Learn More" [ref=e318] [cursor=pointer]:
+              - /url: https://www.uoaleadership.org/
+            - button "Schedule a Meeting" [ref=e319]
+        - article [ref=e320]:
+          - generic [ref=e321]:
+            - generic [ref=e322]:
+              - img "The Vision Council logo"
+            - generic [ref=e323]:
+              - paragraph [ref=e324]: Sept. 16 to 18, 2026
+              - heading "Vision Council 2026 Lab Leadership Forum" [level=3] [ref=e325]
+              - paragraph [ref=e326]: M Resort Spa Casino, Henderson, NV
+          - paragraph [ref=e327]: Tailored educational sessions, networking, and industry insights for optical lab professionals.
+          - generic [ref=e328]:
+            - link "Learn More" [ref=e329] [cursor=pointer]:
+              - /url: https://thevisioncouncil.org/lab-leadership-forum-2026
+            - button "Schedule a Meeting" [ref=e330]
+    - generic [ref=e332]:
+      - generic [ref=e333]:
+        - paragraph [ref=e334]: Industry Connections
+        - heading "Connected Across the Industry" [level=2] [ref=e335]
+        - paragraph [ref=e336]: Our network works with organizations that help independent practices compete, grow, and stay in control.
+      - generic [ref=e337]:
+        - link "VSP Vision" [ref=e338] [cursor=pointer]:
+          - /url: https://vspvision.com/
+          - img "VSP Vision"
+        - link "Northwest Administrators" [ref=e339] [cursor=pointer]:
+          - /url: https://www.nwadmin.com/
+          - img "Northwest Administrators"
+        - link "Acquios Alliance" [ref=e340] [cursor=pointer]:
+          - /url: https://acquios.com/services/acquios-alliance/
+          - img "Acquios Alliance"
+        - link "The Vision Council" [ref=e341] [cursor=pointer]:
+          - /url: https://thevisioncouncil.org/
+          - img "The Vision Council"
+        - link "Vision Monday Ultimate Partners" [ref=e342] [cursor=pointer]:
+          - /url: https://visionmonday.com
+          - img "Vision Monday Ultimate Partners"
+    - generic [ref=e345]:
+      - paragraph [ref=e346]: Contact
+      - heading "Start the Conversation" [level=2] [ref=e347]
+      - paragraph [ref=e348]: Tell us a little about your practice and we’ll show you what a better lab relationship can look like.
+      - paragraph [ref=e349]:
+        - text: Prefer to talk now? Call
+        - link "877.390.6900" [ref=e350] [cursor=pointer]:
+          - /url: tel:8773906900
+      - button "Contact Us" [ref=e351]
+    - generic [ref=e352]:
+      - generic [ref=e354]:
+        - generic [ref=e355]:
+          - paragraph [ref=e356]: Artisan Lab Network
+          - heading "Independent eye care deserves a better lab model." [level=2] [ref=e357]
+        - link "Get Started" [ref=e358] [cursor=pointer]:
+          - /url: https://form.typeform.com/to/quuPCSff
+      - generic [ref=e359]:
+        - generic [ref=e360]:
+          - generic [ref=e361]:
+            - button "Artisan Lab Network" [ref=e362]
+            - generic [ref=e363]:
+              - generic [ref=e364]: Artisan Lab Network
+              - generic [ref=e365]: Doctor-owned network
+          - paragraph [ref=e366]:
+            - text: Artisan Lab Network is the parent organization supporting
+            - link "Pacific Artisan Labs" [ref=e367] [cursor=pointer]:
+              - /url: /pacific-artisan-labs
+            - text: ","
+            - link "Peak Artisan Labs" [ref=e368] [cursor=pointer]:
+              - /url: /peak-artisan-labs
+            - text: ", and"
+            - link "Pike Artisan Labs" [ref=e369] [cursor=pointer]:
+              - /url: /pike-artisan-labs
+            - text: ", built to serve independent eye care with more choice, more control, and better partnership."
+          - generic [ref=e370]:
+            - link "Facebook" [ref=e371] [cursor=pointer]:
+              - /url: https://www.facebook.com/artisanlabnetwork
+            - link "Instagram" [ref=e372] [cursor=pointer]:
+              - /url: https://www.instagram.com/artisanlabnetwork
+            - link "LinkedIn" [ref=e373] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/artisan-lab-network/
+        - generic [ref=e374]:
+          - heading "Explore" [level=3] [ref=e375]
+          - list [ref=e376]:
+            - listitem [ref=e377]:
+              - link "Home" [ref=e378] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=e379]:
+              - link "About Us" [ref=e380] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e381]:
+              - link "Meet the Artisans" [ref=e382] [cursor=pointer]:
+                - /url: /meet-the-artisans
+            - listitem [ref=e383]:
+              - link "Our Labs" [ref=e384] [cursor=pointer]:
+                - /url: /#labs
+            - listitem [ref=e385]:
+              - link "Resources" [ref=e386] [cursor=pointer]:
+                - /url: /provider-resources
+            - listitem [ref=e387]:
+              - link "Customer Portal" [ref=e388] [cursor=pointer]:
+                - /url: /portal
+            - listitem [ref=e389]:
+              - button "Contact Us" [ref=e390]
+        - generic [ref=e391]:
+          - heading "Company" [level=3] [ref=e392]
+          - list [ref=e393]:
+            - listitem [ref=e394]:
+              - link "Careers" [ref=e395] [cursor=pointer]:
+                - /url: /careers
+            - listitem [ref=e396]:
+              - link "Press Releases" [ref=e397] [cursor=pointer]:
+                - /url: /about#press-releases
+            - listitem [ref=e398]:
+              - link "Newsletter" [ref=e399] [cursor=pointer]:
+                - /url: /newsletter
+        - generic [ref=e400]:
+          - heading "Contact" [level=3] [ref=e401]
+          - generic [ref=e402]:
+            - paragraph [ref=e403]:
+              - link "12302 NE Marx St. Portland, OR 97230" [ref=e404] [cursor=pointer]:
+                - /url: https://www.google.com/maps/search/?api=1&query=12302%20NE%20Marx%20St%20Portland%20OR%2097230
+                - text: 12302 NE Marx St.
+                - text: Portland, OR 97230
+              - link "Open in Maps" [ref=e405] [cursor=pointer]:
+                - /url: https://www.google.com/maps/search/?api=1&query=12302%20NE%20Marx%20St%20Portland%20OR%2097230
+            - paragraph [ref=e406]:
+              - link "877.390.6900" [ref=e407] [cursor=pointer]:
+                - /url: tel:8773906900
+            - paragraph [ref=e408]:
+              - link "info@artisanlabnetwork.com" [ref=e409] [cursor=pointer]:
+                - /url: mailto:info@artisanlabnetwork.com
+      - generic [ref=e411]:
+        - generic [ref=e412]:
+          - paragraph [ref=e413]: © 2026 Artisan Lab Network
+          - paragraph [ref=e414]:
+            - text: Privacy is not a game (
+            - button "this is" [ref=e415]
+            - text: ), and we respect your privacy. Information submitted through this site is used only to respond to your inquiry and support your relationship with Artisan Lab Network.
+        - generic [ref=e416]:
+          - link "Terms & Conditions" [ref=e417] [cursor=pointer]:
+            - /url: /terms-and-conditions
+          - link "Privacy Policy" [ref=e418] [cursor=pointer]:
+            - /url: /privacy-policy
+  - button "Open Next.js Dev Tools" [ref=e424] [cursor=pointer]:
+    - img [ref=e425]
+  - alert [ref=e428]

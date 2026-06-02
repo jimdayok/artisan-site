@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export default async function PortalPage({
   searchParams,
 }: {
-  searchParams: Promise<{ account?: string; q?: string; mode?: string }>;
+  searchParams: Promise<{ account?: string; q?: string; mode?: string; division?: string; lab?: string }>;
 }) {
   const headerList = await headers();
   const query = await searchParams;
@@ -22,7 +22,14 @@ export default async function PortalPage({
     isPortalAdminEmail(authenticatedEmail) &&
     !showCustomerPortal
   ) {
-    return <AdminLandingDashboard adminEmail={authenticatedEmail} query={query.q ?? ""} />;
+    return (
+      <AdminLandingDashboard
+        adminEmail={authenticatedEmail}
+        query={query.q ?? ""}
+        divisionFilter={query.division ?? ""}
+        labFilter={query.lab ?? ""}
+      />
+    );
   }
 
   return (

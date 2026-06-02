@@ -1,60 +1,34 @@
-import p6PricingData from "@/private-source/pricing/generated/p6-pricing.json";
-import g6PricingData from "@/private-source/pricing/generated/g6-pricing.json";
-import a6PricingData from "@/private-source/pricing/generated/a6-pricing.json";
-import b5PricingData from "@/private-source/pricing/generated/b5-pricing.json";
-import s5PricingData from "@/private-source/pricing/generated/s5-pricing.json";
-import m5PricingData from "@/private-source/pricing/generated/m5-pricing.json";
-import y5PricingData from "@/private-source/pricing/generated/y5-pricing.json";
-import tkPricingData from "@/private-source/pricing/generated/tk-pricing.json";
-import vdPricingData from "@/private-source/pricing/generated/vd-pricing.json";
 import InteractivePriceListDashboard from "@/src/components/private-price/InteractivePriceListDashboard";
-import { getAuthorizedPriceListForPage } from "@/lib/portal/priceListAccess";
+import { getAuthorizedPriceListFromHeaders } from "@/lib/portal/priceListAccess";
 import { isLocalhostDevelopmentRequest } from "@/lib/portal/auth";
-import type { GeneratedPriceListData } from "@/lib/pricing/types";
-import type { PriceListCode } from "@/lib/portal/priceLists";
+import { canonicalPriceListCode } from "@/lib/portal/priceLists";
+import { loadGeneratedPriceListByCode } from "@/lib/pricing/loadGeneratedPriceList";
 import { headers } from "next/headers";
 import { OnlinePriceListShell } from "./OnlinePriceListShell";
 import PriceListAccessMessage from "./PriceListAccessMessage";
 
-const generatedPriceDataByCode: Record<PriceListCode, GeneratedPriceListData | null> = {
-  P6: p6PricingData as GeneratedPriceListData,
-  G6: g6PricingData as GeneratedPriceListData,
-  A6: a6PricingData as GeneratedPriceListData,
-  B5: b5PricingData as GeneratedPriceListData,
-  S5: s5PricingData as GeneratedPriceListData,
-  M5: m5PricingData as GeneratedPriceListData,
-  Y5: y5PricingData as GeneratedPriceListData,
-  TK: tkPricingData as GeneratedPriceListData,
-  VD: vdPricingData as GeneratedPriceListData,
-};
-
-const customerTitleByCode: Record<PriceListCode, string> = {
-  P6: "Artisan Equity Partner Pricing",
-  G6: "Artisan General Pricing",
-  A6: "Artisan PMP Partner Pricing",
-  B5: "Artisan Lens System Pricing",
-  S5: "Shamir Lens System Pricing",
-  M5: "Artisan Frame System Pricing",
-  Y5: "Artisan Safety System Pricing",
-  TK: "Tokai Pricing",
-  VD: "Value Systems",
-};
-
 export default async function GeneratedInteractivePriceListPage({
   code,
+  previewAccountNumber,
 }: {
-  code: PriceListCode;
+  code: string;
+  previewAccountNumber?: string;
 }) {
+  const normalizedCode = canonicalPriceListCode(code);
   const requestHeaders = await headers();
   const isLocalhostDevelopment = isLocalhostDevelopmentRequest(requestHeaders);
-  const access = await getAuthorizedPriceListForPage(code);
+  const access = getAuthorizedPriceListFromHeaders(
+    requestHeaders,
+    normalizedCode,
+    previewAccountNumber ? { previewAccountNumber } : undefined
+  );
 
   if (access.status === "unauthenticated") {
     if (isLocalhostDevelopment) {
       return (
         <div className="space-y-6">
           <PriceListAccessMessage message="Unable to verify your secure login. Choose a localhost test account to continue." />
-          <LocalhostAccessActions code={code} />
+          <LocalhostAccessActions code={normalizedCode} />
         </div>
       );
     }
@@ -68,8 +42,8 @@ export default async function GeneratedInteractivePriceListPage({
     if (isLocalhostDevelopment) {
       return (
         <div className="space-y-6">
-          <PriceListAccessMessage message={`This local test login does not include ${code}. Choose an assigned account to continue.`} />
-          <LocalhostAccessActions code={code} />
+          <PriceListAccessMessage message={`This local test login does not include ${normalizedCode}. Choose an assigned account to continue.`} />
+          <LocalhostAccessActions code={normalizedCode} />
         </div>
       );
     }
@@ -79,17 +53,24 @@ export default async function GeneratedInteractivePriceListPage({
     );
   }
 
-  const generatedPriceList = generatedPriceDataByCode[code];
+  const generatedPriceList = await loadGeneratedPriceListByCode(normalizedCode);
   if (!generatedPriceList) {
     return (
-      <PriceListAccessMessage message={`${code} interactive pricing data is not available yet.`} />
+      <PriceListAccessMessage message={`${normalizedCode} interactive pricing data is not available yet.`} />
     );
   }
 
+  const accountPriceListCodes = access.customer.priceLists
+    .map((entry) => canonicalPriceListCode(entry))
+    .filter((value, index, values) => Boolean(value) && values.indexOf(value) === index)
+    .sort((a, b) => a.localeCompare(b));
+
   return (
-    <OnlinePriceListShell
+      <OnlinePriceListShell
       priceList={access.priceList}
-      title={customerTitleByCode[code]}
+      accountPriceListCodes={accountPriceListCodes}
+      previewAccountNumber={previewAccountNumber}
+      title={`${normalizedCode} Pricing`}
       description="Interactive private pricing guide for assigned portal accounts."
     >
       <InteractivePriceListDashboard priceList={generatedPriceList} />

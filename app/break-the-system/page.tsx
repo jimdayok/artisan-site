@@ -209,7 +209,7 @@ export default function BreakTheSystemPage() {
     context.restore();
   }, []);
 
-  const step = useCallback(() => {
+  const runStep = useCallback(() => {
     const game = gameRef.current;
 
     if (game.state === "playing") {
@@ -288,20 +288,23 @@ export default function BreakTheSystemPage() {
       .filter((popup) => popup.life > 0);
 
     draw();
-    frameRef.current = requestAnimationFrame(step);
   }, [addPopup, draw, resetBall, syncUi]);
 
   useEffect(() => {
     resizeCanvas();
     draw();
     window.addEventListener("resize", resizeCanvas);
-    frameRef.current = requestAnimationFrame(step);
+    const loop = () => {
+      runStep();
+      frameRef.current = requestAnimationFrame(loop);
+    };
+    frameRef.current = requestAnimationFrame(loop);
 
     return () => {
       window.removeEventListener("resize", resizeCanvas);
       if (frameRef.current) cancelAnimationFrame(frameRef.current);
     };
-  }, [draw, resizeCanvas, step]);
+  }, [draw, resizeCanvas, runStep]);
 
   return (
     <main className="min-h-screen overflow-hidden bg-[#080706] px-4 py-6 text-white md:px-8 md:py-10">

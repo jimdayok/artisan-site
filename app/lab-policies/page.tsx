@@ -713,7 +713,10 @@ function PolicyPanel({
       className="scroll-mt-40 rounded-[30px] border border-black/10 bg-white p-5 shadow-[0_18px_54px_rgba(24,18,13,0.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(24,18,13,0.1)] md:p-6"
     >
       {section.id === "shipping" ? (
-        <span id="shipping-policies" className="block scroll-mt-40" aria-hidden="true" />
+        <>
+          <span id="shipping" className="block scroll-mt-40" aria-hidden="true" />
+          <span id="shipping-policies" className="block scroll-mt-40" aria-hidden="true" />
+        </>
       ) : null}
       <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-start">
         <div>

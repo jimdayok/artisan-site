@@ -1,0 +1,512 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - img "Artisan Lab Network ring logo" [ref=e8]
+          - generic [ref=e9]:
+            - paragraph [ref=e10]: Artisan Lab Network
+            - paragraph [ref=e11]: Customer Portal
+        - navigation [ref=e12]:
+          - link "Back to Portal" [ref=e13] [cursor=pointer]:
+            - /url: /portal
+          - link "Admin Dashboard" [ref=e14] [cursor=pointer]:
+            - /url: /portal/admin
+          - link "Provider Resources" [ref=e15] [cursor=pointer]:
+            - /url: /provider-resources
+          - link "Sign Out" [ref=e16] [cursor=pointer]:
+            - /url: /cdn-cgi/access/logout?returnTo=/portal
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - paragraph [ref=e20]: Private Online Pricing
+          - heading "E5 Pricing" [level=1] [ref=e21]
+          - paragraph [ref=e22]: Interactive private pricing guide for assigned portal accounts.
+        - generic [ref=e23]:
+          - generic [ref=e24]:
+            - strong [ref=e26]: Confidential Partner Pricing
+            - generic [ref=e27]: Private pricing for assigned Artisan Equity Partner accounts.
+            - generic [ref=e28]: Do Not Distribute
+          - generic [ref=e29]:
+            - strong [ref=e31]: Shipping Rates
+            - generic [ref=e32]:
+              - text: "Next Day Air:"
+              - strong [ref=e33]: $4 per job
+            - generic [ref=e34]:
+              - text: "2-Day Shipping:"
+              - strong [ref=e35]: $16 per box
+      - generic [ref=e37]:
+        - generic [ref=e38]:
+          - generic [ref=e39]:
+            - button "View Anti-Reflective Coatings" [ref=e40]
+            - button "View Edging Services" [ref=e41]
+          - paragraph [ref=e42]: This online price guide is provided for convenience and may contain errors or omissions. Artisan Lab Network reserves the right to correct pricing errors, update product availability, and change pricing at any time without notice. Final pricing is determined by the active lab billing system and confirmed order details.
+        - generic [ref=e43]:
+          - generic [ref=e44]:
+            - generic [ref=e45]:
+              - paragraph [ref=e46]: E5 Pricing
+              - heading "Guided Lens Pricing Builder" [level=2] [ref=e47]
+              - paragraph [ref=e48]: Start with design, then open each row to build price by material and clear/photochromic/polarized options.
+              - generic [ref=e49]:
+                - generic [ref=e50]: Not eligible for Artisan Multiple Pair Program
+                - link "View Lab Policies Guide" [ref=e51] [cursor=pointer]:
+                  - /url: /portal/price-list/policies
+              - paragraph [ref=e53]: Products not listed are not available.
+            - generic [ref=e54]:
+              - generic [ref=e55]:
+                - generic [ref=e56]: Search
+                - searchbox "Search" [ref=e57]
+              - generic [ref=e58]:
+                - button "Edged and Assembled" [ref=e59]
+                - button "Uncut" [ref=e60]
+          - generic [ref=e61]:
+            - generic [ref=e62]:
+              - generic [ref=e63]: "Step 1: Design Type"
+              - 'combobox "Step 1: Design Type" [ref=e64]':
+                - option "All" [selected]
+                - option "Single Vision"
+            - generic [ref=e65]:
+              - generic [ref=e66]: "Step 2: Brand"
+              - 'combobox "Step 2: Brand" [ref=e67]':
+                - option "All" [selected]
+                - option "Artisan"
+                - option "ENDLESS"
+            - generic [ref=e68]:
+              - generic [ref=e69]: "Step 3: Design Style"
+              - 'combobox "Step 3: Design Style" [ref=e70]':
+                - option "All" [selected]
+                - option "CFB"
+                - option "Diamond Series"
+                - option "ENDLESS BIFCL *"
+                - option "Gold Series"
+                - option "Platinum Series"
+                - option "SD Concept"
+                - option "SD Digital SV"
+                - option "SD Reach"
+            - generic [ref=e71]:
+              - generic [ref=e72]: View By
+              - combobox "View By" [ref=e73]:
+                - option "Design Type"
+                - option "Brand" [selected]
+          - group [ref=e74]:
+            - generic "Advanced Filters" [ref=e75] [cursor=pointer]
+            - option "All" [selected]
+            - option "B50"
+            - option "B53"
+            - option "B60"
+            - option "B67"
+            - option "B74"
+            - option "BLY"
+            - option "H53"
+            - option "H56"
+            - option "H60"
+            - option "H67"
+            - option "H74"
+            - option "P"
+            - option "P60"
+            - option "P67"
+            - option "P74"
+            - option "PLP"
+            - option "PLY"
+            - option "PRM"
+            - option "PRT"
+            - option "PRY"
+            - option "S50"
+            - option "S53"
+            - option "S60"
+            - option "S67"
+            - option "SPY"
+            - option "T53"
+            - option "T60"
+            - option "T67"
+            - option "T74"
+            - option "TPH"
+            - option "TPP"
+            - option "TPR"
+            - option "TPT"
+            - option "TPY"
+            - option "TRN"
+            - option "ZPY"
+            - option "All" [selected]
+            - option "Yes"
+            - option "No"
+            - option "All" [selected]
+            - option "Yes"
+            - option "No"
+            - option "All" [selected]
+            - option "2BN"
+            - option "2GY"
+            - option "AMB"
+            - option "AMT"
+            - option "BLT"
+            - option "BNA"
+            - option "BNC"
+            - option "CLR"
+            - option "COP"
+            - option "CTB"
+            - option "CTG"
+            - option "DBN"
+            - option "DGY"
+            - option "DRV"
+            - option "EME"
+            - option "G15"
+            - option "GBG"
+            - option "GBN"
+            - option "GEM"
+            - option "GGY"
+            - option "GOC"
+            - option "GRE"
+            - option "GRN"
+            - option "GRO"
+            - option "GRS"
+            - option "GSE"
+            - option "GY2"
+            - option "GYA"
+            - option "GYC"
+            - option "NAB"
+            - option "NAG"
+            - option "NCB"
+            - option "NCG"
+            - option "NDG"
+            - option "OCN"
+            - option "RSE"
+            - option "RUB"
+            - option "SAP"
+            - option "SBN"
+            - option "SEB"
+            - option "SEG"
+            - option "SNF"
+            - option "SNS"
+            - option "SXB"
+            - option "SXG"
+            - option "SYB"
+            - option "SYG"
+            - option "TBN"
+            - option "TGN"
+            - option "TGY"
+            - option "VIO"
+            - option "X2B"
+            - option "X2G"
+            - option "X2N"
+            - option "XGG"
+            - option "XPB"
+            - option "XPG"
+            - option "XTB"
+            - option "XTG"
+          - generic [ref=e77]: Showing 8 top-level design rows
+          - generic [ref=e79]:
+            - generic [ref=e80]:
+              - generic [ref=e82]:
+                - img "Artisan logo" [ref=e83]
+                - generic [ref=e84]: Artisan
+              - generic [ref=e86]:
+                - generic [ref=e89]: Single Vision
+                - table [ref=e91]:
+                  - rowgroup [ref=e100]:
+                    - row "Design Type ↕ Brand ↕ Design Style ↕ Clear ↕ Photochromic ↕ Polarized ↕ Actions" [ref=e101]:
+                      - columnheader "Design Type ↕" [ref=e102]:
+                        - button "Design Type ↕" [ref=e103]:
+                          - generic [ref=e104]: Design Type
+                          - generic [ref=e105]: ↕
+                      - columnheader "Brand ↕" [ref=e106]:
+                        - button "Brand ↕" [ref=e107]:
+                          - generic [ref=e108]: Brand
+                          - generic [ref=e109]: ↕
+                      - columnheader "Design Style ↕" [ref=e110]:
+                        - button "Design Style ↕" [ref=e111]:
+                          - generic [ref=e112]: Design Style
+                          - generic [ref=e113]: ↕
+                      - columnheader "Clear ↕" [ref=e114]:
+                        - button "Clear ↕" [ref=e115]:
+                          - generic [ref=e116]: Clear
+                          - generic [ref=e117]: ↕
+                      - columnheader "Photochromic ↕" [ref=e118]:
+                        - button "Photochromic ↕" [ref=e119]:
+                          - generic [ref=e120]: Photochromic
+                          - generic [ref=e121]: ↕
+                      - columnheader "Polarized ↕" [ref=e122]:
+                        - button "Polarized ↕" [ref=e123]:
+                          - generic [ref=e124]: Polarized
+                          - generic [ref=e125]: ↕
+                      - columnheader "Actions" [ref=e126]
+                  - rowgroup [ref=e127]:
+                    - row "Single Vision Artisan Diamond Series $77.00+ $87.00+ $136.00+ Build Price" [ref=e128]:
+                      - cell "Single Vision" [ref=e129]
+                      - cell "Artisan" [ref=e130]
+                      - cell "Diamond Series" [ref=e131]:
+                        - generic [ref=e133]: Diamond Series
+                      - cell "$77.00+" [ref=e134]
+                      - cell "$87.00+" [ref=e135]
+                      - cell "$136.00+" [ref=e136]
+                      - cell "Build Price" [ref=e137]:
+                        - button "Build Price" [ref=e138]
+                    - row "Single Vision Artisan Platinum Series $77.00+ $84.00+ $136.00+ Build Price" [ref=e139]:
+                      - cell "Single Vision" [ref=e140]
+                      - cell "Artisan" [ref=e141]
+                      - cell "Platinum Series" [ref=e142]:
+                        - generic [ref=e144]: Platinum Series
+                      - cell "$77.00+" [ref=e145]
+                      - cell "$84.00+" [ref=e146]
+                      - cell "$136.00+" [ref=e147]
+                      - cell "Build Price" [ref=e148]:
+                        - button "Build Price" [ref=e149]
+                    - row "Single Vision Artisan Gold Series $75.00+ $82.00+ $134.00+ Build Price" [ref=e150]:
+                      - cell "Single Vision" [ref=e151]
+                      - cell "Artisan" [ref=e152]
+                      - cell "Gold Series" [ref=e153]:
+                        - generic [ref=e155]: Gold Series
+                      - cell "$75.00+" [ref=e156]
+                      - cell "$82.00+" [ref=e157]
+                      - cell "$134.00+" [ref=e158]
+                      - cell "Build Price" [ref=e159]:
+                        - button "Build Price" [ref=e160]
+                    - row "Single Vision Artisan CFB $52.00+ $59.00+ $111.00+ Build Price" [ref=e161]:
+                      - cell "Single Vision" [ref=e162]
+                      - cell "Artisan" [ref=e163]
+                      - cell "CFB" [ref=e164]:
+                        - generic [ref=e166]: CFB
+                      - cell "$52.00+" [ref=e167]
+                      - cell "$59.00+" [ref=e168]
+                      - cell "$111.00+" [ref=e169]
+                      - cell "Build Price" [ref=e170]:
+                        - button "Build Price" [ref=e171]
+                    - row "Single Vision Artisan SD Concept $42.00+ $49.00+ $101.00+ Build Price" [ref=e172]:
+                      - cell "Single Vision" [ref=e173]
+                      - cell "Artisan" [ref=e174]
+                      - cell "SD Concept" [ref=e175]:
+                        - generic [ref=e177]: SD Concept
+                      - cell "$42.00+" [ref=e178]
+                      - cell "$49.00+" [ref=e179]
+                      - cell "$101.00+" [ref=e180]
+                      - cell "Build Price" [ref=e181]:
+                        - button "Build Price" [ref=e182]
+                    - row "Single Vision Artisan SD Reach $47.00+ $54.00+ $106.00+ Build Price" [ref=e183]:
+                      - cell "Single Vision" [ref=e184]
+                      - cell "Artisan" [ref=e185]
+                      - cell "SD Reach" [ref=e186]:
+                        - generic [ref=e188]: SD Reach
+                      - cell "$47.00+" [ref=e189]
+                      - cell "$54.00+" [ref=e190]
+                      - cell "$106.00+" [ref=e191]
+                      - cell "Build Price" [ref=e192]:
+                        - button "Build Price" [ref=e193]
+                    - row "Single Vision Artisan SD Digital SV $27.00+ $34.00+ $86.00+ Build Price" [ref=e194]:
+                      - cell "Single Vision" [ref=e195]
+                      - cell "Artisan" [ref=e196]
+                      - cell "SD Digital SV" [ref=e197]:
+                        - generic [ref=e199]: SD Digital SV
+                      - cell "$27.00+" [ref=e200]
+                      - cell "$34.00+" [ref=e201]
+                      - cell "$86.00+" [ref=e202]
+                      - cell "Build Price" [ref=e203]:
+                        - button "Build Price" [ref=e204]
+            - generic [ref=e205]:
+              - generic [ref=e208]: ENDLESS
+              - generic [ref=e210]:
+                - generic [ref=e213]: Single Vision
+                - table [ref=e215]:
+                  - rowgroup [ref=e224]:
+                    - row "Design Type ↕ Brand ↕ Design Style ↕ Clear ↕ Photochromic ↕ Polarized ↕ Actions" [ref=e225]:
+                      - columnheader "Design Type ↕" [ref=e226]:
+                        - button "Design Type ↕" [ref=e227]:
+                          - generic [ref=e228]: Design Type
+                          - generic [ref=e229]: ↕
+                      - columnheader "Brand ↕" [ref=e230]:
+                        - button "Brand ↕" [ref=e231]:
+                          - generic [ref=e232]: Brand
+                          - generic [ref=e233]: ↕
+                      - columnheader "Design Style ↕" [ref=e234]:
+                        - button "Design Style ↕" [ref=e235]:
+                          - generic [ref=e236]: Design Style
+                          - generic [ref=e237]: ↕
+                      - columnheader "Clear ↕" [ref=e238]:
+                        - button "Clear ↕" [ref=e239]:
+                          - generic [ref=e240]: Clear
+                          - generic [ref=e241]: ↕
+                      - columnheader "Photochromic ↕" [ref=e242]:
+                        - button "Photochromic ↕" [ref=e243]:
+                          - generic [ref=e244]: Photochromic
+                          - generic [ref=e245]: ↕
+                      - columnheader "Polarized ↕" [ref=e246]:
+                        - button "Polarized ↕" [ref=e247]:
+                          - generic [ref=e248]: Polarized
+                          - generic [ref=e249]: ↕
+                      - columnheader "Actions" [ref=e250]
+                  - rowgroup [ref=e251]:
+                    - row "Single Vision ENDLESS ENDLESS BIFCL * $37.00+ $44.00+ $96.00+ Build Price" [ref=e252]:
+                      - cell "Single Vision" [ref=e253]
+                      - cell "ENDLESS" [ref=e254]
+                      - cell "ENDLESS BIFCL *" [ref=e255]:
+                        - generic [ref=e257]: ENDLESS BIFCL *
+                      - cell "$37.00+" [ref=e258]
+                      - cell "$44.00+" [ref=e259]
+                      - cell "$96.00+" [ref=e260]
+                      - cell "Build Price" [ref=e261]:
+                        - button "Build Price" [ref=e262]
+        - generic [ref=e263]:
+          - generic [ref=e264]:
+            - paragraph [ref=e265]: E5 Add-Ons
+            - heading "AR Coatings" [level=2] [ref=e266]
+          - generic [ref=e267]:
+            - generic [ref=e268]:
+              - heading "Artisan" [level=3] [ref=e269]
+              - generic [ref=e270]:
+                - article [ref=e271]:
+                  - generic [ref=e272]:
+                    - heading "Armour" [level=4] [ref=e273]:
+                      - generic [ref=e275]: Armour
+                    - paragraph [ref=e276]: $62.00
+                - article [ref=e277]:
+                  - generic [ref=e278]:
+                    - heading "Azure" [level=4] [ref=e279]:
+                      - generic [ref=e281]: Azure
+                    - paragraph [ref=e282]: $70.00
+                - article [ref=e283]:
+                  - generic [ref=e284]:
+                    - heading "Backside AR" [level=4] [ref=e285]:
+                      - generic [ref=e287]: Backside AR
+                    - paragraph [ref=e288]: $22.00
+                - article [ref=e289]:
+                  - generic [ref=e290]:
+                    - heading "Diamond Shield" [level=4] [ref=e291]:
+                      - generic [ref=e293]: Diamond Shield
+                    - paragraph [ref=e294]: $37.00
+                - article [ref=e295]:
+                  - generic [ref=e296]:
+                    - heading "Emerald" [level=4] [ref=e297]:
+                      - generic [ref=e299]: Emerald
+                    - paragraph [ref=e300]: $55.00
+                - article [ref=e301]:
+                  - generic [ref=e302]:
+                    - heading "Nytopia" [level=4] [ref=e303]:
+                      - generic [ref=e305]: Nytopia
+                    - paragraph [ref=e306]: $62.00
+                - article [ref=e307]:
+                  - generic [ref=e308]:
+                    - heading "Retinal Bliss" [level=4] [ref=e309]:
+                      - generic [ref=e311]: Retinal Bliss
+                    - paragraph [ref=e312]: $70.00
+                - article [ref=e313]:
+                  - generic [ref=e314]:
+                    - heading "Standard" [level=4] [ref=e315]:
+                      - generic [ref=e317]: Standard
+                    - paragraph [ref=e318]: $36.00
+                - article [ref=e319]:
+                  - generic [ref=e320]:
+                    - heading "UV Coating" [level=4] [ref=e321]:
+                      - generic [ref=e323]: UV Coating
+                    - paragraph [ref=e324]: $5.00
+            - button "See More AR Options" [ref=e326]
+            - generic [ref=e327]:
+              - heading "Protection Options" [level=3] [ref=e328]
+              - article [ref=e330]:
+                - generic [ref=e331]:
+                  - heading "Diamond Defense" [level=4] [ref=e332]
+                  - paragraph [ref=e333]: $18.00
+            - generic [ref=e334]:
+              - heading "Mirror Treatments" [level=3] [ref=e335]
+              - generic [ref=e336]:
+                - article [ref=e337]:
+                  - generic [ref=e338]:
+                    - heading "Gradient Mirror" [level=4] [ref=e339]
+                    - paragraph [ref=e340]: $69.00
+                - article [ref=e341]:
+                  - generic [ref=e342]:
+                    - heading "Mirror Matched" [level=4] [ref=e343]
+                    - paragraph [ref=e344]: $69.00
+        - generic [ref=e345]:
+          - generic [ref=e346]:
+            - paragraph [ref=e347]: PDF Source Pricing
+            - heading "ChemClip by Chemistrie" [level=2] [ref=e348]
+          - img "Chemistrie logo" [ref=e350]
+          - generic [ref=e351]:
+            - generic [ref=e352]:
+              - generic [ref=e353]: ChemClip Solid Sunlens
+              - generic [ref=e354]: $85.00
+            - generic [ref=e355]:
+              - generic [ref=e356]: ChemClip Drive
+              - generic [ref=e357]: $117.00
+            - generic [ref=e358]:
+              - generic [ref=e359]: ChemClip Solid Sunlens with Backside AR
+              - generic [ref=e360]: $88.00
+            - generic [ref=e361]:
+              - generic [ref=e362]: ChemClip Gradient Sunlens with Backside AR
+              - generic [ref=e363]: $90.00
+            - generic [ref=e364]:
+              - generic [ref=e365]: ChemClip Mirror Sunlens
+              - generic [ref=e366]: $92.00
+            - generic [ref=e367]:
+              - generic [ref=e368]: ChemClip Color
+              - generic [ref=e369]: $117.00
+            - generic [ref=e370]:
+              - generic [ref=e371]: ChemClip Readers Blue
+              - generic [ref=e372]: $95.00
+            - generic [ref=e373]:
+              - generic [ref=e374]: ChemClip Therapeutic
+              - generic [ref=e375]: $130.00
+            - generic [ref=e376]:
+              - generic [ref=e377]: ChemClip Avulux
+              - generic [ref=e378]: $335.00
+            - generic [ref=e379]:
+              - generic [ref=e380]: Swarovski Crystal add on
+              - generic [ref=e381]: $20.00
+          - paragraph [ref=e382]: ChemClip demonstration kits are available for purchase.
+        - generic [ref=e383]:
+          - generic [ref=e384]:
+            - paragraph [ref=e385]: PDF Source Rates
+            - heading "Shipping" [level=2] [ref=e386]
+          - generic [ref=e387]:
+            - generic [ref=e388]:
+              - generic [ref=e389]: Next Day Delivery per Order
+              - generic [ref=e390]: $4
+            - generic [ref=e391]:
+              - generic [ref=e392]: 2-Day Delivery per Box
+              - generic [ref=e393]: $16
+            - generic [ref=e394]:
+              - generic [ref=e395]: Ground Delivery per Box
+              - generic [ref=e396]: $8
+            - generic [ref=e397]:
+              - generic [ref=e398]: Mail to Patient, add-on to standard shipping
+              - generic [ref=e399]: $8
+        - generic [ref=e401]:
+          - paragraph [ref=e402]: Price Builder Add-Ons
+          - heading "Materials, Options, Finishing, and Shipping" [level=2] [ref=e403]
+        - generic [ref=e404]: This online price guide is provided for convenience and may contain errors or omissions. Artisan Lab Network reserves the right to correct pricing errors, update product availability, and change pricing at any time without notice. Final pricing is determined by the active lab billing system and confirmed order details.
+        - generic [ref=e405]:
+          - heading "Reference Key" [level=2] [ref=e406]
+          - generic [ref=e407]:
+            - generic [ref=e408]:
+              - generic [ref=e409]: ★
+              - generic [ref=e410]: Recommended for Best Service
+            - generic [ref=e411]:
+              - generic [ref=e412]: ➜
+              - generic [ref=e413]: Outsourced Product
+            - generic [ref=e414]:
+              - generic [ref=e415]: SV
+              - generic [ref=e416]: Single Vision
+            - generic [ref=e417]:
+              - generic [ref=e418]: ESV
+              - generic [ref=e419]: Enhanced Single Vision with Power Boost
+            - generic [ref=e420]:
+              - generic [ref=e421]: MF
+              - generic [ref=e422]: Multifocal Design
+            - generic [ref=e423]:
+              - generic [ref=e424]: OCP
+              - generic [ref=e425]: Occupational Progressive Design
+            - generic [ref=e426]:
+              - generic [ref=e427]: PAL
+              - generic [ref=e428]: Progressive Design
+      - generic [ref=e430]:
+        - paragraph [ref=e431]:
+          - img "Artisan ring icon" [ref=e433]
+          - text: Artisan Lab Network
+        - navigation [ref=e434]:
+          - link "Provider Resources" [ref=e435] [cursor=pointer]:
+            - /url: /provider-resources
+          - link "Policies" [ref=e436] [cursor=pointer]:
+            - /url: /lab-policies
+          - link "Contact Support" [ref=e437] [cursor=pointer]:
+            - /url: mailto:sales@artisanlabnetwork.com
+          - link "ArtisanLabNetwork.com" [ref=e438] [cursor=pointer]:
+            - /url: /
+  - button "Open Next.js Dev Tools" [ref=e444] [cursor=pointer]:
+    - img [ref=e445]

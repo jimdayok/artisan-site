@@ -39,6 +39,7 @@ import {
   type PortalSection,
 } from "@/lib/portal/customers";
 import { getPriceListByCode, type PortalPriceList } from "@/lib/portal/priceLists";
+import { canonicalPriceListCode } from "@/lib/portal/priceLists";
 import {
   getPortalWorkbookProfileByEmail,
   getPortalWorkbookProfilesByEmail,
@@ -507,7 +508,7 @@ function PriceListCard({
   priceList,
   accountNumber,
 }: {
-  priceList: PortalPriceList;
+  priceList: PortalPriceList & { configured: boolean };
   accountNumber?: string;
 }) {
   const downloadParams = new URLSearchParams({ code: priceList.code });
@@ -530,22 +531,31 @@ function PriceListCard({
           {priceList.label}
         </p>
         <p className="mt-2 break-all text-sm text-[#706759]">{priceList.fileName}</p>
-        {!priceList.r2Key ? (
+        {!priceList.configured ? (
+          <p className="mt-2 text-sm font-semibold text-[#172a28]">
+            Assigned from account data. Contact portal support for download format.
+          </p>
+        ) : null}
+        {priceList.configured && !priceList.r2Key ? (
           <p className="mt-2 text-sm font-semibold text-[#172a28]">
             Interactive pricing available in portal.
           </p>
         ) : null}
       </div>
       <div className="mt-6 flex flex-col gap-3">
-        {priceList.onlineUrl ? (
+        {priceList.configured && priceList.onlineUrl ? (
           <Link
-            href={priceList.onlineUrl}
+            href={
+              accountNumber
+                ? `${priceList.onlineUrl}?account=${encodeURIComponent(accountNumber)}`
+                : priceList.onlineUrl
+            }
             className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[#172a28] px-5 py-2 text-sm font-semibold text-white transition hover:bg-[#27433f]"
           >
             View {priceList.code} Online Pricing
           </Link>
         ) : null}
-        {priceList.r2Key ? (
+        {priceList.configured && priceList.r2Key ? (
           <a
             href={`/api/portal/download?${downloadParams.toString()}`}
             className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#d8c49b] bg-[#fffaf1] px-5 py-2 text-sm font-semibold text-[#172a28] transition hover:bg-white"
@@ -1081,14 +1091,16 @@ function PortalAccountHero({
             <span className="text-[#d8c49b]">Last shipped</span>
             <br />
             <span className="font-semibold text-white">
-              {formatPortalDate(account?.lastShippedDate ?? "")}
+              {formatPortalDate(
+                account?.lastShippedDate || dashboardAccount?.latest_ship_date || ""
+              )}
             </span>
           </p>
           <p>
             <span className="text-[#d8c49b]">Primary lab</span>
             <br />
             <span className="font-semibold text-white">
-              {account?.lastLabName || "Not available"}
+              {account?.lastLabName || dashboardAccount?.lab_name || "Not available"}
             </span>
           </p>
           <p>
@@ -1255,14 +1267,18 @@ function AccountPerformanceSection({
 
 function AccountProfileSection({
   account,
+  dashboardAccount,
+  customerTypeLabel,
   practiceName,
   accountNumber,
 }: {
   account?: PortalWorkbookAccount;
+  dashboardAccount?: PortalDashboardV1Account;
+  customerTypeLabel?: string;
   practiceName: string;
   accountNumber: string;
 }) {
-  if (!account && !practiceName && !accountNumber) return null;
+  if (!account && !dashboardAccount && !practiceName && !accountNumber) return null;
 
   const correctionLink = correctionHref({
     subject: "Portal Account Information Correction",
@@ -1270,8 +1286,21 @@ function AccountProfileSection({
     accountNumber,
     details: "Please describe the account information that should be corrected.",
   });
-  const addressLines = formatAddressLines(account?.fullAddress);
-  const stateZip = [account?.state, account?.zipCode].filter(Boolean).join(" ");
+  const addressLines = formatAddressLines(
+    account?.fullAddress || dashboardAccount?.address || ""
+  );
+  const stateZip = [
+    account?.state || dashboardAccount?.state,
+    account?.zipCode || "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+  const phoneNumber = account?.phoneNumber || dashboardAccount?.phone || "";
+  const primaryLab = account?.lastLabName || dashboardAccount?.lab_name || "";
+  const latestShipDate =
+    account?.lastShippedDate || dashboardAccount?.latest_ship_date || "";
+  const resolvedCustomerType =
+    customerTypeLabel || dashboardAccount?.division || account?.division || "";
 
   return (
     <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9">
@@ -1293,8 +1322,11 @@ function AccountProfileSection({
           label="Address"
           value={addressLines.length > 0 ? addressLines.join("\n") : ""}
         />
-        <UsageRow label="Phone Number" value={account?.phoneNumber ?? ""} />
+        <UsageRow label="Phone Number" value={phoneNumber} />
         <UsageRow label="State / ZIP" value={stateZip} />
+        <UsageRow label="Primary Lab" value={primaryLab} />
+        <UsageRow label="Latest Ship Date" value={formatPortalDate(latestShipDate)} />
+        <UsageRow label="Customer Type" value={resolvedCustomerType} />
       </div>
       <a
         href={correctionLink}
@@ -1308,11 +1340,13 @@ function AccountProfileSection({
 
 function UserContactSection({
   workbookProfile,
+  dashboardAccount,
   authenticatedEmail,
   practiceName,
   accountNumber,
 }: {
   workbookProfile?: PortalWorkbookProfile;
+  dashboardAccount?: PortalDashboardV1Account;
   authenticatedEmail: string;
   practiceName: string;
   accountNumber: string;
@@ -1323,6 +1357,9 @@ function UserContactSection({
     accountNumber,
     details: "Please describe the user/contact information that should be corrected.",
   });
+
+  const assignedUsers = dashboardAccount?.authorized_users ?? [];
+  const hasAssignedUsers = assignedUsers.length > 0;
 
   return (
     <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9">
@@ -1338,6 +1375,28 @@ function UserContactSection({
           label="Workbook Emails"
           value={workbookProfile?.person.emails.join(", ") ?? authenticatedEmail}
         />
+      </div>
+      <div className="mt-6 border-t border-[#d8c49b] pt-4">
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8b7650]">
+          Assigned Users
+        </p>
+        {hasAssignedUsers ? (
+          <div className="mt-3 grid gap-3">
+            {assignedUsers.map((user) => (
+              <div key={`${user.email}-${user.name}`} className="rounded-[2px] border border-[#eadfce] bg-white/70 p-3">
+                <p className="font-semibold text-[#172a28]">{user.name || "Unnamed User"}</p>
+                <p className="mt-1 text-sm text-[#625b53]">{user.email}</p>
+                <p className="mt-1 text-xs text-[#706759]">
+                  {[user.role_type, user.marketing_status].filter(Boolean).join(" · ") || "No role/status provided"}
+                </p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="mt-3 text-sm text-[#706759]">
+            No assigned portal users found for this account.
+          </p>
+        )}
       </div>
       <a
         href={correctionLink}
@@ -1528,6 +1587,12 @@ function formatShare(value: unknown) {
   return `${Math.round(percentage)}%`;
 }
 
+function formatPct(value: unknown) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return "0%";
+  return `${numeric.toFixed(1)}%`;
+}
+
 function growthLabel(value: unknown) {
   const numeric = Number(value);
   if (!Number.isFinite(numeric)) return "0.0%";
@@ -1555,8 +1620,31 @@ function DashboardV1Panel({
   const mix = dashboard.vsp_private_pay_mix;
   const productMix = dashboard.product_mix;
   const programUsage = dashboard.program_usage;
+  const quality = dashboard.quality_metrics;
+  const enrollment = dashboard.program_enrollment;
   const userSummary = dashboard.authorized_users_summary;
   const insights = dashboard.customer_insights?.suggestions ?? [];
+  const rewardPrograms = enrollment
+    ? [
+        enrollment.arpmp26 ? "Artisan Rewards PMP (ARPMP26)" : "",
+        enrollment.arsql26 ? "Artisan Rewards Sequel (ARSQL26)" : "",
+        enrollment.aruty26 ? "Artisan Rewards Unity (ARUTY26)" : "",
+      ].filter(Boolean)
+    : [];
+  const cmWarrantyPct = Number(quality?.warranty_pct?.cm ?? 0);
+  const cmOfficeRedoPct = Number(quality?.office_redo_pct?.cm ?? 0);
+  const cmLabRedoPct = Number(quality?.lab_redo_pct?.cm ?? 0);
+  const redoAlerts = [
+    cmWarrantyPct > 5
+      ? `Warranty redo is ${formatPct(cmWarrantyPct)} (above 5% average-practice benchmark).`
+      : "",
+    cmOfficeRedoPct > 10
+      ? `Office redo is ${formatPct(cmOfficeRedoPct)} (above 10% average-practice benchmark).`
+      : "",
+    cmLabRedoPct > 2
+      ? `Lab redo is ${formatPct(cmLabRedoPct)} (above 2% average-practice benchmark).`
+      : "",
+  ].filter(Boolean);
 
   return (
     <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur lg:col-span-3 sm:p-9">
@@ -1641,6 +1729,16 @@ function DashboardV1Panel({
           <p className="mt-3 text-xs text-[#706759]">
             Values: Modern Pkg {programUsage.modern_package_usage || "blank"} · Modern Frame {programUsage.modern_frame_usage || "blank"} · ChemClip {programUsage.chemclip_usage || "blank"} · SpecCheck {programUsage.speccheck_usage || "blank"} · Tokai {programUsage.tokai_usage || "blank"}
           </p>
+          {rewardPrograms.length > 0 ? (
+            <p className="mt-2 text-xs text-[#706759]">
+              Artisan Rewards: {rewardPrograms.join(" · ")}
+            </p>
+          ) : null}
+          {dashboard.used_price_lists?.length ? (
+            <p className="mt-2 text-xs text-[#706759]">
+              Used price lists: {dashboard.used_price_lists.join(", ")}
+            </p>
+          ) : null}
         </div>
 
         <div className="border border-[#d8c49b] bg-white/70 p-5">
@@ -1669,6 +1767,40 @@ function DashboardV1Panel({
           <p className="mt-4 text-xs text-[#706759]">
             Data refresh date: {dashboard.data_refresh_date || "Unknown"}
           </p>
+          {quality ? (
+            <div className="mt-3 border-t border-[#e7d9bb] pt-3 text-xs text-[#706759]">
+              <p>
+                Lab Redo % (PPM/PM/CM): {formatPct(quality.lab_redo_pct.ppm)} / {formatPct(quality.lab_redo_pct.pm)} / {formatPct(quality.lab_redo_pct.cm)}
+              </p>
+              <p>
+                Office Redo % (PPM/PM/CM): {formatPct(quality.office_redo_pct.ppm)} / {formatPct(quality.office_redo_pct.pm)} / {formatPct(quality.office_redo_pct.cm)}
+              </p>
+              <p>
+                Warranty % (PPM/PM/CM): {formatPct(quality.warranty_pct.ppm)} / {formatPct(quality.warranty_pct.pm)} / {formatPct(quality.warranty_pct.cm)}
+              </p>
+              <p>
+                Non-Adapt % (PPM/PM/CM): {formatPct(quality.non_adapt_pct.ppm)} / {formatPct(quality.non_adapt_pct.pm)} / {formatPct(quality.non_adapt_pct.cm)}
+              </p>
+            </div>
+          ) : null}
+          {redoAlerts.length > 0 ? (
+            <div className="mt-3 border-t border-[#e7d9bb] pt-3 text-xs text-[#7f2f2f]">
+              <p className="font-semibold uppercase tracking-[0.16em] text-[#8b3b3b]">
+                Support Alert
+              </p>
+              <ul className="mt-2 space-y-1">
+                {redoAlerts.map((alert) => (
+                  <li key={alert}>• {alert}</li>
+                ))}
+              </ul>
+              <a
+                href="mailto:sales@artisanlabnetwork.com?subject=Schedule%20Additional%20Support&body=Please%20schedule%20additional%20support%20for%20our%20account.%20We%20are%20seeing%20redo%20percentages%20above%20average-practice%20benchmarks."
+                className="mt-2 inline-flex text-xs font-semibold underline decoration-[#8b3b3b] underline-offset-4 hover:text-[#5a1e1e]"
+              >
+                Contact sales to schedule additional support
+              </a>
+            </div>
+          ) : null}
         </div>
       </div>
     </section>
@@ -1698,23 +1830,41 @@ export function PortalDashboardContent({
   isLocalhostDevelopment?: boolean;
   selectableAccountCount?: number;
 }) {
-  if (!customer && !workbookProfile) {
+  if (!customer && !workbookProfile && dashboardState?.status !== "ok") {
     return (
       <PortalMessage message="Your login was verified, but your account has not yet been assigned portal access. Please contact Artisan Lab Network." />
     );
   }
 
-  const availablePriceLists = (customer?.priceLists ?? [])
-    .map(getPriceListByCode)
-    .filter((priceList): priceList is PortalPriceList => Boolean(priceList));
+  const dashboardAssignedPriceLists = dashboardState?.account?.used_price_lists ?? [];
+  const effectivePriceListCodes =
+    dashboardAssignedPriceLists.length > 0
+      ? dashboardAssignedPriceLists.map((code) => canonicalPriceListCode(code))
+      : (customer?.priceLists ?? []).map((code) => canonicalPriceListCode(code));
+  const availablePriceLists = effectivePriceListCodes.map((rawCode) => {
+    const normalizedCode = rawCode.trim().toUpperCase();
+    const configured = getPriceListByCode(normalizedCode);
+    if (configured) return { ...configured, configured: true } satisfies PortalPriceList & { configured: boolean };
+
+    return {
+      code: normalizedCode as PortalPriceList["code"],
+      label: `${normalizedCode} Price Sheet`,
+      fileName: `Assigned ${normalizedCode} pricing`,
+      r2Key: null,
+      onlineUrl: null,
+      configured: false,
+    } satisfies PortalPriceList & { configured: boolean };
+  });
   const availablePortalSections = customer ? visiblePortalSectionCards(customer) : [];
   const account = workbookProfile?.account;
   const practiceName =
+    dashboardState?.account?.business_name ||
     account?.accountName ||
     workbookProfile?.person.organization ||
     customer?.practiceName ||
     "Customer";
   const accountNumber =
+    dashboardState?.account?.account_id ||
     account?.accountNumber ||
     workbookProfile?.person.accountNumber ||
     customer?.accountNumber ||
@@ -1915,12 +2065,15 @@ export function PortalDashboardContent({
 
         <AccountProfileSection
           account={account}
+          dashboardAccount={dashboardState?.account}
+          customerTypeLabel={customerTypeLabel}
           practiceName={practiceName}
           accountNumber={accountNumber}
         />
 
         <UserContactSection
           workbookProfile={workbookProfile}
+          dashboardAccount={dashboardState?.account}
           authenticatedEmail={authenticatedEmail}
           practiceName={practiceName}
           accountNumber={accountNumber}

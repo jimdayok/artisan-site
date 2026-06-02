@@ -1,7 +1,8 @@
 import "server-only";
 
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
+import { canonicalPriceListCode } from "@/lib/portal/priceLists";
 
 const DASHBOARD_V1_DIR = path.join(
   process.cwd(),
@@ -22,24 +23,29 @@ export type DashboardV1AdminAccount = {
   account_id: string;
   business_name: string;
   all_account_numbers: string;
-  division: string;
-  lab_name: string;
-  purchase_summary?: {
-    sales?: { cm?: number };
-    jobs?: { cm?: number };
-  };
+  customer_type?: string;
+  sales_rep?: string;
+  lab?: string;
+  cm_sales?: number;
+  cm_jobs?: number;
+  cm_jpd?: number | null;
+  authorized_user_count?: number;
+  price_lists?: string[];
 };
 
 export type DashboardV1AdminRow = {
   businessName: string;
   acctId: string;
   accountNumbers: string;
+  division: string;
   customerType: string;
   salesRep: string;
   lab: string;
   cmSales: number;
   cmJobs: number;
   cmJpd: number | null;
+  authorizedUsers: number;
+  priceLists: string;
 };
 
 function readJson<T>(filePath: string): T | undefined {
@@ -71,29 +77,49 @@ export function getDashboardV1Manifest() {
 }
 
 export function getDashboardV1AdminRows() {
-  const accountsDir = path.join(DASHBOARD_V1_DIR, "accounts");
-  if (!existsSync(accountsDir)) return [];
+  const accountsIndexPath = path.join(DASHBOARD_V1_DIR, "accounts_index.json");
+  const accountsIndex = readJson<DashboardV1AdminAccount[]>(accountsIndexPath) ?? [];
+  if (!accountsIndex.length) return [];
 
   const rows: DashboardV1AdminRow[] = [];
-  const files = readdirSync(accountsDir).filter((file) => file.endsWith(".json"));
-  for (const file of files) {
-    const account = readJson<DashboardV1AdminAccount>(path.join(accountsDir, file));
-    if (!account) continue;
-
+  for (const account of accountsIndex) {
     rows.push({
       businessName: account.business_name || "Unknown",
       acctId: account.account_id,
       accountNumbers: account.all_account_numbers || "—",
-      customerType: parseCustomerType(account.division),
-      salesRep: "—", // Not in dashboard v1 export yet.
-      lab: account.lab_name || "—",
-      cmSales: Number(account.purchase_summary?.sales?.cm ?? 0),
-      cmJobs: Number(account.purchase_summary?.jobs?.cm ?? 0),
-      cmJpd: null, // Not in dashboard v1 export yet.
+      division: parseCustomerType(account.customer_type || ""),
+      customerType: parseCustomerType(account.customer_type || ""),
+      salesRep: account.sales_rep || "—",
+      lab: account.lab || "—",
+      cmSales: Number(account.cm_sales ?? 0),
+      cmJobs: Number(account.cm_jobs ?? 0),
+      cmJpd:
+        typeof account.cm_jpd === "number" && Number.isFinite(account.cm_jpd)
+          ? account.cm_jpd
+          : null,
+      authorizedUsers: Number(account.authorized_user_count ?? 0),
+      priceLists: [
+        ...new Set([
+          ...(account.price_lists ?? []).map((entry) => canonicalPriceListCode(String(entry || ""))),
+          "M5",
+          "Y5",
+        ]),
+      ]
+        .filter(Boolean)
+        .sort((a, b) => a.localeCompare(b))
+        .join(", "),
     });
   }
 
   return rows.sort((a, b) => a.businessName.localeCompare(b.businessName));
+}
+
+export function getDashboardV1Accounts() {
+  return (
+    readJson<DashboardV1AdminAccount[]>(
+      path.join(DASHBOARD_V1_DIR, "accounts_index.json")
+    ) ?? []
+  );
 }
 
 export function resolveDashboardV1AcctId(input: string) {

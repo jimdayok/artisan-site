@@ -3,7 +3,7 @@ import "server-only";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import type { PriceListCode } from "@/lib/portal/priceLists";
-import { getPriceListByCode } from "@/lib/portal/priceLists";
+import { canonicalPriceListCode, getPriceListByCode } from "@/lib/portal/priceLists";
 import { parseCsvList, readPrivatePortalCsv } from "@/lib/portal/privateCsv";
 import type { PortalCustomerTypeCode } from "@/lib/portal/customerTypes";
 import { getPortalCustomerTypeInfo } from "@/lib/portal/customerTypes";
@@ -52,6 +52,19 @@ type WorkbookAccessRecord = {
   portalSections?: string[];
 };
 
+type DashboardV1AccountIndexRecord = {
+  account_id?: string;
+  business_name?: string;
+  all_account_numbers?: string;
+  customer_type?: string;
+  price_lists?: string[];
+};
+
+type DashboardV1UserAccessRecord = {
+  email?: string;
+  account_ids?: string[];
+};
+
 const portalSections = new Set<PortalSection>([
   "pricing",
   "packages",
@@ -68,7 +81,7 @@ function isPortalSection(section: string): section is PortalSection {
 
 function toPriceListCodes(value: string) {
   return parseCsvList(value)
-    .map((code) => code.toUpperCase())
+    .map((code) => canonicalPriceListCode(code))
     .filter((code): code is PriceListCode => Boolean(getPriceListByCode(code)));
 }
 
@@ -86,12 +99,16 @@ function toPortalSectionsFromList(values: string[] = []) {
 
 function toPriceListCodesFromList(values: string[] = []) {
   return values
-    .map((code) => code.trim().toUpperCase())
+    .map((code) => canonicalPriceListCode(code))
     .filter((code): code is PriceListCode => Boolean(getPriceListByCode(code)));
 }
 
 function uniqueList<T extends string>(values: T[]) {
   return [...new Set(values)];
+}
+
+function withGlobalPackageAccess(values: PriceListCode[]) {
+  return uniqueList([...values, "M5", "Y5"]);
 }
 
 function getWorkbookAccessRecords() {
@@ -111,6 +128,87 @@ function getWorkbookAccessRecords() {
   }
 }
 
+function readJsonFile<T>(filePath: string): T | undefined {
+  if (!existsSync(filePath)) return undefined;
+  try {
+    return JSON.parse(readFileSync(filePath, "utf8")) as T;
+  } catch {
+    return undefined;
+  }
+}
+
+function getDashboardV1AccessRecords() {
+  const dashboardDir = path.join(
+    process.cwd(),
+    "private-source",
+    "portal",
+    "dashboard-v1",
+    "current"
+  );
+
+  const accountsIndex =
+    readJsonFile<DashboardV1AccountIndexRecord[]>(
+      path.join(dashboardDir, "accounts_index.json")
+    ) ?? [];
+  const usersToAccounts =
+    readJsonFile<DashboardV1UserAccessRecord[]>(
+      path.join(dashboardDir, "users_to_accounts.json")
+    ) ?? [];
+
+  if (!accountsIndex.length || !usersToAccounts.length) return [];
+
+  const accountById = new Map(
+    accountsIndex
+      .filter((row) => row.account_id)
+      .map((row) => [String(row.account_id).trim().toUpperCase(), row])
+  );
+
+  const records: PortalCustomerAccess[] = [];
+  for (const entry of usersToAccounts) {
+    const email = normalizeEmail(entry.email ?? "");
+    if (!email) continue;
+
+    for (const accountIdRaw of entry.account_ids ?? []) {
+      const accountId = String(accountIdRaw || "").trim().toUpperCase();
+      if (!accountId) continue;
+
+      const account = accountById.get(accountId);
+      if (!account) continue;
+      const accountTypeRaw = account.customer_type?.trim() || "";
+      const accountTypeInfo = getPortalCustomerTypeInfo(accountTypeRaw);
+      const accountTypeCode = accountTypeInfo?.code ?? "";
+
+      records.push({
+        email,
+        accountNumber: accountId,
+        practiceName: account.business_name?.trim() || accountId,
+        allowedPriceLists: withGlobalPackageAccess(
+          toPriceListCodesFromList(account.price_lists ?? [])
+        ),
+        portalSections: [
+          "pricing",
+          "packages",
+          "calculator",
+          "catalog",
+          "policies",
+          "exports",
+          "performance",
+        ],
+        customerTypeCode: accountTypeCode,
+        customerTypeLabel: accountTypeInfo?.label || accountTypeRaw || "",
+      });
+    }
+  }
+
+  return records.filter(
+    (entry) =>
+      entry.email &&
+      entry.accountNumber &&
+      entry.practiceName &&
+      entry.portalSections.length > 0
+  );
+}
+
 // ALN staff update customer portal permissions in:
 // private-source/portal/customers.csv
 // Keep one row per authorized user email. Only the listed price_list codes and
@@ -122,7 +220,7 @@ const manualCustomerPortalAccess: PortalCustomerAccess[] = readPrivatePortalCsv(
     email: row.email?.trim().toLowerCase() ?? "",
     accountNumber: row.account_number?.trim() ?? "",
     practiceName: row.practice_name?.trim() ?? "",
-    allowedPriceLists: toPriceListCodes(row.price_lists ?? ""),
+    allowedPriceLists: withGlobalPackageAccess(toPriceListCodes(row.price_lists ?? "")),
     portalSections: toPortalSections(row.portal_sections ?? ""),
   }))
   .filter(
@@ -141,8 +239,8 @@ const workbookCustomerPortalAccess: PortalCustomerAccess[] =
       );
       const mappedPriceList = customerType?.priceList;
       const allowedPriceLists = mappedPriceList
-        ? [mappedPriceList]
-        : toPriceListCodesFromList(entry.allowedPriceLists);
+        ? withGlobalPackageAccess([mappedPriceList])
+        : withGlobalPackageAccess(toPriceListCodesFromList(entry.allowedPriceLists));
 
       return {
         email: entry.email?.trim().toLowerCase() ?? "",
@@ -163,25 +261,43 @@ const workbookCustomerPortalAccess: PortalCustomerAccess[] =
         entry.portalSections.length > 0
     );
 
+const dashboardV1CustomerPortalAccess: PortalCustomerAccess[] =
+  getDashboardV1AccessRecords();
+
 export const customerPortalAccess: PortalCustomerAccess[] = [
-  ...workbookCustomerPortalAccess,
-  ...manualCustomerPortalAccess.filter(
-    (manualEntry) =>
-      !workbookCustomerPortalAccess.some(
-        (workbookEntry) =>
-          workbookEntry.email === manualEntry.email &&
-          normalizeAccountNumber(workbookEntry.accountNumber) ===
-            normalizeAccountNumber(manualEntry.accountNumber)
+  ...dashboardV1CustomerPortalAccess,
+  ...workbookCustomerPortalAccess.filter(
+    (workbookEntry) =>
+      !dashboardV1CustomerPortalAccess.some(
+        (dashboardEntry) =>
+          dashboardEntry.email === workbookEntry.email &&
+          normalizeAccountNumber(dashboardEntry.accountNumber) ===
+            normalizeAccountNumber(workbookEntry.accountNumber)
       )
   ),
+  ...manualCustomerPortalAccess.filter((manualEntry) => {
+    const existsInDashboard = dashboardV1CustomerPortalAccess.some(
+      (dashboardEntry) =>
+        dashboardEntry.email === manualEntry.email &&
+        normalizeAccountNumber(dashboardEntry.accountNumber) ===
+          normalizeAccountNumber(manualEntry.accountNumber)
+    );
+    const existsInWorkbook = workbookCustomerPortalAccess.some(
+      (workbookEntry) =>
+        workbookEntry.email === manualEntry.email &&
+        normalizeAccountNumber(workbookEntry.accountNumber) ===
+          normalizeAccountNumber(manualEntry.accountNumber)
+    );
+    return !existsInDashboard && !existsInWorkbook;
+  }),
 ];
 
 export const customers: PortalCustomer[] = customerPortalAccess.map((entry) => ({
   accountNumber: entry.accountNumber,
   practiceName: entry.practiceName,
   emails: [entry.email.toLowerCase()],
-  priceLists: entry.allowedPriceLists,
-  allowedPriceLists: entry.allowedPriceLists,
+  priceLists: withGlobalPackageAccess(entry.allowedPriceLists),
+  allowedPriceLists: withGlobalPackageAccess(entry.allowedPriceLists),
   portalSections: entry.portalSections,
   customerTypeCode: entry.customerTypeCode,
   customerTypeLabel: entry.customerTypeLabel,
@@ -197,9 +313,11 @@ function toPortalCustomer(entries: PortalCustomerAccess[]): PortalCustomer | und
     accountNumber: primaryEntry.accountNumber,
     practiceName: primaryEntry.practiceName,
     emails: uniqueList(entries.map((entry) => entry.email.toLowerCase())),
-    priceLists: uniqueList(entries.flatMap((entry) => entry.allowedPriceLists)),
-    allowedPriceLists: uniqueList(
-      entries.flatMap((entry) => entry.allowedPriceLists)
+    priceLists: withGlobalPackageAccess(
+      uniqueList(entries.flatMap((entry) => entry.allowedPriceLists))
+    ),
+    allowedPriceLists: withGlobalPackageAccess(
+      uniqueList(entries.flatMap((entry) => entry.allowedPriceLists))
     ),
     portalSections: uniqueList(entries.flatMap((entry) => entry.portalSections)),
     customerTypeCode: primaryEntry.customerTypeCode,
@@ -247,6 +365,21 @@ export function getCustomerByEmailAndAccount(
 
 export function getCustomerByEmail(email: string) {
   return getCustomersByEmail(email)[0];
+}
+
+export function getCustomerByAccountNumber(accountNumber: string) {
+  const normalizedAccountNumber = normalizeAccountNumber(accountNumber);
+  if (!normalizedAccountNumber) return undefined;
+
+  const entriesByEmail = new Map<string, PortalCustomerAccess[]>();
+  for (const entry of customerPortalAccess) {
+    if (normalizeAccountNumber(entry.accountNumber) !== normalizedAccountNumber) continue;
+    const emailKey = entry.email.toLowerCase();
+    entriesByEmail.set(emailKey, [...(entriesByEmail.get(emailKey) ?? []), entry]);
+  }
+
+  const first = [...entriesByEmail.values()][0];
+  return first ? toPortalCustomer(first) : undefined;
 }
 
 export function customerHasPortalSection(

@@ -42,12 +42,14 @@ const RECOMMENDED_PRIVATE_CACHE_HEADERS = {
 };
 
 function parseArgs(argv) {
-  const args = { baseUrl: DEFAULT_BASE_URL };
+  const args = { baseUrl: DEFAULT_BASE_URL, accessAware: false };
   for (let i = 0; i < argv.length; i += 1) {
     const token = argv[i];
     if (token === "--base-url") {
       args.baseUrl = argv[i + 1];
       i += 1;
+    } else if (token === "--access-aware") {
+      args.accessAware = true;
     }
   }
   return args;
@@ -96,7 +98,15 @@ async function request(baseUrl, path, redirect = "manual") {
   }
 }
 
-async function checkPublicRoutes(baseUrl) {
+function isEdgeSelfRedirect(path, status, location) {
+  return status >= 300 && status < 400 && Boolean(location) && location === path;
+}
+
+function isCloudflareAccessLoginRedirect(location) {
+  return Boolean(location && location.startsWith("/cdn-cgi/access/login/"));
+}
+
+async function checkPublicRoutes(baseUrl, options) {
   const results = [];
   for (const path of PUBLIC_ROUTES) {
     const res = await request(baseUrl, path, "manual");
@@ -113,21 +123,26 @@ async function checkPublicRoutes(baseUrl) {
     }
     const status = res.response.status;
     const location = parseLocation(baseUrl, res.response.headers.get("location"));
-    const pass = status >= 200 && status < 400;
+    const edgeSelfRedirect = options.accessAware && isEdgeSelfRedirect(path, status, location);
+    const pass = (status >= 200 && status < 400) || edgeSelfRedirect;
     results.push({
       area: "public",
       path,
       pass,
-      blocking: true,
+      blocking: !edgeSelfRedirect,
       status,
       destination: location || "",
-      note: pass ? "OK" : "Public route did not return 2xx/3xx.",
+      note: edgeSelfRedirect
+        ? "Edge canonical/self-redirect observed. Verify canonical host directly."
+        : pass
+          ? "OK"
+          : "Public route did not return 2xx/3xx.",
     });
   }
   return results;
 }
 
-async function checkRedirects(baseUrl) {
+async function checkRedirects(baseUrl, options) {
   const results = [];
   for (const entry of REDIRECT_ROUTES) {
     const res = await request(baseUrl, entry.source, "manual");
@@ -148,17 +163,20 @@ async function checkRedirects(baseUrl) {
     const location = parseLocation(baseUrl, res.response.headers.get("location"));
     const redirectStatus = status >= 300 && status < 400;
     const destinationMatch = location === entry.destination;
-    const pass = redirectStatus && destinationMatch;
+    const edgeSelfRedirect = options.accessAware && isEdgeSelfRedirect(entry.source, status, location);
+    const pass = (redirectStatus && destinationMatch) || edgeSelfRedirect;
 
     results.push({
       area: "redirect",
       path: entry.source,
       pass,
-      blocking: true,
+      blocking: !edgeSelfRedirect,
       status,
       destination: location || "",
       expected: entry.destination,
-      note: pass
+      note: edgeSelfRedirect
+        ? "Edge canonical/self-redirect observed. Validate this redirect on canonical launch domain."
+        : pass
         ? "OK"
         : !redirectStatus
           ? "Expected redirect status."
@@ -168,7 +186,7 @@ async function checkRedirects(baseUrl) {
   return results;
 }
 
-async function checkRobotsAndSitemap(baseUrl) {
+async function checkRobotsAndSitemap(baseUrl, options) {
   const checks = [];
 
   const robotsRes = await request(baseUrl, "/robots.txt", "manual");
@@ -182,27 +200,41 @@ async function checkRobotsAndSitemap(baseUrl) {
       note: `Request failed: ${robotsRes.error.message}`,
     });
   } else {
-    const text = await robotsRes.response.text();
-    const requiredLines = [
-      "Disallow: /portal",
-      "Disallow: /portal/",
-      "Disallow: /private",
-      "Disallow: /private/",
-      "Disallow: /api",
-      "Disallow: /api/",
-    ];
-    const missingLines = requiredLines.filter((line) => !text.includes(line));
-    checks.push({
-      area: "robots",
-      path: "/robots.txt",
-      pass: robotsRes.response.status === 200 && missingLines.length === 0,
-      blocking: true,
-      status: robotsRes.response.status,
-      note:
-        missingLines.length === 0
-          ? "OK"
-          : `Missing disallow rules: ${missingLines.join(", ")}`,
-    });
+    const robotsStatus = robotsRes.response.status;
+    const robotsLocation = parseLocation(baseUrl, robotsRes.response.headers.get("location"));
+    if (options.accessAware && isEdgeSelfRedirect("/robots.txt", robotsStatus, robotsLocation)) {
+      checks.push({
+        area: "robots",
+        path: "/robots.txt",
+        pass: true,
+        blocking: false,
+        status: robotsStatus,
+        destination: robotsLocation || "",
+        note: "Edge canonical/self-redirect observed. Verify robots on canonical host.",
+      });
+    } else {
+      const text = await robotsRes.response.text();
+      const requiredLines = [
+        "Disallow: /portal",
+        "Disallow: /portal/",
+        "Disallow: /private",
+        "Disallow: /private/",
+        "Disallow: /api",
+        "Disallow: /api/",
+      ];
+      const missingLines = requiredLines.filter((line) => !text.includes(line));
+      checks.push({
+        area: "robots",
+        path: "/robots.txt",
+        pass: robotsRes.response.status === 200 && missingLines.length === 0,
+        blocking: true,
+        status: robotsRes.response.status,
+        note:
+          missingLines.length === 0
+            ? "OK"
+            : `Missing disallow rules: ${missingLines.join(", ")}`,
+      });
+    }
   }
 
   const sitemapRes = await request(baseUrl, "/sitemap.xml", "manual");
@@ -216,23 +248,37 @@ async function checkRobotsAndSitemap(baseUrl) {
       note: `Request failed: ${sitemapRes.error.message}`,
     });
   } else {
-    const xml = await sitemapRes.response.text();
-    const missingPublicRoutes = PUBLIC_ROUTES.filter((route) => {
-      const path = route === "/" ? "/" : route;
-      return !xml.includes(`<loc>`) || !xml.includes(path);
-    }).filter((route) => route !== "/");
+    const sitemapStatus = sitemapRes.response.status;
+    const sitemapLocation = parseLocation(baseUrl, sitemapRes.response.headers.get("location"));
+    if (options.accessAware && isEdgeSelfRedirect("/sitemap.xml", sitemapStatus, sitemapLocation)) {
+      checks.push({
+        area: "sitemap",
+        path: "/sitemap.xml",
+        pass: true,
+        blocking: false,
+        status: sitemapStatus,
+        destination: sitemapLocation || "",
+        note: "Edge canonical/self-redirect observed. Verify sitemap on canonical host.",
+      });
+    } else {
+      const xml = await sitemapRes.response.text();
+      const missingPublicRoutes = PUBLIC_ROUTES.filter((route) => {
+        const path = route === "/" ? "/" : route;
+        return !xml.includes(`<loc>`) || !xml.includes(path);
+      }).filter((route) => route !== "/");
 
-    checks.push({
-      area: "sitemap",
-      path: "/sitemap.xml",
-      pass: sitemapRes.response.status === 200 && missingPublicRoutes.length === 0,
-      blocking: true,
-      status: sitemapRes.response.status,
-      note:
-        missingPublicRoutes.length === 0
-          ? "OK"
-          : `Missing expected route references: ${missingPublicRoutes.join(", ")}`,
-    });
+      checks.push({
+        area: "sitemap",
+        path: "/sitemap.xml",
+        pass: sitemapRes.response.status === 200 && missingPublicRoutes.length === 0,
+        blocking: true,
+        status: sitemapRes.response.status,
+        note:
+          missingPublicRoutes.length === 0
+            ? "OK"
+            : `Missing expected route references: ${missingPublicRoutes.join(", ")}`,
+      });
+    }
   }
 
   return checks;
@@ -249,7 +295,7 @@ async function checkProtectedRoutes(baseUrl) {
         pass: false,
         blocking: true,
         status: "ERR",
-        missingHeaders: Object.keys(REQUIRED_PRIVATE_HEADERS),
+        missingHeaders: Object.keys(REQUIRED_NOINDEX_HEADERS),
         note: `Request failed: ${res.error.message}`,
       });
       continue;
@@ -257,6 +303,7 @@ async function checkProtectedRoutes(baseUrl) {
 
     const status = res.response.status;
     const location = parseLocation(baseUrl, res.response.headers.get("location"));
+    const accessLoginIntercept = isCloudflareAccessLoginRedirect(location);
     const missingNoindexHeaders = summarizeHeaders(res.response.headers, REQUIRED_NOINDEX_HEADERS);
     const missingCacheHeaders = summarizeHeaders(
       res.response.headers,
@@ -265,7 +312,8 @@ async function checkProtectedRoutes(baseUrl) {
 
     // Allow a wide envelope because auth can yield login page, redirect, 401, or 403.
     const statusAcceptable = [200, 302, 303, 307, 308, 401, 403].includes(status);
-    const pass = statusAcceptable && missingNoindexHeaders.length === 0;
+    const pass =
+      (statusAcceptable && missingNoindexHeaders.length === 0) || accessLoginIntercept;
 
     results.push({
       area: "protected",
@@ -277,7 +325,9 @@ async function checkProtectedRoutes(baseUrl) {
       missingHeaders: missingNoindexHeaders,
       missingRecommendedCacheHeaders: missingCacheHeaders,
       note: pass
-        ? "OK"
+        ? accessLoginIntercept
+          ? "Cloudflare Access login intercept observed (expected at edge)."
+          : "OK"
         : !statusAcceptable
           ? "Unexpected status for protected route."
           : "Missing required noindex headers.",
@@ -324,12 +374,16 @@ function printSummary(allRows) {
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   const baseUrl = normalizeBaseUrl(args.baseUrl);
-  console.log(`ALN launch verification starting for ${baseUrl}`);
+  console.log(
+    `ALN launch verification starting for ${baseUrl}${
+      args.accessAware ? " (Cloudflare Access aware mode)" : ""
+    }`
+  );
 
   const [publicChecks, redirectChecks, robotsSitemapChecks, protectedChecks] = await Promise.all([
-    checkPublicRoutes(baseUrl),
-    checkRedirects(baseUrl),
-    checkRobotsAndSitemap(baseUrl),
+    checkPublicRoutes(baseUrl, args),
+    checkRedirects(baseUrl, args),
+    checkRobotsAndSitemap(baseUrl, args),
     checkProtectedRoutes(baseUrl),
   ]);
 

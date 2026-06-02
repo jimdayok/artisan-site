@@ -1,13 +1,4 @@
-export type PriceListCode =
-  | "P6"
-  | "G6"
-  | "A6"
-  | "B5"
-  | "S5"
-  | "VD"
-  | "M5"
-  | "Y5"
-  | "TK";
+export type PriceListCode = string;
 
 export type PortalPriceList = {
   code: PriceListCode;
@@ -15,7 +6,16 @@ export type PortalPriceList = {
   fileName: string;
   r2Key?: string | null;
   onlineUrl?: string | null;
+  configured?: boolean;
 };
+
+export function canonicalPriceListCode(code: string) {
+  const normalized = code.trim().toUpperCase();
+  if (normalized === "G5") return "G6";
+  if (normalized === "P5") return "P6";
+  if (normalized === "A5") return "A6";
+  return normalized;
+}
 
 export const priceLists: PortalPriceList[] = [
   {
@@ -81,10 +81,82 @@ export const priceLists: PortalPriceList[] = [
     r2Key: null,
     onlineUrl: "/portal/price-list/tk",
   },
+  {
+    code: "E4",
+    label: "E4 Price Sheet",
+    fileName: "Assigned E4 pricing",
+    r2Key: null,
+    onlineUrl: "/portal/price-list/e4",
+  },
+  {
+    code: "E5",
+    label: "E5 Price Sheet",
+    fileName: "Assigned E5 pricing",
+    r2Key: null,
+    onlineUrl: "/portal/price-list/e5",
+  },
+  {
+    code: "E7",
+    label: "E7 Price Sheet",
+    fileName: "Assigned E7 pricing",
+    r2Key: null,
+    onlineUrl: "/portal/price-list/e7",
+  },
+  {
+    code: "E8",
+    label: "E8 Price Sheet",
+    fileName: "Assigned E8 pricing",
+    r2Key: null,
+    onlineUrl: "/portal/price-list/e8",
+  },
+  {
+    code: "NL",
+    label: "NL Price Sheet",
+    fileName: "Assigned Neurolens pricing",
+    r2Key: null,
+    onlineUrl: "/portal/price-list/nl",
+  },
+  {
+    code: "CD",
+    label: "CD Price Sheet",
+    fileName: "Assigned Cadre pricing",
+    r2Key: null,
+    onlineUrl: "/portal/price-list/cd",
+  },
+  {
+    code: "J1",
+    label: "J1 Price Sheet",
+    fileName: "Assigned J1 pricing",
+    r2Key: null,
+    onlineUrl: "/portal/price-list/j1",
+  },
+  {
+    code: "J2",
+    label: "J2 Price Sheet",
+    fileName: "Assigned J2 pricing",
+    r2Key: null,
+    onlineUrl: "/portal/price-list/j2",
+  },
+  {
+    code: "C3",
+    label: "C3 Price Sheet",
+    fileName: "Assigned C3 pricing",
+    r2Key: null,
+    onlineUrl: "/portal/price-list/c3",
+  },
 ];
 
 export function getPriceListByCode(code: string) {
-  const normalizedCode = code.trim().toUpperCase();
-
-  return priceLists.find((priceList) => priceList.code === normalizedCode);
+  const normalizedCode = canonicalPriceListCode(code);
+  if (!normalizedCode) return undefined;
+  const configured = priceLists.find((priceList) => priceList.code === normalizedCode);
+  if (configured) return { ...configured, configured: true };
+  return {
+    code: normalizedCode,
+    label: `${normalizedCode} Price Sheet`,
+    fileName: `Assigned ${normalizedCode} pricing`,
+    r2Key: null,
+    onlineUrl: `/portal/price-list/${normalizedCode.toLowerCase()}`,
+    configured: false,
+  } satisfies PortalPriceList;
 }

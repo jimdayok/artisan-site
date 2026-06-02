@@ -9,7 +9,18 @@ export const dynamic = "force-dynamic";
 export default async function PortalPage({
   searchParams,
 }: {
-  searchParams: Promise<{ account?: string; q?: string; mode?: string; division?: string; lab?: string }>;
+  searchParams: Promise<{
+    account?: string;
+    q?: string;
+    mode?: string;
+    division?: string;
+    lab?: string;
+    priceList?: string;
+    hasUser?: string;
+    activity?: string;
+    trend?: string;
+    opportunity?: string;
+  }>;
 }) {
   const headerList = await headers();
   const query = await searchParams;
@@ -28,6 +39,11 @@ export default async function PortalPage({
         query={query.q ?? ""}
         divisionFilter={query.division ?? ""}
         labFilter={query.lab ?? ""}
+        priceListFilter={query.priceList ?? ""}
+        userFilter={query.hasUser ?? ""}
+        activityFilter={query.activity ?? ""}
+        trendFilter={query.trend ?? ""}
+        opportunityFilter={query.opportunity ?? ""}
       />
     );
   }

@@ -5,6 +5,7 @@ import {
   Activity,
   BadgeCheck,
   BookOpen,
+  CircleDollarSign,
   ExternalLink,
   Eye,
   Glasses,
@@ -12,13 +13,17 @@ import {
   Layers,
   LogOut,
   Mail,
+  MapPin,
   Minus,
   Newspaper,
   Package,
   ShieldCheck,
   Sparkles,
+  Target,
   TrendingDown,
   TrendingUp,
+  Trophy,
+  Users,
   type LucideIcon,
 } from "lucide-react";
 import { isPortalAdminEmail } from "@/lib/portal/admin";
@@ -54,6 +59,14 @@ import {
   type PortalDashboardV1Account,
   type PortalDashboardV1State,
 } from "@/lib/portal/dashboardV1";
+import {
+  PracticePerformanceScoreChart,
+  ServiceExcellenceCharts,
+  TrendsPerformanceCharts,
+  type MixPoint,
+  type QualityPoint,
+  type TrendPoint,
+} from "./PracticeIntelligenceCharts";
 
 const PORTAL_ACCESS_LOGIN_URL = portalAccessLoginUrl();
 const PORTAL_ACCESS_LOGOUT_URL =
@@ -1303,7 +1316,7 @@ function AccountProfileSection({
     customerTypeLabel || dashboardAccount?.division || account?.division || "";
 
   return (
-    <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9">
+    <section id="account-details" className="scroll-mt-24 border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9">
       <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
         Account Details
       </p>
@@ -1362,7 +1375,7 @@ function UserContactSection({
   const hasAssignedUsers = assignedUsers.length > 0;
 
   return (
-    <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9">
+    <section id="support" className="scroll-mt-24 border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9">
       <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
         Portal User
       </p>
@@ -1807,6 +1820,812 @@ function DashboardV1Panel({
   );
 }
 
+type PracticeIntelligenceModel = {
+  trends: TrendPoint[];
+  vspMix: MixPoint[];
+  programMix: MixPoint[];
+  quality: QualityPoint[];
+  score: number;
+  scoreDelta: number;
+  scoreLabel: "Excellent" | "Good" | "Needs Attention";
+  ppmSales: number;
+  pmSales: number;
+  cmSales: number;
+  ppmJobs: number;
+  pmJobs: number;
+  cmJobs: number;
+  currentJpd: number | null;
+  previousJpd: number | null;
+  vspShare: number;
+  privatePayShare: number;
+  salesTrend: ReturnType<typeof getPercentChange>;
+  jobsTrend: ReturnType<typeof getPercentChange>;
+  jpdTrend: ReturnType<typeof getPercentChange> | null;
+  opportunities: Array<{
+    title: string;
+    priority: "green" | "yellow" | "red";
+    current: string;
+    why: string;
+    action: string;
+  }>;
+  programs: Array<{
+    title: string;
+    status: "Active" | "Recommended" | "Available" | "Coming Soon";
+    value: string;
+    detail: string;
+    href: string;
+  }>;
+};
+
+function asNumber(value: unknown) {
+  const numeric = Number(value);
+  return Number.isFinite(numeric) ? numeric : 0;
+}
+
+function pctValue(value: unknown) {
+  const numeric = asNumber(value);
+  return numeric <= 1 ? numeric * 100 : numeric;
+}
+
+function isActiveUsage(value?: string) {
+  const normalized = (value ?? "").trim().toLowerCase();
+  return Boolean(normalized && !["0", "0%", "false", "no", "none", "n/a", "na"].includes(normalized));
+}
+
+function clampScore(value: number) {
+  return Math.max(0, Math.min(100, Math.round(value)));
+}
+
+function statusForScore(score: number): PracticeIntelligenceModel["scoreLabel"] {
+  if (score >= 82) return "Excellent";
+  if (score >= 66) return "Good";
+  return "Needs Attention";
+}
+
+function buildPracticeIntelligenceModel({
+  account,
+  dashboard,
+  hasModernPackageWarning,
+  showNeurolens,
+  showSequelRewards,
+  hasSequelRebateInvitation,
+}: {
+  account?: PortalWorkbookAccount;
+  dashboard?: PortalDashboardV1Account;
+  hasModernPackageWarning: boolean;
+  showNeurolens: boolean;
+  showSequelRewards: boolean;
+  hasSequelRebateInvitation: boolean;
+}): PracticeIntelligenceModel {
+  const jobs = dashboard?.purchase_summary?.jobs;
+  const sales = dashboard?.purchase_summary?.sales;
+  const cmSales = asNumber(sales?.cm ?? account?.cmSales);
+  const pmSales = asNumber(sales?.pm ?? account?.pmSales);
+  const ppmSales = asNumber(sales?.ppm ?? account?.ppmSales);
+  const cmJobs = asNumber(jobs?.cm ?? account?.cmJobs);
+  const pmJobs = asNumber(jobs?.pm ?? account?.pmJobs);
+  const ppmJobs = asNumber(jobs?.ppm ?? account?.ppmJobs);
+  const mix = dashboard?.vsp_private_pay_mix;
+  const vspJobs = asNumber(mix?.vsp_jobs?.cm ?? account?.cmVspJobs);
+  const sqlJobs = asNumber(dashboard?.product_mix?.sql_jobs?.cm ?? account?.cmSqlJobs);
+  const vspShare = pctValue(mix?.vsp_share ?? account?.cmVspSow ?? (cmJobs ? vspJobs / cmJobs : 0));
+  const privatePayShare = Math.max(0, 100 - vspShare);
+  const currentJpd =
+    account && Number.isFinite(Number(account.cmJpd)) && Number(account.cmJpd) > 0
+      ? Number(account.cmJpd)
+      : null;
+  const previousJpd =
+    account && Number.isFinite(Number(account.pmJpd)) && Number(account.pmJpd) > 0
+      ? Number(account.pmJpd)
+      : null;
+  const programFlags = dashboard?.program_usage?.flags;
+  const activePrograms = [
+    programFlags?.modern_package ?? isActiveUsage(account?.modernPkgUsage),
+    programFlags?.modern_frame ?? isActiveUsage(account?.modernFrmUsage),
+    programFlags?.chemclip ?? isActiveUsage(account?.chemClipUsage),
+    programFlags?.speccheck ?? isActiveUsage(account?.specCheckUsage),
+    programFlags?.tokai ?? isActiveUsage(account?.tokaiUsage),
+    showNeurolens,
+    showSequelRewards,
+  ].filter(Boolean).length;
+  const quality = dashboard?.quality_metrics;
+  const warrantyCm = pctValue(quality?.warranty_pct?.cm);
+  const officeRedoCm = pctValue(quality?.office_redo_pct?.cm);
+  const labRedoCm = pctValue(quality?.lab_redo_pct?.cm);
+  const qualityPenalty = Math.min(24, warrantyCm * 1.6 + officeRedoCm * 1.1 + labRedoCm * 3);
+  const growthScore = cmSales > pmSales ? 22 : cmSales === pmSales ? 15 : 9;
+  const programScore = Math.min(22, activePrograms * 3.4);
+  const volumeScore = cmJobs > pmJobs ? 16 : cmJobs === pmJobs ? 11 : 7;
+  const score = clampScore(48 + growthScore + programScore + volumeScore - qualityPenalty);
+  const scoreDelta = score - clampScore(48 + (pmSales > ppmSales ? 22 : 10) + programScore + (pmJobs > ppmJobs ? 16 : 7) - qualityPenalty);
+  const trends = [
+    { label: "Prior", sales: ppmSales, jobs: ppmJobs },
+    { label: "Previous", sales: pmSales, jobs: pmJobs },
+    { label: "Current", sales: cmSales, jobs: cmJobs },
+  ];
+  const programMix = [
+    { label: "Modern Frame", value: isActiveUsage(account?.modernFrmUsage) || programFlags?.modern_frame ? 82 : 18, color: "#1f8a70" },
+    { label: "ChemClip", value: isActiveUsage(account?.chemClipUsage) || programFlags?.chemclip ? 68 : 14, color: "#2f5f9c" },
+    { label: "Tokai", value: isActiveUsage(account?.tokaiUsage) || programFlags?.tokai ? 70 : 12, color: "#c9a24f" },
+    { label: "SpecCheck", value: isActiveUsage(account?.specCheckUsage) || programFlags?.speccheck ? 64 : 10, color: "#c96856" },
+  ];
+  const opportunities: PracticeIntelligenceModel["opportunities"] = [];
+  if (cmJobs < pmJobs) {
+    opportunities.push({
+      title: "Jobs are down versus last month",
+      priority: "red",
+      current: `${formatCount(cmJobs)} current jobs vs ${formatCount(pmJobs)} previous`,
+      why: "Order volume is the clearest early signal that a practice may need attention.",
+      action: "Check in on ordering patterns and ask whether staffing, patient flow, or vendor mix changed.",
+    });
+  }
+  if (cmSales < pmSales) {
+    opportunities.push({
+      title: "Sales are down versus last month",
+      priority: "red",
+      current: `${formatMoney(cmSales)} current vs ${formatMoney(pmSales)} previous`,
+      why: "A revenue dip can indicate lower volume, lower-value jobs, or missed premium recommendations.",
+      action: "Review recent order mix and offer support on high-value lens/package recommendations.",
+    });
+  }
+  if (currentJpd !== null && previousJpd !== null && currentJpd < previousJpd) {
+    opportunities.push({
+      title: "Jobs per day are trending down",
+      priority: "yellow",
+      current: `${currentJpd.toFixed(1)} JPD vs ${previousJpd.toFixed(1)} previous`,
+      why: "JPD helps separate true demand shifts from calendar timing.",
+      action: "Use the monthly order trend to confirm whether the slowdown is isolated or sustained.",
+    });
+  }
+  opportunities.push(
+    {
+      title: "Activate Tokai",
+      priority: isActiveUsage(account?.tokaiUsage) || programFlags?.tokai ? "green" : "yellow",
+      current: isActiveUsage(account?.tokaiUsage) || programFlags?.tokai ? "Program activity detected" : "No current usage detected",
+      why: "Tokai can support specialty and high-index cases when the practice has appropriate demand.",
+      action: "Introduce Tokai for high-index and specialty cases.",
+    }
+  );
+  if (vspJobs > 0 || vspShare > 0) {
+    opportunities.push({
+      title: "VSP education opportunity",
+      priority: "yellow",
+      current: `${Math.round(vspShare)}% VSP mix`,
+      why: "VSP activity is present, so education and quoting resources may improve confidence at the counter.",
+      action: "Share VSP-specific pricing and patient communication resources.",
+    });
+  }
+  opportunities.push(
+    {
+      title: "Reduce Redos",
+      priority: warrantyCm > 5 || officeRedoCm > 10 || labRedoCm > 2 ? "red" : "green",
+      current: `Warranty ${warrantyCm.toFixed(1)}% · Office ${officeRedoCm.toFixed(1)}% · Lab ${labRedoCm.toFixed(1)}%`,
+      why: "Redo, warranty, and non-adapt rates directly affect chair time, patient trust, and margin.",
+      action: "Prioritize remake patterns and schedule support if rates rise.",
+    },
+    {
+      title: "Improve Frame Package Usage",
+      priority: hasModernPackageWarning ? "yellow" : "green",
+      current: isActiveUsage(account?.modernPkgUsage) ? account?.modernPkgUsage || "Active" : "No current usage recorded",
+      why: "Frame package participation can simplify quoting and strengthen program value.",
+      action: "Compare Modern Package savings against current frame behavior.",
+    }
+  );
+  const programs: PracticeIntelligenceModel["programs"] = [
+    {
+      title: "Modern Frame",
+      status: isActiveUsage(account?.modernFrmUsage) || programFlags?.modern_frame ? "Active" : "Available",
+      value: account?.modernFrmUsage || "No usage recorded",
+      detail: "Frame system participation and growth signal.",
+      href: "/provider-resources#modern-frame-system",
+    },
+    {
+      title: "Tokai",
+      status: isActiveUsage(account?.tokaiUsage) || programFlags?.tokai ? "Active" : "Recommended",
+      value: account?.tokaiUsage || "Recommended for specialty growth",
+      detail: "Premium high-index and outsourced specialty design path.",
+      href: "/provider-resources#tokai",
+    },
+    {
+      title: "Sequel Rewards",
+      status: hasSequelRebateInvitation ? "Recommended" : showSequelRewards ? "Active" : "Available",
+      value: showSequelRewards ? `${formatCount(sqlJobs)} current jobs` : "Potential rebate program",
+      detail: "Rewards and growth program for Sequel activity.",
+      href: "/programs#sequel-artisan-rewards",
+    },
+    {
+      title: "Benchmarking",
+      status: "Coming Soon",
+      value: "Benchmarking Available Soon",
+      detail: "Network average and top-quartile comparisons.",
+      href: "/portal",
+    },
+  ];
+
+  return {
+    trends,
+    vspMix: [
+      { label: "VSP Jobs", value: Math.round(vspShare), color: "#2f5f9c" },
+      { label: "Private Pay Jobs", value: Math.round(privatePayShare), color: "#1f8a70" },
+    ],
+    programMix,
+    quality: [
+      { label: "Prior", warranty: pctValue(quality?.warranty_pct?.ppm), officeRedo: pctValue(quality?.office_redo_pct?.ppm), labRedo: pctValue(quality?.lab_redo_pct?.ppm) },
+      { label: "Previous", warranty: pctValue(quality?.warranty_pct?.pm), officeRedo: pctValue(quality?.office_redo_pct?.pm), labRedo: pctValue(quality?.lab_redo_pct?.pm) },
+      { label: "Current", warranty: warrantyCm, officeRedo: officeRedoCm, labRedo: labRedoCm },
+    ],
+    score,
+    scoreDelta,
+    scoreLabel: statusForScore(score),
+    ppmSales,
+    pmSales,
+    cmSales,
+    ppmJobs,
+    pmJobs,
+    cmJobs,
+    currentJpd,
+    previousJpd,
+    vspShare,
+    privatePayShare,
+    salesTrend: getPercentChange(cmSales, pmSales),
+    jobsTrend: getPercentChange(cmJobs, pmJobs),
+    jpdTrend:
+      currentJpd !== null && previousJpd !== null
+        ? getPercentChange(currentJpd, previousJpd)
+        : null,
+    opportunities,
+    programs,
+  };
+}
+
+function IntelligenceMetric({
+  icon: Icon,
+  label,
+  value,
+  detail,
+  trend,
+}: {
+  icon: LucideIcon;
+  label: string;
+  value: string;
+  detail?: string;
+  trend?: ReturnType<typeof getPercentChange>;
+}) {
+  const trendTone =
+    trend?.direction === "up"
+      ? "text-[#8ee0bc]"
+      : trend?.direction === "down"
+        ? "text-[#ffb29e]"
+        : "text-white/70";
+
+  return (
+    <div className="group rounded-md border border-white/15 bg-white/[0.075] p-4 shadow-[0_18px_44px_rgba(0,0,0,0.12)] backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/[0.11]">
+      <div className="flex items-center justify-between gap-3">
+        <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-white/12 text-[#f2d88f]">
+          <Icon className="h-5 w-5" />
+        </span>
+        {trend ? (
+          <span className={`text-xs font-semibold ${trendTone}`}>{trend.label}</span>
+        ) : null}
+      </div>
+      <p className="mt-4 text-[11px] font-bold uppercase tracking-[0.18em] text-white/62">
+        {label}
+      </p>
+      <p className="mt-2 text-3xl font-semibold text-white">{value}</p>
+      {detail ? <p className="mt-2 text-xs leading-5 text-white/62">{detail}</p> : null}
+    </div>
+  );
+}
+
+function PracticeIntelligenceHero({
+  practiceName,
+  accountNumber,
+  authenticatedEmail,
+  customerTypeLabel,
+  account,
+  dashboardAccount,
+  intelligence,
+  adminPreviewAccountName,
+}: {
+  practiceName: string;
+  accountNumber: string;
+  authenticatedEmail: string;
+  customerTypeLabel?: string;
+  account?: PortalWorkbookAccount;
+  dashboardAccount?: PortalDashboardV1Account;
+  intelligence: PracticeIntelligenceModel;
+  adminPreviewAccountName?: string;
+}) {
+  const primaryLab = account?.lastLabName || dashboardAccount?.lab_name || "Not available";
+  const tier = loyaltyTierLabel(
+    dashboardAccount?.tier_status?.previous_month_tier_rank_by_acct_id || account?.tier
+  ) || "Tier insight pending";
+  const lastShipment = account?.lastShippedDate || dashboardAccount?.latest_ship_date || "";
+  const dataFreshness = dashboardAccount?.data_refresh_date || "";
+
+  return (
+    <section id="overview" className="relative isolate scroll-mt-24 overflow-hidden rounded-md bg-[#13211f] p-5 text-white shadow-[0_34px_100px_rgba(19,33,31,0.28)] sm:p-7 lg:col-span-3">
+      <div className="absolute inset-0 -z-10 bg-[linear-gradient(135deg,#13211f_0%,#173f43_42%,#4b5f7f_100%)]" />
+      <div className="absolute inset-x-0 top-0 -z-10 h-32 bg-[linear-gradient(90deg,rgba(242,216,143,0.28),rgba(31,138,112,0.2),rgba(47,95,156,0.24))]" />
+      <div className="grid gap-8 xl:grid-cols-[1.02fr_1.5fr] xl:items-end">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f2d88f]">
+            Practice Intelligence Center
+          </p>
+          <h1 className="mt-4 max-w-4xl break-words text-4xl font-semibold leading-tight text-white sm:text-5xl">
+            {dashboardAccount?.business_name || practiceName}
+          </h1>
+          <div className="mt-5 flex flex-wrap gap-2 text-sm">
+            <span className="inline-flex items-center gap-2 rounded-md border border-white/16 bg-white/10 px-3 py-2">
+              <MapPin className="h-4 w-4 text-[#f2d88f]" />
+              {primaryLab}
+            </span>
+            <span className="inline-flex items-center gap-2 rounded-md border border-white/16 bg-white/10 px-3 py-2">
+              <Trophy className="h-4 w-4 text-[#f2d88f]" />
+              {tier}
+            </span>
+            <span className="inline-flex items-center gap-2 rounded-md border border-white/16 bg-white/10 px-3 py-2">
+              <Users className="h-4 w-4 text-[#f2d88f]" />
+              {dashboardAccount?.all_account_numbers || accountNumber || "Account pending"}
+            </span>
+          </div>
+          <div className="mt-5 grid gap-2 text-sm text-white/68">
+            <p>
+              Last shipment: <span className="font-semibold text-white">{formatPortalDate(lastShipment)}</span>
+            </p>
+            <p>
+              Data freshness: <span className="font-semibold text-white">{formatPortalDate(dataFreshness)}</span>
+            </p>
+            <p>
+              {adminPreviewAccountName ? "Admin preview identity" : "Signed in"}: <span className="font-semibold text-white">{authenticatedEmail}</span>
+            </p>
+            {customerTypeLabel ? (
+              <p>
+                Relationship: <span className="font-semibold text-white">{customerTypeLabel}</span>
+              </p>
+            ) : null}
+          </div>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <IntelligenceMetric
+            icon={CircleDollarSign}
+            label="Current Month Sales"
+            value={formatMoney(intelligence.cmSales)}
+            trend={intelligence.salesTrend}
+          />
+          <IntelligenceMetric
+            icon={CircleDollarSign}
+            label="Previous Month Sales"
+            value={formatMoney(intelligence.pmSales)}
+            detail={`Prior previous: ${formatMoney(intelligence.ppmSales)}`}
+          />
+          <IntelligenceMetric
+            icon={Package}
+            label="Current Month Jobs"
+            value={formatCount(intelligence.cmJobs)}
+            trend={intelligence.jobsTrend}
+          />
+          <IntelligenceMetric
+            icon={Package}
+            label="Previous Month Jobs"
+            value={formatCount(intelligence.pmJobs)}
+            detail={`Prior previous: ${formatCount(intelligence.ppmJobs)}`}
+          />
+          {intelligence.currentJpd !== null ? (
+            <IntelligenceMetric
+              icon={Activity}
+              label="Jobs Per Day"
+              value={intelligence.currentJpd.toFixed(1)}
+              trend={intelligence.jpdTrend ?? undefined}
+              detail="Shown from workbook JPD data."
+            />
+          ) : null}
+          <IntelligenceMetric
+            icon={Target}
+            label="VSP / Private Pay"
+            value={`${Math.round(intelligence.vspShare)}%`}
+            detail={`${Math.round(intelligence.privatePayShare)}% private pay mix`}
+          />
+          <IntelligenceMetric
+            icon={Layers}
+            label="Assigned Price Lists"
+            value={dashboardAccount?.used_price_lists?.join(", ") || "Pending"}
+            detail="Only assigned customer-facing price sheets are shown."
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PracticePerformanceScoreSection({ intelligence }: { intelligence: PracticeIntelligenceModel }) {
+  const factorRows = [
+    ["Growth", intelligence.salesTrend.direction === "up" ? 88 : 62],
+    ["Program Participation", Math.min(100, intelligence.programMix.reduce((total, item) => total + item.value, 0) / intelligence.programMix.length)],
+    ["Order Volume", intelligence.jobsTrend.direction === "up" ? 86 : 60],
+    ["Quality Signal", Math.max(35, 100 - intelligence.quality[2].warranty - intelligence.quality[2].officeRedo - intelligence.quality[2].labRedo)],
+    ["VSP Mix Visibility", intelligence.vspShare > 0 ? 82 : 58],
+    ["Future Product Detail", 0],
+  ] as const;
+
+  return (
+    <section className="grid gap-6 rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3 xl:grid-cols-[0.85fr_1.15fr]">
+      <div>
+        <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#7a6b49]">
+          Practice Performance Score Preview
+        </p>
+        <p className="mt-3 rounded-md border border-[#d9c8a6] bg-white/75 px-3 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#59635f]">
+          Preview framework · Requires additional data for launch-grade scoring
+        </p>
+        <div className="mt-5">
+          <PracticePerformanceScoreChart score={intelligence.score} />
+        </div>
+        <div className="mt-4 text-center">
+          <p className="text-2xl font-semibold text-[#142724]">{intelligence.scoreLabel}</p>
+          <p className="mt-1 text-sm font-semibold text-[#1f8a70]">
+            {intelligence.scoreDelta >= 0 ? "+" : ""}
+            {intelligence.scoreDelta} vs last month
+          </p>
+        </div>
+      </div>
+      <div className="grid content-center gap-3">
+        {factorRows.map(([label, value]) => (
+          <div key={label} className="grid gap-2 rounded-md border border-[#eadfce] bg-white/70 p-3 sm:grid-cols-[11rem_1fr_3rem] sm:items-center">
+            <p className="text-sm font-semibold text-[#142724]">{label}</p>
+            <div className="h-2 overflow-hidden rounded-full bg-[#e7ddcc]">
+              <div className="h-full rounded-full bg-[#1f8a70]" style={{ width: `${value === 0 ? 0 : Math.max(8, Math.min(100, value))}%` }} />
+            </div>
+            <p className="text-sm font-semibold text-[#59635f] sm:text-right">
+              {value === 0 ? "Placeholder" : Math.round(value)}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function TierProgressTracker({
+  tier,
+  cmSales,
+}: {
+  tier: string;
+  cmSales: number;
+}) {
+  const currentTier = Number(tier.match(/\d+/)?.[0] ?? "0");
+  const nextTarget = currentTier > 0 ? (currentTier + 1) * 10000 : 50000;
+  const progress = nextTarget ? Math.min(100, (cmSales / nextTarget) * 100) : 48;
+  const remaining = Math.max(0, nextTarget - cmSales);
+
+  return (
+    <section className="rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_20px_54px_rgba(20,39,36,0.08)] lg:col-span-3">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#7a6b49]">
+            Tier Progress Tracker
+          </p>
+          <h3 className="mt-2 text-2xl font-semibold text-[#142724]">
+            {tier || "Tier insight pending"}
+          </h3>
+        </div>
+        <p className="text-sm font-semibold text-[#59635f]">
+          {currentTier > 0 ? `${formatMoney(remaining)} from Tier ${currentTier + 1}` : "Threshold support ready for launch data"}
+        </p>
+      </div>
+      <div className="mt-5 h-4 overflow-hidden rounded-full bg-[#e7ddcc]">
+        <div className="h-full rounded-full bg-[linear-gradient(90deg,#1f8a70,#c9a24f)] transition-all duration-700" style={{ width: `${Math.max(8, progress)}%` }} />
+      </div>
+    </section>
+  );
+}
+
+function OpportunitiesCenter({ opportunities }: { opportunities: PracticeIntelligenceModel["opportunities"] }) {
+  const tone = {
+    green: "border-[#93c9a8] bg-[#f1fbf4] text-[#1f6b45]",
+    yellow: "border-[#d8c078] bg-[#fff9e8] text-[#7a5b16]",
+    red: "border-[#dfa091] bg-[#fff3ef] text-[#8b3b2d]",
+  } satisfies Record<PracticeIntelligenceModel["opportunities"][number]["priority"], string>;
+
+  return (
+    <section className="rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3">
+      <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#7a6b49]">
+            Opportunities Identified
+          </p>
+          <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Practice growth signals</h2>
+        </div>
+        <span className="inline-flex w-fit items-center gap-2 rounded-md border border-[#d9c8a6] bg-white/75 px-3 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#59635f]">
+          <Sparkles className="h-4 w-4 text-[#c9a24f]" />
+          AI-ready framework
+        </span>
+      </div>
+      <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+        {opportunities.map((item) => (
+          <article key={item.title} className="rounded-md border border-[#eadfce] bg-white/78 p-4 shadow-[0_14px_36px_rgba(20,39,36,0.06)] transition hover:-translate-y-0.5 hover:shadow-[0_18px_44px_rgba(20,39,36,0.1)]">
+            <span className={`inline-flex rounded-md border px-2.5 py-1 text-xs font-bold uppercase tracking-[0.12em] ${tone[item.priority]}`}>
+              {item.priority}
+            </span>
+            <h3 className="mt-4 text-lg font-semibold text-[#142724]">{item.title}</h3>
+            <p className="mt-3 text-sm font-semibold text-[#59635f]">{item.current}</p>
+            <p className="mt-3 text-sm leading-6 text-[#6d746f]">{item.why}</p>
+            <p className="mt-3 text-xs font-bold uppercase tracking-[0.12em] text-[#1f8a70]">{item.action}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ProgramParticipationCenter({ programs }: { programs: PracticeIntelligenceModel["programs"] }) {
+  const statusTone = {
+    Active: "bg-[#1f8a70] text-white",
+    Recommended: "bg-[#c9a24f] text-[#142724]",
+    Available: "bg-[#2f5f9c] text-white",
+    "Coming Soon": "bg-[#e7ddcc] text-[#59635f]",
+  } satisfies Record<PracticeIntelligenceModel["programs"][number]["status"], string>;
+
+  return (
+    <section className="rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3">
+      <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#7a6b49]">
+        Program Participation Center
+      </p>
+      <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Rewards and growth programs</h2>
+      <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        {programs.map((program) => (
+          <Link key={program.title} href={program.href} className="rounded-md border border-[#eadfce] bg-white/78 p-4 transition hover:-translate-y-0.5 hover:border-[#1f8a70]">
+            <span className={`inline-flex rounded-md px-2.5 py-1 text-xs font-bold ${statusTone[program.status]}`}>
+              {program.status}
+            </span>
+            <h3 className="mt-4 text-xl font-semibold text-[#142724]">{program.title}</h3>
+            <p className="mt-2 text-sm font-semibold text-[#59635f]">{program.value}</p>
+            <p className="mt-3 text-sm leading-6 text-[#6d746f]">{program.detail}</p>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function PlaceholderInsightCard({
+  title,
+  label,
+  detail,
+}: {
+  title: string;
+  label: string;
+  detail: string;
+}) {
+  return (
+    <article className="rounded-md border border-dashed border-[#d9c8a6] bg-white/72 p-5">
+      <span className="inline-flex rounded-md border border-[#d9c8a6] bg-[#f8f1e6] px-2.5 py-1 text-xs font-bold uppercase tracking-[0.12em] text-[#7a6b49]">
+        {label}
+      </span>
+      <h3 className="mt-4 text-xl font-semibold text-[#142724]">{title}</h3>
+      <p className="mt-3 text-sm leading-6 text-[#6d746f]">{detail}</p>
+    </article>
+  );
+}
+
+function ProductBrandIntelligenceSection({ programMix }: { programMix: MixPoint[] }) {
+  return (
+    <section className="rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3">
+      <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#7a6b49]">
+        Product and Brand Intelligence
+      </p>
+      <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Product detail framework</h2>
+      <p className="mt-3 max-w-3xl text-sm leading-6 text-[#6d746f]">
+        The portal is ready for product-level intelligence, but these sections stay clearly labeled until order-level lens, material, AR, brand, and package details are connected.
+      </p>
+      <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <PlaceholderInsightCard title="Lens Mix" label="Requires Product Detail Data" detail="Progressive, single vision, and occupational mix will appear when lens-detail data is connected." />
+        <PlaceholderInsightCard title="Material Mix" label="Requires Order-Level Detail" detail="Poly, Trivex, high-index, and plastic mix requires material-level order data." />
+        <PlaceholderInsightCard title="Brand Mix" label="Requires Brand Detail Data" detail="Newton, Sequel, Shamir, Varilux, and other brand share will appear after brand-level order detail is available." />
+        <div className="rounded-md border border-[#eadfce] bg-white/78 p-5">
+          <span className="inline-flex rounded-md border border-[#d9c8a6] bg-[#f8f1e6] px-2.5 py-1 text-xs font-bold uppercase tracking-[0.12em] text-[#7a6b49]">
+            Status Signals
+          </span>
+          <h3 className="mt-4 text-xl font-semibold text-[#142724]">Program Mix</h3>
+          <div className="mt-4 grid gap-3">
+            {programMix.map((item) => (
+              <div key={item.label}>
+                <div className="flex items-center justify-between gap-3 text-sm">
+                  <span className="font-semibold text-[#142724]">{item.label}</span>
+                  <span className="text-[#6d746f]">{item.value >= 50 ? "Active" : "Not Recorded"}</span>
+                </div>
+                <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#e7ddcc]">
+                  <div className="h-full rounded-full" style={{ width: `${Math.max(10, item.value)}%`, backgroundColor: item.color }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function BenchmarkingSection() {
+  return (
+    <section className="rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3">
+      <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#7a6b49]">
+            Benchmarking
+          </p>
+          <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Your practice vs the network</h2>
+        </div>
+        <span className="inline-flex w-fit rounded-md border border-[#d9c8a6] bg-white/75 px-3 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#59635f]">
+          Benchmarking Available Soon
+        </span>
+      </div>
+      <div className="mt-6 grid gap-4 md:grid-cols-3">
+        <PlaceholderInsightCard title="Your Practice" label="Coming Soon" detail="Practice-level benchmarks will appear when network comparison data is approved for customer display." />
+        <PlaceholderInsightCard title="Network Average" label="Requires Benchmark Dataset" detail="Network averages require a customer-safe benchmark rollup before display." />
+        <PlaceholderInsightCard title="Top 25%" label="Future Insight" detail="Top-quartile comparisons will be added once benchmarking definitions are finalized." />
+      </div>
+    </section>
+  );
+}
+
+function ResourceCenter({
+  availablePriceLists,
+  availablePortalSections,
+  accountNumber,
+  isLocalhostDevelopment,
+}: {
+  availablePriceLists: Array<PortalPriceList & { configured: boolean }>;
+  availablePortalSections: PortalSectionCard[];
+  accountNumber: string;
+  isLocalhostDevelopment?: boolean;
+}) {
+  return (
+    <section id="price-sheets" className="scroll-mt-24 rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3">
+      <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#7a6b49]">
+        Resource Center
+      </p>
+      <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Pricing, policies, resources, support</h2>
+      <div className="mt-6 grid gap-5 xl:grid-cols-[1.25fr_0.75fr]">
+        <div>
+          <h3 className="text-lg font-semibold text-[#142724]">Price Sheets</h3>
+          {availablePriceLists.length > 0 ? (
+            <div className="mt-4 grid gap-4 md:grid-cols-2">
+              {availablePriceLists.map((priceList) => (
+                <PriceListCard key={priceList.code} priceList={priceList} accountNumber={accountNumber} />
+              ))}
+            </div>
+          ) : (
+            <p className="mt-4 rounded-md border border-[#eadfce] bg-white/70 p-4 text-sm text-[#59635f]">
+              No price sheets have been assigned to this account yet.
+            </p>
+          )}
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold text-[#142724]">Portal Tools</h3>
+          <div className="mt-4 grid gap-3">
+            {availablePortalSections.map((card) => (
+              <PortalResourceCard key={card.title} card={card} />
+            ))}
+          </div>
+        </div>
+      </div>
+      <PortalHelpSection isLocalhostDevelopment={isLocalhostDevelopment} />
+    </section>
+  );
+}
+
+function PortalSectionNav() {
+  const links = [
+    ["Overview", "#overview"],
+    ["Trends", "#trends"],
+    ["Opportunities", "#opportunities"],
+    ["Programs", "#programs"],
+    ["Price Sheets", "#price-sheets"],
+    ["Account Details", "#account-details"],
+    ["Support", "#support"],
+  ] as const;
+
+  return (
+    <nav className="sticky top-3 z-10 rounded-md border border-[#d9c8a6] bg-[#fffdf8]/92 p-2 shadow-[0_18px_50px_rgba(20,39,36,0.1)] backdrop-blur lg:col-span-3">
+      <div className="flex gap-2 overflow-x-auto">
+        {links.map(([label, href]) => (
+          <a
+            key={href}
+            href={href}
+            className="whitespace-nowrap rounded-full px-3 py-2 text-xs font-bold uppercase tracking-[0.12em] text-[#59635f] transition hover:bg-[#172a28] hover:text-white"
+          >
+            {label}
+          </a>
+        ))}
+      </div>
+    </nav>
+  );
+}
+
+function PracticeIntelligenceCenter({
+  practiceName,
+  accountNumber,
+  customerTypeLabel,
+  account,
+  dashboardAccount,
+  authenticatedEmail,
+  adminPreviewAccountName,
+  availablePriceLists,
+  availablePortalSections,
+  isLocalhostDevelopment,
+  shouldShowNeurolens,
+  shouldShowSequelRewards,
+  hasSequelRebateInvitation,
+}: {
+  practiceName: string;
+  accountNumber: string;
+  customerTypeLabel?: string;
+  account?: PortalWorkbookAccount;
+  dashboardAccount?: PortalDashboardV1Account;
+  authenticatedEmail: string;
+  adminPreviewAccountName?: string;
+  availablePriceLists: Array<PortalPriceList & { configured: boolean }>;
+  availablePortalSections: PortalSectionCard[];
+  isLocalhostDevelopment?: boolean;
+  shouldShowNeurolens: boolean;
+  shouldShowSequelRewards: boolean;
+  hasSequelRebateInvitation: boolean;
+}) {
+  const intelligence = buildPracticeIntelligenceModel({
+    account,
+    dashboard: dashboardAccount,
+    hasModernPackageWarning: Boolean(account && hasModernPackageSavingsWarning(account)),
+    showNeurolens: shouldShowNeurolens,
+    showSequelRewards: shouldShowSequelRewards,
+    hasSequelRebateInvitation,
+  });
+  const tier =
+    loyaltyTierLabel(dashboardAccount?.tier_status?.previous_month_tier_rank_by_acct_id || account?.tier) ||
+    "Tier insight pending";
+
+  return (
+    <>
+      <PortalSectionNav />
+      <PracticeIntelligenceHero
+        practiceName={practiceName}
+        accountNumber={accountNumber}
+        authenticatedEmail={authenticatedEmail}
+        customerTypeLabel={customerTypeLabel}
+        account={account}
+        dashboardAccount={dashboardAccount}
+        intelligence={intelligence}
+        adminPreviewAccountName={adminPreviewAccountName}
+      />
+      <PracticePerformanceScoreSection intelligence={intelligence} />
+      <section id="trends" className="scroll-mt-24 lg:col-span-3">
+        <TrendsPerformanceCharts trends={intelligence.trends} vspMix={intelligence.vspMix} />
+      </section>
+      <TierProgressTracker tier={tier} cmSales={intelligence.cmSales} />
+      <div id="opportunities" className="scroll-mt-24 lg:col-span-3">
+        <OpportunitiesCenter opportunities={intelligence.opportunities} />
+      </div>
+      <ProductBrandIntelligenceSection programMix={intelligence.programMix} />
+      <section className="lg:col-span-3">
+        <ServiceExcellenceCharts
+          quality={intelligence.quality}
+          orderVolume={intelligence.trends}
+        />
+      </section>
+      <div id="programs" className="scroll-mt-24 lg:col-span-3">
+        <ProgramParticipationCenter programs={intelligence.programs} />
+      </div>
+      <BenchmarkingSection />
+      <ResourceCenter
+        availablePriceLists={availablePriceLists}
+        availablePortalSections={availablePortalSections}
+        accountNumber={accountNumber}
+        isLocalhostDevelopment={isLocalhostDevelopment}
+      />
+    </>
+  );
+}
+
 export function PortalDashboardContent({
   authenticatedEmail,
   customer,
@@ -1879,10 +2698,6 @@ export function PortalDashboardContent({
     account,
     invited: hasSequelRebateInvitation,
   });
-  const shouldShowNeurolensInvitation = containsText(
-    account?.primaryPalPrivatePay,
-    "neurolens"
-  );
   const showDashboardV1 = dashboardState?.status === "ok";
   const isAdmin = isPortalAdminEmail(authenticatedEmail);
   const shouldShowDashboardWarnings =
@@ -1932,10 +2747,6 @@ export function PortalDashboardContent({
       ) : null}
 
       <div className="grid gap-7 lg:grid-cols-3">
-        {showDashboardV1 ? (
-          <DashboardV1Panel dashboardState={dashboardState} />
-        ) : null}
-
         {shouldShowDashboardWarnings ? (
           <section className="border border-[#b89a61] bg-[#fff4dd] p-5 text-[#172a28] shadow-[0_14px_40px_rgba(23,42,40,0.08)] lg:col-span-3">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b7650]">
@@ -1957,16 +2768,6 @@ export function PortalDashboardContent({
             </p>
           </section>
         ) : null}
-
-        <PortalAccountHero
-          practiceName={practiceName}
-          accountNumber={accountNumber}
-          customerTypeLabel={customerTypeLabel}
-          account={account}
-          dashboardAccount={dashboardState?.account}
-          authenticatedEmail={authenticatedEmail}
-          adminPreviewAccountName={adminPreviewAccountName}
-        />
 
         {isAdmin && !adminPreviewAccountName ? (
           <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-5 shadow-[0_18px_55px_rgba(23,42,40,0.08)] lg:col-span-3">
@@ -1990,78 +2791,21 @@ export function PortalDashboardContent({
           </section>
         ) : null}
 
-        {account ? (
-          <AccountPerformanceSection
-            account={account}
-            showNeurolens={shouldShowNeurolens}
-            showSequelRewards={shouldShowSequelRewards}
-          />
-        ) : null}
-
-        {shouldShowSequelRewards ? (
-          <SequelRewardsInvitationCard invited={hasSequelRebateInvitation} />
-        ) : null}
-
-        {account && hasModernPackageSavingsWarning(account) ? (
-          <ModernPackageSavingsAlert />
-        ) : null}
-
-        {shouldShowNeurolensInvitation ? <NeurolensExpansionInvitation /> : null}
-
-        <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9 lg:col-span-2">
-          <div className="mb-6 flex flex-col gap-3 border-b border-[#d8c49b] pb-6 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
-                Secure Downloads
-              </p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.03em] text-[#172a28]">
-                Your Available Price Sheets
-              </h2>
-            </div>
-            <p className="max-w-xs text-sm leading-6 text-[#706759]">
-              Files are assigned by account and served through the secure portal only.
-            </p>
-          </div>
-
-          {availablePriceLists.length > 0 ? (
-            <div className="grid gap-4 md:grid-cols-2">
-              {availablePriceLists.map((priceList) => (
-                <PriceListCard
-                  key={priceList.code}
-                  priceList={priceList}
-                  accountNumber={accountNumber}
-                />
-              ))}
-            </div>
-          ) : (
-            <p className="border-t border-[#d8c49b] py-6 text-[#5b5245]">
-              No price sheets have been assigned to this account yet.
-            </p>
-          )}
-
-          <PortalHelpSection isLocalhostDevelopment={isLocalhostDevelopment} />
-        </section>
-
-        {availablePortalSections.length > 0 ? (
-          <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9">
-            <div className="mb-6 border-b border-[#d8c49b] pb-6">
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
-                Assigned Tools
-              </p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.03em] text-[#172a28]">
-                Your Portal Sections
-              </h2>
-              <p className="mt-3 max-w-xl text-sm leading-6 text-[#706759]">
-                These sections are available based on your account permissions.
-              </p>
-            </div>
-            <div className="grid gap-4">
-              {availablePortalSections.map((card) => (
-                <PortalResourceCard key={card.title} card={card} />
-              ))}
-            </div>
-          </section>
-        ) : null}
+        <PracticeIntelligenceCenter
+          practiceName={practiceName}
+          accountNumber={accountNumber}
+          customerTypeLabel={customerTypeLabel}
+          account={account}
+          dashboardAccount={dashboardState?.account}
+          authenticatedEmail={authenticatedEmail}
+          adminPreviewAccountName={adminPreviewAccountName}
+          availablePriceLists={availablePriceLists}
+          availablePortalSections={availablePortalSections}
+          isLocalhostDevelopment={isLocalhostDevelopment}
+          shouldShowNeurolens={shouldShowNeurolens}
+          shouldShowSequelRewards={shouldShowSequelRewards}
+          hasSequelRebateInvitation={hasSequelRebateInvitation}
+        />
 
         <AccountProfileSection
           account={account}
@@ -2078,15 +2822,6 @@ export function PortalDashboardContent({
           practiceName={practiceName}
           accountNumber={accountNumber}
         />
-
-        {account ? (
-          <ProgramUsageSection
-            account={account}
-            showNeurolens={shouldShowNeurolens}
-            showSequelRewards={shouldShowSequelRewards}
-            hasSequelRebateInvitation={hasSequelRebateInvitation}
-          />
-        ) : null}
       </div>
     </PortalShell>
   );

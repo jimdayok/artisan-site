@@ -46,3 +46,8 @@ public/hero-vertical.mp4
 
 # local confidential source PDFs used for pricing data extraction
 /private-source/
+
+# Allow tracking of required lookup spreadsheets used by the pricing generator
+!private-source/portal/lookup_docs/Lookup.xlsx
+!private-source/portal/lookup_docs/Lookup_Mat.xlsx
+!private-source/portal/lookup_docs/Lookup_AR.xlsx

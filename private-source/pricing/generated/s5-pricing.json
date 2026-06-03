@@ -44000,6 +44000,10 @@
       "title": "Package Notes",
       "items": [
         {
+          "name": "ARTISAN LENS SYSTEMS",
+          "price": "Lens and coating package pricing. Orders include the listed lens design and an included coating; additional coating upgrade options are available below."
+        },
+        {
           "name": "Included AR",
           "price": "Artisan Emerald, Artisan Standard, Diamond Sun, Backside AR (included)"
         },
@@ -44217,7 +44221,7 @@
     "rawSourceRowsProcessed": 653,
     "rowsExcludedMissingLookup": 0,
     "displayRowCount": 45,
-    "generatedAt": "2026-06-02T03:00:09.187Z",
+    "generatedAt": "2026-06-03T22:43:35.940Z",
     "rawColumns": [
       "PL",
       "Mat",

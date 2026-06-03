@@ -21,6 +21,7 @@
     "pricing:generate-dvi": "node scripts/generate-price-list-data-dvi.mjs",
     "pricing:validate-ar": "node scripts/generate-ar-price-guide-validation.mjs",
     "launch:verify": "node scripts/verify-launch-readiness.mjs",
+    "build:whitepaper": "typst compile publications/aln-strategic-white-paper/main.typ publications/aln-strategic-white-paper/output/ALN-Strategic-White-Paper.pdf",
     "typecheck": "NODE_OPTIONS='--max-old-space-size=12288' tsc --noEmit"
   },
   "dependencies": {

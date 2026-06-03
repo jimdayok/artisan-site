@@ -187,6 +187,11 @@ const b5PackageAddOns = [
   {
     title: "Package Notes",
     items: [
+      {
+        name: "ARTISAN LENS SYSTEMS",
+        price:
+          "Lens and coating package pricing. Orders include the listed lens design and an included coating; additional coating upgrade options are available below.",
+      },
       { name: "Included AR", price: "Artisan Emerald, Artisan Standard, Diamond Sun, Backside AR (included)" },
       { name: "Products not listed", price: "Not available" },
     ],
@@ -210,6 +215,11 @@ const s5PackageAddOns = [
   {
     title: "Package Notes",
     items: [
+      {
+        name: "ARTISAN LENS SYSTEMS",
+        price:
+          "Lens and coating package pricing. Orders include the listed lens design and an included coating; additional coating upgrade options are available below.",
+      },
       { name: "Included AR", price: "Artisan Emerald, Artisan Standard, Diamond Sun, Backside AR (included)" },
       { name: "Products not listed", price: "Not available" },
     ],
@@ -238,7 +248,7 @@ const m5AddOns = [
       {
         name: "Artisan Frame System",
         price:
-          "Artisan Frame Systems include the frame and polycarbonate lenses bundled at a reduced package price.",
+          "Artisan Frame Systems include the frame and polycarbonate lenses bundled at a reduced package price. Additional lens, coating, and frame-tier upgrade options are available below.",
       },
       { name: "Frame shipping", price: "Frames are drop-shipped to the lab with no additional frame shipping fees." },
     ],
@@ -274,7 +284,7 @@ const y5AddOns = [
       {
         name: "Artisan Safety System",
         price:
-          "Artisan Safety Frame Systems include the frame and lenses bundled at reduced package pricing.",
+          "Artisan Safety Systems include the safety frame and lenses bundled at reduced package pricing. Additional lens, coating, and frame-tier upgrade options are available below.",
       },
       { name: "Side shields", price: "Included at no additional fee", recommended: true },
       { name: "Warranty policy", price: "See safety vendor tier and warranty section" },
@@ -376,7 +386,21 @@ const configs = [
     code: "TK",
     rawPath: resolveSourceFile(["m5-tk-b5-s5-y5raw.xlsx"]),
     arCoatings: tokaiOnlyArCoatings,
-    addOnSections: fullServiceAddOns,
+    addOnSections: [
+      {
+        title: "Package Notes",
+        items: [
+          {
+            name: "ARTISAN LENS SYSTEMS",
+            price:
+              "Tokai lens and coating package pricing. Orders include the eligible Tokai lens design and Tokai AR coating; additional upgrade options are available below when supported.",
+          },
+          { name: "Included AR", price: "Eligible Tokai AR coatings" },
+          { name: "Products not listed", price: "Not available" },
+        ],
+      },
+      ...fullServiceAddOns,
+    ],
     assumptions: [
       "TK pulled from mixed workbook rows where PL code is TK.",
       "TK interactive AR list is restricted to Tokai AR coatings.",
@@ -388,9 +412,14 @@ const configs = [
     arCoatings: noArtisanArCoatings,
     addOnSections: [
       {
-        title: "Program Notes",
+        title: "Package Notes",
         items: [
-          { name: "Included AR", price: "None" },
+          {
+            name: "ARTISAN LENS SYSTEMS",
+            price:
+              "Value lens and coating package pricing. Orders include the listed lens package rules; additional coating upgrade options are available below when supported.",
+          },
+          { name: "Included AR", price: "None included unless shown on the selected lens package" },
           { name: "Artisan Standard", price: "$21" },
           { name: "Products not listed", price: "Not available" },
         ],

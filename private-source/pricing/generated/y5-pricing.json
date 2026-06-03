@@ -96070,7 +96070,7 @@
       "items": [
         {
           "name": "Artisan Safety System",
-          "price": "Artisan Safety Frame Systems include the frame and lenses bundled at reduced package pricing."
+          "price": "Artisan Safety Systems include the safety frame and lenses bundled at reduced package pricing. Additional lens, coating, and frame-tier upgrade options are available below."
         },
         {
           "name": "Side shields",
@@ -96293,7 +96293,7 @@
     "rawSourceRowsProcessed": 4623,
     "rowsExcludedMissingLookup": 383,
     "displayRowCount": 139,
-    "generatedAt": "2026-06-02T03:00:11.380Z",
+    "generatedAt": "2026-06-03T22:43:38.230Z",
     "rawColumns": [
       "PL",
       "Mat",

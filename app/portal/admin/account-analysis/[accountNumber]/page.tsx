@@ -22,6 +22,10 @@ function money(value: number) {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(value);
 }
 
+function moneyOrUnavailable(value: number | null) {
+  return value === null ? "Unavailable" : `${money(value)}/day`;
+}
+
 function count(value: number) {
   return new Intl.NumberFormat("en-US").format(value);
 }
@@ -95,7 +99,10 @@ function flagsFor(row: DashboardV1AdminRow) {
   const flags: Array<{ title: string; why: string; action: string }> = [];
   if (row.cmSales < row.pmSales) flags.push({ title: "Sales down month over month", why: `${money(row.cmSales)} current vs ${money(row.pmSales)} previous.`, action: "Review order mix and contact the customer with a specific support angle." });
   if (row.cmJobs < row.pmJobs) flags.push({ title: "Jobs down month over month", why: `${count(row.cmJobs)} current jobs vs ${count(row.pmJobs)} previous.`, action: "Ask whether patient flow, staffing, or competing lab usage changed." });
+  if ((row.brandUsage.neurolens_jobs?.cm ?? 0) < (row.brandUsage.neurolens_jobs?.pm ?? 0)) flags.push({ title: "Neurolens decline", why: `${count(row.brandUsage.neurolens_jobs?.cm ?? 0)} current Neurolens jobs vs ${count(row.brandUsage.neurolens_jobs?.pm ?? 0)} previous.`, action: "Review Neurolens ordering behavior and identify whether education or workflow support is needed." });
+  if ((row.brandUsage.sequel_jobs?.cm ?? 0) < (row.brandUsage.sequel_jobs?.pm ?? 0)) flags.push({ title: "Sequel decline", why: `${count(row.brandUsage.sequel_jobs?.cm ?? 0)} current Sequel jobs vs ${count(row.brandUsage.sequel_jobs?.pm ?? 0)} previous.`, action: "Review Sequel PAL adoption and whether rewards-qualified activity is slipping." });
   if (row.cmJpd !== null && row.pmJpd !== null && row.cmJpd < row.pmJpd) flags.push({ title: "JPD down", why: `${row.cmJpd.toFixed(1)} current JPD vs ${row.pmJpd.toFixed(1)} previous.`, action: "Use JPD to distinguish velocity from calendar timing." });
+  if (row.turnaroundAverageDays.cm > row.turnaroundAverageDays.pm && row.turnaroundAverageDays.pm > 0) flags.push({ title: "Turnaround deterioration", why: `${row.turnaroundAverageDays.cm.toFixed(1)} current average days vs ${row.turnaroundAverageDays.pm.toFixed(1)} previous.`, action: "Review lab service timing and proactively communicate expectations if needed." });
   if (row.pmJobs > 0 && row.cmJobs === 0) flags.push({ title: "No current activity", why: "Prior-month jobs exist, but current-month jobs are zero.", action: "Prioritize immediate outreach to confirm ordering status." });
   if (!row.programs.tokai) flags.push({ title: "Tokai opportunity", why: "Tokai usage is not recorded.", action: "Introduce Tokai only where specialty or high-index demand makes sense." });
   if (!row.programs.modernFrame) flags.push({ title: "Modern Frame opportunity", why: "Modern Frame usage is not recorded.", action: "Review whether Modern Frame can simplify package adoption." });
@@ -124,8 +131,8 @@ export default async function AdminAccountAnalysisPage({ params }: { params: Pro
   const row = rows.find((entry) => entry.acctId.toUpperCase() === resolved.acctId.toUpperCase());
   if (!row) return <NotFound adminEmail={adminEmail} />;
 
-  const salesChange = percentChange(row.cmSales, row.pmSales);
-  const jobsChange = percentChange(row.cmJobs, row.pmJobs);
+  const salesChange = percentChange(row.cmSalesPerDay ?? 0, row.pmSalesPerDay ?? 0);
+  const jobsChange = percentChange(row.cmJpd ?? 0, row.pmJpd ?? 0);
   const email = firstEmail(row);
   const emailHref = email ? `mailto:${email}?subject=${encodeURIComponent("Checking in from Artisan Lab Network")}` : "";
   const flags = flagsFor(row);
@@ -149,8 +156,8 @@ export default async function AdminAccountAnalysisPage({ params }: { params: Pro
       </section>
 
       <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <MetricCard icon={CircleDollarSign} label="Current Month Sales" value={money(row.cmSales)} detail={`PM ${money(row.pmSales)} · PPM ${money(row.ppmSales)}`} />
-        <MetricCard icon={Package} label="Current Month Jobs" value={count(row.cmJobs)} detail={`PM ${count(row.pmJobs)} · PPM ${count(row.ppmJobs)}`} />
+        <MetricCard icon={CircleDollarSign} label="Current Sales / Day" value={moneyOrUnavailable(row.cmSalesPerDay)} detail={`PM ${moneyOrUnavailable(row.pmSalesPerDay)} · Monthly ${money(row.cmSales)}`} />
+        <MetricCard icon={Package} label="Current Jobs / Day" value={row.cmJpd === null ? "Unavailable" : `${row.cmJpd.toFixed(1)}/day`} detail={`PM ${row.pmJpd === null ? "Unavailable" : `${row.pmJpd.toFixed(1)}/day`} · Monthly ${count(row.cmJobs)}`} />
         <MetricCard icon={Activity} label="JPD" value={row.cmJpd === null ? "Unavailable" : row.cmJpd.toFixed(1)} detail={row.pmJpd === null ? "JPD data unavailable" : `PM ${row.pmJpd.toFixed(1)}`} />
         <MetricCard icon={Users} label="Authorized Users" value={count(row.authorizedUsers)} detail={row.authorizedUserEmails.join(", ") || "No customer email available"} />
       </section>
@@ -176,13 +183,13 @@ export default async function AdminAccountAnalysisPage({ params }: { params: Pro
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b7650]">Performance and Mix</p>
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
             <div className="rounded-md border border-[#eadfce] bg-white/72 p-4">
-              <p className="text-sm font-semibold text-[#172a28]">Sales Trend</p>
-              <p className="mt-2 text-2xl font-semibold text-[#172a28]">{money(row.cmSales)}</p>
+              <p className="text-sm font-semibold text-[#172a28]">Sales / Day Trend</p>
+              <p className="mt-2 text-2xl font-semibold text-[#172a28]">{moneyOrUnavailable(row.cmSalesPerDay)}</p>
               <TrendBadge change={salesChange} />
             </div>
             <div className="rounded-md border border-[#eadfce] bg-white/72 p-4">
-              <p className="text-sm font-semibold text-[#172a28]">Jobs Trend</p>
-              <p className="mt-2 text-2xl font-semibold text-[#172a28]">{count(row.cmJobs)}</p>
+              <p className="text-sm font-semibold text-[#172a28]">Jobs / Day Trend</p>
+              <p className="mt-2 text-2xl font-semibold text-[#172a28]">{row.cmJpd === null ? "Unavailable" : `${row.cmJpd.toFixed(1)}/day`}</p>
               <TrendBadge change={jobsChange} />
             </div>
             <div className="rounded-md border border-[#eadfce] bg-white/72 p-4">

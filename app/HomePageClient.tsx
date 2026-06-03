@@ -198,44 +198,13 @@ const partnerBrands = [
   },
 ];
 
-const betterModelCards = [
-  {
-    id: "freedom",
-    title: "Freedom to Choose",
-    icon: "/icons/artisan/freedom-to-choose.svg",
-    body: "More lens options. Less forcing you into one path.",
-    helper: "Expand to see our brand choices.",
-    expandedTitle: "Partner Brands",
-    expandedBody:
-      "Access the lens brands your practice knows and trusts, with the freedom to choose what fits each patient best.",
-  },
-  {
-    id: "transparency",
-    title: "Transparent Outcomes",
-    icon: "/icons/artisan/transparency.svg",
-    body: "Clear reporting, timing, cost, and performance expectations.",
-    helper: "Expand to see the supporting data.",
-    expandedBody:
-      "Clear expectations matter. Artisan Lab Network is built to give practices better visibility into service, timing, communication, cost, quality, and patient-impacting outcomes so teams can plan with confidence.",
-  },
-  {
-    id: "flexibility",
-    title: "Flexibility",
-    icon: "/icons/artisan/flexibility.svg",
-    body: "Systems designed to support your process, not punish it.",
-    helper: "Expand to see how this works.",
-    expandedBody:
-      "Your practice should not have to change everything to work with your lab. Our systems are designed to support different workflows, ordering methods, product preferences, and practice needs.",
-  },
-];
-
 const capabilities = [
   {
     title: "Freeform lens options",
     icon: "/icons/artisan/freedom-to-choose.svg",
     detail:
-      "We carry products from major lens vendors and give practices more freedom of choice.",
-    link: { label: "Jump to vendor partners", href: "#vendor-partners" },
+      "Practice control starts with choice. ALN gives independent practices access to the lens brands and design families they already trust, so recommendations can be based on the patient instead of a forced path.",
+    brands: partnerBrands,
   },
   {
     title: "AR treatments",
@@ -545,205 +514,6 @@ function ProofStatCard({
   );
 }
 
-function BetterModelCard({
-  card,
-  isOpen,
-  onToggle,
-  compact = false,
-}: {
-  card: (typeof betterModelCards)[number];
-  isOpen: boolean;
-  onToggle: () => void;
-  compact?: boolean;
-}) {
-  const panelId = `better-model-${card.id}-panel`;
-
-  return (
-    <motion.article
-      layout
-      variants={cardReveal}
-      transition={{ layout: { duration: 0.42, ease: "easeInOut" } }}
-      className={`group flex h-full flex-col overflow-hidden rounded-2xl border border-[#d6c3a1]/50 bg-[#fffaf2]/88 shadow-[0_18px_45px_rgba(49,39,26,0.08)] backdrop-blur-md transition-colors duration-300 hover:border-[#c9b28b] hover:bg-[#fffaf2] hover:shadow-[0_24px_64px_rgba(49,39,26,0.13)] ${
-        isOpen ? "lg:col-span-3" : ""
-      }`}
-    >
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-expanded={isOpen}
-        aria-controls={panelId}
-        className={`flex w-full flex-1 items-stretch justify-between gap-4 p-5 text-left outline-none transition focus-visible:ring-2 focus-visible:ring-[#8a7654]/45 md:p-6 ${
-          isOpen ? "min-h-[132px]" : compact ? "min-h-[152px]" : "min-h-[176px]"
-        }`}
-      >
-        <span className="flex min-w-0 items-start gap-4">
-          <ArtisanIcon
-            src={card.icon}
-            size="sm"
-            className="h-12 w-12 border-[#d6c3a1]/55 bg-white/70 shadow-[0_10px_24px_rgba(49,39,26,0.06)]"
-          />
-          <span className="flex min-h-full min-w-0 flex-col">
-            <span className="block text-xs uppercase tracking-[0.24em] text-black/50 md:tracking-[0.28em]">
-              {card.title}
-            </span>
-            <span className="mt-2 block text-xl font-semibold text-[#1f1718]">
-              {card.body}
-            </span>
-            <span className="mt-auto block pt-3 text-xs font-medium leading-5 text-[#625b53]/70">
-              {card.helper}
-            </span>
-          </span>
-        </span>
-        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[#d6c3a1]/70 bg-white/75 text-2xl leading-none text-[#7d6746] shadow-sm transition">
-          {isOpen ? "−" : "+"}
-        </span>
-      </button>
-
-      <AnimatePresence initial={false}>
-        {isOpen ? (
-          <motion.div
-            id={panelId}
-            key="expanded"
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.28, ease: "easeOut" }}
-          >
-            <div className="mx-5 mb-5 border-t border-[#d6c3a1]/45 pt-5 md:mx-6 md:mb-6">
-              {card.id !== "transparency" ? (
-                <>
-                  {card.expandedTitle ? (
-                    <h3 className="text-lg font-semibold text-[#1f1718]">
-                      {card.expandedTitle}
-                    </h3>
-                  ) : null}
-                  <p className="mt-2 text-sm leading-7 text-black/66">
-                    {card.expandedBody}
-                  </p>
-                </>
-              ) : null}
-
-              {card.id === "flexibility" ? (
-                <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
-                  {systemsIntegrationLogos.map((logo) => (
-                    <div
-                      key={logo.alt}
-                      className="flex h-24 items-center justify-center rounded-2xl border border-[#dfd2bf] bg-white px-4 py-4 shadow-[0_10px_28px_rgba(49,39,26,0.06)]"
-                    >
-                      <Image
-                        src={logo.src}
-                        alt={logo.alt}
-                        width={240}
-                        height={100}
-                        className="max-h-14 w-auto max-w-full object-contain"
-                      />
-                    </div>
-                  ))}
-                  <div className="flex h-24 items-center justify-center rounded-2xl border border-[#d4c09a]/60 bg-[#171311] px-4 text-center text-sm font-semibold text-[#d4c09a]">
-                    and many more
-                  </div>
-                </div>
-              ) : null}
-
-              {card.id === "freedom" ? (
-                <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
-                  {partnerBrands.map((brand) => (
-                    <Link
-                      key={brand.name}
-                      href={brand.href}
-                      className={`group flex h-24 items-center justify-center rounded-xl border border-[#dfd2bf] bg-white px-4 py-4 shadow-[0_10px_28px_rgba(49,39,26,0.06)] transition hover:-translate-y-0.5 hover:border-[#bca37a] hover:shadow-[0_16px_38px_rgba(49,39,26,0.12)] ${
-                        brand.cardLabel ? "flex-col" : ""
-                      }`}
-                      aria-label={`View ${brand.name} resources`}
-                    >
-                      <Image
-                        src={brand.logo}
-                        alt={`${brand.name} logo`}
-                        width={220}
-                        height={80}
-                        className={`${brand.logoClass} object-contain transition group-hover:scale-[1.02]`}
-                      />
-                      {brand.cardLabel ? (
-                        <span className="mt-2 text-center text-[12.5px] font-semibold leading-[1.2] text-[#1f1718]">
-                          {brand.cardLabel}
-                        </span>
-                      ) : null}
-                    </Link>
-                  ))}
-                </div>
-              ) : null}
-
-              {card.id === "transparency" ? (
-                <div className="transparency-expanded-content mt-5 rounded-2xl border border-[#d6c3a1]/45 bg-white/72 p-4 shadow-[0_18px_44px_rgba(49,39,26,0.08)] md:p-5">
-                  <div className="transparency-dashboard-header">
-                    <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">
-                      Transparency
-                    </p>
-                    <h3 className="mt-3 text-2xl font-semibold leading-tight text-[#1f1718] md:text-3xl">
-                      Real numbers. Clear expectations. No surprises.
-                    </h3>
-                    <p className="mt-3 text-sm leading-7 text-[#625b53] md:text-base">
-                      Simple reporting, easy to understand pricing, and service standards your team can track.
-                    </p>
-                  </div>
-
-                  <div className="mt-10">
-                    <p className="transparency-performance-label text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8a7654]">
-                      Performance Overview
-                    </p>
-
-                    <div className="mt-10 grid gap-6 md:grid-cols-2 md:gap-8">
-                      {[
-                        {
-                          title: "Days Per Order",
-                          icon: "/turntime-icon.png",
-                          alt: "3.5 Days Per Order. Average turnaround time across completed orders.",
-                        },
-                        {
-                          title: "Service Levels",
-                          icon: "/service-icon.png",
-                          alt: "98%+ Service Levels. Reliable performance your practice can track.",
-                        },
-                        {
-                          title: "Minute Hold Time",
-                          icon: "/holdtime-icon.png",
-                          alt: "Less than 1 Minute Hold Time. Average hold time to customer service.",
-                        },
-                        {
-                          title: "Tariff Fees",
-                          icon: "/tariff-icon.png",
-                          alt: "$0 Tariff Fees. No tariff passthrough fees. Clear pricing from the start.",
-                        },
-                      ].map((metric) => (
-                        <div
-                          key={metric.title}
-                          className="rounded-2xl border border-black/10 bg-white p-3 shadow-[0_20px_50px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_25px_60px_rgba(0,0,0,0.12)]"
-                        >
-                          <img
-                            src={metric.icon}
-                            alt={metric.alt}
-                            className="h-auto w-full rounded-xl object-contain"
-                          />
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="mt-8 h-1 w-full rounded-full bg-[#e5ddd2]" />
-
-                    <p className="transparency-footer-line mt-3 text-center text-sm text-[#6b6259]">
-                      Clear reports. Simple pricing. No tariff passthrough fees.
-                    </p>
-                  </div>
-                </div>
-              ) : null}
-            </div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
-    </motion.article>
-  );
-}
-
 function HomeNetworkMap() {
   const [activeLabId, setActiveLabId] = useState<string | null>(null);
   const activeLab = activeLabId ? homeLabs.find((lab) => lab.id === activeLabId) ?? null : null;
@@ -902,7 +672,6 @@ function HomeNetworkMap() {
 
 export default function Home() {
   const [showHeroBox, setShowHeroBox] = useState(true);
-  const [activeBetterModelCard, setActiveBetterModelCard] = useState<string | null>(null);
   const [activeCapability, setActiveCapability] = useState<string | null>(null);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const proofRef = useRef<HTMLElement | null>(null);
@@ -950,23 +719,6 @@ export default function Home() {
 
   const activeProofStat =
     proofStats.find((stat) => stat.id === activeProofStatId) ?? proofStats[0];
-
-  const renderBetterModelCard = (
-    card: (typeof betterModelCards)[number],
-    options?: { compact?: boolean }
-  ) => (
-    <BetterModelCard
-      key={card.id}
-      card={card}
-      isOpen={activeBetterModelCard === card.id}
-      compact={options?.compact}
-      onToggle={() =>
-        setActiveBetterModelCard((current) =>
-          current === card.id ? null : card.id
-        )
-      }
-    />
-  );
 
   const openContactModal = () => {
     setIsContactModalOpen(true);
@@ -1084,7 +836,7 @@ export default function Home() {
                       href="/artisan-model"
                       className="font-semibold text-[#d4c09a] underline decoration-[#d4c09a]/45 underline-offset-4 transition hover:text-white"
                     >
-                      Learn About Lab Ownership.
+                      Learn about our unique lab model.
                     </Link>
                   </p>
                 </div>
@@ -1338,15 +1090,39 @@ export default function Home() {
             </motion.div>
 
             <motion.div
-              id="vendor-partners"
-              variants={staggerContainer}
-              initial="initial"
-              whileInView="whileInView"
-              viewport={{ once: true, amount: 0.2 }}
-              layout
-              className="mt-8 grid scroll-mt-24 items-stretch gap-5 lg:grid-cols-3"
+              {...fadeUp}
+              className="mt-8 overflow-hidden rounded-[30px] border border-[#d6c3a1]/35 bg-[#171311] text-white shadow-[0_28px_80px_rgba(31,26,23,0.22)]"
             >
-              {betterModelCards.map((card) => renderBetterModelCard(card))}
+              <div className="relative px-6 py-8 md:px-8 md:py-10">
+                <div
+                  className="pointer-events-none absolute inset-0 opacity-[0.22]"
+                  style={{
+                    backgroundImage:
+                      "radial-gradient(circle at 12% 10%, rgba(212,192,154,0.28), transparent 34%), radial-gradient(circle at 88% 80%, rgba(255,255,255,0.13), transparent 32%)",
+                  }}
+                  aria-hidden="true"
+                />
+                <div className="relative z-10 grid gap-7 lg:grid-cols-[1fr_auto] lg:items-center">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#d4c09a]">
+                      From independence to control
+                    </p>
+                    <h3 className="mt-3 max-w-4xl text-3xl font-semibold leading-tight tracking-tight md:text-4xl">
+                      Made here matters most when it gives your practice more control.
+                    </h3>
+                    <p className="mt-4 max-w-3xl text-base leading-8 text-white/68 md:text-lg">
+                      That is the point of the Artisan model: more real choices, cleaner workflows, stronger lab communication, and support that helps your team serve patients without being boxed into a corporate system.
+                    </p>
+                  </div>
+                  <a
+                    href="#capabilities"
+                    className="inline-flex min-h-12 w-fit items-center justify-center rounded-full border border-[#d4c09a]/40 bg-[#d4c09a] px-6 py-3 text-sm font-semibold text-[#171311] shadow-[0_14px_34px_rgba(212,192,154,0.18)] transition hover:-translate-y-0.5 hover:bg-[#e2cca2]"
+                  >
+                    See Practice Control
+                    <span className="ml-2" aria-hidden="true">→</span>
+                  </a>
+                </div>
+              </div>
             </motion.div>
           </div>
         </div>
@@ -1450,6 +1226,34 @@ export default function Home() {
                           {cap.detail}
                         </p>
 
+                        {"brands" in cap && cap.brands ? (
+                          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                            {cap.brands.map((brand) => (
+                              <Link
+                                key={brand.name}
+                                href={brand.href}
+                                className={`group/logo flex h-24 items-center justify-center rounded-2xl border border-white/10 bg-white px-4 py-4 shadow-[0_12px_30px_rgba(0,0,0,0.14)] transition hover:-translate-y-0.5 hover:border-[#d4c09a] ${
+                                  brand.cardLabel ? "flex-col" : ""
+                                }`}
+                                aria-label={`View ${brand.name} resources`}
+                              >
+                                <Image
+                                  src={brand.logo}
+                                  alt={`${brand.name} logo`}
+                                  width={220}
+                                  height={80}
+                                  className={`${brand.logoClass} object-contain transition group-hover/logo:scale-[1.02]`}
+                                />
+                                {brand.cardLabel ? (
+                                  <span className="mt-2 text-center text-[12.5px] font-semibold leading-[1.2] text-[#1f1718]">
+                                    {brand.cardLabel}
+                                  </span>
+                                ) : null}
+                              </Link>
+                            ))}
+                          </div>
+                        ) : null}
+
                         {"integrations" in cap && cap.integrations ? (
                           <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
                             {cap.integrations.map((logo) => (
@@ -1472,16 +1276,6 @@ export default function Home() {
                           </div>
                         ) : null}
 
-                        {"link" in cap && cap.link ? (
-                          <a
-                            href={cap.link.href}
-                            target={cap.link.href.startsWith("http") ? "_blank" : undefined}
-                            rel={cap.link.href.startsWith("http") ? "noreferrer" : undefined}
-                            className="mt-4 inline-flex rounded-full border border-[#d4c09a]/50 px-4 py-2 text-sm font-semibold text-[#d4c09a] transition hover:bg-[#d4c09a] hover:text-black"
-                          >
-                            {cap.link.label}
-                          </a>
-                        ) : null}
                       </motion.div>
                     )}
                   </AnimatePresence>

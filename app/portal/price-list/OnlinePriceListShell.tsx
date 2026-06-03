@@ -138,12 +138,26 @@ function CompactPortalFooter() {
   return (
     <footer className="mt-8 border-t border-[#d8c49b] py-7">
       <div className="flex flex-col gap-4 text-sm text-[#706759] lg:flex-row lg:items-center lg:justify-between">
-        <p className="flex items-center gap-2 font-semibold text-[#172a28]">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#ccb48a] bg-[#122033] shadow-[0_8px_18px_rgba(18,32,51,0.24)]">
-            <Image src="/aln-icon.png" alt="Artisan ring icon" width={17} height={17} className="h-[17px] w-[17px] object-contain" />
-          </span>
-          Artisan Lab Network
-        </p>
+        <div>
+          <p className="flex items-center gap-2 font-semibold text-[#172a28]">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#ccb48a] bg-[#122033] shadow-[0_8px_18px_rgba(18,32,51,0.24)]">
+              <Image src="/aln-icon.png" alt="Artisan ring icon" width={17} height={17} className="h-[17px] w-[17px] object-contain" />
+            </span>
+            Artisan Lab Network
+          </p>
+          <p className="mt-2 text-xs">
+            © 2026 Artisan Lab Network · This webpage was built and designed by{" "}
+            <a
+              href="https://d2dmktg.com"
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold text-[#8b7650] transition hover:text-[#172a28]"
+            >
+              D2D Marketing
+            </a>
+            .
+          </p>
+        </div>
         <nav className="flex flex-wrap gap-x-5 gap-y-2">
           {links.map((link) =>
             link.href.startsWith("mailto:") ? (

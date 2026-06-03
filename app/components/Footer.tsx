@@ -196,6 +196,18 @@ export default function Footer({
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-6 text-xs leading-6 text-white/45 md:flex-row md:items-center md:justify-between md:px-10">
           <div>
             <p>© 2026 Artisan Lab Network</p>
+            <p className="mt-1">
+              This webpage was built and designed by{" "}
+              <a
+                href="https://d2dmktg.com"
+                target="_blank"
+                rel="noreferrer"
+                className="font-semibold text-[#c9b28b] transition hover:text-white/80"
+              >
+                D2D Marketing
+              </a>
+              .
+            </p>
             <p className="mt-1 max-w-2xl">
               Privacy is not a game (
               <button

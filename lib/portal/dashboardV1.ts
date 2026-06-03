@@ -15,6 +15,7 @@ const DASHBOARD_V1_DIR = path.join(
 export type PortalDashboardV1Manifest = {
   snapshot_id: string;
   source_account_file: string;
+  source_account_files?: string[];
   source_user_file: string;
   generated_at: string;
   row_count_input_accounts: number;
@@ -33,6 +34,63 @@ export type PortalDashboardV1Manifest = {
   duplicate_acct_id_count: number;
   skipped_summary_rows: number;
   refresh_dates_detected: string[];
+  data_dictionary?: Array<{
+    source_file: string;
+    row_count: number;
+    fields: string[];
+  }>;
+  field_precedence_documentation?: string[];
+  reused_existing_user_access?: boolean;
+};
+
+export type PortalDashboardV1MonthlyNumber = {
+  ppm: number;
+  pm: number;
+  cm: number;
+};
+
+export type PortalDashboardV1SupplementalIntelligence = {
+  brand_usage?: {
+    hoya_jobs?: PortalDashboardV1MonthlyNumber;
+    shamir_jobs?: PortalDashboardV1MonthlyNumber;
+    tokai_jobs?: PortalDashboardV1MonthlyNumber;
+    varilux_jobs?: PortalDashboardV1MonthlyNumber;
+    neurolens_jobs?: PortalDashboardV1MonthlyNumber;
+    sequel_jobs?: PortalDashboardV1MonthlyNumber;
+    iot_artisan_jobs?: PortalDashboardV1MonthlyNumber;
+  };
+  material_usage?: {
+    plastic_jobs?: PortalDashboardV1MonthlyNumber;
+    trivex_jobs?: PortalDashboardV1MonthlyNumber;
+    hi_index_160_jobs?: PortalDashboardV1MonthlyNumber;
+    hi_index_167_jobs?: PortalDashboardV1MonthlyNumber;
+    hi_index_174_jobs?: PortalDashboardV1MonthlyNumber;
+  };
+  specialty_usage?: {
+    photochromic_jobs?: PortalDashboardV1MonthlyNumber;
+    polarized_jobs?: PortalDashboardV1MonthlyNumber;
+    multiple_pair_jobs?: PortalDashboardV1MonthlyNumber;
+  };
+  turnaround?: {
+    average_days?: PortalDashboardV1MonthlyNumber;
+  };
+  rewards?: {
+    arpmp26?: {
+      enrolled: boolean;
+      qualified_pmp_jobs: PortalDashboardV1MonthlyNumber;
+      rebate_total: PortalDashboardV1MonthlyNumber;
+    };
+    aruty26?: {
+      enrolled: boolean;
+      qualified_jobs: PortalDashboardV1MonthlyNumber;
+      rewards_earned: PortalDashboardV1MonthlyNumber;
+    };
+    arsql26?: {
+      enrolled: boolean;
+      qualified_sequel_pal_jobs: PortalDashboardV1MonthlyNumber;
+      rebate_total: PortalDashboardV1MonthlyNumber;
+    };
+  };
 };
 
 export type PortalDashboardV1Account = {
@@ -94,6 +152,11 @@ export type PortalDashboardV1Account = {
     arsql26: boolean;
     arpmp26: boolean;
     aruty26: boolean;
+  };
+  supplemental_intelligence?: PortalDashboardV1SupplementalIntelligence;
+  data_lineage?: {
+    source_files: string[];
+    field_precedence: Record<string, string>;
   };
   customer_insights: {
     suggestions?: string[];

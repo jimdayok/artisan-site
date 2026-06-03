@@ -1,0 +1,17 @@
+.git
+.next
+out
+node_modules
+coverage
+
+private-source/pricing/generated
+private-source/portal/dashboard-v1/releases
+private-source/portal/dashboard-v1/validation-errors
+private-source/portal/dashboard-v1/current *.prev
+private-source/portal/dashboard-v1/current 2
+private-source/portal/dashboard-v1/current 3
+private-source/portal/dashboard-v1/current 4
+private-source/portal/dashboard-v1/current 5
+
+files
+publications

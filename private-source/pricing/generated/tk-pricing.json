@@ -2483,6 +2483,23 @@
   ],
   "addOnSections": [
     {
+      "title": "Package Notes",
+      "items": [
+        {
+          "name": "ARTISAN LENS SYSTEMS",
+          "price": "Tokai lens and coating package pricing. Orders include the eligible Tokai lens design and Tokai AR coating; additional upgrade options are available below when supported."
+        },
+        {
+          "name": "Included AR",
+          "price": "Eligible Tokai AR coatings"
+        },
+        {
+          "name": "Products not listed",
+          "price": "Not available"
+        }
+      ]
+    },
+    {
       "title": "Add for Material",
       "items": [
         {
@@ -2648,7 +2665,7 @@
     "rawSourceRowsProcessed": 406,
     "rowsExcludedMissingLookup": 168,
     "displayRowCount": 20,
-    "generatedAt": "2026-06-02T03:00:12.207Z",
+    "generatedAt": "2026-06-03T22:43:39.032Z",
     "rawColumns": [
       "PL",
       "Mat",

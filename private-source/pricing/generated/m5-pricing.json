@@ -442816,7 +442816,7 @@
       "items": [
         {
           "name": "Artisan Frame System",
-          "price": "Artisan Frame Systems include the frame and polycarbonate lenses bundled at a reduced package price."
+          "price": "Artisan Frame Systems include the frame and polycarbonate lenses bundled at a reduced package price. Additional lens, coating, and frame-tier upgrade options are available below."
         },
         {
           "name": "Frame shipping",
@@ -443029,7 +443029,7 @@
     "rawSourceRowsProcessed": 7714,
     "rowsExcludedMissingLookup": 755,
     "displayRowCount": 221,
-    "generatedAt": "2026-06-02T03:00:10.373Z",
+    "generatedAt": "2026-06-03T22:43:37.255Z",
     "rawColumns": [
       "PL",
       "Mat",

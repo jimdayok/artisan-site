@@ -35,6 +35,14 @@ export type QualityPoint = {
   warranty: number;
   officeRedo: number;
   labRedo: number;
+  nonAdapt: number;
+};
+
+export type MonthlyUsagePoint = {
+  label: string;
+  prior: number;
+  previous: number;
+  current: number;
 };
 
 export type BenchmarkPoint = {
@@ -220,21 +228,37 @@ export function MixIntelligenceCharts({
 export function ServiceExcellenceCharts({
   quality,
   orderVolume,
+  turnaround,
 }: {
   quality: QualityPoint[];
   orderVolume: TrendPoint[];
+  turnaround: MonthlyUsagePoint[];
 }) {
+  const hasTurnaround = turnaround.some((point) => point.current > 0 || point.previous > 0 || point.prior > 0);
+
   return (
     <div className="grid gap-5 xl:grid-cols-3">
-      <Panel eyebrow="Requires Turnaround Data" title="Turnaround Performance">
-        <div className="flex h-full flex-col justify-center rounded-md border border-dashed border-[#d9c8a6] bg-[#f8f1e6]/70 p-5 text-center">
-          <p className="text-sm font-semibold text-[#142724]">
-            Coming Soon
-          </p>
-          <p className="mt-3 text-sm leading-6 text-[#6d746f]">
-            Turnaround performance will appear when production timing data is connected.
-          </p>
-        </div>
+      <Panel eyebrow="Service Timing" title="Turnaround Performance">
+        {hasTurnaround ? (
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={turnaround} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
+              <CartesianGrid stroke="#eadfce" vertical={false} />
+              <XAxis dataKey="label" tick={{ fill: "#746b5f", fontSize: 12 }} tickLine={false} axisLine={false} />
+              <YAxis tick={{ fill: "#746b5f", fontSize: 12 }} tickLine={false} axisLine={false} />
+              <Tooltip formatter={(value) => [`${Number(value).toFixed(1)} days`, "Avg turnaround"]} contentStyle={tooltipStyle()} />
+              <Bar dataKey="current" name="Average Days" fill="#1f8a70" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        ) : (
+          <div className="flex h-full flex-col justify-center rounded-md border border-dashed border-[#d9c8a6] bg-[#f8f1e6]/70 p-5 text-center">
+            <p className="text-sm font-semibold text-[#142724]">
+              Turnaround Data Coming Soon
+            </p>
+            <p className="mt-3 text-sm leading-6 text-[#6d746f]">
+              Average turnaround appears when timing fields exist for this account.
+            </p>
+          </div>
+        )}
       </Panel>
 
       <Panel eyebrow="Quality" title="Quality Metrics">
@@ -247,6 +271,7 @@ export function ServiceExcellenceCharts({
             <Bar dataKey="warranty" stackId="quality" fill="#c9a24f" radius={[4, 4, 0, 0]} />
             <Bar dataKey="officeRedo" stackId="quality" fill="#c96856" radius={[4, 4, 0, 0]} />
             <Bar dataKey="labRedo" stackId="quality" fill="#2f5f9c" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="nonAdapt" stackId="quality" fill="#8067aa" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </Panel>
@@ -263,6 +288,32 @@ export function ServiceExcellenceCharts({
         </ResponsiveContainer>
       </Panel>
     </div>
+  );
+}
+
+export function MonthlyUsageCharts({
+  title,
+  eyebrow,
+  data,
+}: {
+  title: string;
+  eyebrow: string;
+  data: MonthlyUsagePoint[];
+}) {
+  return (
+    <Panel eyebrow={eyebrow} title={title}>
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={data} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
+          <CartesianGrid stroke="#eadfce" vertical={false} />
+          <XAxis dataKey="label" tick={{ fill: "#746b5f", fontSize: 11 }} tickLine={false} axisLine={false} interval={0} />
+          <YAxis tick={{ fill: "#746b5f", fontSize: 12 }} tickLine={false} axisLine={false} />
+          <Tooltip formatter={(value) => numberFormatter.format(Number(value))} contentStyle={tooltipStyle()} />
+          <Bar dataKey="prior" name="Prior Previous" fill="#d8c49b" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="previous" name="Previous" fill="#2f5f9c" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="current" name="Current" fill="#1f8a70" radius={[4, 4, 0, 0]} />
+        </BarChart>
+      </ResponsiveContainer>
+    </Panel>
   );
 }
 

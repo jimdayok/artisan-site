@@ -69,6 +69,18 @@ export default function NewsletterShell({ children }: NewsletterShellProps) {
               <p className="mt-2 max-w-2xl text-sm leading-6 text-[#4d5664]">
                 A publication from Artisan Lab Network for independent eye care practices.
               </p>
+              <p className="mt-2 text-xs leading-5 text-[#6f675e]">
+                © 2026 Artisan Lab Network · This webpage was built and designed by{" "}
+                <a
+                  href="https://d2dmktg.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-semibold text-[#8a7654] underline decoration-[#c7ad7b] underline-offset-4 transition hover:text-[#122033]"
+                >
+                  D2D Marketing
+                </a>
+                .
+              </p>
             </div>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap md:justify-end">

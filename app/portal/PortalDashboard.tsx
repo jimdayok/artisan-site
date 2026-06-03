@@ -62,8 +62,10 @@ import {
 import {
   PracticePerformanceScoreChart,
   ServiceExcellenceCharts,
+  MonthlyUsageCharts,
   TrendsPerformanceCharts,
   type MixPoint,
+  type MonthlyUsagePoint,
   type QualityPoint,
   type TrendPoint,
 } from "./PracticeIntelligenceCharts";
@@ -412,9 +414,23 @@ function PortalFooter() {
   return (
     <footer className="mt-8 border-t border-[#d8c49b] py-7">
       <div className="flex flex-col gap-4 text-sm text-[#706759] lg:flex-row lg:items-center lg:justify-between">
-        <p className="font-semibold text-[#172a28]">
-          Artisan Lab Network Customer Portal
-        </p>
+        <div>
+          <p className="font-semibold text-[#172a28]">
+            Artisan Lab Network Customer Portal
+          </p>
+          <p className="mt-1 text-xs">
+            © 2026 Artisan Lab Network · This webpage was built and designed by{" "}
+            <a
+              href="https://d2dmktg.com"
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold text-[#8b7650] transition hover:text-[#172a28]"
+            >
+              D2D Marketing
+            </a>
+            .
+          </p>
+        </div>
         <nav className="flex flex-wrap gap-x-5 gap-y-2">
           {links.map((link) =>
             link.href.startsWith("mailto:") ? (
@@ -1824,6 +1840,10 @@ type PracticeIntelligenceModel = {
   trends: TrendPoint[];
   vspMix: MixPoint[];
   programMix: MixPoint[];
+  brandUsage: MonthlyUsagePoint[];
+  materialUsage: MonthlyUsagePoint[];
+  specialtyUsage: MonthlyUsagePoint[];
+  turnaround: MonthlyUsagePoint[];
   quality: QualityPoint[];
   score: number;
   scoreDelta: number;
@@ -1850,10 +1870,15 @@ type PracticeIntelligenceModel = {
   }>;
   programs: Array<{
     title: string;
-    status: "Active" | "Recommended" | "Available" | "Coming Soon";
+    status: "Active" | "Not Recorded";
     value: string;
     detail: string;
     href: string;
+  }>;
+  rewards: Array<{
+    title: string;
+    metrics: Array<{ label: string; value: string }>;
+    trend: string;
   }>;
 };
 
@@ -1876,6 +1901,25 @@ function clampScore(value: number) {
   return Math.max(0, Math.min(100, Math.round(value)));
 }
 
+function monthlyPoint(label: string, value?: { ppm?: number; pm?: number; cm?: number }): MonthlyUsagePoint {
+  return {
+    label,
+    prior: asNumber(value?.ppm),
+    previous: asNumber(value?.pm),
+    current: asNumber(value?.cm),
+  };
+}
+
+function hasUsageData(points: MonthlyUsagePoint[]) {
+  return points.some((point) => point.prior > 0 || point.previous > 0 || point.current > 0);
+}
+
+function rewardTrendLabel(current: number, previous: number, unit: string) {
+  const trend = getPercentChange(current, previous);
+  if (trend.direction === "flat") return `Flat vs previous month (${formatCount(previous)} ${unit})`;
+  return `${trend.label} vs previous month (${formatCount(previous)} ${unit})`;
+}
+
 function statusForScore(score: number): PracticeIntelligenceModel["scoreLabel"] {
   if (score >= 82) return "Excellent";
   if (score >= 66) return "Good";
@@ -1888,14 +1932,12 @@ function buildPracticeIntelligenceModel({
   hasModernPackageWarning,
   showNeurolens,
   showSequelRewards,
-  hasSequelRebateInvitation,
 }: {
   account?: PortalWorkbookAccount;
   dashboard?: PortalDashboardV1Account;
   hasModernPackageWarning: boolean;
   showNeurolens: boolean;
   showSequelRewards: boolean;
-  hasSequelRebateInvitation: boolean;
 }): PracticeIntelligenceModel {
   const jobs = dashboard?.purchase_summary?.jobs;
   const sales = dashboard?.purchase_summary?.sales;
@@ -1907,7 +1949,6 @@ function buildPracticeIntelligenceModel({
   const ppmJobs = asNumber(jobs?.ppm ?? account?.ppmJobs);
   const mix = dashboard?.vsp_private_pay_mix;
   const vspJobs = asNumber(mix?.vsp_jobs?.cm ?? account?.cmVspJobs);
-  const sqlJobs = asNumber(dashboard?.product_mix?.sql_jobs?.cm ?? account?.cmSqlJobs);
   const vspShare = pctValue(mix?.vsp_share ?? account?.cmVspSow ?? (cmJobs ? vspJobs / cmJobs : 0));
   const privatePayShare = Math.max(0, 100 - vspShare);
   const currentJpd =
@@ -1929,9 +1970,11 @@ function buildPracticeIntelligenceModel({
     showSequelRewards,
   ].filter(Boolean).length;
   const quality = dashboard?.quality_metrics;
+  const supplemental = dashboard?.supplemental_intelligence;
   const warrantyCm = pctValue(quality?.warranty_pct?.cm);
   const officeRedoCm = pctValue(quality?.office_redo_pct?.cm);
   const labRedoCm = pctValue(quality?.lab_redo_pct?.cm);
+  const nonAdaptCm = pctValue(quality?.non_adapt_pct?.cm);
   const qualityPenalty = Math.min(24, warrantyCm * 1.6 + officeRedoCm * 1.1 + labRedoCm * 3);
   const growthScore = cmSales > pmSales ? 22 : cmSales === pmSales ? 15 : 9;
   const programScore = Math.min(22, activePrograms * 3.4);
@@ -1955,17 +1998,23 @@ function buildPracticeIntelligenceModel({
       title: "Jobs are down versus last month",
       priority: "red",
       current: `${formatCount(cmJobs)} current jobs vs ${formatCount(pmJobs)} previous`,
-      why: "Order volume is the clearest early signal that a practice may need attention.",
-      action: "Check in on ordering patterns and ask whether staffing, patient flow, or vendor mix changed.",
+      why: "Order volume can dip when recall flow, patient scheduling, or optical capture slows down.",
+      action: "Use patient recall, social media, and practice-growth tools to bring patients back into the office.",
     });
   }
   if (cmSales < pmSales) {
+    const priorAverageSales = (pmSales + ppmSales) / 2;
+    const averageDeviation =
+      priorAverageSales > 0 ? ((cmSales - priorAverageSales) / priorAverageSales) * 100 : null;
     opportunities.push({
       title: "Sales are down versus last month",
       priority: "red",
       current: `${formatMoney(cmSales)} current vs ${formatMoney(pmSales)} previous`,
-      why: "A revenue dip can indicate lower volume, lower-value jobs, or missed premium recommendations.",
-      action: "Review recent order mix and offer support on high-value lens/package recommendations.",
+      why:
+        averageDeviation === null
+          ? "A revenue dip can indicate lower order volume, lower-value jobs, or missed premium recommendations."
+          : `Current sales are ${Math.abs(averageDeviation).toFixed(1)}% ${averageDeviation < 0 ? "below" : "above"} the average of the prior two months.`,
+      action: "Compare lens mix, coating selection, and package adoption to recent averages to find the most practical recovery path.",
     });
   }
   if (currentJpd !== null && previousJpd !== null && currentJpd < previousJpd) {
@@ -1988,11 +2037,14 @@ function buildPracticeIntelligenceModel({
   );
   if (vspJobs > 0 || vspShare > 0) {
     opportunities.push({
-      title: "VSP education opportunity",
-      priority: "yellow",
+      title: vspShare < 25 ? "VSP availability reminder" : "VSP education opportunity",
+      priority: vspShare < 25 ? "green" : "yellow",
       current: `${Math.round(vspShare)}% VSP mix`,
-      why: "VSP activity is present, so education and quoting resources may improve confidence at the counter.",
-      action: "Share VSP-specific pricing and patient communication resources.",
+      why:
+        vspShare < 25
+          ? "VSP is available through our labs when the practice wants to route eligible VSP work through Artisan."
+          : "VSP activity is present, so education and quoting resources may improve confidence at the counter.",
+      action: "To maximize VSP reimbursements through available incentives, talk to us to learn more.",
     });
   }
   opportunities.push(
@@ -2001,44 +2053,124 @@ function buildPracticeIntelligenceModel({
       priority: warrantyCm > 5 || officeRedoCm > 10 || labRedoCm > 2 ? "red" : "green",
       current: `Warranty ${warrantyCm.toFixed(1)}% · Office ${officeRedoCm.toFixed(1)}% · Lab ${labRedoCm.toFixed(1)}%`,
       why: "Redo, warranty, and non-adapt rates directly affect chair time, patient trust, and margin.",
-      action: "Prioritize remake patterns and schedule support if rates rise.",
+      action:
+        warrantyCm > 5 || officeRedoCm > 10 || labRedoCm > 2
+          ? "Leverage our partnership with OTI's online web portal for staff training; special rates apply."
+          : "Keep using consistent measurements, frame adjustment checks, and remake notes to protect chair time.",
     },
     {
       title: "Improve Frame Package Usage",
       priority: hasModernPackageWarning ? "yellow" : "green",
       current: isActiveUsage(account?.modernPkgUsage) ? account?.modernPkgUsage || "Active" : "No current usage recorded",
-      why: "Frame package participation can simplify quoting and strengthen program value.",
-      action: "Compare Modern Package savings against current frame behavior.",
+      why: "Frame package participation can simplify quoting and strengthen program value for complete-pair sales.",
+      action: "Review Artisan Frame Systems M5 for everyday packages and Artisan Safety Systems Y5 for safety package opportunities.",
     }
   );
+  const brandUsage = [
+    monthlyPoint("Hoya", supplemental?.brand_usage?.hoya_jobs),
+    monthlyPoint("Shamir", supplemental?.brand_usage?.shamir_jobs),
+    monthlyPoint("Tokai", supplemental?.brand_usage?.tokai_jobs),
+    monthlyPoint("Varilux", supplemental?.brand_usage?.varilux_jobs),
+    monthlyPoint("Neurolens", supplemental?.brand_usage?.neurolens_jobs),
+    monthlyPoint("Sequel", supplemental?.brand_usage?.sequel_jobs),
+    monthlyPoint("IOT Artisan", supplemental?.brand_usage?.iot_artisan_jobs),
+  ];
+  const materialUsage = [
+    monthlyPoint("Plastic", supplemental?.material_usage?.plastic_jobs),
+    monthlyPoint("Trivex", supplemental?.material_usage?.trivex_jobs),
+    monthlyPoint("1.60", supplemental?.material_usage?.hi_index_160_jobs),
+    monthlyPoint("1.67", supplemental?.material_usage?.hi_index_167_jobs),
+    monthlyPoint("1.74", supplemental?.material_usage?.hi_index_174_jobs),
+  ];
+  const specialtyUsage = [
+    monthlyPoint("Photochromic", supplemental?.specialty_usage?.photochromic_jobs),
+    monthlyPoint("Polarized", supplemental?.specialty_usage?.polarized_jobs),
+    monthlyPoint("Multiple Pairs", supplemental?.specialty_usage?.multiple_pair_jobs),
+  ];
+  const turnaround = [
+    monthlyPoint("Prior", { cm: supplemental?.turnaround?.average_days?.ppm }),
+    monthlyPoint("Previous", { cm: supplemental?.turnaround?.average_days?.pm }),
+    monthlyPoint("Current", { cm: supplemental?.turnaround?.average_days?.cm }),
+  ];
+  const rewards: PracticeIntelligenceModel["rewards"] = [];
+  const rewardsData = supplemental?.rewards;
+  if (rewardsData?.arpmp26?.enrolled) {
+    rewards.push({
+      title: "ARPMP26",
+      metrics: [
+        { label: "Qualified PMP Jobs", value: formatCount(rewardsData.arpmp26.qualified_pmp_jobs.cm) },
+        { label: "Rebate Total", value: formatMoney(rewardsData.arpmp26.rebate_total.cm) },
+      ],
+      trend: rewardTrendLabel(
+        rewardsData.arpmp26.qualified_pmp_jobs.cm,
+        rewardsData.arpmp26.qualified_pmp_jobs.pm,
+        "qualified jobs"
+      ),
+    });
+  }
+  if (rewardsData?.aruty26?.enrolled) {
+    rewards.push({
+      title: "ARUTY26",
+      metrics: [
+        { label: "Qualified Jobs", value: formatCount(rewardsData.aruty26.qualified_jobs.cm) },
+        { label: "Rewards Earned", value: formatMoney(rewardsData.aruty26.rewards_earned.cm) },
+      ],
+      trend: rewardTrendLabel(
+        rewardsData.aruty26.qualified_jobs.cm,
+        rewardsData.aruty26.qualified_jobs.pm,
+        "qualified jobs"
+      ),
+    });
+  }
+  if (rewardsData?.arsql26?.enrolled) {
+    rewards.push({
+      title: "ARSQL26",
+      metrics: [
+        { label: "Qualified Sequel PAL Jobs", value: formatCount(rewardsData.arsql26.qualified_sequel_pal_jobs.cm) },
+        { label: "Rebate Total", value: formatMoney(rewardsData.arsql26.rebate_total.cm) },
+      ],
+      trend: rewardTrendLabel(
+        rewardsData.arsql26.qualified_sequel_pal_jobs.cm,
+        rewardsData.arsql26.qualified_sequel_pal_jobs.pm,
+        "qualified jobs"
+      ),
+    });
+  }
   const programs: PracticeIntelligenceModel["programs"] = [
     {
       title: "Modern Frame",
-      status: isActiveUsage(account?.modernFrmUsage) || programFlags?.modern_frame ? "Active" : "Available",
+      status: isActiveUsage(account?.modernFrmUsage) || programFlags?.modern_frame ? "Active" : "Not Recorded",
       value: account?.modernFrmUsage || "No usage recorded",
       detail: "Frame system participation and growth signal.",
       href: "/provider-resources#modern-frame-system",
     },
     {
+      title: "Modern Package",
+      status: isActiveUsage(account?.modernPkgUsage) || programFlags?.modern_package ? "Active" : "Not Recorded",
+      value: account?.modernPkgUsage || "No usage recorded",
+      detail: "Package system participation and complete-pair usage signal.",
+      href: "/provider-resources#modern-package-system",
+    },
+    {
+      title: "ChemClip",
+      status: isActiveUsage(account?.chemClipUsage) || programFlags?.chemclip ? "Active" : "Not Recorded",
+      value: account?.chemClipUsage || "No usage recorded",
+      detail: "Specialty clip usage signal.",
+      href: "/provider-resources#specialty-systems",
+    },
+    {
+      title: "SpecCheck",
+      status: isActiveUsage(account?.specCheckUsage) || programFlags?.speccheck ? "Active" : "Not Recorded",
+      value: account?.specCheckUsage || "No usage recorded",
+      detail: "SpecCheck usage signal.",
+      href: "/provider-resources#speccheck",
+    },
+    {
       title: "Tokai",
-      status: isActiveUsage(account?.tokaiUsage) || programFlags?.tokai ? "Active" : "Recommended",
+      status: isActiveUsage(account?.tokaiUsage) || programFlags?.tokai ? "Active" : "Not Recorded",
       value: account?.tokaiUsage || "Recommended for specialty growth",
       detail: "Premium high-index and outsourced specialty design path.",
       href: "/provider-resources#tokai",
-    },
-    {
-      title: "Sequel Rewards",
-      status: hasSequelRebateInvitation ? "Recommended" : showSequelRewards ? "Active" : "Available",
-      value: showSequelRewards ? `${formatCount(sqlJobs)} current jobs` : "Potential rebate program",
-      detail: "Rewards and growth program for Sequel activity.",
-      href: "/programs#sequel-artisan-rewards",
-    },
-    {
-      title: "Benchmarking",
-      status: "Coming Soon",
-      value: "Benchmarking Available Soon",
-      detail: "Network average and top-quartile comparisons.",
-      href: "/portal",
     },
   ];
 
@@ -2049,10 +2181,14 @@ function buildPracticeIntelligenceModel({
       { label: "Private Pay Jobs", value: Math.round(privatePayShare), color: "#1f8a70" },
     ],
     programMix,
+    brandUsage,
+    materialUsage,
+    specialtyUsage,
+    turnaround,
     quality: [
-      { label: "Prior", warranty: pctValue(quality?.warranty_pct?.ppm), officeRedo: pctValue(quality?.office_redo_pct?.ppm), labRedo: pctValue(quality?.lab_redo_pct?.ppm) },
-      { label: "Previous", warranty: pctValue(quality?.warranty_pct?.pm), officeRedo: pctValue(quality?.office_redo_pct?.pm), labRedo: pctValue(quality?.lab_redo_pct?.pm) },
-      { label: "Current", warranty: warrantyCm, officeRedo: officeRedoCm, labRedo: labRedoCm },
+      { label: "Prior", warranty: pctValue(quality?.warranty_pct?.ppm), officeRedo: pctValue(quality?.office_redo_pct?.ppm), labRedo: pctValue(quality?.lab_redo_pct?.ppm), nonAdapt: pctValue(quality?.non_adapt_pct?.ppm) },
+      { label: "Previous", warranty: pctValue(quality?.warranty_pct?.pm), officeRedo: pctValue(quality?.office_redo_pct?.pm), labRedo: pctValue(quality?.lab_redo_pct?.pm), nonAdapt: pctValue(quality?.non_adapt_pct?.pm) },
+      { label: "Current", warranty: warrantyCm, officeRedo: officeRedoCm, labRedo: labRedoCm, nonAdapt: nonAdaptCm },
     ],
     score,
     scoreDelta,
@@ -2075,6 +2211,7 @@ function buildPracticeIntelligenceModel({
         : null,
     opportunities,
     programs,
+    rewards,
   };
 }
 
@@ -2308,6 +2445,9 @@ function TierProgressTracker({
           <h3 className="mt-2 text-2xl font-semibold text-[#142724]">
             {tier || "Tier insight pending"}
           </h3>
+          <p className="mt-2 text-sm leading-6 text-[#59635f]">
+            Loyalty tiers are based on total lens purchases. This tracker will use qualified lens-pair fields once available.
+          </p>
         </div>
         <p className="text-sm font-semibold text-[#59635f]">
           {currentTier > 0 ? `${formatMoney(remaining)} from Tier ${currentTier + 1}` : "Threshold support ready for launch data"}
@@ -2315,6 +2455,39 @@ function TierProgressTracker({
       </div>
       <div className="mt-5 h-4 overflow-hidden rounded-full bg-[#e7ddcc]">
         <div className="h-full rounded-full bg-[linear-gradient(90deg,#1f8a70,#c9a24f)] transition-all duration-700" style={{ width: `${Math.max(8, progress)}%` }} />
+      </div>
+    </section>
+  );
+}
+
+function DailyTrendSummary({ intelligence }: { intelligence: PracticeIntelligenceModel }) {
+  const current = intelligence.currentJpd;
+  const previous = intelligence.previousJpd;
+
+  return (
+    <section className="mt-5 rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_18px_48px_rgba(20,39,36,0.07)]">
+      <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#7a6b49]">
+        Per Day Activity
+      </p>
+      <div className="mt-3 grid gap-4 md:grid-cols-3">
+        <div>
+          <p className="text-sm font-semibold text-[#59635f]">Current jobs per day</p>
+          <p className="mt-1 text-2xl font-semibold text-[#142724]">
+            {current === null ? "Pending" : current.toFixed(1)}
+          </p>
+        </div>
+        <div>
+          <p className="text-sm font-semibold text-[#59635f]">Previous jobs per day</p>
+          <p className="mt-1 text-2xl font-semibold text-[#142724]">
+            {previous === null ? "Pending" : previous.toFixed(1)}
+          </p>
+        </div>
+        <div>
+          <p className="text-sm font-semibold text-[#59635f]">Read this with monthly trend</p>
+          <p className="mt-1 text-sm leading-6 text-[#6d746f]">
+            Per-day activity helps separate true demand shifts from calendar timing, shorter months, or fewer shipping days.
+          </p>
+        </div>
       </div>
     </section>
   );
@@ -2361,17 +2534,15 @@ function OpportunitiesCenter({ opportunities }: { opportunities: PracticeIntelli
 function ProgramParticipationCenter({ programs }: { programs: PracticeIntelligenceModel["programs"] }) {
   const statusTone = {
     Active: "bg-[#1f8a70] text-white",
-    Recommended: "bg-[#c9a24f] text-[#142724]",
-    Available: "bg-[#2f5f9c] text-white",
-    "Coming Soon": "bg-[#e7ddcc] text-[#59635f]",
+    "Not Recorded": "bg-[#e7ddcc] text-[#59635f]",
   } satisfies Record<PracticeIntelligenceModel["programs"][number]["status"], string>;
 
   return (
     <section className="rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3">
       <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#7a6b49]">
-        Program Participation Center
+        Growth Program Center
       </p>
-      <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Rewards and growth programs</h2>
+      <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Growth programs and packages</h2>
       <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {programs.map((program) => (
           <Link key={program.title} href={program.href} className="rounded-md border border-[#eadfce] bg-white/78 p-4 transition hover:-translate-y-0.5 hover:border-[#1f8a70]">
@@ -2382,6 +2553,40 @@ function ProgramParticipationCenter({ programs }: { programs: PracticeIntelligen
             <p className="mt-2 text-sm font-semibold text-[#59635f]">{program.value}</p>
             <p className="mt-3 text-sm leading-6 text-[#6d746f]">{program.detail}</p>
           </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function RewardsCenter({ rewards }: { rewards: PracticeIntelligenceModel["rewards"] }) {
+  if (rewards.length === 0) return null;
+
+  return (
+    <section className="rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3">
+      <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#7a6b49]">
+        Rewards Center
+      </p>
+      <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Active enrolled rewards</h2>
+      <div className="mt-6 grid gap-4 md:grid-cols-3">
+        {rewards.map((reward) => (
+          <article key={reward.title} className="rounded-md border border-[#eadfce] bg-white/78 p-5">
+            <span className="inline-flex rounded-md bg-[#1f8a70] px-2.5 py-1 text-xs font-bold text-white">
+              Enrolled
+            </span>
+            <h3 className="mt-4 text-xl font-semibold text-[#142724]">{reward.title}</h3>
+            <p className="mt-2 rounded-md border border-[#d9c8a6] bg-[#fffdf8] px-3 py-2 text-xs font-bold uppercase tracking-[0.1em] text-[#59635f]">
+              {reward.trend}
+            </p>
+            <div className="mt-4 grid gap-3">
+              {reward.metrics.map((metric) => (
+                <div key={metric.label} className="rounded-md border border-[#eadfce] bg-[#fffdf8] p-3">
+                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#7a6b49]">{metric.label}</p>
+                  <p className="mt-1 text-2xl font-semibold text-[#142724]">{metric.value}</p>
+                </div>
+              ))}
+            </div>
+          </article>
         ))}
       </div>
     </section>
@@ -2408,20 +2613,42 @@ function PlaceholderInsightCard({
   );
 }
 
-function ProductBrandIntelligenceSection({ programMix }: { programMix: MixPoint[] }) {
+function ProductBrandIntelligenceSection({
+  brandUsage,
+  materialUsage,
+  specialtyUsage,
+  programMix,
+}: {
+  brandUsage: MonthlyUsagePoint[];
+  materialUsage: MonthlyUsagePoint[];
+  specialtyUsage: MonthlyUsagePoint[];
+  programMix: MixPoint[];
+}) {
   return (
     <section className="rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3">
       <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#7a6b49]">
-        Product and Brand Intelligence
+        Product Intelligence
       </p>
-      <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Product detail framework</h2>
+      <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Counts, usage, and trends</h2>
       <p className="mt-3 max-w-3xl text-sm leading-6 text-[#6d746f]">
-        The portal is ready for product-level intelligence, but these sections stay clearly labeled until order-level lens, material, AR, brand, and package details are connected.
+        Product reporting uses jobs, orders, pairs, and usage counts only. Revenue remains at the account level.
       </p>
-      <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <PlaceholderInsightCard title="Lens Mix" label="Requires Product Detail Data" detail="Progressive, single vision, and occupational mix will appear when lens-detail data is connected." />
-        <PlaceholderInsightCard title="Material Mix" label="Requires Order-Level Detail" detail="Poly, Trivex, high-index, and plastic mix requires material-level order data." />
-        <PlaceholderInsightCard title="Brand Mix" label="Requires Brand Detail Data" detail="Newton, Sequel, Shamir, Varilux, and other brand share will appear after brand-level order detail is available." />
+      <div className="mt-6 grid gap-5 xl:grid-cols-3">
+        {hasUsageData(brandUsage) ? (
+          <MonthlyUsageCharts eyebrow="Brand Usage" title="Brand Jobs by Month" data={brandUsage} />
+        ) : (
+          <PlaceholderInsightCard title="Brand Usage" label="Additional Product Intelligence Coming Soon" detail="Brand count fields are unavailable for this account." />
+        )}
+        {hasUsageData(materialUsage) ? (
+          <MonthlyUsageCharts eyebrow="Material Usage" title="Material Jobs by Month" data={materialUsage} />
+        ) : (
+          <PlaceholderInsightCard title="Material Usage" label="Additional Product Intelligence Coming Soon" detail="Material count fields are unavailable for this account." />
+        )}
+        {hasUsageData(specialtyUsage) ? (
+          <MonthlyUsageCharts eyebrow="Specialty Usage" title="Specialty Jobs by Month" data={specialtyUsage} />
+        ) : (
+          <PlaceholderInsightCard title="Specialty Usage" label="Additional Product Intelligence Coming Soon" detail="Specialty product count fields are unavailable for this account." />
+        )}
         <div className="rounded-md border border-[#eadfce] bg-white/78 p-5">
           <span className="inline-flex rounded-md border border-[#d9c8a6] bg-[#f8f1e6] px-2.5 py-1 text-xs font-bold uppercase tracking-[0.12em] text-[#7a6b49]">
             Status Signals
@@ -2578,7 +2805,6 @@ function PracticeIntelligenceCenter({
     hasModernPackageWarning: Boolean(account && hasModernPackageSavingsWarning(account)),
     showNeurolens: shouldShowNeurolens,
     showSequelRewards: shouldShowSequelRewards,
-    hasSequelRebateInvitation,
   });
   const tier =
     loyaltyTierLabel(dashboardAccount?.tier_status?.previous_month_tier_rank_by_acct_id || account?.tier) ||
@@ -2600,18 +2826,26 @@ function PracticeIntelligenceCenter({
       <PracticePerformanceScoreSection intelligence={intelligence} />
       <section id="trends" className="scroll-mt-24 lg:col-span-3">
         <TrendsPerformanceCharts trends={intelligence.trends} vspMix={intelligence.vspMix} />
+        <DailyTrendSummary intelligence={intelligence} />
       </section>
       <TierProgressTracker tier={tier} cmSales={intelligence.cmSales} />
       <div id="opportunities" className="scroll-mt-24 lg:col-span-3">
         <OpportunitiesCenter opportunities={intelligence.opportunities} />
       </div>
-      <ProductBrandIntelligenceSection programMix={intelligence.programMix} />
+      <ProductBrandIntelligenceSection
+        brandUsage={intelligence.brandUsage}
+        materialUsage={intelligence.materialUsage}
+        specialtyUsage={intelligence.specialtyUsage}
+        programMix={intelligence.programMix}
+      />
       <section className="lg:col-span-3">
         <ServiceExcellenceCharts
           quality={intelligence.quality}
           orderVolume={intelligence.trends}
+          turnaround={intelligence.turnaround}
         />
       </section>
+      <RewardsCenter rewards={intelligence.rewards} />
       <div id="programs" className="scroll-mt-24 lg:col-span-3">
         <ProgramParticipationCenter programs={intelligence.programs} />
       </div>

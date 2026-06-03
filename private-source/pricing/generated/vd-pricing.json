@@ -61,11 +61,15 @@
   ],
   "addOnSections": [
     {
-      "title": "Program Notes",
+      "title": "Package Notes",
       "items": [
         {
+          "name": "ARTISAN LENS SYSTEMS",
+          "price": "Value lens and coating package pricing. Orders include the listed lens package rules; additional coating upgrade options are available below when supported."
+        },
+        {
           "name": "Included AR",
-          "price": "None"
+          "price": "None included unless shown on the selected lens package"
         },
         {
           "name": "Artisan Standard",
@@ -242,7 +246,7 @@
     "rawSourceRowsProcessed": 0,
     "rowsExcludedMissingLookup": 0,
     "displayRowCount": 0,
-    "generatedAt": "2026-06-02T03:00:14.006Z",
+    "generatedAt": "2026-06-03T22:43:40.708Z",
     "rawColumns": [
       "PL",
       "Mat",

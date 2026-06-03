@@ -108,6 +108,7 @@ type ProgramMeta = {
   packageNotes: string[];
   ruleNotes: string[];
   titleLogoSrc?: string;
+  packageMark?: "lens" | "frame" | "safety";
 };
 
 const defaultProgramMeta: ProgramMeta = {
@@ -135,61 +136,75 @@ const metaByCode: Record<string, ProgramMeta> = {
   B5: {
     multiplePairEligible: true,
     packageNotes: [
-      "Package includes Artisan Emerald AR.",
-      "Upgrades are available only at source-listed pricing.",
+      "ARTISAN LENS SYSTEMS: lens and coating package pricing.",
+      "Orders include the selected lens design and included coating shown in the package notes.",
+      "Additional coating upgrade options are available at source-listed pricing.",
       "Products not listed are not available.",
     ],
     ruleNotes: [],
     titleLogoSrc: "/iot-logo.png",
+    packageMark: "lens",
   },
   S5: {
     multiplePairEligible: true,
     packageNotes: [
-      "Package includes Artisan Emerald AR.",
-      "Upgrades are available only at source-listed pricing.",
+      "ARTISAN LENS SYSTEMS: lens and coating package pricing.",
+      "Orders include the selected lens design and included coating shown in the package notes.",
+      "Additional coating upgrade options are available at source-listed pricing.",
       "Products not listed are not available.",
     ],
     ruleNotes: [],
     titleLogoSrc: "/shamir-logo.png",
+    packageMark: "lens",
   },
   TK: {
     multiplePairEligible: false,
-    packageNotes: [],
+    packageNotes: [
+      "ARTISAN LENS SYSTEMS: Tokai lens and coating package pricing.",
+      "Orders include eligible Tokai AR coating support; additional upgrade options are available when supported.",
+    ],
     ruleNotes: [
       "Tokai Lens System pricing includes eligible Tokai AR coatings.",
       "Artisan coatings are not available with this program.",
       "TK is not eligible for the Artisan Multiple Pair Program.",
     ],
     titleLogoSrc: "/tokai-logo.png",
+    packageMark: "lens",
   },
   VD: {
     multiplePairEligible: false,
-    packageNotes: [],
+    packageNotes: [
+      "ARTISAN LENS SYSTEMS: value lens package pricing.",
+      "Orders follow the package coating rules shown for this list; additional coating upgrade options are available when supported.",
+    ],
     ruleNotes: [
       "This program does not permit usage of Artisan coatings.",
       "Artisan Standard is available for $21.",
       "No included AR on Value Systems.",
       "Products not listed are not available.",
     ],
+    packageMark: "lens",
   },
   M5: {
     multiplePairEligible: false,
     packageNotes: [
-      "Modern Frame System packages include frames at Tier 1.",
-      "Additional frame tiers and add-on prices are listed below.",
-      "No included AR on M5 packages.",
+      "Artisan Frame Systems packages include frames and lenses.",
+      "Tier 1 frame options are included; additional frame upgrade tiers are listed below.",
+      "Additional lens and coating options are available below.",
     ],
     ruleNotes: ["Products not listed are not available."],
+    packageMark: "frame",
   },
   Y5: {
     multiplePairEligible: false,
     packageNotes: [
-      "Safety Systems packages include frames at Tier 1.",
-      "Additional frame tiers and add-on prices are listed below.",
-      "No included AR on Y5 packages.",
+      "Artisan Safety Systems packages include safety frames and lenses.",
+      "Tier 1 safety frame options are included; additional frame upgrade tiers are listed below.",
+      "Additional lens and coating options are available below.",
       "Side shields are included at no additional fee.",
     ],
     ruleNotes: ["Products not listed are not available."],
+    packageMark: "safety",
   },
 };
 
@@ -204,6 +219,44 @@ function resolveProgramTitle(code: string) {
 
 function resolveProgramMeta(code: string): ProgramMeta {
   return metaByCode[code] ?? defaultProgramMeta;
+}
+
+function PackageSystemMark({ variant }: { variant: NonNullable<ProgramMeta["packageMark"]> }) {
+  const label =
+    variant === "lens"
+      ? "Lens Systems"
+      : variant === "frame"
+        ? "Frame Systems"
+        : "Safety Systems";
+
+  return (
+    <div className="relative flex min-h-[104px] w-full max-w-[360px] items-center justify-center overflow-hidden rounded-[2px] border border-[#d8c49b] bg-[#122033] px-6 py-5 text-center text-white shadow-[0_18px_48px_rgba(18,32,51,0.14)]">
+      <Image
+        src="/rings.png"
+        alt=""
+        width={220}
+        height={220}
+        className="absolute -right-12 -top-16 h-44 w-44 object-contain opacity-[0.13]"
+        aria-hidden="true"
+      />
+      <Image
+        src="/rings.png"
+        alt=""
+        width={160}
+        height={160}
+        className="absolute -bottom-16 -left-12 h-36 w-36 rotate-180 object-contain opacity-[0.09]"
+        aria-hidden="true"
+      />
+      <div className="relative">
+        <p className="font-alfons-brush text-[2.15rem] leading-none text-[#d8c49b]">
+          Artisan
+        </p>
+        <p className="mt-1 text-[1.35rem] font-semibold uppercase leading-none tracking-[0.12em] md:text-[1.55rem]">
+          {label}
+        </p>
+      </div>
+    </div>
+  );
 }
 
 const materialDisplayMap: Record<string, string> = {
@@ -772,15 +825,22 @@ export default function InteractivePriceListDashboard({
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[#122033] md:text-3xl">
               Guided Lens Pricing Builder
             </h2>
-            {programMeta.titleLogoSrc ? (
-              <div className="mt-3">
-                <Image
-                  src={programMeta.titleLogoSrc}
-                  alt={`${programTitle} logo`}
-                  width={140}
-                  height={40}
-                  className="h-8 w-auto object-contain"
-                />
+            {programMeta.packageMark || programMeta.titleLogoSrc ? (
+              <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+                {programMeta.packageMark ? (
+                  <PackageSystemMark variant={programMeta.packageMark} />
+                ) : null}
+                {programMeta.titleLogoSrc ? (
+                  <div className="flex min-h-[72px] w-fit min-w-[180px] items-center justify-center rounded-[2px] border border-[#dfd2bf] bg-white px-5 py-3 shadow-[0_12px_30px_rgba(18,32,51,0.06)]">
+                    <Image
+                      src={programMeta.titleLogoSrc}
+                      alt={`${programTitle} logo`}
+                      width={190}
+                      height={72}
+                      className="max-h-12 w-auto max-w-[180px] object-contain"
+                    />
+                  </div>
+                ) : null}
               </div>
             ) : null}
             <p className="mt-3 max-w-3xl text-sm leading-6 text-[#4d5664]">
@@ -1795,9 +1855,9 @@ function AddOnSections({ sections }: { sections: PriceListAddOnSection[] }) {
               {section.items.map((item) => (
                 <div
                   key={`${section.title}-${item.name}`}
-                  className="flex items-start justify-between gap-3 border-b border-[#f1e6d8] pb-2 last:border-b-0 last:pb-0"
+                  className="grid gap-2 border-b border-[#f1e6d8] pb-2 last:border-b-0 last:pb-0 sm:grid-cols-[minmax(0,1fr)_minmax(9rem,auto)] sm:items-start"
                 >
-                  <div>
+                  <div className="min-w-0">
                     <p className="font-semibold text-[#122033]">
                       {item.href ? (
                         <a
@@ -1814,7 +1874,7 @@ function AddOnSections({ sections }: { sections: PriceListAddOnSection[] }) {
                     </p>
                     {item.notes ? <p className="text-xs text-[#625b53]">{item.notes}</p> : null}
                   </div>
-                  <p className="shrink-0 font-bold text-[#122033]">
+                  <p className="min-w-0 break-words font-bold leading-6 text-[#122033] sm:text-right">
                     {typeof item.price === "number" ? currency(item.price) : item.price}
                   </p>
                 </div>

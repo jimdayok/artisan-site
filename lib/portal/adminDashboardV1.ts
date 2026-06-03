@@ -3,7 +3,11 @@ import "server-only";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { canonicalPriceListCode } from "@/lib/portal/priceLists";
-import type { PortalDashboardV1Account } from "@/lib/portal/dashboardV1";
+import type {
+  PortalDashboardV1Account,
+  PortalDashboardV1MonthlyNumber,
+  PortalDashboardV1SupplementalIntelligence,
+} from "@/lib/portal/dashboardV1";
 
 const DASHBOARD_V1_DIR = path.join(
   process.cwd(),
@@ -81,11 +85,19 @@ export type DashboardV1AdminRow = {
   ppmJpd: number | null;
   pmJpd: number | null;
   cmJpd: number | null;
+  ppmSalesPerDay: number | null;
+  pmSalesPerDay: number | null;
+  cmSalesPerDay: number | null;
   vspShare: number | null;
   privatePayMix: number | null;
   vspJobs: number;
   sqlJobs: number;
   netLensJobs: number;
+  brandUsage: NonNullable<PortalDashboardV1SupplementalIntelligence["brand_usage"]>;
+  materialUsage: NonNullable<PortalDashboardV1SupplementalIntelligence["material_usage"]>;
+  specialtyUsage: NonNullable<PortalDashboardV1SupplementalIntelligence["specialty_usage"]>;
+  turnaroundAverageDays: PortalDashboardV1MonthlyNumber;
+  rewards: NonNullable<PortalDashboardV1SupplementalIntelligence["rewards"]>;
   quality: {
     labRedoPct: DashboardV1QualityTrend;
     officeRedoPct: DashboardV1QualityTrend;
@@ -146,10 +158,24 @@ function calculateJpd(jobs: number) {
   return jobs > 0 ? jobs / 22 : null;
 }
 
+function calculateSalesPerDay(sales: number, jobs: number, jobsPerDay: number | null) {
+  if (sales <= 0 || jobs <= 0 || !jobsPerDay || jobsPerDay <= 0) return null;
+  return sales / (jobs / jobsPerDay);
+}
+
 function parseCustomerType(division: string) {
   const code = (division || "").trim().toUpperCase();
   if (!code) return "—";
   return code;
+}
+
+function monthlyNumber(value: unknown): PortalDashboardV1MonthlyNumber {
+  const record = value as { ppm?: unknown; pm?: unknown; cm?: unknown } | undefined;
+  return {
+    ppm: Number(record?.ppm ?? 0) || 0,
+    pm: Number(record?.pm ?? 0) || 0,
+    cm: Number(record?.cm ?? 0) || 0,
+  };
 }
 
 export function getDashboardV1Manifest() {
@@ -169,6 +195,7 @@ export function getDashboardV1AdminRows() {
     const jobs = detail?.purchase_summary?.jobs;
     const sales = detail?.purchase_summary?.sales;
     const quality = detail?.quality_metrics;
+    const supplemental = detail?.supplemental_intelligence;
     const programFlags = detail?.program_usage?.flags;
     const priceListCodes = [
       ...new Set(
@@ -180,10 +207,16 @@ export function getDashboardV1AdminRows() {
     const ppmJobs = Number(jobs?.ppm ?? 0);
     const pmJobs = Number(jobs?.pm ?? 0);
     const cmJobs = Number(jobs?.cm ?? account.cm_jobs ?? 0);
+    const ppmSales = Number(sales?.ppm ?? 0);
+    const pmSales = Number(sales?.pm ?? 0);
+    const cmSales = Number(sales?.cm ?? account.cm_sales ?? 0);
+    const ppmJpd = calculateJpd(ppmJobs);
+    const pmJpd = calculateJpd(pmJobs);
     const explicitCmJpd =
       typeof account.cm_jpd === "number" && Number.isFinite(account.cm_jpd)
         ? account.cm_jpd
         : null;
+    const cmJpd = explicitCmJpd ?? calculateJpd(cmJobs);
 
     rows.push({
       businessName: account.business_name || "Unknown",
@@ -199,20 +232,46 @@ export function getDashboardV1AdminRows() {
       latestShipDate: detail?.latest_ship_date || account.latest_date_shipped || "",
       dataRefreshDate: detail?.data_refresh_date || account.data_refresh_date || "",
       tier: detail?.tier_status?.previous_month_tier_rank_by_acct_id || "Unranked",
-      ppmSales: Number(sales?.ppm ?? 0),
-      pmSales: Number(sales?.pm ?? 0),
-      cmSales: Number(sales?.cm ?? account.cm_sales ?? 0),
+      ppmSales,
+      pmSales,
+      cmSales,
       ppmJobs,
       pmJobs,
       cmJobs,
-      ppmJpd: calculateJpd(ppmJobs),
-      pmJpd: calculateJpd(pmJobs),
-      cmJpd: explicitCmJpd ?? calculateJpd(cmJobs),
+      ppmJpd,
+      pmJpd,
+      cmJpd,
+      ppmSalesPerDay: calculateSalesPerDay(ppmSales, ppmJobs, ppmJpd),
+      pmSalesPerDay: calculateSalesPerDay(pmSales, pmJobs, pmJpd),
+      cmSalesPerDay: calculateSalesPerDay(cmSales, cmJobs, cmJpd),
       vspShare: normalizePct(detail?.vsp_private_pay_mix?.vsp_share),
       privatePayMix: normalizePct(detail?.vsp_private_pay_mix?.private_pay_mix),
       vspJobs: Number(detail?.vsp_private_pay_mix?.vsp_jobs?.cm ?? 0),
       sqlJobs: Number(detail?.product_mix?.sql_jobs?.cm ?? 0),
       netLensJobs: Number(detail?.product_mix?.net_lens_jobs?.cm ?? 0),
+      brandUsage: {
+        hoya_jobs: monthlyNumber(supplemental?.brand_usage?.hoya_jobs),
+        shamir_jobs: monthlyNumber(supplemental?.brand_usage?.shamir_jobs),
+        tokai_jobs: monthlyNumber(supplemental?.brand_usage?.tokai_jobs),
+        varilux_jobs: monthlyNumber(supplemental?.brand_usage?.varilux_jobs),
+        neurolens_jobs: monthlyNumber(supplemental?.brand_usage?.neurolens_jobs),
+        sequel_jobs: monthlyNumber(supplemental?.brand_usage?.sequel_jobs),
+        iot_artisan_jobs: monthlyNumber(supplemental?.brand_usage?.iot_artisan_jobs),
+      },
+      materialUsage: {
+        plastic_jobs: monthlyNumber(supplemental?.material_usage?.plastic_jobs),
+        trivex_jobs: monthlyNumber(supplemental?.material_usage?.trivex_jobs),
+        hi_index_160_jobs: monthlyNumber(supplemental?.material_usage?.hi_index_160_jobs),
+        hi_index_167_jobs: monthlyNumber(supplemental?.material_usage?.hi_index_167_jobs),
+        hi_index_174_jobs: monthlyNumber(supplemental?.material_usage?.hi_index_174_jobs),
+      },
+      specialtyUsage: {
+        photochromic_jobs: monthlyNumber(supplemental?.specialty_usage?.photochromic_jobs),
+        polarized_jobs: monthlyNumber(supplemental?.specialty_usage?.polarized_jobs),
+        multiple_pair_jobs: monthlyNumber(supplemental?.specialty_usage?.multiple_pair_jobs),
+      },
+      turnaroundAverageDays: monthlyNumber(supplemental?.turnaround?.average_days),
+      rewards: supplemental?.rewards ?? {},
       quality: {
         labRedoPct: trendValue(quality?.lab_redo_pct),
         officeRedoPct: trendValue(quality?.office_redo_pct),

@@ -39,6 +39,10 @@ function money(value: number) {
   }).format(value);
 }
 
+function moneyOrUnavailable(value: number | null) {
+  return value === null ? "Unavailable" : `${money(value)}/day`;
+}
+
 function formatCount(value: number) {
   return new Intl.NumberFormat("en-US").format(value);
 }
@@ -132,6 +136,22 @@ function qualityUp(row: DashboardV1AdminRow, key: keyof DashboardV1AdminRow["qua
   return row.quality[key].cm > row.quality[key].pm;
 }
 
+function monthlyDecline(value?: { pm: number; cm: number }) {
+  return Number(value?.pm ?? 0) > 0 && Number(value?.cm ?? 0) < Number(value?.pm ?? 0);
+}
+
+function neurolensDown(row: DashboardV1AdminRow) {
+  return monthlyDecline(row.brandUsage.neurolens_jobs);
+}
+
+function sequelDown(row: DashboardV1AdminRow) {
+  return monthlyDecline(row.brandUsage.sequel_jobs);
+}
+
+function turnaroundDeteriorated(row: DashboardV1AdminRow) {
+  return row.turnaroundAverageDays.pm > 0 && row.turnaroundAverageDays.cm > row.turnaroundAverageDays.pm;
+}
+
 function customerOpportunityReason(row: DashboardV1AdminRow) {
   const type = row.customerType.toUpperCase();
   if (type === "NL") return "Neurolens customer: look for non-Neurolens expansion and patient education opportunities.";
@@ -213,8 +233,8 @@ function ActionButtons({ row }: { row: DashboardV1AdminRow }) {
 }
 
 function AccountCard({ row }: { row: DashboardV1AdminRow }) {
-  const salesChange = percentChange(row.cmSales, row.pmSales);
-  const jobsChange = percentChange(row.cmJobs, row.pmJobs);
+  const salesChange = percentChange(row.cmSalesPerDay ?? 0, row.pmSalesPerDay ?? 0);
+  const jobsChange = percentChange(row.cmJpd ?? 0, row.pmJpd ?? 0);
 
   return (
     <article className="rounded-md border border-[#d8c49b] bg-[#fffaf1]/88 p-5 shadow-[0_16px_44px_rgba(23,42,40,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_22px_55px_rgba(23,42,40,0.12)]">
@@ -234,14 +254,14 @@ function AccountCard({ row }: { row: DashboardV1AdminRow }) {
       </div>
       <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8b7650]">CM Sales</p>
-          <p className="mt-1 text-lg font-semibold text-[#172a28]">{money(row.cmSales)}</p>
-          <p className="text-xs text-[#706759]">PM {money(row.pmSales)}</p>
+          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8b7650]">CM Sales / Day</p>
+          <p className="mt-1 text-lg font-semibold text-[#172a28]">{moneyOrUnavailable(row.cmSalesPerDay)}</p>
+          <p className="text-xs text-[#706759]">PM {moneyOrUnavailable(row.pmSalesPerDay)}</p>
         </div>
         <div>
-          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8b7650]">CM Jobs</p>
-          <p className="mt-1 text-lg font-semibold text-[#172a28]">{formatCount(row.cmJobs)}</p>
-          <p className="text-xs text-[#706759]">PM {formatCount(row.pmJobs)}</p>
+          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8b7650]">CM Jobs / Day</p>
+          <p className="mt-1 text-lg font-semibold text-[#172a28]">{row.cmJpd === null ? "Unavailable" : `${row.cmJpd.toFixed(1)}/day`}</p>
+          <p className="text-xs text-[#706759]">PM {row.pmJpd === null ? "Unavailable" : `${row.pmJpd.toFixed(1)}/day`}</p>
         </div>
         <div>
           <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8b7650]">Last Ship</p>
@@ -391,6 +411,9 @@ export default function AdminLandingDashboard({
     if (trendFilter === "sales-down" && !salesDown(row)) return false;
     if (trendFilter === "jobs-down" && !jobsDown(row)) return false;
     if (trendFilter === "jpd-down" && !jpdDown(row)) return false;
+    if (trendFilter === "neurolens-down" && !neurolensDown(row)) return false;
+    if (trendFilter === "sequel-down" && !sequelDown(row)) return false;
+    if (trendFilter === "turnaround-up" && !turnaroundDeteriorated(row)) return false;
     if (trendFilter === "no-activity" && !isNoCurrentActivity(row)) return false;
     if (opportunityFilter === "program" && !hasProgramOpportunity(row)) return false;
     if (opportunityFilter === "high-value-decliner" && !isHighValueDecliner(row)) return false;
@@ -418,6 +441,9 @@ export default function AdminLandingDashboard({
   const salesDownRows = rows.filter(salesDown);
   const jobsDownRows = rows.filter(jobsDown);
   const jpdDownRows = rows.filter(jpdDown);
+  const neurolensDownRows = rows.filter(neurolensDown);
+  const sequelDownRows = rows.filter(sequelDown);
+  const turnaroundDeterioratedRows = rows.filter(turnaroundDeteriorated);
   const noActivityRows = rows.filter(isNoCurrentActivity);
   const noUserRows = rows.filter((row) => row.authorizedUsers === 0);
   const missingPriceListRows = rows.filter((row) => row.priceListCodes.length === 0);
@@ -452,6 +478,33 @@ export default function AdminLandingDashboard({
       priorLabel: (row) => row.pmJpd?.toFixed(1) ?? "Unavailable",
       reason: () => "Jobs-per-day is lower than the prior month using available JPD data.",
       action: () => "Use JPD to confirm whether the issue is true velocity decline rather than calendar timing.",
+    },
+    {
+      id: "neurolens-down",
+      title: "Customers with Neurolens decline",
+      rows: neurolensDownRows,
+      currentLabel: (row) => formatCount(row.brandUsage.neurolens_jobs?.cm ?? 0),
+      priorLabel: (row) => formatCount(row.brandUsage.neurolens_jobs?.pm ?? 0),
+      reason: () => "Current-month Neurolens jobs are lower than previous month.",
+      action: () => "Review whether Neurolens activity needs staff education, ordering support, or patient conversation tools.",
+    },
+    {
+      id: "sequel-down",
+      title: "Customers with Sequel decline",
+      rows: sequelDownRows,
+      currentLabel: (row) => formatCount(row.brandUsage.sequel_jobs?.cm ?? 0),
+      priorLabel: (row) => formatCount(row.brandUsage.sequel_jobs?.pm ?? 0),
+      reason: () => "Current-month Sequel jobs are lower than previous month.",
+      action: () => "Check Sequel PAL ordering patterns and rewards-qualified activity before outreach.",
+    },
+    {
+      id: "turnaround-up",
+      title: "Customers with turnaround deterioration",
+      rows: turnaroundDeterioratedRows,
+      currentLabel: (row) => `${row.turnaroundAverageDays.cm.toFixed(1)} days`,
+      priorLabel: (row) => `${row.turnaroundAverageDays.pm.toFixed(1)} days`,
+      reason: () => "Current average turnaround time is higher than previous month.",
+      action: () => "Review service timing and proactively communicate with accounts where delays may affect experience.",
     },
     {
       id: "no-activity",
@@ -516,6 +569,9 @@ export default function AdminLandingDashboard({
         <StatCard icon={ArrowDownRight} label="Sales Down" value={formatCount(salesDownRows.length)} />
         <StatCard icon={ArrowDownRight} label="Jobs Down" value={formatCount(jobsDownRows.length)} />
         <StatCard icon={Activity} label="JPD Down" value={formatCount(jpdDownRows.length)} detail="Shown only when JPD data exists." />
+        <StatCard icon={ArrowDownRight} label="Neurolens Down" value={formatCount(neurolensDownRows.length)} />
+        <StatCard icon={ArrowDownRight} label="Sequel Down" value={formatCount(sequelDownRows.length)} />
+        <StatCard icon={Activity} label="Turnaround Up" value={formatCount(turnaroundDeterioratedRows.length)} />
         <StatCard icon={AlertTriangle} label="No Current Activity" value={formatCount(noActivityRows.length)} />
         <StatCard icon={ClipboardCopy} label="Missing Price Lists" value={formatCount(missingPriceListRows.length)} />
       </section>
@@ -555,44 +611,47 @@ export default function AdminLandingDashboard({
             <Search className="h-3.5 w-3.5" /> {formatCount(filtered.length)} accounts
           </span>
         </div>
-        <form className="mt-7 grid gap-3 lg:grid-cols-[1fr_repeat(7,minmax(130px,180px))_auto]">
-          <input name="q" defaultValue={query} placeholder="Search account, email, lab, price list" className="min-h-12 rounded-md border border-[#d8c49b] bg-[#fffaf1] px-4 text-sm text-[#172a28] outline-none transition focus:border-[#172a28]" />
-          <select name="division" defaultValue={divisionFilter} className="min-h-12 rounded-md border border-[#d8c49b] bg-[#fffaf1] px-3 text-sm text-[#172a28] outline-none transition focus:border-[#172a28]">
+        <form className="mt-7 flex flex-wrap items-end gap-3">
+          <input name="q" defaultValue={query} placeholder="Search account, email, lab, price list" className="min-h-12 min-w-64 flex-1 rounded-md border border-[#d8c49b] bg-[#fffaf1] px-4 text-sm text-[#172a28] outline-none transition focus:border-[#172a28]" />
+          <select name="division" defaultValue={divisionFilter} className="min-h-12 w-full rounded-md border border-[#d8c49b] bg-[#fffaf1] px-3 text-sm text-[#172a28] outline-none transition focus:border-[#172a28] sm:w-44">
             <option value="">All Types</option>
             {typeOptions.map((option) => <option key={option} value={option}>{customerTypeLabel(option)}</option>)}
           </select>
-          <select name="lab" defaultValue={labFilter} className="min-h-12 rounded-md border border-[#d8c49b] bg-[#fffaf1] px-3 text-sm text-[#172a28] outline-none transition focus:border-[#172a28]">
+          <select name="lab" defaultValue={labFilter} className="min-h-12 w-full rounded-md border border-[#d8c49b] bg-[#fffaf1] px-3 text-sm text-[#172a28] outline-none transition focus:border-[#172a28] sm:w-44">
             <option value="">All Labs</option>
             {labOptions.map((option) => <option key={option} value={option}>{option}</option>)}
           </select>
-          <select name="priceList" defaultValue={priceListFilter} className="min-h-12 rounded-md border border-[#d8c49b] bg-[#fffaf1] px-3 text-sm text-[#172a28] outline-none transition focus:border-[#172a28]">
+          <select name="priceList" defaultValue={priceListFilter} className="min-h-12 w-full rounded-md border border-[#d8c49b] bg-[#fffaf1] px-3 text-sm text-[#172a28] outline-none transition focus:border-[#172a28] sm:w-44">
             <option value="">All Lists</option>
             {priceListOptions.map((option) => <option key={option} value={option}>{option}</option>)}
           </select>
-          <select name="hasUser" defaultValue={userFilter} className="min-h-12 rounded-md border border-[#d8c49b] bg-[#fffaf1] px-3 text-sm text-[#172a28] outline-none transition focus:border-[#172a28]">
+          <select name="hasUser" defaultValue={userFilter} className="min-h-12 w-full rounded-md border border-[#d8c49b] bg-[#fffaf1] px-3 text-sm text-[#172a28] outline-none transition focus:border-[#172a28] sm:w-44">
             <option value="">All Users</option>
             <option value="has-user">Has User</option>
             <option value="no-user">No User</option>
           </select>
-          <select name="activity" defaultValue={activityFilter} className="min-h-12 rounded-md border border-[#d8c49b] bg-[#fffaf1] px-3 text-sm text-[#172a28] outline-none transition focus:border-[#172a28]">
+          <select name="activity" defaultValue={activityFilter} className="min-h-12 w-full rounded-md border border-[#d8c49b] bg-[#fffaf1] px-3 text-sm text-[#172a28] outline-none transition focus:border-[#172a28] sm:w-44">
             <option value="">All Activity</option>
             <option value="active">Current Activity</option>
             <option value="no-current">No Current Activity</option>
           </select>
-          <select name="trend" defaultValue={trendFilter} className="min-h-12 rounded-md border border-[#d8c49b] bg-[#fffaf1] px-3 text-sm text-[#172a28] outline-none transition focus:border-[#172a28]">
+          <select name="trend" defaultValue={trendFilter} className="min-h-12 w-full rounded-md border border-[#d8c49b] bg-[#fffaf1] px-3 text-sm text-[#172a28] outline-none transition focus:border-[#172a28] sm:w-44">
             <option value="">All Trends</option>
             <option value="sales-down">Sales Down</option>
             <option value="jobs-down">Jobs Down</option>
             <option value="jpd-down">JPD Down</option>
+            <option value="neurolens-down">Neurolens Down</option>
+            <option value="sequel-down">Sequel Down</option>
+            <option value="turnaround-up">Turnaround Up</option>
             <option value="no-activity">No Activity</option>
           </select>
-          <select name="opportunity" defaultValue={opportunityFilter} className="min-h-12 rounded-md border border-[#d8c49b] bg-[#fffaf1] px-3 text-sm text-[#172a28] outline-none transition focus:border-[#172a28]">
+          <select name="opportunity" defaultValue={opportunityFilter} className="min-h-12 w-full rounded-md border border-[#d8c49b] bg-[#fffaf1] px-3 text-sm text-[#172a28] outline-none transition focus:border-[#172a28] sm:w-48">
             <option value="">All Opportunities</option>
             <option value="program">Program Gaps</option>
             <option value="high-value-decliner">High-Value Decliner</option>
             <option value="missing-price-lists">Missing Price Lists</option>
           </select>
-          <button className="min-h-12 rounded-full bg-[#172a28] px-5 text-sm font-semibold text-white transition hover:bg-[#27433f]">
+          <button className="min-h-12 rounded-full bg-[#172a28] px-6 text-sm font-semibold text-white transition hover:bg-[#27433f]">
             Apply
           </button>
         </form>

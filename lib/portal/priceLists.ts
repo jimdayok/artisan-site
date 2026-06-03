@@ -14,6 +14,7 @@ export function canonicalPriceListCode(code: string) {
   if (normalized === "G5") return "G6";
   if (normalized === "P5") return "P6";
   if (normalized === "A5") return "A6";
+  if (normalized === "VX") return "VD";
   return normalized;
 }
 

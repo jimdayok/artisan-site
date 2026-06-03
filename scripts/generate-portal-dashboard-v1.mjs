@@ -7,6 +7,8 @@ import { XMLParser } from "fast-xml-parser";
 const root = process.cwd();
 const portalDir = path.join(root, "private-source", "portal");
 const defaultAccountInputCandidates = [
+  path.join(portalDir, "acct_data_1.xlsx"),
+  path.join(portalDir, "Acct_Data_1.xlsx"),
   path.join(portalDir, "acct_data.xlsx"),
   path.join(portalDir, "Acct_Data.xlsx"),
   path.join(portalDir, "acct_data.csv"),
@@ -17,6 +19,10 @@ const defaultUserInputCandidates = [
   path.join(portalDir, "User_Data.xlsx"),
   path.join(portalDir, "user_data.csv"),
   path.join(portalDir, "User_Data.csv"),
+];
+const defaultSupplementalAccountInputCandidates = [
+  path.join(portalDir, "acct_data_2.xlsx"),
+  path.join(portalDir, "acct_data_3.xlsx"),
 ];
 const outputBaseDir = path.join(portalDir, "dashboard-v1");
 const releasesDir = path.join(outputBaseDir, "releases");
@@ -120,12 +126,70 @@ const ACCOUNT_HEADER_ALIASES = {
   "PPM Warranty %": ["PPM Warranty %"],
   "PM Warranty %": ["PM Warranty %"],
   "CM Warranty %": ["CM Warranty %"],
+  "PPM Warranty Redo %": ["PPM Warranty Redo %", "PPM Warranty %"],
+  "PM Warranty Redo %": ["PM Warranty Redo %", "PM Warranty %"],
+  "CM Warranty Redo %": ["CM Warranty Redo %", "CM Warranty %"],
   "PPM Non-Adapt %": ["PPM Non-Adapt %", "PPM Non Adapt %"],
   "PM Non-Adapt %": ["PM Non-Adapt %", "PM Non Adapt %"],
   "CM Non-Adapt %": ["CM Non-Adapt %", "CM Non Adapt %"],
-  "Is Enrolled in ARSQL26": ["Is Enrolled in ARSQL26"],
-  "Is Enrolled in ARPMP26": ["Is Enrolled in ARPMP26"],
-  "Is Enrolled in ARUTY26": ["Is Enrolled in ARUTY26"],
+  "Is ARSQL26 Customer": ["Is ARSQL26 Customer", "Is Enrolled in ARSQL26"],
+  "Is Enrolled in ARPMP26 Display": ["Is Enrolled in ARPMP26 Display", "Is Enrolled in ARPMP26"],
+  "Is Enrolled in ARUTY26 Display": ["Is Enrolled in ARUTY26 Display", "Is Enrolled in ARUTY26"],
+  "Business Name": ["Business Name"],
+  "CM ARPMP26 Qualified PMP Jobs": ["CM ARPMP26 Qualified PMP Jobs"],
+  "PM ARPMP26 Qualified PMP Jobs": ["PM ARPMP26 Qualified PMP Jobs"],
+  "CM ARPMP26 Rebate Total": ["CM ARPMP26 Rebate Total"],
+  "PM ARPMP26 Rebate Total": ["PM ARPMP26 Rebate Total"],
+  "CM ARSQL26 Qualified Sequel PAL Jobs": ["CM ARSQL26 Qualified Sequel PAL Jobs"],
+  "PM ARSQL26 Qualified Sequel PAL Jobs": ["PM ARSQL26 Qualified Sequel PAL Jobs"],
+  "CM ARSQL26 Sequel PAL Rebate Total": ["CM ARSQL26 Sequel PAL Rebate Total"],
+  "PM ARSQL26 Sequel PAL Rebate Total": ["PM ARSQL26 Sequel PAL Rebate Total"],
+  "CM ARUTY26 Qualified Jobs": ["CM ARUTY26 Qualified Jobs"],
+  "PM ARUTY26 Qualified Jobs": ["PM ARUTY26 Qualified Jobs"],
+  "CM ARUTY26 Rewards Earned": ["CM ARUTY26 Rewards Earned"],
+  "PM ARUTY26 Rewards Earned": ["PM ARUTY26 Rewards Earned"],
+  "CM Average Turnaround Time": ["CM Average Turnaround Time"],
+  "PM Average Turnaround Time": ["PM Average Turnaround Time"],
+  "PPM Average Turnaround Time": ["PPM Average Turnaround Time"],
+  "CM Plastic Orders": ["CM Plastic Orders"],
+  "PM Plastic Orders": ["PM Plastic Orders"],
+  "PPM Plastic Orders": ["PPM Plastic Orders"],
+  "CM Trivex Orders": ["CM Trivex Orders"],
+  "PM Trivex Orders": ["PM Trivex Orders"],
+  "PPM Trivex Orders": ["PPM Trivex Orders"],
+  "CM Hi Index 1.60 Orders": ["CM Hi Index 1.60 Orders"],
+  "CM Hi Index 1.67 Orders": ["CM Hi Index 1.67 Orders"],
+  "CM Hi Index 1.74 Orders": ["CM Hi Index 1.74 Orders"],
+  "CM Photochromic": ["CM Photochromic"],
+  "PM Photochromic": ["PM Photochromic"],
+  "PPM Photochromic": ["PPM Photochromic"],
+  "CM Polarized": ["CM Polarized"],
+  "PM Polarized": ["PM Polarized"],
+  "PPM Polarized": ["PPM Polarized"],
+  "CM Multiple Pairs": ["CM Multiple Pairs"],
+  "PM Multiple Pairs": ["PM Multiple Pairs"],
+  "PPM Multiple Pairs": ["PPM Multiple Pairs"],
+  "CM Hoya Orders": ["CM Hoya Orders"],
+  "PM Hoya Orders": ["PM Hoya Orders"],
+  "PPM Hoya Orders": ["PPM Hoya Orders"],
+  "CM Shamir Orders": ["CM Shamir Orders"],
+  "PM Shamir Orders": ["PM Shamir Orders"],
+  "PPM Shamir Orders": ["PPM Shamir Orders"],
+  "CM Tokai Orders": ["CM Tokai Orders"],
+  "PM Tokai Orders": ["PM Tokai Orders"],
+  "PPM Tokai Orders": ["PPM Tokai Orders"],
+  "CM Varilux Orders": ["CM Varilux Orders"],
+  "PM Varilux Orders": ["PM Varilux Orders"],
+  "PPM Varilux Orders": ["PPM Varilux Orders"],
+  "CM Neurolens Orders": ["CM Neurolens Orders"],
+  "PM Neurolens Orders": ["PM Neurolens Orders"],
+  "PPM Neurolens Orders": ["PPM Neurolens Orders"],
+  "CM Sequel Orders": ["CM Sequel Orders"],
+  "PM Sequel Orders": ["PM Sequel Orders"],
+  "PPM Sequel Orders": ["PPM Sequel Orders"],
+  "CM IOT Artisan Orders": ["CM IOT Artisan Orders"],
+  "PPM IOT Artisan Orders": ["PPM IOT Artisan Orders"],
+  "CM Tier Jobs": ["CM Tier Jobs"],
   "Data Refresh Date": ["Data Refresh Date", "Last Shipped Date (Global)"],
 };
 
@@ -160,6 +224,7 @@ function parseArgs() {
     userInput: "",
     accountSheet: "Export",
     userSheet: "person list",
+    supplementalInputs: [],
     allowDuplicateAcctId: false,
     ignoreEmptySummaryRows: false,
     allowInvalidUserAccountLinks: false,
@@ -172,6 +237,7 @@ function parseArgs() {
     else if (arg === "--sheet") parsed.accountSheet = args[++i] ?? "Export";
     else if (arg === "--account-sheet") parsed.accountSheet = args[++i] ?? "Export";
     else if (arg === "--user-sheet") parsed.userSheet = args[++i] ?? "person list";
+    else if (arg === "--supplemental-input") parsed.supplementalInputs.push(args[++i] ?? "");
     else if (arg === "--allow-duplicate-acct-id") parsed.allowDuplicateAcctId = true;
     else if (arg === "--ignore-empty-summary-rows") parsed.ignoreEmptySummaryRows = true;
     else if (arg === "--allow-invalid-user-account-links") parsed.allowInvalidUserAccountLinks = true;
@@ -587,6 +653,147 @@ function mergeDuplicateRows(rows) {
   });
 }
 
+function sourceRank(sourceFile) {
+  const base = path.basename(sourceFile).toLowerCase();
+  if (base === "acct_data_3.xlsx") return 40;
+  if (base === "acct_data_2.xlsx") return 35;
+  if (base === "acct_data_1.xlsx") return 30;
+  if (base === "acct_data.xlsx") return 25;
+  return 10;
+}
+
+function completenessScore(row) {
+  return Object.values(row).filter((value) => toText(value)).length;
+}
+
+function bestValue(existing, incoming, existingSource, incomingSource) {
+  const existingText = toText(existing);
+  const incomingText = toText(incoming);
+  if (!incomingText) return existing;
+  if (!existingText) return incoming;
+  return sourceRank(incomingSource) >= sourceRank(existingSource) ? incoming : existing;
+}
+
+function mergeUnifiedAccountRows(sourceEntries) {
+  const grouped = new Map();
+  for (const entry of sourceEntries) {
+    const acctId = normalizeAcctId(entry.row["Acct ID"]);
+    if (!acctId) continue;
+    grouped.set(acctId, [...(grouped.get(acctId) ?? []), entry]);
+  }
+
+  return [...grouped.entries()].map(([acctId, entries]) => {
+    const sortedEntries = [...entries].sort((a, b) => {
+      const rankDelta = sourceRank(b.sourceFile) - sourceRank(a.sourceFile);
+      if (rankDelta !== 0) return rankDelta;
+      return completenessScore(b.row) - completenessScore(a.row);
+    });
+    const merged = { "Acct ID": acctId };
+    const sourcesByColumn = { "Acct ID": "master key" };
+
+    for (const entry of sortedEntries.reverse()) {
+      for (const [column, value] of Object.entries(entry.row)) {
+        if (!column) continue;
+        const next = bestValue(merged[column], value, sourcesByColumn[column] ?? "", entry.sourceFile);
+        if (next !== merged[column]) {
+          merged[column] = next;
+          sourcesByColumn[column] = path.relative(root, entry.sourceFile);
+        }
+      }
+    }
+
+    merged.__source_files = [...new Set(entries.map((entry) => path.relative(root, entry.sourceFile)))].sort();
+    merged.__field_precedence = sourcesByColumn;
+    return merged;
+  });
+}
+
+function monthlyValues(row, label) {
+  return {
+    ppm: toNumber(row[`PPM ${label}`]),
+    pm: toNumber(row[`PM ${label}`]),
+    cm: toNumber(row[`CM ${label}`]),
+  };
+}
+
+function buildSupplementalIntelligence(row) {
+  const arpmpQualifiedJobs = {
+    ppm: 0,
+    pm: toNumber(row["PM ARPMP26 Qualified PMP Jobs"]),
+    cm: toNumber(row["CM ARPMP26 Qualified PMP Jobs"]),
+  };
+  const arpmpRebateTotal = {
+    ppm: 0,
+    pm: toNumber(row["PM ARPMP26 Rebate Total"]),
+    cm: toNumber(row["CM ARPMP26 Rebate Total"]),
+  };
+  const arutyQualifiedJobs = {
+    ppm: 0,
+    pm: toNumber(row["PM ARUTY26 Qualified Jobs"]),
+    cm: toNumber(row["CM ARUTY26 Qualified Jobs"]),
+  };
+  const arutyRewardsEarned = {
+    ppm: 0,
+    pm: toNumber(row["PM ARUTY26 Rewards Earned"]),
+    cm: toNumber(row["CM ARUTY26 Rewards Earned"]),
+  };
+  const arsqlQualifiedJobs = {
+    ppm: 0,
+    pm: toNumber(row["PM ARSQL26 Qualified Sequel PAL Jobs"]),
+    cm: toNumber(row["CM ARSQL26 Qualified Sequel PAL Jobs"]),
+  };
+  const arsqlRebateTotal = {
+    ppm: 0,
+    pm: toNumber(row["PM ARSQL26 Sequel PAL Rebate Total"]),
+    cm: toNumber(row["CM ARSQL26 Sequel PAL Rebate Total"]),
+  };
+  const hasMonthlyActivity = (value) => value.ppm > 0 || value.pm > 0 || value.cm > 0;
+
+  return {
+    brand_usage: {
+      hoya_jobs: monthlyValues(row, "Hoya Orders"),
+      shamir_jobs: monthlyValues(row, "Shamir Orders"),
+      tokai_jobs: monthlyValues(row, "Tokai Orders"),
+      varilux_jobs: monthlyValues(row, "Varilux Orders"),
+      neurolens_jobs: monthlyValues(row, "Neurolens Orders"),
+      sequel_jobs: monthlyValues(row, "Sequel Orders"),
+      iot_artisan_jobs: monthlyValues(row, "IOT Artisan Orders"),
+    },
+    material_usage: {
+      plastic_jobs: monthlyValues(row, "Plastic Orders"),
+      trivex_jobs: monthlyValues(row, "Trivex Orders"),
+      hi_index_160_jobs: monthlyValues(row, "Hi Index 1.60 Orders"),
+      hi_index_167_jobs: monthlyValues(row, "Hi Index 1.67 Orders"),
+      hi_index_174_jobs: monthlyValues(row, "Hi Index 1.74 Orders"),
+    },
+    specialty_usage: {
+      photochromic_jobs: monthlyValues(row, "Photochromic"),
+      polarized_jobs: monthlyValues(row, "Polarized"),
+      multiple_pair_jobs: monthlyValues(row, "Multiple Pairs"),
+    },
+    turnaround: {
+      average_days: monthlyValues(row, "Average Turnaround Time"),
+    },
+    rewards: {
+      arpmp26: {
+        enrolled: truthyUsage(row["Is Enrolled in ARPMP26 Display"]) || hasMonthlyActivity(arpmpQualifiedJobs) || hasMonthlyActivity(arpmpRebateTotal),
+        qualified_pmp_jobs: arpmpQualifiedJobs,
+        rebate_total: arpmpRebateTotal,
+      },
+      aruty26: {
+        enrolled: truthyUsage(row["Is Enrolled in ARUTY26 Display"]) || hasMonthlyActivity(arutyQualifiedJobs) || hasMonthlyActivity(arutyRewardsEarned),
+        qualified_jobs: arutyQualifiedJobs,
+        rewards_earned: arutyRewardsEarned,
+      },
+      arsql26: {
+        enrolled: truthyUsage(row["Is ARSQL26 Customer"]) || hasMonthlyActivity(arsqlQualifiedJobs) || hasMonthlyActivity(arsqlRebateTotal),
+        qualified_sequel_pal_jobs: arsqlQualifiedJobs,
+        rebate_total: arsqlRebateTotal,
+      },
+    },
+  };
+}
+
 function classifyAccount(row) {
   const cmJobs = toNumber(row["CM Jobs"]);
   const pmJobs = toNumber(row["PM Jobs"]);
@@ -619,10 +826,10 @@ function classifyAccount(row) {
       pm: toNumber(row["PM Office Redo %"]),
       cm: toNumber(row["CM Office Redo %"]),
     },
-    warranty_pct: {
-      ppm: toNumber(row["PPM Warranty %"]),
-      pm: toNumber(row["PM Warranty %"]),
-      cm: toNumber(row["CM Warranty %"]),
+      warranty_pct: {
+      ppm: toNumber(row["PPM Warranty Redo %"] || row["PPM Warranty %"]),
+      pm: toNumber(row["PM Warranty Redo %"] || row["PM Warranty %"]),
+      cm: toNumber(row["CM Warranty Redo %"] || row["CM Warranty %"]),
     },
     non_adapt_pct: {
       ppm: toNumber(row["PPM Non-Adapt %"]),
@@ -631,10 +838,11 @@ function classifyAccount(row) {
     },
   };
 
+  const supplementalIntelligence = buildSupplementalIntelligence(row);
   const programEnrollment = {
-    arsql26: truthyUsage(row["Is Enrolled in ARSQL26"]),
-    arpmp26: truthyUsage(row["Is Enrolled in ARPMP26"]),
-    aruty26: truthyUsage(row["Is Enrolled in ARUTY26"]),
+    arsql26: Boolean(supplementalIntelligence.rewards.arsql26.enrolled),
+    arpmp26: Boolean(supplementalIntelligence.rewards.arpmp26.enrolled),
+    aruty26: Boolean(supplementalIntelligence.rewards.aruty26.enrolled),
   };
 
   const metrics = {
@@ -706,10 +914,74 @@ function classifyAccount(row) {
     },
     quality_metrics: qualityRates,
     program_enrollment: programEnrollment,
+    supplemental_intelligence: supplementalIntelligence,
+    data_lineage: {
+      source_files: row.__source_files ?? [],
+      field_precedence: row.__field_precedence ?? {},
+    },
     customer_insights: {
       suggestions: insights,
       metrics,
     },
+  };
+}
+
+function hasUserColumns(userRows) {
+  if (!userRows.length) return false;
+  const headerSet = new Set(Object.keys(userRows[0]));
+  return REQUIRED_USER_COLUMNS.every((column) => headerSet.has(column));
+}
+
+function buildUserAccessFromExistingSnapshot(validAccountIds) {
+  const existingUsersToAccounts = readJson(path.join(currentDir, "users_to_accounts.json")) ?? [];
+  const accountToUsersMap = new Map();
+  const usersToAccounts = [];
+
+  for (const entry of existingUsersToAccounts) {
+    const email = normalizeEmail(entry.email);
+    if (!email) continue;
+    const accountIds = (entry.account_ids ?? [])
+      .map((value) => normalizeAcctId(value))
+      .filter((acctId) => validAccountIds.has(acctId));
+    if (!accountIds.length) continue;
+    usersToAccounts.push({
+      email,
+      account_ids: [...new Set(accountIds)].sort(),
+      user_profiles: entry.user_profiles ?? [],
+    });
+  }
+
+  for (const acctId of validAccountIds) {
+    const existingAccount = readJson(path.join(currentDir, "accounts", `${safeFileName(acctId)}.json`));
+    const existingUsers = existingAccount?.authorized_users ?? [];
+    if (existingUsers.length) {
+      accountToUsersMap.set(
+        acctId,
+        existingUsers.map((user) => ({
+          email: normalizeEmail(user.email),
+          name: toText(user.name),
+          organization: toText(user.organization),
+          marketing_status: toText(user.marketing_status),
+          role_type: toText(user.role_type),
+          division: "",
+          targeted_programs: "",
+          all_account_numbers: "",
+          organization_acct_id: acctId,
+          organization_numeric_id: "",
+        }))
+      );
+    }
+  }
+
+  return {
+    usersToAccounts,
+    accountToUsersMap,
+    userRowsCount: 0,
+    userRowsWithAccount: 0,
+    invalidUserLinksCount: 0,
+    uniqueUserEmails: usersToAccounts.length,
+    skippedUserSummaryRows: 0,
+    reusedExistingSnapshotUsers: true,
   };
 }
 
@@ -852,11 +1124,37 @@ function writeJson(filePath, data) {
   writeFileSync(filePath, `${JSON.stringify(data, null, 2)}\n`);
 }
 
+function readJson(filePath) {
+  if (!existsSync(filePath)) return undefined;
+  try {
+    return JSON.parse(readFileSync(filePath, "utf8"));
+  } catch {
+    return undefined;
+  }
+}
+
 function resolveInputPath(explicitPath, candidates, label) {
   if (explicitPath) return path.isAbsolute(explicitPath) ? explicitPath : path.join(root, explicitPath);
   const found = candidates.find((candidate) => existsSync(candidate));
   if (!found) throw new Error(`No default ${label} input found. Checked: ${candidates.map((c) => path.relative(root, c)).join(", ")}`);
   return found;
+}
+
+function resolveInputPaths(explicitPaths, candidates) {
+  const values = explicitPaths.length > 0 ? explicitPaths : candidates;
+  return [...new Set(values
+    .filter(Boolean)
+    .map((candidate) => (path.isAbsolute(candidate) ? candidate : path.join(root, candidate)))
+    .filter((candidate) => existsSync(candidate)))];
+}
+
+function discoveredFieldsForSource(sourceFile, rows) {
+  const fieldNames = [...new Set(rows.flatMap((row) => Object.keys(row).filter((key) => key && !key.startsWith("__"))))].sort();
+  return {
+    source_file: path.relative(root, sourceFile),
+    row_count: rows.length,
+    fields: fieldNames,
+  };
 }
 
 function copyDir(source, destination) {
@@ -869,17 +1167,28 @@ async function main() {
   const args = parseArgs();
   const accountInputPath = resolveInputPath(args.accountInput, defaultAccountInputCandidates, "account");
   const userInputPath = resolveInputPath(args.userInput, defaultUserInputCandidates, "user");
-  const accountRows = await readRows(accountInputPath, args.accountSheet, ACCOUNT_HEADER_ALIASES);
+  const supplementalAccountInputPaths = resolveInputPaths(args.supplementalInputs, defaultSupplementalAccountInputCandidates)
+    .filter((sourceFile) => sourceFile !== accountInputPath);
+  const accountSourcePaths = [accountInputPath, ...supplementalAccountInputPaths];
+  const accountSourceRows = [];
+  const dataDictionary = [];
+  for (const sourceFile of accountSourcePaths) {
+    const rows = await readRows(sourceFile, args.accountSheet, ACCOUNT_HEADER_ALIASES);
+    dataDictionary.push(discoveredFieldsForSource(sourceFile, rows));
+    accountSourceRows.push(...rows.map((row) => ({ row, sourceFile })));
+  }
+  const accountRows = accountSourceRows.map((entry) => entry.row);
   const userRows = await readRows(userInputPath, args.userSheet, USER_HEADER_ALIASES);
 
   const accountValidation = validateAccountRows(accountRows, args.allowDuplicateAcctId, args.ignoreEmptySummaryRows);
-  const normalizedAccountRows = args.allowDuplicateAcctId
-    ? mergeDuplicateRows(accountValidation.cleanedRows)
-    : accountValidation.cleanedRows;
+  const validRowsByReference = new Set(accountValidation.cleanedRows);
+  const normalizedAccountRows = mergeUnifiedAccountRows(accountSourceRows.filter((entry) => validRowsByReference.has(entry.row)));
 
   const classifiedAccounts = normalizedAccountRows.map(classifyAccount);
   const accountIds = new Set(classifiedAccounts.map((account) => account.account_id));
-  const userAccess = buildUserAccess(userRows, accountIds, args.allowInvalidUserAccountLinks);
+  const userAccess = hasUserColumns(userRows)
+    ? buildUserAccess(userRows, accountIds, args.allowInvalidUserAccountLinks)
+    : buildUserAccessFromExistingSnapshot(accountIds);
 
   const releaseId = new Date().toISOString().replace(/[:.]/g, "-");
   const releaseDir = path.join(releasesDir, releaseId);
@@ -933,6 +1242,7 @@ async function main() {
   const manifest = {
     snapshot_id: releaseId,
     source_account_file: path.relative(root, accountInputPath),
+    source_account_files: accountSourcePaths.map((sourceFile) => path.relative(root, sourceFile)),
     source_user_file: path.relative(root, userInputPath),
     generated_at: new Date().toISOString(),
     row_count_input_accounts: accountValidation.rowCount,
@@ -952,6 +1262,14 @@ async function main() {
     skipped_summary_rows: accountValidation.skippedSummaryRows,
     skipped_user_summary_rows: userAccess.skippedUserSummaryRows,
     refresh_dates_detected: accountValidation.refreshDates,
+    data_dictionary: dataDictionary,
+    field_precedence_documentation: [
+      "Acct ID is the master key for all account intelligence records.",
+      "When duplicate fields are present, non-empty values from the most specific current customer intelligence feeds take precedence in this order: acct_data_3.xlsx, acct_data_2.xlsx, acct_data_1.xlsx, acct_data.xlsx.",
+      "Revenue fields are preserved only at account level: PPM Sales, PM Sales, and CM Sales.",
+      "Product, material, specialty, program, reward, quality, and turnaround reporting uses counts, percentages, statuses, or timing fields only.",
+    ],
+    reused_existing_user_access: Boolean(userAccess.reusedExistingSnapshotUsers),
     required_account_columns: REQUIRED_ACCOUNT_COLUMNS,
     required_user_columns: REQUIRED_USER_COLUMNS,
     acct_id_pattern: ACCT_ID_PATTERN.source,

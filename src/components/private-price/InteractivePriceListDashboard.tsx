@@ -91,6 +91,14 @@ function exactPriceLabel(row: PriceListPricingRow | undefined, mode: PriceMode) 
   return currency(priceFor(row, mode));
 }
 
+function addOnPriceToNumber(value: number | string) {
+  if (typeof value === "number") return Number.isFinite(value) ? value : 0;
+  const normalized = String(value || "").trim().toLowerCase();
+  if (!normalized || normalized.includes("included")) return 0;
+  const parsed = Number(normalized.replace(/[^0-9.-]/g, ""));
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
 const titleByCode: Record<string, string> = {
   P6: "Artisan Equity Partner Pricing",
   G6: "Artisan General Pricing",
@@ -1109,6 +1117,9 @@ export default function InteractivePriceListDashboard({
       </section>
 
       <ArCoatingsSection coatings={priceList.arCoatings} listCode={priceList.code} />
+      {priceList.code === "M5" || priceList.code === "Y5" ? (
+        <ModernFramePricingCalculator priceList={priceList} priceMode={priceMode} />
+      ) : null}
       <AddOnSections sections={priceList.addOnSections} />
       {priceList.code === "M5" ? <ModernFramePackageSection /> : null}
       {priceList.code === "Y5" ? <SafetyPackageTierSection /> : null}
@@ -1542,6 +1553,89 @@ function OptionFamilyPanel({
             </div>
           ))
         )}
+      </div>
+    </section>
+  );
+}
+
+function ModernFramePricingCalculator({
+  priceList,
+  priceMode,
+}: {
+  priceList: GeneratedPriceListData;
+  priceMode: PriceMode;
+}) {
+  const tierSection = priceList.addOnSections.find((section) =>
+    /frame tier|safety vendor tier/i.test(section.title)
+  );
+  const tierOptions = (tierSection?.items ?? []).filter((item) =>
+    !item.href && !/side shields/i.test(item.name)
+  );
+  const packageOptions = useMemo(
+    () =>
+      [...priceList.rows]
+        .filter((row) => priceFor(row, priceMode) > 0)
+        .sort((a, b) => priceFor(a, priceMode) - priceFor(b, priceMode))
+        .slice(0, 60),
+    [priceList.rows, priceMode]
+  );
+  const [selectedPackageId, setSelectedPackageId] = useState(packageOptions[0]?.id ?? "");
+  const [selectedTierName, setSelectedTierName] = useState(tierOptions[0]?.name ?? "");
+  const selectedPackage = packageOptions.find((row) => row.id === selectedPackageId) ?? packageOptions[0];
+  const selectedTier = tierOptions.find((item) => item.name === selectedTierName) ?? tierOptions[0];
+  const packagePrice = selectedPackage ? priceFor(selectedPackage, priceMode) : 0;
+  const tierPrice = selectedTier ? addOnPriceToNumber(selectedTier.price) : 0;
+  const total = packagePrice + tierPrice;
+
+  if (!packageOptions.length || !tierOptions.length) return null;
+
+  return (
+    <section className="rounded-[2px] border border-[#dfd2bf] bg-white/88 p-5 shadow-[0_16px_45px_rgba(18,32,51,0.08)]">
+      <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#8a7654]">
+        Frame Pricing Calculator
+      </p>
+      <h2 className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-[#122033]">
+        {priceList.code === "Y5" ? "Safety frame package estimate" : "Modern frame system estimate"}
+      </h2>
+      <p className="mt-2 max-w-3xl text-sm leading-6 text-[#5f6875]">
+        Select a frame/package price and frame tier. The calculator uses generated {priceList.code} pricing and the current tier guide.
+      </p>
+      <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_0.72fr_0.72fr]">
+        <label className="grid gap-2 text-sm font-semibold text-[#122033]">
+          Select Frame / Package
+          <select
+            value={selectedPackage?.id ?? ""}
+            onChange={(event) => setSelectedPackageId(event.target.value)}
+            className="min-h-11 rounded-[2px] border border-[#dfd2bf] bg-[#fff8ef] px-3 text-sm font-medium text-[#122033]"
+          >
+            {packageOptions.map((row) => (
+              <option key={row.id} value={row.id}>
+                {row.designStyle} · {row.material} · {row.materialColor} · {exactPriceLabel(row, priceMode)}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="grid gap-2 text-sm font-semibold text-[#122033]">
+          Select Tier
+          <select
+            value={selectedTier?.name ?? ""}
+            onChange={(event) => setSelectedTierName(event.target.value)}
+            className="min-h-11 rounded-[2px] border border-[#dfd2bf] bg-[#fff8ef] px-3 text-sm font-medium text-[#122033]"
+          >
+            {tierOptions.map((tier) => (
+              <option key={tier.name} value={tier.name}>
+                {tier.name} · {typeof tier.price === "number" ? currency(tier.price) : tier.price}
+              </option>
+            ))}
+          </select>
+        </label>
+        <div className="rounded-[2px] border border-[#d8c49b] bg-[#fff8ef] p-4">
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#8a7654]">Estimated Selling Price</p>
+          <p className="mt-2 text-sm text-[#5f6875]">
+            {currency(packagePrice)} + {currency(tierPrice)}
+          </p>
+          <p className="mt-1 text-3xl font-semibold tracking-[-0.04em] text-[#122033]">{currency(total)}</p>
+        </div>
       </div>
     </section>
   );

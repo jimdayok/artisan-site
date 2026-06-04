@@ -295,19 +295,26 @@ export function MonthlyUsageCharts({
   title,
   eyebrow,
   data,
+  valueType = "count",
 }: {
   title: string;
   eyebrow: string;
   data: MonthlyUsagePoint[];
+  valueType?: "count" | "percent";
 }) {
+  const formatter =
+    valueType === "percent"
+      ? (value: number) => `${numberFormatter.format(Number(value))}%`
+      : (value: number) => numberFormatter.format(Number(value));
+
   return (
     <Panel eyebrow={eyebrow} title={title}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
           <CartesianGrid stroke="#eadfce" vertical={false} />
           <XAxis dataKey="label" tick={{ fill: "#746b5f", fontSize: 11 }} tickLine={false} axisLine={false} interval={0} />
-          <YAxis tick={{ fill: "#746b5f", fontSize: 12 }} tickLine={false} axisLine={false} />
-          <Tooltip formatter={(value) => numberFormatter.format(Number(value))} contentStyle={tooltipStyle()} />
+          <YAxis tick={{ fill: "#746b5f", fontSize: 12 }} tickLine={false} axisLine={false} tickFormatter={(value) => formatter(Number(value))} />
+          <Tooltip formatter={(value) => formatter(Number(value))} contentStyle={tooltipStyle()} />
           <Bar dataKey="prior" name="Prior Previous" fill="#d8c49b" radius={[4, 4, 0, 0]} />
           <Bar dataKey="previous" name="Previous" fill="#2f5f9c" radius={[4, 4, 0, 0]} />
           <Bar dataKey="current" name="Current" fill="#1f8a70" radius={[4, 4, 0, 0]} />

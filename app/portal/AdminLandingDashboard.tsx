@@ -11,6 +11,7 @@ import {
   Package,
   Search,
   ShieldAlert,
+  Target,
   Users,
 } from "lucide-react";
 import { AdminShell, adminButtonClass } from "@/app/portal/admin/AdminShell";
@@ -113,31 +114,43 @@ function hasProgramOpportunity(row: DashboardV1AdminRow) {
 }
 
 function isHighValueDecliner(row: DashboardV1AdminRow) {
-  return row.pmSales >= 5000 && row.cmSales < row.pmSales;
+  return row.ppmSales >= 5000 && row.pmSales < row.ppmSales;
 }
 
 function isNoCurrentActivity(row: DashboardV1AdminRow) {
   return row.pmJobs > 0 && row.cmJobs === 0;
 }
 
+function daysSinceShip(row: DashboardV1AdminRow) {
+  if (!row.latestShipDate) return null;
+  const shipped = new Date(`${row.latestShipDate}T00:00:00`);
+  if (Number.isNaN(shipped.getTime())) return null;
+  return Math.max(0, Math.floor((Date.now() - shipped.getTime()) / 86_400_000));
+}
+
+function noOrdersForAtLeast(row: DashboardV1AdminRow, days: number) {
+  const elapsed = daysSinceShip(row);
+  return elapsed !== null && elapsed >= days;
+}
+
 function jpdDown(row: DashboardV1AdminRow) {
-  return row.cmJpd !== null && row.pmJpd !== null && row.cmJpd < row.pmJpd;
+  return row.pmJpd !== null && row.ppmJpd !== null && row.pmJpd < row.ppmJpd;
 }
 
 function salesDown(row: DashboardV1AdminRow) {
-  return row.cmSales < row.pmSales;
+  return row.pmSales < row.ppmSales;
 }
 
 function jobsDown(row: DashboardV1AdminRow) {
-  return row.cmJobs < row.pmJobs;
+  return row.pmJobs < row.ppmJobs;
 }
 
 function qualityUp(row: DashboardV1AdminRow, key: keyof DashboardV1AdminRow["quality"]) {
-  return row.quality[key].cm > row.quality[key].pm;
+  return row.quality[key].pm > row.quality[key].ppm;
 }
 
-function monthlyDecline(value?: { pm: number; cm: number }) {
-  return Number(value?.pm ?? 0) > 0 && Number(value?.cm ?? 0) < Number(value?.pm ?? 0);
+function monthlyDecline(value?: { ppm?: number; pm?: number; cm?: number }) {
+  return Number(value?.ppm ?? 0) > 0 && Number(value?.pm ?? 0) < Number(value?.ppm ?? 0);
 }
 
 function neurolensDown(row: DashboardV1AdminRow) {
@@ -149,7 +162,34 @@ function sequelDown(row: DashboardV1AdminRow) {
 }
 
 function turnaroundDeteriorated(row: DashboardV1AdminRow) {
-  return row.turnaroundAverageDays.pm > 0 && row.turnaroundAverageDays.cm > row.turnaroundAverageDays.pm;
+  const customerPm = row.turnaroundAverageDays.pm;
+  const labPm = row.labTurnaroundAverageDays.pm;
+  return customerPm > 0 && labPm > 0 && customerPm > labPm + 1;
+}
+
+function preferredDesignJobs(row: DashboardV1AdminRow) {
+  return [
+    row.brandUsage.hoya_jobs,
+    row.brandUsage.shamir_jobs,
+    row.brandUsage.tokai_jobs,
+    row.brandUsage.varilux_jobs,
+    row.brandUsage.neurolens_jobs,
+    row.brandUsage.sequel_jobs,
+    row.brandUsage.iot_artisan_jobs,
+  ].reduce((total, value) => total + Number(value?.pm ?? 0), 0);
+}
+
+function preferredMaterialJobs(row: DashboardV1AdminRow) {
+  return [
+    row.materialUsage.hi_index_160_jobs,
+    row.materialUsage.hi_index_167_jobs,
+    row.materialUsage.hi_index_174_jobs,
+    row.materialUsage.trivex_jobs,
+  ].reduce((total, value) => total + Number(value?.pm ?? 0), 0);
+}
+
+function programProductCount(row: DashboardV1AdminRow) {
+  return Object.values(row.programs).filter(Boolean).length;
 }
 
 function customerOpportunityReason(row: DashboardV1AdminRow) {
@@ -233,8 +273,8 @@ function ActionButtons({ row }: { row: DashboardV1AdminRow }) {
 }
 
 function AccountCard({ row }: { row: DashboardV1AdminRow }) {
-  const salesChange = percentChange(row.cmSalesPerDay ?? 0, row.pmSalesPerDay ?? 0);
-  const jobsChange = percentChange(row.cmJpd ?? 0, row.pmJpd ?? 0);
+  const salesChange = percentChange(row.pmSalesPerDay ?? 0, row.ppmSalesPerDay ?? 0);
+  const jobsChange = percentChange(row.pmJpd ?? 0, row.ppmJpd ?? 0);
 
   return (
     <article className="rounded-md border border-[#d8c49b] bg-[#fffaf1]/88 p-5 shadow-[0_16px_44px_rgba(23,42,40,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_22px_55px_rgba(23,42,40,0.12)]">
@@ -254,14 +294,14 @@ function AccountCard({ row }: { row: DashboardV1AdminRow }) {
       </div>
       <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8b7650]">CM Sales / Day</p>
-          <p className="mt-1 text-lg font-semibold text-[#172a28]">{moneyOrUnavailable(row.cmSalesPerDay)}</p>
-          <p className="text-xs text-[#706759]">PM {moneyOrUnavailable(row.pmSalesPerDay)}</p>
+          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8b7650]">PM Sales / Day</p>
+          <p className="mt-1 text-lg font-semibold text-[#172a28]">{moneyOrUnavailable(row.pmSalesPerDay)}</p>
+          <p className="text-xs text-[#706759]">PPM {moneyOrUnavailable(row.ppmSalesPerDay)} · CM pace {moneyOrUnavailable(row.cmSalesPerDay)}</p>
         </div>
         <div>
-          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8b7650]">CM Jobs / Day</p>
-          <p className="mt-1 text-lg font-semibold text-[#172a28]">{row.cmJpd === null ? "Unavailable" : `${row.cmJpd.toFixed(1)}/day`}</p>
-          <p className="text-xs text-[#706759]">PM {row.pmJpd === null ? "Unavailable" : `${row.pmJpd.toFixed(1)}/day`}</p>
+          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8b7650]">PM Jobs / Day</p>
+          <p className="mt-1 text-lg font-semibold text-[#172a28]">{row.pmJpd === null ? "Unavailable" : `${row.pmJpd.toFixed(1)}/day`}</p>
+          <p className="text-xs text-[#706759]">PPM {row.ppmJpd === null ? "Unavailable" : `${row.ppmJpd.toFixed(1)}/day`} · CM pace {row.cmJpd === null ? "Unavailable" : `${row.cmJpd.toFixed(1)}/day`}</p>
         </div>
         <div>
           <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8b7650]">Last Ship</p>
@@ -415,7 +455,12 @@ export default function AdminLandingDashboard({
     if (trendFilter === "sequel-down" && !sequelDown(row)) return false;
     if (trendFilter === "turnaround-up" && !turnaroundDeteriorated(row)) return false;
     if (trendFilter === "no-activity" && !isNoCurrentActivity(row)) return false;
+    if (trendFilter === "no-orders-60" && !noOrdersForAtLeast(row, 60)) return false;
+    if (trendFilter === "no-orders-90" && !noOrdersForAtLeast(row, 90)) return false;
     if (opportunityFilter === "program" && !hasProgramOpportunity(row)) return false;
+    if (opportunityFilter === "preferred-designs" && preferredDesignJobs(row) > 0) return false;
+    if (opportunityFilter === "preferred-materials" && preferredMaterialJobs(row) > 0) return false;
+    if (opportunityFilter === "program-products" && programProductCount(row) > 0) return false;
     if (opportunityFilter === "high-value-decliner" && !isHighValueDecliner(row)) return false;
     if (opportunityFilter === "missing-price-lists" && row.priceListCodes.length > 0) return false;
     if (!normalizedQuery) return true;
@@ -445,84 +490,135 @@ export default function AdminLandingDashboard({
   const sequelDownRows = rows.filter(sequelDown);
   const turnaroundDeterioratedRows = rows.filter(turnaroundDeteriorated);
   const noActivityRows = rows.filter(isNoCurrentActivity);
+  const noOrders30Rows = rows.filter((row) => noOrdersForAtLeast(row, 30));
+  const noOrders60Rows = rows.filter((row) => noOrdersForAtLeast(row, 60));
+  const noOrders90Rows = rows.filter((row) => noOrdersForAtLeast(row, 90));
+  const notUsingPreferredDesignRows = rows.filter((row) => row.pmJobs > 0 && preferredDesignJobs(row) === 0);
+  const notUsingPreferredMaterialRows = rows.filter((row) => row.pmJobs > 0 && preferredMaterialJobs(row) === 0);
+  const notUsingProgramProductRows = rows.filter((row) => row.pmJobs > 0 && programProductCount(row) === 0);
   const noUserRows = rows.filter((row) => row.authorizedUsers === 0);
   const missingPriceListRows = rows.filter((row) => row.priceListCodes.length === 0);
-  const highValueDecliners = rows.filter(isHighValueDecliner).sort((a, b) => (b.pmSales - b.cmSales) - (a.pmSales - a.cmSales));
-  const topGrowthAccounts = [...rows].sort((a, b) => percentChange(b.cmSales, b.pmSales).value - percentChange(a.cmSales, a.pmSales).value).slice(0, 5);
-  const topDecliningAccounts = [...salesDownRows].sort((a, b) => percentChange(a.cmSales, a.pmSales).value - percentChange(b.cmSales, b.pmSales).value).slice(0, 5);
+  const highValueDecliners = rows.filter(isHighValueDecliner).sort((a, b) => (b.ppmSales - b.pmSales) - (a.ppmSales - a.pmSales));
+  const topGrowthAccounts = [...rows].sort((a, b) => percentChange(b.pmSales, b.ppmSales).value - percentChange(a.pmSales, a.ppmSales).value).slice(0, 5);
+  const topDecliningAccounts = [...salesDownRows].sort((a, b) => percentChange(a.pmSales, a.ppmSales).value - percentChange(b.pmSales, b.ppmSales).value).slice(0, 5);
 
   const queues: Array<QueueItem & { id: string }> = [
     {
       id: "down-accounts",
-      title: "Customers with sales down month over month",
-      rows: salesDownRows.sort((a, b) => (b.pmSales - b.cmSales) - (a.pmSales - a.cmSales)),
-      currentLabel: (row) => money(row.cmSales),
-      priorLabel: (row) => money(row.pmSales),
-      reason: (row) => `Current-month sales are ${percentChange(row.cmSales, row.pmSales).label} versus previous month.`,
-      action: () => "Open account analysis, review order mix, and contact the customer if the decline is meaningful.",
+      title: "Customers with PM sales down vs PPM",
+      rows: salesDownRows.sort((a, b) => (b.ppmSales - b.pmSales) - (a.ppmSales - a.pmSales)),
+      currentLabel: (row) => money(row.pmSales),
+      priorLabel: (row) => money(row.ppmSales),
+      reason: (row) => `Previous-month sales are ${percentChange(row.pmSales, row.ppmSales).label} versus prior previous month. CM pace is ${money(row.cmSales)}.`,
+      action: () => "Open account analysis, review order mix, and contact the customer if the PM decline is meaningful.",
     },
     {
       id: "jobs-down",
-      title: "Customers with jobs down month over month",
-      rows: jobsDownRows.sort((a, b) => (b.pmJobs - b.cmJobs) - (a.pmJobs - a.cmJobs)),
-      currentLabel: (row) => formatCount(row.cmJobs),
-      priorLabel: (row) => formatCount(row.pmJobs),
-      reason: (row) => `Current-month jobs are ${percentChange(row.cmJobs, row.pmJobs).label} versus previous month.`,
-      action: () => "Check whether the practice has changed ordering behavior, staffing, or competing lab usage.",
+      title: "Customers with PM jobs down vs PPM",
+      rows: jobsDownRows.sort((a, b) => (b.ppmJobs - b.pmJobs) - (a.ppmJobs - a.pmJobs)),
+      currentLabel: (row) => formatCount(row.pmJobs),
+      priorLabel: (row) => formatCount(row.ppmJobs),
+      reason: (row) => `Previous-month jobs are ${percentChange(row.pmJobs, row.ppmJobs).label} versus prior previous month.`,
+      action: () => "Use JPD queue first, then check ordering behavior, staffing, or competing lab usage.",
     },
     {
       id: "jpd-down",
-      title: "Customers with JPD down month over month",
-      rows: jpdDownRows,
-      currentLabel: (row) => row.cmJpd?.toFixed(1) ?? "Unavailable",
-      priorLabel: (row) => row.pmJpd?.toFixed(1) ?? "Unavailable",
-      reason: () => "Jobs-per-day is lower than the prior month using available JPD data.",
-      action: () => "Use JPD to confirm whether the issue is true velocity decline rather than calendar timing.",
+      title: "Largest PM JPD declines vs PPM",
+      rows: jpdDownRows.sort((a, b) => percentChange(a.pmJpd ?? 0, a.ppmJpd ?? 0).value - percentChange(b.pmJpd ?? 0, b.ppmJpd ?? 0).value),
+      currentLabel: (row) => row.pmJpd?.toFixed(1) ?? "Unavailable",
+      priorLabel: (row) => row.ppmJpd?.toFixed(1) ?? "Unavailable",
+      reason: (row) => `PM JPD is ${percentChange(row.pmJpd ?? 0, row.ppmJpd ?? 0).label} versus PPM JPD.`,
+      action: () => "Prioritize these accounts for staff retraining, marketing support, or multiple-pair promotion support.",
     },
     {
       id: "neurolens-down",
       title: "Customers with Neurolens decline",
       rows: neurolensDownRows,
-      currentLabel: (row) => formatCount(row.brandUsage.neurolens_jobs?.cm ?? 0),
-      priorLabel: (row) => formatCount(row.brandUsage.neurolens_jobs?.pm ?? 0),
-      reason: () => "Current-month Neurolens jobs are lower than previous month.",
+      currentLabel: (row) => formatCount(row.brandUsage.neurolens_jobs?.pm ?? 0),
+      priorLabel: (row) => formatCount(row.brandUsage.neurolens_jobs?.ppm ?? 0),
+      reason: () => "Previous-month Neurolens jobs are lower than prior previous month.",
       action: () => "Review whether Neurolens activity needs staff education, ordering support, or patient conversation tools.",
     },
     {
       id: "sequel-down",
       title: "Customers with Sequel decline",
       rows: sequelDownRows,
-      currentLabel: (row) => formatCount(row.brandUsage.sequel_jobs?.cm ?? 0),
-      priorLabel: (row) => formatCount(row.brandUsage.sequel_jobs?.pm ?? 0),
-      reason: () => "Current-month Sequel jobs are lower than previous month.",
+      currentLabel: (row) => formatCount(row.brandUsage.sequel_jobs?.pm ?? 0),
+      priorLabel: (row) => formatCount(row.brandUsage.sequel_jobs?.ppm ?? 0),
+      reason: () => "Previous-month Sequel jobs are lower than prior previous month.",
       action: () => "Check Sequel PAL ordering patterns and rewards-qualified activity before outreach.",
     },
     {
       id: "turnaround-up",
-      title: "Customers with turnaround deterioration",
+      title: "Customers worse than lab average turnaround",
       rows: turnaroundDeterioratedRows,
-      currentLabel: (row) => `${row.turnaroundAverageDays.cm.toFixed(1)} days`,
-      priorLabel: (row) => `${row.turnaroundAverageDays.pm.toFixed(1)} days`,
-      reason: () => "Current average turnaround time is higher than previous month.",
+      currentLabel: (row) => `${row.turnaroundAverageDays.pm.toFixed(1)} days`,
+      priorLabel: (row) => `${row.labTurnaroundAverageDays.pm.toFixed(1)} days`,
+      reason: () => "Previous-month customer turnaround is more than 1 business day worse than the entire lab average.",
       action: () => "Review service timing and proactively communicate with accounts where delays may affect experience.",
     },
     {
       id: "no-activity",
-      title: "No current-month activity after prior-month activity",
-      rows: noActivityRows,
-      currentLabel: (row) => `${formatCount(row.cmJobs)} jobs`,
-      priorLabel: (row) => `${formatCount(row.pmJobs)} jobs`,
-      reason: () => "The customer had prior-month jobs but no current-month jobs in the snapshot.",
+      title: "No orders 30+ days",
+      rows: noOrders30Rows.sort((a, b) => (daysSinceShip(b) ?? 0) - (daysSinceShip(a) ?? 0)),
+      currentLabel: (row) => `${daysSinceShip(row) ?? "—"} days`,
+      priorLabel: (row) => formatDate(row.latestShipDate),
+      reason: () => "No shipped orders have been recorded for at least 30 days.",
       action: () => "Contact the account quickly to confirm whether ordering has paused or moved elsewhere.",
+    },
+    {
+      id: "no-orders-60",
+      title: "No orders 60+ days",
+      rows: noOrders60Rows.sort((a, b) => (daysSinceShip(b) ?? 0) - (daysSinceShip(a) ?? 0)),
+      currentLabel: (row) => `${daysSinceShip(row) ?? "—"} days`,
+      priorLabel: (row) => formatDate(row.latestShipDate),
+      reason: () => "No shipped orders have been recorded for at least 60 days.",
+      action: () => "Prioritize outreach and verify whether the account is inactive, paused, or ordering elsewhere.",
+    },
+    {
+      id: "no-orders-90",
+      title: "No orders 90+ days",
+      rows: noOrders90Rows.sort((a, b) => (daysSinceShip(b) ?? 0) - (daysSinceShip(a) ?? 0)),
+      currentLabel: (row) => `${daysSinceShip(row) ?? "—"} days`,
+      priorLabel: (row) => formatDate(row.latestShipDate),
+      reason: () => "No shipped orders have been recorded for at least 90 days.",
+      action: () => "Treat as a reactivation account and confirm status before routine growth outreach.",
     },
     {
       id: "quality",
       title: "Customers with remake, redo, or warranty increases",
       rows: rows.filter((row) => qualityUp(row, "labRedoPct") || qualityUp(row, "officeRedoPct") || qualityUp(row, "warrantyPct") || qualityUp(row, "nonAdaptPct")),
-      currentLabel: (row) => `Warranty ${row.quality.warrantyPct.cm.toFixed(1)}% · Office ${row.quality.officeRedoPct.cm.toFixed(1)}%`,
-      priorLabel: (row) => `Warranty ${row.quality.warrantyPct.pm.toFixed(1)}% · Office ${row.quality.officeRedoPct.pm.toFixed(1)}%`,
-      reason: () => "One or more quality/service rates increased versus previous month.",
+      currentLabel: (row) => `PM Warranty ${row.quality.warrantyPct.pm.toFixed(1)}% · Office ${row.quality.officeRedoPct.pm.toFixed(1)}%`,
+      priorLabel: (row) => `PPM Warranty ${row.quality.warrantyPct.ppm.toFixed(1)}% · Office ${row.quality.officeRedoPct.ppm.toFixed(1)}%`,
+      reason: () => "One or more remake/service rates increased in PM versus PPM.",
       action: () => "Review remake patterns and schedule proactive lab support where needed.",
+    },
+    {
+      id: "preferred-designs",
+      title: "Not using preferred designs",
+      rows: notUsingPreferredDesignRows.sort((a, b) => b.pmJobs - a.pmJobs),
+      currentLabel: (row) => `${formatCount(preferredDesignJobs(row))} PM preferred design jobs`,
+      priorLabel: (row) => `${formatCount(row.pmJobs)} PM total jobs`,
+      reason: () => "No PM usage was found for preferred design families in the current account intelligence fields.",
+      action: () => "Review design recommendations and identify one preferred-design adoption path.",
+    },
+    {
+      id: "preferred-materials",
+      title: "Not using preferred materials",
+      rows: notUsingPreferredMaterialRows.sort((a, b) => b.pmJobs - a.pmJobs),
+      currentLabel: (row) => `${formatCount(preferredMaterialJobs(row))} PM preferred material jobs`,
+      priorLabel: (row) => `${formatCount(row.pmJobs)} PM total jobs`,
+      reason: () => "No PM usage was found for Trivex or high-index material fields.",
+      action: () => "Review material recommendation opportunities based on patient Rx and lifestyle needs.",
+    },
+    {
+      id: "program-products",
+      title: "Not using program products",
+      rows: notUsingProgramProductRows.sort((a, b) => b.pmJobs - a.pmJobs),
+      currentLabel: (row) => `${formatCount(programProductCount(row))} active programs`,
+      priorLabel: (row) => `${formatCount(row.pmJobs)} PM jobs`,
+      reason: () => "No Modern Package, Modern Frame, ChemClip, SpecCheck, or Tokai usage flags are active.",
+      action: () => "Pick one program with a clear use case; do not send generic program advertising.",
     },
     {
       id: "opportunities",
@@ -563,38 +659,44 @@ export default function AdminLandingDashboard({
       <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <StatCard icon={Users} label="Total Accounts" value={formatCount(rows.length)} />
         <StatCard icon={BadgeCheck} label="Active This Month" value={formatCount(activeAccounts.length)} />
-        <StatCard icon={CircleDollarSign} label="Current Month Sales" value={money(totalCmSales)} />
-        <StatCard icon={Package} label="Current Month Jobs" value={formatCount(totalCmJobs)} />
+        <StatCard icon={CircleDollarSign} label="CM Sales Pace" value={money(totalCmSales)} />
+        <StatCard icon={Package} label="CM Jobs Pace" value={formatCount(totalCmJobs)} />
         <StatCard icon={ShieldAlert} label="No Portal Users" value={formatCount(noUserRows.length)} />
-        <StatCard icon={ArrowDownRight} label="Sales Down" value={formatCount(salesDownRows.length)} />
-        <StatCard icon={ArrowDownRight} label="Jobs Down" value={formatCount(jobsDownRows.length)} />
-        <StatCard icon={Activity} label="JPD Down" value={formatCount(jpdDownRows.length)} detail="Shown only when JPD data exists." />
+        <StatCard icon={ArrowDownRight} label="PM Sales Down" value={formatCount(salesDownRows.length)} />
+        <StatCard icon={ArrowDownRight} label="PM Jobs Down" value={formatCount(jobsDownRows.length)} />
+        <StatCard icon={Activity} label="PM JPD Down" value={formatCount(jpdDownRows.length)} detail="PM JPD vs PPM JPD." />
         <StatCard icon={ArrowDownRight} label="Neurolens Down" value={formatCount(neurolensDownRows.length)} />
         <StatCard icon={ArrowDownRight} label="Sequel Down" value={formatCount(sequelDownRows.length)} />
         <StatCard icon={Activity} label="Turnaround Up" value={formatCount(turnaroundDeterioratedRows.length)} />
         <StatCard icon={AlertTriangle} label="No Current Activity" value={formatCount(noActivityRows.length)} />
+        <StatCard icon={AlertTriangle} label="No Orders 30+ Days" value={formatCount(noOrders30Rows.length)} />
+        <StatCard icon={AlertTriangle} label="No Orders 60+ Days" value={formatCount(noOrders60Rows.length)} />
+        <StatCard icon={AlertTriangle} label="No Orders 90+ Days" value={formatCount(noOrders90Rows.length)} />
+        <StatCard icon={Target} label="No Preferred Designs" value={formatCount(notUsingPreferredDesignRows.length)} />
+        <StatCard icon={Target} label="No Preferred Materials" value={formatCount(notUsingPreferredMaterialRows.length)} />
+        <StatCard icon={Target} label="No Program Products" value={formatCount(notUsingProgramProductRows.length)} />
         <StatCard icon={ClipboardCopy} label="Missing Price Lists" value={formatCount(missingPriceListRows.length)} />
       </section>
 
       <section className="mt-8 grid gap-5 xl:grid-cols-2">
         <div className="rounded-md border border-[#d8c49b] bg-[#fffaf1]/88 p-5 shadow-[0_18px_55px_rgba(23,42,40,0.08)]">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b7650]">Top Growth Accounts</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b7650]">Top PM Growth Accounts</p>
           <div className="mt-4 grid gap-3">
             {topGrowthAccounts.map((row) => (
               <Link key={`growth-${row.acctId}`} href={accountHref(row)} className="flex items-center justify-between gap-3 rounded-md border border-[#eadfce] bg-white/75 p-3 transition hover:bg-white">
                 <span className="font-semibold text-[#172a28]">{row.businessName}</span>
-                <TrendBadge change={percentChange(row.cmSales, row.pmSales)} />
+                <TrendBadge change={percentChange(row.pmSales, row.ppmSales)} />
               </Link>
             ))}
           </div>
         </div>
         <div className="rounded-md border border-[#d8c49b] bg-[#fffaf1]/88 p-5 shadow-[0_18px_55px_rgba(23,42,40,0.08)]">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b7650]">Top Declining Accounts</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b7650]">Top PM Declining Accounts</p>
           <div className="mt-4 grid gap-3">
             {topDecliningAccounts.map((row) => (
               <Link key={`decline-${row.acctId}`} href={accountHref(row)} className="flex items-center justify-between gap-3 rounded-md border border-[#eadfce] bg-white/75 p-3 transition hover:bg-white">
                 <span className="font-semibold text-[#172a28]">{row.businessName}</span>
-                <TrendBadge change={percentChange(row.cmSales, row.pmSales)} />
+                <TrendBadge change={percentChange(row.pmSales, row.ppmSales)} />
               </Link>
             ))}
           </div>
@@ -644,10 +746,15 @@ export default function AdminLandingDashboard({
             <option value="sequel-down">Sequel Down</option>
             <option value="turnaround-up">Turnaround Up</option>
             <option value="no-activity">No Activity</option>
+            <option value="no-orders-60">No Orders 60+</option>
+            <option value="no-orders-90">No Orders 90+</option>
           </select>
           <select name="opportunity" defaultValue={opportunityFilter} className="min-h-12 w-full rounded-md border border-[#d8c49b] bg-[#fffaf1] px-3 text-sm text-[#172a28] outline-none transition focus:border-[#172a28] sm:w-48">
             <option value="">All Opportunities</option>
             <option value="program">Program Gaps</option>
+            <option value="preferred-designs">Preferred Design Gaps</option>
+            <option value="preferred-materials">Preferred Material Gaps</option>
+            <option value="program-products">Program Product Gaps</option>
             <option value="high-value-decliner">High-Value Decliner</option>
             <option value="missing-price-lists">Missing Price Lists</option>
           </select>
@@ -673,7 +780,7 @@ export default function AdminLandingDashboard({
         <div className="mt-5 grid gap-4 md:grid-cols-2">
           <StatCard icon={ShieldAlert} label="Accounts with no authorized users" value={formatCount(noUserRows.length)} />
           <StatCard icon={ClipboardCopy} label="Assigned sheets but no users" value={formatCount(rows.filter((row) => row.priceListCodes.length > 0 && row.authorizedUsers === 0).length)} />
-          <StatCard icon={ArrowDownRight} label="High-value decliners" value={formatCount(highValueDecliners.length)} detail="PM sales at or above $5,000 with current-month sales decline." />
+          <StatCard icon={ArrowDownRight} label="High-value decliners" value={formatCount(highValueDecliners.length)} detail="PPM sales at or above $5,000 with previous-month sales decline." />
         </div>
       </section>
     </AdminShell>

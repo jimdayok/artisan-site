@@ -159,6 +159,7 @@ async function readLookupBrandAndName() {
     if (!dvi || !normalizedName) return;
     map.set(dvi, {
       name: normalizedName,
+      designType: String(row.getCell(4).value ?? "").trim(),
       brand,
     });
   });
@@ -210,12 +211,14 @@ function normalizeBrandAndStyle(row, lookupMap) {
       return {
         brand: found.brand || row.brand,
         designStyle: found.name || row.designStyle,
+        designType: found.designType || row.designType,
       };
     }
   }
   return {
     brand: row.brand,
     designStyle: row.designStyle,
+    designType: row.designType,
   };
 }
 
@@ -286,10 +289,16 @@ function normalizeRows(rows, lookupMap, priceListCode) {
     const normalizedDesignStyle = styleNormalization.matched
       ? styleNormalization.displayName
       : normalized.designStyle;
+    const lookupDesignTypeResolution = resolveLookupDesignType({
+      brand: normalizedBrand,
+      styleName: normalizedDesignStyle,
+      lookupDesignType: normalized.designType,
+      fallbackDesignType: String(row.designType || "").trim() || "Single Vision",
+    });
     const designTypeResolution = resolveESeriesDesignTypeRule(
       priceListCode,
       normalizedDesignStyle,
-      String(row.designType || "").trim() || "Single Vision"
+      lookupDesignTypeResolution.designType
     );
     const materialColor = lensMatClassification.category === "Polarized"
       ? "Polarized"
@@ -334,7 +343,7 @@ function normalizeRows(rows, lookupMap, priceListCode) {
         productStyle: normalizedDesignStyle,
         oldDesignType: String(row.designType || "").trim() || "Single Vision",
         correctedDesignType: designTypeResolution.designType,
-        sourceRuleUsed: designTypeResolution.sourceRule,
+        sourceRuleUsed: designTypeResolution.sourceRule === "Default FIN mapping" ? lookupDesignTypeResolution.sourceRule : designTypeResolution.sourceRule,
       });
     }
   }
@@ -416,6 +425,33 @@ function parseFinToDesignType(fin) {
   return "Progressive";
 }
 
+function resolveLookupDesignType({ brand, styleName, lookupDesignType, fallbackDesignType }) {
+  const explicit = String(lookupDesignType || "").trim();
+  if (explicit) {
+    return {
+      designType: explicit,
+      sourceRule: "Lookup.xlsx Type Revised",
+      changed: explicit !== fallbackDesignType,
+    };
+  }
+
+  const brandKey = normalizeKey(brand);
+  const styleKey = normalizeKey(styleName);
+  if (brandKey.includes("VARILUX") || styleKey.includes("VARILUX")) {
+    return {
+      designType: "Progressive",
+      sourceRule: "Varilux fallback => Progressive unless lookup overrides",
+      changed: fallbackDesignType !== "Progressive",
+    };
+  }
+
+  return {
+    designType: fallbackDesignType,
+    sourceRule: "Default FIN mapping",
+    changed: false,
+  };
+}
+
 function resolveESeriesDesignTypeRule(listCode, styleName, fallbackDesignType) {
   const code = String(listCode ?? "").trim().toUpperCase();
   if (!/^E\d/.test(code)) {
@@ -492,14 +528,20 @@ function dviRowsToGeneratedPayload(code, dviRows, lookupMap, arLookupMap) {
       .filter((coating) => coating.code && Number.isFinite(coating.price));
 
     const finDesignType = parseFinToDesignType(row?.sourceRefs?.styleRow?.Fin);
-    const designTypeResolution = resolveESeriesDesignTypeRule(code, normalizedStyle, finDesignType);
+    const lookupDesignTypeResolution = resolveLookupDesignType({
+      brand: normalizedBrand,
+      styleName: normalizedStyle,
+      lookupDesignType: styleLookup?.designType,
+      fallbackDesignType: finDesignType,
+    });
+    const designTypeResolution = resolveESeriesDesignTypeRule(code, normalizedStyle, lookupDesignTypeResolution.designType);
     if (designTypeResolution.changed) {
       designTypeCorrections.push({
         priceListCode: code,
         productStyle: normalizedStyle,
         oldDesignType: finDesignType,
         correctedDesignType: designTypeResolution.designType,
-        sourceRuleUsed: designTypeResolution.sourceRule,
+        sourceRuleUsed: designTypeResolution.sourceRule === "Default FIN mapping" ? lookupDesignTypeResolution.sourceRule : designTypeResolution.sourceRule,
       });
     }
 

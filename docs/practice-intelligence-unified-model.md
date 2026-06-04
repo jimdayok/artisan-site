@@ -20,7 +20,7 @@ Precedence is:
 2. `acct_data_2.xlsx`
 3. `acct_data_1.xlsx`
 
-Revenue stays account-level only: `PPM Sales`, `PM Sales`, and `CM Sales`. Product, brand, material, specialty, program, reward, quality, and turnaround sections use counts, percentages, statuses, or timing fields.
+Revenue stays account-level only: `PPM Sales`, `PM Sales`, and `CM Sales`. Brand reporting uses job counts. Material, photochromic, polarized, and multiple-pair reporting is displayed as a percentage of that month’s total jobs. Program, reward, quality, and turnaround sections use counts, percentages, statuses, or timing fields.
 
 ## Discovered Fields
 
@@ -43,10 +43,21 @@ Discovered field groups:
 - Brand Intelligence uses actual monthly brand job counts when present.
 - Material Intelligence uses actual monthly material job counts when present.
 - Specialty Product Usage uses actual photochromic, polarized, and multiple-pair counts when present.
+- Material, photochromic, polarized, and multiple-pair dashboard charts calculate each value as a share of total jobs for the same month.
 - Program Intelligence shows Modern Package, Modern Frame, ChemClip, SpecCheck, and Tokai status only from usage fields.
 - Quality & Service shows warranty, office redo, lab redo, and non-adapt percentages.
+- Remake Intelligence compares current-month warranty redo, office redo, lab redo, and non-adapt percentages against previous month.
 - Turnaround Performance uses real PPM/PM/CM average turnaround time.
 - Rewards Center is hidden unless an account is enrolled in a specific reward program.
+
+## Loyalty Tiers
+
+Loyalty tier progress uses current-month jobs, not revenue:
+
+- Tier 1: 0-20 jobs
+- Tier 2: 21-60 jobs
+- Tier 3: 61-100 jobs
+- Tier 4: above 100 jobs
 
 ## Rewards Visibility
 

@@ -97,12 +97,12 @@ function programStatus(value: boolean) {
 
 function flagsFor(row: DashboardV1AdminRow) {
   const flags: Array<{ title: string; why: string; action: string }> = [];
-  if (row.cmSales < row.pmSales) flags.push({ title: "Sales down month over month", why: `${money(row.cmSales)} current vs ${money(row.pmSales)} previous.`, action: "Review order mix and contact the customer with a specific support angle." });
-  if (row.cmJobs < row.pmJobs) flags.push({ title: "Jobs down month over month", why: `${count(row.cmJobs)} current jobs vs ${count(row.pmJobs)} previous.`, action: "Ask whether patient flow, staffing, or competing lab usage changed." });
-  if ((row.brandUsage.neurolens_jobs?.cm ?? 0) < (row.brandUsage.neurolens_jobs?.pm ?? 0)) flags.push({ title: "Neurolens decline", why: `${count(row.brandUsage.neurolens_jobs?.cm ?? 0)} current Neurolens jobs vs ${count(row.brandUsage.neurolens_jobs?.pm ?? 0)} previous.`, action: "Review Neurolens ordering behavior and identify whether education or workflow support is needed." });
-  if ((row.brandUsage.sequel_jobs?.cm ?? 0) < (row.brandUsage.sequel_jobs?.pm ?? 0)) flags.push({ title: "Sequel decline", why: `${count(row.brandUsage.sequel_jobs?.cm ?? 0)} current Sequel jobs vs ${count(row.brandUsage.sequel_jobs?.pm ?? 0)} previous.`, action: "Review Sequel PAL adoption and whether rewards-qualified activity is slipping." });
-  if (row.cmJpd !== null && row.pmJpd !== null && row.cmJpd < row.pmJpd) flags.push({ title: "JPD down", why: `${row.cmJpd.toFixed(1)} current JPD vs ${row.pmJpd.toFixed(1)} previous.`, action: "Use JPD to distinguish velocity from calendar timing." });
-  if (row.turnaroundAverageDays.cm > row.turnaroundAverageDays.pm && row.turnaroundAverageDays.pm > 0) flags.push({ title: "Turnaround deterioration", why: `${row.turnaroundAverageDays.cm.toFixed(1)} current average days vs ${row.turnaroundAverageDays.pm.toFixed(1)} previous.`, action: "Review lab service timing and proactively communicate expectations if needed." });
+  if (row.pmSales < row.ppmSales) flags.push({ title: "Sales down PM vs PPM", why: `${money(row.pmSales)} PM vs ${money(row.ppmSales)} PPM. CM pace is ${money(row.cmSales)}.`, action: "Review order mix and contact the customer with a specific support angle." });
+  if (row.pmJobs < row.ppmJobs) flags.push({ title: "Jobs down PM vs PPM", why: `${count(row.pmJobs)} PM jobs vs ${count(row.ppmJobs)} PPM jobs.`, action: "Use JPD first, then ask whether patient flow, staffing, or competing lab usage changed." });
+  if ((row.brandUsage.neurolens_jobs?.pm ?? 0) < (row.brandUsage.neurolens_jobs?.ppm ?? 0)) flags.push({ title: "Neurolens decline", why: `${count(row.brandUsage.neurolens_jobs?.pm ?? 0)} PM Neurolens jobs vs ${count(row.brandUsage.neurolens_jobs?.ppm ?? 0)} PPM.`, action: "Review Neurolens ordering behavior and identify whether education or workflow support is needed." });
+  if ((row.brandUsage.sequel_jobs?.pm ?? 0) < (row.brandUsage.sequel_jobs?.ppm ?? 0)) flags.push({ title: "Sequel decline", why: `${count(row.brandUsage.sequel_jobs?.pm ?? 0)} PM Sequel jobs vs ${count(row.brandUsage.sequel_jobs?.ppm ?? 0)} PPM.`, action: "Review Sequel PAL adoption and whether rewards-qualified activity is slipping." });
+  if (row.pmJpd !== null && row.ppmJpd !== null && row.pmJpd < row.ppmJpd) flags.push({ title: "JPD down", why: `${row.pmJpd.toFixed(1)} PM JPD vs ${row.ppmJpd.toFixed(1)} PPM JPD.`, action: "Use JPD to distinguish velocity from calendar timing." });
+  if (row.turnaroundAverageDays.pm > row.labTurnaroundAverageDays.pm + 1 && row.labTurnaroundAverageDays.pm > 0) flags.push({ title: "Turnaround above lab average", why: `${row.turnaroundAverageDays.pm.toFixed(1)} PM customer average days vs ${row.labTurnaroundAverageDays.pm.toFixed(1)} lab average.`, action: "Review lab service timing and proactively communicate expectations if needed." });
   if (row.pmJobs > 0 && row.cmJobs === 0) flags.push({ title: "No current activity", why: "Prior-month jobs exist, but current-month jobs are zero.", action: "Prioritize immediate outreach to confirm ordering status." });
   if (!row.programs.tokai) flags.push({ title: "Tokai opportunity", why: "Tokai usage is not recorded.", action: "Introduce Tokai only where specialty or high-index demand makes sense." });
   if (!row.programs.modernFrame) flags.push({ title: "Modern Frame opportunity", why: "Modern Frame usage is not recorded.", action: "Review whether Modern Frame can simplify package adoption." });
@@ -131,8 +131,8 @@ export default async function AdminAccountAnalysisPage({ params }: { params: Pro
   const row = rows.find((entry) => entry.acctId.toUpperCase() === resolved.acctId.toUpperCase());
   if (!row) return <NotFound adminEmail={adminEmail} />;
 
-  const salesChange = percentChange(row.cmSalesPerDay ?? 0, row.pmSalesPerDay ?? 0);
-  const jobsChange = percentChange(row.cmJpd ?? 0, row.pmJpd ?? 0);
+  const salesChange = percentChange(row.pmSalesPerDay ?? 0, row.ppmSalesPerDay ?? 0);
+  const jobsChange = percentChange(row.pmJpd ?? 0, row.ppmJpd ?? 0);
   const email = firstEmail(row);
   const emailHref = email ? `mailto:${email}?subject=${encodeURIComponent("Checking in from Artisan Lab Network")}` : "";
   const flags = flagsFor(row);
@@ -156,9 +156,9 @@ export default async function AdminAccountAnalysisPage({ params }: { params: Pro
       </section>
 
       <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <MetricCard icon={CircleDollarSign} label="Current Sales / Day" value={moneyOrUnavailable(row.cmSalesPerDay)} detail={`PM ${moneyOrUnavailable(row.pmSalesPerDay)} · Monthly ${money(row.cmSales)}`} />
-        <MetricCard icon={Package} label="Current Jobs / Day" value={row.cmJpd === null ? "Unavailable" : `${row.cmJpd.toFixed(1)}/day`} detail={`PM ${row.pmJpd === null ? "Unavailable" : `${row.pmJpd.toFixed(1)}/day`} · Monthly ${count(row.cmJobs)}`} />
-        <MetricCard icon={Activity} label="JPD" value={row.cmJpd === null ? "Unavailable" : row.cmJpd.toFixed(1)} detail={row.pmJpd === null ? "JPD data unavailable" : `PM ${row.pmJpd.toFixed(1)}`} />
+        <MetricCard icon={CircleDollarSign} label="PM Sales / Day" value={moneyOrUnavailable(row.pmSalesPerDay)} detail={`PPM ${moneyOrUnavailable(row.ppmSalesPerDay)} · CM pace ${moneyOrUnavailable(row.cmSalesPerDay)}`} />
+        <MetricCard icon={Package} label="PM Jobs / Day" value={row.pmJpd === null ? "Unavailable" : `${row.pmJpd.toFixed(1)}/day`} detail={`PPM ${row.ppmJpd === null ? "Unavailable" : `${row.ppmJpd.toFixed(1)}/day`} · CM pace ${row.cmJpd === null ? "Unavailable" : `${row.cmJpd.toFixed(1)}/day`}`} />
+        <MetricCard icon={Activity} label="PM JPD Trend" value={row.pmJpd === null ? "Unavailable" : row.pmJpd.toFixed(1)} detail={row.ppmJpd === null ? "JPD data unavailable" : `PPM ${row.ppmJpd.toFixed(1)}`} />
         <MetricCard icon={Users} label="Authorized Users" value={count(row.authorizedUsers)} detail={row.authorizedUserEmails.join(", ") || "No customer email available"} />
       </section>
 
@@ -184,12 +184,12 @@ export default async function AdminAccountAnalysisPage({ params }: { params: Pro
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
             <div className="rounded-md border border-[#eadfce] bg-white/72 p-4">
               <p className="text-sm font-semibold text-[#172a28]">Sales / Day Trend</p>
-              <p className="mt-2 text-2xl font-semibold text-[#172a28]">{moneyOrUnavailable(row.cmSalesPerDay)}</p>
+              <p className="mt-2 text-2xl font-semibold text-[#172a28]">{moneyOrUnavailable(row.pmSalesPerDay)}</p>
               <TrendBadge change={salesChange} />
             </div>
             <div className="rounded-md border border-[#eadfce] bg-white/72 p-4">
               <p className="text-sm font-semibold text-[#172a28]">Jobs / Day Trend</p>
-              <p className="mt-2 text-2xl font-semibold text-[#172a28]">{row.cmJpd === null ? "Unavailable" : `${row.cmJpd.toFixed(1)}/day`}</p>
+              <p className="mt-2 text-2xl font-semibold text-[#172a28]">{row.pmJpd === null ? "Unavailable" : `${row.pmJpd.toFixed(1)}/day`}</p>
               <TrendBadge change={jobsChange} />
             </div>
             <div className="rounded-md border border-[#eadfce] bg-white/72 p-4">
@@ -205,12 +205,12 @@ export default async function AdminAccountAnalysisPage({ params }: { params: Pro
       </section>
 
       <section className="mt-8 rounded-md border border-[#d8c49b] bg-[#fffaf1]/88 p-6 shadow-[0_18px_55px_rgba(23,42,40,0.08)]">
-        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b7650]">Quality and Service Metrics</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b7650]">Redo Intelligence</p>
         <div className="mt-5 grid gap-4 md:grid-cols-4">
-          <MetricCard icon={ShieldAlert} label="Warranty %" value={`${row.quality.warrantyPct.cm.toFixed(1)}%`} detail={`PM ${row.quality.warrantyPct.pm.toFixed(1)}%`} />
-          <MetricCard icon={ShieldAlert} label="Office Redo %" value={`${row.quality.officeRedoPct.cm.toFixed(1)}%`} detail={`PM ${row.quality.officeRedoPct.pm.toFixed(1)}%`} />
-          <MetricCard icon={ShieldAlert} label="Lab Redo %" value={`${row.quality.labRedoPct.cm.toFixed(1)}%`} detail={`PM ${row.quality.labRedoPct.pm.toFixed(1)}%`} />
-          <MetricCard icon={ShieldAlert} label="Non-Adapt %" value={`${row.quality.nonAdaptPct.cm.toFixed(1)}%`} detail={`PM ${row.quality.nonAdaptPct.pm.toFixed(1)}%`} />
+          <MetricCard icon={ShieldAlert} label="Warranty Redo %" value={`${row.quality.warrantyPct.pm.toFixed(1)}%`} detail={`PPM ${row.quality.warrantyPct.ppm.toFixed(1)}% · CM ${row.quality.warrantyPct.cm.toFixed(1)}%`} />
+          <MetricCard icon={ShieldAlert} label="Office Redo %" value={`${row.quality.officeRedoPct.pm.toFixed(1)}%`} detail={`PPM ${row.quality.officeRedoPct.ppm.toFixed(1)}% · CM ${row.quality.officeRedoPct.cm.toFixed(1)}%`} />
+          <MetricCard icon={ShieldAlert} label="Lab Redo %" value={`${row.quality.labRedoPct.pm.toFixed(1)}%`} detail={`PPM ${row.quality.labRedoPct.ppm.toFixed(1)}% · CM ${row.quality.labRedoPct.cm.toFixed(1)}%`} />
+          <MetricCard icon={ShieldAlert} label="Non-Adapt %" value={`${row.quality.nonAdaptPct.pm.toFixed(1)}%`} detail={`PPM ${row.quality.nonAdaptPct.ppm.toFixed(1)}% · CM ${row.quality.nonAdaptPct.cm.toFixed(1)}%`} />
         </div>
       </section>
 

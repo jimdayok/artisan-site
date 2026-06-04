@@ -68,7 +68,7 @@ function normalizeDesignStyleName(value: string) {
 }
 
 type LookupMaps = {
-  productByDvi: Map<string, string>;
+  productByDvi: Map<string, { name: string; designType: string; brand: string }>;
   materialByDvi: Map<string, string>;
   arByCode: Map<string, { name: string; brand: string }>;
 };
@@ -98,12 +98,16 @@ async function loadLookupMaps(): Promise<LookupMaps> {
     const materialRows = await readFirstWorksheetRows(path.join(docsDir, "Lookup_Mat.xlsx"));
     const arRows = await readFirstWorksheetRows(path.join(docsDir, "Lookup_AR.xlsx"));
 
-    const productByDvi = new Map<string, string>();
+    const productByDvi = new Map<string, { name: string; designType: string; brand: string }>();
     for (const row of lookupRows.slice(1)) {
       const dvi = normalizeLookupKey(row[0] || "");
       const name = (row[1] || "").trim();
       if (!dvi || !name) continue;
-      productByDvi.set(dvi, name);
+      productByDvi.set(dvi, {
+        name,
+        designType: (row[3] || "").trim(),
+        brand: (row[5] || "").trim(),
+      });
     }
 
     const materialByDvi = new Map<string, string>();
@@ -243,13 +247,19 @@ async function dviToGenerated(code: string, rows: DviRow[]): Promise<GeneratedPr
     const productLookupKey = normalizeLookupKey(
       row.sourceRefs?.styleRow?.Name || row.productStyleCode || row.productStyleDescription || ""
     );
-    const mappedProductName =
+    const productLookup =
       lookups.productByDvi.get(productLookupKey) ||
       lookups.productByDvi.get(normalizeLookupKey(row.productStyleCode || "")) ||
-      lookups.productByDvi.get(normalizeLookupKey(row.productStyleDescription || "")) ||
+      lookups.productByDvi.get(normalizeLookupKey(row.productStyleDescription || ""));
+    const mappedProductName =
+      productLookup?.name ||
       row.productStyleDescription ||
       row.productStyleCode;
     const normalizedStyle = normalizeDesignStyleName(mappedProductName);
+    const fallbackDesignType = row.sourceRefs?.styleRow?.Fin === "S" ? "Single Vision" : "Progressive";
+    const designType =
+      productLookup?.designType ||
+      (normalizeLookupKey(productLookup?.brand || normalizedStyle).includes("VARILUX") ? "Progressive" : fallbackDesignType);
     const coatingOptions = (row.linkedSchedules?.coating ?? []).map((coating) => ({
       code: String(coating.Code ?? "").trim().toUpperCase(),
       name:
@@ -272,8 +282,8 @@ async function dviToGenerated(code: string, rows: DviRow[]): Promise<GeneratedPr
     return {
       code,
       id: `${code}-${index}`,
-      brand: normalizeDesignStyleName((row.productStyleDescription || "Design").split(" ")[0] || "Design"),
-      designType: row.sourceRefs?.styleRow?.Fin === "S" ? "Single Vision" : "Progressive",
+      brand: productLookup?.brand || normalizeDesignStyleName((row.productStyleDescription || "Design").split(" ")[0] || "Design"),
+      designType,
       designStyle: normalizedStyle,
       rawProductNames: [row.productStyleCode].filter(Boolean),
       sourceCodes: [row.productStyleCode, row.materialCode].filter(Boolean),

@@ -97,6 +97,7 @@ export type DashboardV1AdminRow = {
   materialUsage: NonNullable<PortalDashboardV1SupplementalIntelligence["material_usage"]>;
   specialtyUsage: NonNullable<PortalDashboardV1SupplementalIntelligence["specialty_usage"]>;
   turnaroundAverageDays: PortalDashboardV1MonthlyNumber;
+  labTurnaroundAverageDays: PortalDashboardV1MonthlyNumber;
   rewards: NonNullable<PortalDashboardV1SupplementalIntelligence["rewards"]>;
   quality: {
     labRedoPct: DashboardV1QualityTrend;
@@ -271,6 +272,7 @@ export function getDashboardV1AdminRows() {
         multiple_pair_jobs: monthlyNumber(supplemental?.specialty_usage?.multiple_pair_jobs),
       },
       turnaroundAverageDays: monthlyNumber(supplemental?.turnaround?.average_days),
+      labTurnaroundAverageDays: monthlyNumber(supplemental?.turnaround?.lab_average_days),
       rewards: supplemental?.rewards ?? {},
       quality: {
         labRedoPct: trendValue(quality?.lab_redo_pct),

@@ -73,6 +73,7 @@ export type PortalDashboardV1SupplementalIntelligence = {
   };
   turnaround?: {
     average_days?: PortalDashboardV1MonthlyNumber;
+    lab_average_days?: PortalDashboardV1MonthlyNumber;
   };
   rewards?: {
     arpmp26?: {
@@ -173,6 +174,7 @@ export type PortalDashboardV1Account = {
     role_type: string;
     marketing_status: string;
     organization: string;
+    targeted_programs?: string;
   }>;
 };
 

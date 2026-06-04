@@ -1113,10 +1113,41 @@ function detailedAuthorizedUsers(users = []) {
         role_type: toText(user.role_type),
         marketing_status: toText(user.marketing_status),
         organization: toText(user.organization),
+        targeted_programs: toText(user.targeted_programs),
       });
     }
   }
   return [...byEmail.values()].sort((a, b) => a.email.localeCompare(b.email));
+}
+
+function monthlyAverage(values) {
+  const valid = values.filter((value) => Number.isFinite(value) && value > 0);
+  if (!valid.length) return 0;
+  return valid.reduce((total, value) => total + value, 0) / valid.length;
+}
+
+function buildLabTurnaroundAverages(accounts) {
+  const byLab = new Map();
+  for (const account of accounts) {
+    const lab = toText(account.lab_name) || "Unknown";
+    const averageDays = account.supplemental_intelligence?.turnaround?.average_days ?? {};
+    const current = byLab.get(lab) ?? { ppm: [], pm: [], cm: [] };
+    current.ppm.push(toNumber(averageDays.ppm));
+    current.pm.push(toNumber(averageDays.pm));
+    current.cm.push(toNumber(averageDays.cm));
+    byLab.set(lab, current);
+  }
+
+  return new Map(
+    [...byLab.entries()].map(([lab, values]) => [
+      lab,
+      {
+        ppm: monthlyAverage(values.ppm),
+        pm: monthlyAverage(values.pm),
+        cm: monthlyAverage(values.cm),
+      },
+    ])
+  );
 }
 
 function writeJson(filePath, data) {
@@ -1197,14 +1228,23 @@ async function main() {
   const accountsIndex = [];
   const refreshDateCandidates = new Set();
   let accountsWithoutUsers = 0;
+  const labTurnaroundAverages = buildLabTurnaroundAverages(classifiedAccounts);
 
   for (const account of classifiedAccounts) {
     refreshDateCandidates.add(account.data_refresh_date);
     const usersForAccount = userAccess.accountToUsersMap.get(account.account_id) ?? [];
     if (usersForAccount.length === 0) accountsWithoutUsers += 1;
+    const labAverageDays = labTurnaroundAverages.get(toText(account.lab_name) || "Unknown");
 
     const accountOutput = {
       ...account,
+      supplemental_intelligence: {
+        ...(account.supplemental_intelligence ?? {}),
+        turnaround: {
+          ...(account.supplemental_intelligence?.turnaround ?? {}),
+          lab_average_days: labAverageDays ?? { ppm: 0, pm: 0, cm: 0 },
+        },
+      },
       authorized_users_summary: summarizeAuthorizedUsers(usersForAccount),
       authorized_users: detailedAuthorizedUsers(usersForAccount),
     };

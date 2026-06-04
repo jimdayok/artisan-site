@@ -1854,8 +1854,12 @@ type PracticeIntelligenceModel = {
   ppmJobs: number;
   pmJobs: number;
   cmJobs: number;
+  priorJpd: number | null;
   currentJpd: number | null;
   previousJpd: number | null;
+  cmProjectedJobs: number;
+  cmProjectedTier: string;
+  labTurnaround: MonthlyUsagePoint[];
   vspShare: number;
   privatePayShare: number;
   salesTrend: ReturnType<typeof getPercentChange>;
@@ -1879,6 +1883,13 @@ type PracticeIntelligenceModel = {
     title: string;
     metrics: Array<{ label: string; value: string }>;
     trend: string;
+  }>;
+  targetInvitations: Array<{
+    program: "ARUTY26" | "ARSQL26" | string;
+    title: string;
+    detail: string;
+    benefits: string[];
+    href: string;
   }>;
 };
 
@@ -1910,6 +1921,24 @@ function monthlyPoint(label: string, value?: { ppm?: number; pm?: number; cm?: n
   };
 }
 
+function monthlySharePoint(
+  label: string,
+  value: { ppm?: number; pm?: number; cm?: number } | undefined,
+  totals: { ppm: number; pm: number; cm: number }
+): MonthlyUsagePoint {
+  const share = (numerator: unknown, denominator: number) => {
+    if (!denominator) return 0;
+    return (asNumber(numerator) / denominator) * 100;
+  };
+
+  return {
+    label,
+    prior: share(value?.ppm, totals.ppm),
+    previous: share(value?.pm, totals.pm),
+    current: share(value?.cm, totals.cm),
+  };
+}
+
 function hasUsageData(points: MonthlyUsagePoint[]) {
   return points.some((point) => point.prior > 0 || point.previous > 0 || point.current > 0);
 }
@@ -1918,6 +1947,59 @@ function rewardTrendLabel(current: number, previous: number, unit: string) {
   const trend = getPercentChange(current, previous);
   if (trend.direction === "flat") return `Flat vs previous month (${formatCount(previous)} ${unit})`;
   return `${trend.label} vs previous month (${formatCount(previous)} ${unit})`;
+}
+
+function monthlyTierLabel(jobs: number) {
+  if (jobs > 100) return "Tier 4";
+  if (jobs >= 61) return "Tier 3";
+  if (jobs >= 21) return "Tier 2";
+  return "Tier 1";
+}
+
+function projectedJobsFromJpd(jpd: number | null) {
+  return jpd === null ? 0 : Math.round(jpd * 22);
+}
+
+function targetProgramTokens(dashboard?: PortalDashboardV1Account) {
+  const values = [
+    ...(dashboard?.authorized_users ?? []).map((user) => user.targeted_programs),
+  ];
+  return [...new Set(
+    values
+      .flatMap((value) => String(value || "").split(/[;,|/]/))
+      .map((value) => value.trim().toUpperCase())
+      .filter(Boolean)
+  )];
+}
+
+function buildTargetInvitations(programs: string[]): PracticeIntelligenceModel["targetInvitations"] {
+  return programs.flatMap((program) => {
+    if (program.includes("ARUTY26")) {
+      return [{
+        program: "ARUTY26",
+        title: "You've been invited to the Unity Rewards Program.",
+        detail: "Program: ARUTY26",
+        benefits: ["Unity rewards", "Growth incentives", "Program support"],
+        href: "https://form.typeform.com/to/WCU5ReWQ",
+      }];
+    }
+    if (program.includes("ARSQL26")) {
+      return [{
+        program: "ARSQL26",
+        title: "You've been invited to the Sequel Rewards Program.",
+        detail: "Program: ARSQL26",
+        benefits: ["Sequel rewards", "Qualified Sequel PAL incentives", "Program support"],
+        href: "https://form.typeform.com/to/WCU5ReWQ",
+      }];
+    }
+    return [];
+  });
+}
+
+function scoreFromInverseMetric(value: number, goodThreshold: number, badThreshold: number) {
+  if (value <= goodThreshold) return 100;
+  if (value >= badThreshold) return 35;
+  return 100 - ((value - goodThreshold) / (badThreshold - goodThreshold)) * 65;
 }
 
 function statusForScore(score: number): PracticeIntelligenceModel["scoreLabel"] {
@@ -1954,11 +2036,21 @@ function buildPracticeIntelligenceModel({
   const currentJpd =
     account && Number.isFinite(Number(account.cmJpd)) && Number(account.cmJpd) > 0
       ? Number(account.cmJpd)
-      : null;
+      : cmJobs > 0
+        ? cmJobs / 22
+        : null;
   const previousJpd =
     account && Number.isFinite(Number(account.pmJpd)) && Number(account.pmJpd) > 0
       ? Number(account.pmJpd)
-      : null;
+      : pmJobs > 0
+        ? pmJobs / 22
+        : null;
+  const priorJpd =
+    account && Number.isFinite(Number(account.ppmJpd)) && Number(account.ppmJpd) > 0
+      ? Number(account.ppmJpd)
+      : ppmJobs > 0
+        ? ppmJobs / 22
+        : null;
   const programFlags = dashboard?.program_usage?.flags;
   const activePrograms = [
     programFlags?.modern_package ?? isActiveUsage(account?.modernPkgUsage),
@@ -1972,15 +2064,47 @@ function buildPracticeIntelligenceModel({
   const quality = dashboard?.quality_metrics;
   const supplemental = dashboard?.supplemental_intelligence;
   const warrantyCm = pctValue(quality?.warranty_pct?.cm);
+  const warrantyPm = pctValue(quality?.warranty_pct?.pm);
+  const warrantyPpm = pctValue(quality?.warranty_pct?.ppm);
   const officeRedoCm = pctValue(quality?.office_redo_pct?.cm);
+  const officeRedoPm = pctValue(quality?.office_redo_pct?.pm);
+  const officeRedoPpm = pctValue(quality?.office_redo_pct?.ppm);
   const labRedoCm = pctValue(quality?.lab_redo_pct?.cm);
+  const labRedoPm = pctValue(quality?.lab_redo_pct?.pm);
+  const labRedoPpm = pctValue(quality?.lab_redo_pct?.ppm);
   const nonAdaptCm = pctValue(quality?.non_adapt_pct?.cm);
-  const qualityPenalty = Math.min(24, warrantyCm * 1.6 + officeRedoCm * 1.1 + labRedoCm * 3);
-  const growthScore = cmSales > pmSales ? 22 : cmSales === pmSales ? 15 : 9;
+  const nonAdaptPm = pctValue(quality?.non_adapt_pct?.pm);
+  const nonAdaptPpm = pctValue(quality?.non_adapt_pct?.ppm);
+  const turnaroundPm = asNumber(supplemental?.turnaround?.average_days?.pm);
+  const labTurnaroundPm = asNumber(supplemental?.turnaround?.lab_average_days?.pm);
+  const pmTatVariance = labTurnaroundPm > 0 ? Math.max(0, turnaroundPm - labTurnaroundPm) : 0;
+  const jpdTrendScore =
+    previousJpd !== null && priorJpd !== null && priorJpd > 0
+      ? Math.max(35, Math.min(100, 75 + ((previousJpd - priorJpd) / priorJpd) * 100))
+      : 65;
+  const tatScore = scoreFromInverseMetric(pmTatVariance, 0, 2.5);
+  const officeRedoScore = scoreFromInverseMetric(officeRedoPm, 2, 8);
+  const labRedoScore = scoreFromInverseMetric(labRedoPm, 1, 4);
   const programScore = Math.min(22, activePrograms * 3.4);
-  const volumeScore = cmJobs > pmJobs ? 16 : cmJobs === pmJobs ? 11 : 7;
-  const score = clampScore(48 + growthScore + programScore + volumeScore - qualityPenalty);
-  const scoreDelta = score - clampScore(48 + (pmSales > ppmSales ? 22 : 10) + programScore + (pmJobs > ppmJobs ? 16 : 7) - qualityPenalty);
+  const score = clampScore(
+    tatScore * 0.26 +
+      labRedoScore * 0.22 +
+      officeRedoScore * 0.22 +
+      jpdTrendScore * 0.2 +
+      programScore * 0.1
+  );
+  const priorTatVariance =
+    asNumber(supplemental?.turnaround?.lab_average_days?.ppm) > 0
+      ? Math.max(0, asNumber(supplemental?.turnaround?.average_days?.ppm) - asNumber(supplemental?.turnaround?.lab_average_days?.ppm))
+      : 0;
+  const priorScore = clampScore(
+    scoreFromInverseMetric(priorTatVariance, 0, 2.5) * 0.26 +
+      scoreFromInverseMetric(labRedoPpm, 1, 4) * 0.22 +
+      scoreFromInverseMetric(officeRedoPpm, 2, 8) * 0.22 +
+      65 * 0.2 +
+      programScore * 0.1
+  );
+  const scoreDelta = score - priorScore;
   const trends = [
     { label: "Prior", sales: ppmSales, jobs: ppmJobs },
     { label: "Previous", sales: pmSales, jobs: pmJobs },
@@ -1994,36 +2118,53 @@ function buildPracticeIntelligenceModel({
   ];
   const opportunities: PracticeIntelligenceModel["opportunities"] = [];
   if (cmJobs < pmJobs) {
+    // Current month is directional only; PM vs PPM JPD below is the primary volume-health signal.
+  }
+  if (previousJpd !== null && priorJpd !== null && previousJpd < priorJpd) {
+    const decline = ((previousJpd - priorJpd) / priorJpd) * 100;
     opportunities.push({
-      title: "Jobs are down versus last month",
+      title: "JPD declining",
       priority: "red",
-      current: `${formatCount(cmJobs)} current jobs vs ${formatCount(pmJobs)} previous`,
-      why: "Order volume can dip when recall flow, patient scheduling, or optical capture slows down.",
-      action: "Use patient recall, social media, and practice-growth tools to bring patients back into the office.",
+      current: `PM ${previousJpd.toFixed(1)} JPD vs PPM ${priorJpd.toFixed(1)} JPD · Down ${Math.abs(decline).toFixed(0)}%`,
+      why: "ALN evaluates customer health using jobs per day because it normalizes for calendar timing.",
+      action: "Consider staff retraining, marketing support, and multiple-pair promotions.",
     });
   }
-  if (cmSales < pmSales) {
-    const priorAverageSales = (pmSales + ppmSales) / 2;
-    const averageDeviation =
-      priorAverageSales > 0 ? ((cmSales - priorAverageSales) / priorAverageSales) * 100 : null;
+  if (pmSales < ppmSales) {
+    const decline = ppmSales > 0 ? ((pmSales - ppmSales) / ppmSales) * 100 : 0;
     opportunities.push({
-      title: "Sales are down versus last month",
+      title: "Sales declining",
       priority: "red",
-      current: `${formatMoney(cmSales)} current vs ${formatMoney(pmSales)} previous`,
-      why:
-        averageDeviation === null
-          ? "A revenue dip can indicate lower order volume, lower-value jobs, or missed premium recommendations."
-          : `Current sales are ${Math.abs(averageDeviation).toFixed(1)}% ${averageDeviation < 0 ? "below" : "above"} the average of the prior two months.`,
-      action: "Compare lens mix, coating selection, and package adoption to recent averages to find the most practical recovery path.",
+      current: `PM ${formatMoney(pmSales)} vs PPM ${formatMoney(ppmSales)} · ${Math.abs(decline).toFixed(0)}% down`,
+      why: "Previous month sales are the primary revenue-health signal; current month is only a pace indicator.",
+      action: "Review patient flow, premium recommendation consistency, and complete-pair capture.",
     });
   }
-  if (currentJpd !== null && previousJpd !== null && currentJpd < previousJpd) {
+  if (officeRedoPm > officeRedoPpm + 0.5) {
     opportunities.push({
-      title: "Jobs per day are trending down",
+      title: "High office redos",
+      priority: "red",
+      current: `PM ${officeRedoPm.toFixed(1)}% vs PPM ${officeRedoPpm.toFixed(1)}%`,
+      why: "Office redo increases usually point to measurement, progressive fitting, or frame-selection issues.",
+      action: "Review measurements, progressive fitting, and frame selection with the team.",
+    });
+  }
+  if (labRedoPm > labRedoPpm + 0.5) {
+    opportunities.push({
+      title: "High lab redos",
+      priority: "red",
+      current: `PM ${labRedoPm.toFixed(1)}% vs PPM ${labRedoPpm.toFixed(1)}%`,
+      why: "Lab redo increases should be reviewed with Artisan support so causes are identified quickly.",
+      action: "Contact Artisan support for a remake review.",
+    });
+  }
+  if (turnaroundPm > 0 && labTurnaroundPm > 0 && turnaroundPm > labTurnaroundPm + 1) {
+    opportunities.push({
+      title: "Turnaround above lab average",
       priority: "yellow",
-      current: `${currentJpd.toFixed(1)} JPD vs ${previousJpd.toFixed(1)} previous`,
-      why: "JPD helps separate true demand shifts from calendar timing.",
-      action: "Use the monthly order trend to confirm whether the slowdown is isolated or sustained.",
+      current: `Your PM TAT ${turnaroundPm.toFixed(1)} days vs lab ${labTurnaroundPm.toFixed(1)} days`,
+      why: "Turnaround is measured as average business days in lab production, excluding shipping and frame wait.",
+      action: "Review order complexity, frame availability, and support tickets with the lab team.",
     });
   }
   opportunities.push(
@@ -2050,11 +2191,11 @@ function buildPracticeIntelligenceModel({
   opportunities.push(
     {
       title: "Reduce Redos",
-      priority: warrantyCm > 5 || officeRedoCm > 10 || labRedoCm > 2 ? "red" : "green",
-      current: `Warranty ${warrantyCm.toFixed(1)}% · Office ${officeRedoCm.toFixed(1)}% · Lab ${labRedoCm.toFixed(1)}%`,
+      priority: warrantyPm > 5 || officeRedoPm > 10 || labRedoPm > 2 ? "red" : "green",
+      current: `PM Warranty ${warrantyPm.toFixed(1)}% · Office ${officeRedoPm.toFixed(1)}% · Lab ${labRedoPm.toFixed(1)}%`,
       why: "Redo, warranty, and non-adapt rates directly affect chair time, patient trust, and margin.",
       action:
-        warrantyCm > 5 || officeRedoCm > 10 || labRedoCm > 2
+        warrantyPm > 5 || officeRedoPm > 10 || labRedoPm > 2
           ? "Leverage our partnership with OTI's online web portal for staff training; special rates apply."
           : "Keep using consistent measurements, frame adjustment checks, and remake notes to protect chair time.",
     },
@@ -2076,21 +2217,26 @@ function buildPracticeIntelligenceModel({
     monthlyPoint("IOT Artisan", supplemental?.brand_usage?.iot_artisan_jobs),
   ];
   const materialUsage = [
-    monthlyPoint("Plastic", supplemental?.material_usage?.plastic_jobs),
-    monthlyPoint("Trivex", supplemental?.material_usage?.trivex_jobs),
-    monthlyPoint("1.60", supplemental?.material_usage?.hi_index_160_jobs),
-    monthlyPoint("1.67", supplemental?.material_usage?.hi_index_167_jobs),
-    monthlyPoint("1.74", supplemental?.material_usage?.hi_index_174_jobs),
+    monthlySharePoint("Plastic", supplemental?.material_usage?.plastic_jobs, { ppm: ppmJobs, pm: pmJobs, cm: cmJobs }),
+    monthlySharePoint("Trivex", supplemental?.material_usage?.trivex_jobs, { ppm: ppmJobs, pm: pmJobs, cm: cmJobs }),
+    monthlySharePoint("1.60", supplemental?.material_usage?.hi_index_160_jobs, { ppm: ppmJobs, pm: pmJobs, cm: cmJobs }),
+    monthlySharePoint("1.67", supplemental?.material_usage?.hi_index_167_jobs, { ppm: ppmJobs, pm: pmJobs, cm: cmJobs }),
+    monthlySharePoint("1.74", supplemental?.material_usage?.hi_index_174_jobs, { ppm: ppmJobs, pm: pmJobs, cm: cmJobs }),
   ];
   const specialtyUsage = [
-    monthlyPoint("Photochromic", supplemental?.specialty_usage?.photochromic_jobs),
-    monthlyPoint("Polarized", supplemental?.specialty_usage?.polarized_jobs),
-    monthlyPoint("Multiple Pairs", supplemental?.specialty_usage?.multiple_pair_jobs),
+    monthlySharePoint("Photochromic", supplemental?.specialty_usage?.photochromic_jobs, { ppm: ppmJobs, pm: pmJobs, cm: cmJobs }),
+    monthlySharePoint("Polarized", supplemental?.specialty_usage?.polarized_jobs, { ppm: ppmJobs, pm: pmJobs, cm: cmJobs }),
+    monthlySharePoint("Multiple Pairs", supplemental?.specialty_usage?.multiple_pair_jobs, { ppm: ppmJobs, pm: pmJobs, cm: cmJobs }),
   ];
   const turnaround = [
     monthlyPoint("Prior", { cm: supplemental?.turnaround?.average_days?.ppm }),
     monthlyPoint("Previous", { cm: supplemental?.turnaround?.average_days?.pm }),
     monthlyPoint("Current", { cm: supplemental?.turnaround?.average_days?.cm }),
+  ];
+  const labTurnaround = [
+    monthlyPoint("Prior", { cm: supplemental?.turnaround?.lab_average_days?.ppm }),
+    monthlyPoint("Previous", { cm: supplemental?.turnaround?.lab_average_days?.pm }),
+    monthlyPoint("Current", { cm: supplemental?.turnaround?.lab_average_days?.cm }),
   ];
   const rewards: PracticeIntelligenceModel["rewards"] = [];
   const rewardsData = supplemental?.rewards;
@@ -2185,9 +2331,10 @@ function buildPracticeIntelligenceModel({
     materialUsage,
     specialtyUsage,
     turnaround,
+    labTurnaround,
     quality: [
-      { label: "Prior", warranty: pctValue(quality?.warranty_pct?.ppm), officeRedo: pctValue(quality?.office_redo_pct?.ppm), labRedo: pctValue(quality?.lab_redo_pct?.ppm), nonAdapt: pctValue(quality?.non_adapt_pct?.ppm) },
-      { label: "Previous", warranty: pctValue(quality?.warranty_pct?.pm), officeRedo: pctValue(quality?.office_redo_pct?.pm), labRedo: pctValue(quality?.lab_redo_pct?.pm), nonAdapt: pctValue(quality?.non_adapt_pct?.pm) },
+      { label: "Prior", warranty: warrantyPpm, officeRedo: officeRedoPpm, labRedo: labRedoPpm, nonAdapt: pctValue(quality?.non_adapt_pct?.ppm) },
+      { label: "Previous", warranty: warrantyPm, officeRedo: officeRedoPm, labRedo: labRedoPm, nonAdapt: nonAdaptPm },
       { label: "Current", warranty: warrantyCm, officeRedo: officeRedoCm, labRedo: labRedoCm, nonAdapt: nonAdaptCm },
     ],
     score,
@@ -2199,19 +2346,26 @@ function buildPracticeIntelligenceModel({
     ppmJobs,
     pmJobs,
     cmJobs,
+    priorJpd,
     currentJpd,
     previousJpd,
+    cmProjectedJobs: projectedJobsFromJpd(currentJpd),
+    cmProjectedTier: monthlyTierLabel(projectedJobsFromJpd(currentJpd)),
     vspShare,
     privatePayShare,
-    salesTrend: getPercentChange(cmSales, pmSales),
-    jobsTrend: getPercentChange(cmJobs, pmJobs),
+    salesTrend: getPercentChange(pmSales, ppmSales),
+    jobsTrend:
+      previousJpd !== null && priorJpd !== null
+        ? getPercentChange(previousJpd, priorJpd)
+        : getPercentChange(pmJobs, ppmJobs),
     jpdTrend:
-      currentJpd !== null && previousJpd !== null
-        ? getPercentChange(currentJpd, previousJpd)
+      previousJpd !== null && priorJpd !== null
+        ? getPercentChange(previousJpd, priorJpd)
         : null,
     opportunities,
     programs,
     rewards,
+    targetInvitations: buildTargetInvitations(targetProgramTokens(dashboard)),
   };
 }
 
@@ -2327,35 +2481,36 @@ function PracticeIntelligenceHero({
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <IntelligenceMetric
             icon={CircleDollarSign}
-            label="Current Month Sales"
-            value={formatMoney(intelligence.cmSales)}
+            label="Previous Month Sales"
+            value={formatMoney(intelligence.pmSales)}
             trend={intelligence.salesTrend}
+            detail={`PPM ${formatMoney(intelligence.ppmSales)} · CM pace ${formatMoney(intelligence.cmSales)}`}
           />
           <IntelligenceMetric
             icon={CircleDollarSign}
-            label="Previous Month Sales"
-            value={formatMoney(intelligence.pmSales)}
-            detail={`Prior previous: ${formatMoney(intelligence.ppmSales)}`}
-          />
-          <IntelligenceMetric
-            icon={Package}
-            label="Current Month Jobs"
-            value={formatCount(intelligence.cmJobs)}
-            trend={intelligence.jobsTrend}
+            label="Current Month Pace"
+            value={formatMoney(intelligence.cmSales)}
+            detail="Directional only; PM is the primary performance month."
           />
           <IntelligenceMetric
             icon={Package}
             label="Previous Month Jobs"
             value={formatCount(intelligence.pmJobs)}
-            detail={`Prior previous: ${formatCount(intelligence.ppmJobs)}`}
+            detail={`PPM ${formatCount(intelligence.ppmJobs)} · CM pace ${formatCount(intelligence.cmJobs)}`}
+          />
+          <IntelligenceMetric
+            icon={Activity}
+            label="Jobs Per Day Down"
+            value={intelligence.previousJpd === null ? "Pending" : `${intelligence.previousJpd.toFixed(1)} JPD`}
+            trend={intelligence.jobsTrend}
+            detail={intelligence.priorJpd === null ? "PPM JPD pending" : `PPM ${intelligence.priorJpd.toFixed(1)} JPD`}
           />
           {intelligence.currentJpd !== null ? (
             <IntelligenceMetric
               icon={Activity}
-              label="Jobs Per Day"
+              label="CM Pace"
               value={intelligence.currentJpd.toFixed(1)}
-              trend={intelligence.jpdTrend ?? undefined}
-              detail="Shown from workbook JPD data."
+              detail={`Projected ${formatCount(intelligence.cmProjectedJobs)} jobs · ${intelligence.cmProjectedTier}`}
             />
           ) : null}
           <IntelligenceMetric
@@ -2378,12 +2533,11 @@ function PracticeIntelligenceHero({
 
 function PracticePerformanceScoreSection({ intelligence }: { intelligence: PracticeIntelligenceModel }) {
   const factorRows = [
-    ["Growth", intelligence.salesTrend.direction === "up" ? 88 : 62],
+    ["PM Turnaround", intelligence.labTurnaround[1]?.current ? 82 : 62],
     ["Program Participation", Math.min(100, intelligence.programMix.reduce((total, item) => total + item.value, 0) / intelligence.programMix.length)],
-    ["Order Volume", intelligence.jobsTrend.direction === "up" ? 86 : 60],
-    ["Quality Signal", Math.max(35, 100 - intelligence.quality[2].warranty - intelligence.quality[2].officeRedo - intelligence.quality[2].labRedo)],
-    ["VSP Mix Visibility", intelligence.vspShare > 0 ? 82 : 58],
-    ["Future Product Detail", 0],
+    ["PM JPD Trend", intelligence.jpdTrend?.direction === "up" ? 86 : intelligence.jpdTrend?.direction === "down" ? 58 : 72],
+    ["PM Office Redos", Math.max(35, 100 - intelligence.quality[1].officeRedo * 8)],
+    ["PM Lab Redos", Math.max(35, 100 - intelligence.quality[1].labRedo * 14)],
   ] as const;
 
   return (
@@ -2393,7 +2547,7 @@ function PracticePerformanceScoreSection({ intelligence }: { intelligence: Pract
           Practice Performance Score Preview
         </p>
         <p className="mt-3 rounded-md border border-[#d9c8a6] bg-white/75 px-3 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#59635f]">
-          Preview framework · Requires additional data for launch-grade scoring
+          PM service, redo, JPD, and program-participation weighting
         </p>
         <div className="mt-5">
           <PracticePerformanceScoreChart score={intelligence.score} />
@@ -2424,16 +2578,16 @@ function PracticePerformanceScoreSection({ intelligence }: { intelligence: Pract
 }
 
 function TierProgressTracker({
-  tier,
-  cmSales,
+  pmJobs,
+  cmProjectedJobs,
+  cmProjectedTier,
 }: {
-  tier: string;
-  cmSales: number;
+  pmJobs: number;
+  cmProjectedJobs: number;
+  cmProjectedTier: string;
 }) {
-  const currentTier = Number(tier.match(/\d+/)?.[0] ?? "0");
-  const nextTarget = currentTier > 0 ? (currentTier + 1) * 10000 : 50000;
-  const progress = nextTarget ? Math.min(100, (cmSales / nextTarget) * 100) : 48;
-  const remaining = Math.max(0, nextTarget - cmSales);
+  const tierLabel = monthlyTierLabel(pmJobs);
+  const progress = Math.min(100, Math.max(0, pmJobs));
 
   return (
     <section className="rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_20px_54px_rgba(20,39,36,0.08)] lg:col-span-3">
@@ -2443,15 +2597,16 @@ function TierProgressTracker({
             Tier Progress Tracker
           </p>
           <h3 className="mt-2 text-2xl font-semibold text-[#142724]">
-            {tier || "Tier insight pending"}
+            Tier Achieved Last Month: {tierLabel}
           </h3>
           <p className="mt-2 text-sm leading-6 text-[#59635f]">
-            Loyalty tiers are based on total lens purchases. This tracker will use qualified lens-pair fields once available.
+            Tier 1 is 0-20 jobs, Tier 2 is 21-60, Tier 3 is 61-100, and Tier 4 is above 100 jobs in a month.
           </p>
         </div>
-        <p className="text-sm font-semibold text-[#59635f]">
-          {currentTier > 0 ? `${formatMoney(remaining)} from Tier ${currentTier + 1}` : "Threshold support ready for launch data"}
-        </p>
+        <div className="grid gap-1 text-sm font-semibold text-[#59635f] md:text-right">
+          <p>{formatCount(pmJobs)} jobs last month · {progress.toFixed(0)}% toward Tier 4</p>
+          <p>Currently pacing toward: {cmProjectedTier} ({formatCount(cmProjectedJobs)} projected jobs)</p>
+        </div>
       </div>
       <div className="mt-5 h-4 overflow-hidden rounded-full bg-[#e7ddcc]">
         <div className="h-full rounded-full bg-[linear-gradient(90deg,#1f8a70,#c9a24f)] transition-all duration-700" style={{ width: `${Math.max(8, progress)}%` }} />
@@ -2463,29 +2618,30 @@ function TierProgressTracker({
 function DailyTrendSummary({ intelligence }: { intelligence: PracticeIntelligenceModel }) {
   const current = intelligence.currentJpd;
   const previous = intelligence.previousJpd;
+  const prior = intelligence.priorJpd;
 
   return (
     <section className="mt-5 rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_18px_48px_rgba(20,39,36,0.07)]">
       <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#7a6b49]">
-        Per Day Activity
+        Jobs Per Day Trend
       </p>
       <div className="mt-3 grid gap-4 md:grid-cols-3">
         <div>
-          <p className="text-sm font-semibold text-[#59635f]">Current jobs per day</p>
-          <p className="mt-1 text-2xl font-semibold text-[#142724]">
-            {current === null ? "Pending" : current.toFixed(1)}
-          </p>
-        </div>
-        <div>
-          <p className="text-sm font-semibold text-[#59635f]">Previous jobs per day</p>
+          <p className="text-sm font-semibold text-[#59635f]">PM jobs per day</p>
           <p className="mt-1 text-2xl font-semibold text-[#142724]">
             {previous === null ? "Pending" : previous.toFixed(1)}
           </p>
         </div>
         <div>
-          <p className="text-sm font-semibold text-[#59635f]">Read this with monthly trend</p>
+          <p className="text-sm font-semibold text-[#59635f]">PPM jobs per day</p>
+          <p className="mt-1 text-2xl font-semibold text-[#142724]">
+            {prior === null ? "Pending" : prior.toFixed(1)}
+          </p>
+        </div>
+        <div>
+          <p className="text-sm font-semibold text-[#59635f]">CM pace</p>
           <p className="mt-1 text-sm leading-6 text-[#6d746f]">
-            Per-day activity helps separate true demand shifts from calendar timing, shorter months, or fewer shipping days.
+            {current === null ? "Pending" : `${current.toFixed(1)} JPD projected to ${formatCount(intelligence.cmProjectedJobs)} jobs.`} Current month is directional only.
           </p>
         </div>
       </div>
@@ -2593,6 +2749,105 @@ function RewardsCenter({ rewards }: { rewards: PracticeIntelligenceModel["reward
   );
 }
 
+function RemakePerformanceCenter({ quality }: { quality: QualityPoint[] }) {
+  const current = quality.find((point) => point.label === "Current") ?? quality[quality.length - 1];
+  const previous = quality.find((point) => point.label === "Previous") ?? quality[quality.length - 2];
+  const prior = quality.find((point) => point.label === "Prior") ?? quality[0];
+  const metrics = [
+    { label: "Warranty Redo", current: current?.warranty ?? 0, previous: previous?.warranty ?? 0, prior: prior?.warranty ?? 0 },
+    { label: "Office Redo", current: current?.officeRedo ?? 0, previous: previous?.officeRedo ?? 0, prior: prior?.officeRedo ?? 0 },
+    { label: "Lab Redo", current: current?.labRedo ?? 0, previous: previous?.labRedo ?? 0, prior: prior?.labRedo ?? 0 },
+    { label: "Non-Adapt", current: current?.nonAdapt ?? 0, previous: previous?.nonAdapt ?? 0, prior: prior?.nonAdapt ?? 0 },
+  ];
+
+  return (
+    <section className="rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3">
+      <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#7a6b49]">
+        Remake Intelligence
+      </p>
+      <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Quality and remake signals</h2>
+      <p className="mt-3 max-w-3xl text-sm leading-6 text-[#6d746f]">
+        These rates use the remake percentages in the unified account record. PM is the primary read; CM is directional.
+      </p>
+      <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        {metrics.map((metric) => {
+          const change = metric.current - metric.previous;
+          const isWorse = change > 0.05;
+          const isBetter = change < -0.05;
+
+          return (
+            <article key={metric.label} className="rounded-md border border-[#eadfce] bg-white/78 p-4">
+              <span
+                className={`inline-flex rounded-md px-2.5 py-1 text-xs font-bold uppercase tracking-[0.1em] ${
+                  isWorse
+                    ? "bg-[#fff3ef] text-[#8b3b2d]"
+                    : isBetter
+                      ? "bg-[#f1fbf4] text-[#1f6b45]"
+                      : "bg-[#e7ddcc] text-[#59635f]"
+                }`}
+              >
+                {isWorse ? "Increased" : isBetter ? "Improved" : "Flat"}
+              </span>
+              <h3 className="mt-4 text-lg font-semibold text-[#142724]">{metric.label}</h3>
+              <div className="mt-4 grid grid-cols-3 gap-2 text-center">
+                <div className="rounded-md border border-[#eadfce] bg-[#fffdf8] p-2">
+                  <p className="text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#7a6b49]">PPM</p>
+                  <p className="mt-1 text-sm font-semibold text-[#142724]">{metric.prior.toFixed(1)}%</p>
+                </div>
+                <div className="rounded-md border border-[#d9c8a6] bg-[#fffaf1] p-2">
+                  <p className="text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#7a6b49]">PM</p>
+                  <p className="mt-1 text-sm font-semibold text-[#142724]">{metric.previous.toFixed(1)}%</p>
+                </div>
+                <div className="rounded-md border border-[#eadfce] bg-[#fffdf8] p-2">
+                  <p className="text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#7a6b49]">CM</p>
+                  <p className="mt-1 text-sm font-semibold text-[#142724]">{metric.current.toFixed(1)}%</p>
+                </div>
+              </div>
+              <p className="mt-2 text-sm text-[#6d746f]">
+                PM vs PPM {metric.previous - metric.prior >= 0 ? "+" : ""}
+                {(metric.previous - metric.prior).toFixed(1)} pts
+              </p>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function TurnaroundBenchmarkCenter({
+  turnaround,
+  labTurnaround,
+}: {
+  turnaround: MonthlyUsagePoint[];
+  labTurnaround: MonthlyUsagePoint[];
+}) {
+  const pmCustomer = turnaround.find((point) => point.label === "Previous")?.current ?? 0;
+  const pmLab = labTurnaround.find((point) => point.label === "Previous")?.current ?? 0;
+  const difference = pmCustomer && pmLab ? pmCustomer - pmLab : 0;
+
+  return (
+    <section className="rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3">
+      <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#7a6b49]">
+        Turnaround Performance
+      </p>
+      <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Your average vs entire lab average</h2>
+      <p className="mt-3 max-w-3xl text-sm leading-6 text-[#6d746f]">
+        Turnaround Time = Average business days in lab production. Does not include shipping time. Does not include frame wait time.
+      </p>
+      <div className="mt-6 grid gap-4 md:grid-cols-3">
+        <DashboardV1Card label="Your PM Avg TAT" value={pmCustomer ? `${pmCustomer.toFixed(1)} days` : "Pending"} />
+        <DashboardV1Card label="Lab PM Avg TAT" value={pmLab ? `${pmLab.toFixed(1)} days` : "Pending"} />
+        <DashboardV1Card
+          label="Difference"
+          value={pmCustomer && pmLab ? `${difference >= 0 ? "+" : ""}${difference.toFixed(1)} days` : "Pending"}
+          detail={difference > 0 ? "Above lab average" : difference < 0 ? "Better than lab average" : "Aligned with lab average"}
+        />
+      </div>
+    </section>
+  );
+}
+
 function PlaceholderInsightCard({
   title,
   label,
@@ -2640,12 +2895,12 @@ function ProductBrandIntelligenceSection({
           <PlaceholderInsightCard title="Brand Usage" label="Additional Product Intelligence Coming Soon" detail="Brand count fields are unavailable for this account." />
         )}
         {hasUsageData(materialUsage) ? (
-          <MonthlyUsageCharts eyebrow="Material Usage" title="Material Jobs by Month" data={materialUsage} />
+          <MonthlyUsageCharts eyebrow="Material Usage" title="Material Share of Monthly Jobs" data={materialUsage} valueType="percent" />
         ) : (
           <PlaceholderInsightCard title="Material Usage" label="Additional Product Intelligence Coming Soon" detail="Material count fields are unavailable for this account." />
         )}
         {hasUsageData(specialtyUsage) ? (
-          <MonthlyUsageCharts eyebrow="Specialty Usage" title="Specialty Jobs by Month" data={specialtyUsage} />
+          <MonthlyUsageCharts eyebrow="Specialty Usage" title="Specialty Share of Monthly Jobs" data={specialtyUsage} valueType="percent" />
         ) : (
           <PlaceholderInsightCard title="Specialty Usage" label="Additional Product Intelligence Coming Soon" detail="Specialty product count fields are unavailable for this account." />
         )}
@@ -2692,6 +2947,70 @@ function BenchmarkingSection() {
         <PlaceholderInsightCard title="Network Average" label="Requires Benchmark Dataset" detail="Network averages require a customer-safe benchmark rollup before display." />
         <PlaceholderInsightCard title="Top 25%" label="Future Insight" detail="Top-quartile comparisons will be added once benchmarking definitions are finalized." />
       </div>
+    </section>
+  );
+}
+
+function CustomerEngagementCenter({ invitations }: { invitations: PracticeIntelligenceModel["targetInvitations"] }) {
+  const forms = [
+    {
+      title: "Update Contact Information",
+      href: "https://form.typeform.com/to/svIIMiD9",
+      detail: "Keep names, emails, phone numbers, and account contacts current.",
+    },
+    {
+      title: "Complete Customer Profile",
+      href: "https://form.typeform.com/to/QLjV4Oho",
+      detail: "Tell us more about your practice, specialties, goals, and support needs.",
+    },
+    {
+      title: "Share Your Artisan Experience",
+      href: "https://form.typeform.com/to/iGoDcWlY",
+      detail: "Share feedback on service, products, ordering, and partnership experience.",
+    },
+  ];
+
+  return (
+    <section className="rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3">
+      <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#7a6b49]">
+        Help Us Improve Your Experience
+      </p>
+      <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Customer profile and engagement</h2>
+      <div className="mt-6 grid gap-4 md:grid-cols-3">
+        {forms.map((form) => (
+          <a key={form.title} href={form.href} target="_blank" rel="noreferrer" className="rounded-md border border-[#eadfce] bg-white/78 p-4 transition hover:-translate-y-0.5 hover:border-[#1f8a70]">
+            <span className="inline-flex rounded-md border border-[#d9c8a6] bg-[#f8f1e6] px-2.5 py-1 text-xs font-bold uppercase tracking-[0.12em] text-[#7a6b49]">
+              Typeform
+            </span>
+            <h3 className="mt-4 text-lg font-semibold text-[#142724]">{form.title}</h3>
+            <p className="mt-3 text-sm leading-6 text-[#6d746f]">{form.detail}</p>
+            <p className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#1f8a70]">
+              Open form <ExternalLink className="h-4 w-4" />
+            </p>
+          </a>
+        ))}
+      </div>
+      {invitations.length > 0 ? (
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
+          {invitations.map((invitation) => (
+            <article key={invitation.program} className="rounded-md border border-[#d9c8a6] bg-[#fffaf1] p-5">
+              <span className="inline-flex rounded-md bg-[#172a28] px-2.5 py-1 text-xs font-bold uppercase tracking-[0.12em] text-white">
+                Target Program Invitation
+              </span>
+              <h3 className="mt-4 text-xl font-semibold text-[#142724]">{invitation.title}</h3>
+              <p className="mt-2 text-sm font-semibold text-[#59635f]">{invitation.detail}</p>
+              <ul className="mt-3 space-y-1 text-sm leading-6 text-[#6d746f]">
+                {invitation.benefits.map((benefit) => (
+                  <li key={benefit}>• {benefit}</li>
+                ))}
+              </ul>
+              <a href={invitation.href} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#1f8a70] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#172a28]">
+                Join Program <ExternalLink className="h-4 w-4" />
+              </a>
+            </article>
+          ))}
+        </div>
+      ) : null}
     </section>
   );
 }
@@ -2806,10 +3125,6 @@ function PracticeIntelligenceCenter({
     showNeurolens: shouldShowNeurolens,
     showSequelRewards: shouldShowSequelRewards,
   });
-  const tier =
-    loyaltyTierLabel(dashboardAccount?.tier_status?.previous_month_tier_rank_by_acct_id || account?.tier) ||
-    "Tier insight pending";
-
   return (
     <>
       <PortalSectionNav />
@@ -2828,7 +3143,11 @@ function PracticeIntelligenceCenter({
         <TrendsPerformanceCharts trends={intelligence.trends} vspMix={intelligence.vspMix} />
         <DailyTrendSummary intelligence={intelligence} />
       </section>
-      <TierProgressTracker tier={tier} cmSales={intelligence.cmSales} />
+      <TierProgressTracker
+        pmJobs={intelligence.pmJobs}
+        cmProjectedJobs={intelligence.cmProjectedJobs}
+        cmProjectedTier={intelligence.cmProjectedTier}
+      />
       <div id="opportunities" className="scroll-mt-24 lg:col-span-3">
         <OpportunitiesCenter opportunities={intelligence.opportunities} />
       </div>
@@ -2845,10 +3164,13 @@ function PracticeIntelligenceCenter({
           turnaround={intelligence.turnaround}
         />
       </section>
+      <TurnaroundBenchmarkCenter turnaround={intelligence.turnaround} labTurnaround={intelligence.labTurnaround} />
+      <RemakePerformanceCenter quality={intelligence.quality} />
       <RewardsCenter rewards={intelligence.rewards} />
       <div id="programs" className="scroll-mt-24 lg:col-span-3">
         <ProgramParticipationCenter programs={intelligence.programs} />
       </div>
+      <CustomerEngagementCenter invitations={intelligence.targetInvitations} />
       <BenchmarkingSection />
       <ResourceCenter
         availablePriceLists={availablePriceLists}

@@ -79,9 +79,11 @@ export type DashboardV1AdminRow = {
   ppmSales: number;
   pmSales: number;
   cmSales: number;
+  cmProjectedSales: number;
   ppmJobs: number;
   pmJobs: number;
   cmJobs: number;
+  cmProjectedJobs: number;
   ppmJpd: number | null;
   pmJpd: number | null;
   cmJpd: number | null;
@@ -164,6 +166,73 @@ function calculateSalesPerDay(sales: number, jobs: number, jobsPerDay: number | 
   return sales / (jobs / jobsPerDay);
 }
 
+function nthWeekdayOfMonth(year: number, monthIndex: number, weekday: number, ordinal: number) {
+  const first = new Date(year, monthIndex, 1);
+  const offset = (weekday - first.getDay() + 7) % 7;
+  return new Date(year, monthIndex, 1 + offset + (ordinal - 1) * 7);
+}
+
+function lastWeekdayOfMonth(year: number, monthIndex: number, weekday: number) {
+  const last = new Date(year, monthIndex + 1, 0);
+  const offset = (last.getDay() - weekday + 7) % 7;
+  return new Date(year, monthIndex, last.getDate() - offset);
+}
+
+function observedHoliday(date: Date) {
+  const observed = new Date(date);
+  if (date.getDay() === 0) observed.setDate(date.getDate() + 1);
+  if (date.getDay() === 6) observed.setDate(date.getDate() - 1);
+  return observed;
+}
+
+function dateKey(date: Date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
+function nationalHolidayKeys(year: number) {
+  return new Set(
+    [
+      observedHoliday(new Date(year, 0, 1)),
+      nthWeekdayOfMonth(year, 0, 1, 3),
+      nthWeekdayOfMonth(year, 1, 1, 3),
+      lastWeekdayOfMonth(year, 4, 1),
+      observedHoliday(new Date(year, 5, 19)),
+      observedHoliday(new Date(year, 6, 4)),
+      nthWeekdayOfMonth(year, 8, 1, 1),
+      nthWeekdayOfMonth(year, 9, 1, 2),
+      observedHoliday(new Date(year, 10, 11)),
+      nthWeekdayOfMonth(year, 10, 4, 4),
+      observedHoliday(new Date(year, 11, 25)),
+    ].map(dateKey)
+  );
+}
+
+function businessDaysInMonth(anchorDate: string) {
+  const parsed = anchorDate ? new Date(`${anchorDate}T00:00:00`) : new Date();
+  const fallback = new Date();
+  const year = Number.isNaN(parsed.getTime()) ? fallback.getFullYear() : parsed.getFullYear();
+  const monthIndex = Number.isNaN(parsed.getTime()) ? fallback.getMonth() : parsed.getMonth();
+  const holidays = nationalHolidayKeys(year);
+  const lastDay = new Date(year, monthIndex + 1, 0).getDate();
+  let days = 0;
+  for (let day = 1; day <= lastDay; day += 1) {
+    const date = new Date(year, monthIndex, day);
+    if (date.getDay() === 0 || date.getDay() === 6) continue;
+    if (holidays.has(dateKey(date))) continue;
+    days += 1;
+  }
+  return days || 22;
+}
+
+function projectedJobs(jobsPerDay: number | null, businessDays: number, fallbackJobs: number) {
+  return jobsPerDay === null ? fallbackJobs : Math.round(jobsPerDay * businessDays);
+}
+
+function projectedSales(sales: number, jobs: number, jobsPerDay: number | null, businessDays: number) {
+  if (sales <= 0 || jobs <= 0 || !jobsPerDay || jobsPerDay <= 0) return sales;
+  return Math.round(calculateSalesPerDay(sales, jobs, jobsPerDay)! * businessDays);
+}
+
 function parseCustomerType(division: string) {
   const code = (division || "").trim().toUpperCase();
   if (!code) return "—";
@@ -218,6 +287,9 @@ export function getDashboardV1AdminRows() {
         ? account.cm_jpd
         : null;
     const cmJpd = explicitCmJpd ?? calculateJpd(cmJobs);
+    const cmBusinessDays = businessDaysInMonth(detail?.data_refresh_date || account.data_refresh_date || "");
+    const cmProjectedJobs = projectedJobs(cmJpd, cmBusinessDays, cmJobs);
+    const cmProjectedSales = projectedSales(cmSales, cmJobs, cmJpd, cmBusinessDays);
 
     rows.push({
       businessName: account.business_name || "Unknown",
@@ -236,9 +308,11 @@ export function getDashboardV1AdminRows() {
       ppmSales,
       pmSales,
       cmSales,
+      cmProjectedSales,
       ppmJobs,
       pmJobs,
       cmJobs,
+      cmProjectedJobs,
       ppmJpd,
       pmJpd,
       cmJpd,

@@ -91,7 +91,7 @@ export function getLocalDevelopmentPortalEmailFromHeaders(headers: Headers) {
 export function getPortalAuthenticatedEmailFromHeaders(headers: Headers) {
   const trustedEmail =
     headers.get(TRUSTED_PORTAL_EMAIL_HEADER)?.trim().toLowerCase() ?? "";
-  if (trustedEmail && isLocalhostDevelopmentRequest(headers)) return trustedEmail;
+  if (trustedEmail) return trustedEmail;
 
   if (!isCloudflareAccessConfigured()) {
     logMissingCloudflareAccessEnv(headers);

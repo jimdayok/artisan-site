@@ -1,0 +1,1115 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e1159] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e1160]:
+      - img [ref=e1161]
+    - generic [ref=e1164]:
+      - button "Open issues overlay" [ref=e1165]:
+        - generic [ref=e1166]:
+          - generic [ref=e1167]: "0"
+          - generic [ref=e1168]: "1"
+        - generic [ref=e1169]: Issue
+      - button "Collapse issues badge" [ref=e1170]:
+        - img [ref=e1171]
+  - main [ref=e1173]:
+    - generic [ref=e1176]:
+      - link "Home" [ref=e1177] [cursor=pointer]:
+        - /url: /
+        - img "Artisan Lab Network" [ref=e1178]
+      - navigation [ref=e1179]:
+        - link "Home" [ref=e1180] [cursor=pointer]:
+          - /url: /
+        - link "About Us" [ref=e1181] [cursor=pointer]:
+          - /url: /about
+        - button "Our Labs ▼" [ref=e1183]:
+          - text: Our Labs
+          - generic [ref=e1184]: ▼
+        - button "Resources ▼" [ref=e1186]:
+          - text: Resources
+          - generic [ref=e1187]: ▼
+        - button "Contact Us" [ref=e1188]
+        - link "Get Started" [ref=e1189] [cursor=pointer]:
+          - /url: https://form.typeform.com/to/quuPCSff
+    - generic [ref=e1192]:
+      - paragraph [ref=e1193]: Patient Vision Resources
+      - heading "See Better. Feel Better. Choose Independent." [level=1] [ref=e1194]
+      - paragraph [ref=e1195]: Premium lenses and independent doctors working together to give you clearer, more comfortable vision.
+      - link "Find a Doctor Near You" [ref=e1196] [cursor=pointer]:
+        - /url: "#find-a-practice"
+    - generic [ref=e1198]:
+      - generic [ref=e1199]:
+        - paragraph [ref=e1200]: Everyday Friction
+        - heading "Struggling With Your Vision?" [level=2] [ref=e1201]
+        - paragraph [ref=e1203]: Clear vision should feel easy. If your glasses make normal moments harder, the answer may be better lens design, materials, or coatings.
+      - generic [ref=e1204]:
+        - generic [ref=e1205]:
+          - img [ref=e1207]
+          - heading "Tired of glare while driving at night?" [level=3] [ref=e1208]
+          - paragraph [ref=e1209]: Light scatter can make headlights feel sharp, hazy, and distracting.
+        - generic [ref=e1210]:
+          - img [ref=e1212]
+          - heading "Eye strain from screens all day?" [level=3] [ref=e1213]
+          - paragraph [ref=e1214]: Modern work asks your eyes to shift focus for hours at a time.
+        - generic [ref=e1215]:
+          - img [ref=e1217]
+          - heading "Thick, heavy glasses that don't look right?" [level=3] [ref=e1218]
+          - paragraph [ref=e1219]: The right lens material can change both comfort and appearance.
+    - generic [ref=e1221]:
+      - img "A warm independent eye care setting with eyewear on display" [ref=e1223]
+      - generic [ref=e1225]:
+        - paragraph [ref=e1226]: The Better Path
+        - heading "A Better Way to See" [level=2] [ref=e1227]
+        - generic [ref=e1228]:
+          - paragraph [ref=e1229]: Independent eye doctors have the freedom to recommend what's best for you, not what they are required to use. That means better lenses, better materials, and solutions designed for your life.
+          - paragraph [ref=e1230]: "The experience should feel personal: a doctor listening closely, an optician helping you choose confidently, and a lab crafting your lenses with care."
+    - generic [ref=e1232]:
+      - generic [ref=e1233]:
+        - paragraph [ref=e1234]: Choice Matters
+        - heading "Why Independent Eye Care Feels Different" [level=2] [ref=e1235]
+        - paragraph [ref=e1237]: The difference is not just where you buy glasses. It is who gets to decide what belongs in front of your eyes.
+      - generic [ref=e1238]:
+        - generic [ref=e1239]:
+          - paragraph [ref=e1240]: Corporate Model
+          - heading "Built around the product" [level=3] [ref=e1241]
+          - list [ref=e1242]:
+            - listitem [ref=e1243]:
+              - generic [ref=e1245]: Limited options
+            - listitem [ref=e1246]:
+              - generic [ref=e1248]: One-size-fits-all lenses
+            - listitem [ref=e1249]:
+              - generic [ref=e1251]: Product-driven recommendations
+        - generic [ref=e1252]:
+          - paragraph [ref=e1253]: Independent Care
+          - heading "Built around your vision" [level=3] [ref=e1254]
+          - list [ref=e1255]:
+            - listitem [ref=e1256]:
+              - generic [ref=e1258]: Personalized recommendations
+            - listitem [ref=e1259]:
+              - generic [ref=e1261]: Premium lens options
+            - listitem [ref=e1262]:
+              - generic [ref=e1264]: Focus on long-term comfort
+    - generic [ref=e1266]:
+      - generic [ref=e1267]:
+        - paragraph [ref=e1268]: Tokai Feature
+        - heading "Thinner. Lighter. Better Looking Lenses" [level=2] [ref=e1269]
+        - paragraph [ref=e1270]: Advanced materials like ultra-thin high-index lenses reduce thickness, weight, and improve how your glasses look and feel--especially for stronger prescriptions.
+      - generic [ref=e1272]:
+        - generic [ref=e1273]:
+          - paragraph [ref=e1276]: Standard
+          - heading "Thicker profile" [level=3] [ref=e1277]
+        - generic [ref=e1278]:
+          - paragraph [ref=e1281]: High-Index
+          - heading "Slimmer feel" [level=3] [ref=e1282]
+    - generic [ref=e1284]:
+      - generic [ref=e1285]:
+        - paragraph [ref=e1286]: Lens Basics
+        - heading "Understanding Your Lenses" [level=2] [ref=e1287]
+        - paragraph [ref=e1289]: You do not need a technical manual to make a confident choice. Start with the benefits you can actually feel.
+      - generic [ref=e1290]:
+        - article [ref=e1291]:
+          - img [ref=e1293]
+          - heading "See Near and Far Without Lines" [level=3] [ref=e1294]
+          - paragraph [ref=e1295]: Progressive lenses allow you to see clearly at all distances without visible lines.
+        - article [ref=e1296]:
+          - img [ref=e1298]
+          - heading "Reduce Glare and Improve Clarity" [level=3] [ref=e1299]
+          - paragraph [ref=e1300]: Anti-reflective coatings allow more light through your lenses and reduce glare, especially at night.
+          - paragraph [ref=e1301]: "Source: American Optometric Association"
+        - article [ref=e1302]:
+          - img [ref=e1304]
+          - heading "Why Lens Material Matters" [level=3] [ref=e1305]
+          - paragraph [ref=e1306]: High-index materials bend light more efficiently, creating thinner and lighter lenses.
+    - generic [ref=e1308]:
+      - generic [ref=e1309]:
+        - paragraph [ref=e1310]: Craftsmanship
+        - heading "Not All Lenses Are Created Equal" [level=2] [ref=e1311]
+        - generic [ref=e1312]:
+          - paragraph [ref=e1313]: The quality of your lenses depends on how they are made. Precision manufacturing, advanced technology, and attention to detail all play a role in how clearly and comfortably you see.
+          - paragraph [ref=e1314]: "Behind every great pair of glasses is a chain of decisions: measurements, materials, surfacing, coating, inspection, and a lab team that treats clarity like craft."
+      - img "Technician inspecting lenses in an optical lab" [ref=e1316]
+    - generic [ref=e1319]:
+      - generic [ref=e1320]:
+        - generic [ref=e1321]:
+          - paragraph [ref=e1322]: Patient Practice Locator
+          - heading "Find an Independent Eye Care Practice" [level=2] [ref=e1323]
+          - paragraph [ref=e1324]: These independent practices are connected to the Artisan Lab Network ecosystem and can help you explore premium lens options with a local doctor.
+        - generic [ref=e1325]:
+          - generic [ref=e1326]: Search by ZIP, city, or address
+          - generic [ref=e1327]:
+            - textbox "Search by ZIP, city, or address" [ref=e1328]:
+              - /placeholder: "Example: Denver, CO or 80504"
+              - text: "80504"
+            - generic [ref=e1329]: Search radius
+            - combobox "Search radius" [ref=e1330]:
+              - option "25 miles"
+              - option "50 miles"
+              - option "100 miles" [selected]
+              - option "500 miles"
+            - button "Find Practices" [ref=e1331]:
+              - img [ref=e1332]
+              - text: Find Practices
+          - generic [ref=e1335]:
+            - generic [ref=e1336]:
+              - img [ref=e1337]
+              - text: Approved practices only
+            - generic [ref=e1340]:
+              - img [ref=e1341]
+              - text: No labs displayed
+            - generic [ref=e1345]:
+              - img [ref=e1346]
+              - text: Distance sorted
+      - paragraph [ref=e1349]: Server-side Google Maps key is not configured. Add GOOGLE_MAPS_SERVER_API_KEY, GOOGLE_GEOCODING_API_KEY, GOOGLE_PLACES_API_KEY, or GOOGLE_MAPS_API_KEY in Vercel to enable distance sorting.
+      - generic [ref=e1350]:
+        - generic [ref=e1351]:
+          - article [ref=e1352] [cursor=pointer]:
+            - generic [ref=e1353]:
+              - generic [ref=e1354]:
+                - paragraph [ref=e1355]: Frederick, CO
+                - heading "Carbon Valley Eye Care" [level=3] [ref=e1356]
+              - generic [ref=e1357]:
+                - generic [ref=e1358]: 1 location
+                - generic "Practice affiliations" [ref=e1359]:
+                  - generic "Artisan equity partner" [ref=e1360]:
+                    - img "Artisan equity partner" [ref=e1361]
+            - generic [ref=e1362]:
+              - paragraph [ref=e1363]:
+                - img [ref=e1364]
+                - generic [ref=e1367]: 5900 Keyes St Suite 101, Frederick, CO 80504
+              - link "303-833-1056" [ref=e1368]:
+                - /url: tel:303-833-1056
+                - img [ref=e1369]
+                - generic [ref=e1371]: 303-833-1056
+            - generic [ref=e1372]:
+              - paragraph [ref=e1373]: Search to calculate distance
+              - link "Get Directions" [ref=e1374]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Carbon%20Valley%20Eye%20Care%2C%205900%20Keyes%20St%20Suite%20101%2C%20Frederick%2C%20CO%2080504
+                - img [ref=e1375]
+                - text: Get Directions
+          - article [ref=e1377] [cursor=pointer]:
+            - generic [ref=e1378]:
+              - generic [ref=e1379]:
+                - paragraph [ref=e1380]: Snellville, GA
+                - heading "Carlin Vision" [level=3] [ref=e1381]
+              - generic [ref=e1383]: 1 location
+            - generic [ref=e1384]:
+              - paragraph [ref=e1385]:
+                - img [ref=e1386]
+                - generic [ref=e1389]: 2377 Lenora Church Road, Snellville, GA 30078
+              - link "770-979-2020" [ref=e1390]:
+                - /url: tel:770-979-2020
+                - img [ref=e1391]
+                - generic [ref=e1393]: 770-979-2020
+            - generic [ref=e1394]:
+              - paragraph [ref=e1395]: Search to calculate distance
+              - link "Get Directions" [ref=e1396]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Carlin%20Vision%2C%202377%20Lenora%20Church%20Road%2C%20Snellville%2C%20GA%2030078
+                - img [ref=e1397]
+                - text: Get Directions
+          - article [ref=e1399] [cursor=pointer]:
+            - generic [ref=e1400]:
+              - generic [ref=e1401]:
+                - paragraph [ref=e1402]: Birmingham, MI
+                - heading "Clarity Advanced Eye Care" [level=3] [ref=e1403]
+              - generic [ref=e1404]:
+                - generic [ref=e1405]: 1 location
+                - generic "Practice affiliations" [ref=e1406]:
+                  - generic "Artisan equity partner" [ref=e1407]:
+                    - img "Artisan equity partner" [ref=e1408]
+            - generic [ref=e1409]:
+              - paragraph [ref=e1410]:
+                - img [ref=e1411]
+                - generic [ref=e1414]: 970 S. Old Woodward Ave., Birmingham, MI 48009
+              - link "734-455-3340" [ref=e1415]:
+                - /url: tel:734-455-3340
+                - img [ref=e1416]
+                - generic [ref=e1418]: 734-455-3340
+            - generic [ref=e1419]:
+              - paragraph [ref=e1420]: Search to calculate distance
+              - link "Get Directions" [ref=e1421]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Clarity%20Advanced%20Eye%20Care%2C%20970%20S.%20Old%20Woodward%20Ave.%2C%20Birmingham%2C%20MI%2048009
+                - img [ref=e1422]
+                - text: Get Directions
+          - article [ref=e1424] [cursor=pointer]:
+            - generic [ref=e1425]:
+              - generic [ref=e1426]:
+                - paragraph [ref=e1427]: San Diego, CA
+                - heading "Complete Eye Care" [level=3] [ref=e1428]
+              - generic [ref=e1429]:
+                - generic [ref=e1430]: 1 location
+                - generic "Practice affiliations" [ref=e1431]:
+                  - generic "Artisan equity partner" [ref=e1432]:
+                    - img "Artisan equity partner" [ref=e1433]
+            - generic [ref=e1434]:
+              - paragraph [ref=e1435]:
+                - img [ref=e1436]
+                - generic [ref=e1439]: "5075 Ruffin Rd #B, San Diego, CA 92123"
+              - link "858-278-4720" [ref=e1440]:
+                - /url: tel:858-278-4720
+                - img [ref=e1441]
+                - generic [ref=e1443]: 858-278-4720
+            - generic [ref=e1444]:
+              - paragraph [ref=e1445]: Search to calculate distance
+              - link "Get Directions" [ref=e1446]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Complete%20Eye%20Care%2C%205075%20Ruffin%20Rd%20%23B%2C%20San%20Diego%2C%20CA%2092123
+                - img [ref=e1447]
+                - text: Get Directions
+          - article [ref=e1449] [cursor=pointer]:
+            - generic [ref=e1450]:
+              - generic [ref=e1451]:
+                - paragraph [ref=e1452]: Tigard, OR
+                - heading "Converge Neuro Optometry" [level=3] [ref=e1453]
+              - generic [ref=e1455]: 1 location
+            - generic [ref=e1456]:
+              - paragraph [ref=e1457]:
+                - img [ref=e1458]
+                - generic [ref=e1461]: "9975 Sw Frewing St. #130, Tigard, OR 97223"
+              - link "503-906-3596" [ref=e1462]:
+                - /url: tel:503-906-3596
+                - img [ref=e1463]
+                - generic [ref=e1465]: 503-906-3596
+            - generic [ref=e1466]:
+              - paragraph [ref=e1467]: Search to calculate distance
+              - link "Get Directions" [ref=e1468]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Converge%20Neuro%20Optometry%2C%209975%20Sw%20Frewing%20St.%20%23130%2C%20Tigard%2C%20OR%2097223
+                - img [ref=e1469]
+                - text: Get Directions
+          - article [ref=e1471] [cursor=pointer]:
+            - generic [ref=e1472]:
+              - generic [ref=e1473]:
+                - paragraph [ref=e1474]: Bangor, ME
+                - heading "Dr. Valley Eye Group" [level=3] [ref=e1475]
+              - generic [ref=e1476]:
+                - generic [ref=e1477]: 1 location
+                - generic "Practice affiliations" [ref=e1478]:
+                  - generic "Artisan equity partner" [ref=e1479]:
+                    - img "Artisan equity partner" [ref=e1480]
+            - generic [ref=e1481]:
+              - paragraph [ref=e1482]:
+                - img [ref=e1483]
+                - generic [ref=e1486]: 766 Stillwater Ave Suite 1, Bangor, ME 4401
+              - link "207-945-5891" [ref=e1487]:
+                - /url: tel:207-945-5891
+                - img [ref=e1488]
+                - generic [ref=e1490]: 207-945-5891
+            - generic [ref=e1491]:
+              - paragraph [ref=e1492]: Search to calculate distance
+              - link "Get Directions" [ref=e1493]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Dr.%20Valley%20Eye%20Group%2C%20766%20Stillwater%20Ave%20Suite%201%2C%20Bangor%2C%20ME%204401
+                - img [ref=e1494]
+                - text: Get Directions
+          - article [ref=e1496] [cursor=pointer]:
+            - generic [ref=e1497]:
+              - generic [ref=e1498]:
+                - paragraph [ref=e1499]: Devils Lake, ND
+                - heading "Drs Moen, Enderle And Krein Pc" [level=3] [ref=e1500]
+              - generic [ref=e1501]:
+                - generic [ref=e1502]: 1 location
+                - generic "Practice affiliations" [ref=e1503]:
+                  - generic "Artisan equity partner" [ref=e1504]:
+                    - img "Artisan equity partner" [ref=e1505]
+            - generic [ref=e1506]:
+              - paragraph [ref=e1507]:
+                - img [ref=e1508]
+                - generic [ref=e1511]: 404 Hwy 2 East, Devils Lake, ND 58301
+              - link "701-662-4085" [ref=e1512]:
+                - /url: tel:701-662-4085
+                - img [ref=e1513]
+                - generic [ref=e1515]: 701-662-4085
+            - generic [ref=e1516]:
+              - paragraph [ref=e1517]: Search to calculate distance
+              - link "Get Directions" [ref=e1518]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Drs%20Moen%2C%20Enderle%20And%20Krein%20Pc%2C%20404%20Hwy%202%20East%2C%20Devils%20Lake%2C%20ND%2058301
+                - img [ref=e1519]
+                - text: Get Directions
+          - article [ref=e1521] [cursor=pointer]:
+            - generic [ref=e1522]:
+              - generic [ref=e1523]:
+                - paragraph [ref=e1524]: Vancouver, WA
+                - heading "Evergreen Eye Care" [level=3] [ref=e1525]
+              - generic [ref=e1527]: 1 location
+            - generic [ref=e1528]:
+              - paragraph [ref=e1529]:
+                - img [ref=e1530]
+                - generic [ref=e1533]: "1319 Ne 134Th St #107, Vancouver, WA 98685"
+              - link "360-573-3937" [ref=e1534]:
+                - /url: tel:360-573-3937
+                - img [ref=e1535]
+                - generic [ref=e1537]: 360-573-3937
+            - generic [ref=e1538]:
+              - paragraph [ref=e1539]: Search to calculate distance
+              - link "Get Directions" [ref=e1540]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Evergreen%20Eye%20Care%2C%201319%20Ne%20134Th%20St%20%23107%2C%20Vancouver%2C%20WA%2098685
+                - img [ref=e1541]
+                - text: Get Directions
+          - article [ref=e1543] [cursor=pointer]:
+            - generic [ref=e1544]:
+              - generic [ref=e1545]:
+                - paragraph [ref=e1546]: Rigby, ID
+                - heading "Eye Care Of Rigby And Blackfoot" [level=3] [ref=e1547]
+              - generic [ref=e1548]:
+                - generic [ref=e1549]: 1 location
+                - generic "Practice affiliations" [ref=e1550]:
+                  - generic "Artisan equity partner" [ref=e1551]:
+                    - img "Artisan equity partner" [ref=e1552]
+            - generic [ref=e1553]:
+              - paragraph [ref=e1554]:
+                - img [ref=e1555]
+                - generic [ref=e1558]: 711 Rigby Lake Dr Suite 301, Rigby, ID 83442
+              - link "208-782-3422" [ref=e1559]:
+                - /url: tel:208-782-3422
+                - img [ref=e1560]
+                - generic [ref=e1562]: 208-782-3422
+            - generic [ref=e1563]:
+              - paragraph [ref=e1564]: Search to calculate distance
+              - link "Get Directions" [ref=e1565]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Eye%20Care%20Of%20Rigby%20And%20Blackfoot%2C%20711%20Rigby%20Lake%20Dr%20Suite%20301%2C%20Rigby%2C%20ID%2083442
+                - img [ref=e1566]
+                - text: Get Directions
+          - article [ref=e1568] [cursor=pointer]:
+            - generic [ref=e1569]:
+              - generic [ref=e1570]:
+                - paragraph [ref=e1571]: Crossville, TN
+                - heading "Eye Centers Of Tennessee" [level=3] [ref=e1572]
+              - generic [ref=e1574]: 1 location
+            - generic [ref=e1575]:
+              - paragraph [ref=e1576]:
+                - img [ref=e1577]
+                - generic [ref=e1580]: 15 Iris Lane, Crossville, TN 38555
+              - link "931-456-2728" [ref=e1581]:
+                - /url: tel:931-456-2728
+                - img [ref=e1582]
+                - generic [ref=e1584]: 931-456-2728
+            - generic [ref=e1585]:
+              - paragraph [ref=e1586]: Search to calculate distance
+              - link "Get Directions" [ref=e1587]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Eye%20Centers%20Of%20Tennessee%2C%2015%20Iris%20Lane%2C%20Crossville%2C%20TN%2038555
+                - img [ref=e1588]
+                - text: Get Directions
+          - article [ref=e1590] [cursor=pointer]:
+            - generic [ref=e1591]:
+              - generic [ref=e1592]:
+                - paragraph [ref=e1593]: Lincoln City, OR
+                - heading "Eyecare Associates" [level=3] [ref=e1594]
+              - generic [ref=e1595]:
+                - generic [ref=e1596]: 1 location
+                - generic "Practice affiliations" [ref=e1597]:
+                  - generic "Artisan equity partner" [ref=e1598]:
+                    - img "Artisan equity partner" [ref=e1599]
+            - generic [ref=e1600]:
+              - paragraph [ref=e1601]:
+                - img [ref=e1602]
+                - generic [ref=e1605]: 2930 Ne West Devils Lake Rd, Lincoln City, OR 97367
+              - link "541-926-5848" [ref=e1606]:
+                - /url: tel:541-926-5848
+                - img [ref=e1607]
+                - generic [ref=e1609]: 541-926-5848
+            - generic [ref=e1610]:
+              - paragraph [ref=e1611]: Search to calculate distance
+              - link "Get Directions" [ref=e1612]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Eyecare%20Associates%2C%202930%20Ne%20West%20Devils%20Lake%20Rd%2C%20Lincoln%20City%2C%20OR%2097367
+                - img [ref=e1613]
+                - text: Get Directions
+          - article [ref=e1615] [cursor=pointer]:
+            - generic [ref=e1616]:
+              - generic [ref=e1617]:
+                - paragraph [ref=e1618]: Mandan, ND
+                - heading "Eyecare Professionals" [level=3] [ref=e1619]
+              - generic [ref=e1620]:
+                - generic [ref=e1621]: 1 location
+                - generic "Practice affiliations" [ref=e1622]:
+                  - generic "Artisan equity partner" [ref=e1623]:
+                    - img "Artisan equity partner" [ref=e1624]
+            - generic [ref=e1625]:
+              - paragraph [ref=e1626]:
+                - img [ref=e1627]
+                - generic [ref=e1630]: 113 3Rd Ave Nw, Mandan, ND 58554
+              - link "701-663-2020" [ref=e1631]:
+                - /url: tel:701-663-2020
+                - img [ref=e1632]
+                - generic [ref=e1634]: 701-663-2020
+            - generic [ref=e1635]:
+              - paragraph [ref=e1636]: Search to calculate distance
+              - link "Get Directions" [ref=e1637]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Eyecare%20Professionals%2C%20113%203Rd%20Ave%20Nw%2C%20Mandan%2C%20ND%2058554
+                - img [ref=e1638]
+                - text: Get Directions
+          - article [ref=e1640] [cursor=pointer]:
+            - generic [ref=e1641]:
+              - generic [ref=e1642]:
+                - paragraph [ref=e1643]: Portland, OR
+                - heading "Eyestyles" [level=3] [ref=e1644]
+              - generic [ref=e1645]:
+                - generic [ref=e1646]: 1 location
+                - generic "Practice affiliations" [ref=e1647]:
+                  - generic "Artisan equity partner" [ref=e1648]:
+                    - img "Artisan equity partner" [ref=e1649]
+            - generic [ref=e1650]:
+              - paragraph [ref=e1651]:
+                - img [ref=e1652]
+                - generic [ref=e1655]: 7144 Sw Hazel Fern Rd, Portland, OR 97224
+              - link "503-775-4550" [ref=e1656]:
+                - /url: tel:503-775-4550
+                - img [ref=e1657]
+                - generic [ref=e1659]: 503-775-4550
+            - generic [ref=e1660]:
+              - paragraph [ref=e1661]: Search to calculate distance
+              - link "Get Directions" [ref=e1662]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Eyestyles%2C%207144%20Sw%20Hazel%20Fern%20Rd%2C%20Portland%2C%20OR%2097224
+                - img [ref=e1663]
+                - text: Get Directions
+          - article [ref=e1665] [cursor=pointer]:
+            - generic [ref=e1666]:
+              - generic [ref=e1667]:
+                - paragraph [ref=e1668]: Ontario, OR
+                - heading "Family Eye Center-Ontario" [level=3] [ref=e1669]
+              - generic [ref=e1670]:
+                - generic [ref=e1671]: 1 location
+                - generic "Practice affiliations" [ref=e1672]:
+                  - generic "Artisan equity partner" [ref=e1673]:
+                    - img "Artisan equity partner" [ref=e1674]
+            - generic [ref=e1675]:
+              - paragraph [ref=e1676]:
+                - img [ref=e1677]
+                - generic [ref=e1680]: 350 E Lane South, Ontario, OR 97914
+              - link "541-889-2020" [ref=e1681]:
+                - /url: tel:541-889-2020
+                - img [ref=e1682]
+                - generic [ref=e1684]: 541-889-2020
+            - generic [ref=e1685]:
+              - paragraph [ref=e1686]: Search to calculate distance
+              - link "Get Directions" [ref=e1687]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Family%20Eye%20Center-Ontario%2C%20350%20E%20Lane%20South%2C%20Ontario%2C%20OR%2097914
+                - img [ref=e1688]
+                - text: Get Directions
+          - article [ref=e1690] [cursor=pointer]:
+            - generic [ref=e1691]:
+              - generic [ref=e1692]:
+                - paragraph [ref=e1693]: Muncie, IN
+                - heading "Family Vision Care" [level=3] [ref=e1694]
+              - generic [ref=e1695]:
+                - generic [ref=e1696]: 1 location
+                - generic "Practice affiliations" [ref=e1697]:
+                  - generic "Artisan equity partner" [ref=e1698]:
+                    - img "Artisan equity partner" [ref=e1699]
+            - generic [ref=e1700]:
+              - paragraph [ref=e1701]:
+                - img [ref=e1702]
+                - generic [ref=e1705]: 4801 W Bethel, Muncie, IN 47304
+              - link "765-288-7744" [ref=e1706]:
+                - /url: tel:765-288-7744
+                - img [ref=e1707]
+                - generic [ref=e1709]: 765-288-7744
+            - generic [ref=e1710]:
+              - paragraph [ref=e1711]: Search to calculate distance
+              - link "Get Directions" [ref=e1712]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Family%20Vision%20Care%2C%204801%20W%20Bethel%2C%20Muncie%2C%20IN%2047304
+                - img [ref=e1713]
+                - text: Get Directions
+          - article [ref=e1715] [cursor=pointer]:
+            - generic [ref=e1716]:
+              - generic [ref=e1717]:
+                - paragraph [ref=e1718]: Scappoose, OR
+                - heading "Family Vision Of Oregon" [level=3] [ref=e1719]
+              - generic [ref=e1721]: 1 location
+            - generic [ref=e1722]:
+              - paragraph [ref=e1723]:
+                - img [ref=e1724]
+                - generic [ref=e1727]: 51675 Columbia River Hwy, Scappoose, OR 97056
+              - link "503 543 6313" [ref=e1728]:
+                - /url: tel:503 543 6313
+                - img [ref=e1729]
+                - generic [ref=e1731]: 503 543 6313
+            - generic [ref=e1732]:
+              - paragraph [ref=e1733]: Search to calculate distance
+              - link "Get Directions" [ref=e1734]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Family%20Vision%20Of%20Oregon%2C%2051675%20Columbia%20River%20Hwy%2C%20Scappoose%2C%20OR%2097056
+                - img [ref=e1735]
+                - text: Get Directions
+          - article [ref=e1737] [cursor=pointer]:
+            - generic [ref=e1738]:
+              - generic [ref=e1739]:
+                - paragraph [ref=e1740]: Carmel, IN
+                - heading "Garn Eyecare Group" [level=3] [ref=e1741]
+              - generic [ref=e1742]:
+                - generic [ref=e1743]: 1 location
+                - generic "Practice affiliations" [ref=e1744]:
+                  - generic "Artisan equity partner" [ref=e1745]:
+                    - img "Artisan equity partner" [ref=e1746]
+            - generic [ref=e1747]:
+              - paragraph [ref=e1748]:
+                - img [ref=e1749]
+                - generic [ref=e1752]: 14560 River Rd Suite 120, Carmel, IN 46033
+              - link "317-873-3000" [ref=e1753]:
+                - /url: tel:317-873-3000
+                - img [ref=e1754]
+                - generic [ref=e1756]: 317-873-3000
+            - generic [ref=e1757]:
+              - paragraph [ref=e1758]: Search to calculate distance
+              - link "Get Directions" [ref=e1759]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Garn%20Eyecare%20Group%2C%2014560%20River%20Rd%20Suite%20120%2C%20Carmel%2C%20IN%2046033
+                - img [ref=e1760]
+                - text: Get Directions
+          - article [ref=e1762] [cursor=pointer]:
+            - generic [ref=e1763]:
+              - generic [ref=e1764]:
+                - paragraph [ref=e1765]: Louisville, CO
+                - heading "Gilded Frame" [level=3] [ref=e1766]
+              - generic [ref=e1768]: 1 location
+            - generic [ref=e1769]:
+              - paragraph [ref=e1770]:
+                - img [ref=e1771]
+                - generic [ref=e1774]: 801 Main Street, Louisville, CO 80027
+              - link "720-230-6869" [ref=e1775]:
+                - /url: tel:720-230-6869
+                - img [ref=e1776]
+                - generic [ref=e1778]: 720-230-6869
+            - generic [ref=e1779]:
+              - paragraph [ref=e1780]: Search to calculate distance
+              - link "Get Directions" [ref=e1781]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Gilded%20Frame%2C%20801%20Main%20Street%2C%20Louisville%2C%20CO%2080027
+                - img [ref=e1782]
+                - text: Get Directions
+          - article [ref=e1784] [cursor=pointer]:
+            - generic [ref=e1785]:
+              - generic [ref=e1786]:
+                - paragraph [ref=e1787]: Minot, ND
+                - heading "Johnson Eyecare Pc" [level=3] [ref=e1788]
+              - generic [ref=e1790]: 1 location
+            - generic [ref=e1791]:
+              - paragraph [ref=e1792]:
+                - img [ref=e1793]
+                - generic [ref=e1796]: 1525 31St Ave Sw Ste E, Minot, ND 58701
+              - link "701-857-6050" [ref=e1797]:
+                - /url: tel:701-857-6050
+                - img [ref=e1798]
+                - generic [ref=e1800]: 701-857-6050
+            - generic [ref=e1801]:
+              - paragraph [ref=e1802]: Search to calculate distance
+              - link "Get Directions" [ref=e1803]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Johnson%20Eyecare%20Pc%2C%201525%2031St%20Ave%20Sw%20Ste%20E%2C%20Minot%2C%20ND%2058701
+                - img [ref=e1804]
+                - text: Get Directions
+          - article [ref=e1806] [cursor=pointer]:
+            - generic [ref=e1807]:
+              - generic [ref=e1808]:
+                - paragraph [ref=e1809]: Minot, ND
+                - heading "Johnson Eyecare Pc" [level=3] [ref=e1810]
+              - generic [ref=e1811]:
+                - generic [ref=e1812]: 1 location
+                - generic "Practice affiliations" [ref=e1813]:
+                  - generic "Artisan equity partner" [ref=e1814]:
+                    - img "Artisan equity partner" [ref=e1815]
+            - generic [ref=e1816]:
+              - paragraph [ref=e1817]:
+                - img [ref=e1818]
+                - generic [ref=e1821]: 1525 31St Ave Sw Ste E, Minot, ND 58701
+              - link "701-857-6050" [ref=e1822]:
+                - /url: tel:701-857-6050
+                - img [ref=e1823]
+                - generic [ref=e1825]: 701-857-6050
+            - generic [ref=e1826]:
+              - paragraph [ref=e1827]: Search to calculate distance
+              - link "Get Directions" [ref=e1828]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Johnson%20Eyecare%20Pc%2C%201525%2031St%20Ave%20Sw%20Ste%20E%2C%20Minot%2C%20ND%2058701
+                - img [ref=e1829]
+                - text: Get Directions
+          - article [ref=e1831] [cursor=pointer]:
+            - generic [ref=e1832]:
+              - generic [ref=e1833]:
+                - paragraph [ref=e1834]: Lenexa, KS
+                - heading "Letournaeu Eye Group" [level=3] [ref=e1835]
+              - generic [ref=e1836]:
+                - generic [ref=e1837]: 1 location
+                - generic "Practice affiliations" [ref=e1838]:
+                  - generic "Artisan equity partner" [ref=e1839]:
+                    - img "Artisan equity partner" [ref=e1840]
+            - generic [ref=e1841]:
+              - paragraph [ref=e1842]:
+                - img [ref=e1843]
+                - generic [ref=e1846]: 9479 Meadow View Dr, Lenexa, KS 66227
+              - link "913-261-8327" [ref=e1847]:
+                - /url: tel:913-261-8327
+                - img [ref=e1848]
+                - generic [ref=e1850]: 913-261-8327
+            - generic [ref=e1851]:
+              - paragraph [ref=e1852]: Search to calculate distance
+              - link "Get Directions" [ref=e1853]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Letournaeu%20Eye%20Group%2C%209479%20Meadow%20View%20Dr%2C%20Lenexa%2C%20KS%2066227
+                - img [ref=e1854]
+                - text: Get Directions
+          - article [ref=e1856] [cursor=pointer]:
+            - generic [ref=e1857]:
+              - generic [ref=e1858]:
+                - paragraph [ref=e1859]: Vancouver, WA
+                - heading "Mt View Eye" [level=3] [ref=e1860]
+              - generic [ref=e1861]:
+                - generic [ref=e1862]: 1 location
+                - generic "Practice affiliations" [ref=e1863]:
+                  - generic "Tokai access" [ref=e1864]:
+                    - img "Tokai access" [ref=e1865]
+            - generic [ref=e1866]:
+              - paragraph [ref=e1867]:
+                - img [ref=e1868]
+                - generic [ref=e1871]: 1405 Se 164Th Ave Ste 102, Vancouver, WA 98683
+              - link "360-253-4405" [ref=e1872]:
+                - /url: tel:360-253-4405
+                - img [ref=e1873]
+                - generic [ref=e1875]: 360-253-4405
+            - generic [ref=e1876]:
+              - paragraph [ref=e1877]: Search to calculate distance
+              - link "Get Directions" [ref=e1878]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Mt%20View%20Eye%2C%201405%20Se%20164Th%20Ave%20Ste%20102%2C%20Vancouver%2C%20WA%2098683
+                - img [ref=e1879]
+                - text: Get Directions
+          - article [ref=e1881] [cursor=pointer]:
+            - generic [ref=e1882]:
+              - generic [ref=e1883]:
+                - paragraph [ref=e1884]: Beavercreek, OH
+                - heading "Nova Vision Care" [level=3] [ref=e1885]
+              - generic [ref=e1887]: 1 location
+            - generic [ref=e1888]:
+              - paragraph [ref=e1889]:
+                - img [ref=e1890]
+                - generic [ref=e1893]: 4244 Indian Ripple Rd Ste100, Beavercreek, OH 45440
+              - link "937-320-0300" [ref=e1894]:
+                - /url: tel:937-320-0300
+                - img [ref=e1895]
+                - generic [ref=e1897]: 937-320-0300
+            - generic [ref=e1898]:
+              - paragraph [ref=e1899]: Search to calculate distance
+              - link "Get Directions" [ref=e1900]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Nova%20Vision%20Care%2C%204244%20Indian%20Ripple%20Rd%20Ste100%2C%20Beavercreek%2C%20OH%2045440
+                - img [ref=e1901]
+                - text: Get Directions
+          - article [ref=e1903] [cursor=pointer]:
+            - generic [ref=e1904]:
+              - generic [ref=e1905]:
+                - paragraph [ref=e1906]: Minot, ND
+                - heading "Optical Outlook" [level=3] [ref=e1907]
+              - generic [ref=e1909]: 1 location
+            - generic [ref=e1910]:
+              - paragraph [ref=e1911]:
+                - img [ref=e1912]
+                - generic [ref=e1915]: 1400 S Broadway, Minot, ND 58701
+              - link "701-837-0022" [ref=e1916]:
+                - /url: tel:701-837-0022
+                - img [ref=e1917]
+                - generic [ref=e1919]: 701-837-0022
+            - generic [ref=e1920]:
+              - paragraph [ref=e1921]: Search to calculate distance
+              - link "Get Directions" [ref=e1922]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Optical%20Outlook%2C%201400%20S%20Broadway%2C%20Minot%2C%20ND%2058701
+                - img [ref=e1923]
+                - text: Get Directions
+          - article [ref=e1925] [cursor=pointer]:
+            - generic [ref=e1926]:
+              - generic [ref=e1927]:
+                - paragraph [ref=e1928]: Colorado Springs, CO
+                - heading "Pine Creek Vision Clinic" [level=3] [ref=e1929]
+              - generic [ref=e1930]:
+                - generic [ref=e1931]: 1 location
+                - generic "Practice affiliations" [ref=e1932]:
+                  - generic "Artisan equity partner" [ref=e1933]:
+                    - img "Artisan equity partner" [ref=e1934]
+            - generic [ref=e1935]:
+              - paragraph [ref=e1936]:
+                - img [ref=e1937]
+                - generic [ref=e1940]: Suite 200, Colorado Springs, CO 80920
+              - link "719-594-2020" [ref=e1941]:
+                - /url: tel:719-594-2020
+                - img [ref=e1942]
+                - generic [ref=e1944]: 719-594-2020
+            - generic [ref=e1945]:
+              - paragraph [ref=e1946]: Search to calculate distance
+              - link "Get Directions" [ref=e1947]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Pine%20Creek%20Vision%20Clinic%2C%20Suite%20200%2C%20Colorado%20Springs%2C%20CO%2080920
+                - img [ref=e1948]
+                - text: Get Directions
+          - article [ref=e1950] [cursor=pointer]:
+            - generic [ref=e1951]:
+              - generic [ref=e1952]:
+                - paragraph [ref=e1953]: Portland, OR
+                - heading "Portland Eye Care" [level=3] [ref=e1954]
+              - generic [ref=e1956]: 1 location
+            - generic [ref=e1957]:
+              - paragraph [ref=e1958]:
+                - img [ref=e1959]
+                - generic [ref=e1962]: 4133 Se Division St, Portland, OR 97202
+              - link "503-444-7639" [ref=e1963]:
+                - /url: tel:503-444-7639
+                - img [ref=e1964]
+                - generic [ref=e1966]: 503-444-7639
+            - generic [ref=e1967]:
+              - paragraph [ref=e1968]: Search to calculate distance
+              - link "Get Directions" [ref=e1969]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Portland%20Eye%20Care%2C%204133%20Se%20Division%20St%2C%20Portland%2C%20OR%2097202
+                - img [ref=e1970]
+                - text: Get Directions
+          - article [ref=e1972] [cursor=pointer]:
+            - generic [ref=e1973]:
+              - generic [ref=e1974]:
+                - paragraph [ref=e1975]: Wahpeton, ND
+                - heading "Prairie Vision Center" [level=3] [ref=e1976]
+              - generic [ref=e1977]:
+                - generic [ref=e1978]: 1 location
+                - generic "Practice affiliations" [ref=e1979]:
+                  - generic "Artisan equity partner" [ref=e1980]:
+                    - img "Artisan equity partner" [ref=e1981]
+            - generic [ref=e1982]:
+              - paragraph [ref=e1983]:
+                - img [ref=e1984]
+                - generic [ref=e1987]: 315 11Th Street N Suite E, Wahpeton, ND 58075
+              - link "701-642-4090" [ref=e1988]:
+                - /url: tel:701-642-4090
+                - img [ref=e1989]
+                - generic [ref=e1991]: 701-642-4090
+            - generic [ref=e1992]:
+              - paragraph [ref=e1993]: Search to calculate distance
+              - link "Get Directions" [ref=e1994]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Prairie%20Vision%20Center%2C%20315%2011Th%20Street%20N%20Suite%20E%2C%20Wahpeton%2C%20ND%2058075
+                - img [ref=e1995]
+                - text: Get Directions
+          - article [ref=e1997] [cursor=pointer]:
+            - generic [ref=e1998]:
+              - generic [ref=e1999]:
+                - paragraph [ref=e2000]: Bloomington, IN
+                - heading "Precision Eye Group" [level=3] [ref=e2001]
+              - generic [ref=e2002]:
+                - generic [ref=e2003]: 1 location
+                - generic "Practice affiliations" [ref=e2004]:
+                  - generic "Artisan equity partner" [ref=e2005]:
+                    - img "Artisan equity partner" [ref=e2006]
+            - generic [ref=e2007]:
+              - paragraph [ref=e2008]:
+                - img [ref=e2009]
+                - generic [ref=e2012]: 4619 W Richland Plaza Dr, Bloomington, IN 47404
+              - link "812-954-4565" [ref=e2013]:
+                - /url: tel:812-954-4565
+                - img [ref=e2014]
+                - generic [ref=e2016]: 812-954-4565
+            - generic [ref=e2017]:
+              - paragraph [ref=e2018]: Search to calculate distance
+              - link "Get Directions" [ref=e2019]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Precision%20Eye%20Group%2C%204619%20W%20Richland%20Plaza%20Dr%2C%20Bloomington%2C%20IN%2047404
+                - img [ref=e2020]
+                - text: Get Directions
+          - article [ref=e2022] [cursor=pointer]:
+            - generic [ref=e2023]:
+              - generic [ref=e2024]:
+                - paragraph [ref=e2025]: Basalt, CO
+                - heading "Rocky Mountain Vision Group" [level=3] [ref=e2026]
+              - generic [ref=e2027]:
+                - generic [ref=e2028]: 1 location
+                - generic "Practice affiliations" [ref=e2029]:
+                  - generic "Artisan equity partner" [ref=e2030]:
+                    - img "Artisan equity partner" [ref=e2031]
+            - generic [ref=e2032]:
+              - paragraph [ref=e2033]:
+                - img [ref=e2034]
+                - generic [ref=e2037]: 341 Market St, Basalt, CO 81621
+              - link "970-927-2020" [ref=e2038]:
+                - /url: tel:970-927-2020
+                - img [ref=e2039]
+                - generic [ref=e2041]: 970-927-2020
+            - generic [ref=e2042]:
+              - paragraph [ref=e2043]: Search to calculate distance
+              - link "Get Directions" [ref=e2044]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Rocky%20Mountain%20Vision%20Group%2C%20341%20Market%20St%2C%20Basalt%2C%20CO%2081621
+                - img [ref=e2045]
+                - text: Get Directions
+          - article [ref=e2047] [cursor=pointer]:
+            - generic [ref=e2048]:
+              - generic [ref=e2049]:
+                - paragraph [ref=e2050]: Portland, OR
+                - heading "Tabor Vision" [level=3] [ref=e2051]
+              - generic [ref=e2053]: 1 location
+            - generic [ref=e2054]:
+              - paragraph [ref=e2055]:
+                - img [ref=e2056]
+                - generic [ref=e2059]: 1433 Ne 69Th Ave, Portland, OR 97213
+              - link "971-256-3937" [ref=e2060]:
+                - /url: tel:971-256-3937
+                - img [ref=e2061]
+                - generic [ref=e2063]: 971-256-3937
+            - generic [ref=e2064]:
+              - paragraph [ref=e2065]: Search to calculate distance
+              - link "Get Directions" [ref=e2066]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Tabor%20Vision%2C%201433%20Ne%2069Th%20Ave%2C%20Portland%2C%20OR%2097213
+                - img [ref=e2067]
+                - text: Get Directions
+          - article [ref=e2069] [cursor=pointer]:
+            - generic [ref=e2070]:
+              - generic [ref=e2071]:
+                - paragraph [ref=e2072]: Glenwood Springs, CO
+                - heading "Valley Vision Glenwood" [level=3] [ref=e2073]
+              - generic [ref=e2074]:
+                - generic [ref=e2075]: 1 location
+                - generic "Practice affiliations" [ref=e2076]:
+                  - generic "Artisan equity partner" [ref=e2077]:
+                    - img "Artisan equity partner" [ref=e2078]
+            - generic [ref=e2079]:
+              - paragraph [ref=e2080]:
+                - img [ref=e2081]
+                - generic [ref=e2084]: 904 Pitkin Ave, Glenwood Springs, CO 81601
+              - link "970-945-6011" [ref=e2085]:
+                - /url: tel:970-945-6011
+                - img [ref=e2086]
+                - generic [ref=e2088]: 970-945-6011
+            - generic [ref=e2089]:
+              - paragraph [ref=e2090]: Search to calculate distance
+              - link "Get Directions" [ref=e2091]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Valley%20Vision%20Glenwood%2C%20904%20Pitkin%20Ave%2C%20Glenwood%20Springs%2C%20CO%2081601
+                - img [ref=e2092]
+                - text: Get Directions
+          - article [ref=e2094] [cursor=pointer]:
+            - generic [ref=e2095]:
+              - generic [ref=e2096]:
+                - paragraph [ref=e2097]: Greenwood, IN
+                - heading "Visionquest Eyecare" [level=3] [ref=e2098]
+              - generic [ref=e2099]:
+                - generic [ref=e2100]: 1 location
+                - generic "Practice affiliations" [ref=e2101]:
+                  - generic "Artisan equity partner" [ref=e2102]:
+                    - img "Artisan equity partner" [ref=e2103]
+            - generic [ref=e2104]:
+              - paragraph [ref=e2105]:
+                - img [ref=e2106]
+                - generic [ref=e2109]: 2887 S St Rd 135, Greenwood, IN 46143
+              - link "317-865-6829" [ref=e2110]:
+                - /url: tel:317-865-6829
+                - img [ref=e2111]
+                - generic [ref=e2113]: 317-865-6829
+            - generic [ref=e2114]:
+              - paragraph [ref=e2115]: Search to calculate distance
+              - link "Get Directions" [ref=e2116]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Visionquest%20Eyecare%2C%202887%20S%20St%20Rd%20135%2C%20Greenwood%2C%20IN%2046143
+                - img [ref=e2117]
+                - text: Get Directions
+          - article [ref=e2119] [cursor=pointer]:
+            - generic [ref=e2120]:
+              - generic [ref=e2121]:
+                - paragraph [ref=e2122]: Montrose, CO
+                - heading "Vista Vision" [level=3] [ref=e2123]
+              - generic [ref=e2125]: 1 location
+            - generic [ref=e2126]:
+              - paragraph [ref=e2127]:
+                - img [ref=e2128]
+                - generic [ref=e2131]: 2770 Woodgate Rd, Montrose, CO 81401
+              - link "970-249-2330" [ref=e2132]:
+                - /url: tel:970-249-2330
+                - img [ref=e2133]
+                - generic [ref=e2135]: 970-249-2330
+            - generic [ref=e2136]:
+              - paragraph [ref=e2137]: Search to calculate distance
+              - link "Get Directions" [ref=e2138]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Vista%20Vision%2C%202770%20Woodgate%20Rd%2C%20Montrose%2C%20CO%2081401
+                - img [ref=e2139]
+                - text: Get Directions
+          - article [ref=e2141] [cursor=pointer]:
+            - generic [ref=e2142]:
+              - generic [ref=e2143]:
+                - paragraph [ref=e2144]: Bemidji, MN
+                - heading "White Spruce Optometry" [level=3] [ref=e2145]
+              - generic [ref=e2146]:
+                - generic [ref=e2147]: 1 location
+                - generic "Practice affiliations" [ref=e2148]:
+                  - generic "Artisan equity partner" [ref=e2149]:
+                    - img "Artisan equity partner" [ref=e2150]
+            - generic [ref=e2151]:
+              - paragraph [ref=e2152]:
+                - img [ref=e2153]
+                - generic [ref=e2156]: 1900 Division St. W Suite 5, Bemidji, MN 56601
+              - link "218-759-1430" [ref=e2157]:
+                - /url: tel:218-759-1430
+                - img [ref=e2158]
+                - generic [ref=e2160]: 218-759-1430
+            - generic [ref=e2161]:
+              - paragraph [ref=e2162]: Search to calculate distance
+              - link "Get Directions" [ref=e2163]:
+                - /url: https://www.google.com/maps/search/?api=1&query=White%20Spruce%20Optometry%2C%201900%20Division%20St.%20W%20Suite%205%2C%20Bemidji%2C%20MN%2056601
+                - img [ref=e2164]
+                - text: Get Directions
+          - article [ref=e2166] [cursor=pointer]:
+            - generic [ref=e2167]:
+              - generic [ref=e2168]:
+                - paragraph [ref=e2169]: Williston, ND
+                - heading "Williston Basin Eyecare Assoc" [level=3] [ref=e2170]
+              - generic [ref=e2171]:
+                - generic [ref=e2172]: 1 location
+                - generic "Practice affiliations" [ref=e2173]:
+                  - generic "Artisan equity partner" [ref=e2174]:
+                    - img "Artisan equity partner" [ref=e2175]
+            - generic [ref=e2176]:
+              - paragraph [ref=e2177]:
+                - img [ref=e2178]
+                - generic [ref=e2181]: 1500 14Th St. W Suite 100, Williston, ND 58801
+              - link "701-577-3937" [ref=e2182]:
+                - /url: tel:701-577-3937
+                - img [ref=e2183]
+                - generic [ref=e2185]: 701-577-3937
+            - generic [ref=e2186]:
+              - paragraph [ref=e2187]: Search to calculate distance
+              - link "Get Directions" [ref=e2188]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Williston%20Basin%20Eyecare%20Assoc%2C%201500%2014Th%20St.%20W%20Suite%20100%2C%20Williston%2C%20ND%2058801
+                - img [ref=e2189]
+                - text: Get Directions
+          - article [ref=e2191] [cursor=pointer]:
+            - generic [ref=e2192]:
+              - generic [ref=e2193]:
+                - paragraph [ref=e2194]: Casper, WY
+                - heading "Wind City Eye Care" [level=3] [ref=e2195]
+              - generic [ref=e2196]:
+                - generic [ref=e2197]: 1 location
+                - generic "Practice affiliations" [ref=e2198]:
+                  - generic "Artisan equity partner" [ref=e2199]:
+                    - img "Artisan equity partner" [ref=e2200]
+            - generic [ref=e2201]:
+              - paragraph [ref=e2202]:
+                - img [ref=e2203]
+                - generic [ref=e2206]: 1526 Centennial Court, Casper, WY 82609
+              - link "307-237-6025" [ref=e2207]:
+                - /url: tel:307-237-6025
+                - img [ref=e2208]
+                - generic [ref=e2210]: 307-237-6025
+            - generic [ref=e2211]:
+              - paragraph [ref=e2212]: Search to calculate distance
+              - link "Get Directions" [ref=e2213]:
+                - /url: https://www.google.com/maps/search/?api=1&query=Wind%20City%20Eye%20Care%2C%201526%20Centennial%20Court%2C%20Casper%2C%20WY%2082609
+                - img [ref=e2214]
+                - text: Get Directions
+        - generic [ref=e2218]: Map temporarily unavailable. Practice results are still shown below.
+    - generic [ref=e2220]:
+      - generic [ref=e2221]:
+        - paragraph [ref=e2222]: Trusted Sources
+        - heading "Trusted Vision Resources" [level=2] [ref=e2223]
+        - paragraph [ref=e2225]: Want to learn more about your vision and your glasses? These trusted organizations provide clear, patient-friendly education to help you better understand your options.
+      - generic [ref=e2226]:
+        - link "Understanding Your Vision Myopia and Vision Correction Explains how vision problems are corrected using lenses, including multifocal options. American Optometric Association" [ref=e2227] [cursor=pointer]:
+          - /url: https://www.aoa.org/healthy-eyes/eye-and-vision-conditions/myopia
+          - img [ref=e2229]
+          - paragraph [ref=e2230]: Understanding Your Vision
+          - heading "Myopia and Vision Correction" [level=3] [ref=e2231]
+          - paragraph [ref=e2232]: Explains how vision problems are corrected using lenses, including multifocal options.
+          - paragraph [ref=e2233]: American Optometric Association ->
+        - link "Choosing the Right Glasses Lens Protection and Glare Reduction Covers lens protection, glare reduction, UV protection, and why lens choices matter. American Optometric Association" [ref=e2234] [cursor=pointer]:
+          - /url: https://www.aoa.org/news/clinical-eye-care/health-and-wellness/protecting-patients-eye-summer
+          - img [ref=e2236]
+          - paragraph [ref=e2237]: Choosing the Right Glasses
+          - heading "Lens Protection and Glare Reduction" [level=3] [ref=e2238]
+          - paragraph [ref=e2239]: Covers lens protection, glare reduction, UV protection, and why lens choices matter.
+          - paragraph [ref=e2240]: American Optometric Association ->
+        - link "Eye Health and Vision Care Learn About Eye Health Government-backed education on how vision works and how to protect it. National Eye Institute" [ref=e2241] [cursor=pointer]:
+          - /url: https://www.nei.nih.gov/learn-about-eye-health
+          - img [ref=e2243]
+          - paragraph [ref=e2244]: Eye Health and Vision Care
+          - heading "Learn About Eye Health" [level=3] [ref=e2245]
+          - paragraph [ref=e2246]: Government-backed education on how vision works and how to protect it.
+          - paragraph [ref=e2247]: National Eye Institute ->
+      - generic [ref=e2248]:
+        - paragraph [ref=e2249]: About Eye Care Professionals
+        - heading "United Opticians Association and Opticians Association of America" [level=3] [ref=e2250]
+        - paragraph [ref=e2251]: These organizations support the professionals who design, craft, and fit your eyewear.
+    - generic [ref=e2254]:
+      - heading "Ready to See the Difference?" [level=2] [ref=e2255]
+      - link "Find a Practice" [ref=e2256] [cursor=pointer]:
+        - /url: "#find-a-practice"
+    - generic [ref=e2257]:
+      - generic [ref=e2259]:
+        - generic [ref=e2260]:
+          - paragraph [ref=e2261]: Artisan Lab Network
+          - heading "Independent eye care deserves a better lab model." [level=2] [ref=e2262]
+        - link "Get Started" [ref=e2263] [cursor=pointer]:
+          - /url: https://form.typeform.com/to/quuPCSff
+      - generic [ref=e2264]:
+        - generic [ref=e2265]:
+          - generic [ref=e2266]:
+            - button "Artisan Lab Network" [ref=e2267]
+            - generic [ref=e2268]:
+              - generic [ref=e2269]: Artisan Lab Network
+              - generic [ref=e2270]: Doctor-owned network
+          - paragraph [ref=e2271]:
+            - text: Artisan Lab Network is the parent organization supporting
+            - link "Pacific Artisan Labs" [ref=e2272] [cursor=pointer]:
+              - /url: /pacific-artisan-labs
+            - text: ","
+            - link "Peak Artisan Labs" [ref=e2273] [cursor=pointer]:
+              - /url: /peak-artisan-labs
+            - text: ", and"
+            - link "Pike Artisan Labs" [ref=e2274] [cursor=pointer]:
+              - /url: /pike-artisan-labs
+            - text: ", built to serve independent eye care with more choice, more control, and better partnership."
+          - generic [ref=e2275]:
+            - link "Facebook" [ref=e2276] [cursor=pointer]:
+              - /url: https://www.facebook.com/artisanlabnetwork
+            - link "Instagram" [ref=e2277] [cursor=pointer]:
+              - /url: https://www.instagram.com/artisanlabnetwork
+            - link "LinkedIn" [ref=e2278] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/artisan-lab-network/
+        - generic [ref=e2279]:
+          - heading "Explore" [level=3] [ref=e2280]
+          - list [ref=e2281]:
+            - listitem [ref=e2282]:
+              - link "Home" [ref=e2283] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=e2284]:
+              - link "About Us" [ref=e2285] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e2286]:
+              - link "Meet the Artisans" [ref=e2287] [cursor=pointer]:
+                - /url: /meet-the-artisans
+            - listitem [ref=e2288]:
+              - link "Our Labs" [ref=e2289] [cursor=pointer]:
+                - /url: /#labs
+            - listitem [ref=e2290]:
+              - link "Resources" [ref=e2291] [cursor=pointer]:
+                - /url: /provider-resources
+            - listitem [ref=e2292]:
+              - link "Customer Portal" [ref=e2293] [cursor=pointer]:
+                - /url: /portal
+            - listitem [ref=e2294]:
+              - button "Contact Us" [ref=e2295]
+        - generic [ref=e2296]:
+          - heading "Company" [level=3] [ref=e2297]
+          - list [ref=e2298]:
+            - listitem [ref=e2299]:
+              - link "Careers" [ref=e2300] [cursor=pointer]:
+                - /url: /careers
+            - listitem [ref=e2301]:
+              - link "Press Releases" [ref=e2302] [cursor=pointer]:
+                - /url: /about#press-releases
+            - listitem [ref=e2303]:
+              - link "Newsletter" [ref=e2304] [cursor=pointer]:
+                - /url: /newsletter
+        - generic [ref=e2305]:
+          - heading "Contact" [level=3] [ref=e2306]
+          - generic [ref=e2307]:
+            - paragraph [ref=e2308]:
+              - link "12302 NE Marx St. Portland, OR 97230" [ref=e2309] [cursor=pointer]:
+                - /url: https://www.google.com/maps/search/?api=1&query=12302%20NE%20Marx%20St%20Portland%20OR%2097230
+                - text: 12302 NE Marx St.
+                - text: Portland, OR 97230
+              - link "Open in Maps" [ref=e2310] [cursor=pointer]:
+                - /url: https://www.google.com/maps/search/?api=1&query=12302%20NE%20Marx%20St%20Portland%20OR%2097230
+            - paragraph [ref=e2311]:
+              - link "877.390.6900" [ref=e2312] [cursor=pointer]:
+                - /url: tel:8773906900
+            - paragraph [ref=e2313]:
+              - link "info@artisanlabnetwork.com" [ref=e2314] [cursor=pointer]:
+                - /url: mailto:info@artisanlabnetwork.com
+      - generic [ref=e2316]:
+        - generic [ref=e2317]:
+          - paragraph [ref=e2318]: © 2026 Artisan Lab Network
+          - paragraph [ref=e2319]:
+            - text: This webpage was built and designed by
+            - link "D2D Marketing" [ref=e2320] [cursor=pointer]:
+              - /url: https://d2dmktg.com
+            - text: .
+          - paragraph [ref=e2321]:
+            - text: Privacy is not a game (
+            - button "this is" [ref=e2322]
+            - text: ), and we respect your privacy. Information submitted through this site is used only to respond to your inquiry and support your relationship with Artisan Lab Network.
+        - generic [ref=e2323]:
+          - link "Terms & Conditions" [ref=e2324] [cursor=pointer]:
+            - /url: /terms-and-conditions
+          - link "Privacy Policy" [ref=e2325] [cursor=pointer]:
+            - /url: /privacy-policy
+  - alert [ref=e2326]

@@ -1,18 +1,10 @@
 import "server-only";
 
 import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
-
-export const PORTAL_ADMIN_EMAILS = new Set([
-  "brandon.butler@artisanlabnetwork.com",
-  "jim.day@artisanlabnetwork.com",
-  "jimdayok@me.com",
-  "rahlson@artisanlabnetwork.com",
-  "rick@pacificartisanlabs.com",
-  "rtinson@pacificartisanlabs.com",
-]);
+import { isPortalAdmin } from "@/lib/portal/userDataAccess";
 
 export function isPortalAdminEmail(email: string) {
-  return PORTAL_ADMIN_EMAILS.has(email.trim().toLowerCase());
+  return isPortalAdmin(email);
 }
 
 export function getPortalAdminEmailFromHeaders(headers: Headers) {

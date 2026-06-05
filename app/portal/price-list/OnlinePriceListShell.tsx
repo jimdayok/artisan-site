@@ -102,12 +102,20 @@ function CompactPortalHeader({ isAdmin }: { isAdmin: boolean }) {
             Back to Portal
           </Link>
           {isAdmin ? (
-            <Link
-              href="/portal/admin"
-              className="inline-flex min-h-9 items-center rounded-full border border-[#d7c5a8] bg-white/85 px-3 text-xs font-semibold text-[#122033] transition hover:bg-white"
-            >
-              Admin Dashboard
-            </Link>
+            <>
+              <Link
+                href="/portal/admin"
+                className="inline-flex min-h-9 items-center rounded-full border border-[#d7c5a8] bg-white/85 px-3 text-xs font-semibold text-[#122033] transition hover:bg-white"
+              >
+                Admin Dashboard
+              </Link>
+              <Link
+                href="/portal/employee-resources"
+                className="inline-flex min-h-9 items-center rounded-full border border-[#d7c5a8] bg-white/85 px-3 text-xs font-semibold text-[#122033] transition hover:bg-white"
+              >
+                Employee Resources
+              </Link>
+            </>
           ) : null}
           <Link
             href="/provider-resources"

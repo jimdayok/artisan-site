@@ -76,6 +76,24 @@ function percentChange(current: number, prior: number) {
   };
 }
 
+type GlowTone = "red" | "green" | "none";
+
+function glowFromPercent(value: number): GlowTone {
+  if (value <= -10) return "red";
+  if (value >= 10) return "green";
+  return "none";
+}
+
+function glowClass(tone: GlowTone) {
+  if (tone === "red") {
+    return "border-[#d88d7f] shadow-[0_0_0_1px_rgba(216,141,127,0.28),0_0_34px_rgba(216,82,61,0.26),0_16px_44px_rgba(23,42,40,0.08)]";
+  }
+  if (tone === "green") {
+    return "border-[#86c99d] shadow-[0_0_0_1px_rgba(82,176,116,0.24),0_0_34px_rgba(52,168,103,0.24),0_16px_44px_rgba(23,42,40,0.08)]";
+  }
+  return "border-[#d8c49b] shadow-[0_16px_44px_rgba(23,42,40,0.08)]";
+}
+
 function customerTypeLabel(code: string) {
   const normalized = code.trim().toUpperCase();
   return customerTypeLabels[normalized] || normalized || "Unclassified";
@@ -207,14 +225,16 @@ function StatCard({
   value,
   detail,
   icon: Icon,
+  glow = "none",
 }: {
   label: string;
   value: string;
   detail?: string;
   icon: typeof CircleDollarSign;
+  glow?: GlowTone;
 }) {
   return (
-    <article className="relative overflow-hidden rounded-md border border-[#d8c49b] bg-[#fffaf1]/88 p-5 shadow-[0_16px_44px_rgba(23,42,40,0.08)]">
+    <article className={`relative overflow-hidden rounded-md border bg-[#fffaf1]/88 p-5 transition ${glowClass(glow)}`}>
       <div className="absolute right-3 top-3 text-[#d8c49b]/70">
         <Icon className="h-6 w-6" />
       </div>
@@ -275,9 +295,13 @@ function ActionButtons({ row }: { row: DashboardV1AdminRow }) {
 function AccountCard({ row }: { row: DashboardV1AdminRow }) {
   const salesChange = percentChange(row.pmSalesPerDay ?? 0, row.ppmSalesPerDay ?? 0);
   const jobsChange = percentChange(row.pmJpd ?? 0, row.ppmJpd ?? 0);
+  const primaryGlow =
+    Math.abs(jobsChange.value) >= Math.abs(salesChange.value)
+      ? glowFromPercent(jobsChange.value)
+      : glowFromPercent(salesChange.value);
 
   return (
-    <article className="rounded-md border border-[#d8c49b] bg-[#fffaf1]/88 p-5 shadow-[0_16px_44px_rgba(23,42,40,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_22px_55px_rgba(23,42,40,0.12)]">
+    <article className={`rounded-md border bg-[#fffaf1]/88 p-5 transition hover:-translate-y-0.5 hover:shadow-[0_22px_55px_rgba(23,42,40,0.12)] ${glowClass(primaryGlow)}`}>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <Link href={accountHref(row)} className="text-xl font-semibold tracking-[-0.03em] text-[#172a28] underline-offset-4 hover:underline">
@@ -346,9 +370,10 @@ function QueueSection({ item }: { item: QueueItem }) {
       ) : (
         <div className="mt-5 grid gap-4 xl:grid-cols-2">
           {item.rows.slice(0, 12).map((row) => {
-            const salesChange = percentChange(row.cmSales, row.pmSales);
+            const salesChange = percentChange(row.pmSales, row.ppmSales);
+            const rowGlow = glowFromPercent(salesChange.value);
             return (
-              <article key={`${item.title}-${row.acctId}`} className="rounded-md border border-[#eadfce] bg-white/78 p-4">
+              <article key={`${item.title}-${row.acctId}`} className={`rounded-md border bg-white/78 p-4 ${glowClass(rowGlow)}`}>
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                   <div>
                     <Link href={accountHref(row)} className="font-semibold text-[#172a28] underline-offset-4 hover:underline">
@@ -480,8 +505,32 @@ export default function AdminLandingDashboard({
       .includes(normalizedQuery);
   });
 
-  const totalCmSales = rows.reduce((total, row) => total + row.cmSales, 0);
-  const totalCmJobs = rows.reduce((total, row) => total + row.cmJobs, 0);
+  const totalCmSales = rows.reduce((total, row) => total + row.cmProjectedSales, 0);
+  const totalCmJobs = rows.reduce((total, row) => total + row.cmProjectedJobs, 0);
+  const totalPmSales = rows.reduce((total, row) => total + row.pmSales, 0);
+  const totalPpmSales = rows.reduce((total, row) => total + row.ppmSales, 0);
+  const totalPmJobs = rows.reduce((total, row) => total + row.pmJobs, 0);
+  const totalPpmJobs = rows.reduce((total, row) => total + row.ppmJobs, 0);
+  const totalPmJpd = rows.reduce((total, row) => total + Number(row.pmJpd ?? 0), 0);
+  const totalPpmJpd = rows.reduce((total, row) => total + Number(row.ppmJpd ?? 0), 0);
+  const totalPmNeurolensJobs = rows.reduce((total, row) => total + Number(row.brandUsage.neurolens_jobs?.pm ?? 0), 0);
+  const totalPpmNeurolensJobs = rows.reduce((total, row) => total + Number(row.brandUsage.neurolens_jobs?.ppm ?? 0), 0);
+  const totalPmSequelJobs = rows.reduce((total, row) => total + Number(row.brandUsage.sequel_jobs?.pm ?? 0), 0);
+  const totalPpmSequelJobs = rows.reduce((total, row) => total + Number(row.brandUsage.sequel_jobs?.ppm ?? 0), 0);
+  const averagePmTat = rows.length
+    ? rows.reduce((total, row) => total + Number(row.turnaroundAverageDays.pm ?? 0), 0) / rows.length
+    : 0;
+  const averageLabPmTat = rows.length
+    ? rows.reduce((total, row) => total + Number(row.labTurnaroundAverageDays.pm ?? 0), 0) / rows.length
+    : 0;
+  const cmSalesPaceChange = percentChange(totalCmSales, totalPmSales);
+  const cmJobsPaceChange = percentChange(totalCmJobs, totalPmJobs);
+  const pmSalesChange = percentChange(totalPmSales, totalPpmSales);
+  const pmJobsChange = percentChange(totalPmJobs, totalPpmJobs);
+  const pmJpdChange = percentChange(totalPmJpd, totalPpmJpd);
+  const neurolensJobsChange = percentChange(totalPmNeurolensJobs, totalPpmNeurolensJobs);
+  const sequelJobsChange = percentChange(totalPmSequelJobs, totalPpmSequelJobs);
+  const turnaroundChange = percentChange(averagePmTat, averageLabPmTat);
   const activeAccounts = rows.filter((row) => row.cmJobs > 0);
   const salesDownRows = rows.filter(salesDown);
   const jobsDownRows = rows.filter(jobsDown);
@@ -657,34 +706,42 @@ export default function AdminLandingDashboard({
       </section>
 
       <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-        <StatCard icon={Users} label="Total Accounts" value={formatCount(rows.length)} />
-        <StatCard icon={BadgeCheck} label="Active This Month" value={formatCount(activeAccounts.length)} />
-        <StatCard icon={CircleDollarSign} label="CM Sales Pace" value={money(totalCmSales)} />
-        <StatCard icon={Package} label="CM Jobs Pace" value={formatCount(totalCmJobs)} />
-        <StatCard icon={ShieldAlert} label="No Portal Users" value={formatCount(noUserRows.length)} />
-        <StatCard icon={ArrowDownRight} label="PM Sales Down" value={formatCount(salesDownRows.length)} />
-        <StatCard icon={ArrowDownRight} label="PM Jobs Down" value={formatCount(jobsDownRows.length)} />
-        <StatCard icon={Activity} label="PM JPD Down" value={formatCount(jpdDownRows.length)} detail="PM JPD vs PPM JPD." />
-        <StatCard icon={ArrowDownRight} label="Neurolens Down" value={formatCount(neurolensDownRows.length)} />
-        <StatCard icon={ArrowDownRight} label="Sequel Down" value={formatCount(sequelDownRows.length)} />
-        <StatCard icon={Activity} label="Turnaround Up" value={formatCount(turnaroundDeterioratedRows.length)} />
-        <StatCard icon={AlertTriangle} label="No Current Activity" value={formatCount(noActivityRows.length)} />
-        <StatCard icon={AlertTriangle} label="No Orders 30+ Days" value={formatCount(noOrders30Rows.length)} />
-        <StatCard icon={AlertTriangle} label="No Orders 60+ Days" value={formatCount(noOrders60Rows.length)} />
-        <StatCard icon={AlertTriangle} label="No Orders 90+ Days" value={formatCount(noOrders90Rows.length)} />
-        <StatCard icon={Target} label="No Preferred Designs" value={formatCount(notUsingPreferredDesignRows.length)} />
-        <StatCard icon={Target} label="No Preferred Materials" value={formatCount(notUsingPreferredMaterialRows.length)} />
-        <StatCard icon={Target} label="No Program Products" value={formatCount(notUsingProgramProductRows.length)} />
-        <StatCard icon={ClipboardCopy} label="Missing Price Lists" value={formatCount(missingPriceListRows.length)} />
+        <StatCard icon={Users} label="Total Accounts" value={formatCount(rows.length)} detail="accounts" />
+        <StatCard icon={BadgeCheck} label="Active This Month" value={formatCount(activeAccounts.length)} detail="accounts with CM jobs" />
+        <StatCard icon={CircleDollarSign} label="CM Sales Pace" value={money(totalCmSales)} detail={`projected from sales/day × business days · ${cmSalesPaceChange.label} vs PM`} glow={glowFromPercent(cmSalesPaceChange.value)} />
+        <StatCard icon={Package} label="CM Jobs Pace" value={formatCount(totalCmJobs)} detail={`projected from JPD × business days · ${cmJobsPaceChange.label} vs PM`} glow={glowFromPercent(cmJobsPaceChange.value)} />
+        <StatCard icon={ShieldAlert} label="No Portal Users" value={formatCount(noUserRows.length)} detail="accounts" />
+        <StatCard icon={ArrowDownRight} label="PM Sales Down" value={formatCount(salesDownRows.length)} detail={`accounts · PM vs PPM · ${pmSalesChange.label} total`} glow={glowFromPercent(pmSalesChange.value)} />
+        <StatCard icon={ArrowDownRight} label="PM Jobs Down" value={formatCount(jobsDownRows.length)} detail={`accounts · PM vs PPM · ${pmJobsChange.label} total`} glow={glowFromPercent(pmJobsChange.value)} />
+        <StatCard icon={Activity} label="PM JPD Down" value={formatCount(jpdDownRows.length)} detail={`accounts · PM JPD vs PPM JPD · ${pmJpdChange.label} total pace`} glow={glowFromPercent(pmJpdChange.value)} />
+        <StatCard icon={ArrowDownRight} label="Neurolens Down" value={formatCount(neurolensDownRows.length)} detail={`accounts · PM vs PPM jobs · ${neurolensJobsChange.label} total`} glow={glowFromPercent(neurolensJobsChange.value)} />
+        <StatCard icon={ArrowDownRight} label="Sequel Down" value={formatCount(sequelDownRows.length)} detail={`accounts · PM vs PPM jobs · ${sequelJobsChange.label} total`} glow={glowFromPercent(sequelJobsChange.value)} />
+        <StatCard icon={Activity} label="Turnaround Up" value={formatCount(turnaroundDeterioratedRows.length)} detail={`accounts worse than lab PM average · ${turnaroundChange.label} vs lab`} glow={turnaroundChange.value >= 10 ? "red" : "none"} />
+        <StatCard icon={AlertTriangle} label="No Current Activity" value={formatCount(noActivityRows.length)} detail="accounts" />
+        <StatCard icon={AlertTriangle} label="No Orders 30+ Days" value={formatCount(noOrders30Rows.length)} detail="accounts" />
+        <StatCard icon={AlertTriangle} label="No Orders 60+ Days" value={formatCount(noOrders60Rows.length)} detail="accounts" />
+        <StatCard icon={AlertTriangle} label="No Orders 90+ Days" value={formatCount(noOrders90Rows.length)} detail="accounts" />
+        <StatCard icon={Target} label="No Preferred Designs" value={formatCount(notUsingPreferredDesignRows.length)} detail="accounts" />
+        <StatCard icon={Target} label="No Preferred Materials" value={formatCount(notUsingPreferredMaterialRows.length)} detail="accounts" />
+        <StatCard icon={Target} label="No Program Products" value={formatCount(notUsingProgramProductRows.length)} detail="accounts" />
+        <StatCard icon={ClipboardCopy} label="Missing Price Lists" value={formatCount(missingPriceListRows.length)} detail="accounts" />
       </section>
+      <p className="mt-3 rounded-md border border-[#d8c49b] bg-[#fffaf1]/88 px-4 py-3 text-xs font-semibold leading-5 text-[#706759]">
+        CM Sales Pace and CM Jobs Pace are projected full-month values calculated from current Sales/Day and JPD multiplied by current-month business days, excluding weekends and national holidays. Actual CM month-to-date values remain available in each account analysis.
+      </p>
 
       <section className="mt-8 grid gap-5 xl:grid-cols-2">
         <div className="rounded-md border border-[#d8c49b] bg-[#fffaf1]/88 p-5 shadow-[0_18px_55px_rgba(23,42,40,0.08)]">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b7650]">Top PM Growth Accounts</p>
           <div className="mt-4 grid gap-3">
             {topGrowthAccounts.map((row) => (
-              <Link key={`growth-${row.acctId}`} href={accountHref(row)} className="flex items-center justify-between gap-3 rounded-md border border-[#eadfce] bg-white/75 p-3 transition hover:bg-white">
-                <span className="font-semibold text-[#172a28]">{row.businessName}</span>
+              <Link key={`growth-${row.acctId}`} href={accountHref(row)} className={`grid gap-2 rounded-md border bg-white/75 p-3 transition hover:bg-white sm:grid-cols-[1fr_auto] sm:items-center ${glowClass(glowFromPercent(percentChange(row.pmSales, row.ppmSales).value))}`}>
+                <span>
+                  <span className="font-semibold text-[#172a28]">{row.businessName}</span>
+                  <span className="mt-1 block text-xs text-[#706759]">
+                    CM {row.cmJpd === null ? "—" : row.cmJpd.toFixed(1)} JPD · PM {row.pmJpd === null ? "—" : row.pmJpd.toFixed(1)} JPD · PPM {row.ppmJpd === null ? "—" : row.ppmJpd.toFixed(1)} JPD
+                  </span>
+                </span>
                 <TrendBadge change={percentChange(row.pmSales, row.ppmSales)} />
               </Link>
             ))}
@@ -694,8 +751,13 @@ export default function AdminLandingDashboard({
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b7650]">Top PM Declining Accounts</p>
           <div className="mt-4 grid gap-3">
             {topDecliningAccounts.map((row) => (
-              <Link key={`decline-${row.acctId}`} href={accountHref(row)} className="flex items-center justify-between gap-3 rounded-md border border-[#eadfce] bg-white/75 p-3 transition hover:bg-white">
-                <span className="font-semibold text-[#172a28]">{row.businessName}</span>
+              <Link key={`decline-${row.acctId}`} href={accountHref(row)} className={`grid gap-2 rounded-md border bg-white/75 p-3 transition hover:bg-white sm:grid-cols-[1fr_auto] sm:items-center ${glowClass(glowFromPercent(percentChange(row.pmSales, row.ppmSales).value))}`}>
+                <span>
+                  <span className="font-semibold text-[#172a28]">{row.businessName}</span>
+                  <span className="mt-1 block text-xs text-[#706759]">
+                    CM {row.cmJpd === null ? "—" : row.cmJpd.toFixed(1)} JPD · PM {row.pmJpd === null ? "—" : row.pmJpd.toFixed(1)} JPD · PPM {row.ppmJpd === null ? "—" : row.ppmJpd.toFixed(1)} JPD
+                  </span>
+                </span>
                 <TrendBadge change={percentChange(row.pmSales, row.ppmSales)} />
               </Link>
             ))}

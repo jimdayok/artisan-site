@@ -4,6 +4,7 @@ import { isLocalhostDevelopmentRequest } from "@/lib/portal/auth";
 import { canonicalPriceListCode } from "@/lib/portal/priceLists";
 import { loadGeneratedPriceListByCode } from "@/lib/pricing/loadGeneratedPriceList";
 import { headers } from "next/headers";
+import { forbidden } from "next/navigation";
 import { OnlinePriceListShell } from "./OnlinePriceListShell";
 import PriceListAccessMessage from "./PriceListAccessMessage";
 
@@ -17,7 +18,7 @@ export default async function GeneratedInteractivePriceListPage({
   const normalizedCode = canonicalPriceListCode(code);
   const requestHeaders = await headers();
   const isLocalhostDevelopment = isLocalhostDevelopmentRequest(requestHeaders);
-  const access = getAuthorizedPriceListFromHeaders(
+  const access = await getAuthorizedPriceListFromHeaders(
     requestHeaders,
     normalizedCode,
     previewAccountNumber ? { previewAccountNumber } : undefined
@@ -47,10 +48,7 @@ export default async function GeneratedInteractivePriceListPage({
         </div>
       );
     }
-
-    return (
-      <PriceListAccessMessage message="You do not have access to this price list." />
-    );
+    forbidden();
   }
 
   const generatedPriceList = await loadGeneratedPriceListByCode(normalizedCode);
@@ -59,6 +57,8 @@ export default async function GeneratedInteractivePriceListPage({
       <PriceListAccessMessage message={`${normalizedCode} interactive pricing data is not available yet.`} />
     );
   }
+  const comparisonPriceList =
+    normalizedCode === "B5" ? await loadGeneratedPriceListByCode("G6") : null;
 
   const accountPriceListCodes = access.customer.priceLists
     .map((entry) => canonicalPriceListCode(entry))
@@ -73,7 +73,10 @@ export default async function GeneratedInteractivePriceListPage({
       title={`${normalizedCode} Pricing`}
       description="Interactive private pricing guide for assigned portal accounts."
     >
-      <InteractivePriceListDashboard priceList={generatedPriceList} />
+      <InteractivePriceListDashboard
+        priceList={generatedPriceList}
+        comparisonPriceList={comparisonPriceList}
+      />
     </OnlinePriceListShell>
   );
 }

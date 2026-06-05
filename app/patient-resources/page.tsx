@@ -6,7 +6,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import RingsAccent from "../components/RingsAccent";
 import SiteIcon from "../components/SiteIcon";
-import { PracticeLookupMap } from "../provider-resources/page";
+import PatientPracticeLocator from "./PatientPracticeLocator";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
 
@@ -357,7 +357,7 @@ export default function PatientResources() {
       </section>
 
       {/* 8. FIND A PRACTICE */}
-      <PracticeLookupMap />
+      <PatientPracticeLocator />
 
       {/* 9. TRUSTED VISION RESOURCES */}
       <section data-theme="light" className="relative overflow-hidden bg-[#efe4d3] px-6 py-24 md:py-32">

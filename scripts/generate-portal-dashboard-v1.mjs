@@ -138,16 +138,22 @@ const ACCOUNT_HEADER_ALIASES = {
   "Business Name": ["Business Name"],
   "CM ARPMP26 Qualified PMP Jobs": ["CM ARPMP26 Qualified PMP Jobs"],
   "PM ARPMP26 Qualified PMP Jobs": ["PM ARPMP26 Qualified PMP Jobs"],
+  "PPM ARPMP26 Qualified PMP Jobs": ["PPM ARPMP26 Qualified PMP Jobs"],
   "CM ARPMP26 Rebate Total": ["CM ARPMP26 Rebate Total"],
   "PM ARPMP26 Rebate Total": ["PM ARPMP26 Rebate Total"],
+  "PPM ARPMP26 Rebate Total": ["PPM ARPMP26 Rebate Total"],
   "CM ARSQL26 Qualified Sequel PAL Jobs": ["CM ARSQL26 Qualified Sequel PAL Jobs"],
   "PM ARSQL26 Qualified Sequel PAL Jobs": ["PM ARSQL26 Qualified Sequel PAL Jobs"],
+  "PPM ARSQL26 Qualified Sequel PAL Jobs": ["PPM ARSQL26 Qualified Sequel PAL Jobs"],
   "CM ARSQL26 Sequel PAL Rebate Total": ["CM ARSQL26 Sequel PAL Rebate Total"],
   "PM ARSQL26 Sequel PAL Rebate Total": ["PM ARSQL26 Sequel PAL Rebate Total"],
+  "PPM ARSQL26 Sequel PAL Rebate Total": ["PPM ARSQL26 Sequel PAL Rebate Total"],
   "CM ARUTY26 Qualified Jobs": ["CM ARUTY26 Qualified Jobs"],
   "PM ARUTY26 Qualified Jobs": ["PM ARUTY26 Qualified Jobs"],
+  "PPM ARUTY26 Qualified Jobs": ["PPM ARUTY26 Qualified Jobs"],
   "CM ARUTY26 Rewards Earned": ["CM ARUTY26 Rewards Earned"],
   "PM ARUTY26 Rewards Earned": ["PM ARUTY26 Rewards Earned"],
+  "PPM ARUTY26 Rewards Earned": ["PPM ARUTY26 Rewards Earned"],
   "CM Average Turnaround Time": ["CM Average Turnaround Time"],
   "PM Average Turnaround Time": ["PM Average Turnaround Time"],
   "PPM Average Turnaround Time": ["PPM Average Turnaround Time"],
@@ -718,32 +724,32 @@ function monthlyValues(row, label) {
 
 function buildSupplementalIntelligence(row) {
   const arpmpQualifiedJobs = {
-    ppm: 0,
+    ppm: toNumber(row["PPM ARPMP26 Qualified PMP Jobs"]),
     pm: toNumber(row["PM ARPMP26 Qualified PMP Jobs"]),
     cm: toNumber(row["CM ARPMP26 Qualified PMP Jobs"]),
   };
   const arpmpRebateTotal = {
-    ppm: 0,
+    ppm: toNumber(row["PPM ARPMP26 Rebate Total"]),
     pm: toNumber(row["PM ARPMP26 Rebate Total"]),
     cm: toNumber(row["CM ARPMP26 Rebate Total"]),
   };
   const arutyQualifiedJobs = {
-    ppm: 0,
+    ppm: toNumber(row["PPM ARUTY26 Qualified Jobs"]),
     pm: toNumber(row["PM ARUTY26 Qualified Jobs"]),
     cm: toNumber(row["CM ARUTY26 Qualified Jobs"]),
   };
   const arutyRewardsEarned = {
-    ppm: 0,
+    ppm: toNumber(row["PPM ARUTY26 Rewards Earned"]),
     pm: toNumber(row["PM ARUTY26 Rewards Earned"]),
     cm: toNumber(row["CM ARUTY26 Rewards Earned"]),
   };
   const arsqlQualifiedJobs = {
-    ppm: 0,
+    ppm: toNumber(row["PPM ARSQL26 Qualified Sequel PAL Jobs"]),
     pm: toNumber(row["PM ARSQL26 Qualified Sequel PAL Jobs"]),
     cm: toNumber(row["CM ARSQL26 Qualified Sequel PAL Jobs"]),
   };
   const arsqlRebateTotal = {
-    ppm: 0,
+    ppm: toNumber(row["PPM ARSQL26 Sequel PAL Rebate Total"]),
     pm: toNumber(row["PM ARSQL26 Sequel PAL Rebate Total"]),
     cm: toNumber(row["CM ARSQL26 Sequel PAL Rebate Total"]),
   };

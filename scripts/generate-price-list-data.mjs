@@ -196,18 +196,6 @@ const b5PackageAddOns = [
       { name: "Products not listed", price: "Not available" },
     ],
   },
-  {
-    title: "AR Upgrade Pricing",
-    items: [
-      { name: "Nytopia", price: "$21" },
-      { name: "Armour", price: "$11" },
-      { name: "Azure", price: "$21" },
-      { name: "Artisan Emerald", price: "Included", recommended: true },
-      { name: "Artisan Standard", price: "Included" },
-      { name: "Diamond Sun", price: "Included" },
-      { name: "Backside AR", price: "Included" },
-    ],
-  },
   ...fullServiceAddOns,
 ];
 
@@ -222,20 +210,6 @@ const s5PackageAddOns = [
       },
       { name: "Included AR", price: "Artisan Emerald, Artisan Standard, Diamond Sun, Backside AR (included)" },
       { name: "Products not listed", price: "Not available" },
-    ],
-  },
-  {
-    title: "AR Upgrade Pricing",
-    items: [
-      { name: "Nytopia", price: "$21" },
-      { name: "Armour", price: "$11" },
-      { name: "Azure", price: "$21" },
-      { name: "Artisan Emerald", price: "Included", recommended: true },
-      { name: "Artisan Standard", price: "Included" },
-      { name: "Diamond Sun", price: "Included" },
-      { name: "Backside AR", price: "Included" },
-      { name: "Glacier Expressions", price: "$53" },
-      { name: "Glacier Plus", price: "$44" },
     ],
   },
   ...fullServiceAddOns,

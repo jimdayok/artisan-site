@@ -62,7 +62,7 @@ const commonQuestions = [
   {
     label: "Warranty",
     title: "How long is coverage?",
-    body: "Most Artisan lenses are covered for 2 years with up to 2 remakes, depending on product type.",
+    body: "Artisan Standard is 1 year/1 time; Diamond Defence and premium Artisan AR treatments are 2 years/2 times.",
     href: "#warranty-coverage",
     icon: "/icons/site/shield.svg",
   },
@@ -138,9 +138,9 @@ const policySections: PolicySection[] = [
     whatThisMeans:
       "Warranty coverage is designed to give your team a clear path when a covered product issue comes up after delivery.",
     qualifies: [
-      "Artisan standard and regular bar products: 2 years, up to 2 warranty remakes.",
-      "Artisan Diamond and similar products: 1 year, up to 1 warranty remake.",
-      "Diamond Defense: 2 years, up to 2 warranty remakes.",
+      "Artisan Standard (AST): 1 year, up to 1 warranty remake.",
+      "Diamond Defence (DDE): 2 years, up to 2 warranty remakes.",
+      "Artisan Premium AR Treatments — Azure (AAZ), Nytopia (NYT), Emerald (AEM), Armour (AAR), and Diamond Sun (ADS): 2 years, up to 2 warranty remakes.",
       "Mirror coating alone: 1 year, up to 1 warranty remake.",
       "Mirror plus Artisan Diamond backside AR: 2 years, up to 2 warranty remakes.",
     ],
@@ -223,8 +223,8 @@ const policySections: PolicySection[] = [
     whatThisMeans:
       "For covered AR treatment issues, your team can submit the warranty request without first sending the lenses back to the lab.",
     qualifies: [
-      "Artisan AR Technologies, excluding Standard AR.",
-      "Artisan Standard and Backside AR.",
+      "Artisan Standard (AST): 1 year, up to 1 warranty remake.",
+      "Artisan Premium AR Treatments — Azure (AAZ), Nytopia (NYT), Emerald (AEM), Armour (AAR), and Diamond Sun (ADS): 2 years, up to 2 warranty remakes.",
       "TechShield AR Technologies.",
       "Tokai AR Technologies.",
       "Crizal AR Technologies.",
@@ -262,7 +262,7 @@ const policySections: PolicySection[] = [
       "Scratch coating coverage gives your practice a straightforward way to handle covered coating concerns without slowing the patient solution.",
     qualifies: [
       "Factory Scratch Coat: 1 year, up to 1 warranty remake.",
-      "Diamond Defense Scratch Coat: 2 years, up to 2 warranty remakes.",
+      "Diamond Defence (DDE): 2 years, up to 2 warranty remakes.",
     ],
     doesNotQualify: [
       "Chemiclips do not include a scratch warranty.",
@@ -273,7 +273,7 @@ const policySections: PolicySection[] = [
       "Submit the warranty request with the order details and reason.",
       "Contact customer service if the coating type is unclear.",
     ],
-    keywords: ["scratch", "coating", "factory scratch", "diamond defense", "chemiclips"],
+    keywords: ["scratch", "coating", "factory scratch", "diamond defence", "diamond defense", "chemiclips"],
   },
   {
     id: "vsp-unity",
@@ -464,6 +464,7 @@ const policySections: PolicySection[] = [
     ],
     doesNotQualify: [
       "Chemiclips do not include a scratch warranty.",
+      "There are no multiple-pair discounts available with Chemistrie clips.",
     ],
     nextSteps: [
       "Confirm whether retrofit magnets are needed before quoting.",

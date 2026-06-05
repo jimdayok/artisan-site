@@ -76,10 +76,12 @@ function Panel({
   title,
   eyebrow,
   children,
+  legend,
 }: {
   title: string;
   eyebrow: string;
   children: React.ReactNode;
+  legend?: Array<{ label: string; color: string }>;
 }) {
   return (
     <div className="min-w-0 rounded-md border border-[#d9c8a6] bg-[#fffdf8]/90 p-5 shadow-[0_20px_48px_rgba(20,39,36,0.08)]">
@@ -87,7 +89,21 @@ function Panel({
         {eyebrow}
       </p>
       <h3 className="mt-2 text-xl font-semibold text-[#142724]">{title}</h3>
-      <div className="mt-5 h-72 min-w-0">{children}</div>
+      {legend?.length ? <ChartKey items={legend} /> : null}
+      <div className="mt-4 h-72 min-w-0">{children}</div>
+    </div>
+  );
+}
+
+function ChartKey({ items }: { items: Array<{ label: string; color: string }> }) {
+  return (
+    <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2">
+      {items.map((item) => (
+        <span key={item.label} className="inline-flex items-center gap-2 text-xs font-semibold text-[#59635f]">
+          <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: item.color }} />
+          {item.label}
+        </span>
+      ))}
     </div>
   );
 }
@@ -132,7 +148,7 @@ export function TrendsPerformanceCharts({
 }) {
   return (
     <div className="grid gap-5 xl:grid-cols-3">
-      <Panel eyebrow="Revenue" title="Monthly Revenue Trend">
+      <Panel eyebrow="Purchases" title="Monthly Purchase Trend" legend={[{ label: "Completed months and current month-to-date actuals", color: "#1f8a70" }]}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={trends} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
             <defs>
@@ -150,7 +166,7 @@ export function TrendsPerformanceCharts({
         </ResponsiveContainer>
       </Panel>
 
-      <Panel eyebrow="Orders" title="Monthly Job Trend">
+      <Panel eyebrow="Orders" title="Monthly Order Trend" legend={[{ label: "Completed months and current month-to-date actuals", color: "#2f5f9c" }]}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={trends} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
             <defs>
@@ -168,17 +184,29 @@ export function TrendsPerformanceCharts({
         </ResponsiveContainer>
       </Panel>
 
-      <Panel eyebrow="Mix" title="VSP Mix Trend">
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
+      <Panel eyebrow="Mix" title="VSP Mix Trend" legend={vspMix.map((item) => ({ label: item.label, color: item.color }))}>
+        <div className="relative h-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
             <Pie data={vspMix} dataKey="value" nameKey="label" innerRadius="62%" outerRadius="88%" stroke="none">
               {vspMix.map((entry) => (
                 <Cell key={entry.label} fill={entry.color} />
               ))}
             </Pie>
             <Tooltip formatter={(value, name) => [`${Math.round(Number(value))}%`, name]} contentStyle={tooltipStyle()} />
-          </PieChart>
-        </ResponsiveContainer>
+            </PieChart>
+          </ResponsiveContainer>
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <div className="text-center">
+              <p className="text-4xl font-semibold text-[#142724]">
+                {Math.round(vspMix[0]?.value ?? 0)}%
+              </p>
+              <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#7a6b49]">
+                VSP
+              </p>
+            </div>
+          </div>
+        </div>
       </Panel>
     </div>
   );
@@ -238,7 +266,7 @@ export function ServiceExcellenceCharts({
 
   return (
     <div className="grid gap-5 xl:grid-cols-3">
-      <Panel eyebrow="Service Timing" title="Turnaround Performance">
+      <Panel eyebrow="Service Timing" title="Turnaround Performance" legend={[{ label: "Average business days in lab production", color: "#1f8a70" }]}>
         {hasTurnaround ? (
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={turnaround} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
@@ -261,7 +289,12 @@ export function ServiceExcellenceCharts({
         )}
       </Panel>
 
-      <Panel eyebrow="Quality" title="Quality Metrics">
+      <Panel eyebrow="Quality" title="Remake Intelligence" legend={[
+        { label: "Warranty Remake %", color: "#c9a24f" },
+        { label: "Office Remake %", color: "#c96856" },
+        { label: "Lab Remake %", color: "#2f5f9c" },
+        { label: "Non-Adapt %", color: "#8067aa" },
+      ]}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={quality} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
             <CartesianGrid stroke="#eadfce" vertical={false} />
@@ -276,7 +309,7 @@ export function ServiceExcellenceCharts({
         </ResponsiveContainer>
       </Panel>
 
-      <Panel eyebrow="Order Volume" title="Monthly Order Trend">
+      <Panel eyebrow="Order Volume" title="Orders Per Day Trend" legend={[{ label: "Actual orders per day, including current month-to-date", color: "#8067aa" }]}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={orderVolume} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
             <CartesianGrid stroke="#eadfce" vertical={false} />
@@ -296,11 +329,15 @@ export function MonthlyUsageCharts({
   eyebrow,
   data,
   valueType = "count",
+  monthLabels,
+  horizontal = false,
 }: {
   title: string;
   eyebrow: string;
   data: MonthlyUsagePoint[];
   valueType?: "count" | "percent";
+  monthLabels: { prior: string; previous: string; current: string };
+  horizontal?: boolean;
 }) {
   const formatter =
     valueType === "percent"
@@ -308,16 +345,29 @@ export function MonthlyUsageCharts({
       : (value: number) => numberFormatter.format(Number(value));
 
   return (
-    <Panel eyebrow={eyebrow} title={title}>
+    <Panel eyebrow={eyebrow} title={title} legend={[
+      { label: monthLabels.prior, color: "#d8c49b" },
+      { label: monthLabels.previous, color: "#2f5f9c" },
+      { label: `${monthLabels.current} MTD`, color: "#1f8a70" },
+    ]}>
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
-          <CartesianGrid stroke="#eadfce" vertical={false} />
-          <XAxis dataKey="label" tick={{ fill: "#746b5f", fontSize: 11 }} tickLine={false} axisLine={false} interval={0} />
-          <YAxis tick={{ fill: "#746b5f", fontSize: 12 }} tickLine={false} axisLine={false} tickFormatter={(value) => formatter(Number(value))} />
+        <BarChart data={data} layout={horizontal ? "vertical" : "horizontal"} margin={{ top: 8, right: 12, left: horizontal ? 18 : 0, bottom: 0 }}>
+          <CartesianGrid stroke="#eadfce" vertical={!horizontal} horizontal={horizontal} />
+          {horizontal ? (
+            <>
+              <XAxis type="number" tick={{ fill: "#746b5f", fontSize: 11 }} tickLine={false} axisLine={false} tickFormatter={(value) => formatter(Number(value))} />
+              <YAxis type="category" dataKey="label" width={90} tick={{ fill: "#4f5a56", fontSize: 11 }} tickLine={false} axisLine={false} />
+            </>
+          ) : (
+            <>
+              <XAxis dataKey="label" tick={{ fill: "#746b5f", fontSize: 11 }} tickLine={false} axisLine={false} interval={0} />
+              <YAxis tick={{ fill: "#746b5f", fontSize: 12 }} tickLine={false} axisLine={false} tickFormatter={(value) => formatter(Number(value))} />
+            </>
+          )}
           <Tooltip formatter={(value) => formatter(Number(value))} contentStyle={tooltipStyle()} />
-          <Bar dataKey="prior" name="Prior Previous" fill="#d8c49b" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="previous" name="Previous" fill="#2f5f9c" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="current" name="Current" fill="#1f8a70" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="prior" name={monthLabels.prior} fill="#d8c49b" radius={horizontal ? [0, 4, 4, 0] : [4, 4, 0, 0]} />
+          <Bar dataKey="previous" name={monthLabels.previous} fill="#2f5f9c" radius={horizontal ? [0, 4, 4, 0] : [4, 4, 0, 0]} />
+          <Bar dataKey="current" name={`${monthLabels.current} MTD`} fill="#1f8a70" radius={horizontal ? [0, 4, 4, 0] : [4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </Panel>

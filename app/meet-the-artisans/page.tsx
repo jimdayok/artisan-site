@@ -54,8 +54,8 @@ const salesTeam: TeamMember[] = [
 
 const leadershipTeam: TeamMember[] = [
   { name: "Brandon Butler", role: "President & CEO", image: "/brandon-headshot.jpg" },
-  { name: "Jim Day", role: "EVP Sales & Marketing", image: "/jim-headshot.jpg" },
   { name: "Rachel Ahlson", role: "COO", image: "/rachael-headshot.jpg" },
+  { name: "Jim Day", role: "EVP Sales & Marketing", image: "/jimhs1.jpg" },
   { name: "Shelley Witmer", role: "Customer Service Leadership", image: "/shelley-headshot.jpg" },
 ];
 

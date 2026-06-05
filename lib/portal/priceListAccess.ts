@@ -1,14 +1,18 @@
 import { headers } from "next/headers";
+import { forbidden } from "next/navigation";
 import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
 import { isPortalAdminEmail } from "@/lib/portal/admin";
 import {
   customerHasPortalSection,
   getCustomerByAccountNumber,
-  getCustomerByEmail,
-  getCustomersByEmail,
   type PortalCustomer,
   type PortalSection,
 } from "@/lib/portal/customers";
+import {
+  getAuthorizedPortalCustomer,
+  getAuthorizedPortalCustomers,
+} from "@/lib/portal/portalAuthorization";
+import { normalizeAssignedPriceListCodes } from "@/lib/portal/assignedPriceLists";
 import {
   canonicalPriceListCode,
   getPriceListByCode,
@@ -35,11 +39,11 @@ export type PriceListAccessResult =
   | AuthorizedPriceListAccess
   | DeniedPriceListAccess;
 
-export function getAuthorizedPriceListFromHeaders(
+export async function getAuthorizedPriceListFromHeaders(
   headerList: Headers,
   code: string,
   options?: { previewAccountNumber?: string }
-): PriceListAccessResult {
+): Promise<PriceListAccessResult> {
   const authenticatedEmail = getPortalAuthenticatedEmailFromHeaders(headerList);
   const priceList = getPriceListByCode(code);
 
@@ -53,9 +57,9 @@ export function getAuthorizedPriceListFromHeaders(
       ? getCustomerByAccountNumber(previewAccountNumber)
       : undefined;
     if (previewCustomer) {
-      const previewPriceLists = [...new Set(previewCustomer.priceLists.map((entry) => canonicalPriceListCode(entry)))]
-        .filter(Boolean)
-        .sort((a, b) => a.localeCompare(b));
+      const previewPriceLists = normalizeAssignedPriceListCodes(
+        previewCustomer.priceLists
+      );
       if (!previewPriceLists.includes(priceList.code)) {
         return {
           status: "forbidden",
@@ -106,8 +110,8 @@ export function getAuthorizedPriceListFromHeaders(
     };
   }
 
-  const customers = getCustomersByEmail(authenticatedEmail);
-    const customer = customers.find((entry) =>
+  const customers = await getAuthorizedPortalCustomers(authenticatedEmail);
+  const customer = customers.find((entry) =>
       priceList
         ? entry.priceLists
           .map((priceListCode) => canonicalPriceListCode(priceListCode))
@@ -169,10 +173,10 @@ export async function getAuthorizedPortalSectionForPage(section: PortalSection) 
     };
   }
 
-  const customer = getCustomerByEmail(authenticatedEmail);
+  const customer = await getAuthorizedPortalCustomer(authenticatedEmail);
 
   if (!customer || !customerHasPortalSection(customer, section)) {
-    return { status: "forbidden" as const, authenticatedEmail, customer };
+    forbidden();
   }
 
   return { status: "authorized" as const, authenticatedEmail, customer };

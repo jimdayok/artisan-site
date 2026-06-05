@@ -180,6 +180,7 @@ export default function Header({
         { label: "Pacific Artisan Labs", href: "/pacific-artisan-labs" },
         { label: "Peak Artisan Labs", href: "/peak-artisan-labs" },
         { label: "Pike Artisan Labs", href: "/pike-artisan-labs" },
+        { label: "Meet the Artisans", href: "/meet-the-artisans", dividerBefore: true },
       ],
     }),
     []

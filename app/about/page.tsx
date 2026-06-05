@@ -33,20 +33,20 @@ const leaders = [
     bio: "Brandon brings deep experience across optics, manufacturing, coatings, lens design software, and lab systems. He built Artisan Lab Network around a simple idea: independent practices deserve better alignment, better choices, and a lab partner that understands private practice. His work also extends into second-chance employment and reentry support.",
   },
   {
-    name: "Jim Day",
-    role: "Executive VP, Sales & Marketing",
-    image: "/jim-headshot.jpg",
-    email: SALES_EMAIL,
-    linkedin: "https://www.linkedin.com/in/jimdayok/",
-    bio: "Jim leads growth, positioning, and commercial strategy for the network. He helps practices see where control, margin, or service quality may be slipping, then has clear conversations about what a better model could look like.",
-  },
-  {
     name: "Rachel Ahlson",
     role: "VP & COO",
     image: "/rachael-headshot.jpg",
     email: "mailto:rahlson@artisanlabnetwork.com",
     linkedin: "https://www.linkedin.com/in/rachel-ahlson-73a90b123",
     bio: "Rachel brings strong operational leadership and hands-on lab experience. Her focus is consistency, efficiency, and making sure the network delivers on the promises it makes to practices.",
+  },
+  {
+    name: "Jim Day",
+    role: "Executive VP, Sales & Marketing",
+    image: "/jimhs1.jpg",
+    email: SALES_EMAIL,
+    linkedin: "https://www.linkedin.com/in/jimdayok/",
+    bio: "Jim leads growth, positioning, and commercial strategy for the network. He helps practices see where control, margin, or service quality may be slipping, then has clear conversations about what a better model could look like.",
   },
   {
     name: "Shelley Witmer",
@@ -265,9 +265,12 @@ export default function AboutPage() {
   const [disableTimelineEffects, setDisableTimelineEffects] = useState(false);
 
   useEffect(() => {
+    const isSafari =
+      /^((?!chrome|android|crios|fxios|edgios).)*safari/i.test(window.navigator.userAgent);
+
     const syncHashState = () => {
       const hash = window.location.hash.toLowerCase();
-      setDisableTimelineEffects(Boolean(hash && hash !== "#timeline"));
+      setDisableTimelineEffects(isSafari || Boolean(hash && hash !== "#timeline"));
 
       if (!hash) return;
       const target = document.querySelector(hash);

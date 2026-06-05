@@ -193,7 +193,7 @@ async function readLookupArMap() {
   // These codes must never appear raw in customer UI.
   map.set("MMI", { name: "Mirror Matched", brandFamily: "Mirror Treatments" });
   map.set("GMR", { name: "Gradient Mirror", brandFamily: "Mirror Treatments" });
-  map.set("DDE", { name: "Diamond Defense", brandFamily: "Protection Options" });
+  map.set("DDE", { name: "Diamond Defence", brandFamily: "Protection Options" });
 
   return map;
 }

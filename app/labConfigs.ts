@@ -109,6 +109,23 @@ export const pacificLabConfig = {
       { icon: "cog", title: "Reliable Process", body: "A steady production rhythm helps reduce friction for practices." },
     ],
   },
+  storyPhotos: [
+    {
+      eyebrow: "Production Floor",
+      title: "Craft becomes visible in the work.",
+      body: "A wide view inside Pacific shows the real production environment behind its Northwest craft story: experienced people, specialized equipment, and a workflow built around careful execution.",
+      image: "/pacific_inside_1.png",
+      imageAlt: "Inside the Pacific Artisan Labs production facility",
+    },
+    {
+      eyebrow: "Hands-On Quality",
+      title: "The details stay personal.",
+      body: "Pacific’s vertical facility photography brings the story closer to the people and processes that protect each order before it returns to the practice.",
+      image: "/pacific_inside_2.png",
+      imageAlt: "A detailed view inside Pacific Artisan Labs",
+      imagePosition: "object-center",
+    },
+  ],
   partnership: {
     eyebrow: "Independent by Nature",
     title: "A local lab presence with the broader Artisan Lab Network behind it.",
@@ -243,6 +260,15 @@ export const peakLabConfig = {
       { icon: "cog", title: "Steady Systems", body: "Processes built to reduce drag and maintain quality." },
     ],
   },
+  storyPhotos: [
+    {
+      eyebrow: "Colorado Facility",
+      title: "A clear view of Peak in motion.",
+      body: "Peak’s facility reflects the lab’s operating style: modern, composed, and ready to support demanding independent practices with consistent production and responsive service.",
+      image: "/peak_inside_1.png",
+      imageAlt: "Inside the Peak Artisan Labs production facility",
+    },
+  ],
   partnership: {
     eyebrow: "Independent Strength at Altitude",
     title: "A premium Colorado lab for practices that value choice.",
@@ -378,6 +404,22 @@ export const pikeLabConfig = {
       { icon: "factory", title: "High-Output Ready", body: "Production support for busy independent practices." },
     ],
   },
+  storyPhotos: [
+    {
+      eyebrow: "Indianapolis Production",
+      title: "Built to keep quality moving.",
+      body: "The first Pike facility view grounds the speed story in a real production environment where equipment, process, and people work together to keep orders moving.",
+      image: "/pike_inside_1.png",
+      imageAlt: "Inside the Pike Artisan Labs production facility",
+    },
+    {
+      eyebrow: "Operational Detail",
+      title: "Momentum with attention.",
+      body: "A second look inside Pike reinforces the practical discipline behind its turnaround focus: clean workflows, active production, and a team close to the work.",
+      image: "/pike_inside_2.png",
+      imageAlt: "Production equipment and workflow inside Pike Artisan Labs",
+    },
+  ],
   partnership: {
     eyebrow: "A Lab Partner That Shows Up",
     title: "Fast, practical support for independent practices.",

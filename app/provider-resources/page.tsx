@@ -172,12 +172,12 @@ const localResourceFiles = new Set([
   "ArtisanDesigns/sd_digital.pdf",
   "ArtisanDesigns/sd_radius.pdf",
   "ArtisanDesigns/sd_reach.pdf",
-  "Artisan Deisgn Series .pdf",
-  "Camber Diamond Family Leaflet-Artisan-draft1.pdf",
-  "Universal Gold Family Leaflet-Artisan-draft1.pdf",
-  "Ultimate Platinum Family Leaflet-Artisan-draft1.pdf",
-  "Office Reader II SD Reach Individual Leaflet-Artisan-draft1.pdf",
-  "SD Reach ALN 2025.pdf",
+  "artisan-design-series.pdf",
+  "artisan-diamond-series-guide.pdf",
+  "artisan-gold-series-guide.pdf",
+  "artisan-platinum-series-guide.pdf",
+  "sd-reach-individual-leaflet.pdf",
+  "sd-reach-guide-2025.pdf",
   "modern-frame-book.pdf",
   "armou-rx-frame-book.pdf",
   "dvx-wileyx-frame-book.pdf",
@@ -235,37 +235,37 @@ const downloadResourceSections: DownloadResourceSection[] = [
         title: "Diamond Series",
         description: "Product leaflet for Diamond Series lens conversations and staff reference.",
         label: "Product Guide",
-        filename: "Camber Diamond Family Leaflet-Artisan-draft1.pdf",
+        filename: "artisan-diamond-series-guide.pdf",
       },
       {
         title: "Gold Series",
         description: "Product leaflet for Gold Series positioning and recommendations.",
         label: "Product Guide",
-        filename: "Universal Gold Family Leaflet-Artisan-draft1.pdf",
+        filename: "artisan-gold-series-guide.pdf",
       },
       {
         title: "Platinum Series",
         description: "Product leaflet for Platinum Series premium design support.",
         label: "Product Guide",
-        filename: "Ultimate Platinum Family Leaflet-Artisan-draft1.pdf",
+        filename: "artisan-platinum-series-guide.pdf",
       },
       {
         title: "Artisan Design Series",
         description: "Overview guide for Artisan design families and recommendation support.",
         label: "Product Guide",
-        filename: "Artisan Deisgn Series .pdf",
+        filename: "artisan-design-series.pdf",
       },
       {
         title: "SD Reach Individual Leaflet",
         description: "Individual leaflet for SD Reach positioning and office-reader conversations.",
         label: "Product Guide",
-        filename: "Office Reader II SD Reach Individual Leaflet-Artisan-draft1.pdf",
+        filename: "sd-reach-individual-leaflet.pdf",
       },
       {
         title: "SD Reach",
         description: "Current SD Reach guide for design recommendations and fitting context.",
         label: "Product Guide",
-        filename: "SD Reach ALN 2025.pdf",
+        filename: "sd-reach-guide-2025.pdf",
       },
     ],
     layoutCharts: [
@@ -919,6 +919,24 @@ const featuredCards: FeaturedCard[] = [
 
 const mostUsedResources: ResourceItem[] = [
   {
+    title: "Protect Lab Choice",
+    icon: "/icons/site/badge-check.svg",
+    type: "Tool",
+    description:
+      "Find legislators, generate advocacy letters, and support laboratory choice and Vision Benefit Manager reform.",
+    cta: "Open Advocacy Center",
+    href: "/advocacy",
+  },
+  {
+    title: "Optical Engineering Center",
+    icon: "/icons/site/monitor.svg",
+    type: "Tool",
+    description:
+      "Professional optical calculators, lens thickness estimators, prism tools, compensation calculators, laboratory references, and engineering resources.",
+    cta: "Launch Engineering Center",
+    href: "/optical-engineering",
+  },
+  {
     title: "SpecCheck",
     icon: "/icons/site/monitor.svg",
     type: "Tool",
@@ -958,7 +976,7 @@ const mostUsedResources: ResourceItem[] = [
     type: "Tool",
     description: "Review Artisan policy guidance for remakes, redos, warranties, shipping, and frames.",
     cta: "Review Policies",
-    href: "/portal/price-list/policies",
+    href: "/policies",
   },
   {
     title: "Contact Support",
@@ -1026,7 +1044,7 @@ const accountTools: ResourceItem[] = [
     type: "Tool",
     description: "Search and source stock lenses through the GoStock lens marketplace.",
     cta: "Open GoStock",
-    href: "https://www.gostocklenses.com/",
+    href: "https://www.globalopticsinc.com/gostock",
   },
 ];
 
@@ -1101,7 +1119,7 @@ const pricingAccessCards = [
   {
     title: "Artisan Policies",
     body: "Official policy guide for warranties, remakes, redos, shipping, frame handling, coatings, canceled orders, multiple pair programs, and account support.",
-    href: "/portal/price-list/policies",
+    href: "/policies",
     cta: "Open Artisan Policies",
   },
 ];
@@ -1492,6 +1510,13 @@ function openExternal(href: string) {
   return href.startsWith("http") || href.startsWith("mailto:");
 }
 
+function publicFileHref(filename: string) {
+  return `/files/${filename
+    .split("/")
+    .map((segment) => encodeURIComponent(segment))
+    .join("/")}`;
+}
+
 function SectionHeader({
   eyebrow,
   title,
@@ -1723,7 +1748,7 @@ function ResourceLink({
 }
 
 function DownloadResourceCard({ resource }: { resource: DownloadResourceItem }) {
-  const href = resource.filename ? `/files/${resource.filename}` : resource.externalHref;
+  const href = resource.filename ? publicFileHref(resource.filename) : resource.externalHref;
   const hasLocalFile = resource.filename ? localResourceFiles.has(resource.filename) : Boolean(resource.externalHref);
 
   return (
@@ -1844,7 +1869,7 @@ function ResourceMenuBar({
 }
 
 function resourceHref(resource: DownloadResourceItem) {
-  return resource.filename ? `/files/${resource.filename}` : resource.externalHref ?? "#";
+  return resource.filename ? publicFileHref(resource.filename) : resource.externalHref ?? "#";
 }
 
 function resourceIsAvailable(resource: DownloadResourceItem) {

@@ -18,8 +18,8 @@ import {
 import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
 import {
   customerHasPortalSection,
-  getCustomerByEmail,
 } from "@/lib/portal/customers";
+import { getAuthorizedPortalCustomer } from "@/lib/portal/portalAuthorization";
 import PriceListAccessMessage from "../PriceListAccessMessage";
 
 export const metadata: Metadata = {
@@ -41,11 +41,15 @@ const policySections: PolicySection[] = [
     id: "ar-policies",
     title: "AR Policies",
     icon: ShieldCheck,
-    summary: "Warranty support for AR treatments, including brand-specific warranty terms.",
+    summary: "Warranty support for AR treatments, including Artisan coating-specific warranty terms.",
     body: ["We do not require lenses to be returned for AR treatment warranty usage."],
     terms: [
-      { label: "Artisan AR Technologies, excluding Standard AR", value: "2 years, 2 times" },
-      { label: "Artisan Standard and Backside AR", value: "1 year, 1 time" },
+      { label: "Artisan Standard (AST)", value: "1 year, 1 time" },
+      {
+        label:
+          "Artisan Premium AR Treatments: Azure (AAZ), Nytopia (NYT), Emerald (AEM), Armour (AAR), Diamond Sun (ADS)",
+        value: "2 years, 2 times",
+      },
       { label: "TechShield AR Technologies", value: "2 years, 2 times" },
       { label: "Tokai AR Technologies", value: "2 years, 2 times" },
       { label: "Crizal AR Technologies", value: "2 years, 2 times" },
@@ -57,16 +61,16 @@ const policySections: PolicySection[] = [
     id: "scratch-coating-policies",
     title: "Scratch Coating Policies",
     icon: BadgeCheck,
-    summary: "Scratch coating warranty terms for factory and Diamond Defense coating support.",
+    summary: "Scratch coating warranty terms for factory and Diamond Defence coating support.",
     body: ["We do not require lenses to be returned for scratch coating warranty usage."],
     terms: [
       { label: "Factory Scratch Coat", value: "1 year, 1 time" },
-      { label: "Diamond Defense Scratch Coat", value: "2 years, 2 times" },
+      { label: "Diamond Defence (DDE)", value: "2 years, 2 times" },
     ],
   },
   {
-    id: "doctor-redo-non-adapt",
-    title: "Doctor Redo and Non Adapt Changes",
+    id: "doctor-remake-non-adapt",
+    title: "Doctor Remake and Non Adapt Changes",
     icon: RefreshCcw,
     summary: "Guidance for patient non-adaptable elements and doctor-requested changes.",
     body: [
@@ -81,7 +85,7 @@ const policySections: PolicySection[] = [
     summary: "How lab error remake requests are reviewed and processed.",
     body: [
       "All remakes due to lab error will be processed at no charge with valid reason or reasons if received within 30 days from the date the order was shipped.",
-      "If, upon evaluation, the remake request is not valid, the customer's 1 time redo will be used.",
+      "If, upon evaluation, the remake request is not valid, the customer's 1 time remake will be used.",
       "Lenses are required to be returned for inspection and quality control when requested.",
     ],
   },
@@ -106,7 +110,7 @@ const policySections: PolicySection[] = [
       "Next Day Air: $4.",
       "2 Day Shipping: $16.",
       "Inbound shipping is provided complimentary.",
-      "The shipping method is determined by the lab based on job flow, volume, and delivery needs.",
+      "The shipping method is determined by the lab based on order flow, volume, and delivery needs.",
     ],
   },
   {
@@ -149,12 +153,12 @@ const policySections: PolicySection[] = [
     ],
   },
   {
-    id: "warranty-redo-guidelines",
-    title: "Warranty and Redo Guidelines",
+    id: "warranty-remake-guidelines",
+    title: "Warranty and Remake Guidelines",
     icon: ShieldCheck,
-    summary: "Fair-use guidance for warranty and redo support.",
+    summary: "Fair-use guidance for warranty and remake support.",
     body: [
-      "Warranty and redo support is designed to help practices serve patients well while protecting fair use of lab resources.",
+      "Warranty and remake support is designed to help practices serve patients well while protecting fair use of lab resources.",
       "Warranty terms may vary by product, coating, vendor, material, or program.",
     ],
   },
@@ -211,7 +215,9 @@ const policySections: PolicySection[] = [
 
 export default async function ArtisanPoliciesPage() {
   const authenticatedEmail = getPortalAuthenticatedEmailFromHeaders(await headers());
-  const customer = authenticatedEmail ? getCustomerByEmail(authenticatedEmail) : undefined;
+  const customer = authenticatedEmail
+    ? await getAuthorizedPortalCustomer(authenticatedEmail)
+    : undefined;
 
   if (!authenticatedEmail) {
     return (

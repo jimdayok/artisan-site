@@ -95,6 +95,47 @@ function programStatus(value: boolean) {
   return value ? "Active" : "Not Recorded";
 }
 
+function monthlyTierLabel(jobs: number) {
+  if (jobs > 100) return "Tier 4";
+  if (jobs >= 61) return "Tier 3";
+  if (jobs >= 21) return "Tier 2";
+  return "Tier 1";
+}
+
+function tierFillFromJobs(jobs: number) {
+  if (jobs > 100) return 100;
+  if (jobs >= 61) return 75;
+  if (jobs >= 21) return 50;
+  return 25;
+}
+
+function relativeMonthLabel(offset: number, anchor = new Date()) {
+  return new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" }).format(
+    new Date(anchor.getFullYear(), anchor.getMonth() - offset, 1)
+  );
+}
+
+function rewardProgramName(program: string) {
+  if (program === "ARPMP26") return "PMP Rewards";
+  if (program === "ARSQL26") return "Sequel Rewards";
+  return "Unity Rewards";
+}
+
+function rewardRowsFor(row: DashboardV1AdminRow) {
+  const rewards = row.rewards;
+  return [
+    rewards.arpmp26?.enrolled
+      ? { program: "ARPMP26", qualified: rewards.arpmp26.qualified_pmp_jobs, payout: rewards.arpmp26.rebate_total }
+      : null,
+    rewards.aruty26?.enrolled
+      ? { program: "ARUTY26", qualified: rewards.aruty26.qualified_jobs, payout: rewards.aruty26.rewards_earned }
+      : null,
+    rewards.arsql26?.enrolled
+      ? { program: "ARSQL26", qualified: rewards.arsql26.qualified_sequel_pal_jobs, payout: rewards.arsql26.rebate_total }
+      : null,
+  ].filter(Boolean) as Array<{ program: "ARPMP26" | "ARUTY26" | "ARSQL26"; qualified: { ppm: number; pm: number; cm: number }; payout: { ppm: number; pm: number; cm: number } }>;
+}
+
 function flagsFor(row: DashboardV1AdminRow) {
   const flags: Array<{ title: string; why: string; action: string }> = [];
   if (row.pmSales < row.ppmSales) flags.push({ title: "Sales down PM vs PPM", why: `${money(row.pmSales)} PM vs ${money(row.ppmSales)} PPM. CM pace is ${money(row.cmSales)}.`, action: "Review order mix and contact the customer with a specific support angle." });
@@ -136,6 +177,10 @@ export default async function AdminAccountAnalysisPage({ params }: { params: Pro
   const email = firstEmail(row);
   const emailHref = email ? `mailto:${email}?subject=${encodeURIComponent("Checking in from Artisan Lab Network")}` : "";
   const flags = flagsFor(row);
+  const rewardRows = rewardRowsFor(row);
+  const pmMonth = relativeMonthLabel(1);
+  const ppmMonth = relativeMonthLabel(2);
+  const pmTier = monthlyTierLabel(row.pmJobs);
 
   return (
     <AdminShell title="Internal Account Analysis" adminEmail={adminEmail} eyebrow="ALN Customer Intelligence">
@@ -161,6 +206,39 @@ export default async function AdminAccountAnalysisPage({ params }: { params: Pro
         <MetricCard icon={Activity} label="PM JPD Trend" value={row.pmJpd === null ? "Unavailable" : row.pmJpd.toFixed(1)} detail={row.ppmJpd === null ? "JPD data unavailable" : `PPM ${row.ppmJpd.toFixed(1)}`} />
         <MetricCard icon={Users} label="Authorized Users" value={count(row.authorizedUsers)} detail={row.authorizedUserEmails.join(", ") || "No customer email available"} />
       </section>
+
+      {rewardRows.length ? (
+        <section className="mt-8 rounded-md border border-[#d8c49b] bg-[#fffaf1]/88 p-6 shadow-[0_18px_55px_rgba(23,42,40,0.08)]">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b7650]">Rewards Payout Reference</p>
+          <h2 className="mt-2 text-2xl font-semibold text-[#172a28]">PM Rewards · {pmMonth}</h2>
+          <p className="mt-2 text-sm leading-6 text-[#706759]">Customer service payout reference for enrolled rewards. PM Loyalty Tier is based on {count(row.pmJobs)} previous-month jobs.</p>
+          <div className="mt-5 grid gap-4 lg:grid-cols-3">
+            {rewardRows.map((reward) => (
+              <article key={reward.program} className="rounded-md border border-[#eadfce] bg-white/72 p-5">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#8b7650]">{reward.program}</p>
+                    <h3 className="mt-2 text-xl font-semibold text-[#172a28]">{rewardProgramName(reward.program)}</h3>
+                  </div>
+                  <div className="grid h-20 w-20 place-items-center rounded-full" style={{ background: `conic-gradient(#1f8a70 0 ${tierFillFromJobs(row.pmJobs)}%, #eadfce ${tierFillFromJobs(row.pmJobs)}% 100%)` }}>
+                    <div className="grid h-14 w-14 place-items-center rounded-full bg-white text-xs font-bold text-[#172a28]">{pmTier}</div>
+                  </div>
+                </div>
+                <div className="mt-4 rounded-md border border-[#1f8a70]/35 bg-[#f1fbf4] p-4">
+                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#1f6b45]">PM Rewards</p>
+                  <p className="mt-2 text-4xl font-semibold tracking-[-0.04em] text-[#172a28]">{money(reward.payout.pm)}</p>
+                  <p className="mt-2 text-sm font-semibold text-[#172a28]">{count(reward.qualified.pm)} PM qualified orders · {pmTier}</p>
+                </div>
+                <div className="mt-4 grid gap-3 text-sm text-[#706759]">
+                  <p><span className="font-semibold text-[#172a28]">{pmMonth}:</span> {count(reward.qualified.pm)} qualified · {money(reward.payout.pm)} total rebate</p>
+                  <p><span className="font-semibold text-[#172a28]">{ppmMonth}:</span> {reward.qualified.ppm > 0 || reward.payout.ppm > 0 ? `${count(reward.qualified.ppm)} qualified · ${money(reward.payout.ppm)} total rebate` : "PPM reward fields not loaded"}</p>
+                  <p><span className="font-semibold text-[#172a28]">CM MTD:</span> {count(reward.qualified.cm)} qualified · {money(reward.payout.cm)} rebate</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <section className="mt-8 grid gap-5 lg:grid-cols-[0.92fr_1.08fr]">
         <article className="rounded-md border border-[#d8c49b] bg-[#fffaf1]/88 p-6 shadow-[0_18px_55px_rgba(23,42,40,0.08)]">

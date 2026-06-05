@@ -7,9 +7,9 @@ import {
 import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
 import { isPortalAdminEmail } from "@/lib/portal/admin";
 import {
-  getCustomerByEmailAndAccount,
-  getCustomersByEmail,
-} from "@/lib/portal/customers";
+  getAuthorizedPortalCustomer,
+  getAuthorizedPortalCustomers,
+} from "@/lib/portal/portalAuthorization";
 import { normalizeAccountNumber } from "@/lib/portal/normalizeAccounts";
 import { getPriceListByCode } from "@/lib/portal/priceLists";
 import { checkRateLimit } from "@/lib/portal/rateLimit";
@@ -248,9 +248,9 @@ export async function GET(request: NextRequest) {
 
     const requestedAccountNumber =
       request.nextUrl.searchParams.get("account")?.trim() ?? "";
-    const customers = getCustomersByEmail(authenticatedEmail);
+    const customers = await getAuthorizedPortalCustomers(authenticatedEmail);
     const customer = requestedAccountNumber
-      ? getCustomerByEmailAndAccount(authenticatedEmail, requestedAccountNumber)
+      ? await getAuthorizedPortalCustomer(authenticatedEmail, requestedAccountNumber)
       : customers.length === 1
         ? customers[0]
         : undefined;

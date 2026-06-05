@@ -46,7 +46,7 @@ export default function EmptyState({
       </div>
       <div className="mt-4 flex flex-wrap gap-2">
         <Link href="/portal/price-list/packages" className="rounded-full bg-[#122033] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#c7ad7b] hover:text-[#122033]">Package pricing</Link>
-        <Link href="/portal/price-list/policies" className="rounded-full border border-[#d7c5a8] bg-white px-4 py-2 text-sm font-bold text-[#122033] transition hover:bg-[#eadcc6]">Policies</Link>
+        <Link href="/policies" className="rounded-full border border-[#d7c5a8] bg-white px-4 py-2 text-sm font-bold text-[#122033] transition hover:bg-[#eadcc6]">Policies</Link>
         <button type="button" onClick={onMSRP} className="rounded-full border border-[#d7c5a8] bg-white px-4 py-2 text-sm font-bold text-[#122033] transition hover:bg-[#eadcc6]">MSRP toggle</button>
       </div>
       <div className="mt-5 rounded-2xl border border-[#eadfce] bg-white p-4">

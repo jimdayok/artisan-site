@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { forbidden } from "next/navigation";
 import { PortalPerformanceCharts } from "./PortalPerformanceCharts";
 import {
   Activity,
@@ -38,17 +39,20 @@ import {
 } from "@/lib/portal/auth";
 import {
   customerHasPortalSection,
-  getCustomerByEmailAndAccount,
-  getCustomersByEmail,
   type PortalCustomer,
   type PortalSection,
 } from "@/lib/portal/customers";
+import {
+  getAuthorizedPortalCustomer,
+  getAuthorizedPortalCustomers,
+} from "@/lib/portal/portalAuthorization";
+import { normalizeAssignedPriceListCodes } from "@/lib/portal/assignedPriceLists";
+import { loadPortalUserAccess } from "@/lib/portal/userDataAccess";
 import { getPriceListByCode, type PortalPriceList } from "@/lib/portal/priceLists";
 import { canonicalPriceListCode } from "@/lib/portal/priceLists";
 import {
   getPortalWorkbookProfileByEmail,
   getPortalWorkbookProfilesByEmail,
-  getPortalWorkbookEmails,
   profileHasSequelRebateInvitation,
   type PortalWorkbookProfile,
   type PortalWorkbookAccount,
@@ -69,15 +73,14 @@ import {
   type QualityPoint,
   type TrendPoint,
 } from "./PracticeIntelligenceCharts";
+import {
+  calculatePracticePerformanceScore,
+  type PracticePerformanceScoreFactors,
+} from "@/lib/portal/performanceScore";
 
 const PORTAL_ACCESS_LOGIN_URL = portalAccessLoginUrl();
 const PORTAL_ACCESS_LOGOUT_URL =
   "/cdn-cgi/access/logout?returnTo=/portal";
-const LOCAL_TEST_ADMIN_EMAILS = [
-  "jimdayok@me.com",
-  "jim.day@artisanlabnetwork.com",
-];
-
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
@@ -319,10 +322,12 @@ function PortalHeader({
   practiceName,
   hasMultipleAccounts,
   isAdminPreview,
+  isEmployee,
 }: {
   practiceName: string;
   hasMultipleAccounts?: boolean;
   isAdminPreview?: boolean;
+  isEmployee?: boolean;
 }) {
   return (
     <header className="mb-7 border border-[#d8c49b] bg-[#fffaf1]/88 px-4 py-3 shadow-[0_18px_55px_rgba(23,42,40,0.09)] backdrop-blur sm:px-5">
@@ -374,6 +379,15 @@ function PortalHeader({
             <Newspaper className="h-4 w-4" />
             Newsletter
           </Link>
+          {isEmployee ? (
+            <Link
+              href="/portal/employee-resources"
+              className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#b89a61] bg-[#fffaf1] px-4 transition hover:bg-white"
+            >
+              <ShieldCheck className="h-4 w-4" />
+              Employee Resources
+            </Link>
+          ) : null}
           {hasMultipleAccounts ? (
             <Link
               href="/portal"
@@ -484,11 +498,7 @@ function PortalMessage({
   );
 }
 
-function LocalTestLoginPanel() {
-  const emails = [
-    ...new Set([...LOCAL_TEST_ADMIN_EMAILS, ...getPortalWorkbookEmails()]),
-  ];
-
+function LocalTestLoginPanel({ emails }: { emails: string[] }) {
   return (
     <PortalShell eyebrow="Local Test Login">
       <section className="max-w-4xl border border-[#d8c49b] bg-[#fffaf1]/88 p-7 shadow-[0_24px_80px_rgba(23,42,40,0.12)] sm:p-10">
@@ -512,7 +522,7 @@ function LocalTestLoginPanel() {
             <select
               name="email"
               className="min-h-12 border border-[#d8c49b] bg-white px-4 text-base font-normal text-[#172a28] outline-none transition focus:border-[#172a28]"
-              defaultValue={LOCAL_TEST_ADMIN_EMAILS[0]}
+              defaultValue={emails[0]}
             >
               {emails.map((email) => (
                 <option key={email} value={email}>
@@ -741,13 +751,13 @@ const portalSectionCards: PortalSectionCard[] = [
     section: "policies",
     title: "Artisan Policies",
     body: "Review warranties, remakes, shipping, frame handling, and support policies.",
-    href: "/portal/price-list/policies",
+    href: "/policies",
     cta: "Open Policies",
   },
   {
     section: "performance",
     title: "Performance Review",
-    body: "Review monthly lens pairs, sales mix, premium adoption, and remake activity.",
+    body: "Review monthly lens pairs, purchase mix, premium adoption, and remake activity.",
     href: "/portal/performance",
     cta: "Open Performance",
   },
@@ -1838,6 +1848,7 @@ function DashboardV1Panel({
 
 type PracticeIntelligenceModel = {
   trends: TrendPoint[];
+  orderRateTrends: TrendPoint[];
   vspMix: MixPoint[];
   programMix: MixPoint[];
   brandUsage: MonthlyUsagePoint[];
@@ -1846,8 +1857,13 @@ type PracticeIntelligenceModel = {
   turnaround: MonthlyUsagePoint[];
   quality: QualityPoint[];
   score: number;
-  scoreDelta: number;
+  scoreFactors: PracticePerformanceScoreFactors;
   scoreLabel: "Excellent" | "Good" | "Needs Attention";
+  reportMonths: {
+    prior: string;
+    previous: string;
+    current: string;
+  };
   ppmSales: number;
   pmSales: number;
   cmSales: number;
@@ -1857,8 +1873,6 @@ type PracticeIntelligenceModel = {
   priorJpd: number | null;
   currentJpd: number | null;
   previousJpd: number | null;
-  cmProjectedJobs: number;
-  cmProjectedTier: string;
   labTurnaround: MonthlyUsagePoint[];
   vspShare: number;
   privatePayShare: number;
@@ -1881,8 +1895,17 @@ type PracticeIntelligenceModel = {
   }>;
   rewards: Array<{
     title: string;
-    metrics: Array<{ label: string; value: string }>;
-    trend: string;
+    code: "ARPMP26" | "ARUTY26" | "ARSQL26";
+    qualifiedLabel: string;
+    payoutLabel: string;
+    pmQualifiedOrders: number;
+    pmPayout: number;
+    cmQualifiedOrders: number;
+    cmPayout: number;
+    tier: string;
+    tierFill: number;
+    pmMonth: string;
+    cmMonth: string;
   }>;
   targetInvitations: Array<{
     program: "ARUTY26" | "ARSQL26" | string;
@@ -1956,8 +1979,90 @@ function monthlyTierLabel(jobs: number) {
   return "Tier 1";
 }
 
-function projectedJobsFromJpd(jpd: number | null) {
-  return jpd === null ? 0 : Math.round(jpd * 22);
+function tierFillFromJobs(jobs: number) {
+  if (jobs > 100) return 100;
+  if (jobs >= 61) return 75;
+  if (jobs >= 21) return 50;
+  return 25;
+}
+
+function relativeMonthLabel(offset: number, anchorDate?: string) {
+  const parsed = anchorDate ? new Date(`${anchorDate}T00:00:00Z`) : new Date();
+  const anchor = Number.isNaN(parsed.getTime()) ? new Date() : parsed;
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(
+    new Date(Date.UTC(anchor.getUTCFullYear(), anchor.getUTCMonth() - offset, 1))
+  );
+}
+
+function nthWeekdayOfMonth(year: number, monthIndex: number, weekday: number, ordinal: number) {
+  const first = new Date(year, monthIndex, 1);
+  const offset = (weekday - first.getDay() + 7) % 7;
+  return new Date(year, monthIndex, 1 + offset + (ordinal - 1) * 7);
+}
+
+function lastWeekdayOfMonth(year: number, monthIndex: number, weekday: number) {
+  const last = new Date(year, monthIndex + 1, 0);
+  const offset = (last.getDay() - weekday + 7) % 7;
+  return new Date(year, monthIndex, last.getDate() - offset);
+}
+
+function observedHoliday(date: Date) {
+  const observed = new Date(date);
+  if (date.getDay() === 0) observed.setDate(date.getDate() + 1);
+  if (date.getDay() === 6) observed.setDate(date.getDate() - 1);
+  return observed;
+}
+
+function dateKey(date: Date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
+function nationalHolidayKeys(year: number) {
+  return new Set(
+    [
+      observedHoliday(new Date(year, 0, 1)),
+      nthWeekdayOfMonth(year, 0, 1, 3),
+      nthWeekdayOfMonth(year, 1, 1, 3),
+      lastWeekdayOfMonth(year, 4, 1),
+      observedHoliday(new Date(year, 5, 19)),
+      observedHoliday(new Date(year, 6, 4)),
+      nthWeekdayOfMonth(year, 8, 1, 1),
+      nthWeekdayOfMonth(year, 9, 1, 2),
+      observedHoliday(new Date(year, 10, 11)),
+      nthWeekdayOfMonth(year, 10, 4, 4),
+      observedHoliday(new Date(year, 11, 25)),
+    ].map(dateKey)
+  );
+}
+
+function businessDaysInMonth(anchorDate: string) {
+  const parsed = anchorDate ? new Date(`${anchorDate}T00:00:00`) : new Date();
+  const year = Number.isNaN(parsed.getTime()) ? new Date().getFullYear() : parsed.getFullYear();
+  const monthIndex = Number.isNaN(parsed.getTime()) ? new Date().getMonth() : parsed.getMonth();
+  const holidays = nationalHolidayKeys(year);
+  const lastDay = new Date(year, monthIndex + 1, 0).getDate();
+  let days = 0;
+  for (let day = 1; day <= lastDay; day += 1) {
+    const date = new Date(year, monthIndex, day);
+    if (date.getDay() === 0 || date.getDay() === 6) continue;
+    if (holidays.has(dateKey(date))) continue;
+    days += 1;
+  }
+  return days || 22;
+}
+
+function projectedJobsFromJpd(jpd: number | null, businessDays: number) {
+  return jpd === null ? 0 : Math.round(jpd * businessDays);
+}
+
+function projectedSalesFromPerDay(sales: number, jobs: number, jpd: number | null, businessDays: number) {
+  if (!sales || !jobs || !jpd) return sales;
+  const salesPerDay = sales / (jobs / jpd);
+  return Math.round(salesPerDay * businessDays);
 }
 
 function targetProgramTokens(dashboard?: PortalDashboardV1Account) {
@@ -2052,17 +2157,15 @@ function buildPracticeIntelligenceModel({
         ? ppmJobs / 22
         : null;
   const programFlags = dashboard?.program_usage?.flags;
-  const activePrograms = [
-    programFlags?.modern_package ?? isActiveUsage(account?.modernPkgUsage),
-    programFlags?.modern_frame ?? isActiveUsage(account?.modernFrmUsage),
-    programFlags?.chemclip ?? isActiveUsage(account?.chemClipUsage),
-    programFlags?.speccheck ?? isActiveUsage(account?.specCheckUsage),
-    programFlags?.tokai ?? isActiveUsage(account?.tokaiUsage),
-    showNeurolens,
-    showSequelRewards,
-  ].filter(Boolean).length;
   const quality = dashboard?.quality_metrics;
   const supplemental = dashboard?.supplemental_intelligence;
+  const reportAnchor =
+    dashboard?.data_refresh_date || account?.lastShippedDateGlobal || "";
+  const reportMonths = {
+    prior: relativeMonthLabel(2, reportAnchor),
+    previous: relativeMonthLabel(1, reportAnchor),
+    current: relativeMonthLabel(0, reportAnchor),
+  };
   const warrantyCm = pctValue(quality?.warranty_pct?.cm);
   const warrantyPm = pctValue(quality?.warranty_pct?.pm);
   const warrantyPpm = pctValue(quality?.warranty_pct?.ppm);
@@ -2077,38 +2180,26 @@ function buildPracticeIntelligenceModel({
   const nonAdaptPpm = pctValue(quality?.non_adapt_pct?.ppm);
   const turnaroundPm = asNumber(supplemental?.turnaround?.average_days?.pm);
   const labTurnaroundPm = asNumber(supplemental?.turnaround?.lab_average_days?.pm);
-  const pmTatVariance = labTurnaroundPm > 0 ? Math.max(0, turnaroundPm - labTurnaroundPm) : 0;
-  const jpdTrendScore =
+  const orderTrendPercent =
     previousJpd !== null && priorJpd !== null && priorJpd > 0
-      ? Math.max(35, Math.min(100, 75 + ((previousJpd - priorJpd) / priorJpd) * 100))
-      : 65;
-  const tatScore = scoreFromInverseMetric(pmTatVariance, 0, 2.5);
-  const officeRedoScore = scoreFromInverseMetric(officeRedoPm, 2, 8);
-  const labRedoScore = scoreFromInverseMetric(labRedoPm, 1, 4);
-  const programScore = Math.min(22, activePrograms * 3.4);
-  const score = clampScore(
-    tatScore * 0.26 +
-      labRedoScore * 0.22 +
-      officeRedoScore * 0.22 +
-      jpdTrendScore * 0.2 +
-      programScore * 0.1
-  );
-  const priorTatVariance =
-    asNumber(supplemental?.turnaround?.lab_average_days?.ppm) > 0
-      ? Math.max(0, asNumber(supplemental?.turnaround?.average_days?.ppm) - asNumber(supplemental?.turnaround?.lab_average_days?.ppm))
+      ? (previousJpd / priorJpd) * 100
       : 0;
-  const priorScore = clampScore(
-    scoreFromInverseMetric(priorTatVariance, 0, 2.5) * 0.26 +
-      scoreFromInverseMetric(labRedoPpm, 1, 4) * 0.22 +
-      scoreFromInverseMetric(officeRedoPpm, 2, 8) * 0.22 +
-      65 * 0.2 +
-      programScore * 0.1
-  );
-  const scoreDelta = score - priorScore;
+  const performanceScore = calculatePracticePerformanceScore({
+    previousMonthTurnaround: turnaroundPm,
+    previousMonthOrderTrend: orderTrendPercent,
+    previousMonthOfficeRemakes: officeRedoPm,
+    previousMonthLabRemakes: labRedoPm,
+  });
+  const score = performanceScore.score;
   const trends = [
-    { label: "Prior", sales: ppmSales, jobs: ppmJobs },
-    { label: "Previous", sales: pmSales, jobs: pmJobs },
-    { label: "Current", sales: cmSales, jobs: cmJobs },
+    { label: reportMonths.prior, sales: ppmSales, jobs: ppmJobs },
+    { label: reportMonths.previous, sales: pmSales, jobs: pmJobs },
+    { label: `${reportMonths.current} MTD`, sales: cmSales, jobs: cmJobs },
+  ];
+  const orderRateTrends = [
+    { label: reportMonths.prior, sales: 0, jobs: priorJpd ?? 0 },
+    { label: reportMonths.previous, sales: 0, jobs: previousJpd ?? 0 },
+    { label: `${reportMonths.current} MTD`, sales: 0, jobs: currentJpd ?? 0 },
   ];
   const programMix = [
     { label: "Modern Frame", value: isActiveUsage(account?.modernFrmUsage) || programFlags?.modern_frame ? 82 : 18, color: "#1f8a70" },
@@ -2123,38 +2214,38 @@ function buildPracticeIntelligenceModel({
   if (previousJpd !== null && priorJpd !== null && previousJpd < priorJpd) {
     const decline = ((previousJpd - priorJpd) / priorJpd) * 100;
     opportunities.push({
-      title: "JPD declining",
+      title: "Orders per day declining",
       priority: "red",
-      current: `PM ${previousJpd.toFixed(1)} JPD vs PPM ${priorJpd.toFixed(1)} JPD · Down ${Math.abs(decline).toFixed(0)}%`,
-      why: "ALN evaluates customer health using jobs per day because it normalizes for calendar timing.",
+      current: `${reportMonths.previous} ${previousJpd.toFixed(1)} OPD vs ${reportMonths.prior} ${priorJpd.toFixed(1)} OPD · Down ${Math.abs(decline).toFixed(0)}%`,
+      why: "ALN evaluates customer health using orders per day because it normalizes for calendar timing.",
       action: "Consider staff retraining, marketing support, and multiple-pair promotions.",
     });
   }
   if (pmSales < ppmSales) {
     const decline = ppmSales > 0 ? ((pmSales - ppmSales) / ppmSales) * 100 : 0;
     opportunities.push({
-      title: "Sales declining",
+      title: "Purchases declining",
       priority: "red",
-      current: `PM ${formatMoney(pmSales)} vs PPM ${formatMoney(ppmSales)} · ${Math.abs(decline).toFixed(0)}% down`,
-      why: "Previous month sales are the primary revenue-health signal; current month is only a pace indicator.",
+      current: `${reportMonths.previous} ${formatMoney(pmSales)} vs ${reportMonths.prior} ${formatMoney(ppmSales)} · ${Math.abs(decline).toFixed(0)}% down`,
+      why: "Previous month purchases are the primary account activity signal.",
       action: "Review patient flow, premium recommendation consistency, and complete-pair capture.",
     });
   }
   if (officeRedoPm > officeRedoPpm + 0.5) {
     opportunities.push({
-      title: "High office redos",
+      title: "High office remakes",
       priority: "red",
-      current: `PM ${officeRedoPm.toFixed(1)}% vs PPM ${officeRedoPpm.toFixed(1)}%`,
-      why: "Office redo increases usually point to measurement, progressive fitting, or frame-selection issues.",
+      current: `${reportMonths.previous} ${officeRedoPm.toFixed(1)}% vs ${reportMonths.prior} ${officeRedoPpm.toFixed(1)}%`,
+      why: "Office remake increases usually point to measurement, progressive fitting, or frame-selection issues.",
       action: "Review measurements, progressive fitting, and frame selection with the team.",
     });
   }
   if (labRedoPm > labRedoPpm + 0.5) {
     opportunities.push({
-      title: "High lab redos",
+      title: "High lab remakes",
       priority: "red",
-      current: `PM ${labRedoPm.toFixed(1)}% vs PPM ${labRedoPpm.toFixed(1)}%`,
-      why: "Lab redo increases should be reviewed with Artisan support so causes are identified quickly.",
+      current: `${reportMonths.previous} ${labRedoPm.toFixed(1)}% vs ${reportMonths.prior} ${labRedoPpm.toFixed(1)}%`,
+      why: "Lab remake increases should be reviewed with Artisan support so causes are identified quickly.",
       action: "Contact Artisan support for a remake review.",
     });
   }
@@ -2162,7 +2253,7 @@ function buildPracticeIntelligenceModel({
     opportunities.push({
       title: "Turnaround above lab average",
       priority: "yellow",
-      current: `Your PM TAT ${turnaroundPm.toFixed(1)} days vs lab ${labTurnaroundPm.toFixed(1)} days`,
+      current: `Your ${reportMonths.previous} turnaround ${turnaroundPm.toFixed(1)} days vs lab ${labTurnaroundPm.toFixed(1)} days`,
       why: "Turnaround is measured as average business days in lab production, excluding shipping and frame wait.",
       action: "Review order complexity, frame availability, and support tickets with the lab team.",
     });
@@ -2190,10 +2281,10 @@ function buildPracticeIntelligenceModel({
   }
   opportunities.push(
     {
-      title: "Reduce Redos",
+      title: "Reduce Remakes",
       priority: warrantyPm > 5 || officeRedoPm > 10 || labRedoPm > 2 ? "red" : "green",
-      current: `PM Warranty ${warrantyPm.toFixed(1)}% · Office ${officeRedoPm.toFixed(1)}% · Lab ${labRedoPm.toFixed(1)}%`,
-      why: "Redo, warranty, and non-adapt rates directly affect chair time, patient trust, and margin.",
+      current: `${reportMonths.previous} Warranty ${warrantyPm.toFixed(1)}% · Office ${officeRedoPm.toFixed(1)}% · Lab ${labRedoPm.toFixed(1)}%`,
+      why: "Remake, warranty, and non-adapt rates directly affect chair time, patient trust, and margin.",
       action:
         warrantyPm > 5 || officeRedoPm > 10 || labRedoPm > 2
           ? "Leverage our partnership with OTI's online web portal for staff training; special rates apply."
@@ -2203,7 +2294,7 @@ function buildPracticeIntelligenceModel({
       title: "Improve Frame Package Usage",
       priority: hasModernPackageWarning ? "yellow" : "green",
       current: isActiveUsage(account?.modernPkgUsage) ? account?.modernPkgUsage || "Active" : "No current usage recorded",
-      why: "Frame package participation can simplify quoting and strengthen program value for complete-pair sales.",
+      why: "Frame package participation can simplify quoting and strengthen program value for complete-pair purchases.",
       action: "Review Artisan Frame Systems M5 for everyday packages and Artisan Safety Systems Y5 for safety package opportunities.",
     }
   );
@@ -2229,57 +2320,67 @@ function buildPracticeIntelligenceModel({
     monthlySharePoint("Multiple Pairs", supplemental?.specialty_usage?.multiple_pair_jobs, { ppm: ppmJobs, pm: pmJobs, cm: cmJobs }),
   ];
   const turnaround = [
-    monthlyPoint("Prior", { cm: supplemental?.turnaround?.average_days?.ppm }),
-    monthlyPoint("Previous", { cm: supplemental?.turnaround?.average_days?.pm }),
-    monthlyPoint("Current", { cm: supplemental?.turnaround?.average_days?.cm }),
+    monthlyPoint(reportMonths.prior, { cm: supplemental?.turnaround?.average_days?.ppm }),
+    monthlyPoint(reportMonths.previous, { cm: supplemental?.turnaround?.average_days?.pm }),
+    monthlyPoint(`${reportMonths.current} MTD`, { cm: supplemental?.turnaround?.average_days?.cm }),
   ];
   const labTurnaround = [
-    monthlyPoint("Prior", { cm: supplemental?.turnaround?.lab_average_days?.ppm }),
-    monthlyPoint("Previous", { cm: supplemental?.turnaround?.lab_average_days?.pm }),
-    monthlyPoint("Current", { cm: supplemental?.turnaround?.lab_average_days?.cm }),
+    monthlyPoint(reportMonths.prior, { cm: supplemental?.turnaround?.lab_average_days?.ppm }),
+    monthlyPoint(reportMonths.previous, { cm: supplemental?.turnaround?.lab_average_days?.pm }),
+    monthlyPoint(`${reportMonths.current} MTD`, { cm: supplemental?.turnaround?.lab_average_days?.cm }),
   ];
   const rewards: PracticeIntelligenceModel["rewards"] = [];
   const rewardsData = supplemental?.rewards;
+  const pmMonth = reportMonths.previous;
+  const cmMonth = reportMonths.current;
+  const rewardTier = monthlyTierLabel(pmJobs);
+  const rewardTierFill = tierFillFromJobs(pmJobs);
   if (rewardsData?.arpmp26?.enrolled) {
     rewards.push({
-      title: "ARPMP26",
-      metrics: [
-        { label: "Qualified PMP Jobs", value: formatCount(rewardsData.arpmp26.qualified_pmp_jobs.cm) },
-        { label: "Rebate Total", value: formatMoney(rewardsData.arpmp26.rebate_total.cm) },
-      ],
-      trend: rewardTrendLabel(
-        rewardsData.arpmp26.qualified_pmp_jobs.cm,
-        rewardsData.arpmp26.qualified_pmp_jobs.pm,
-        "qualified jobs"
-      ),
+      title: "PMP Rewards",
+      code: "ARPMP26",
+      qualifiedLabel: "Qualified PMP Orders",
+      payoutLabel: "Total Rebate",
+      pmQualifiedOrders: rewardsData.arpmp26.qualified_pmp_jobs.pm,
+      pmPayout: rewardsData.arpmp26.rebate_total.pm,
+      cmQualifiedOrders: rewardsData.arpmp26.qualified_pmp_jobs.cm,
+      cmPayout: rewardsData.arpmp26.rebate_total.cm,
+      tier: rewardTier,
+      tierFill: rewardTierFill,
+      pmMonth,
+      cmMonth,
     });
   }
   if (rewardsData?.aruty26?.enrolled) {
     rewards.push({
-      title: "ARUTY26",
-      metrics: [
-        { label: "Qualified Jobs", value: formatCount(rewardsData.aruty26.qualified_jobs.cm) },
-        { label: "Rewards Earned", value: formatMoney(rewardsData.aruty26.rewards_earned.cm) },
-      ],
-      trend: rewardTrendLabel(
-        rewardsData.aruty26.qualified_jobs.cm,
-        rewardsData.aruty26.qualified_jobs.pm,
-        "qualified jobs"
-      ),
+      title: "Unity Rewards",
+      code: "ARUTY26",
+      qualifiedLabel: "Qualified Unity Orders",
+      payoutLabel: "Total Rebate",
+      pmQualifiedOrders: rewardsData.aruty26.qualified_jobs.pm,
+      pmPayout: rewardsData.aruty26.rewards_earned.pm,
+      cmQualifiedOrders: rewardsData.aruty26.qualified_jobs.cm,
+      cmPayout: rewardsData.aruty26.rewards_earned.cm,
+      tier: rewardTier,
+      tierFill: rewardTierFill,
+      pmMonth,
+      cmMonth,
     });
   }
   if (rewardsData?.arsql26?.enrolled) {
     rewards.push({
-      title: "ARSQL26",
-      metrics: [
-        { label: "Qualified Sequel PAL Jobs", value: formatCount(rewardsData.arsql26.qualified_sequel_pal_jobs.cm) },
-        { label: "Rebate Total", value: formatMoney(rewardsData.arsql26.rebate_total.cm) },
-      ],
-      trend: rewardTrendLabel(
-        rewardsData.arsql26.qualified_sequel_pal_jobs.cm,
-        rewardsData.arsql26.qualified_sequel_pal_jobs.pm,
-        "qualified jobs"
-      ),
+      title: "Sequel Rewards",
+      code: "ARSQL26",
+      qualifiedLabel: "Qualified Sequel Orders",
+      payoutLabel: "Total Rebate",
+      pmQualifiedOrders: rewardsData.arsql26.qualified_sequel_pal_jobs.pm,
+      pmPayout: rewardsData.arsql26.rebate_total.pm,
+      cmQualifiedOrders: rewardsData.arsql26.qualified_sequel_pal_jobs.cm,
+      cmPayout: rewardsData.arsql26.rebate_total.cm,
+      tier: rewardTier,
+      tierFill: rewardTierFill,
+      pmMonth,
+      cmMonth,
     });
   }
   const programs: PracticeIntelligenceModel["programs"] = [
@@ -2322,9 +2423,10 @@ function buildPracticeIntelligenceModel({
 
   return {
     trends,
+    orderRateTrends,
     vspMix: [
-      { label: "VSP Jobs", value: Math.round(vspShare), color: "#2f5f9c" },
-      { label: "Private Pay Jobs", value: Math.round(privatePayShare), color: "#1f8a70" },
+      { label: "VSP Orders", value: Math.round(vspShare), color: "#2f5f9c" },
+      { label: "Private Pay Orders", value: Math.round(privatePayShare), color: "#1f8a70" },
     ],
     programMix,
     brandUsage,
@@ -2333,13 +2435,20 @@ function buildPracticeIntelligenceModel({
     turnaround,
     labTurnaround,
     quality: [
-      { label: "Prior", warranty: warrantyPpm, officeRedo: officeRedoPpm, labRedo: labRedoPpm, nonAdapt: pctValue(quality?.non_adapt_pct?.ppm) },
-      { label: "Previous", warranty: warrantyPm, officeRedo: officeRedoPm, labRedo: labRedoPm, nonAdapt: nonAdaptPm },
-      { label: "Current", warranty: warrantyCm, officeRedo: officeRedoCm, labRedo: labRedoCm, nonAdapt: nonAdaptCm },
+      { label: reportMonths.prior, warranty: warrantyPpm, officeRedo: officeRedoPpm, labRedo: labRedoPpm, nonAdapt: pctValue(quality?.non_adapt_pct?.ppm) },
+      { label: reportMonths.previous, warranty: warrantyPm, officeRedo: officeRedoPm, labRedo: labRedoPm, nonAdapt: nonAdaptPm },
+      { label: `${reportMonths.current} MTD`, warranty: warrantyCm, officeRedo: officeRedoCm, labRedo: labRedoCm, nonAdapt: nonAdaptCm },
     ],
     score,
-    scoreDelta,
+    scoreFactors: {
+      previousMonthTurnaround: performanceScore.factors.previousMonthTurnaround,
+      previousMonthOrderTrend: performanceScore.factors.previousMonthOrderTrend,
+      previousMonthOfficeRemakes:
+        performanceScore.factors.previousMonthOfficeRemakes,
+      previousMonthLabRemakes: performanceScore.factors.previousMonthLabRemakes,
+    },
     scoreLabel: statusForScore(score),
+    reportMonths,
     ppmSales,
     pmSales,
     cmSales,
@@ -2349,8 +2458,6 @@ function buildPracticeIntelligenceModel({
     priorJpd,
     currentJpd,
     previousJpd,
-    cmProjectedJobs: projectedJobsFromJpd(currentJpd),
-    cmProjectedTier: monthlyTierLabel(projectedJobsFromJpd(currentJpd)),
     vspShare,
     privatePayShare,
     salesTrend: getPercentChange(pmSales, ppmSales),
@@ -2481,36 +2588,36 @@ function PracticeIntelligenceHero({
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <IntelligenceMetric
             icon={CircleDollarSign}
-            label="Previous Month Sales"
+            label={`${intelligence.reportMonths.previous} Purchases`}
             value={formatMoney(intelligence.pmSales)}
             trend={intelligence.salesTrend}
-            detail={`PPM ${formatMoney(intelligence.ppmSales)} · CM pace ${formatMoney(intelligence.cmSales)}`}
+            detail={`${intelligence.reportMonths.prior} ${formatMoney(intelligence.ppmSales)}`}
           />
           <IntelligenceMetric
             icon={CircleDollarSign}
-            label="Current Month Pace"
+            label={`${intelligence.reportMonths.current} Purchases MTD`}
             value={formatMoney(intelligence.cmSales)}
-            detail="Directional only; PM is the primary performance month."
+            detail="Actual month-to-date purchases."
           />
           <IntelligenceMetric
             icon={Package}
-            label="Previous Month Jobs"
+            label={`${intelligence.reportMonths.previous} Orders`}
             value={formatCount(intelligence.pmJobs)}
-            detail={`PPM ${formatCount(intelligence.ppmJobs)} · CM pace ${formatCount(intelligence.cmJobs)}`}
+            detail={`${intelligence.reportMonths.prior} ${formatCount(intelligence.ppmJobs)}`}
           />
           <IntelligenceMetric
             icon={Activity}
-            label="Jobs Per Day Down"
-            value={intelligence.previousJpd === null ? "Pending" : `${intelligence.previousJpd.toFixed(1)} JPD`}
+            label={`${intelligence.reportMonths.previous} Orders Per Day`}
+            value={intelligence.previousJpd === null ? "Pending" : `${intelligence.previousJpd.toFixed(1)} OPD`}
             trend={intelligence.jobsTrend}
-            detail={intelligence.priorJpd === null ? "PPM JPD pending" : `PPM ${intelligence.priorJpd.toFixed(1)} JPD`}
+            detail={intelligence.priorJpd === null ? `${intelligence.reportMonths.prior} OPD pending` : `${intelligence.reportMonths.prior} ${intelligence.priorJpd.toFixed(1)} OPD`}
           />
           {intelligence.currentJpd !== null ? (
             <IntelligenceMetric
               icon={Activity}
-              label="CM Pace"
-              value={intelligence.currentJpd.toFixed(1)}
-              detail={`Projected ${formatCount(intelligence.cmProjectedJobs)} jobs · ${intelligence.cmProjectedTier}`}
+              label={`${intelligence.reportMonths.current} Orders MTD`}
+              value={formatCount(intelligence.cmJobs)}
+              detail={`${intelligence.currentJpd.toFixed(1)} actual orders per day MTD`}
             />
           ) : null}
           <IntelligenceMetric
@@ -2522,7 +2629,11 @@ function PracticeIntelligenceHero({
           <IntelligenceMetric
             icon={Layers}
             label="Assigned Price Lists"
-            value={dashboardAccount?.used_price_lists?.join(", ") || "Pending"}
+            value={
+              normalizeAssignedPriceListCodes(
+                dashboardAccount?.used_price_lists ?? []
+              ).join(", ") || "Pending"
+            }
             detail="Only assigned customer-facing price sheets are shown."
           />
         </div>
@@ -2533,11 +2644,10 @@ function PracticeIntelligenceHero({
 
 function PracticePerformanceScoreSection({ intelligence }: { intelligence: PracticeIntelligenceModel }) {
   const factorRows = [
-    ["PM Turnaround", intelligence.labTurnaround[1]?.current ? 82 : 62],
-    ["Program Participation", Math.min(100, intelligence.programMix.reduce((total, item) => total + item.value, 0) / intelligence.programMix.length)],
-    ["PM JPD Trend", intelligence.jpdTrend?.direction === "up" ? 86 : intelligence.jpdTrend?.direction === "down" ? 58 : 72],
-    ["PM Office Redos", Math.max(35, 100 - intelligence.quality[1].officeRedo * 8)],
-    ["PM Lab Redos", Math.max(35, 100 - intelligence.quality[1].labRedo * 14)],
+    ["Previous Month Turnaround", intelligence.scoreFactors.previousMonthTurnaround],
+    ["Previous Month Order Trend", intelligence.scoreFactors.previousMonthOrderTrend],
+    ["Previous Month Office Remakes", intelligence.scoreFactors.previousMonthOfficeRemakes],
+    ["Previous Month Lab Remakes", intelligence.scoreFactors.previousMonthLabRemakes],
   ] as const;
 
   return (
@@ -2547,7 +2657,7 @@ function PracticePerformanceScoreSection({ intelligence }: { intelligence: Pract
           Practice Performance Score Preview
         </p>
         <p className="mt-3 rounded-md border border-[#d9c8a6] bg-white/75 px-3 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#59635f]">
-          PM service, redo, JPD, and program-participation weighting
+          Previous-month turnaround, order trend, and remake scoring
         </p>
         <div className="mt-5">
           <PracticePerformanceScoreChart score={intelligence.score} />
@@ -2555,8 +2665,7 @@ function PracticePerformanceScoreSection({ intelligence }: { intelligence: Pract
         <div className="mt-4 text-center">
           <p className="text-2xl font-semibold text-[#142724]">{intelligence.scoreLabel}</p>
           <p className="mt-1 text-sm font-semibold text-[#1f8a70]">
-            {intelligence.scoreDelta >= 0 ? "+" : ""}
-            {intelligence.scoreDelta} vs last month
+            Based on {intelligence.reportMonths.previous} results
           </p>
         </div>
       </div>
@@ -2579,12 +2688,12 @@ function PracticePerformanceScoreSection({ intelligence }: { intelligence: Pract
 
 function TierProgressTracker({
   pmJobs,
-  cmProjectedJobs,
-  cmProjectedTier,
+  cmJobs,
+  reportMonths,
 }: {
   pmJobs: number;
-  cmProjectedJobs: number;
-  cmProjectedTier: string;
+  cmJobs: number;
+  reportMonths: PracticeIntelligenceModel["reportMonths"];
 }) {
   const tierLabel = monthlyTierLabel(pmJobs);
   const progress = Math.min(100, Math.max(0, pmJobs));
@@ -2597,15 +2706,15 @@ function TierProgressTracker({
             Tier Progress Tracker
           </p>
           <h3 className="mt-2 text-2xl font-semibold text-[#142724]">
-            Tier Achieved Last Month: {tierLabel}
+            Tier Achieved in {reportMonths.previous}: {tierLabel}
           </h3>
           <p className="mt-2 text-sm leading-6 text-[#59635f]">
-            Tier 1 is 0-20 jobs, Tier 2 is 21-60, Tier 3 is 61-100, and Tier 4 is above 100 jobs in a month.
+            Tier 1 is 0-20 orders, Tier 2 is 21-60, Tier 3 is 61-100, and Tier 4 is above 100 orders in a month.
           </p>
         </div>
         <div className="grid gap-1 text-sm font-semibold text-[#59635f] md:text-right">
-          <p>{formatCount(pmJobs)} jobs last month · {progress.toFixed(0)}% toward Tier 4</p>
-          <p>Currently pacing toward: {cmProjectedTier} ({formatCount(cmProjectedJobs)} projected jobs)</p>
+          <p>{formatCount(pmJobs)} orders in {reportMonths.previous} · {progress.toFixed(0)}% toward Tier 4</p>
+          <p>{reportMonths.current} MTD: {formatCount(cmJobs)} actual orders</p>
         </div>
       </div>
       <div className="mt-5 h-4 overflow-hidden rounded-full bg-[#e7ddcc]">
@@ -2623,28 +2732,31 @@ function DailyTrendSummary({ intelligence }: { intelligence: PracticeIntelligenc
   return (
     <section className="mt-5 rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_18px_48px_rgba(20,39,36,0.07)]">
       <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#7a6b49]">
-        Jobs Per Day Trend
+        Orders Per Day Trend
       </p>
       <div className="mt-3 grid gap-4 md:grid-cols-3">
         <div>
-          <p className="text-sm font-semibold text-[#59635f]">PM jobs per day</p>
+          <p className="text-sm font-semibold text-[#59635f]">{intelligence.reportMonths.previous} orders per day</p>
           <p className="mt-1 text-2xl font-semibold text-[#142724]">
             {previous === null ? "Pending" : previous.toFixed(1)}
           </p>
         </div>
         <div>
-          <p className="text-sm font-semibold text-[#59635f]">PPM jobs per day</p>
+          <p className="text-sm font-semibold text-[#59635f]">{intelligence.reportMonths.prior} orders per day</p>
           <p className="mt-1 text-2xl font-semibold text-[#142724]">
             {prior === null ? "Pending" : prior.toFixed(1)}
           </p>
         </div>
         <div>
-          <p className="text-sm font-semibold text-[#59635f]">CM pace</p>
+          <p className="text-sm font-semibold text-[#59635f]">{intelligence.reportMonths.current} MTD</p>
           <p className="mt-1 text-sm leading-6 text-[#6d746f]">
-            {current === null ? "Pending" : `${current.toFixed(1)} JPD projected to ${formatCount(intelligence.cmProjectedJobs)} jobs.`} Current month is directional only.
+            {current === null ? "Pending" : `${current.toFixed(1)} actual orders per day across ${formatCount(intelligence.cmJobs)} month-to-date orders.`}
           </p>
         </div>
       </div>
+      <p className="mt-4 rounded-md border border-[#d9c8a6] bg-white/70 px-4 py-3 text-xs font-semibold leading-5 text-[#59635f]">
+        {intelligence.reportMonths.current} values are actual month-to-date purchases and orders. No projected totals are shown.
+      </p>
     </section>
   );
 }
@@ -2724,23 +2836,63 @@ function RewardsCenter({ rewards }: { rewards: PracticeIntelligenceModel["reward
         Rewards Center
       </p>
       <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Active enrolled rewards</h2>
-      <div className="mt-6 grid gap-4 md:grid-cols-3">
+      <p className="mt-3 max-w-3xl text-sm leading-6 text-[#59635f]">
+        Previous month rewards are the payout reference for customer service. Current month activity is month-to-date.
+      </p>
+      <div className="mt-6 grid gap-4 lg:grid-cols-3">
         {rewards.map((reward) => (
-          <article key={reward.title} className="rounded-md border border-[#eadfce] bg-white/78 p-5">
-            <span className="inline-flex rounded-md bg-[#1f8a70] px-2.5 py-1 text-xs font-bold text-white">
-              Enrolled
-            </span>
-            <h3 className="mt-4 text-xl font-semibold text-[#142724]">{reward.title}</h3>
-            <p className="mt-2 rounded-md border border-[#d9c8a6] bg-[#fffdf8] px-3 py-2 text-xs font-bold uppercase tracking-[0.1em] text-[#59635f]">
-              {reward.trend}
-            </p>
-            <div className="mt-4 grid gap-3">
-              {reward.metrics.map((metric) => (
-                <div key={metric.label} className="rounded-md border border-[#eadfce] bg-[#fffdf8] p-3">
-                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#7a6b49]">{metric.label}</p>
-                  <p className="mt-1 text-2xl font-semibold text-[#142724]">{metric.value}</p>
+          <article key={reward.code} className="rounded-md border border-[#d9c8a6] bg-white/82 p-5 shadow-[0_18px_44px_rgba(20,39,36,0.07)]">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <span className="inline-flex rounded-md bg-[#1f8a70] px-2.5 py-1 text-xs font-bold text-white">Enrolled</span>
+                <h3 className="mt-4 text-2xl font-semibold text-[#142724]">{reward.title}</h3>
+                <p className="mt-1 text-xs font-bold uppercase tracking-[0.16em] text-[#7a6b49]">{reward.code}</p>
+              </div>
+              <div
+                className="grid h-20 w-20 shrink-0 place-items-center rounded-full"
+                style={{ background: `conic-gradient(#1f8a70 0 ${reward.tierFill}%, #e7ddcc ${reward.tierFill}% 100%)` }}
+                aria-label={`${reward.tier} loyalty tier`}
+              >
+                <div className="grid h-14 w-14 place-items-center rounded-full bg-white text-center text-xs font-bold text-[#142724]">
+                  {reward.tier}
                 </div>
-              ))}
+              </div>
+            </div>
+
+            <div className="mt-5 rounded-md border border-[#1f8a70]/35 bg-[#f1fbf4] p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#1f6b45]">{reward.pmMonth} Rewards</p>
+              <p className="mt-2 text-5xl font-semibold tracking-[-0.05em] text-[#142724]">{formatMoney(reward.pmPayout)}</p>
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                <div className="rounded-md bg-white/78 p-3">
+                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#7a6b49]">{reward.pmMonth} Qualified Orders</p>
+                  <p className="mt-1 text-2xl font-semibold text-[#142724]">{formatCount(reward.pmQualifiedOrders)}</p>
+                </div>
+                <div className="rounded-md bg-white/78 p-3">
+                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#7a6b49]">{reward.pmMonth} Loyalty Tier</p>
+                  <p className="mt-1 text-2xl font-semibold text-[#142724]">{reward.tier}</p>
+                </div>
+              </div>
+              <div className="mt-4 flex items-center gap-3">
+                <Package className="h-5 w-5 text-[#1f8a70]" />
+                <div className="h-3 flex-1 overflow-hidden rounded-full bg-[#d9ebdf]">
+                  <div className="h-full rounded-full bg-[#1f8a70]" style={{ width: `${reward.tierFill}%` }} />
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 rounded-md border border-[#eadfce] bg-[#fffdf8] p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#7a6b49]">{reward.cmMonth} MTD</p>
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                <p className="text-sm font-semibold text-[#59635f]">
+                  Qualified Orders: <span className="text-[#142724]">{formatCount(reward.cmQualifiedOrders)}</span>
+                </p>
+                <p className="text-sm font-semibold text-[#59635f]">
+                  Current Rewards: <span className="text-[#142724]">{formatMoney(reward.cmPayout)}</span>
+                </p>
+              </div>
+              <p className="mt-3 text-xs leading-5 text-[#6d746f]">
+                Current month rewards are month-to-date; {reward.pmMonth} remains the payout reference.
+              </p>
             </div>
           </article>
         ))}
@@ -2749,14 +2901,20 @@ function RewardsCenter({ rewards }: { rewards: PracticeIntelligenceModel["reward
   );
 }
 
-function RemakePerformanceCenter({ quality }: { quality: QualityPoint[] }) {
-  const current = quality.find((point) => point.label === "Current") ?? quality[quality.length - 1];
-  const previous = quality.find((point) => point.label === "Previous") ?? quality[quality.length - 2];
-  const prior = quality.find((point) => point.label === "Prior") ?? quality[0];
+function RemakePerformanceCenter({
+  quality,
+  reportMonths,
+}: {
+  quality: QualityPoint[];
+  reportMonths: PracticeIntelligenceModel["reportMonths"];
+}) {
+  const current = quality[quality.length - 1];
+  const previous = quality[quality.length - 2];
+  const prior = quality[0];
   const metrics = [
-    { label: "Warranty Redo", current: current?.warranty ?? 0, previous: previous?.warranty ?? 0, prior: prior?.warranty ?? 0 },
-    { label: "Office Redo", current: current?.officeRedo ?? 0, previous: previous?.officeRedo ?? 0, prior: prior?.officeRedo ?? 0 },
-    { label: "Lab Redo", current: current?.labRedo ?? 0, previous: previous?.labRedo ?? 0, prior: prior?.labRedo ?? 0 },
+    { label: "Warranty Remake", current: current?.warranty ?? 0, previous: previous?.warranty ?? 0, prior: prior?.warranty ?? 0 },
+    { label: "Office Remake", current: current?.officeRedo ?? 0, previous: previous?.officeRedo ?? 0, prior: prior?.officeRedo ?? 0 },
+    { label: "Lab Remake", current: current?.labRedo ?? 0, previous: previous?.labRedo ?? 0, prior: prior?.labRedo ?? 0 },
     { label: "Non-Adapt", current: current?.nonAdapt ?? 0, previous: previous?.nonAdapt ?? 0, prior: prior?.nonAdapt ?? 0 },
   ];
 
@@ -2767,7 +2925,7 @@ function RemakePerformanceCenter({ quality }: { quality: QualityPoint[] }) {
       </p>
       <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Quality and remake signals</h2>
       <p className="mt-3 max-w-3xl text-sm leading-6 text-[#6d746f]">
-        These rates use the remake percentages in the unified account record. PM is the primary read; CM is directional.
+        These rates use the remake percentages in the unified account record. {reportMonths.previous} is the completed comparison month and {reportMonths.current} is month-to-date.
       </p>
       <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {metrics.map((metric) => {
@@ -2791,20 +2949,20 @@ function RemakePerformanceCenter({ quality }: { quality: QualityPoint[] }) {
               <h3 className="mt-4 text-lg font-semibold text-[#142724]">{metric.label}</h3>
               <div className="mt-4 grid grid-cols-3 gap-2 text-center">
                 <div className="rounded-md border border-[#eadfce] bg-[#fffdf8] p-2">
-                  <p className="text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#7a6b49]">PPM</p>
+                  <p className="text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#7a6b49]">{reportMonths.prior}</p>
                   <p className="mt-1 text-sm font-semibold text-[#142724]">{metric.prior.toFixed(1)}%</p>
                 </div>
                 <div className="rounded-md border border-[#d9c8a6] bg-[#fffaf1] p-2">
-                  <p className="text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#7a6b49]">PM</p>
+                  <p className="text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#7a6b49]">{reportMonths.previous}</p>
                   <p className="mt-1 text-sm font-semibold text-[#142724]">{metric.previous.toFixed(1)}%</p>
                 </div>
                 <div className="rounded-md border border-[#eadfce] bg-[#fffdf8] p-2">
-                  <p className="text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#7a6b49]">CM</p>
+                  <p className="text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#7a6b49]">{reportMonths.current} MTD</p>
                   <p className="mt-1 text-sm font-semibold text-[#142724]">{metric.current.toFixed(1)}%</p>
                 </div>
               </div>
               <p className="mt-2 text-sm text-[#6d746f]">
-                PM vs PPM {metric.previous - metric.prior >= 0 ? "+" : ""}
+                {reportMonths.previous} vs {reportMonths.prior} {metric.previous - metric.prior >= 0 ? "+" : ""}
                 {(metric.previous - metric.prior).toFixed(1)} pts
               </p>
             </article>
@@ -2818,12 +2976,14 @@ function RemakePerformanceCenter({ quality }: { quality: QualityPoint[] }) {
 function TurnaroundBenchmarkCenter({
   turnaround,
   labTurnaround,
+  reportMonths,
 }: {
   turnaround: MonthlyUsagePoint[];
   labTurnaround: MonthlyUsagePoint[];
+  reportMonths: PracticeIntelligenceModel["reportMonths"];
 }) {
-  const pmCustomer = turnaround.find((point) => point.label === "Previous")?.current ?? 0;
-  const pmLab = labTurnaround.find((point) => point.label === "Previous")?.current ?? 0;
+  const pmCustomer = turnaround[1]?.current ?? 0;
+  const pmLab = labTurnaround[1]?.current ?? 0;
   const difference = pmCustomer && pmLab ? pmCustomer - pmLab : 0;
 
   return (
@@ -2836,8 +2996,8 @@ function TurnaroundBenchmarkCenter({
         Turnaround Time = Average business days in lab production. Does not include shipping time. Does not include frame wait time.
       </p>
       <div className="mt-6 grid gap-4 md:grid-cols-3">
-        <DashboardV1Card label="Your PM Avg TAT" value={pmCustomer ? `${pmCustomer.toFixed(1)} days` : "Pending"} />
-        <DashboardV1Card label="Lab PM Avg TAT" value={pmLab ? `${pmLab.toFixed(1)} days` : "Pending"} />
+        <DashboardV1Card label={`Your ${reportMonths.previous} Avg Turnaround`} value={pmCustomer ? `${pmCustomer.toFixed(1)} days` : "Pending"} />
+        <DashboardV1Card label={`Lab ${reportMonths.previous} Avg Turnaround`} value={pmLab ? `${pmLab.toFixed(1)} days` : "Pending"} />
         <DashboardV1Card
           label="Difference"
           value={pmCustomer && pmLab ? `${difference >= 0 ? "+" : ""}${difference.toFixed(1)} days` : "Pending"}
@@ -2873,11 +3033,13 @@ function ProductBrandIntelligenceSection({
   materialUsage,
   specialtyUsage,
   programMix,
+  reportMonths,
 }: {
   brandUsage: MonthlyUsagePoint[];
   materialUsage: MonthlyUsagePoint[];
   specialtyUsage: MonthlyUsagePoint[];
   programMix: MixPoint[];
+  reportMonths: PracticeIntelligenceModel["reportMonths"];
 }) {
   return (
     <section className="rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3">
@@ -2886,21 +3048,21 @@ function ProductBrandIntelligenceSection({
       </p>
       <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Counts, usage, and trends</h2>
       <p className="mt-3 max-w-3xl text-sm leading-6 text-[#6d746f]">
-        Product reporting uses jobs, orders, pairs, and usage counts only. Revenue remains at the account level.
+        Product reporting uses orders, pairs, and usage counts only. Purchases remain at the account level.
       </p>
       <div className="mt-6 grid gap-5 xl:grid-cols-3">
         {hasUsageData(brandUsage) ? (
-          <MonthlyUsageCharts eyebrow="Brand Usage" title="Brand Jobs by Month" data={brandUsage} />
+          <MonthlyUsageCharts eyebrow="Brand Usage" title="Brand Orders by Month" data={brandUsage} monthLabels={reportMonths} horizontal />
         ) : (
           <PlaceholderInsightCard title="Brand Usage" label="Additional Product Intelligence Coming Soon" detail="Brand count fields are unavailable for this account." />
         )}
         {hasUsageData(materialUsage) ? (
-          <MonthlyUsageCharts eyebrow="Material Usage" title="Material Share of Monthly Jobs" data={materialUsage} valueType="percent" />
+          <MonthlyUsageCharts eyebrow="Material Usage" title="Material Share of Monthly Orders" data={materialUsage} valueType="percent" monthLabels={reportMonths} />
         ) : (
           <PlaceholderInsightCard title="Material Usage" label="Additional Product Intelligence Coming Soon" detail="Material count fields are unavailable for this account." />
         )}
         {hasUsageData(specialtyUsage) ? (
-          <MonthlyUsageCharts eyebrow="Specialty Usage" title="Specialty Share of Monthly Jobs" data={specialtyUsage} valueType="percent" />
+          <MonthlyUsageCharts eyebrow="Specialty Usage" title="Specialty Share of Monthly Orders" data={specialtyUsage} valueType="percent" monthLabels={reportMonths} />
         ) : (
           <PlaceholderInsightCard title="Specialty Usage" label="Additional Product Intelligence Coming Soon" detail="Specialty product count fields are unavailable for this account." />
         )}
@@ -2951,6 +3113,17 @@ function BenchmarkingSection() {
   );
 }
 
+function FormLogoMark() {
+  return (
+    <span className="inline-grid h-7 w-7 grid-cols-2 gap-1 rounded-md bg-[#172a28] p-1.5" aria-hidden="true">
+      <span className="rounded-full bg-[#f2d88f]" />
+      <span className="rounded-full bg-[#1f8a70]" />
+      <span className="rounded-full bg-white" />
+      <span className="rounded-full bg-[#c96856]" />
+    </span>
+  );
+}
+
 function CustomerEngagementCenter({ invitations }: { invitations: PracticeIntelligenceModel["targetInvitations"] }) {
   const forms = [
     {
@@ -2979,8 +3152,9 @@ function CustomerEngagementCenter({ invitations }: { invitations: PracticeIntell
       <div className="mt-6 grid gap-4 md:grid-cols-3">
         {forms.map((form) => (
           <a key={form.title} href={form.href} target="_blank" rel="noreferrer" className="rounded-md border border-[#eadfce] bg-white/78 p-4 transition hover:-translate-y-0.5 hover:border-[#1f8a70]">
-            <span className="inline-flex rounded-md border border-[#d9c8a6] bg-[#f8f1e6] px-2.5 py-1 text-xs font-bold uppercase tracking-[0.12em] text-[#7a6b49]">
-              Typeform
+            <span className="inline-flex items-center gap-2 rounded-md border border-[#d9c8a6] bg-[#f8f1e6] px-2.5 py-1 text-xs font-bold uppercase tracking-[0.12em] text-[#7a6b49]">
+              <FormLogoMark />
+              Form
             </span>
             <h3 className="mt-4 text-lg font-semibold text-[#142724]">{form.title}</h3>
             <p className="mt-3 text-sm leading-6 text-[#6d746f]">{form.detail}</p>
@@ -3067,6 +3241,7 @@ function PortalSectionNav() {
     ["Trends", "#trends"],
     ["Opportunities", "#opportunities"],
     ["Programs", "#programs"],
+    ["Policies", "/policies"],
     ["Price Sheets", "#price-sheets"],
     ["Account Details", "#account-details"],
     ["Support", "#support"],
@@ -3145,8 +3320,8 @@ function PracticeIntelligenceCenter({
       </section>
       <TierProgressTracker
         pmJobs={intelligence.pmJobs}
-        cmProjectedJobs={intelligence.cmProjectedJobs}
-        cmProjectedTier={intelligence.cmProjectedTier}
+        cmJobs={intelligence.cmJobs}
+        reportMonths={intelligence.reportMonths}
       />
       <div id="opportunities" className="scroll-mt-24 lg:col-span-3">
         <OpportunitiesCenter opportunities={intelligence.opportunities} />
@@ -3156,16 +3331,17 @@ function PracticeIntelligenceCenter({
         materialUsage={intelligence.materialUsage}
         specialtyUsage={intelligence.specialtyUsage}
         programMix={intelligence.programMix}
+        reportMonths={intelligence.reportMonths}
       />
       <section className="lg:col-span-3">
         <ServiceExcellenceCharts
           quality={intelligence.quality}
-          orderVolume={intelligence.trends}
+          orderVolume={intelligence.orderRateTrends}
           turnaround={intelligence.turnaround}
         />
       </section>
-      <TurnaroundBenchmarkCenter turnaround={intelligence.turnaround} labTurnaround={intelligence.labTurnaround} />
-      <RemakePerformanceCenter quality={intelligence.quality} />
+      <TurnaroundBenchmarkCenter turnaround={intelligence.turnaround} labTurnaround={intelligence.labTurnaround} reportMonths={intelligence.reportMonths} />
+      <RemakePerformanceCenter quality={intelligence.quality} reportMonths={intelligence.reportMonths} />
       <RewardsCenter rewards={intelligence.rewards} />
       <div id="programs" className="scroll-mt-24 lg:col-span-3">
         <ProgramParticipationCenter programs={intelligence.programs} />
@@ -3214,8 +3390,8 @@ export function PortalDashboardContent({
   const dashboardAssignedPriceLists = dashboardState?.account?.used_price_lists ?? [];
   const effectivePriceListCodes =
     dashboardAssignedPriceLists.length > 0
-      ? dashboardAssignedPriceLists.map((code) => canonicalPriceListCode(code))
-      : (customer?.priceLists ?? []).map((code) => canonicalPriceListCode(code));
+      ? normalizeAssignedPriceListCodes(dashboardAssignedPriceLists)
+      : normalizeAssignedPriceListCodes(customer?.priceLists ?? []);
   const availablePriceLists = effectivePriceListCodes.map((rawCode) => {
     const normalizedCode = rawCode.trim().toUpperCase();
     const configured = getPriceListByCode(normalizedCode);
@@ -3267,6 +3443,7 @@ export function PortalDashboardContent({
           practiceName={practiceName}
           hasMultipleAccounts={selectableAccountCount > 1}
           isAdminPreview={Boolean(adminPreviewAccountName)}
+          isEmployee={isAdmin && !adminPreviewAccountName}
         />
       }
       footer={<PortalFooter />}
@@ -3343,6 +3520,12 @@ export function PortalDashboardContent({
               >
                 Admin Portal
               </Link>
+              <Link
+                href="/portal/employee-resources"
+                className="inline-flex min-h-11 w-fit items-center justify-center rounded-full border border-[#d8c49b] bg-white px-5 py-2 text-sm font-semibold text-[#172a28] transition hover:bg-[#fffaf1]"
+              >
+                Employee Resources
+              </Link>
             </div>
           </section>
         ) : null}
@@ -3383,7 +3566,7 @@ export function PortalDashboardContent({
   );
 }
 
-export default function PortalDashboard({
+export default async function PortalDashboard({
   headerList,
   selectedAccountNumber,
 }: {
@@ -3394,7 +3577,17 @@ export default function PortalDashboard({
   const isLocalhostDevelopment = isLocalhostDevelopmentRequest(headerList);
 
   if (!authenticatedEmail) {
-    if (isLocalhostDevelopment) return <LocalTestLoginPanel />;
+    if (isLocalhostDevelopment) {
+      const workbookAccess = await loadPortalUserAccess();
+      const emails = [
+        ...(process.env.PORTAL_ADMIN_EMAILS ?? "")
+          .split(",")
+          .map((email) => email.trim().toLowerCase())
+          .filter(Boolean),
+        ...workbookAccess.usersByEmail.keys(),
+      ].filter((email, index, values) => values.indexOf(email) === index);
+      return <LocalTestLoginPanel emails={emails} />;
+    }
 
     return (
       <PortalMessage
@@ -3404,11 +3597,14 @@ export default function PortalDashboard({
     );
   }
 
-  const customers = getCustomersByEmail(authenticatedEmail);
+  const customers = await getAuthorizedPortalCustomers(authenticatedEmail);
+  if (!isPortalAdminEmail(authenticatedEmail) && customers.length === 0) {
+    forbidden();
+  }
   const profiles = getPortalWorkbookProfilesByEmail(authenticatedEmail);
   const selectedAccountKey = normalizeAccountNumber(selectedAccountNumber);
   const matchedCustomer = selectedAccountKey
-    ? getCustomerByEmailAndAccount(authenticatedEmail, selectedAccountKey)
+    ? await getAuthorizedPortalCustomer(authenticatedEmail, selectedAccountKey)
     : customers[0];
   const matchedProfile = selectedAccountKey
     ? getPortalWorkbookProfileByEmail(authenticatedEmail, selectedAccountKey)
@@ -3427,6 +3623,14 @@ export default function PortalDashboard({
       )
     ),
   ]).size;
+
+  if (
+    selectedAccountKey &&
+    !matchedCustomer &&
+    !isPortalAdminEmail(authenticatedEmail)
+  ) {
+    forbidden();
+  }
 
   if (
     selectableAccountCount > 1 &&

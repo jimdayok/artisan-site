@@ -306,33 +306,6 @@ const homeLabs = [
   },
 ];
 
-const resourceLinks = [
-  {
-    title: "Product Resources",
-    body: "Lens systems, AR treatments, vendor libraries, and program details.",
-    href: "/provider-resources#product-information",
-    icon: "/icons/artisan/resources.svg",
-  },
-  {
-    title: "Partner Resources",
-    body: "Pricing requests, account tools, shipping, and ordering support.",
-    href: "/provider-resources",
-    icon: "/icons/site/briefcase.svg",
-  },
-  {
-    title: "Training and Education",
-    body: "Webinars, product training, and team education materials.",
-    href: "/provider-resources#training-education",
-    icon: "/icons/site/book-open.svg",
-  },
-  {
-    title: "Customer Service Support",
-    body: "Find the right lab team for order support and customer service.",
-    href: "/provider-resources#lab-customer-service",
-    icon: "/icons/artisan/clear-communication.svg",
-  },
-];
-
 function ArtisanIcon({
   src,
   tone = "gold",

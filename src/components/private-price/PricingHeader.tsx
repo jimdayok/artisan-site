@@ -40,7 +40,7 @@ export default function PricingHeader({
             ["/portal/price-list/catalog", "Catalog"],
             ["/portal/price-list/calculator", "Quote Builder"],
             ["/portal/price-list/b5", "B5 Pricing"],
-            ["/portal/price-list/policies", "Artisan Policies"],
+            ["/policies", "Artisan Policies"],
           ].map(([href, label]) => (
             <Link key={href} href={href} className="inline-flex min-h-9 shrink-0 items-center justify-center rounded-full border border-[#d7c5a8] bg-white/90 px-3.5 py-1.5 text-sm font-semibold text-[#122033] transition hover:bg-[#eadcc6]">
               {label}

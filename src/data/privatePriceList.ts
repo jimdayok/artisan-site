@@ -358,10 +358,6 @@ export const priceItems: PriceItem[] = [
 
   item("ref-outsourced", "Reference", "Reference Key", "Reference", "Outsourced Product", 0, { outsourced: true, notes: "Marked with arrow in source PDF." }),
   item("ref-recommended", "Reference", "Reference Key", "Reference", "Recommended for Best Service", 0, { recommended: true, notes: "Marked with star in source PDF." }),
-  item("ref-sv", "Reference", "Reference Key", "SV", "Single Vision", 0),
-  item("ref-esv", "Reference", "Reference Key", "ESV", "Enhanced Single Vision with Power Boost", 0),
-  item("ref-mf", "Reference", "Reference Key", "MF", "Multifocal Design", 0),
-  item("ref-pal", "Reference", "Reference Key", "PAL", "Progressive Design", 0),
 ];
 
 export const brands: PriceBrand[] = [

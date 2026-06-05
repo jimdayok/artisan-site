@@ -164,14 +164,14 @@ export default async function PortalPerformancePage() {
                   detail="Total completed lens pairs."
                 />
                 <StatCard
-                  label="Total Sales"
+                  label="Total Purchases"
                   value={currencyFormatter.format(latestRecord.totalSales)}
-                  detail="Total lab sales for the month."
+                  detail="Total lab purchases for the month."
                 />
                 <StatCard
                   label="Private Pay"
                   value={currencyFormatter.format(latestRecord.privatePaySales)}
-                  detail="Private pay sales activity."
+                  detail="Private pay purchase activity."
                 />
                 <StatCard
                   label="Premium Pairs"

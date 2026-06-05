@@ -72,6 +72,7 @@ export async function proxy(request: NextRequest) {
   if (!isPortalProtected) return response;
 
   const requestHeaders = new Headers(request.headers);
+  requestHeaders.delete("x-portal-auth-email");
 
   if (localhostDev) {
     const localEmail = request.cookies.get(LOCAL_PORTAL_TEST_EMAIL_COOKIE)?.value?.trim().toLowerCase() ?? "";

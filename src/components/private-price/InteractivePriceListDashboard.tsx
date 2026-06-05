@@ -74,6 +74,20 @@ function normalizeKey(value: string) {
     .trim();
 }
 
+function isCoppertoneRow(row: PriceListPricingRow) {
+  const source = [
+    row.colorBrand,
+    row.materialColor,
+    row.colorRaw.join(" "),
+    row.availableColors.join(" "),
+    row.rawProductNames.join(" "),
+  ]
+    .join(" ")
+    .toUpperCase();
+
+  return source.includes("COPPERTONE");
+}
+
 function priceFor(row: PriceListPricingRow | undefined, mode: PriceMode) {
   if (!row) return Number.POSITIVE_INFINITY;
   return mode === "edged" ? row.edgedPrice : row.uncutPrice;
@@ -242,17 +256,17 @@ function PackageSystemMark({ variant }: { variant: NonNullable<ProgramMeta["pack
       <Image
         src="/rings.png"
         alt=""
-        width={220}
-        height={220}
-        className="absolute -right-12 -top-16 h-44 w-44 object-contain opacity-[0.13]"
+        width={500}
+        height={500}
+        className="absolute -right-16 -top-24 h-64 w-64 object-contain opacity-[0.18]"
         aria-hidden="true"
       />
       <Image
-        src="/rings.png"
+        src="/Rings 2.png"
         alt=""
-        width={160}
-        height={160}
-        className="absolute -bottom-16 -left-12 h-36 w-36 rotate-180 object-contain opacity-[0.09]"
+        width={500}
+        height={500}
+        className="absolute -bottom-20 -left-14 h-44 w-44 rotate-180 object-contain opacity-[0.14]"
         aria-hidden="true"
       />
       <div className="relative">
@@ -440,6 +454,31 @@ function minRow(rows: PriceListPricingRow[], group: MaterialGroup, mode: PriceMo
   return rows
     .filter((row) => row.materialColor === group)
     .sort((a, b) => priceFor(a, mode) - priceFor(b, mode))[0];
+}
+
+function findComparableRow(
+  selectedRow: PriceListPricingRow,
+  comparisonRows: PriceListPricingRow[]
+) {
+  const design = normalizeKey(selectedRow.designStyle);
+  const material = normalizeKey(selectedRow.material);
+  const materialColor = normalizeKey(selectedRow.materialColor);
+  const colorBrand = normalizeKey(selectedRow.colorBrand);
+  const candidates = comparisonRows.filter(
+    (row) =>
+      normalizeKey(row.designStyle) === design &&
+      normalizeKey(row.material) === material
+  );
+
+  return (
+    candidates.find(
+      (row) =>
+        normalizeKey(row.materialColor) === materialColor &&
+        normalizeKey(row.colorBrand) === colorBrand
+    ) ??
+    candidates.find((row) => normalizeKey(row.materialColor) === materialColor) ??
+    candidates[0]
+  );
 }
 
 function rowMatchesSearch(row: PriceListPricingRow, query: string) {
@@ -652,8 +691,10 @@ function BrandGroupHeader({ label }: { label: string }) {
 
 export default function InteractivePriceListDashboard({
   priceList,
+  comparisonPriceList,
 }: {
   priceList: GeneratedPriceListData;
+  comparisonPriceList?: GeneratedPriceListData | null;
 }) {
   const listCode = String(priceList.code ?? "").trim().toUpperCase();
   const isPackageList = ["B5", "S5", "M5", "Y5"].includes(listCode);
@@ -672,10 +713,18 @@ export default function InteractivePriceListDashboard({
   const [sort, setSort] = useState<{ key: SortKey; direction: SortDirection } | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const queryText = query.trim().toLowerCase();
+  const customerRows = useMemo(
+    () => priceList.rows.filter((row) => !isCoppertoneRow(row)),
+    [priceList.rows]
+  );
+  const comparisonRows = useMemo(
+    () => (comparisonPriceList?.rows ?? []).filter((row) => !isCoppertoneRow(row)),
+    [comparisonPriceList?.rows]
+  );
 
   const baseFilteredRows = useMemo(
     () =>
-      priceList.rows.filter((row) => {
+      customerRows.filter((row) => {
         if (materialDisplay(row.material) === "PFT") return false;
         if (designType !== "All" && row.designType !== designType) return false;
         if (brand !== "All" && row.brand !== brand) return false;
@@ -683,7 +732,7 @@ export default function InteractivePriceListDashboard({
         if (queryText && !rowMatchesSearch(row, queryText)) return false;
         return true;
       }),
-    [priceList.rows, designType, brand, designStyle, queryText]
+    [customerRows, designType, brand, designStyle, queryText]
   );
 
   const designRows = useMemo(() => {
@@ -711,7 +760,7 @@ export default function InteractivePriceListDashboard({
   ]);
 
   const options = useMemo(() => {
-    const rows = priceList.rows;
+    const rows = customerRows;
     const dependentBrands = uniqueValues(
       rows.filter(
         (row) =>
@@ -751,7 +800,7 @@ export default function InteractivePriceListDashboard({
       materials: materialOptions,
       colorBrands: colorBrandOptions,
     };
-  }, [priceList.rows, baseFilteredRows, brand, designType, designStyle, queryText]);
+  }, [customerRows, baseFilteredRows, brand, designType, designStyle, queryText]);
 
   const groupedSections = useMemo(() => {
     const map = new Map<string, Map<string, DesignRow[]>>();
@@ -868,7 +917,7 @@ export default function InteractivePriceListDashboard({
                   : "Not eligible for Artisan Multiple Pair Program"}
               </span>
               <Link
-                href="/portal/price-list/policies"
+                href="/policies"
                 className="inline-flex items-center rounded-full border border-[#d7c5a8] bg-white px-3 py-1 text-xs font-semibold text-[#122033] hover:bg-[#f7f0e6]"
               >
                 View Lab Policies Guide
@@ -1097,6 +1146,7 @@ export default function InteractivePriceListDashboard({
                                         priceMode={priceMode}
                                         listCode={priceList.code}
                                         materialAddOns={priceList.materialAddOns ?? []}
+                                        comparisonRows={comparisonRows}
                                       />
                                     </td>
                                   </tr>
@@ -1127,7 +1177,7 @@ export default function InteractivePriceListDashboard({
       <section className="rounded-[2px] border border-[#dfd2bf] bg-white/80 p-4 text-xs leading-5 text-[#625b53]">
         This online price guide is provided for convenience and may contain errors or omissions. Artisan Lab Network reserves the right to correct pricing errors, update product availability, and change pricing at any time without notice. Final pricing is determined by the active lab billing system and confirmed order details.
       </section>
-      <ReferenceKey rows={priceList.rows} />
+      <ReferenceKey rows={customerRows} />
     </div>
   );
 }
@@ -1137,11 +1187,13 @@ function ExpandedDesignBuilder({
   priceMode,
   listCode,
   materialAddOns,
+  comparisonRows,
 }: {
   designRow: DesignRow;
   priceMode: PriceMode;
   listCode: GeneratedPriceListData["code"];
   materialAddOns: NonNullable<GeneratedPriceListData["materialAddOns"]>;
+  comparisonRows: PriceListPricingRow[];
 }) {
   const isBlueLightRow = (row: PriceListPricingRow) => {
     const materialToken = String(row.materialRaw || row.material || "").trim().toUpperCase();
@@ -1239,6 +1291,19 @@ function ExpandedDesignBuilder({
   const corridors = useMemo(() => inferCorridors(designRow.rows), [designRow.rows]);
   const codeRow = selectedPriceRow ?? designRow.rows[0];
   const code = productCodeSummary(codeRow);
+  const g6ComparisonRow = useMemo(
+    () =>
+      listCode === "B5" && selectedPriceRow
+        ? findComparableRow(selectedPriceRow, comparisonRows)
+        : undefined,
+    [listCode, selectedPriceRow, comparisonRows]
+  );
+  const packagePrice = priceFor(selectedPriceRow, builderMode);
+  const g6ComparisonPrice = priceFor(g6ComparisonRow, builderMode);
+  const g6Savings =
+    Number.isFinite(packagePrice) && Number.isFinite(g6ComparisonPrice)
+      ? Math.max(0, g6ComparisonPrice - packagePrice)
+      : null;
   const lowestPhoto = photoFamilies[0]?.family ?? "";
   const lowestPhotoNote =
     lowestPhoto.includes("Transitions")
@@ -1266,6 +1331,23 @@ function ExpandedDesignBuilder({
                   ? "Includes frame and polycarbonate lenses bundled at reduced package pricing."
                   : "Includes safety frame package and side shields at no additional fee."}
               </p>
+            ) : null}
+            {listCode === "B5" ? (
+              <div className="mt-3 rounded-[2px] border border-[#d9c8a6] bg-white/82 p-3">
+                <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#8a7654]">
+                  G6 Savings Proof
+                </p>
+                {g6ComparisonRow && g6Savings !== null ? (
+                  <p className="mt-2 text-sm leading-6 text-[#4d5664]">
+                    G6 equivalent {currency(g6ComparisonPrice)} − B5 package {currency(packagePrice)} ={" "}
+                    <span className="font-bold text-[#122033]">{currency(g6Savings)} package savings</span>.
+                  </p>
+                ) : (
+                  <p className="mt-2 text-sm leading-6 text-[#4d5664]">
+                    G6 equivalent is not available for this exact build in the current pricing data.
+                  </p>
+                )}
+              </div>
             ) : null}
           </div>
         </section>
@@ -1920,16 +2002,25 @@ function ArCoatingsSection({
 }
 
 function AddOnSections({ sections }: { sections: PriceListAddOnSection[] }) {
-  const visibleSections = sections.filter((section) => {
+  const visibleSections = sections.flatMap((section) => {
     const title = section.title.toLowerCase();
-    if (title.includes("program notes")) return false;
+    if (title.includes("program notes")) return [];
+    if (title.includes("ar upgrade pricing")) return [];
     const hasDviOnlyItem = section.items.some(
       (item) =>
         String(item.name || "")
           .toLowerCase()
           .includes("dvi-driven pricing")
     );
-    return !hasDviOnlyItem;
+    if (hasDviOnlyItem) return [];
+
+    const items = section.items.filter((item) => {
+      const source = `${item.name ?? ""} ${item.price ?? ""} ${item.notes ?? ""}`.toUpperCase();
+      return !source.includes("COPPERTONE");
+    });
+
+    if (!items.length) return [];
+    return [{ ...section, items }];
   });
   const sectionId = (title: string) => {
     const lower = title.toLowerCase();
@@ -1940,42 +2031,71 @@ function AddOnSections({ sections }: { sections: PriceListAddOnSection[] }) {
     <section id="available-add-ons" className="rounded-[2px] border border-[#dfd2bf] bg-[#fbf8f3]/94 p-4 shadow-[0_22px_60px_rgba(18,32,51,0.08)] md:p-6">
       <SectionHeading title="Materials, Options, Finishing, and Shipping" eyebrow="Price Builder Add-Ons" />
       <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {visibleSections.map((section) => (
-          <article id={sectionId(section.title)} key={section.title} className="rounded-[2px] border border-[#eadfce] bg-white/82 p-4">
-            <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-[#8a7654]">
-              {section.title}
-            </h3>
-            <div className="mt-3 grid gap-2">
-              {section.items.map((item) => (
-                <div
-                  key={`${section.title}-${item.name}`}
-                  className="grid gap-2 border-b border-[#f1e6d8] pb-2 last:border-b-0 last:pb-0 sm:grid-cols-[minmax(0,1fr)_minmax(9rem,auto)] sm:items-start"
-                >
-                  <div className="min-w-0">
-                    <p className="font-semibold text-[#122033]">
-                      {item.href ? (
-                        <a
-                          href={item.href}
-                          target={item.href.startsWith("http") ? "_blank" : undefined}
-                          rel={item.href.startsWith("http") ? "noreferrer" : undefined}
-                          className="underline decoration-[#c9b186] underline-offset-4 hover:decoration-[#122033]"
-                        >
-                          {inlineMarker(item.name, Boolean(item.recommended), Boolean(item.outsourced))}
-                        </a>
-                      ) : (
-                        inlineMarker(item.name, Boolean(item.recommended), Boolean(item.outsourced))
-                      )}
-                    </p>
-                    {item.notes ? <p className="text-xs text-[#625b53]">{item.notes}</p> : null}
-                  </div>
-                  <p className="min-w-0 break-words font-bold leading-6 text-[#122033] sm:text-right">
-                    {typeof item.price === "number" ? currency(item.price) : item.price}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </article>
-        ))}
+        {visibleSections.map((section) => {
+          const isPackageNotes = section.title.toLowerCase().includes("package notes");
+
+          return (
+            <article
+              id={sectionId(section.title)}
+              key={section.title}
+              className={`rounded-[2px] border border-[#eadfce] bg-white/82 p-4 ${isPackageNotes ? "md:col-span-2 xl:col-span-3" : ""}`}
+            >
+              <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-[#8a7654]">
+                {section.title}
+              </h3>
+              <div className={isPackageNotes ? "mt-4 grid gap-3 md:grid-cols-2" : "mt-3 grid gap-2"}>
+                {section.items.map((item) => {
+                  const priceText = typeof item.price === "number" ? currency(item.price) : item.price;
+
+                  if (isPackageNotes) {
+                    return (
+                      <div
+                        key={`${section.title}-${item.name}`}
+                        className="rounded-[2px] border border-[#f1e6d8] bg-[#fbf8f3]/78 p-3"
+                      >
+                        <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#8a7654]">
+                          {item.name}
+                        </p>
+                        <p className="mt-2 break-words text-base font-semibold leading-7 text-[#122033]">
+                          {priceText}
+                        </p>
+                        {item.notes ? <p className="mt-2 text-xs leading-5 text-[#625b53]">{item.notes}</p> : null}
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div
+                      key={`${section.title}-${item.name}`}
+                      className="grid gap-2 border-b border-[#f1e6d8] pb-2 last:border-b-0 last:pb-0 sm:grid-cols-[minmax(0,1fr)_minmax(9rem,auto)] sm:items-start"
+                    >
+                      <div className="min-w-0">
+                        <p className="break-words font-semibold text-[#122033]">
+                          {item.href ? (
+                            <a
+                              href={item.href}
+                              target={item.href.startsWith("http") ? "_blank" : undefined}
+                              rel={item.href.startsWith("http") ? "noreferrer" : undefined}
+                              className="underline decoration-[#c9b186] underline-offset-4 hover:decoration-[#122033]"
+                            >
+                              {inlineMarker(item.name, Boolean(item.recommended), Boolean(item.outsourced))}
+                            </a>
+                          ) : (
+                            inlineMarker(item.name, Boolean(item.recommended), Boolean(item.outsourced))
+                          )}
+                        </p>
+                        {item.notes ? <p className="text-xs text-[#625b53]">{item.notes}</p> : null}
+                      </div>
+                      <p className="min-w-0 break-words font-bold leading-6 text-[#122033] sm:text-right">
+                        {priceText}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            </article>
+          );
+        })}
       </div>
     </section>
   );
@@ -2144,22 +2264,10 @@ function ChemClipSection() {
 }
 
 function ReferenceKey({ rows }: { rows: PriceListPricingRow[] }) {
-  const designText = rows
-    .map((row) => `${row.designType} ${row.designStyle} ${row.brand}`)
-    .join(" ")
-    .toUpperCase();
-  const hasRecommended = rows.some((row) => row.recommended);
-  const hasOutsourced = rows.some((row) => row.outsourced);
   const entries: Array<[string, string]> = [];
-  if (hasRecommended) entries.push(["★", "Recommended for Best Service"]);
-  if (hasOutsourced) entries.push(["➜", "Outsourced Product"]);
-  if (/\bSV\b|SINGLE VISION/.test(designText)) entries.push(["SV", "Single Vision"]);
-  if (/\bESV\b|ENHANCED SINGLE VISION/.test(designText))
-    entries.push(["ESV", "Enhanced Single Vision with Power Boost"]);
-  if (/\bMF\b|MULTIFOCAL/.test(designText)) entries.push(["MF", "Multifocal Design"]);
-  if (/\bOCP\b|OCCUPATIONAL/.test(designText))
-    entries.push(["OCP", "Occupational Progressive Design"]);
-  if (/\bPAL\b|PROGRESSIVE/.test(designText)) entries.push(["PAL", "Progressive Design"]);
+  if (rows.some((row) => row.recommended)) entries.push(["★", "Preferred Product"]);
+  if (rows.some((row) => row.outsourced)) entries.push(["➜", "Outsourced Product"]);
+  if (!entries.length) return null;
 
   return (
     <section className="rounded-[2px] border border-[#dfd2bf] bg-white/75 p-4 text-sm shadow-[0_12px_34px_rgba(18,32,51,0.05)] md:p-5">

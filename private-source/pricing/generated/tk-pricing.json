@@ -55,7 +55,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-anti-fatigue-rest-tokai-hi-index-1-60-clear-standard-color-128-8",
+      "id": "tk-anti-fatigue-rest-tokai-hi-index-1-60-clear-polarized-colors-128-8",
       "brand": "Tokai",
       "designType": "Anti-Fatigue",
       "designStyle": "Rest",
@@ -75,7 +75,7 @@
       "availableColors": [
         "Lbf"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 128,
       "uncutDeduct": 8,
       "uncutPrice": 120,
@@ -107,7 +107,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-anti-fatigue-rest-tokai-hi-index-1-60-photochromic-standard-color-173-8",
+      "id": "tk-anti-fatigue-rest-tokai-hi-index-1-60-photochromic-polarized-colors-173-8",
       "brand": "Tokai",
       "designType": "Anti-Fatigue",
       "designStyle": "Rest",
@@ -129,7 +129,7 @@
         "Ltb",
         "Ltg"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 173,
       "uncutDeduct": 8,
       "uncutPrice": 165,
@@ -213,7 +213,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-anti-fatigue-rest-tokai-hi-index-1-67-clear-standard-color-146-8",
+      "id": "tk-anti-fatigue-rest-tokai-hi-index-1-67-clear-polarized-colors-146-8",
       "brand": "Tokai",
       "designType": "Anti-Fatigue",
       "designStyle": "Rest",
@@ -233,7 +233,7 @@
       "availableColors": [
         "Lbf"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 146,
       "uncutDeduct": 8,
       "uncutPrice": 138,
@@ -265,7 +265,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-anti-fatigue-rest-tokai-hi-index-1-67-photochromic-standard-color-173-8",
+      "id": "tk-anti-fatigue-rest-tokai-hi-index-1-67-photochromic-polarized-colors-173-8",
       "brand": "Tokai",
       "designType": "Anti-Fatigue",
       "designStyle": "Rest",
@@ -287,7 +287,7 @@
         "Ltb",
         "Ltg"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 173,
       "uncutDeduct": 8,
       "uncutPrice": 165,
@@ -371,7 +371,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-anti-fatigue-rest-tokai-hi-index-1-70-clear-standard-color-146-8",
+      "id": "tk-anti-fatigue-rest-tokai-hi-index-1-70-clear-polarized-colors-146-8",
       "brand": "Tokai",
       "designType": "Anti-Fatigue",
       "designStyle": "Rest",
@@ -391,7 +391,7 @@
       "availableColors": [
         "Lbf"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 146,
       "uncutDeduct": 8,
       "uncutPrice": 138,
@@ -475,7 +475,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-anti-fatigue-rest-tokai-hi-index-1-76-clear-standard-color-191-8",
+      "id": "tk-anti-fatigue-rest-tokai-hi-index-1-76-clear-polarized-colors-191-8",
       "brand": "Tokai",
       "designType": "Anti-Fatigue",
       "designStyle": "Rest",
@@ -495,7 +495,7 @@
       "availableColors": [
         "Lbf"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 191,
       "uncutDeduct": 8,
       "uncutPrice": 183,
@@ -527,7 +527,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-anti-fatigue-rest-tokai-s76-clear-standard-color-173-8",
+      "id": "tk-anti-fatigue-rest-tokai-s76-clear-polarized-colors-173-8",
       "brand": "Tokai",
       "designType": "Anti-Fatigue",
       "designStyle": "Rest",
@@ -549,7 +549,7 @@
         "Ltb",
         "Ltg"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 173,
       "uncutDeduct": 8,
       "uncutPrice": 165,
@@ -636,7 +636,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-progressive-tokaiselect-5x-tokai-hi-index-1-60-clear-standard-color-143-8",
+      "id": "tk-progressive-tokaiselect-5x-tokai-hi-index-1-60-clear-polarized-colors-143-8",
       "brand": "Tokai",
       "designType": "Progressive",
       "designStyle": "TokaiSelect 5X",
@@ -659,7 +659,7 @@
       "availableColors": [
         "Lbf"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 143,
       "uncutDeduct": 8,
       "uncutPrice": 135,
@@ -691,7 +691,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-progressive-tokaiselect-5x-tokai-hi-index-1-60-photochromic-standard-color-188-8",
+      "id": "tk-progressive-tokaiselect-5x-tokai-hi-index-1-60-photochromic-polarized-colors-188-8",
       "brand": "Tokai",
       "designType": "Progressive",
       "designStyle": "TokaiSelect 5X",
@@ -716,7 +716,7 @@
         "Ltb",
         "Ltg"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 188,
       "uncutDeduct": 8,
       "uncutPrice": 180,
@@ -803,7 +803,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-progressive-tokaiselect-5x-tokai-hi-index-1-67-clear-standard-color-161-8",
+      "id": "tk-progressive-tokaiselect-5x-tokai-hi-index-1-67-clear-polarized-colors-161-8",
       "brand": "Tokai",
       "designType": "Progressive",
       "designStyle": "TokaiSelect 5X",
@@ -826,7 +826,7 @@
       "availableColors": [
         "Lbf"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 161,
       "uncutDeduct": 8,
       "uncutPrice": 153,
@@ -858,7 +858,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-progressive-tokaiselect-5x-tokai-hi-index-1-67-photochromic-standard-color-188-8",
+      "id": "tk-progressive-tokaiselect-5x-tokai-hi-index-1-67-photochromic-polarized-colors-188-8",
       "brand": "Tokai",
       "designType": "Progressive",
       "designStyle": "TokaiSelect 5X",
@@ -883,7 +883,7 @@
         "Ltb",
         "Ltg"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 188,
       "uncutDeduct": 8,
       "uncutPrice": 180,
@@ -970,7 +970,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-progressive-tokaiselect-5x-tokai-hi-index-1-70-clear-standard-color-161-8",
+      "id": "tk-progressive-tokaiselect-5x-tokai-hi-index-1-70-clear-polarized-colors-161-8",
       "brand": "Tokai",
       "designType": "Progressive",
       "designStyle": "TokaiSelect 5X",
@@ -993,7 +993,7 @@
       "availableColors": [
         "Lbf"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 161,
       "uncutDeduct": 8,
       "uncutPrice": 153,
@@ -1080,7 +1080,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-progressive-tokaiselect-5x-tokai-hi-index-1-76-clear-standard-color-206-8",
+      "id": "tk-progressive-tokaiselect-5x-tokai-hi-index-1-76-clear-polarized-colors-206-8",
       "brand": "Tokai",
       "designType": "Progressive",
       "designStyle": "TokaiSelect 5X",
@@ -1103,7 +1103,7 @@
       "availableColors": [
         "Lbf"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 206,
       "uncutDeduct": 8,
       "uncutPrice": 198,
@@ -1135,7 +1135,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-progressive-tokaiselect-5x-tokai-s76-clear-standard-color-188-8",
+      "id": "tk-progressive-tokaiselect-5x-tokai-s76-clear-polarized-colors-188-8",
       "brand": "Tokai",
       "designType": "Progressive",
       "designStyle": "TokaiSelect 5X",
@@ -1160,7 +1160,7 @@
         "Ltb",
         "Ltg"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 188,
       "uncutDeduct": 8,
       "uncutPrice": 180,
@@ -1251,7 +1251,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-progressive-tokaiselect-7x-tokai-hi-index-1-60-clear-standard-color-162-8",
+      "id": "tk-progressive-tokaiselect-7x-tokai-hi-index-1-60-clear-polarized-colors-162-8",
       "brand": "Tokai",
       "designType": "Progressive",
       "designStyle": "TokaiSelect 7X",
@@ -1278,7 +1278,7 @@
       "availableColors": [
         "Lbf"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 162,
       "uncutDeduct": 8,
       "uncutPrice": 154,
@@ -1310,7 +1310,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-progressive-tokaiselect-7x-tokai-hi-index-1-60-photochromic-standard-color-207-8",
+      "id": "tk-progressive-tokaiselect-7x-tokai-hi-index-1-60-photochromic-polarized-colors-207-8",
       "brand": "Tokai",
       "designType": "Progressive",
       "designStyle": "TokaiSelect 7X",
@@ -1339,7 +1339,7 @@
         "Ltb",
         "Ltg"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 207,
       "uncutDeduct": 8,
       "uncutPrice": 199,
@@ -1430,7 +1430,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-progressive-tokaiselect-7x-tokai-hi-index-1-67-clear-standard-color-180-8",
+      "id": "tk-progressive-tokaiselect-7x-tokai-hi-index-1-67-clear-polarized-colors-180-8",
       "brand": "Tokai",
       "designType": "Progressive",
       "designStyle": "TokaiSelect 7X",
@@ -1457,7 +1457,7 @@
       "availableColors": [
         "Lbf"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 180,
       "uncutDeduct": 8,
       "uncutPrice": 172,
@@ -1489,7 +1489,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-progressive-tokaiselect-7x-tokai-hi-index-1-67-photochromic-standard-color-207-8",
+      "id": "tk-progressive-tokaiselect-7x-tokai-hi-index-1-67-photochromic-polarized-colors-207-8",
       "brand": "Tokai",
       "designType": "Progressive",
       "designStyle": "TokaiSelect 7X",
@@ -1518,7 +1518,7 @@
         "Ltb",
         "Ltg"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 207,
       "uncutDeduct": 8,
       "uncutPrice": 199,
@@ -1609,7 +1609,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-progressive-tokaiselect-7x-tokai-hi-index-1-70-clear-standard-color-180-8",
+      "id": "tk-progressive-tokaiselect-7x-tokai-hi-index-1-70-clear-polarized-colors-180-8",
       "brand": "Tokai",
       "designType": "Progressive",
       "designStyle": "TokaiSelect 7X",
@@ -1636,7 +1636,7 @@
       "availableColors": [
         "Lbf"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 180,
       "uncutDeduct": 8,
       "uncutPrice": 172,
@@ -1727,7 +1727,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-progressive-tokaiselect-7x-tokai-hi-index-1-76-clear-standard-color-225-8",
+      "id": "tk-progressive-tokaiselect-7x-tokai-hi-index-1-76-clear-polarized-colors-225-8",
       "brand": "Tokai",
       "designType": "Progressive",
       "designStyle": "TokaiSelect 7X",
@@ -1754,7 +1754,7 @@
       "availableColors": [
         "Lbf"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 225,
       "uncutDeduct": 8,
       "uncutPrice": 217,
@@ -1786,7 +1786,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-progressive-tokaiselect-7x-tokai-s76-clear-standard-color-207-8",
+      "id": "tk-progressive-tokaiselect-7x-tokai-s76-clear-polarized-colors-207-8",
       "brand": "Tokai",
       "designType": "Progressive",
       "designStyle": "TokaiSelect 7X",
@@ -1815,7 +1815,7 @@
         "Ltb",
         "Ltg"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 207,
       "uncutDeduct": 8,
       "uncutPrice": 199,
@@ -1902,7 +1902,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-progressive-tokaiselect-9x-tokai-hi-index-1-60-clear-standard-color-191-8",
+      "id": "tk-progressive-tokaiselect-9x-tokai-hi-index-1-60-clear-polarized-colors-191-8",
       "brand": "Tokai",
       "designType": "Progressive",
       "designStyle": "TokaiSelect 9X",
@@ -1925,7 +1925,7 @@
       "availableColors": [
         "Lbf"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 191,
       "uncutDeduct": 8,
       "uncutPrice": 183,
@@ -1957,7 +1957,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-progressive-tokaiselect-9x-tokai-hi-index-1-60-photochromic-standard-color-236-8",
+      "id": "tk-progressive-tokaiselect-9x-tokai-hi-index-1-60-photochromic-polarized-colors-236-8",
       "brand": "Tokai",
       "designType": "Progressive",
       "designStyle": "TokaiSelect 9X",
@@ -1982,7 +1982,7 @@
         "Ltb",
         "Ltg"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 236,
       "uncutDeduct": 8,
       "uncutPrice": 228,
@@ -2069,7 +2069,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-progressive-tokaiselect-9x-tokai-hi-index-1-67-clear-standard-color-209-8",
+      "id": "tk-progressive-tokaiselect-9x-tokai-hi-index-1-67-clear-polarized-colors-209-8",
       "brand": "Tokai",
       "designType": "Progressive",
       "designStyle": "TokaiSelect 9X",
@@ -2092,7 +2092,7 @@
       "availableColors": [
         "Lbf"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 209,
       "uncutDeduct": 8,
       "uncutPrice": 201,
@@ -2124,7 +2124,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-progressive-tokaiselect-9x-tokai-hi-index-1-67-photochromic-standard-color-236-8",
+      "id": "tk-progressive-tokaiselect-9x-tokai-hi-index-1-67-photochromic-polarized-colors-236-8",
       "brand": "Tokai",
       "designType": "Progressive",
       "designStyle": "TokaiSelect 9X",
@@ -2149,7 +2149,7 @@
         "Ltb",
         "Ltg"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 236,
       "uncutDeduct": 8,
       "uncutPrice": 228,
@@ -2236,7 +2236,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-progressive-tokaiselect-9x-tokai-hi-index-1-70-clear-standard-color-209-8",
+      "id": "tk-progressive-tokaiselect-9x-tokai-hi-index-1-70-clear-polarized-colors-209-8",
       "brand": "Tokai",
       "designType": "Progressive",
       "designStyle": "TokaiSelect 9X",
@@ -2259,7 +2259,7 @@
       "availableColors": [
         "Lbf"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 209,
       "uncutDeduct": 8,
       "uncutPrice": 201,
@@ -2346,7 +2346,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-progressive-tokaiselect-9x-tokai-hi-index-1-76-clear-standard-color-254-8",
+      "id": "tk-progressive-tokaiselect-9x-tokai-hi-index-1-76-clear-polarized-colors-254-8",
       "brand": "Tokai",
       "designType": "Progressive",
       "designStyle": "TokaiSelect 9X",
@@ -2369,7 +2369,7 @@
       "availableColors": [
         "Lbf"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 254,
       "uncutDeduct": 8,
       "uncutPrice": 246,
@@ -2401,7 +2401,7 @@
     },
     {
       "code": "TK",
-      "id": "tk-progressive-tokaiselect-9x-tokai-s76-clear-standard-color-236-8",
+      "id": "tk-progressive-tokaiselect-9x-tokai-s76-clear-polarized-colors-236-8",
       "brand": "Tokai",
       "designType": "Progressive",
       "designStyle": "TokaiSelect 9X",
@@ -2426,7 +2426,7 @@
         "Ltb",
         "Ltg"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 236,
       "uncutDeduct": 8,
       "uncutPrice": 228,
@@ -2665,7 +2665,7 @@
     "rawSourceRowsProcessed": 406,
     "rowsExcludedMissingLookup": 168,
     "displayRowCount": 20,
-    "generatedAt": "2026-06-04T03:24:37.007Z",
+    "generatedAt": "2026-06-05T15:53:19.929Z",
     "rawColumns": [
       "PL",
       "Mat",

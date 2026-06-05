@@ -3,6 +3,7 @@ import type { MetadataRoute } from "next";
 const publicRoutes = [
   "",
   "/about",
+  "/advocacy",
   "/artisan-model",
   "/careers",
   "/lab-policies",
@@ -12,6 +13,7 @@ const publicRoutes = [
   "/newsletters",
   "/newsletters/practice-matters",
   "/newsletters/practice-matters/issue-001",
+  "/optical-engineering",
   "/pacific-artisan-labs",
   "/patient-resources",
   "/peak-artisan-labs",

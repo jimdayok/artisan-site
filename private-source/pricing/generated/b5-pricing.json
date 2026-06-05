@@ -1685,7 +1685,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-anti-fatigue-sd-concept-artisan-hi-index-1-67-polarized-standard-color-183-8",
+      "id": "b5-anti-fatigue-sd-concept-artisan-hi-index-1-67-polarized-polarized-colors-183-8",
       "brand": "Artisan",
       "designType": "Anti-Fatigue",
       "designStyle": "SD Concept",
@@ -1707,7 +1707,7 @@
         "Brown C",
         "Gray C"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 183,
       "uncutDeduct": 8,
       "uncutPrice": 175,
@@ -4769,7 +4769,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-anti-fatigue-sd-concept-artisan-plastic-polarized-standard-color-140-8",
+      "id": "b5-anti-fatigue-sd-concept-artisan-plastic-polarized-polarized-colors-140-8",
       "brand": "Artisan",
       "designType": "Anti-Fatigue",
       "designStyle": "SD Concept",
@@ -4793,7 +4793,7 @@
         "Gray C",
         "Gray Green"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 140,
       "uncutDeduct": 8,
       "uncutPrice": 132,
@@ -7007,7 +7007,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-anti-fatigue-sd-concept-artisan-polycarbonate-polarized-standard-color-140-8",
+      "id": "b5-anti-fatigue-sd-concept-artisan-polycarbonate-polarized-polarized-colors-140-8",
       "brand": "Artisan",
       "designType": "Anti-Fatigue",
       "designStyle": "SD Concept",
@@ -7031,7 +7031,7 @@
         "Gray C",
         "Gray Green"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 140,
       "uncutDeduct": 8,
       "uncutPrice": 132,
@@ -8969,7 +8969,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-anti-fatigue-sd-concept-artisan-trivex-polarized-standard-color-147-8",
+      "id": "b5-anti-fatigue-sd-concept-artisan-trivex-polarized-polarized-colors-147-8",
       "brand": "Artisan",
       "designType": "Anti-Fatigue",
       "designStyle": "SD Concept",
@@ -8991,7 +8991,7 @@
         "Brown C",
         "Gray C"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 147,
       "uncutDeduct": 8,
       "uncutPrice": 139,
@@ -17073,7 +17073,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-enhanced-sv-sd-digital-sv-artisan-hi-index-1-67-polarized-standard-color-172-8",
+      "id": "b5-enhanced-sv-sd-digital-sv-artisan-hi-index-1-67-polarized-polarized-colors-172-8",
       "brand": "Artisan",
       "designType": "Enhanced SV",
       "designStyle": "SD Digital SV",
@@ -17095,7 +17095,7 @@
         "Brown C",
         "Gray C"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 172,
       "uncutDeduct": 8,
       "uncutPrice": 164,
@@ -20125,7 +20125,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-enhanced-sv-sd-digital-sv-artisan-plastic-polarized-standard-color-129-8",
+      "id": "b5-enhanced-sv-sd-digital-sv-artisan-plastic-polarized-polarized-colors-129-8",
       "brand": "Artisan",
       "designType": "Enhanced SV",
       "designStyle": "SD Digital SV",
@@ -20149,7 +20149,7 @@
         "Gray C",
         "Gray Green"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 129,
       "uncutDeduct": 8,
       "uncutPrice": 121,
@@ -22347,7 +22347,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-enhanced-sv-sd-digital-sv-artisan-polycarbonate-polarized-standard-color-129-8",
+      "id": "b5-enhanced-sv-sd-digital-sv-artisan-polycarbonate-polarized-polarized-colors-129-8",
       "brand": "Artisan",
       "designType": "Enhanced SV",
       "designStyle": "SD Digital SV",
@@ -22371,7 +22371,7 @@
         "Gray C",
         "Gray Green"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 129,
       "uncutDeduct": 8,
       "uncutPrice": 121,
@@ -24300,7 +24300,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-enhanced-sv-sd-digital-sv-artisan-trivex-polarized-standard-color-136-8",
+      "id": "b5-enhanced-sv-sd-digital-sv-artisan-trivex-polarized-polarized-colors-136-8",
       "brand": "Artisan",
       "designType": "Enhanced SV",
       "designStyle": "SD Digital SV",
@@ -24322,7 +24322,7 @@
         "Brown C",
         "Gray C"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 136,
       "uncutDeduct": 8,
       "uncutPrice": 128,
@@ -26258,7 +26258,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-cfb-artisan-hi-index-1-67-polarized-standard-color-205-8",
+      "id": "b5-progressive-cfb-artisan-hi-index-1-67-polarized-polarized-colors-205-8",
       "brand": "Artisan",
       "designType": "Progressive",
       "designStyle": "CFB",
@@ -26280,7 +26280,7 @@
         "Brown C",
         "Gray C"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 205,
       "uncutDeduct": 8,
       "uncutPrice": 197,
@@ -29342,7 +29342,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-cfb-artisan-plastic-polarized-standard-color-162-8",
+      "id": "b5-progressive-cfb-artisan-plastic-polarized-polarized-colors-162-8",
       "brand": "Artisan",
       "designType": "Progressive",
       "designStyle": "CFB",
@@ -29366,7 +29366,7 @@
         "Gray C",
         "Gray Green"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 162,
       "uncutDeduct": 8,
       "uncutPrice": 154,
@@ -31580,7 +31580,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-cfb-artisan-polycarbonate-polarized-standard-color-162-8",
+      "id": "b5-progressive-cfb-artisan-polycarbonate-polarized-polarized-colors-162-8",
       "brand": "Artisan",
       "designType": "Progressive",
       "designStyle": "CFB",
@@ -31604,7 +31604,7 @@
         "Gray C",
         "Gray Green"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 162,
       "uncutDeduct": 8,
       "uncutPrice": 154,
@@ -33542,7 +33542,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-cfb-artisan-trivex-polarized-standard-color-169-8",
+      "id": "b5-progressive-cfb-artisan-trivex-polarized-polarized-colors-169-8",
       "brand": "Artisan",
       "designType": "Progressive",
       "designStyle": "CFB",
@@ -33564,7 +33564,7 @@
         "Brown C",
         "Gray C"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 169,
       "uncutDeduct": 8,
       "uncutPrice": 161,
@@ -35526,7 +35526,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-diamond-series-artisan-hi-index-1-67-polarized-standard-color-282-8",
+      "id": "b5-progressive-diamond-series-artisan-hi-index-1-67-polarized-polarized-colors-282-8",
       "brand": "Artisan",
       "designType": "Progressive",
       "designStyle": "Diamond Series",
@@ -35552,7 +35552,7 @@
         "Brown C",
         "Gray C"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 282,
       "uncutDeduct": 8,
       "uncutPrice": 274,
@@ -38374,7 +38374,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-diamond-series-artisan-plastic-polarized-standard-color-239-8",
+      "id": "b5-progressive-diamond-series-artisan-plastic-polarized-polarized-colors-239-8",
       "brand": "Artisan",
       "designType": "Progressive",
       "designStyle": "Diamond Series",
@@ -38402,7 +38402,7 @@
         "Gray C",
         "Gray Green"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 239,
       "uncutDeduct": 8,
       "uncutPrice": 231,
@@ -40084,7 +40084,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-diamond-series-artisan-polycarbonate-polarized-standard-color-239-8",
+      "id": "b5-progressive-diamond-series-artisan-polycarbonate-polarized-polarized-colors-239-8",
       "brand": "Artisan",
       "designType": "Progressive",
       "designStyle": "Diamond Series",
@@ -40112,7 +40112,7 @@
         "Gray C",
         "Gray Green"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 239,
       "uncutDeduct": 8,
       "uncutPrice": 231,
@@ -43202,7 +43202,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-gold-series-artisan-hi-index-1-67-polarized-standard-color-246-8",
+      "id": "b5-progressive-gold-series-artisan-hi-index-1-67-polarized-polarized-colors-246-8",
       "brand": "Artisan",
       "designType": "Progressive",
       "designStyle": "Gold Series",
@@ -43226,7 +43226,7 @@
         "Brown C",
         "Gray C"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 246,
       "uncutDeduct": 8,
       "uncutPrice": 238,
@@ -46308,7 +46308,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-gold-series-artisan-plastic-polarized-standard-color-203-8",
+      "id": "b5-progressive-gold-series-artisan-plastic-polarized-polarized-colors-203-8",
       "brand": "Artisan",
       "designType": "Progressive",
       "designStyle": "Gold Series",
@@ -46334,7 +46334,7 @@
         "Gray C",
         "Gray Green"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 203,
       "uncutDeduct": 8,
       "uncutPrice": 195,
@@ -48562,7 +48562,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-gold-series-artisan-polycarbonate-polarized-standard-color-203-8",
+      "id": "b5-progressive-gold-series-artisan-polycarbonate-polarized-polarized-colors-203-8",
       "brand": "Artisan",
       "designType": "Progressive",
       "designStyle": "Gold Series",
@@ -48588,7 +48588,7 @@
         "Gray C",
         "Gray Green"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 203,
       "uncutDeduct": 8,
       "uncutPrice": 195,
@@ -50538,7 +50538,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-gold-series-artisan-trivex-polarized-standard-color-210-8",
+      "id": "b5-progressive-gold-series-artisan-trivex-polarized-polarized-colors-210-8",
       "brand": "Artisan",
       "designType": "Progressive",
       "designStyle": "Gold Series",
@@ -50562,7 +50562,7 @@
         "Brown C",
         "Gray C"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 210,
       "uncutDeduct": 8,
       "uncutPrice": 202,
@@ -52799,7 +52799,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-platinum-series-artisan-hi-index-1-67-polarized-standard-color-260-8",
+      "id": "b5-progressive-platinum-series-artisan-hi-index-1-67-polarized-polarized-colors-260-8",
       "brand": "Artisan",
       "designType": "Progressive",
       "designStyle": "Platinum Series",
@@ -52825,7 +52825,7 @@
         "Brown C",
         "Gray C"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 260,
       "uncutDeduct": 8,
       "uncutPrice": 252,
@@ -55927,7 +55927,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-platinum-series-artisan-plastic-polarized-standard-color-217-8",
+      "id": "b5-progressive-platinum-series-artisan-plastic-polarized-polarized-colors-217-8",
       "brand": "Artisan",
       "designType": "Progressive",
       "designStyle": "Platinum Series",
@@ -55955,7 +55955,7 @@
         "Gray C",
         "Gray Green"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 217,
       "uncutDeduct": 8,
       "uncutPrice": 209,
@@ -58197,7 +58197,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-platinum-series-artisan-polycarbonate-polarized-standard-color-217-8",
+      "id": "b5-progressive-platinum-series-artisan-polycarbonate-polarized-polarized-colors-217-8",
       "brand": "Artisan",
       "designType": "Progressive",
       "designStyle": "Platinum Series",
@@ -58225,7 +58225,7 @@
         "Gray C",
         "Gray Green"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 217,
       "uncutDeduct": 8,
       "uncutPrice": 209,
@@ -60187,7 +60187,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-platinum-series-artisan-trivex-polarized-standard-color-224-8",
+      "id": "b5-progressive-platinum-series-artisan-trivex-polarized-polarized-colors-224-8",
       "brand": "Artisan",
       "designType": "Progressive",
       "designStyle": "Platinum Series",
@@ -60213,7 +60213,7 @@
         "Brown C",
         "Gray C"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 224,
       "uncutDeduct": 8,
       "uncutPrice": 216,
@@ -62151,7 +62151,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-anti-fatigue-endless-plus-iot-hi-index-1-67-polarized-standard-color-183-8",
+      "id": "b5-anti-fatigue-endless-plus-iot-hi-index-1-67-polarized-polarized-colors-183-8",
       "brand": "IOT",
       "designType": "Anti-Fatigue",
       "designStyle": "Endless Plus",
@@ -62173,7 +62173,7 @@
         "Brown C",
         "Gray C"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 183,
       "uncutDeduct": 8,
       "uncutPrice": 175,
@@ -65235,7 +65235,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-anti-fatigue-endless-plus-iot-plastic-polarized-standard-color-140-8",
+      "id": "b5-anti-fatigue-endless-plus-iot-plastic-polarized-polarized-colors-140-8",
       "brand": "IOT",
       "designType": "Anti-Fatigue",
       "designStyle": "Endless Plus",
@@ -65259,7 +65259,7 @@
         "Gray C",
         "Gray Green"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 140,
       "uncutDeduct": 8,
       "uncutPrice": 132,
@@ -67473,7 +67473,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-anti-fatigue-endless-plus-iot-polycarbonate-polarized-standard-color-140-8",
+      "id": "b5-anti-fatigue-endless-plus-iot-polycarbonate-polarized-polarized-colors-140-8",
       "brand": "IOT",
       "designType": "Anti-Fatigue",
       "designStyle": "Endless Plus",
@@ -67497,7 +67497,7 @@
         "Gray C",
         "Gray Green"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 140,
       "uncutDeduct": 8,
       "uncutPrice": 132,
@@ -69435,7 +69435,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-anti-fatigue-endless-plus-iot-trivex-polarized-standard-color-147-8",
+      "id": "b5-anti-fatigue-endless-plus-iot-trivex-polarized-polarized-colors-147-8",
       "brand": "IOT",
       "designType": "Anti-Fatigue",
       "designStyle": "Endless Plus",
@@ -69457,7 +69457,7 @@
         "Brown C",
         "Gray C"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 147,
       "uncutDeduct": 8,
       "uncutPrice": 139,
@@ -77569,7 +77569,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-camber-plus-iot-hi-index-1-67-polarized-standard-color-282-8",
+      "id": "b5-progressive-camber-plus-iot-hi-index-1-67-polarized-polarized-colors-282-8",
       "brand": "IOT",
       "designType": "Progressive",
       "designStyle": "Camber Plus",
@@ -77594,7 +77594,7 @@
         "Brown C",
         "Gray C"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 282,
       "uncutDeduct": 8,
       "uncutPrice": 274,
@@ -80686,7 +80686,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-camber-plus-iot-plastic-polarized-standard-color-239-8",
+      "id": "b5-progressive-camber-plus-iot-plastic-polarized-polarized-colors-239-8",
       "brand": "IOT",
       "designType": "Progressive",
       "designStyle": "Camber Plus",
@@ -80713,7 +80713,7 @@
         "Gray C",
         "Gray Green"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 239,
       "uncutDeduct": 8,
       "uncutPrice": 231,
@@ -82669,7 +82669,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-camber-plus-iot-polycarbonate-polarized-standard-color-239-8",
+      "id": "b5-progressive-camber-plus-iot-polycarbonate-polarized-polarized-colors-239-8",
       "brand": "IOT",
       "designType": "Progressive",
       "designStyle": "Camber Plus",
@@ -82696,7 +82696,7 @@
         "Gray C",
         "Gray Green"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 239,
       "uncutDeduct": 8,
       "uncutPrice": 231,
@@ -87449,7 +87449,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-endless-plus-iot-hi-index-1-67-polarized-standard-color-260-8",
+      "id": "b5-progressive-endless-plus-iot-hi-index-1-67-polarized-polarized-colors-260-8",
       "brand": "IOT",
       "designType": "Progressive",
       "designStyle": "Endless Plus",
@@ -87471,7 +87471,7 @@
         "Brown C",
         "Gray C"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 260,
       "uncutDeduct": 8,
       "uncutPrice": 252,
@@ -91933,7 +91933,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-endless-plus-iot-plastic-polarized-standard-color-217-8",
+      "id": "b5-progressive-endless-plus-iot-plastic-polarized-polarized-colors-217-8",
       "brand": "IOT",
       "designType": "Progressive",
       "designStyle": "Endless Plus",
@@ -91957,7 +91957,7 @@
         "Gray C",
         "Gray Green"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 217,
       "uncutDeduct": 8,
       "uncutPrice": 209,
@@ -95847,7 +95847,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-endless-plus-iot-polycarbonate-polarized-standard-color-217-8",
+      "id": "b5-progressive-endless-plus-iot-polycarbonate-polarized-polarized-colors-217-8",
       "brand": "IOT",
       "designType": "Progressive",
       "designStyle": "Endless Plus",
@@ -95871,7 +95871,7 @@
         "Gray C",
         "Gray Green"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 217,
       "uncutDeduct": 8,
       "uncutPrice": 209,
@@ -97809,7 +97809,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-endless-plus-iot-trivex-polarized-standard-color-224-8",
+      "id": "b5-progressive-endless-plus-iot-trivex-polarized-polarized-colors-224-8",
       "brand": "IOT",
       "designType": "Progressive",
       "designStyle": "Endless Plus",
@@ -97831,7 +97831,7 @@
         "Brown C",
         "Gray C"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 224,
       "uncutDeduct": 8,
       "uncutPrice": 216,
@@ -99769,7 +99769,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-essential-plus-iot-hi-index-1-67-polarized-standard-color-246-8",
+      "id": "b5-progressive-essential-plus-iot-hi-index-1-67-polarized-polarized-colors-246-8",
       "brand": "IOT",
       "designType": "Progressive",
       "designStyle": "Essential Plus",
@@ -99791,7 +99791,7 @@
         "Brown C",
         "Gray C"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 246,
       "uncutDeduct": 8,
       "uncutPrice": 238,
@@ -102858,7 +102858,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-essential-plus-iot-plastic-polarized-standard-color-203-8",
+      "id": "b5-progressive-essential-plus-iot-plastic-polarized-polarized-colors-203-8",
       "brand": "IOT",
       "designType": "Progressive",
       "designStyle": "Essential Plus",
@@ -102882,7 +102882,7 @@
         "Gray C",
         "Gray Green"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 203,
       "uncutDeduct": 8,
       "uncutPrice": 195,
@@ -105102,7 +105102,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-essential-plus-iot-polycarbonate-polarized-standard-color-203-8",
+      "id": "b5-progressive-essential-plus-iot-polycarbonate-polarized-polarized-colors-203-8",
       "brand": "IOT",
       "designType": "Progressive",
       "designStyle": "Essential Plus",
@@ -105126,7 +105126,7 @@
         "Gray C",
         "Gray Green"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 203,
       "uncutDeduct": 8,
       "uncutPrice": 195,
@@ -107064,7 +107064,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-progressive-essential-plus-iot-trivex-polarized-standard-color-210-8",
+      "id": "b5-progressive-essential-plus-iot-trivex-polarized-polarized-colors-210-8",
       "brand": "IOT",
       "designType": "Progressive",
       "designStyle": "Essential Plus",
@@ -107086,7 +107086,7 @@
         "Brown C",
         "Gray C"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 210,
       "uncutDeduct": 8,
       "uncutPrice": 202,
@@ -109012,7 +109012,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-sv-endless-plus-iot-hi-index-1-67-polarized-standard-color-172-8",
+      "id": "b5-sv-endless-plus-iot-hi-index-1-67-polarized-polarized-colors-172-8",
       "brand": "IOT",
       "designType": "SV",
       "designStyle": "Endless Plus",
@@ -109034,7 +109034,7 @@
         "Brown C",
         "Gray C"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 172,
       "uncutDeduct": 8,
       "uncutPrice": 164,
@@ -112074,7 +112074,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-sv-endless-plus-iot-plastic-polarized-standard-color-129-8",
+      "id": "b5-sv-endless-plus-iot-plastic-polarized-polarized-colors-129-8",
       "brand": "IOT",
       "designType": "SV",
       "designStyle": "Endless Plus",
@@ -112098,7 +112098,7 @@
         "Gray C",
         "Gray Green"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 129,
       "uncutDeduct": 8,
       "uncutPrice": 121,
@@ -114296,7 +114296,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-sv-endless-plus-iot-polycarbonate-polarized-standard-color-129-8",
+      "id": "b5-sv-endless-plus-iot-polycarbonate-polarized-polarized-colors-129-8",
       "brand": "IOT",
       "designType": "SV",
       "designStyle": "Endless Plus",
@@ -114320,7 +114320,7 @@
         "Gray C",
         "Gray Green"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 129,
       "uncutDeduct": 8,
       "uncutPrice": 121,
@@ -116244,7 +116244,7 @@
     },
     {
       "code": "B5",
-      "id": "b5-sv-endless-plus-iot-trivex-polarized-standard-color-136-8",
+      "id": "b5-sv-endless-plus-iot-trivex-polarized-polarized-colors-136-8",
       "brand": "IOT",
       "designType": "SV",
       "designStyle": "Endless Plus",
@@ -116266,7 +116266,7 @@
         "Brown C",
         "Gray C"
       ],
-      "colorBrand": "Standard Color",
+      "colorBrand": "Polarized Colors",
       "edgedPrice": 136,
       "uncutDeduct": 8,
       "uncutPrice": 128,
@@ -116617,40 +116617,6 @@
       ]
     },
     {
-      "title": "AR Upgrade Pricing",
-      "items": [
-        {
-          "name": "Nytopia",
-          "price": "$21"
-        },
-        {
-          "name": "Armour",
-          "price": "$11"
-        },
-        {
-          "name": "Azure",
-          "price": "$21"
-        },
-        {
-          "name": "Artisan Emerald",
-          "price": "Included",
-          "recommended": true
-        },
-        {
-          "name": "Artisan Standard",
-          "price": "Included"
-        },
-        {
-          "name": "Diamond Sun",
-          "price": "Included"
-        },
-        {
-          "name": "Backside AR",
-          "price": "Included"
-        }
-      ]
-    },
-    {
       "title": "Add for Material",
       "items": [
         {
@@ -116816,7 +116782,7 @@
     "rawSourceRowsProcessed": 2743,
     "rowsExcludedMissingLookup": 195,
     "displayRowCount": 63,
-    "generatedAt": "2026-06-04T03:24:33.155Z",
+    "generatedAt": "2026-06-05T15:53:16.212Z",
     "rawColumns": [
       "PL",
       "Mat",

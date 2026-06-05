@@ -130,7 +130,7 @@ async function loadLookupMaps(): Promise<LookupMaps> {
     // Authoritative ALN overrides.
     arByCode.set("MMI", { name: "Mirror Matched", brand: "Mirror Treatments" });
     arByCode.set("GMR", { name: "Gradient Mirror", brand: "Mirror Treatments" });
-    arByCode.set("DDE", { name: "Diamond Defense", brand: "Protection Options" });
+    arByCode.set("DDE", { name: "Diamond Defence", brand: "Protection Options" });
 
     return { productByDvi, materialByDvi, arByCode };
   })();

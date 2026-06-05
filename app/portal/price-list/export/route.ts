@@ -76,7 +76,7 @@ function makePdf(pageLines: string[], title: string, mode: ExportMode, generated
   return Buffer.from(pdf);
 }
 
-export function GET(request: NextRequest) {
+export async function GET(request: NextRequest) {
   const ip = request.headers.get("cf-connecting-ip") || request.headers.get("x-forwarded-for") || "unknown";
   const ipRate = checkRateLimit({
     key: `portal-export-ip:${ip}`,
@@ -90,7 +90,7 @@ export function GET(request: NextRequest) {
     });
   }
 
-  const access = getAuthorizedPriceListFromHeaders(request.headers, "G6");
+  const access = await getAuthorizedPriceListFromHeaders(request.headers, "G6");
 
   if (access.status === "unauthenticated") {
     return new NextResponse("Unable to verify your secure login.", {

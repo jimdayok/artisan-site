@@ -104,6 +104,14 @@ export type LabLandingConfig = {
     imageAlt: string;
     cards: Array<{ icon: IconName; title: string; body: string }>;
   };
+  storyPhotos: Array<{
+    eyebrow: string;
+    title: string;
+    body: string;
+    image: string;
+    imageAlt: string;
+    imagePosition?: string;
+  }>;
   partnership: {
     eyebrow: string;
     title: string;
@@ -201,6 +209,7 @@ export default function LabLandingPage({ config }: { config: LabLandingConfig })
         <Difference config={config} />
         <Strengths config={config} />
         <Technology config={config} />
+        <FacilityStory config={config} />
         <Partnership config={config} />
         <FeatureGrid config={config} />
         <Culture config={config} />
@@ -545,6 +554,61 @@ function Technology({ config }: { config: LabLandingConfig }) {
           <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">{config.technology.title}</h2>
           <p className="mt-6 text-lg leading-8 text-[#4f5662]">{config.technology.body}</p>
         </PremiumReveal>
+      </div>
+    </section>
+  );
+}
+
+function FacilityStory({ config }: { config: LabLandingConfig }) {
+  return (
+    <section data-theme="light" className="relative overflow-hidden px-5 py-20 md:px-10 lg:py-28">
+      <DecorativeRings config={config} />
+      <div className="relative z-10 mx-auto max-w-7xl">
+        <PremiumReveal className="max-w-3xl">
+          <SectionLabel icon={iconMap.factory} config={config}>Inside the Lab</SectionLabel>
+          <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">
+            The facility behind the partnership.
+          </h2>
+          <p className="mt-5 text-lg leading-8 text-[#4f5662]">
+            Authentic views of the people, equipment, and working environment that support each Artisan practice relationship.
+          </p>
+        </PremiumReveal>
+
+        <div className="mt-12 space-y-10 lg:space-y-14">
+          {config.storyPhotos.map((story, index) => {
+            const imageFirst = index % 2 === 0;
+
+            return (
+              <PremiumReveal
+                key={story.image}
+                className={`grid gap-7 rounded-[2rem] border border-[#dccbaa] bg-[#fbf7ef] p-5 shadow-[0_22px_60px_rgba(30,22,14,0.08)] md:p-7 lg:grid-cols-2 lg:items-center ${
+                  imageFirst ? "" : "lg:[&>*:first-child]:order-2"
+                }`}
+              >
+                <div className="premium-image-hover group relative aspect-[16/10] overflow-hidden rounded-[1.5rem] bg-[#e8dfd2] shadow-[0_20px_50px_rgba(30,22,14,0.13)]">
+                  <Image
+                    src={story.image}
+                    alt={story.imageAlt}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 46vw"
+                    className={`object-cover transition duration-700 group-hover:scale-[1.02] ${story.imagePosition ?? ""}`}
+                  />
+                </div>
+                <div className="px-1 py-2 md:px-3">
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8a7654]">
+                    {story.eyebrow}
+                  </p>
+                  <h3 className="mt-3 text-3xl font-semibold tracking-tight text-[#142033] md:text-4xl">
+                    {story.title}
+                  </h3>
+                  <p className="mt-5 text-base leading-8 text-[#4f5662] md:text-lg">
+                    {story.body}
+                  </p>
+                </div>
+              </PremiumReveal>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

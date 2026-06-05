@@ -1,10 +1,10 @@
 import "server-only";
 
+import { isPortalAdminEmailAddress } from "@/lib/portal/adminAccess";
 import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
-import { isPortalAdmin } from "@/lib/portal/userDataAccess";
 
 export function isPortalAdminEmail(email: string) {
-  return isPortalAdmin(email);
+  return isPortalAdminEmailAddress(email);
 }
 
 export function getPortalAdminEmailFromHeaders(headers: Headers) {

@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { verifyCloudflareAccessJwt } from "@/lib/portal/accessJwt";
-import { isPortalAdminEmail } from "@/lib/portal/admin";
+import { isPortalAdminEmailAddress } from "@/lib/portal/adminAccess";
 
 const LOCALHOST_NAMES = new Set(["localhost", "127.0.0.1", "::1"]);
 const LOCAL_PORTAL_TEST_EMAIL_COOKIE = "portal_dev_email";
@@ -78,7 +78,11 @@ export async function proxy(request: NextRequest) {
     const localEmail = request.cookies.get(LOCAL_PORTAL_TEST_EMAIL_COOKIE)?.value?.trim().toLowerCase() ?? "";
     if (localEmail) requestHeaders.set("x-portal-auth-email", localEmail);
 
-    if (pathname.startsWith("/portal/admin") && localEmail && !isPortalAdminEmail(localEmail)) {
+    if (
+      pathname.startsWith("/portal/admin") &&
+      localEmail &&
+      !isPortalAdminEmailAddress(localEmail)
+    ) {
       return deny(request, 403, "Admin access required.");
     }
 
@@ -94,7 +98,10 @@ export async function proxy(request: NextRequest) {
 
   requestHeaders.set("x-portal-auth-email", verifiedEmail);
 
-  if (pathname.startsWith("/portal/admin") && !isPortalAdminEmail(verifiedEmail)) {
+  if (
+    pathname.startsWith("/portal/admin") &&
+    !isPortalAdminEmailAddress(verifiedEmail)
+  ) {
     return deny(request, 403, "Admin access required.");
   }
 

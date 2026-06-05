@@ -3,6 +3,10 @@ import "server-only";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import ExcelJS from "exceljs";
+import {
+  isPortalAdminEmailAddress,
+  normalizePortalEmail,
+} from "@/lib/portal/adminAccess";
 
 export type PortalUserAccount = {
   acctId: string;
@@ -42,7 +46,7 @@ const EMAIL_COLUMNS = [
 let portalUserAccessPromise: Promise<PortalUserAccessData> | undefined;
 
 export function normalizeEmail(email: unknown) {
-  return String(email ?? "").trim().toLowerCase();
+  return normalizePortalEmail(email);
 }
 
 function normalizeAccountAlias(value: unknown) {
@@ -82,9 +86,17 @@ function workbookPath() {
     process.env.PORTAL_USER_DATA_PATH?.trim() ||
     "private-source/portal/user_data.xlsx";
 
-  return path.isAbsolute(configuredPath)
+  const resolvedPath = path.isAbsolute(configuredPath)
     ? configuredPath
-    : path.join(process.cwd(), configuredPath);
+    : path.join(/* turbopackIgnore: true */ process.cwd(), configuredPath);
+
+  if (existsSync(resolvedPath)) return resolvedPath;
+
+  const trackedCaseVariant = path.join(
+    path.dirname(resolvedPath),
+    "User_Data.xlsx"
+  );
+  return existsSync(trackedCaseVariant) ? trackedCaseVariant : resolvedPath;
 }
 
 function mergeUser(
@@ -219,25 +231,7 @@ export async function getPortalUserByEmail(email: string) {
 }
 
 export function isPortalAdmin(email: string) {
-  const normalizedEmail = normalizeEmail(email);
-  if (!normalizedEmail) return false;
-
-  const configuredDomain = (
-    process.env.PORTAL_ADMIN_EMAIL_DOMAIN?.trim() || "artisanlabnetwork.com"
-  )
-    .replace(/^@/, "")
-    .toLowerCase();
-  const configuredEmails = new Set(
-    (process.env.PORTAL_ADMIN_EMAILS ?? "")
-      .split(",")
-      .map(normalizeEmail)
-      .filter(Boolean)
-  );
-
-  return (
-    normalizedEmail.endsWith(`@${configuredDomain}`) ||
-    configuredEmails.has(normalizedEmail)
-  );
+  return isPortalAdminEmailAddress(email);
 }
 
 export async function getAllowedAccountsForEmail(email: string) {

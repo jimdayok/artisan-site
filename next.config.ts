@@ -4,6 +4,20 @@ const nextConfig: NextConfig = {
   experimental: {
     authInterrupts: true,
   },
+  outputFileTracingIncludes: {
+    "/portal": [
+      "private-source/portal/user_data.xlsx",
+      "private-source/portal/User_Data.xlsx",
+    ],
+    "/portal/*": [
+      "private-source/portal/user_data.xlsx",
+      "private-source/portal/User_Data.xlsx",
+    ],
+    "/api/portal/*": [
+      "private-source/portal/user_data.xlsx",
+      "private-source/portal/User_Data.xlsx",
+    ],
+  },
   images: {
     unoptimized: true,
   },

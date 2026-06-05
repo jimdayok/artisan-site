@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "prebuild": "npm run locator:generate && npm run pricing:generate && npm run pricing:normalize",
+    "prebuild": "npm run portal:generate-dashboard-v1:launch-safe && npm run portal:bundle-dashboard-v1 && npm run locator:generate && npm run pricing:generate && npm run pricing:normalize",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -15,6 +15,7 @@
     "portal:generate-dashboard-v1": "node scripts/generate-portal-dashboard-v1.mjs",
     "portal:generate-dashboard-v1:launch": "node scripts/generate-portal-dashboard-v1.mjs --ignore-empty-summary-rows --allow-duplicate-acct-id --allow-invalid-user-account-links",
     "portal:generate-dashboard-v1:launch-safe": "node scripts/generate-portal-dashboard-v1.mjs --ignore-empty-summary-rows --allow-duplicate-acct-id --allow-invalid-user-account-links",
+    "portal:bundle-dashboard-v1": "node scripts/bundle-portal-dashboard-v1.mjs",
     "locator:generate": "node scripts/generate-patient-locator-data.mjs",
     "pricing:generate": "node scripts/generate-price-list-data.mjs",
     "pricing:normalize": "node scripts/generate-normalized-pricing.mjs",

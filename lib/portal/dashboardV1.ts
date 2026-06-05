@@ -1,16 +1,7 @@
 import "server-only";
 
-import { existsSync, readFileSync } from "node:fs";
-import path from "node:path";
+import { portalDashboardV1Bundle } from "@/lib/portal/dashboardV1Bundle";
 import { normalizeAccountNumber } from "@/lib/portal/normalizeAccounts";
-
-const DASHBOARD_V1_DIR = path.join(
-  process.cwd(),
-  "private-source",
-  "portal",
-  "dashboard-v1",
-  "current"
-);
 
 export type PortalDashboardV1Manifest = {
   snapshot_id: string;
@@ -186,30 +177,13 @@ export type PortalDashboardV1State = {
   staleReason?: string;
 };
 
-function readJson<T>(filePath: string): T | undefined {
-  if (!existsSync(filePath)) return undefined;
-  try {
-    return JSON.parse(readFileSync(filePath, "utf8")) as T;
-  } catch {
-    return undefined;
-  }
-}
-
-function accountFileName(value: string) {
-  return value.replace(/[^a-zA-Z0-9_-]/g, "_");
-}
-
 type DashboardV1IndexRow = {
   account_id?: string;
   all_account_numbers?: string;
 };
 
 function getAccountsIndex() {
-  return (
-    readJson<DashboardV1IndexRow[]>(
-      path.join(DASHBOARD_V1_DIR, "accounts_index.json")
-    ) ?? []
-  );
+  return portalDashboardV1Bundle.accountsIndex as DashboardV1IndexRow[];
 }
 
 function normalizeAcctId(value: string) {
@@ -238,9 +212,7 @@ function resolveAccountId(input: string) {
 }
 
 function getManifest() {
-  return readJson<PortalDashboardV1Manifest>(
-    path.join(DASHBOARD_V1_DIR, "latest_snapshot_manifest.json")
-  );
+  return portalDashboardV1Bundle.manifest ?? undefined;
 }
 
 function isStale(manifest?: PortalDashboardV1Manifest) {
@@ -267,12 +239,12 @@ export function getPortalDashboardV1ByAccount(accountNumber?: string): PortalDas
   const manifest = getManifest();
   const staleState = isStale(manifest);
 
-  if (!existsSync(DASHBOARD_V1_DIR)) {
+  if (!manifest || portalDashboardV1Bundle.accountsIndex.length === 0) {
     return {
       status: "missing-snapshot",
       manifest,
       stale: true,
-      staleReason: "Dashboard v1 snapshot directory is missing.",
+      staleReason: "Dashboard data bundle is missing.",
     };
   }
 
@@ -286,9 +258,7 @@ export function getPortalDashboardV1ByAccount(accountNumber?: string): PortalDas
     };
   }
 
-  const account = readJson<PortalDashboardV1Account>(
-    path.join(DASHBOARD_V1_DIR, "accounts", `${accountFileName(normalized)}.json`)
-  );
+  const account = portalDashboardV1Bundle.accountsById[normalized];
 
   if (!account) {
     return {

@@ -1,13 +1,12 @@
 import "server-only";
 
-import { existsSync, readFileSync } from "node:fs";
-import path from "node:path";
 import { normalizeAssignedPriceListCodes } from "@/lib/portal/assignedPriceLists";
 import type {
   PortalCustomer,
   PortalSection,
 } from "@/lib/portal/customers";
 import { getPortalCustomerTypeInfo } from "@/lib/portal/customerTypes";
+import { portalDashboardV1Bundle } from "@/lib/portal/dashboardV1Bundle";
 import {
   assertAccountAccess,
   getAllowedAccountsForEmail,
@@ -19,6 +18,7 @@ import {
 
 type AccountIndexRow = {
   account_id?: string;
+  all_account_numbers?: string;
   business_name?: string;
   customer_type?: string;
   price_lists?: string[];
@@ -34,25 +34,8 @@ const ALL_PORTAL_SECTIONS: PortalSection[] = [
   "performance",
 ];
 
-let accountIndex: AccountIndexRow[] | undefined;
-
 function getAccountIndex() {
-  if (accountIndex) return accountIndex;
-  const filePath = path.join(
-    process.cwd(),
-    "private-source",
-    "portal",
-    "dashboard-v1",
-    "current",
-    "accounts_index.json"
-  );
-  if (!existsSync(filePath)) return [];
-  try {
-    accountIndex = JSON.parse(readFileSync(filePath, "utf8")) as AccountIndexRow[];
-  } catch {
-    accountIndex = [];
-  }
-  return accountIndex;
+  return portalDashboardV1Bundle.accountsIndex as AccountIndexRow[];
 }
 
 function customerFromAccount(
@@ -81,10 +64,39 @@ function customerFromAccount(
   };
 }
 
+function adminAccountsFromIndex() {
+  return getAccountIndex()
+    .map((entry): PortalUserAccount | undefined => {
+      const acctId = String(entry.account_id ?? "").trim().toUpperCase();
+      if (!acctId) return undefined;
+
+      const accountNumbers = [
+        ...new Set(
+          String(entry.all_account_numbers ?? "")
+            .split(",")
+            .map((value) => value.trim().replace(/\.0$/, ""))
+            .filter(Boolean)
+        ),
+      ];
+
+      return {
+        acctId,
+        accountNumbers,
+        organizationAccountNumber: accountNumbers[0] ?? "",
+        organizationName: String(entry.business_name ?? "").trim(),
+      };
+    })
+    .filter((account): account is PortalUserAccount => Boolean(account));
+}
+
 export async function getAuthorizedPortalCustomers(email: string) {
   if (!email) return [];
   if (isPortalAdmin(email)) {
-    const accounts = await getAllowedAccountsForEmail(email);
+    const accounts = adminAccountsFromIndex();
+    if (accounts.length === 0) {
+      const workbookAccounts = await getAllowedAccountsForEmail(email);
+      return workbookAccounts.map((account) => customerFromAccount(account, email));
+    }
     return accounts.map((account) => customerFromAccount(account, email));
   }
   const user = await getPortalUserByEmail(email);
@@ -98,6 +110,20 @@ export async function getAuthorizedPortalCustomer(
 ) {
   const customers = await getAuthorizedPortalCustomers(email);
   if (!accountId) return customers[0];
+
+  if (isPortalAdmin(email)) {
+    const normalizedAccount = accountId.trim().toUpperCase().replace(/\.0$/, "");
+    return customers.find(
+      (customer) =>
+        customer.accountNumber === normalizedAccount ||
+        adminAccountsFromIndex().some(
+          (account) =>
+            account.acctId === customer.accountNumber &&
+            account.accountNumbers.includes(normalizedAccount)
+        )
+    );
+  }
+
   let account: PortalUserAccount;
   try {
     account = await assertAccountAccess(email, accountId);

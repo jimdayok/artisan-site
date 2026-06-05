@@ -1,21 +1,12 @@
 import "server-only";
 
-import { existsSync, readFileSync } from "node:fs";
-import path from "node:path";
 import { canonicalPriceListCode } from "@/lib/portal/priceLists";
+import { portalDashboardV1Bundle } from "@/lib/portal/dashboardV1Bundle";
 import type {
   PortalDashboardV1Account,
   PortalDashboardV1MonthlyNumber,
   PortalDashboardV1SupplementalIntelligence,
 } from "@/lib/portal/dashboardV1";
-
-const DASHBOARD_V1_DIR = path.join(
-  process.cwd(),
-  "private-source",
-  "portal",
-  "dashboard-v1",
-  "current"
-);
 
 export type DashboardV1AdminManifest = {
   snapshot_id: string;
@@ -116,24 +107,11 @@ export type DashboardV1AdminRow = {
   rawAccount?: PortalDashboardV1Account;
 };
 
-function readJson<T>(filePath: string): T | undefined {
-  if (!existsSync(filePath)) return undefined;
-  try {
-    return JSON.parse(readFileSync(filePath, "utf8")) as T;
-  } catch {
-    return undefined;
-  }
-}
-
 function accountNumbersList(raw: string) {
   return raw
     .split(",")
     .map((entry) => entry.trim())
     .filter(Boolean);
-}
-
-function accountFileName(value: string) {
-  return value.replace(/[^a-zA-Z0-9_-]/g, "_");
 }
 
 function trendValue(value: unknown): DashboardV1QualityTrend {
@@ -146,9 +124,7 @@ function trendValue(value: unknown): DashboardV1QualityTrend {
 }
 
 function readAccountDetail(accountId: string) {
-  return readJson<PortalDashboardV1Account>(
-    path.join(DASHBOARD_V1_DIR, "accounts", `${accountFileName(accountId)}.json`)
-  );
+  return portalDashboardV1Bundle.accountsById[accountId];
 }
 
 function normalizePct(value: unknown) {
@@ -249,14 +225,12 @@ function monthlyNumber(value: unknown): PortalDashboardV1MonthlyNumber {
 }
 
 export function getDashboardV1Manifest() {
-  return readJson<DashboardV1AdminManifest>(
-    path.join(DASHBOARD_V1_DIR, "latest_snapshot_manifest.json")
-  );
+  return portalDashboardV1Bundle.manifest as DashboardV1AdminManifest | null;
 }
 
 export function getDashboardV1AdminRows() {
-  const accountsIndexPath = path.join(DASHBOARD_V1_DIR, "accounts_index.json");
-  const accountsIndex = readJson<DashboardV1AdminAccount[]>(accountsIndexPath) ?? [];
+  const accountsIndex =
+    portalDashboardV1Bundle.accountsIndex as DashboardV1AdminAccount[];
   if (!accountsIndex.length) return [];
 
   const rows: DashboardV1AdminRow[] = [];
@@ -385,11 +359,7 @@ export function getDashboardV1AdminRows() {
 }
 
 export function getDashboardV1Accounts() {
-  return (
-    readJson<DashboardV1AdminAccount[]>(
-      path.join(DASHBOARD_V1_DIR, "accounts_index.json")
-    ) ?? []
-  );
+  return portalDashboardV1Bundle.accountsIndex as DashboardV1AdminAccount[];
 }
 
 export function resolveDashboardV1AcctId(input: string) {

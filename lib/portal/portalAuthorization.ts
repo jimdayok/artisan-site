@@ -90,17 +90,55 @@ function adminAccountsFromIndex() {
 }
 
 export async function getAuthorizedPortalCustomers(email: string) {
-  if (!email) return [];
+  if (!email) {
+    console.log("[PORTAL AUTH]", {
+      email,
+      userFound: false,
+      accountCount: 0,
+      authorizationDecision: "missing-email",
+    });
+    return [];
+  }
   if (isPortalAdmin(email)) {
     const accounts = adminAccountsFromIndex();
     if (accounts.length === 0) {
       const workbookAccounts = await getAllowedAccountsForEmail(email);
+      console.log("[PORTAL AUTH]", {
+        email,
+        userFound: true,
+        role: "admin",
+        accountCount: workbookAccounts.length,
+        authorizationDecision: "admin-workbook-fallback",
+      });
       return workbookAccounts.map((account) => customerFromAccount(account, email));
     }
+    console.log("[PORTAL AUTH]", {
+      email,
+      userFound: true,
+      role: "admin",
+      accountCount: accounts.length,
+      authorizationDecision: "admin-dashboard-access",
+    });
     return accounts.map((account) => customerFromAccount(account, email));
   }
   const user = await getPortalUserByEmail(email);
-  if (!user) return [];
+  if (!user) {
+    console.log("[PORTAL AUTH]", {
+      email,
+      userFound: false,
+      role: "unauthorized",
+      accountCount: 0,
+      authorizationDecision: "email-not-in-workbook",
+    });
+    return [];
+  }
+  console.log("[PORTAL AUTH]", {
+    email,
+    userFound: true,
+    role: "customer",
+    accountCount: user.accounts.length,
+    authorizationDecision: "customer-authorized",
+  });
   return user.accounts.map((account) => customerFromAccount(account, user.email));
 }
 

@@ -81,7 +81,7 @@ function parseEmails(value: unknown) {
     .filter(Boolean);
 }
 
-function workbookPath() {
+export function getPortalWorkbookDiagnostics() {
   const configuredPath =
     process.env.PORTAL_USER_DATA_PATH?.trim() ||
     "private-source/portal/user_data.xlsx";
@@ -90,13 +90,20 @@ function workbookPath() {
     ? configuredPath
     : path.join(/* turbopackIgnore: true */ process.cwd(), configuredPath);
 
-  if (existsSync(resolvedPath)) return resolvedPath;
-
   const trackedCaseVariant = path.join(
     path.dirname(resolvedPath),
     "User_Data.xlsx"
   );
-  return existsSync(trackedCaseVariant) ? trackedCaseVariant : resolvedPath;
+  const effectivePath =
+    !existsSync(resolvedPath) && existsSync(trackedCaseVariant)
+      ? trackedCaseVariant
+      : resolvedPath;
+
+  return {
+    configuredPath,
+    resolvedPath: effectivePath,
+    exists: existsSync(effectivePath),
+  };
 }
 
 function mergeUser(
@@ -130,13 +137,17 @@ function mergeUser(
 }
 
 async function readPortalUserAccess(): Promise<PortalUserAccessData> {
-  const filePath = workbookPath();
-  if (!existsSync(filePath)) {
-    throw new Error(`Portal user workbook not found at ${filePath}.`);
+  const diagnostics = getPortalWorkbookDiagnostics();
+  console.log("[PORTAL WORKBOOK]", diagnostics);
+
+  if (!diagnostics.exists) {
+    throw new Error(
+      `Portal user workbook not found at ${diagnostics.resolvedPath}.`
+    );
   }
 
   const workbook = new ExcelJS.Workbook();
-  await workbook.xlsx.readFile(filePath);
+  await workbook.xlsx.readFile(diagnostics.resolvedPath);
   const worksheet = workbook.getWorksheet(PERSON_LIST_SHEET);
   if (!worksheet) {
     throw new Error(`Portal user workbook is missing sheet "${PERSON_LIST_SHEET}".`);
@@ -212,15 +223,30 @@ async function readPortalUserAccess(): Promise<PortalUserAccessData> {
     }
   }
 
-  return {
+  const result = {
     usersByEmail,
     accountsByCanonicalId,
     accountAliasToCanonicalId,
   };
+  console.log("[PORTAL WORKBOOK]", {
+    ...diagnostics,
+    loaded: true,
+    userCount: usersByEmail.size,
+    accountCount: accountsByCanonicalId.size,
+  });
+  return result;
 }
 
 export function loadPortalUserAccess() {
-  portalUserAccessPromise ??= readPortalUserAccess();
+  portalUserAccessPromise ??= readPortalUserAccess().catch((error) => {
+    portalUserAccessPromise = undefined;
+    console.error("[PORTAL WORKBOOK]", {
+      ...getPortalWorkbookDiagnostics(),
+      loaded: false,
+      error: error instanceof Error ? error.message : String(error),
+    });
+    throw error;
+  });
   return portalUserAccessPromise;
 }
 

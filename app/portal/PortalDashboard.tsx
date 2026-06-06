@@ -47,7 +47,10 @@ import {
   getAuthorizedPortalCustomers,
 } from "@/lib/portal/portalAuthorization";
 import { normalizeAssignedPriceListCodes } from "@/lib/portal/assignedPriceLists";
-import { loadPortalUserAccess } from "@/lib/portal/userDataAccess";
+import {
+  getPortalWorkbookDiagnostics,
+  loadPortalUserAccess,
+} from "@/lib/portal/userDataAccess";
 import { getPriceListByCode, type PortalPriceList } from "@/lib/portal/priceLists";
 import { canonicalPriceListCode } from "@/lib/portal/priceLists";
 import {
@@ -79,8 +82,7 @@ import {
 } from "@/lib/portal/performanceScore";
 
 const PORTAL_ACCESS_LOGIN_URL = portalAccessLoginUrl();
-const PORTAL_ACCESS_LOGOUT_URL =
-  "/cdn-cgi/access/logout?returnTo=/portal";
+const PORTAL_ACCESS_LOGOUT_URL = "/portal/logout";
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
@@ -498,6 +500,67 @@ function PortalMessage({
   );
 }
 
+function PortalWorkbookError({
+  authenticatedEmail,
+  error,
+}: {
+  authenticatedEmail: string;
+  error: unknown;
+}) {
+  const diagnostics = getPortalWorkbookDiagnostics();
+  const errorMessage =
+    error instanceof Error ? error.message : "Unable to load portal workbook.";
+
+  return (
+    <PortalShell eyebrow="Portal Data Error">
+      <section className="max-w-4xl border border-[#c88575] bg-[#fffaf1]/92 p-7 shadow-[0_24px_80px_rgba(23,42,40,0.12)] sm:p-10">
+        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#9a4e42]">
+          Authorization data unavailable
+        </p>
+        <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-[#172a28]">
+          The portal user workbook could not be loaded.
+        </h1>
+        <p className="mt-4 text-base leading-7 text-[#706759]">
+          Authentication succeeded, but customer authorization could not be
+          completed. No customer or account information has been disclosed.
+        </p>
+        <dl className="mt-7 grid gap-4 border border-[#d8c49b] bg-white/70 p-5 text-sm">
+          <div>
+            <dt className="font-semibold text-[#172a28]">Authenticated email</dt>
+            <dd className="mt-1 break-all text-[#706759]">
+              {authenticatedEmail || "Unavailable"}
+            </dd>
+          </div>
+          <div>
+            <dt className="font-semibold text-[#172a28]">Workbook path</dt>
+            <dd className="mt-1 break-all text-[#706759]">
+              {diagnostics.resolvedPath}
+            </dd>
+          </div>
+          <div>
+            <dt className="font-semibold text-[#172a28]">File exists</dt>
+            <dd className="mt-1 text-[#706759]">
+              {diagnostics.exists ? "true" : "false"}
+            </dd>
+          </div>
+          <div>
+            <dt className="font-semibold text-[#172a28]">
+              Authorization status
+            </dt>
+            <dd className="mt-1 text-[#706759]">
+              blocked: workbook unavailable
+            </dd>
+          </div>
+          <div>
+            <dt className="font-semibold text-[#172a28]">Error</dt>
+            <dd className="mt-1 break-all text-[#706759]">{errorMessage}</dd>
+          </div>
+        </dl>
+      </section>
+    </PortalShell>
+  );
+}
+
 function LocalTestLoginPanel({ emails }: { emails: string[] }) {
   return (
     <PortalShell eyebrow="Local Test Login">
@@ -708,6 +771,13 @@ function PortalAccountSelector({
             </Link>
           ))}
         </div>
+        <a
+          href={PORTAL_ACCESS_LOGOUT_URL}
+          className="mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#172a28]/20 bg-transparent px-5 py-2 text-sm font-semibold text-[#172a28] transition hover:bg-[#172a28] hover:text-white"
+        >
+          <LogOut className="h-4 w-4" />
+          Sign Out
+        </a>
       </section>
     </PortalShell>
   );
@@ -3597,11 +3667,39 @@ export default async function PortalDashboard({
     );
   }
 
-  const customers = await getAuthorizedPortalCustomers(authenticatedEmail);
+  let customers: PortalCustomer[];
+  let profiles: PortalWorkbookProfile[];
+  try {
+    customers = await getAuthorizedPortalCustomers(authenticatedEmail);
+    profiles = getPortalWorkbookProfilesByEmail(authenticatedEmail);
+  } catch (error) {
+    console.error("[PORTAL AUTH]", {
+      email: authenticatedEmail,
+      authorized: false,
+      accountCount: 0,
+      authorizationDecision: "workbook-load-error",
+      redirectTarget: null,
+      error: error instanceof Error ? error.message : String(error),
+      workbook: getPortalWorkbookDiagnostics(),
+    });
+    return (
+      <PortalWorkbookError
+        authenticatedEmail={authenticatedEmail}
+        error={error}
+      />
+    );
+  }
+
   if (!isPortalAdminEmail(authenticatedEmail) && customers.length === 0) {
+    console.log("[PORTAL AUTH]", {
+      email: authenticatedEmail,
+      authorized: false,
+      accountCount: 0,
+      authorizationDecision: "render-unauthorized",
+      redirectTarget: null,
+    });
     forbidden();
   }
-  const profiles = getPortalWorkbookProfilesByEmail(authenticatedEmail);
   const selectedAccountKey = normalizeAccountNumber(selectedAccountNumber);
   const matchedCustomer = selectedAccountKey
     ? await getAuthorizedPortalCustomer(authenticatedEmail, selectedAccountKey)
@@ -3623,6 +3721,20 @@ export default async function PortalDashboard({
       )
     ),
   ]).size;
+
+  console.log("[PORTAL AUTH]", {
+    email: authenticatedEmail,
+    authorized: Boolean(matchedCustomer) || isPortalAdminEmail(authenticatedEmail),
+    accountCount: selectableAccountCount,
+    requestedAccount: selectedAccountNumber ?? "",
+    matchedAccount: matchedCustomer?.accountNumber ?? "",
+    dashboardStatus: dashboardState.status,
+    authorizationDecision:
+      selectableAccountCount > 1 && !selectedAccountKey
+        ? "render-account-selector"
+        : "render-customer-dashboard",
+    redirectTarget: null,
+  });
 
   if (
     selectedAccountKey &&

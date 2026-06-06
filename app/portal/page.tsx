@@ -1,6 +1,9 @@
 import { headers } from "next/headers";
 import { isPortalAdminEmail } from "@/lib/portal/admin";
-import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
+import {
+  getCloudflareAccessEmailFromHeaders,
+  getPortalAuthenticatedEmailFromHeaders,
+} from "@/lib/portal/auth";
 import AdminLandingDashboard from "./AdminLandingDashboard";
 import PortalDashboard from "./PortalDashboard";
 
@@ -25,8 +28,25 @@ export default async function PortalPage({
   const headerList = await headers();
   const query = await searchParams;
   const authenticatedEmail = getPortalAuthenticatedEmailFromHeaders(headerList);
+  const cloudflareEmail = getCloudflareAccessEmailFromHeaders(headerList);
   const mode = query.mode?.trim().toLowerCase();
   const showCustomerPortal = mode === "customer";
+
+  console.log("[PORTAL AUTH]", {
+    path: "/portal",
+    authenticatedEmail,
+    cloudflareEmail,
+    authError: headerList.get("x-portal-auth-error") ?? "",
+    authorizationDecision:
+      authenticatedEmail && isPortalAdminEmail(authenticatedEmail)
+        ? showCustomerPortal
+          ? "render-customer-mode"
+          : "render-admin-dashboard"
+        : authenticatedEmail
+          ? "evaluate-customer"
+          : "render-login-error",
+    redirectTarget: null,
+  });
 
   if (
     authenticatedEmail &&

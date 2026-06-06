@@ -6,11 +6,16 @@ export function isPortalAdminEmailAddress(email: string) {
   const normalizedEmail = normalizePortalEmail(email);
   if (!normalizedEmail) return false;
 
-  const configuredDomain = (
-    process.env.PORTAL_ADMIN_EMAIL_DOMAIN?.trim() || "artisanlabnetwork.com"
-  )
-    .replace(/^@/, "")
-    .toLowerCase();
+  const configuredDomains = new Set(
+    (
+      process.env.PORTAL_ADMIN_EMAIL_DOMAINS ||
+      process.env.PORTAL_ADMIN_EMAIL_DOMAIN ||
+      "artisanlabnetwork.com"
+    )
+      .split(",")
+      .map((domain) => domain.trim().replace(/^@/, "").toLowerCase())
+      .filter(Boolean)
+  );
   const configuredEmails = new Set(
     (process.env.PORTAL_ADMIN_EMAILS ?? "")
       .split(",")
@@ -19,7 +24,9 @@ export function isPortalAdminEmailAddress(email: string) {
   );
 
   return (
-    normalizedEmail.endsWith(`@${configuredDomain}`) ||
+    [...configuredDomains].some((domain) =>
+      normalizedEmail.endsWith(`@${domain}`)
+    ) ||
     configuredEmails.has(normalizedEmail)
   );
 }

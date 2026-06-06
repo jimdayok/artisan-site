@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import {
   isLocalhostDevelopmentRequest,
   LOCAL_PORTAL_TEST_EMAIL_COOKIE,
@@ -7,12 +7,13 @@ import {
   loadPortalUserAccess,
   normalizeEmail,
 } from "@/lib/portal/userDataAccess";
+import { safePortalRedirect } from "@/lib/portal/safeRedirect";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 function portalRedirect(request: NextRequest) {
-  return NextResponse.redirect(new URL("/portal", request.url));
+  return safePortalRedirect(request, "/portal");
 }
 
 async function allowedLocalTestEmails() {

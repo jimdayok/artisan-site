@@ -61,7 +61,12 @@ export async function verifyCloudflareAccessJwt(
     if (!email || !email.includes("@")) return null;
 
     return { email, payload };
-  } catch {
+  } catch (error) {
+    console.error("[PORTAL AUTH]", {
+      authorizationDecision: "cloudflare-jwt-rejected",
+      verified: false,
+      error: error instanceof Error ? error.message : String(error),
+    });
     return null;
   }
 }

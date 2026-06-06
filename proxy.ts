@@ -44,9 +44,25 @@ function deny(request: NextRequest, status: number, message: string) {
   if (request.nextUrl.pathname.startsWith("/api/")) {
     return new NextResponse(message, { status });
   }
-  const url = new URL("/portal", request.url);
-  url.searchParams.set("auth", "required");
-  return NextResponse.redirect(url);
+
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.delete("x-portal-auth-email");
+  requestHeaders.set("x-portal-auth-error", message);
+  requestHeaders.set("x-portal-auth-status", String(status));
+
+  console.error("[PORTAL AUTH]", {
+    path: request.nextUrl.pathname,
+    authenticatedEmail: "",
+    cloudflareEmail:
+      request.headers.get(ACCESS_EMAIL_HEADER)?.trim().toLowerCase() ?? "",
+    authorized: false,
+    authorizationDecision: "render-auth-error",
+    redirectTarget: null,
+    status,
+    message,
+  });
+
+  return NextResponse.next({ request: { headers: requestHeaders } });
 }
 
 async function verifiedPortalEmail(request: NextRequest) {
@@ -104,6 +120,15 @@ export async function proxy(request: NextRequest) {
   ) {
     return deny(request, 403, "Admin access required.");
   }
+
+  console.log("[PORTAL AUTH]", {
+    path: pathname,
+    authenticatedEmail: verifiedEmail,
+    cloudflareEmail: emailHeader,
+    authorized: true,
+    authorizationDecision: "allow",
+    redirectTarget: null,
+  });
 
   return NextResponse.next({
     request: { headers: requestHeaders },

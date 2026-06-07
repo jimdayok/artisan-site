@@ -5,6 +5,7 @@ import { FormEvent, KeyboardEvent, useEffect, useMemo, useRef, useState } from "
 import { MapPin, Navigation, Phone, Search, ShieldCheck, Sparkles, Globe2, Building2, LocateFixed } from "lucide-react";
 import { approvedPatientPractices } from "@/lib/patient-locator/practices";
 import type { PracticeWithDistance } from "@/lib/patient-locator/types";
+import { useCookieConsent } from "@/app/components/CookieConsentProvider";
 
 const RADIUS_OPTIONS = [25, 50, 100, 500] as const;
 type RadiusMiles = (typeof RADIUS_OPTIONS)[number];
@@ -232,6 +233,7 @@ function PracticeCard({
 }
 
 export default function PatientPracticeLocator() {
+  const { functional: hasFunctionalConsent, openPreferences } = useCookieConsent();
   const [query, setQuery] = useState("");
   const [searchResults, setSearchResults] = useState<PracticeWithDistance[]>(initialPractices);
   const [radiusMiles, setRadiusMiles] = useState<RadiusMiles>(100);
@@ -288,6 +290,11 @@ export default function PatientPracticeLocator() {
   }, [hasActiveAffiliationFilters, hasSearched, radiusMiles, results.length, searchError, searchMode]);
 
   useEffect(() => {
+    if (!hasFunctionalConsent) {
+      const timeout = window.setTimeout(() => setMapError(false), 0);
+      return () => window.clearTimeout(timeout);
+    }
+
     if (!mapApiKey) {
       const timeout = window.setTimeout(() => setMapError(true), 0);
       return () => window.clearTimeout(timeout);
@@ -313,7 +320,7 @@ export default function PatientPracticeLocator() {
     script.onload = () => setMapReady(true);
     script.onerror = () => setMapError(true);
     document.head.appendChild(script);
-  }, []);
+  }, [hasFunctionalConsent]);
 
   useEffect(() => {
     const maps = window.google?.maps;
@@ -483,6 +490,12 @@ export default function PatientPracticeLocator() {
     setSearchError("");
     setLocationMessage("");
 
+    if (!hasFunctionalConsent) {
+      setLocationMessage("Enable Functional cookies to use your location and the interactive map.");
+      openPreferences();
+      return;
+    }
+
     if (!navigator.geolocation) {
       setLocationMessage("We could not detect your location. Try searching by ZIP, city, or address.");
       return;
@@ -646,7 +659,18 @@ export default function PatientPracticeLocator() {
 
           <div className="order-2 lg:order-2">
             <div className="sticky top-24 overflow-hidden rounded-[34px] border border-[#d7bd8f] bg-white/80 p-3 shadow-[0_28px_80px_rgba(73,48,28,0.12)]">
-              {mapError ? (
+              {!hasFunctionalConsent ? (
+                <div className="flex min-h-[420px] flex-col items-center justify-center rounded-[26px] bg-[#fffaf2] p-8 text-center text-[#6f665b]">
+                  <p className="text-lg font-semibold">Enable Functional cookies to load the interactive map.</p>
+                  <button
+                    type="button"
+                    onClick={openPreferences}
+                    className="mt-5 rounded-full border border-[#b48a52] px-5 py-3 text-sm font-semibold text-[#15342f] transition hover:bg-white"
+                  >
+                    Cookie Preferences
+                  </button>
+                </div>
+              ) : mapError ? (
                 <div className="flex min-h-[420px] items-center justify-center rounded-[26px] bg-[#fffaf2] p-8 text-center text-lg font-semibold text-[#6f665b]">
                   Map temporarily unavailable. Practice results are still shown below.
                 </div>

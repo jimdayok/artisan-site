@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import CookiePreferencesButton from "./CookiePreferencesButton";
 
 type FooterProps = {
   onContactClick?: () => void;
@@ -220,9 +221,11 @@ export default function Footer({
               ), and we respect your privacy. Information submitted through this site is used only to respond to your inquiry and support your relationship with Artisan Lab Network.
             </p>
           </div>
-          <div className="flex shrink-0 gap-5">
+          <div className="flex shrink-0 flex-wrap gap-x-5 gap-y-2">
+            <Link href="/cookie-policy" className="transition hover:text-white/80">Cookie Policy</Link>
             <Link href="/terms-and-conditions" className="transition hover:text-white/80">Terms &amp; Conditions</Link>
             <Link href="/privacy-policy" className="transition hover:text-white/80">Privacy Policy</Link>
+            <CookiePreferencesButton className="transition hover:text-white/80" />
           </div>
         </div>
       </div>

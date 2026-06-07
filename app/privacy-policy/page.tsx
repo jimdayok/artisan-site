@@ -18,7 +18,7 @@ const sections = [
   },
   {
     title: "Cookies and Analytics",
-    body: "This site may use basic cookies, analytics, or embedded third-party services to understand site performance, improve content, and support forms or media. Browser settings may allow you to limit cookies.",
+    body: "CookieYes manages cookie preferences. Necessary security, Cloudflare Access, login, and session cookies remain active. Google Maps and browser location features require Functional consent, while site analytics requires Analytics consent. See the Cookie Policy for details and preference controls.",
   },
   {
     title: "Data Security",

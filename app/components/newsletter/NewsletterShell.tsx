@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import CookiePreferencesButton from "../CookiePreferencesButton";
 
 type NewsletterShellProps = {
   children: React.ReactNode;
@@ -93,6 +94,16 @@ export default function NewsletterShell({ children }: NewsletterShellProps) {
             <Link href="/newsletters" className="text-sm font-semibold text-[#122033] underline decoration-[#c7ad7b] underline-offset-4">
               Newsletter Archive
             </Link>
+            <Link href="/cookie-policy" className="text-sm font-semibold text-[#122033] underline decoration-[#c7ad7b] underline-offset-4">
+              Cookie Policy
+            </Link>
+            <Link href="/privacy-policy" className="text-sm font-semibold text-[#122033] underline decoration-[#c7ad7b] underline-offset-4">
+              Privacy Policy
+            </Link>
+            <Link href="/terms-and-conditions" className="text-sm font-semibold text-[#122033] underline decoration-[#c7ad7b] underline-offset-4">
+              Terms &amp; Conditions
+            </Link>
+            <CookiePreferencesButton className="text-sm font-semibold text-[#122033] underline decoration-[#c7ad7b] underline-offset-4" />
           </div>
         </div>
       </footer>

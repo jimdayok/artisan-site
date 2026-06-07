@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { Analytics } from "@vercel/analytics/next";
+import Script from "next/script";
+import CookieConsentProvider from "./components/CookieConsentProvider";
 import "./globals.css";
 
 const nunito = localFont({
@@ -29,9 +30,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={nunito.variable}>
+      <head>
+        <Script
+          id="cookieyes"
+          src="https://cdn-cookieyes.com/client_data/e83ecccf3618d9b417487e7baad2c2f1/script.js"
+          strategy="beforeInteractive"
+        />
+      </head>
       <body className="min-h-screen antialiased">
-        {children}
-        <Analytics />
+        <CookieConsentProvider>{children}</CookieConsentProvider>
       </body>
     </html>
   );

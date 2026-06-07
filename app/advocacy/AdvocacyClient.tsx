@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { track } from "@vercel/analytics";
+import { trackWithConsent as track } from "@/app/components/CookieConsentProvider";
 import {
   ArrowRight,
   Building2,

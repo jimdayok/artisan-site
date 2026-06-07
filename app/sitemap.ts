@@ -6,6 +6,7 @@ const publicRoutes = [
   "/advocacy",
   "/artisan-model",
   "/careers",
+  "/cookie-policy",
   "/lab-policies",
   "/meet-the-artisans",
   "/new-lab-partner",

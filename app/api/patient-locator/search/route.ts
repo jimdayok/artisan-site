@@ -31,12 +31,7 @@ function normalizeApiKey(value: string) {
 }
 
 function googleApiKey() {
-  const raw =
-    process.env.GOOGLE_MAPS_SERVER_API_KEY ??
-    process.env.GOOGLE_GEOCODING_API_KEY ??
-    process.env.GOOGLE_PLACES_API_KEY ??
-    process.env.GOOGLE_MAPS_API_KEY ??
-    "";
+  const raw = process.env.GOOGLE_MAPS_SERVER_API_KEY ?? "";
   return raw ? normalizeApiKey(raw) : "";
 }
 
@@ -156,7 +151,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         error:
-          "Server-side Google Maps key is not configured. Add GOOGLE_MAPS_SERVER_API_KEY, GOOGLE_GEOCODING_API_KEY, GOOGLE_PLACES_API_KEY, or GOOGLE_MAPS_API_KEY in Vercel to enable distance sorting.",
+          "Server-side Google Maps key is not configured. Add GOOGLE_MAPS_SERVER_API_KEY in Vercel to enable distance sorting.",
         practices: approvedPatientPractices.map((practice) => ({
           ...practice,
           googleMapsUrl: directionsUrl(practice),

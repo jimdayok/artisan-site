@@ -8,6 +8,7 @@ import type { PracticeWithDistance } from "@/lib/patient-locator/types";
 
 const RADIUS_OPTIONS = [25, 50, 100, 500] as const;
 type RadiusMiles = (typeof RADIUS_OPTIONS)[number];
+type SearchMode = "text" | "location" | null;
 
 type LocatorResponse = {
   practices?: PracticeWithDistance[];
@@ -133,11 +134,13 @@ function PracticeBadges({ practice }: { practice: PracticeWithDistance }) {
 function PracticeCard({
   practice,
   isActive,
+  hasDistanceSearch,
   onSelect,
   cardRef,
 }: {
   practice: PracticeWithDistance;
   isActive: boolean;
+  hasDistanceSearch: boolean;
   onSelect: () => void;
   cardRef: (element: HTMLElement | null) => void;
 }) {
@@ -210,7 +213,9 @@ function PracticeCard({
         <p className="text-sm font-semibold text-[#15342f]">
           {typeof practice.distanceMiles === "number"
             ? formatDistance(practice.distanceMiles)
-            : "Search to calculate distance"}
+            : hasDistanceSearch
+              ? "Distance unavailable"
+              : "Distance unavailable until search"}
         </p>
         <a
           href={practice.googleMapsUrl}
@@ -231,6 +236,7 @@ export default function PatientPracticeLocator() {
   const [searchResults, setSearchResults] = useState<PracticeWithDistance[]>(initialPractices);
   const [radiusMiles, setRadiusMiles] = useState<RadiusMiles>(100);
   const [hasSearched, setHasSearched] = useState(false);
+  const [searchMode, setSearchMode] = useState<SearchMode>(null);
   const [searchError, setSearchError] = useState("");
   const [origin, setOrigin] = useState<LocatorResponse["origin"]>(null);
   const [originIsUserLocation, setOriginIsUserLocation] = useState(false);
@@ -275,8 +281,11 @@ export default function PatientPracticeLocator() {
     }
     if (!hasSearched) return "Enter a ZIP code, city, or address to find approved practices near you.";
     if (!results.length) return `No matching practices found within ${radiusMiles} miles. Try increasing the distance or changing filters.`;
+    if (searchMode === "location") {
+      return `Showing ${results.length} approved practice${results.length === 1 ? "" : "s"} near your current location, sorted by nearest distance.`;
+    }
     return `Showing ${results.length} approved practice${results.length === 1 ? "" : "s"} within ${radiusMiles} miles, sorted by nearest distance.`;
-  }, [hasActiveAffiliationFilters, hasSearched, radiusMiles, results.length, searchError]);
+  }, [hasActiveAffiliationFilters, hasSearched, radiusMiles, results.length, searchError, searchMode]);
 
   useEffect(() => {
     if (!mapApiKey) {
@@ -461,6 +470,7 @@ export default function PatientPracticeLocator() {
       setSearchResults(data.practices ?? []);
       setOrigin(data.origin);
       setOriginIsUserLocation(isUserLocation);
+      setSearchMode(isUserLocation ? "location" : "text");
       setHasSearched(true);
     } catch {
       setSearchError("Locator search is temporarily unavailable. Please try again.");
@@ -474,7 +484,7 @@ export default function PatientPracticeLocator() {
     setLocationMessage("");
 
     if (!navigator.geolocation) {
-      setLocationMessage("Location access is unavailable. You can still search by ZIP, city, or address.");
+      setLocationMessage("We could not detect your location. Try searching by ZIP, city, or address.");
       return;
     }
 
@@ -482,14 +492,21 @@ export default function PatientPracticeLocator() {
     navigator.geolocation.getCurrentPosition(
       async ({ coords }) => {
         setQuery("");
-        await runSearch({ latitude: coords.latitude, longitude: coords.longitude }, true);
+        try {
+          await runSearch({ latitude: coords.latitude, longitude: coords.longitude }, true);
+        } finally {
+          setIsFindingLocation(false);
+        }
+      },
+      (error) => {
+        setLocationMessage(
+          error.code === error.PERMISSION_DENIED
+            ? "Location access was not allowed. You can still search by ZIP, city, or address."
+            : "We could not detect your location. Try searching by ZIP, city, or address."
+        );
         setIsFindingLocation(false);
       },
-      () => {
-        setLocationMessage("Location access was not allowed. You can still search by ZIP, city, or address.");
-        setIsFindingLocation(false);
-      },
-      { enableHighAccuracy: false, timeout: 10_000, maximumAge: 300_000 }
+      { enableHighAccuracy: true, timeout: 15_000, maximumAge: 60_000 }
     );
   }
 
@@ -512,15 +529,17 @@ export default function PatientPracticeLocator() {
             <label className="block text-sm font-semibold uppercase tracking-[0.24em] text-[#927346]" htmlFor="patient-practice-search">
               Search by ZIP, city, or address
             </label>
-            <div className="mt-4 grid gap-3 sm:grid-cols-[minmax(0,1fr)_150px] xl:grid-cols-[minmax(0,1fr)_150px_auto_auto]">
+            <div className="mt-4">
               <input
                 ref={inputRef}
                 id="patient-practice-search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Example: Denver, CO or 80504"
-                className="min-h-14 flex-1 rounded-full border border-[#e1cfac] bg-[#fffaf2] px-5 text-lg text-[#142d28] outline-none transition placeholder:text-[#9c9589] focus:border-[#b48a52] focus:ring-4 focus:ring-[#d7bd8f]/35"
+                placeholder="Enter ZIP, city, or address"
+                className="block min-h-14 w-full min-w-0 rounded-2xl border border-[#e1cfac] bg-[#fffaf2] px-5 text-base text-[#142d28] outline-none transition placeholder:text-[#9c9589] focus:border-[#b48a52] focus:ring-4 focus:ring-[#d7bd8f]/35 sm:min-w-[280px] sm:text-lg"
               />
+            </div>
+            <div className="mt-3 grid gap-3 md:grid-cols-[160px_minmax(180px,1fr)_minmax(200px,1fr)]">
               <label className="sr-only" htmlFor="patient-practice-radius">Search radius</label>
               <select
                 id="patient-practice-radius"
@@ -530,7 +549,7 @@ export default function PatientPracticeLocator() {
                   setActivePracticeId(null);
                   infoWindowRef.current?.close();
                 }}
-                className="min-h-14 rounded-full border border-[#e1cfac] bg-[#fffaf2] px-5 text-base font-semibold text-[#142d28] outline-none transition focus:border-[#b48a52] focus:ring-4 focus:ring-[#d7bd8f]/35"
+                className="min-h-14 w-full rounded-2xl border border-[#e1cfac] bg-[#fffaf2] px-5 text-base font-semibold text-[#142d28] outline-none transition focus:border-[#b48a52] focus:ring-4 focus:ring-[#d7bd8f]/35"
               >
                 {RADIUS_OPTIONS.map((radius) => (
                   <option key={radius} value={radius}>{radius} miles</option>
@@ -539,7 +558,7 @@ export default function PatientPracticeLocator() {
               <button
                 type="submit"
                 disabled={isLoading || isFindingLocation}
-                className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-[#15342f] px-7 text-base font-semibold text-[#f7efe2] transition hover:bg-[#23453f] disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-[#15342f] px-6 text-base font-semibold text-[#f7efe2] transition hover:bg-[#23453f] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <Search className="h-5 w-5" />
                 {isLoading ? "Searching" : "Find Practices"}
@@ -548,7 +567,7 @@ export default function PatientPracticeLocator() {
                 type="button"
                 onClick={handleFindMyLocation}
                 disabled={isLoading || isFindingLocation}
-                className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border border-[#b48a52] bg-[#fffaf2] px-6 text-base font-semibold text-[#15342f] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl border border-[#b48a52] bg-[#fffaf2] px-6 text-base font-semibold text-[#15342f] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <LocateFixed className="h-5 w-5" />
                 {isFindingLocation ? "Finding location…" : "Find My Location"}
@@ -614,6 +633,7 @@ export default function PatientPracticeLocator() {
                   key={practice.id}
                   practice={practice}
                   isActive={practice.id === activePracticeId}
+                  hasDistanceSearch={hasSearched}
                   onSelect={() => setActivePracticeId(practice.id)}
                   cardRef={(element) => {
                     if (element) cardRefs.current.set(practice.id, element);

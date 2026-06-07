@@ -100,6 +100,23 @@ function requestSearchText(body: Partial<{ query: string; address: string; city:
   return (body.query || [body.address, body.city, body.state, body.zip].filter(Boolean).join(", ")).trim();
 }
 
+function requestCoordinates(body: Partial<{ latitude: number; longitude: number }>): GeocodeResult | undefined {
+  if (
+    typeof body.latitude !== "number" ||
+    !Number.isFinite(body.latitude) ||
+    body.latitude < -90 ||
+    body.latitude > 90 ||
+    typeof body.longitude !== "number" ||
+    !Number.isFinite(body.longitude) ||
+    body.longitude < -180 ||
+    body.longitude > 180
+  ) {
+    return undefined;
+  }
+
+  return { latitude: body.latitude, longitude: body.longitude };
+}
+
 export async function POST(request: NextRequest) {
   const rate = checkRateLimit({
     key: `patient-locator:${getIp(request)}`,
@@ -112,10 +129,19 @@ export async function POST(request: NextRequest) {
   }
 
   const apiKey = googleApiKey();
-  const body = (await request.json()) as Partial<{ query: string; address: string; city: string; state: string; zip: string }>;
+  const body = (await request.json()) as Partial<{
+    query: string;
+    address: string;
+    city: string;
+    state: string;
+    zip: string;
+    latitude: number;
+    longitude: number;
+  }>;
   const searchText = requestSearchText(body);
+  const coordinates = requestCoordinates(body);
 
-  if (!searchText) {
+  if (!searchText && !coordinates) {
     return NextResponse.json({
       practices: approvedPatientPractices.map((practice) => ({
         ...practice,
@@ -142,7 +168,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const origin = await geocodeAddress(searchText, apiKey);
+  const origin = coordinates ?? (await geocodeAddress(searchText, apiKey));
   if (!origin) {
     return NextResponse.json(
       {

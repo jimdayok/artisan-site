@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { FormEvent, KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
-import { MapPin, Navigation, Phone, Search, ShieldCheck, Sparkles, Globe2, Building2 } from "lucide-react";
+import { MapPin, Navigation, Phone, Search, ShieldCheck, Sparkles, Globe2, Building2, LocateFixed } from "lucide-react";
 import { approvedPatientPractices } from "@/lib/patient-locator/practices";
 import type { PracticeWithDistance } from "@/lib/patient-locator/types";
 
@@ -78,6 +78,17 @@ function filterPracticesByRadius(practices: PracticeWithDistance[], radiusMiles:
     .sort((left, right) => left.distanceMiles - right.distanceMiles);
 }
 
+function filterPracticesByAffiliation(
+  practices: PracticeWithDistance[],
+  filters: { tokai: boolean; artisanPartner: boolean }
+) {
+  return practices.filter(
+    (practice) =>
+      (!filters.tokai || practice.tokai === true) &&
+      (!filters.artisanPartner || practice.artisanPartner === true)
+  );
+}
+
 function markerIcon(active: boolean) {
   return {
     path: "M 0,0 m -7,0 a 7,7 0 1,0 14,0 a 7,7 0 1,0 -14,0",
@@ -89,19 +100,30 @@ function markerIcon(active: boolean) {
   };
 }
 
+function userMarkerIcon() {
+  return {
+    path: "M 0,0 m -8,0 a 8,8 0 1,0 16,0 a 8,8 0 1,0 -16,0",
+    fillColor: "#4285f4",
+    fillOpacity: 1,
+    strokeColor: "#ffffff",
+    strokeWeight: 3,
+    scale: 1.2,
+  };
+}
+
 function PracticeBadges({ practice }: { practice: PracticeWithDistance }) {
-  if (!practice.hasTokai && !practice.isEquityPartner) return null;
+  if (!practice.tokai && !practice.artisanPartner) return null;
 
   return (
     <div className="flex items-center justify-end gap-2" aria-label="Practice affiliations">
-      {practice.hasTokai ? (
+      {practice.tokai ? (
         <span className="flex h-8 w-12 items-center justify-center rounded-full border border-[#e5d4b9] bg-white px-2 shadow-sm" title="Tokai access">
           <Image src="/tokai-logo.png" alt="Tokai access" width={40} height={40} className="h-6 w-6 object-contain" />
         </span>
       ) : null}
-      {practice.isEquityPartner ? (
-        <span className="flex h-8 w-12 items-center justify-center rounded-full border border-[#e5d4b9] bg-white px-2 shadow-sm" title="Artisan equity partner">
-          <Image src="/aln_4c_logo.png" alt="Artisan equity partner" width={48} height={32} className="h-7 w-10 object-contain" />
+      {practice.artisanPartner ? (
+        <span className="flex h-8 w-12 items-center justify-center rounded-full border border-[#e5d4b9] bg-white px-2 shadow-sm" title="Artisan Partner">
+          <Image src="/aln_4c_logo.png" alt="Artisan Partner" width={48} height={32} className="h-7 w-10 object-contain" />
         </span>
       ) : null}
     </div>
@@ -211,33 +233,50 @@ export default function PatientPracticeLocator() {
   const [hasSearched, setHasSearched] = useState(false);
   const [searchError, setSearchError] = useState("");
   const [origin, setOrigin] = useState<LocatorResponse["origin"]>(null);
+  const [originIsUserLocation, setOriginIsUserLocation] = useState(false);
   const [activePracticeId, setActivePracticeId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFindingLocation, setIsFindingLocation] = useState(false);
+  const [locationMessage, setLocationMessage] = useState("");
+  const [tokaiOnly, setTokaiOnly] = useState(false);
+  const [artisanPartnersOnly, setArtisanPartnersOnly] = useState(false);
   const [mapReady, setMapReady] = useState(false);
   const [mapError, setMapError] = useState(false);
   const mapRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const mapInstanceRef = useRef<GoogleMap | null>(null);
   const markerRefs = useRef<Map<string, GoogleMarker>>(new Map());
+  const userMarkerRef = useRef<GoogleMarker | null>(null);
   const cardRefs = useRef<Map<string, HTMLElement>>(new Map());
   const infoWindowRef = useRef<GoogleInfoWindow | null>(null);
 
-  const results = useMemo(
-    () => (hasSearched ? filterPracticesByRadius(searchResults, radiusMiles) : searchResults),
-    [hasSearched, radiusMiles, searchResults]
-  );
+  const results = useMemo(() => {
+    const radiusFiltered = hasSearched
+      ? filterPracticesByRadius(searchResults, radiusMiles)
+      : searchResults;
+    return filterPracticesByAffiliation(radiusFiltered, {
+      tokai: tokaiOnly,
+      artisanPartner: artisanPartnersOnly,
+    });
+  }, [artisanPartnersOnly, hasSearched, radiusMiles, searchResults, tokaiOnly]);
 
   const mappedResults = useMemo(
     () => results.filter((practice) => typeof practice.latitude === "number" && typeof practice.longitude === "number"),
     [results]
   );
+  const hasActiveAffiliationFilters = tokaiOnly || artisanPartnersOnly;
 
   const status = useMemo(() => {
     if (searchError) return searchError;
+    if (!results.length && hasActiveAffiliationFilters) {
+      return hasSearched
+        ? `No matching practices found within ${radiusMiles} miles. Try increasing the distance or changing filters.`
+        : "No matching practices found. Try changing or clearing the affiliation filters.";
+    }
     if (!hasSearched) return "Enter a ZIP code, city, or address to find approved practices near you.";
-    if (!results.length) return `No approved practices found within ${radiusMiles} miles. Try increasing the distance.`;
+    if (!results.length) return `No matching practices found within ${radiusMiles} miles. Try increasing the distance or changing filters.`;
     return `Showing ${results.length} approved practice${results.length === 1 ? "" : "s"} within ${radiusMiles} miles, sorted by nearest distance.`;
-  }, [hasSearched, radiusMiles, results.length, searchError]);
+  }, [hasActiveAffiliationFilters, hasSearched, radiusMiles, results.length, searchError]);
 
   useEffect(() => {
     if (!mapApiKey) {
@@ -302,7 +341,19 @@ export default function PatientPracticeLocator() {
 
     markerRefs.current.forEach((marker) => marker.setMap(null));
     markerRefs.current.clear();
+    userMarkerRef.current?.setMap(null);
+    userMarkerRef.current = null;
     infoWindowRef.current?.close();
+
+    if (origin && originIsUserLocation) {
+      userMarkerRef.current = new maps.Marker({
+        position: { lat: origin.latitude, lng: origin.longitude },
+        map: mapInstanceRef.current,
+        title: "You are here",
+        icon: userMarkerIcon(),
+        zIndex: 1000,
+      });
+    }
 
     if (!mappedResults.length) {
       if (origin) {
@@ -313,6 +364,9 @@ export default function PatientPracticeLocator() {
     }
 
     const bounds = new maps.LatLngBounds();
+    if (origin) {
+      bounds.extend({ lat: origin.latitude, lng: origin.longitude });
+    }
     mappedResults.forEach((practice) => {
       const position = { lat: practice.latitude as number, lng: practice.longitude as number };
       bounds.extend(position);
@@ -331,7 +385,10 @@ export default function PatientPracticeLocator() {
       markerRefs.current.set(practice.id, marker);
     });
 
-    if (mappedResults.length === 1) {
+    if (origin && originIsUserLocation) {
+      mapInstanceRef.current.panTo({ lat: origin.latitude, lng: origin.longitude });
+      mapInstanceRef.current.setZoom(radiusMiles <= 25 ? 10 : radiusMiles <= 100 ? 8 : 6);
+    } else if (mappedResults.length === 1) {
       const practice = mappedResults[0];
       mapInstanceRef.current.panTo({
         lat: practice.latitude as number,
@@ -341,7 +398,7 @@ export default function PatientPracticeLocator() {
     } else {
       mapInstanceRef.current.fitBounds(bounds, 70);
     }
-  }, [mapReady, mappedResults, origin]);
+  }, [mapReady, mappedResults, origin, originIsUserLocation, radiusMiles]);
 
   useEffect(() => {
     const maps = window.google?.maps;
@@ -376,15 +433,23 @@ export default function PatientPracticeLocator() {
 
   async function handleSearch(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    await runSearch({ query }, false);
+  }
+
+  async function runSearch(
+    searchBody: { query: string } | { latitude: number; longitude: number },
+    isUserLocation: boolean
+  ) {
     setIsLoading(true);
     setSearchError("");
+    setLocationMessage("");
     setActivePracticeId(null);
 
     try {
       const response = await fetch("/api/patient-locator/search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
+        body: JSON.stringify(searchBody),
       });
       const data = (await response.json()) as LocatorResponse;
 
@@ -395,12 +460,37 @@ export default function PatientPracticeLocator() {
 
       setSearchResults(data.practices ?? []);
       setOrigin(data.origin);
+      setOriginIsUserLocation(isUserLocation);
       setHasSearched(true);
     } catch {
       setSearchError("Locator search is temporarily unavailable. Please try again.");
     } finally {
       setIsLoading(false);
     }
+  }
+
+  function handleFindMyLocation() {
+    setSearchError("");
+    setLocationMessage("");
+
+    if (!navigator.geolocation) {
+      setLocationMessage("Location access is unavailable. You can still search by ZIP, city, or address.");
+      return;
+    }
+
+    setIsFindingLocation(true);
+    navigator.geolocation.getCurrentPosition(
+      async ({ coords }) => {
+        setQuery("");
+        await runSearch({ latitude: coords.latitude, longitude: coords.longitude }, true);
+        setIsFindingLocation(false);
+      },
+      () => {
+        setLocationMessage("Location access was not allowed. You can still search by ZIP, city, or address.");
+        setIsFindingLocation(false);
+      },
+      { enableHighAccuracy: false, timeout: 10_000, maximumAge: 300_000 }
+    );
   }
 
   return (
@@ -422,7 +512,7 @@ export default function PatientPracticeLocator() {
             <label className="block text-sm font-semibold uppercase tracking-[0.24em] text-[#927346]" htmlFor="patient-practice-search">
               Search by ZIP, city, or address
             </label>
-            <div className="mt-4 grid gap-3 sm:grid-cols-[minmax(0,1fr)_150px_auto]">
+            <div className="mt-4 grid gap-3 sm:grid-cols-[minmax(0,1fr)_150px] xl:grid-cols-[minmax(0,1fr)_150px_auto_auto]">
               <input
                 ref={inputRef}
                 id="patient-practice-search"
@@ -448,13 +538,52 @@ export default function PatientPracticeLocator() {
               </select>
               <button
                 type="submit"
-                disabled={isLoading}
+                disabled={isLoading || isFindingLocation}
                 className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-[#15342f] px-7 text-base font-semibold text-[#f7efe2] transition hover:bg-[#23453f] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <Search className="h-5 w-5" />
                 {isLoading ? "Searching" : "Find Practices"}
               </button>
+              <button
+                type="button"
+                onClick={handleFindMyLocation}
+                disabled={isLoading || isFindingLocation}
+                className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border border-[#b48a52] bg-[#fffaf2] px-6 text-base font-semibold text-[#15342f] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                <LocateFixed className="h-5 w-5" />
+                {isFindingLocation ? "Finding location…" : "Find My Location"}
+              </button>
             </div>
+            <fieldset className="mt-4 flex flex-wrap gap-3">
+              <legend className="sr-only">Practice affiliations</legend>
+              <label className="inline-flex min-h-11 cursor-pointer items-center gap-3 rounded-full border border-[#e1cfac] bg-[#fffaf2] px-4 text-sm font-semibold text-[#15342f]">
+                <input
+                  type="checkbox"
+                  checked={tokaiOnly}
+                  onChange={(event) => {
+                    setTokaiOnly(event.target.checked);
+                    setActivePracticeId(null);
+                  }}
+                  className="h-4 w-4 accent-[#15342f]"
+                />
+                Tokai
+              </label>
+              <label className="inline-flex min-h-11 cursor-pointer items-center gap-3 rounded-full border border-[#e1cfac] bg-[#fffaf2] px-4 text-sm font-semibold text-[#15342f]">
+                <input
+                  type="checkbox"
+                  checked={artisanPartnersOnly}
+                  onChange={(event) => {
+                    setArtisanPartnersOnly(event.target.checked);
+                    setActivePracticeId(null);
+                  }}
+                  className="h-4 w-4 accent-[#15342f]"
+                />
+                Artisan Partners
+              </label>
+            </fieldset>
+            {locationMessage ? (
+              <p className="mt-3 text-sm font-medium text-[#8a5b32]" role="status">{locationMessage}</p>
+            ) : null}
             <div className="mt-4 grid gap-3 text-sm text-[#6f665b] sm:grid-cols-3">
               <span className="inline-flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-[#b48a52]" /> Approved practices only</span>
               <span className="inline-flex items-center gap-2"><Building2 className="h-4 w-4 text-[#b48a52]" /> No labs displayed</span>
@@ -469,12 +598,14 @@ export default function PatientPracticeLocator() {
 
         <div className="mt-8 grid gap-6 lg:grid-cols-[0.92fr_1.08fr]">
           <div className="order-1 max-h-[760px] space-y-4 overflow-y-auto pr-1 lg:order-1" aria-live="polite">
-            {hasSearched && !results.length ? (
+            {!results.length ? (
               <div className="rounded-[28px] border border-[#d7bd8f]/70 bg-white/80 p-8 text-center shadow-[0_18px_45px_rgba(73,48,28,0.08)]">
                 <MapPin className="mx-auto h-9 w-9 text-[#b48a52]" />
-                <h3 className="mt-4 text-2xl font-semibold text-[#142d28]">No nearby approved practices</h3>
+                <h3 className="mt-4 text-2xl font-semibold text-[#142d28]">No matching practices</h3>
                 <p className="mt-2 text-[#6f665b]">
-                  No approved practices found within {radiusMiles} miles. Try increasing the distance.
+                  {hasSearched
+                    ? `No matching practices found within ${radiusMiles} miles. Try increasing the distance or changing filters.`
+                    : "Try changing or clearing the affiliation filters."}
                 </p>
               </div>
             ) : (

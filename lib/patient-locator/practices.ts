@@ -18,8 +18,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": true
+    "tokai": false,
+    "artisanPartner": true
   },
   {
     "id": "carl-pdx-2377-lenora-church-road-snellville-ga-30078",
@@ -35,8 +35,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": false
+    "tokai": false,
+    "artisanPartner": false
   },
   {
     "id": "caec-ind-970-s-old-woodward-ave-birmingham-mi-48009",
@@ -52,8 +52,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": true
+    "tokai": false,
+    "artisanPartner": true
   },
   {
     "id": "comp-pdx-5075-ruffin-rd-b-san-diego-ca-92123",
@@ -69,8 +69,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": true
+    "tokai": false,
+    "artisanPartner": true
   },
   {
     "id": "3981-pdx-9975-sw-frewing-st-130-tigard-or-97223",
@@ -86,8 +86,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": false
+    "tokai": false,
+    "artisanPartner": false
   },
   {
     "id": "samv-ind-766-stillwater-ave-suite-1-bangor-me-4401",
@@ -103,8 +103,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": true
+    "tokai": false,
+    "artisanPartner": true
   },
   {
     "id": "mek-aln-404-hwy-2-east-devils-lake-nd-58301",
@@ -120,8 +120,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": true
+    "tokai": false,
+    "artisanPartner": true
   },
   {
     "id": "ever-pdx-1319-ne-134th-st-107-vancouver-wa-98685",
@@ -137,8 +137,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": false
+    "tokai": false,
+    "artisanPartner": false
   },
   {
     "id": "ecrb-ind-711-rigby-lake-dr-suite-301-rigby-id-83442",
@@ -154,8 +154,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": true
+    "tokai": false,
+    "artisanPartner": true
   },
   {
     "id": "ecot-ind-15-iris-lane-crossville-tn-38555",
@@ -171,8 +171,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": false
+    "tokai": false,
+    "artisanPartner": false
   },
   {
     "id": "eca-pdx-2930-ne-west-devils-lake-rd-lincoln-city-or-97367",
@@ -188,8 +188,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": true
+    "tokai": false,
+    "artisanPartner": true
   },
   {
     "id": "ecp-pdx-113-3rd-ave-nw-mandan-nd-58554",
@@ -205,8 +205,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": true
+    "tokai": false,
+    "artisanPartner": true
   },
   {
     "id": "eyes-pdx-7144-sw-hazel-fern-rd-portland-or-97224",
@@ -222,8 +222,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": true
+    "tokai": false,
+    "artisanPartner": true
   },
   {
     "id": "fec-pdx-350-e-lane-south-ontario-or-97914",
@@ -239,8 +239,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": true
+    "tokai": false,
+    "artisanPartner": true
   },
   {
     "id": "fvc-ind-4801-w-bethel-muncie-in-47304",
@@ -256,8 +256,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": true
+    "tokai": false,
+    "artisanPartner": true
   },
   {
     "id": "fvo-pdx-51675-columbia-river-hwy-scappoose-or-97056",
@@ -273,8 +273,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": false
+    "tokai": false,
+    "artisanPartner": false
   },
   {
     "id": "zvec-ind-14560-river-rd-suite-120-carmel-in-46033",
@@ -290,8 +290,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": true
+    "tokai": false,
+    "artisanPartner": true
   },
   {
     "id": "10076-den-801-main-street-louisville-co-80027",
@@ -307,8 +307,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": false
+    "tokai": false,
+    "artisanPartner": false
   },
   {
     "id": "3084-pdx-1525-31st-ave-sw-ste-e-minot-nd-58701",
@@ -324,8 +324,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": false
+    "tokai": false,
+    "artisanPartner": false
   },
   {
     "id": "jec-den-1525-31st-ave-sw-ste-e-minot-nd-58701",
@@ -341,8 +341,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": true
+    "tokai": false,
+    "artisanPartner": true
   },
   {
     "id": "ldrv-den-9479-meadow-view-dr-lenexa-ks-66227",
@@ -358,8 +358,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": true
+    "tokai": false,
+    "artisanPartner": true
   },
   {
     "id": "mtv-pdx-1405-se-164th-ave-ste-102-vancouver-wa-98683",
@@ -375,8 +375,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": true,
-    "isEquityPartner": false
+    "tokai": true,
+    "artisanPartner": false
   },
   {
     "id": "4149-pdx-4244-indian-ripple-rd-ste100-beavercreek-oh-45440",
@@ -392,8 +392,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": false
+    "tokai": false,
+    "artisanPartner": false
   },
   {
     "id": "10093-den-1400-s-broadway-minot-nd-58701",
@@ -409,8 +409,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": false
+    "tokai": false,
+    "artisanPartner": false
   },
   {
     "id": "pevc-den-suite-200-colorado-springs-co-80920",
@@ -426,8 +426,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": true
+    "tokai": false,
+    "artisanPartner": true
   },
   {
     "id": "port-pdx-4133-se-division-st-portland-or-97202",
@@ -443,8 +443,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": false
+    "tokai": false,
+    "artisanPartner": false
   },
   {
     "id": "prai-den-315-11th-street-n-suite-e-wahpeton-nd-58075",
@@ -460,8 +460,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": true
+    "tokai": false,
+    "artisanPartner": true
   },
   {
     "id": "peg-ind-4619-w-richland-plaza-dr-bloomington-in-47404",
@@ -477,8 +477,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": true
+    "tokai": false,
+    "artisanPartner": true
   },
   {
     "id": "rmvg-pdx-341-market-st-basalt-co-81621",
@@ -494,8 +494,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": true
+    "tokai": false,
+    "artisanPartner": true
   },
   {
     "id": "3009-pdx-1433-ne-69th-ave-portland-or-97213",
@@ -511,8 +511,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": false
+    "tokai": false,
+    "artisanPartner": false
   },
   {
     "id": "vall-pdx-904-pitkin-ave-glenwood-springs-co-81601",
@@ -528,8 +528,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": true
+    "tokai": false,
+    "artisanPartner": true
   },
   {
     "id": "vqec-ind-2887-s-st-rd-135-greenwood-in-46143",
@@ -545,8 +545,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": true
+    "tokai": false,
+    "artisanPartner": true
   },
   {
     "id": "10027-den-2770-woodgate-rd-montrose-co-81401",
@@ -562,8 +562,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": false
+    "tokai": false,
+    "artisanPartner": false
   },
   {
     "id": "wpo-den-1900-division-st-w-suite-5-bemidji-mn-56601",
@@ -579,8 +579,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": true
+    "tokai": false,
+    "artisanPartner": true
   },
   {
     "id": "wbea-den-1500-14th-st-w-suite-100-williston-nd-58801",
@@ -596,8 +596,8 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": true
+    "tokai": false,
+    "artisanPartner": true
   },
   {
     "id": "10008-den-1526-centennial-court-casper-wy-82609",
@@ -613,7 +613,7 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "hasTokai": false,
-    "isEquityPartner": true
+    "tokai": false,
+    "artisanPartner": true
   }
 ];

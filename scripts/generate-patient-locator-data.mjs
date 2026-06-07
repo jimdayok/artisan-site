@@ -83,13 +83,13 @@ for (const accountSource of ACCOUNT_SOURCES) {
     if (!acctId) continue;
 
     const current = accountFlagsByAcctId.get(acctId) ?? {
-      hasTokai: false,
-      isEquityPartner: false,
+      tokai: false,
+      artisanPartner: false,
     };
     accountFlagsByAcctId.set(acctId, {
-      hasTokai: accountFlagValue(current.hasTokai, normalizeYes(row["Tokai Usage"])),
-      isEquityPartner: accountFlagValue(
-        current.isEquityPartner,
+      tokai: accountFlagValue(current.tokai, normalizeYes(row["Tokai Usage"])),
+      artisanPartner: accountFlagValue(
+        current.artisanPartner,
         cellText(row["Last Division"]).toUpperCase() === "PART"
       ),
     });
@@ -150,8 +150,8 @@ for (let rowNumber = 2; rowNumber <= worksheet.rowCount; rowNumber += 1) {
   const accountNumber = get(row, "Organization - Account Number");
   const { city, state, zip } = parseCityState(address);
   const accountFlags = accountFlagsByAcctId.get(acctId) ?? {
-    hasTokai: false,
-    isEquityPartner: false,
+    tokai: false,
+    artisanPartner: false,
   };
 
   if (!name || !address || !city || !state) continue;
@@ -171,8 +171,8 @@ for (let rowNumber = 2; rowNumber <= worksheet.rowCount; rowNumber += 1) {
     insurances,
     numberOfLocations,
     placeId: "",
-    hasTokai: accountFlags.hasTokai,
-    isEquityPartner: accountFlags.isEquityPartner,
+    tokai: accountFlags.tokai,
+    artisanPartner: accountFlags.artisanPartner,
   });
 }
 

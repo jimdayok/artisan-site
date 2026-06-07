@@ -12,8 +12,8 @@ export type ApprovedPractice = {
   insurances: string[];
   numberOfLocations: number;
   placeId?: string;
-  hasTokai: boolean;
-  isEquityPartner: boolean;
+  tokai: boolean;
+  artisanPartner: boolean;
 };
 
 export type PracticeWithDistance = ApprovedPractice & {

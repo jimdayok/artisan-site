@@ -126,11 +126,12 @@ function nameFromDashboardAuthorizedUsers(email: string, accountNumber: string) 
   const dashboard = getPortalDashboardV1ByAccount(accountNumber);
   if (dashboard.status !== "ok") return "";
 
-  return (
-    dashboard.account.authorized_users?.find(
-      (user) => user.email.trim().toLowerCase() === email.trim().toLowerCase()
-    )?.name ?? ""
+  const normalizedEmail = email.trim().toLowerCase();
+  const authorizedUser = dashboard.account?.authorized_users?.find(
+    (user) => user.email.trim().toLowerCase() === normalizedEmail
   );
+
+  return authorizedUser?.name ?? "";
 }
 
 export async function getOnboardingAccess(): Promise<OnboardingAccess> {

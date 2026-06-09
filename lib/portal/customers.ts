@@ -16,7 +16,8 @@ export type PortalSection =
   | "catalog"
   | "policies"
   | "exports"
-  | "performance";
+  | "performance"
+  | "onboarding";
 
 export type PortalCustomerAccess = {
   email: string;
@@ -73,6 +74,7 @@ const portalSections = new Set<PortalSection>([
   "policies",
   "exports",
   "performance",
+  "onboarding",
 ]);
 
 function isPortalSection(section: string): section is PortalSection {
@@ -193,6 +195,7 @@ function getDashboardV1AccessRecords() {
           "policies",
           "exports",
           "performance",
+          "onboarding",
         ],
         customerTypeCode: accountTypeCode,
         customerTypeLabel: accountTypeInfo?.label || accountTypeRaw || "",

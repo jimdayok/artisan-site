@@ -32,6 +32,7 @@ const ALL_PORTAL_SECTIONS: PortalSection[] = [
   "policies",
   "exports",
   "performance",
+  "onboarding",
 ];
 
 function getAccountIndex() {

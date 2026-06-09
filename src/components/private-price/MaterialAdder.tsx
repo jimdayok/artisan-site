@@ -23,7 +23,7 @@ export default function MaterialAdder({
 
   return (
     <section className="rounded-[28px] border border-[#dfd2bf] bg-[#122033] p-5 text-white shadow-[0_24px_70px_rgba(18,32,51,0.18)]">
-      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#d9c394]">Material Calculator</p>
+      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#d9c394]">Material Price Quote Builder</p>
       <h2 className="mt-3 text-2xl font-semibold">Polycarbonate base pricing</h2>
       <div className="mt-5 grid grid-cols-2 gap-2 rounded-2xl border border-white/15 bg-white/8 p-1">
         {(["Edged", "Uncut"] as EdgeMode[]).map((mode) => (

@@ -880,7 +880,7 @@ export default function InteractivePriceListDashboard({
               {programTitle}
             </p>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[#122033] md:text-3xl">
-              Guided Lens Pricing Builder
+              Price Quote Builder
             </h2>
             {programMeta.packageMark || programMeta.titleLogoSrc ? (
               <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -1674,13 +1674,13 @@ function ModernFramePricingCalculator({
   return (
     <section className="rounded-[2px] border border-[#dfd2bf] bg-white/88 p-5 shadow-[0_16px_45px_rgba(18,32,51,0.08)]">
       <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#8a7654]">
-        Frame Pricing Calculator
+        Frame Price Quote Builder
       </p>
       <h2 className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-[#122033]">
         {priceList.code === "Y5" ? "Safety frame package estimate" : "Modern frame system estimate"}
       </h2>
       <p className="mt-2 max-w-3xl text-sm leading-6 text-[#5f6875]">
-        Select a frame/package price and frame tier. The calculator uses generated {priceList.code} pricing and the current tier guide.
+        Select a frame/package price and frame tier. The quote builder uses generated {priceList.code} pricing and the current tier guide.
       </p>
       <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_0.72fr_0.72fr]">
         <label className="grid gap-2 text-sm font-semibold text-[#122033]">

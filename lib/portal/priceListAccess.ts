@@ -104,6 +104,7 @@ export async function getAuthorizedPriceListFromHeaders(
           "policies",
           "exports",
           "performance",
+          "onboarding",
         ],
       },
       priceList,
@@ -168,6 +169,7 @@ export async function getAuthorizedPortalSectionForPage(section: PortalSection) 
           "policies",
           "exports",
           "performance",
+          "onboarding",
         ],
       },
     };

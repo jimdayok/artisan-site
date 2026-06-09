@@ -325,11 +325,13 @@ function PortalHeader({
   hasMultipleAccounts,
   isAdminPreview,
   isEmployee,
+  showNewPartnerOnboarding,
 }: {
   practiceName: string;
   hasMultipleAccounts?: boolean;
   isAdminPreview?: boolean;
   isEmployee?: boolean;
+  showNewPartnerOnboarding?: boolean;
 }) {
   return (
     <header className="mb-7 border border-[#d8c49b] bg-[#fffaf1]/88 px-4 py-3 shadow-[0_18px_55px_rgba(23,42,40,0.09)] backdrop-blur sm:px-5">
@@ -374,6 +376,15 @@ function PortalHeader({
             <BookOpen className="h-4 w-4" />
             Resources
           </Link>
+          {showNewPartnerOnboarding ? (
+            <Link
+              href="/new-lab-partner"
+              className="inline-flex min-h-10 items-center gap-2 rounded-full bg-[#d8c49b] px-4 text-[#172a28] shadow-[0_10px_24px_rgba(184,154,97,0.2)] transition hover:bg-[#e4cca0]"
+            >
+              <BadgeCheck className="h-4 w-4" />
+              New Partner Setup
+            </Link>
+          ) : null}
           <Link
             href="/newsletter"
             className="inline-flex min-h-10 items-center gap-2 rounded-full bg-[#172a28] px-4 text-white shadow-[0_10px_24px_rgba(23,42,40,0.14)] transition hover:bg-[#27433f]"
@@ -803,10 +814,10 @@ const portalSectionCards: PortalSectionCard[] = [
   },
   {
     section: "calculator",
-    title: "Quote Builder",
-    body: "Build an estimated lab price from assigned online pricing.",
+    title: "Price Quote Builder",
+    body: "Create an estimated lab price from assigned online pricing.",
     href: "/portal/price-list/calculator",
-    cta: "Open Calculator",
+    cta: "Open Price Quote Builder",
     requiresPriceList: "G6",
   },
   {
@@ -830,6 +841,13 @@ const portalSectionCards: PortalSectionCard[] = [
     body: "Review monthly lens pairs, purchase mix, premium adoption, and remake activity.",
     href: "/portal/performance",
     cta: "Open Performance",
+  },
+  {
+    section: "onboarding",
+    title: "New Partner Onboarding",
+    body: "Open the guided setup hub for lab contacts, portal access, ordering methods, pricing, safety, shipping, and first orders.",
+    href: "/new-lab-partner",
+    cta: "Open Setup Hub",
   },
   {
     section: "exports",
@@ -1380,12 +1398,14 @@ function AccountProfileSection({
   customerTypeLabel,
   practiceName,
   accountNumber,
+  showNewPartnerOnboarding,
 }: {
   account?: PortalWorkbookAccount;
   dashboardAccount?: PortalDashboardV1Account;
   customerTypeLabel?: string;
   practiceName: string;
   accountNumber: string;
+  showNewPartnerOnboarding?: boolean;
 }) {
   if (!account && !dashboardAccount && !practiceName && !accountNumber) return null;
 
@@ -1423,6 +1443,30 @@ function AccountProfileSection({
         Review the account details Artisan uses for service, support, and
         program eligibility.
       </p>
+      {showNewPartnerOnboarding ? (
+        <Link
+          href="/new-lab-partner"
+          className="mt-6 flex flex-col gap-4 border border-[#172a28] bg-[#172a28] p-5 text-white shadow-[0_18px_55px_rgba(23,42,40,0.16)] transition hover:-translate-y-0.5 hover:bg-[#243f3b] sm:flex-row sm:items-center sm:justify-between"
+        >
+          <span>
+            <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-[#d8c49b]">
+              <BadgeCheck className="h-4 w-4" />
+              Customer Activation
+            </span>
+            <span className="mt-3 block text-2xl font-semibold tracking-[-0.03em]">
+              New Lab Partner Setup
+            </span>
+            <span className="mt-2 block text-sm leading-6 text-white/78">
+              Use the setup hub to confirm lab contacts, portal access,
+              ordering methods, pricing, safety resources, shipping, and first
+              orders.
+            </span>
+          </span>
+          <span className="inline-flex min-h-11 w-fit shrink-0 items-center justify-center rounded-full bg-[#d8c49b] px-5 py-2 text-sm font-semibold text-[#172a28]">
+            Start Setup
+          </span>
+        </Link>
+      ) : null}
       <div className="mt-6 grid gap-4 text-sm leading-6 text-[#706759]">
         {isVisibleSalesRep(account?.salesRep) ? (
           <UsageRow label="Sales Rep" value={account?.salesRep ?? ""} />
@@ -3502,6 +3546,9 @@ export function PortalDashboardContent({
   });
   const showDashboardV1 = dashboardState?.status === "ok";
   const isAdmin = isPortalAdminEmail(authenticatedEmail);
+  const showNewPartnerOnboarding = Boolean(
+    customer && customerHasPortalSection(customer, "onboarding")
+  );
   const shouldShowDashboardWarnings =
     isAdmin && Boolean(dashboardState) && (!showDashboardV1 || Boolean(dashboardState?.stale));
 
@@ -3514,6 +3561,7 @@ export function PortalDashboardContent({
           hasMultipleAccounts={selectableAccountCount > 1}
           isAdminPreview={Boolean(adminPreviewAccountName)}
           isEmployee={isAdmin && !adminPreviewAccountName}
+          showNewPartnerOnboarding={showNewPartnerOnboarding}
         />
       }
       footer={<PortalFooter />}
@@ -3622,6 +3670,7 @@ export function PortalDashboardContent({
           customerTypeLabel={customerTypeLabel}
           practiceName={practiceName}
           accountNumber={accountNumber}
+          showNewPartnerOnboarding={showNewPartnerOnboarding}
         />
 
         <UserContactSection

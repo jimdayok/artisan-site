@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Script from "next/script";
 import CookieConsentProvider from "./components/CookieConsentProvider";
+import TrainingHubReturnButton from "./components/TrainingHubReturnButton";
 import "./globals.css";
 
 const nunito = localFont({
@@ -38,7 +39,10 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen antialiased">
-        <CookieConsentProvider>{children}</CookieConsentProvider>
+        <CookieConsentProvider>
+          {children}
+          <TrainingHubReturnButton />
+        </CookieConsentProvider>
       </body>
     </html>
   );

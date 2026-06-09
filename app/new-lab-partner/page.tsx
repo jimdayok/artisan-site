@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Lock, Mail, PlayCircle } from "lucide-react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import NewLabPartnerHub from "./NewLabPartnerHub";
 
 const REQUEST_ACCESS_EMAIL =
   "mailto:jim.day@artisanlabnetwork.com?subject=New%20Lab%20Partner%20Onboarding%20Access";

@@ -81,8 +81,8 @@ export default function PackageQuoteBuilder({ initialLensId }: { initialLensId?:
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
       <section className="rounded-[30px] border border-[#dfd2bf] bg-white/90 p-5 shadow-[0_22px_60px_rgba(18,32,51,0.08)] md:p-7">
         <div className="mb-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">Package calculator</p>
-          <h2 className="mt-2 text-2xl font-semibold text-[#122033]">Build an IOT Lens System quote</h2>
+          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">Package Price Quote Builder</p>
+          <h2 className="mt-2 text-2xl font-semibold text-[#122033]">Create an IOT Lens System quote</h2>
         </div>
         <div className="grid gap-5 md:grid-cols-2">
           <SelectRow label="Package lens design" value={lensId} onChange={setLensId} items={packageLensItems} allowNone={false} />

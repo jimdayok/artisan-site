@@ -236,17 +236,17 @@
   ],
   "report": {
     "sourceFiles": [
-      "/Users/jimday/Documents/GitHub/artisan-site/private-source/price-lists/rawp6.xlsx",
-      "/Users/jimday/Documents/GitHub/artisan-site/private-source/portal/lookup_docs/Lookup.xlsx",
-      "/Users/jimday/Documents/GitHub/artisan-site/private-source/portal/lookup_docs/Lookup_Mat.xlsx",
-      "/Users/jimday/Documents/GitHub/artisan-site/private-source/price-lists/colors.txt",
-      "/Users/jimday/Documents/GitHub/artisan-site/private-source/portal/lookup_docs/Lookup_AR.xlsx"
+      "/Users/jimday/Documents/artisan-site/private-source/price-lists/rawp6.xlsx",
+      "/Users/jimday/Documents/artisan-site/private-source/portal/lookup_docs/Lookup.xlsx",
+      "/Users/jimday/Documents/artisan-site/private-source/portal/lookup_docs/Lookup_Mat.xlsx",
+      "/Users/jimday/Documents/artisan-site/private-source/price-lists/colors.txt",
+      "/Users/jimday/Documents/artisan-site/private-source/portal/lookup_docs/Lookup_AR.xlsx"
     ],
     "rowCount": 0,
     "rawSourceRowsProcessed": 0,
     "rowsExcludedMissingLookup": 0,
     "displayRowCount": 0,
-    "generatedAt": "2026-06-05T15:53:21.526Z",
+    "generatedAt": "2026-06-08T16:22:02.629Z",
     "rawColumns": [
       "PL",
       "Mat",

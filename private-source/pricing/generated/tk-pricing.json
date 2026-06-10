@@ -33,8 +33,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 1,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -68,8 +85,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 1,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -105,8 +139,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 2,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -140,8 +191,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 1,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -175,8 +243,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 1,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -212,8 +297,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 2,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -247,8 +349,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 1,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -282,8 +401,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 1,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -317,8 +453,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 1,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -352,8 +505,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 1,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -389,8 +559,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 2,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -427,8 +614,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 4,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -465,8 +669,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 4,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -505,8 +726,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 8,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -543,8 +781,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 4,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -581,8 +836,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 4,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -621,8 +893,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 8,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -659,8 +948,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 4,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -697,8 +1003,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 4,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -735,8 +1058,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 4,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -773,8 +1113,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 4,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -813,8 +1170,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 8,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -855,8 +1229,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 8,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -897,8 +1288,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 8,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -941,8 +1349,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 16,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -983,8 +1408,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 8,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -1025,8 +1467,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 8,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -1069,8 +1528,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 16,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -1111,8 +1587,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 8,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -1153,8 +1646,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 8,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -1195,8 +1705,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 8,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -1237,8 +1764,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 8,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -1281,8 +1825,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 16,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -1319,8 +1880,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 4,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -1357,8 +1935,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 4,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -1397,8 +1992,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 8,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -1435,8 +2047,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 4,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -1473,8 +2102,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 4,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -1513,8 +2159,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 8,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -1551,8 +2214,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 4,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -1589,8 +2269,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 4,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -1627,8 +2324,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 4,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -1665,8 +2379,25 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 4,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     },
     {
       "code": "TK",
@@ -1705,18 +2436,49 @@
         "Source product included a trailing availability marker."
       ],
       "duplicateSourceRows": 8,
-      "coatingScheduleRef": "",
-      "coatingOptions": []
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     }
   ],
   "arCoatings": [
     {
-      "notes": "This product is outsourced and will take additional processing time.",
-      "name": "No Reflection Coating",
+      "code": "SPS",
+      "name": "Super Power Shield",
       "brandFamily": "Tokai AR Coatings",
-      "price": 89,
+      "price": 0,
+      "sourceSchedule": "P01",
+      "unresolved": false,
+      "notes": "Price sourced from COT schedule P01.",
       "recommended": false,
-      "outsourced": true
+      "outsourced": false
+    },
+    {
+      "code": "TBC",
+      "name": "Technical Blue Cut",
+      "brandFamily": "Tokai AR Coatings",
+      "price": 0,
+      "sourceSchedule": "P01",
+      "unresolved": false,
+      "notes": "Price sourced from COT schedule P01.",
+      "recommended": false,
+      "outsourced": false
     }
   ],
   "addOnSections": [
@@ -1892,17 +2654,18 @@
   ],
   "report": {
     "sourceFiles": [
-      "/Users/jimday/Documents/artisan-site/private-source/price-lists/m5-tk-b5-s5-y5raw.xlsx",
-      "/Users/jimday/Documents/artisan-site/private-source/portal/lookup_docs/Lookup.xlsx",
-      "/Users/jimday/Documents/artisan-site/private-source/portal/lookup_docs/Lookup_Mat.xlsx",
-      "/Users/jimday/Documents/artisan-site/private-source/price-lists/colors.txt",
-      "/Users/jimday/Documents/artisan-site/private-source/portal/lookup_docs/Lookup_AR.xlsx"
+      "/Users/jimday/Documents/GitHub/artisan-site/private-source/price-lists/m5-tk-b5-s5-y5raw.xlsx",
+      "/Users/jimday/Documents/GitHub/artisan-site/private-source/portal/lookup_docs/Lookup.xlsx",
+      "/Users/jimday/Documents/GitHub/artisan-site/private-source/portal/lookup_docs/Lookup_Mat.xlsx",
+      "/Users/jimday/Documents/GitHub/artisan-site/private-source/price-lists/colors.txt",
+      "/Users/jimday/Documents/GitHub/artisan-site/private-source/portal/lookup_docs/Lookup_AR.xlsx",
+      "/Users/jimday/Documents/GitHub/artisan-site/private-source/pricing/generated/dvi-tk-pricing.json"
     ],
     "rowCount": 44,
     "rawSourceRowsProcessed": 406,
     "rowsExcludedMissingLookup": 168,
     "displayRowCount": 20,
-    "generatedAt": "2026-06-08T16:22:00.889Z",
+    "generatedAt": "2026-06-10T02:14:54.676Z",
     "rawColumns": [
       "PL",
       "Mat",
@@ -1989,7 +2752,8 @@
       "Uncut is calculated as Sphere minus Deduct.",
       "Duplicate normalized rows with identical prices are collapsed and retain their raw source names for expanded detail.",
       "TK pulled from mixed workbook rows where PL code is TK.",
-      "TK interactive AR list is restricted to Tokai AR coatings."
+      "TK interactive AR list is restricted to Tokai AR coatings.",
+      "AR coating prices are sourced from DVI COT schedules matched by Style + Material + Price List."
     ]
   }
 }

@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { BadgeCheck, CheckCircle2, Eye, Moon, ShieldCheck, Sparkles, SunMedium, Waves } from "lucide-react";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import { arTreatments, getArTreatment } from "../arData";
+import { arComparisonRows, arTreatments, getArTreatment, type ArTreatment } from "../arData";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
 
@@ -30,6 +31,8 @@ export default async function ArtisanArPage({ params }: ArPageProps) {
 
   if (!ar) notFound();
 
+  const comparison = arComparisonRows.find((row) => row.artisan === ar.name);
+
   return (
     <main className="min-h-screen bg-[#171311] text-white">
       <Header signUpHref={SIGNUP_URL} />
@@ -53,17 +56,24 @@ export default async function ArtisanArPage({ params }: ArPageProps) {
             <p className="mt-6 max-w-3xl text-lg leading-8 text-white/76 md:text-xl">
               {ar.overview}
             </p>
-            <a
-              href="mailto:sales@artisanlabnetwork.com?subject=Artisan%20AR%20Pricing%20Request"
-              className="mt-8 inline-flex rounded-full bg-[#d4c09a] px-7 py-3 text-sm font-semibold text-[#171311] transition hover:bg-[#e2cca2]"
-            >
-              Request Pricing
-            </a>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <a
+                href="mailto:sales@artisanlabnetwork.com?subject=Artisan%20AR%20Pricing%20Request"
+                className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[#d4c09a] px-7 py-3 text-sm font-semibold text-[#171311] transition hover:bg-[#e2cca2]"
+              >
+                Request Pricing
+                <Sparkles className="h-4 w-4" aria-hidden="true" />
+              </a>
+              <span className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/18 bg-white/10 px-5 text-sm font-semibold text-white">
+                <BadgeCheck className="h-4 w-4 text-[#d4c09a]" aria-hidden="true" />
+                {ar.warranty}
+              </span>
+            </div>
           </div>
 
-          <div className="relative rounded-[30px] border border-white/12 bg-white/[0.07] p-5 shadow-[0_30px_90px_rgba(0,0,0,0.3)] backdrop-blur-md">
+          <div className="relative rounded-[8px] border border-white/12 bg-white/[0.07] p-5 shadow-[0_30px_90px_rgba(0,0,0,0.3)] backdrop-blur-md">
             <div className="pointer-events-none absolute inset-x-8 top-8 h-px bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.8),transparent)]" />
-            <div className="flex min-h-56 items-center justify-center rounded-[24px] border border-white/10 bg-[#fbf8f3] p-7">
+            <div className="flex min-h-56 items-center justify-center rounded-[8px] border border-white/10 bg-[#fbf8f3] p-7">
               <Image
                 src={ar.logo}
                 alt={ar.name}
@@ -81,24 +91,26 @@ export default async function ArtisanArPage({ params }: ArPageProps) {
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">
-              Visual Clarity
+              Treatment Profile
             </p>
             <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">
-              A cleaner lens experience for everyday life.
+              Built for the patient conversation.
             </h2>
             <p className="mt-5 text-lg leading-8 text-[#62584d]">
-              Artisan AR treatments are built to help practices recommend lenses
-              with confidence: clear presentation, dependable performance, and a
-              premium optical experience patients can understand.
+              {ar.name} gives practices a specific recommendation path backed by
+              premium optics, clean cosmetics, backside UV protection, and a
+              simple {ar.warranty.toLowerCase()} message.
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {ar.benefits.map((benefit) => (
               <article
                 key={benefit}
-                className="rounded-[24px] border border-[#e1d4c2] bg-white p-6 shadow-[0_18px_48px_rgba(49,39,26,0.08)]"
+                className="rounded-[8px] border border-[#e1d4c2] bg-white p-6 shadow-[0_18px_48px_rgba(49,39,26,0.08)]"
               >
-                <div className="h-1.5 w-12 rounded-full bg-[#d4c09a]" />
+                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#1f1a17] text-[#d4c09a]">
+                  <BenefitIcon treatment={ar} />
+                </div>
                 <h3 className="mt-5 text-xl font-semibold">{benefit}</h3>
               </article>
             ))}
@@ -109,20 +121,23 @@ export default async function ArtisanArPage({ params }: ArPageProps) {
       <section data-theme="dark" className="relative overflow-hidden bg-[#171311] px-6 py-20 md:px-10 md:py-24">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(212,192,154,0.7),transparent)]" />
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-2">
-          <article className="rounded-[28px] border border-white/12 bg-white/[0.06] p-7 shadow-[0_22px_70px_rgba(0,0,0,0.2)] backdrop-blur-md">
+          <article className="rounded-[8px] border border-white/12 bg-white/[0.06] p-7 shadow-[0_22px_70px_rgba(0,0,0,0.2)] backdrop-blur-md">
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#d4c09a]">
-              Durability and Comfort
+              Performance Notes
             </p>
             <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">
-              Designed for real patient wear.
+              What sets {ar.name.replace("Artisan ", "")} apart.
             </h2>
-            <p className="mt-5 text-base leading-8 text-white/70">
-              Each Artisan AR option gives practices a clear recommendation path
-              for patients who expect lenses to look good, feel comfortable, and
-              hold up in daily use.
-            </p>
+            <ul className="mt-5 space-y-3 text-sm leading-7 text-white/72">
+              {ar.specs.map((item) => (
+                <li key={item} className="flex gap-3">
+                  <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-[#d4c09a]" aria-hidden="true" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
           </article>
-          <article className="rounded-[28px] border border-white/12 bg-white/[0.06] p-7 shadow-[0_22px_70px_rgba(0,0,0,0.2)] backdrop-blur-md">
+          <article className="rounded-[8px] border border-white/12 bg-white/[0.06] p-7 shadow-[0_22px_70px_rgba(0,0,0,0.2)] backdrop-blur-md">
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#d4c09a]">
               Best Fit
             </p>
@@ -138,8 +153,38 @@ export default async function ArtisanArPage({ params }: ArPageProps) {
         </div>
       </section>
 
+      {comparison ? (
+        <section data-theme="light" className="bg-[#fbf8f3] px-6 py-16 text-[#201a16] md:px-10 md:py-20">
+          <div className="mx-auto max-w-5xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">
+              Comparison Guide
+            </p>
+            <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">
+              Similar premium AR class.
+            </h2>
+            <div className="mt-8 grid gap-4 md:grid-cols-[0.7fr_1.3fr]">
+              <article className="rounded-[8px] border border-[#e1d4c2] bg-white p-6 shadow-[0_18px_48px_rgba(49,39,26,0.08)]">
+                <p className="text-sm font-semibold text-[#8a7654]">{comparison.positioning}</p>
+                <h3 className="mt-3 text-2xl font-semibold">{comparison.artisan}</h3>
+              </article>
+              <article className="rounded-[8px] border border-[#e1d4c2] bg-white p-6 shadow-[0_18px_48px_rgba(49,39,26,0.08)]">
+                <p className="text-sm font-semibold text-[#8a7654]">Comparable products</p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {comparison.peers.map((peer) => (
+                    <span key={peer} className="inline-flex items-center gap-2 rounded-full border border-[#d8c6a8] bg-[#fbf8f3] px-4 py-2 text-sm font-semibold text-[#3d352c]">
+                      <BadgeCheck className="h-4 w-4 text-[#8a7654]" aria-hidden="true" />
+                      {peer}
+                    </span>
+                  ))}
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       <section data-theme="light" className="bg-[#f5f1eb] px-6 py-16 text-center text-[#201a16] md:px-10 md:py-20">
-        <div className="mx-auto max-w-4xl rounded-[32px] border border-[#e1d4c2] bg-white p-8 shadow-[0_28px_70px_rgba(49,39,26,0.1)] md:p-12">
+        <div className="mx-auto max-w-4xl rounded-[8px] border border-[#e1d4c2] bg-white p-8 shadow-[0_28px_70px_rgba(49,39,26,0.1)] md:p-12">
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">
             Available Through Artisan
           </p>
@@ -162,4 +207,16 @@ export default async function ArtisanArPage({ params }: ArPageProps) {
       <Footer signUpHref={SIGNUP_URL} />
     </main>
   );
+}
+
+function BenefitIcon({ treatment }: { treatment: ArTreatment }) {
+  const className = "h-5 w-5";
+  const icons = {
+    moon: <Moon className={className} aria-hidden="true" />,
+    shield: <ShieldCheck className={className} aria-hidden="true" />,
+    blue: <Waves className={className} aria-hidden="true" />,
+    emerald: <Eye className={className} aria-hidden="true" />,
+  };
+
+  return icons[treatment.icon] ?? <SunMedium className={className} aria-hidden="true" />;
 }

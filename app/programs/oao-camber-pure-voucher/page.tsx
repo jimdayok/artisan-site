@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const VOUCHER_CODE = "SLOAO26";
 const ACCOUNT_URL = "https://newaccount.artisanlabnetwork.com";
-const OAO_LOGO_URL = "https://www.artisanslabs.com/files/oaologo.png";
+const OAO_LOGO_URL = "/oaologo.png";
 
 const offerItems = [
   "One complimentary Camber Pure progressive lens fit.",

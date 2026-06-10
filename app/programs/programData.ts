@@ -34,6 +34,9 @@ export type ProgramPageData = {
   arLogos?: {
     name: string;
     src: string;
+    slug: string;
+    summary: string;
+    bestFor: string;
   }[];
   detailsTitle: string;
   details: string[];
@@ -313,10 +316,34 @@ export const programs: ProgramPageData[] = [
       "Any eligible non-Neurolens product",
     ],
     arLogos: [
-      { name: "Artisan Armour", src: "/ar/armour.png" },
-      { name: "Artisan Azure", src: "/ar/azure.png" },
-      { name: "Artisan Emerald", src: "/ar/emerald.png" },
-      { name: "Artisan Nytopia", src: "/ar/nytopia.png" },
+      {
+        name: "Artisan Nytopia",
+        src: "/ar/nytopia.png",
+        slug: "nytopia",
+        summary: "Flagship ultra premium AR with targeted light wavelength manipulation for nighttime driving.",
+        bestFor: "Nighttime optics",
+      },
+      {
+        name: "Artisan Armour",
+        src: "/ar/armour.png",
+        slug: "armour",
+        summary: "Our strongest ultra premium AR treatment, built for durability and over 25,000 cleanings.",
+        bestFor: "Maximum durability",
+      },
+      {
+        name: "Artisan Azure",
+        src: "/ar/azure.png",
+        slug: "azure",
+        summary: "Blue light reflection and absorption with a refined front blue hue and minimal backside reflection.",
+        bestFor: "Blue light focus",
+      },
+      {
+        name: "Artisan Emerald",
+        src: "/ar/emerald.png",
+        slug: "emerald",
+        summary: "Premium everyday AR with best-in-class anti-reflectance, great cosmetics, and backside UV coating.",
+        bestFor: "Everyday premium AR",
+      },
     ],
     detailsTitle: "Requirements",
     details: [

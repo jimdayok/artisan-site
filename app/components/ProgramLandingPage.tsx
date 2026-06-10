@@ -256,18 +256,26 @@ function ArLogoCards({ program }: { program: ProgramPageData }) {
 
   return (
     <div className="mt-10">
-      <SectionHeading
-        eyebrow="Free Artisan AR Options"
-        title="Choose from Artisan AR treatments."
-        body="Choose from Artisan AR treatments on eligible non-Neurolens orders during the promotional period."
-      />
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <SectionHeading
+          eyebrow="Free Artisan AR Options"
+          title="Choose the AR treatment that fits the patient."
+          body="During the promotional period, eligible non-Neurolens orders can include Artisan AR at no AR cost. Use the treatment pages below to help your team match the coating to the patient conversation."
+        />
+        <Link
+          href="/artisan-ar"
+          className="inline-flex min-h-12 w-fit items-center justify-center rounded-full border border-[#d8c6a8] bg-white px-6 py-3 text-sm font-semibold text-[#201a16] shadow-[0_14px_34px_rgba(49,39,26,0.08)] transition hover:-translate-y-0.5 hover:border-[#d4c09a] hover:bg-[#d4c09a]"
+        >
+          View Full AR Portfolio
+        </Link>
+      </div>
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {program.arLogos.map((logo) => (
           <Link
-          key={logo.name}
-          href={`/artisan-ar/${logo.name.toLowerCase()}`}
-          className="group flex min-h-[260px] flex-col rounded-[24px] border border-[#e4d8c9] bg-white p-5 shadow-[0_18px_50px_rgba(49,39,26,0.08)] transition hover:-translate-y-1 hover:border-[#d4c09a]"
-        >
+            key={logo.name}
+            href={`/artisan-ar/${logo.slug}`}
+            className="group flex min-h-[340px] flex-col rounded-[8px] border border-[#e4d8c9] bg-white p-5 shadow-[0_18px_50px_rgba(49,39,26,0.08)] transition hover:-translate-y-1 hover:border-[#d4c09a]"
+          >
             <div className="flex h-28 items-center justify-center rounded-2xl bg-[#fbf8f3] px-4">
               <Image
                 src={logo.src}
@@ -282,13 +290,24 @@ function ArLogoCards({ program }: { program: ProgramPageData }) {
             </div>
             <h3 className="mt-4 text-2xl font-semibold text-[#201a16]">{logo.name}</h3>
             <p className="mt-2 flex-1 text-sm leading-6 text-[#62584d]">
-              Artisan AR treatment option for eligible non-Neurolens orders.
+              {logo.summary}
             </p>
+            <div className="mt-4 rounded-[8px] border border-[#eadfce] bg-[#fbf8f3] p-3">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8a7654]">
+                Best fit
+              </p>
+              <p className="mt-1 text-sm font-semibold text-[#201a16]">{logo.bestFor}</p>
+            </div>
             <span className="mt-5 inline-flex w-fit rounded-full border border-[#e1d4c2] bg-[#fbf8f3] px-4 py-2.5 text-sm font-semibold text-[#201a16] transition group-hover:border-[#d4c09a] group-hover:bg-[#d4c09a]">
-              Learn More
+              Open Treatment Page
             </span>
           </Link>
         ))}
+      </div>
+      <div className="mt-6 rounded-[8px] border border-[#d8c6a8] bg-white p-5 shadow-[0_18px_50px_rgba(49,39,26,0.06)]">
+        <p className="text-sm leading-7 text-[#62584d]">
+          Each Artisan AR option includes a 2 year warranty. Eligible promotion orders may use any Artisan AR treatment, including Nytopia, Armour, Azure, and Emerald, subject to program requirements.
+        </p>
       </div>
     </div>
   );

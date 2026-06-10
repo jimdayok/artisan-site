@@ -55,7 +55,7 @@ const PRACTICE_NAME_KEY = "artisan-new-lab-partner-practice-name-v1";
 const statusLabels: Record<SetupStatus, string> = {
   complete: "Complete",
   "not-started": "Not Started",
-  "not-applicable": "Does Not Apply",
+  "not-applicable": "N/A",
   skipped: "Skip",
 };
 
@@ -76,7 +76,7 @@ function safeRead<T>(key: string, fallback: T): T {
 
 function ResourceButton({ link }: { link: ResourceLink }) {
   const className =
-    "inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#d8c6a8] bg-white px-4 py-2 text-sm font-semibold text-[#1f1a17] shadow-sm transition hover:-translate-y-0.5 hover:border-[#b99355] hover:bg-[#fbf8f3]";
+    "inline-flex min-h-11 max-w-full items-center justify-center gap-2 rounded-full border border-[#d8c6a8] bg-white px-4 py-2 text-center text-sm font-semibold leading-5 text-[#1f1a17] shadow-sm transition hover:-translate-y-0.5 hover:border-[#b99355] hover:bg-[#fbf8f3]";
 
   if (link.href.startsWith("mailto:") || link.href.startsWith("tel:") || link.external) {
     return (
@@ -129,7 +129,7 @@ function StatusControls({
   };
 
   return (
-    <div className="w-full max-w-xl rounded-[8px] border border-[#d8c6a8] bg-[#fbf8f3]/90 p-2 shadow-[0_12px_34px_rgba(49,39,26,0.08)] xl:w-auto">
+    <div className="w-full max-w-xl rounded-[8px] border border-[#d8c6a8] bg-[#fbf8f3]/90 p-2 shadow-[0_12px_34px_rgba(49,39,26,0.08)] xl:w-[280px]">
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
       {statuses.map((option) => (
         <button
@@ -139,7 +139,7 @@ function StatusControls({
           title={status === option ? "Click again to undo" : statusHelp[option]}
           onClick={() => setStatus(sectionId, status === option ? "not-started" : option)}
           className={cx(
-            "group inline-flex min-h-12 items-center justify-center gap-2 rounded-[6px] border px-3 text-sm font-bold transition",
+            "group inline-flex min-h-12 min-w-0 items-center justify-center gap-1.5 rounded-[6px] border px-2 text-xs font-bold leading-tight transition sm:text-[11px] xl:text-xs",
             status === option && option === "complete" && "border-[#86b889] bg-[#e6f3e1] text-[#24562d] shadow-sm",
             status === option && option === "skipped" && "border-[#d3cec7] bg-[#ebe7e1] text-[#625b53] shadow-sm",
             status === option && option === "not-applicable" && "border-[#d3cec7] bg-[#ebe7e1] text-[#625b53] shadow-sm line-through decoration-[#8c8a86]",
@@ -147,9 +147,9 @@ function StatusControls({
           )}
         >
           <StatusIcon status={option} />
-          <span>{statusLabels[option]}</span>
+          <span className="min-w-0 whitespace-normal text-center">{statusLabels[option]}</span>
           {status === option ? (
-            <span className="rounded-full bg-white/70 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-[#716b63] no-underline opacity-0 transition group-hover:opacity-100">
+            <span className="hidden rounded-full bg-white/70 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-[#716b63] no-underline opacity-0 transition group-hover:opacity-100 2xl:inline">
               Undo
             </span>
           ) : null}
@@ -272,10 +272,10 @@ function LabSection({ selectedLab, setSelectedLab }: { selectedLab: LabId; setSe
           <div className="relative h-72 lg:h-full">
             <Image src={activeLab.image} alt={`${activeLab.name} lab`} fill sizes="(min-width: 1024px) 44vw, 100vw" className="object-cover" />
           </div>
-          <div className="p-5 md:p-7">
+          <div className="min-w-0 p-5 md:p-7">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8a7654]">Lab Profile</p>
             <h3 className="mt-2 text-3xl font-semibold tracking-tight text-[#1f1a17]">{activeLab.name}</h3>
-            <dl className="mt-6 grid gap-4 sm:grid-cols-2">
+            <dl className="mt-6 grid gap-3 sm:grid-cols-2">
               {[
                 ["Phone", activeLab.phone, activeLab.phoneHref],
                 ["Email", activeLab.email, `mailto:${activeLab.email}`],
@@ -283,9 +283,9 @@ function LabSection({ selectedLab, setSelectedLab }: { selectedLab: LabId; setSe
                 ["Mailing / Shipping Address", activeLab.address],
                 ["Your ALN Representative", activeLab.representative],
               ].map(([label, value, href]) => (
-                <div key={label} className="rounded-[8px] bg-[#fbf8f3] p-4">
-                  <dt className="text-xs font-bold uppercase tracking-[0.18em] text-[#8a7654]">{label}</dt>
-                  <dd className="mt-2 text-sm font-semibold leading-6 text-[#1f1a17]">
+                <div key={label} className="min-w-0 rounded-[8px] bg-[#fbf8f3] p-4">
+                  <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8a7654] sm:text-xs">{label}</dt>
+                  <dd className="mt-2 break-words text-sm font-semibold leading-6 text-[#1f1a17]">
                     {href ? <a href={href} className="hover:underline">{value}</a> : value}
                   </dd>
                 </div>
@@ -305,13 +305,13 @@ function LabSection({ selectedLab, setSelectedLab }: { selectedLab: LabId; setSe
 function PortalSection() {
   return (
     <div className="mt-6 space-y-6">
-      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
         {portalLoginSteps.map((step, index) => (
           <article key={step.title} className="overflow-hidden rounded-[8px] border border-[#d8c6a8] bg-[#fbf8f3]">
             <PortalMockup step={index + 1} title={step.title} />
             <div className="p-4">
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#8a7654]">Step {index + 1}</p>
-              <h3 className="mt-2 text-base font-semibold text-[#1f1a17]">{step.title}</h3>
+              <h3 className="mt-2 text-base font-semibold leading-5 text-[#1f1a17]">{step.title}</h3>
               <p className="mt-2 text-sm leading-6 text-[#625b53]">{step.detail}</p>
             </div>
           </article>
@@ -344,10 +344,10 @@ function PortalMockup({ step, title }: { step: number; title: string }) {
   return (
     <div className="h-36 bg-[#171311] p-4 text-white">
       <div className="flex items-center justify-between border-b border-white/15 pb-3">
-        <span className="font-serif text-lg italic text-[#d4c09a]">Artisan</span>
-        <div className="flex gap-1.5">
+        <span className="font-serif text-base italic text-[#d4c09a]">Artisan</span>
+        <div className="flex min-w-0 gap-1">
           {["Labs", "Resources", "Portal"].map((item) => (
-            <span key={item} className={cx("rounded-full px-2 py-1 text-[10px] font-bold", step === 2 && item === "Portal" ? "bg-[#d4c09a] text-[#171311]" : "bg-white/10")}>
+            <span key={item} className={cx("rounded-full px-1.5 py-1 text-[9px] font-bold leading-none", step === 2 && item === "Portal" ? "bg-[#d4c09a] text-[#171311]" : "bg-white/10")}>
               {item}
             </span>
           ))}
@@ -355,7 +355,7 @@ function PortalMockup({ step, title }: { step: number; title: string }) {
       </div>
       <div className="mt-4 rounded-[8px] bg-white p-3 text-[#1f1a17] shadow-lg">
         <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8a7654]">Customer Portal</p>
-        <div className="mt-2 h-7 rounded border border-[#d8c6a8] bg-[#fbf8f3] px-2 py-1 text-xs font-semibold">
+        <div className="mt-2 h-7 truncate rounded border border-[#d8c6a8] bg-[#fbf8f3] px-2 py-1 text-xs font-semibold">
           {step === 3 ? "registered@email.com" : step === 4 ? "PIN: 123456" : title}
         </div>
       </div>
@@ -368,10 +368,10 @@ function PortalFeatureMockup({ label, title }: { label: string; title: string })
     <div className="h-44 bg-[#f4eee4] p-4">
       <div className="h-full rounded-[8px] border border-[#d8c6a8] bg-white p-4 shadow-sm">
         <div className="flex items-center justify-between">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#8a7654]">{label}</p>
+          <p className="truncate text-xs font-bold uppercase tracking-[0.18em] text-[#8a7654]">{label}</p>
           <span className="rounded-full bg-[#1f1a17] px-2 py-1 text-[10px] font-bold text-white">Portal</span>
         </div>
-        <p className="mt-3 text-base font-semibold text-[#1f1a17]">{title}</p>
+        <p className="mt-3 text-base font-semibold leading-5 text-[#1f1a17]">{title}</p>
         <div className="mt-4 grid grid-cols-4 gap-2">
           {[55, 72, 44, 86].map((height) => (
             <div key={height} className="flex h-14 items-end rounded bg-[#fbf8f3] px-1">
@@ -592,7 +592,7 @@ function ProductComparisonGuide({
             Generate a customer-ready crosswalk from Comparisons.xlsx. The guide only includes the brands selected above and adds placeholders when comparison data is not available yet.
           </p>
         </div>
-        <label className="grid min-w-64 gap-2 text-sm font-semibold text-white">
+        <label className="grid w-full min-w-0 gap-2 text-sm font-semibold text-white lg:w-72">
           Customer name
           <input
             value={practiceName}
@@ -603,19 +603,19 @@ function ProductComparisonGuide({
         </label>
       </div>
       <div className="mt-5 flex flex-wrap gap-2">
-        <button type="button" onClick={() => setShowGuide(true)} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[#d4c09a] px-5 text-sm font-bold text-[#171311] transition hover:bg-[#e2cca2]">
+        <button type="button" onClick={() => setShowGuide(true)} className="inline-flex min-h-11 max-w-full items-center justify-center gap-2 rounded-full bg-[#d4c09a] px-5 text-center text-sm font-bold leading-5 text-[#171311] transition hover:bg-[#e2cca2]">
           <Check className="h-4 w-4" />
           Generate My Product Comparison Guide
         </button>
-        <button type="button" onClick={downloadGuide} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/18 bg-white/10 px-5 text-sm font-bold text-white transition hover:bg-white/16">
+        <button type="button" onClick={downloadGuide} className="inline-flex min-h-11 max-w-full items-center justify-center gap-2 rounded-full border border-white/18 bg-white/10 px-5 text-center text-sm font-bold leading-5 text-white transition hover:bg-white/16">
           <Download className="h-4 w-4" />
           Download Product Comparison Guide
         </button>
-        <button type="button" onClick={openPrintGuide} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/18 bg-white/10 px-5 text-sm font-bold text-white transition hover:bg-white/16">
+        <button type="button" onClick={openPrintGuide} className="inline-flex min-h-11 max-w-full items-center justify-center gap-2 rounded-full border border-white/18 bg-white/10 px-5 text-center text-sm font-bold leading-5 text-white transition hover:bg-white/16">
           <Printer className="h-4 w-4" />
           Export to PDF
         </button>
-        <button type="button" onClick={copyShare} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/18 bg-white/10 px-5 text-sm font-bold text-white transition hover:bg-white/16">
+        <button type="button" onClick={copyShare} className="inline-flex min-h-11 max-w-full items-center justify-center gap-2 rounded-full border border-white/18 bg-white/10 px-5 text-center text-sm font-bold leading-5 text-white transition hover:bg-white/16">
           <Copy className="h-4 w-4" />
           Copy/share with team
         </button>
@@ -633,7 +633,7 @@ function ProductComparisonGuide({
           <div className="p-5">
             {knownColumns.length ? (
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[680px] border-collapse text-sm">
+                <table className="w-full min-w-[680px] border-collapse text-sm leading-5">
                   <thead>
                     <tr>
                       <th className="border border-[#d8c6a8] bg-[#1f1a17] p-3 text-left text-white">Category</th>
@@ -645,9 +645,9 @@ function ProductComparisonGuide({
                   <tbody>
                     {productComparisonRows.map((row) => (
                       <tr key={row.category}>
-                        <th className="border border-[#d8c6a8] bg-white p-3 text-left font-bold">{row.category}</th>
+                        <th className="border border-[#d8c6a8] bg-white p-3 text-left font-bold leading-5">{row.category}</th>
                         {knownColumns.map((column) => (
-                          <td key={column.lensId} className="border border-[#d8c6a8] bg-white p-3">{row.values[column.lensId] || "Data coming soon"}</td>
+                          <td key={column.lensId} className="border border-[#d8c6a8] bg-white p-3 leading-5">{row.values[column.lensId] || "Data coming soon"}</td>
                         ))}
                       </tr>
                     ))}
@@ -664,7 +664,7 @@ function ProductComparisonGuide({
               </div>
             ) : null}
             <div className="mt-6 overflow-x-auto">
-              <table className="w-full min-w-[760px] border-collapse text-sm">
+              <table className="w-full min-w-[760px] border-collapse text-sm leading-5">
                 <thead>
                   <tr>
                     <th className="border border-[#d8c6a8] bg-[#1f1a17] p-3 text-left text-white">AR Need</th>
@@ -676,12 +676,12 @@ function ProductComparisonGuide({
                 <tbody>
                   {arComparisonRows.map((row) => (
                     <tr key={row.need}>
-                      <th className="border border-[#d8c6a8] bg-white p-3 text-left font-bold">
+                      <th className="border border-[#d8c6a8] bg-white p-3 text-left font-bold leading-5">
                         {row.need}
                         <span className="mt-1 block text-xs uppercase tracking-[0.14em] text-[#8a7654]">Category {row.category}</span>
                       </th>
                       {arComparisonColumns.map((column) => (
-                        <td key={column} className="border border-[#d8c6a8] bg-white p-3">{row.values[column] || "—"}</td>
+                        <td key={column} className="border border-[#d8c6a8] bg-white p-3 leading-5">{row.values[column] || "—"}</td>
                       ))}
                     </tr>
                   ))}
@@ -791,7 +791,7 @@ function LensSelection({
 
 function ResourceGrid({ resources }: { resources: TrainingResource[] }) {
   return (
-    <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+    <div className="mt-5 grid gap-3 md:grid-cols-2 2xl:grid-cols-3">
       {resources.map((resource) => (
         <ResourceCard key={`${resource.type}-${resource.label}`} resource={resource} />
       ))}
@@ -820,7 +820,7 @@ function ResourceCard({ resource }: { resource: TrainingResource }) {
                     : resource.label;
 
   return (
-    <article className="rounded-[8px] border border-[#d8c6a8] bg-white p-4">
+    <article className="min-w-0 rounded-[8px] border border-[#d8c6a8] bg-white p-4">
       <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#8a7654]">{resource.type}</p>
       <h4 className="mt-2 text-base font-semibold leading-6 text-[#1f1a17]">{resource.label}</h4>
       <p className="mt-2 text-sm leading-6 text-[#625b53]">{resource.description}</p>
@@ -1199,13 +1199,13 @@ function SetupSection({
       )}
     >
       <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
-        <div className="flex gap-4">
+        <div className="flex min-w-0 gap-4">
           <div className="grid h-12 w-12 shrink-0 place-items-center rounded-[8px] bg-[#1f1a17] text-[#d4c09a]">
             <Icon className="h-6 w-6" aria-hidden="true" />
           </div>
-          <div>
+          <div className="min-w-0">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8a7654]">{section.eyebrow}</p>
-            <h2 className={cx("mt-2 text-2xl font-semibold tracking-tight text-[#1f1a17] md:text-3xl", status === "not-applicable" && "line-through decoration-[#aaa39a]")}>
+            <h2 className={cx("mt-2 text-2xl font-semibold leading-tight tracking-tight text-[#1f1a17] md:text-3xl", status === "not-applicable" && "line-through decoration-[#aaa39a]")}>
               {section.title}
             </h2>
             <p className="mt-3 max-w-3xl text-sm leading-7 text-[#625b53] md:text-base">{section.summary}</p>
@@ -1381,7 +1381,7 @@ export default function NewLabPartnerHub() {
             </div>
             <div className="mt-6 grid gap-3">
               {["Who is my lab?", "How do I order?", "Where is pricing?", "Who do I call?"].map((item) => (
-                <div key={item} className="rounded-[8px] bg-white/8 p-4 text-sm font-semibold text-white/82">
+                <div key={item} className="rounded-[8px] bg-white/8 p-4 text-sm font-semibold leading-5 text-white/82">
                   {item}
                 </div>
               ))}
@@ -1393,15 +1393,15 @@ export default function NewLabPartnerHub() {
       <WelcomeCard />
 
       <section className="px-6 py-12 md:px-10 md:py-16">
-        <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[300px_1fr]">
+        <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)]">
           <ProgressNav statuses={statuses} activeSection={activeSection} setActiveSection={setActiveSection} />
           <div className="min-w-0 space-y-5">
             <MobileProgress statuses={statuses} activeSection={activeSection} setActiveSection={setActiveSection} />
             <div className="rounded-[8px] border border-[#d8c6a8]/70 bg-[#fbf8f3] p-5">
               <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div>
+                <div className="min-w-0">
                   <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8a7654]">Activation Checklist</p>
-                  <h2 className="mt-2 text-3xl font-semibold tracking-tight text-[#1f1a17]">Complete only what applies.</h2>
+                  <h2 className="mt-2 text-3xl font-semibold leading-tight tracking-tight text-[#1f1a17]">Complete only what applies.</h2>
                 </div>
                 <button type="button" onClick={resetAll} className="inline-flex min-h-11 w-fit items-center gap-2 rounded-full bg-[#1f1a17] px-4 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-[#d4c09a] hover:text-[#171311]">
                   <RotateCcw className="h-4 w-4" aria-hidden="true" />

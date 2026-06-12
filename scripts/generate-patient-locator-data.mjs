@@ -1,22 +1,13 @@
 import ExcelJS from "exceljs";
-import JSZip from "jszip";
-import { XMLParser } from "fast-xml-parser";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 const SOURCE = path.join(process.cwd(), "private-source/portal/location_data.xlsx");
-const ACCOUNT_SOURCES = [
-  path.join(process.cwd(), "private-source/portal/acct_data_1.xlsx"),
-  path.join(process.cwd(), "private-source/portal/acct_data_2.xlsx"),
-  path.join(process.cwd(), "private-source/portal/acct_data_3.xlsx"),
-];
+const ACCOUNT_SOURCE = path.join(
+  process.cwd(),
+  "private-site/portal/portal_export.json"
+);
 const OUTPUT = path.join(process.cwd(), "lib/patient-locator/practices.ts");
-const xmlParser = new XMLParser({
-  ignoreAttributes: false,
-  attributeNamePrefix: "",
-  textNodeName: "text",
-  removeNSPrefix: true,
-});
 
 const labNamePattern = /\b(artisan labs?|artisan lab network|pacific artisan|peak artisan|pike artisan|laborator(?:y|ies)| optical lab| lab\b)\b/i;
 
@@ -34,66 +25,27 @@ function normalizeYes(value) {
   return /^yes$/i.test(cellText(value));
 }
 
-function asArray(value) {
-  if (!value) return [];
-  return Array.isArray(value) ? value : [value];
-}
-
-function inlineText(value) {
-  if (!value) return "";
-  const direct = value.t;
-  if (typeof direct === "string" || typeof direct === "number") return String(direct).trim();
-  if (direct?.text) return String(direct.text).trim();
-  return asArray(value.r)
-    .map((run) => (typeof run.t === "string" ? run.t : run.t?.text ?? ""))
-    .join("")
-    .trim();
-}
-
 function accountFlagValue(current, candidate) {
   return current || candidate;
 }
 
-async function readAccountFlags(filePath) {
-  const zip = await JSZip.loadAsync(await readFile(filePath));
-  const sheetXml = await zip.file("xl/worksheets/sheet1.xml")?.async("text");
-  if (!sheetXml) return [];
-
-  const worksheet = xmlParser.parse(sheetXml).worksheet;
-  const rows = asArray(worksheet?.sheetData?.row);
-  const values = rows.map((row) =>
-    asArray(row.c).map((cell) => {
-      if (cell.t === "inlineStr") return inlineText(cell.is);
-      if (cell.v !== undefined) return cellText(cell.v);
-      return "";
-    })
-  );
-  const headers = values[0] ?? [];
-
-  return values.slice(1).map((row) =>
-    Object.fromEntries(headers.map((header, columnIndex) => [header, row[columnIndex] ?? ""]))
-  );
-}
-
 const accountFlagsByAcctId = new Map();
-for (const accountSource of ACCOUNT_SOURCES) {
-  const rows = await readAccountFlags(accountSource);
-  for (const row of rows) {
-    const acctId = cellText(row["Acct ID"]);
-    if (!acctId) continue;
+const accountRows = JSON.parse(await readFile(ACCOUNT_SOURCE, "utf8"));
+for (const row of accountRows) {
+  const acctId = cellText(row["Intel[Acct ID]"]);
+  if (!acctId) continue;
 
-    const current = accountFlagsByAcctId.get(acctId) ?? {
-      tokai: false,
-      artisanPartner: false,
-    };
-    accountFlagsByAcctId.set(acctId, {
-      tokai: accountFlagValue(current.tokai, normalizeYes(row["Tokai Usage"])),
-      artisanPartner: accountFlagValue(
-        current.artisanPartner,
-        cellText(row["Last Division"]).toUpperCase() === "PART"
-      ),
-    });
-  }
+  const current = accountFlagsByAcctId.get(acctId) ?? {
+    tokai: false,
+    artisanPartner: false,
+  };
+  accountFlagsByAcctId.set(acctId, {
+    tokai: accountFlagValue(current.tokai, normalizeYes(row["[tokai_usage]"])),
+    artisanPartner: accountFlagValue(
+      current.artisanPartner,
+      cellText(row["[division]"]).toUpperCase() === "PART"
+    ),
+  });
 }
 
 function cleanWebsite(value) {

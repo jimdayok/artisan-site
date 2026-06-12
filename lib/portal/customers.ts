@@ -42,17 +42,6 @@ export type PortalCustomer = {
   detectedCustomerTypeCodes?: string[];
 };
 
-type WorkbookAccessRecord = {
-  email: string;
-  accountNumber: string;
-  practiceName: string;
-  customerTypeCode?: string;
-  customerTypeLabel?: string;
-  detectedCustomerTypeCodes?: string[];
-  allowedPriceLists?: string[];
-  portalSections?: string[];
-};
-
 type DashboardV1AccountIndexRecord = {
   account_id?: string;
   business_name?: string;
@@ -93,12 +82,6 @@ function toPortalSections(value: string) {
     .filter(isPortalSection);
 }
 
-function toPortalSectionsFromList(values: string[] = []) {
-  return values
-    .map((section) => section.trim().toLowerCase())
-    .filter(isPortalSection);
-}
-
 function toPriceListCodesFromList(values: string[] = []) {
   return values
     .map((code) => canonicalPriceListCode(code))
@@ -111,23 +94,6 @@ function uniqueList<T extends string>(values: T[]) {
 
 function withGlobalPackageAccess(values: PriceListCode[]) {
   return uniqueList([...values, "M5", "Y5"]);
-}
-
-function getWorkbookAccessRecords() {
-  const filePath = path.join(
-    process.cwd(),
-    "private-source",
-    "portal",
-    "workbook-access.json"
-  );
-
-  if (!existsSync(filePath)) return [];
-
-  try {
-    return JSON.parse(readFileSync(filePath, "utf8")) as WorkbookAccessRecord[];
-  } catch {
-    return [];
-  }
 }
 
 function readJsonFile<T>(filePath: string): T | undefined {
@@ -234,50 +200,11 @@ const manualCustomerPortalAccess: PortalCustomerAccess[] = readPrivatePortalCsv(
       entry.portalSections.length > 0
   );
 
-const workbookCustomerPortalAccess: PortalCustomerAccess[] =
-  getWorkbookAccessRecords()
-    .map((entry) => {
-      const customerType = getPortalCustomerTypeInfo(
-        entry.customerTypeCode ?? ""
-      );
-      const mappedPriceList = customerType?.priceList;
-      const allowedPriceLists = mappedPriceList
-        ? withGlobalPackageAccess([mappedPriceList])
-        : withGlobalPackageAccess(toPriceListCodesFromList(entry.allowedPriceLists));
-
-      return {
-        email: entry.email?.trim().toLowerCase() ?? "",
-        accountNumber: entry.accountNumber?.trim() ?? "",
-        practiceName: entry.practiceName?.trim() ?? "",
-        allowedPriceLists,
-        portalSections: toPortalSectionsFromList(entry.portalSections),
-        customerTypeCode: customerType?.code ?? "",
-        customerTypeLabel: customerType?.label ?? "",
-        detectedCustomerTypeCodes: entry.detectedCustomerTypeCodes ?? [],
-      } satisfies PortalCustomerAccess;
-    })
-    .filter(
-      (entry) =>
-        entry.email &&
-        entry.accountNumber &&
-        entry.practiceName &&
-        entry.portalSections.length > 0
-    );
-
 const dashboardV1CustomerPortalAccess: PortalCustomerAccess[] =
   getDashboardV1AccessRecords();
 
 export const customerPortalAccess: PortalCustomerAccess[] = [
   ...dashboardV1CustomerPortalAccess,
-  ...workbookCustomerPortalAccess.filter(
-    (workbookEntry) =>
-      !dashboardV1CustomerPortalAccess.some(
-        (dashboardEntry) =>
-          dashboardEntry.email === workbookEntry.email &&
-          normalizeAccountNumber(dashboardEntry.accountNumber) ===
-            normalizeAccountNumber(workbookEntry.accountNumber)
-      )
-  ),
   ...manualCustomerPortalAccess.filter((manualEntry) => {
     const existsInDashboard = dashboardV1CustomerPortalAccess.some(
       (dashboardEntry) =>
@@ -285,13 +212,7 @@ export const customerPortalAccess: PortalCustomerAccess[] = [
         normalizeAccountNumber(dashboardEntry.accountNumber) ===
           normalizeAccountNumber(manualEntry.accountNumber)
     );
-    const existsInWorkbook = workbookCustomerPortalAccess.some(
-      (workbookEntry) =>
-        workbookEntry.email === manualEntry.email &&
-        normalizeAccountNumber(workbookEntry.accountNumber) ===
-          normalizeAccountNumber(manualEntry.accountNumber)
-    );
-    return !existsInDashboard && !existsInWorkbook;
+    return !existsInDashboard;
   }),
 ];
 

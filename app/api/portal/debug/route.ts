@@ -9,6 +9,8 @@ import {
   isPortalHostRequest,
   isLocalhostDevelopmentRequest,
 } from "@/lib/portal/auth";
+import { getPortalExportDiagnostics } from "@/lib/portal/portalExportData";
+import { getPortalWorkbookDiagnostics } from "@/lib/portal/userDataAccess";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -66,5 +68,9 @@ export async function GET(request: NextRequest) {
     usedHeaderOrLocalDevelopmentCookie: Boolean(detectedEmail),
     detectedHostnames: getRequestHostnames(request.headers),
     nonSensitiveHeaderNames: [...new Set(headerNames)],
+    portalData: {
+      performanceExport: getPortalExportDiagnostics(),
+      userAccessWorkbook: getPortalWorkbookDiagnostics(),
+    },
   });
 }

@@ -155,7 +155,7 @@ export default async function PortalPerformancePage() {
           <>
             <section className="mt-8">
               <p className="mb-5 text-sm font-semibold uppercase tracking-[0.22em] text-[#8b7650]">
-                Last month: {formatMonth(latestRecord.month)}
+                Latest period: {formatMonth(latestRecord.month)}
               </p>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
                 <StatCard

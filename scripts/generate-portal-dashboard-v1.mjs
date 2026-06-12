@@ -6,13 +6,9 @@ import { XMLParser } from "fast-xml-parser";
 
 const root = process.cwd();
 const portalDir = path.join(root, "private-source", "portal");
+const portalExportDir = path.join(root, "private-site", "portal");
 const defaultAccountInputCandidates = [
-  path.join(portalDir, "acct_data_1.xlsx"),
-  path.join(portalDir, "Acct_Data_1.xlsx"),
-  path.join(portalDir, "acct_data.xlsx"),
-  path.join(portalDir, "Acct_Data.xlsx"),
-  path.join(portalDir, "acct_data.csv"),
-  path.join(portalDir, "Acct_Data.csv"),
+  path.join(portalExportDir, "portal_export.json"),
 ];
 const defaultUserInputCandidates = [
   path.join(portalDir, "user_data.xlsx"),
@@ -20,10 +16,7 @@ const defaultUserInputCandidates = [
   path.join(portalDir, "user_data.csv"),
   path.join(portalDir, "User_Data.csv"),
 ];
-const defaultSupplementalAccountInputCandidates = [
-  path.join(portalDir, "acct_data_2.xlsx"),
-  path.join(portalDir, "acct_data_3.xlsx"),
-];
+const defaultSupplementalAccountInputCandidates = [];
 const outputBaseDir = path.join(portalDir, "dashboard-v1");
 const releasesDir = path.join(outputBaseDir, "releases");
 const currentDir = path.join(outputBaseDir, "current");
@@ -199,6 +192,66 @@ const ACCOUNT_HEADER_ALIASES = {
   "Data Refresh Date": ["Data Refresh Date", "Last Shipped Date (Global)"],
 };
 
+const POWER_BI_ACCOUNT_FIELDS = {
+  "Acct ID": "Intel[Acct ID]",
+  "Pipedrive ID": "Intel[Pipedrive ID]",
+  "Last Business Name": "Intel[Business Name]",
+  "Business Name": "Intel[Business Name]",
+  "All Account Numbers": "[all_account_numbers]",
+  "Last Full Address": "[full_address]",
+  "Last Division": "[division]",
+  "Latest Date Shipped": "[date_shipped]",
+  "Primary PAL Brand (Private Pay)": "[primary_pal_brand_private_pay]",
+  "Primary PAL Brand (VSP)": "[primary_pal_brand_vsp]",
+  "Last Lab Name": "[lab_name]",
+  "Last Phone Number": "[phone_number]",
+  "Last State": "[state]",
+  "Modern Pkg Usage": "[modern_pkg_usage]",
+  "Modern Frm Usage": "[modern_frm_usage]",
+  "ChemClip Usage": "[chemclip_usage]",
+  "SpecCheck Usage": "[speccheck_usage]",
+  "Tokai Usage": "[tokai_usage]",
+  "Previous Month Tier Rank by Acct ID": "[previous_month_tier_rank]",
+  "PPM Jobs": "[ppm_jobs]",
+  "PM Jobs": "[pm_jobs]",
+  "CM Jobs": "[cm_jobs]",
+  "PPM Sales": "[ppm_sales]",
+  "PM Sales": "[pm_sales]",
+  "CM Sales": "[cm_sales]",
+  "PPM NL Jobs": "[ppm_nl_jobs]",
+  "PM NL Jobs": "[pm_nl_jobs]",
+  "CM NL Jobs": "[cm_nl_jobs]",
+  "PPM NL SOW": "[ppm_nl_sow]",
+  "PM NL SOW": "[pm_nl_sow]",
+  "CM NL SOW": "[cm_nl_sow]",
+  "PPM SQL Jobs": "[ppm_sql_jobs]",
+  "PM SQL Jobs": "[pm_sql_jobs]",
+  "CM SQL Jobs": "[cm_sql_jobs]",
+  "PPM VSP Jobs": "[ppm_vsp_jobs]",
+  "PM VSP Jobs": "[pm_vsp_jobs]",
+  "CM VSP Jobs": "[cm_vsp_jobs]",
+  "PPM VSP SOW": "[ppm_vsp_sow]",
+  "PM VSP SOW": "[pm_vsp_sow]",
+  "CM VSP SOW": "[cm_vsp_sow]",
+  "Used Price Lists": "[used_price_lists]",
+  "PPM Lab Redo %": "[ppm_lab_redo_pct]",
+  "PM Lab Redo %": "[pm_lab_redo_pct]",
+  "CM Lab Redo %": "[cm_lab_redo_pct]",
+  "PPM Office Redo %": "[ppm_office_redo_pct]",
+  "PM Office Redo %": "[pm_office_redo_pct]",
+  "CM Office Redo %": "[cm_office_redo_pct]",
+  "PPM Warranty Redo %": "[ppm_warranty_redo_pct]",
+  "PM Warranty Redo %": "[pm_warranty_redo_pct]",
+  "CM Warranty Redo %": "[cm_warranty_redo_pct]",
+  "PPM Non-Adapt %": "[ppm_non_adapt_pct]",
+  "PM Non-Adapt %": "[pm_non_adapt_pct]",
+  "CM Non-Adapt %": "[cm_non_adapt_pct]",
+  "Is ARSQL26 Customer": "[is_arsql26_customer]",
+  "Is Enrolled in ARPMP26 Display": "[is_enrolled_arpmp26]",
+  "Is Enrolled in ARUTY26 Display": "[is_enrolled_aruty26]",
+  "Data Refresh Date": "[data_refresh_date]",
+};
+
 const USER_HEADER_ALIASES = {
   "Person - Name": ["Person - Name"],
   "Person - Organization": ["Person - Organization"],
@@ -320,6 +373,22 @@ function worksheetToRecords(worksheet, aliasMap) {
 
 async function readRows(inputFile, sheetName, aliasMap) {
   const ext = path.extname(inputFile).toLowerCase();
+  if (ext === ".json") {
+    const parsed = JSON.parse(readFileSync(inputFile, "utf8"));
+    if (!Array.isArray(parsed)) {
+      throw new Error(`Expected an array in ${path.relative(root, inputFile)}.`);
+    }
+    return parsed
+      .filter((row) => row && typeof row === "object" && !Array.isArray(row))
+      .map((row) =>
+        Object.fromEntries(
+          Object.entries(POWER_BI_ACCOUNT_FIELDS).map(([canonical, source]) => [
+            canonical,
+            row[source] ?? "",
+          ])
+        )
+      );
+  }
   if (ext === ".csv") {
     const workbook = new ExcelJS.Workbook();
     const worksheet = await workbook.csv.readFile(inputFile);
@@ -654,17 +723,21 @@ function mergeDuplicateRows(rows) {
     ])) {
       merged[column] = groupRows.reduce((total, row) => total + toNumber(row[column]), 0);
     }
-    merged["All Account Numbers"] = [...new Set(groupRows.map((row) => toText(row["All Account Numbers"])).filter(Boolean))].join(", ");
+    merged["All Account Numbers"] = [...new Set(
+      groupRows.flatMap((row) =>
+        toText(row["All Account Numbers"])
+          .split(",")
+          .map((value) => value.trim().replace(/\.0$/, ""))
+          .filter(Boolean)
+      )
+    )].join(", ");
     return merged;
   });
 }
 
 function sourceRank(sourceFile) {
   const base = path.basename(sourceFile).toLowerCase();
-  if (base === "acct_data_3.xlsx") return 40;
-  if (base === "acct_data_2.xlsx") return 35;
-  if (base === "acct_data_1.xlsx") return 30;
-  if (base === "acct_data.xlsx") return 25;
+  if (base === "portal_export.json") return 50;
   return 10;
 }
 
@@ -1219,7 +1292,24 @@ async function main() {
 
   const accountValidation = validateAccountRows(accountRows, args.allowDuplicateAcctId, args.ignoreEmptySummaryRows);
   const validRowsByReference = new Set(accountValidation.cleanedRows);
-  const normalizedAccountRows = mergeUnifiedAccountRows(accountSourceRows.filter((entry) => validRowsByReference.has(entry.row)));
+  const validAccountSourceRows = accountSourceRows.filter((entry) =>
+    validRowsByReference.has(entry.row)
+  );
+  const normalizedAccountRows =
+    accountSourcePaths.length === 1 &&
+    path.extname(accountSourcePaths[0]).toLowerCase() === ".json"
+      ? mergeDuplicateRows(validAccountSourceRows.map((entry) => entry.row)).map(
+          (row) => ({
+            ...row,
+            __source_files: [path.relative(root, accountSourcePaths[0])],
+            __field_precedence: Object.fromEntries(
+              Object.keys(row)
+                .filter((key) => key && !key.startsWith("__"))
+                .map((key) => [key, path.relative(root, accountSourcePaths[0])])
+            ),
+          })
+        )
+      : mergeUnifiedAccountRows(validAccountSourceRows);
 
   const classifiedAccounts = normalizedAccountRows.map(classifyAccount);
   const accountIds = new Set(classifiedAccounts.map((account) => account.account_id));
@@ -1311,7 +1401,9 @@ async function main() {
     data_dictionary: dataDictionary,
     field_precedence_documentation: [
       "Acct ID is the master key for all account intelligence records.",
-      "When duplicate fields are present, non-empty values from the most specific current customer intelligence feeds take precedence in this order: acct_data_3.xlsx, acct_data_2.xlsx, acct_data_1.xlsx, acct_data.xlsx.",
+      "Customer performance and account intelligence fields come from private-site/portal/portal_export.json.",
+      "Duplicate Acct ID rows are merged using the latest and most complete Power BI record while additive account metrics are combined.",
+      "Portal authorization and user-to-account access continue to come from private-source/portal/user_data.xlsx.",
       "Revenue fields are preserved only at account level: PPM Sales, PM Sales, and CM Sales.",
       "Product, material, specialty, program, reward, quality, and turnaround reporting uses counts, percentages, statuses, or timing fields only.",
     ],

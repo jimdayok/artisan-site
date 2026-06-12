@@ -6,7 +6,7 @@ import { XMLParser } from 'fast-xml-parser';
 const root = process.cwd();
 const portalDir = path.join(root, 'private-source', 'portal');
 const userPath = path.join(portalDir, 'user_data.xlsx');
-const accountPath = path.join(portalDir, 'acct_data.xlsx');
+const accountPath = path.join(root, 'private-site', 'portal', 'portal_export.json');
 const outputPath = path.join(portalDir, 'workbook-access.json');
 const workbookDataOutputPath = path.join(portalDir, 'workbook-data.json');
 const xmlParser = new XMLParser({
@@ -280,6 +280,72 @@ function parseAccounts(rows) {
     .filter((account) => account.accountNumber);
 }
 
+function readPortalExportAccountRows(filePath) {
+  if (!existsSync(filePath)) {
+    console.warn(`File not found: ${filePath}`);
+    return [];
+  }
+
+  const parsed = JSON.parse(readFileSync(filePath, 'utf8'));
+  if (!Array.isArray(parsed)) {
+    throw new Error(`Expected an array in ${filePath}`);
+  }
+
+  return parsed.flatMap((row) => {
+    const accountNumbers = toText(row['[all_account_numbers]'])
+      .split(',')
+      .map((value) => toAccountNumber(value))
+      .filter(Boolean);
+    const effectiveAccountNumbers =
+      accountNumbers.length > 0
+        ? accountNumbers
+        : [toAccountNumber(row['Intel[Acct ID]'])].filter(Boolean);
+
+    return effectiveAccountNumbers.map((accountNumber) => ({
+      'Account Name': row['Intel[Business Name]'],
+      'Last Account Number': accountNumber,
+      'Last Division': row['[division]'],
+      'Last Sales Rep': '',
+      'Last Shipped Date': row['[date_shipped]'],
+      'Primary PAL Brand (Private Pay)': row['[primary_pal_brand_private_pay]'],
+      'Primary PAL Brand (VSP)': row['[primary_pal_brand_vsp]'],
+      'Last Lab Name': row['[lab_name]'],
+      'Full Address': row['[full_address]'],
+      'Last Phone Number': row['[phone_number]'],
+      'Last State': row['[state]'],
+      'Last Zip Code': '',
+      'Modern Pkg Usage': row['[modern_pkg_usage]'],
+      'Modern Frm Usage': row['[modern_frm_usage]'],
+      'ChemClip Usage': row['[chemclip_usage]'],
+      'SpecCheck Usage': row['[speccheck_usage]'],
+      'Tokai Usage': row['[tokai_usage]'],
+      'CM/PM Tier': row['[previous_month_tier_rank]'],
+      'PPM Jobs': row['[ppm_jobs]'],
+      'PM Jobs': row['[pm_jobs]'],
+      'CM Jobs': row['[cm_jobs]'],
+      'PPM Sales': row['[ppm_sales]'],
+      'PM Sales': row['[pm_sales]'],
+      'CM Sales': row['[cm_sales]'],
+      'PPM NL Jobs': row['[ppm_nl_jobs]'],
+      'PM NL Jobs': row['[pm_nl_jobs]'],
+      'CM NL Jobs': row['[cm_nl_jobs]'],
+      'PM NL SOW': row['[pm_nl_sow]'],
+      'PPM NL SOW': row['[ppm_nl_sow]'],
+      'CM NL SOW': row['[cm_nl_sow]'],
+      'CM SQL Jobs': row['[cm_sql_jobs]'],
+      'PM SQL Jobs': row['[pm_sql_jobs]'],
+      'PPM SQL Jobs': row['[ppm_sql_jobs]'],
+      'PPM VSP Jobs': row['[ppm_vsp_jobs]'],
+      'PM VSP Jobs': row['[pm_vsp_jobs]'],
+      'CM VSP Jobs': row['[cm_vsp_jobs]'],
+      'PPM VSP SOW': row['[ppm_vsp_sow]'],
+      'PM VSP SOW': row['[pm_vsp_sow]'],
+      'CM VSP SOW': row['[cm_vsp_sow]'],
+      'Last Shipped Date (Global)': row['[data_refresh_date]'],
+    }));
+  });
+}
+
 console.log(`Reading user data from ${userPath}...`);
 const userRows = await readSheet(userPath, 'person list');
 if (!userRows.length) {
@@ -287,9 +353,9 @@ if (!userRows.length) {
 }
 
 console.log(`Reading account data from ${accountPath}...`);
-const accountRows = await readSheet(accountPath, 'Export');
+const accountRows = readPortalExportAccountRows(accountPath);
 if (!accountRows.length) {
-  console.warn(`No rows found in acct_data.xlsx. Expected file at ${accountPath}`);
+  console.warn(`No rows found in portal_export.json. Expected file at ${accountPath}`);
 }
 
 const people = parsePeople(userRows);

@@ -185,6 +185,7 @@ export function mergeAccountRows(rows: PortalWorkbookAccount[]) {
   const merged: PortalWorkbookAccount = {
     ...first,
     accountNumber: normalizeAccountNumber(first.accountNumber) || first.accountNumber,
+    allAccountNumbers: uniqueList(rows.flatMap((row) => row.allAccountNumbers)),
   };
 
   for (const field of SUM_FIELDS) {

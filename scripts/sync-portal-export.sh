@@ -45,13 +45,18 @@ cd "$REPO"
 npm run portal:generate-dashboard-v1:launch-safe
 npm run portal:bundle-dashboard-v1
 
-TEMP_INDEX="$(mktemp "$REPO/.git/portal-index.XXXXXX")"
+TEMP_INDEX="$(mktemp "/tmp/artisan-portal-index.XXXXXX")"
 rm -f "$TEMP_INDEX"
+echo "Preparing isolated Git index."
 GIT_INDEX_FILE="$TEMP_INDEX" git read-tree HEAD
+echo "Staging portal refresh."
 GIT_INDEX_FILE="$TEMP_INDEX" git add -- "$DEST_REL" "$BUNDLE_REL"
+echo "Committing portal refresh."
 GIT_INDEX_FILE="$TEMP_INDEX" git commit -m "Daily portal data refresh"
 
 # Keep the normal index aligned with the new commit without disturbing
 # unrelated staged files.
+echo "Aligning the working index."
 git add -- "$DEST_REL" "$BUNDLE_REL"
+echo "Pushing portal refresh."
 git push origin main

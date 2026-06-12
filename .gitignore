@@ -68,3 +68,7 @@ public/hero-vertical.mp4
 .playwright-cli/
 output/playwright/
 *.save
+
+.playwright-cli/
+output/playwright/
+*.save

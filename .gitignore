@@ -64,3 +64,7 @@ public/hero-vertical.mp4
 !private-source/portal/lookup_docs/Lookup.xlsx
 !private-source/portal/lookup_docs/Lookup_Mat.xlsx
 !private-source/portal/lookup_docs/Lookup_AR.xlsx
+
+.playwright-cli/
+output/playwright/
+*.save

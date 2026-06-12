@@ -42,11 +42,5 @@ npm run portal:generate-dashboard-v1:launch-safe
 npm run portal:bundle-dashboard-v1
 
 git add -- "$DEST_REL" "$BUNDLE_REL"
-
-if git diff --cached --quiet -- "$DEST_REL" "$BUNDLE_REL"; then
-  echo "No portal export changes to commit."
-  exit 0
-fi
-
 git commit -m "Daily portal data refresh" -- "$DEST_REL" "$BUNDLE_REL"
 git push origin main

@@ -65,3 +65,7 @@ public/hero-vertical.mp4
 .playwright-cli/
 output/playwright/
 *.save
+
+# Generated pricing/build artifacts
+tmp/pdfs/
+private-source/pricing/generated/

@@ -581,6 +581,584 @@
     },
     {
       "code": "TK",
+      "id": "tk-progressive-tokai-easyone-tokai-hi-index-1-60-clear-clear-108-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "Tokai EasyOne",
+      "rawProductNames": [
+        "TOKAI EASYONE *"
+      ],
+      "sourceCodes": [
+        "TK",
+        "H60"
+      ],
+      "materialRaw": "H60",
+      "material": "Hi-Index 1.60",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "CLR"
+      ],
+      "availableColors": [
+        "Clear"
+      ],
+      "colorBrand": "Clear",
+      "edgedPrice": 108,
+      "uncutDeduct": 8,
+      "uncutPrice": 100,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 1,
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokai-easyone-tokai-hi-index-1-60-clear-polarized-colors-123-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "Tokai EasyOne",
+      "rawProductNames": [
+        "TOKAI EASYONE *"
+      ],
+      "sourceCodes": [
+        "TK",
+        "H60"
+      ],
+      "materialRaw": "H60",
+      "material": "Hi-Index 1.60",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LBF"
+      ],
+      "availableColors": [
+        "Lbf"
+      ],
+      "colorBrand": "Polarized Colors",
+      "edgedPrice": 123,
+      "uncutDeduct": 8,
+      "uncutPrice": 115,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 1,
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokai-easyone-tokai-hi-index-1-60-photochromic-polarized-colors-168-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "Tokai EasyOne",
+      "rawProductNames": [
+        "TOKAI EASYONE *"
+      ],
+      "sourceCodes": [
+        "S60",
+        "TK"
+      ],
+      "materialRaw": "S60",
+      "material": "Hi-Index 1.60",
+      "materialColor": "Photochromic",
+      "colorRaw": [
+        "LTB",
+        "LTG"
+      ],
+      "availableColors": [
+        "Ltb",
+        "Ltg"
+      ],
+      "colorBrand": "Polarized Colors",
+      "edgedPrice": 168,
+      "uncutDeduct": 8,
+      "uncutPrice": 160,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 2,
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokai-easyone-tokai-hi-index-1-67-clear-clear-126-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "Tokai EasyOne",
+      "rawProductNames": [
+        "TOKAI EASYONE *"
+      ],
+      "sourceCodes": [
+        "TK",
+        "H67"
+      ],
+      "materialRaw": "H67",
+      "material": "Hi-Index 1.67",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "CLR"
+      ],
+      "availableColors": [
+        "Clear"
+      ],
+      "colorBrand": "Clear",
+      "edgedPrice": 126,
+      "uncutDeduct": 8,
+      "uncutPrice": 118,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 1,
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokai-easyone-tokai-hi-index-1-67-clear-polarized-colors-141-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "Tokai EasyOne",
+      "rawProductNames": [
+        "TOKAI EASYONE *"
+      ],
+      "sourceCodes": [
+        "TK",
+        "H67"
+      ],
+      "materialRaw": "H67",
+      "material": "Hi-Index 1.67",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LBF"
+      ],
+      "availableColors": [
+        "Lbf"
+      ],
+      "colorBrand": "Polarized Colors",
+      "edgedPrice": 141,
+      "uncutDeduct": 8,
+      "uncutPrice": 133,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 1,
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokai-easyone-tokai-hi-index-1-67-photochromic-polarized-colors-168-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "Tokai EasyOne",
+      "rawProductNames": [
+        "TOKAI EASYONE *"
+      ],
+      "sourceCodes": [
+        "S67",
+        "TK"
+      ],
+      "materialRaw": "S67",
+      "material": "Hi-Index 1.67",
+      "materialColor": "Photochromic",
+      "colorRaw": [
+        "LTB",
+        "LTG"
+      ],
+      "availableColors": [
+        "Ltb",
+        "Ltg"
+      ],
+      "colorBrand": "Polarized Colors",
+      "edgedPrice": 168,
+      "uncutDeduct": 8,
+      "uncutPrice": 160,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 2,
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokai-easyone-tokai-hi-index-1-70-clear-clear-126-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "Tokai EasyOne",
+      "rawProductNames": [
+        "TOKAI EASYONE *"
+      ],
+      "sourceCodes": [
+        "TK",
+        "H70"
+      ],
+      "materialRaw": "H70",
+      "material": "Hi-Index 1.70",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "CLR"
+      ],
+      "availableColors": [
+        "Clear"
+      ],
+      "colorBrand": "Clear",
+      "edgedPrice": 126,
+      "uncutDeduct": 8,
+      "uncutPrice": 118,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 1,
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokai-easyone-tokai-hi-index-1-70-clear-polarized-colors-141-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "Tokai EasyOne",
+      "rawProductNames": [
+        "TOKAI EASYONE *"
+      ],
+      "sourceCodes": [
+        "TK",
+        "H70"
+      ],
+      "materialRaw": "H70",
+      "material": "Hi-Index 1.70",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LBF"
+      ],
+      "availableColors": [
+        "Lbf"
+      ],
+      "colorBrand": "Polarized Colors",
+      "edgedPrice": 141,
+      "uncutDeduct": 8,
+      "uncutPrice": 133,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 1,
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokai-easyone-tokai-hi-index-1-76-clear-clear-171-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "Tokai EasyOne",
+      "rawProductNames": [
+        "TOKAI EASYONE *"
+      ],
+      "sourceCodes": [
+        "TK",
+        "H76"
+      ],
+      "materialRaw": "H76",
+      "material": "Hi-Index 1.76",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "CLR"
+      ],
+      "availableColors": [
+        "Clear"
+      ],
+      "colorBrand": "Clear",
+      "edgedPrice": 171,
+      "uncutDeduct": 8,
+      "uncutPrice": 163,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 1,
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokai-easyone-tokai-hi-index-1-76-clear-polarized-colors-186-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "Tokai EasyOne",
+      "rawProductNames": [
+        "TOKAI EASYONE *"
+      ],
+      "sourceCodes": [
+        "TK",
+        "H76"
+      ],
+      "materialRaw": "H76",
+      "material": "Hi-Index 1.76",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LBF"
+      ],
+      "availableColors": [
+        "Lbf"
+      ],
+      "colorBrand": "Polarized Colors",
+      "edgedPrice": 186,
+      "uncutDeduct": 8,
+      "uncutPrice": 178,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 1,
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
+    },
+    {
+      "code": "TK",
+      "id": "tk-progressive-tokai-easyone-tokai-s76-clear-polarized-colors-168-8",
+      "brand": "Tokai",
+      "designType": "Progressive",
+      "designStyle": "Tokai EasyOne",
+      "rawProductNames": [
+        "TOKAI EASYONE *"
+      ],
+      "sourceCodes": [
+        "S76",
+        "TK"
+      ],
+      "materialRaw": "S76",
+      "material": "S76",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LTB",
+        "LTG"
+      ],
+      "availableColors": [
+        "Ltb",
+        "Ltg"
+      ],
+      "colorBrand": "Polarized Colors",
+      "edgedPrice": 168,
+      "uncutDeduct": 8,
+      "uncutPrice": 160,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [
+        "Source product included a trailing availability marker."
+      ],
+      "duplicateSourceRows": 2,
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
+    },
+    {
+      "code": "TK",
       "id": "tk-progressive-tokaiselect-5x-tokai-hi-index-1-60-clear-clear-128-8",
       "brand": "Tokai",
       "designType": "Progressive",
@@ -2455,6 +3033,562 @@
           "unresolved": false
         }
       ]
+    },
+    {
+      "code": "TK",
+      "id": "tk-sv-tokai-as-sv-tokai-hi-index-1-60-clear-clear-104-8",
+      "brand": "Tokai",
+      "designType": "SV",
+      "designStyle": "Tokai AS SV",
+      "rawProductNames": [
+        "TOKAI AS SV"
+      ],
+      "sourceCodes": [
+        "TK",
+        "H60"
+      ],
+      "materialRaw": "H60",
+      "material": "Hi-Index 1.60",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "CLR"
+      ],
+      "availableColors": [
+        "Clear"
+      ],
+      "colorBrand": "Clear",
+      "edgedPrice": 104,
+      "uncutDeduct": 8,
+      "uncutPrice": 96,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [],
+      "duplicateSourceRows": 1,
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
+    },
+    {
+      "code": "TK",
+      "id": "tk-sv-tokai-as-sv-tokai-hi-index-1-60-clear-polarized-colors-119-8",
+      "brand": "Tokai",
+      "designType": "SV",
+      "designStyle": "Tokai AS SV",
+      "rawProductNames": [
+        "TOKAI AS SV"
+      ],
+      "sourceCodes": [
+        "TK",
+        "H60"
+      ],
+      "materialRaw": "H60",
+      "material": "Hi-Index 1.60",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LBF"
+      ],
+      "availableColors": [
+        "Lbf"
+      ],
+      "colorBrand": "Polarized Colors",
+      "edgedPrice": 119,
+      "uncutDeduct": 8,
+      "uncutPrice": 111,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [],
+      "duplicateSourceRows": 1,
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
+    },
+    {
+      "code": "TK",
+      "id": "tk-sv-tokai-as-sv-tokai-hi-index-1-60-photochromic-polarized-colors-164-8",
+      "brand": "Tokai",
+      "designType": "SV",
+      "designStyle": "Tokai AS SV",
+      "rawProductNames": [
+        "TOKAI AS SV"
+      ],
+      "sourceCodes": [
+        "S60",
+        "TK"
+      ],
+      "materialRaw": "S60",
+      "material": "Hi-Index 1.60",
+      "materialColor": "Photochromic",
+      "colorRaw": [
+        "LTB",
+        "LTG"
+      ],
+      "availableColors": [
+        "Ltb",
+        "Ltg"
+      ],
+      "colorBrand": "Polarized Colors",
+      "edgedPrice": 164,
+      "uncutDeduct": 8,
+      "uncutPrice": 156,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [],
+      "duplicateSourceRows": 2,
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
+    },
+    {
+      "code": "TK",
+      "id": "tk-sv-tokai-as-sv-tokai-hi-index-1-67-clear-clear-122-8",
+      "brand": "Tokai",
+      "designType": "SV",
+      "designStyle": "Tokai AS SV",
+      "rawProductNames": [
+        "TOKAI AS SV"
+      ],
+      "sourceCodes": [
+        "TK",
+        "H67"
+      ],
+      "materialRaw": "H67",
+      "material": "Hi-Index 1.67",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "CLR"
+      ],
+      "availableColors": [
+        "Clear"
+      ],
+      "colorBrand": "Clear",
+      "edgedPrice": 122,
+      "uncutDeduct": 8,
+      "uncutPrice": 114,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [],
+      "duplicateSourceRows": 1,
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
+    },
+    {
+      "code": "TK",
+      "id": "tk-sv-tokai-as-sv-tokai-hi-index-1-67-clear-polarized-colors-137-8",
+      "brand": "Tokai",
+      "designType": "SV",
+      "designStyle": "Tokai AS SV",
+      "rawProductNames": [
+        "TOKAI AS SV"
+      ],
+      "sourceCodes": [
+        "TK",
+        "H67"
+      ],
+      "materialRaw": "H67",
+      "material": "Hi-Index 1.67",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LBF"
+      ],
+      "availableColors": [
+        "Lbf"
+      ],
+      "colorBrand": "Polarized Colors",
+      "edgedPrice": 137,
+      "uncutDeduct": 8,
+      "uncutPrice": 129,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [],
+      "duplicateSourceRows": 1,
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
+    },
+    {
+      "code": "TK",
+      "id": "tk-sv-tokai-as-sv-tokai-hi-index-1-67-photochromic-polarized-colors-164-8",
+      "brand": "Tokai",
+      "designType": "SV",
+      "designStyle": "Tokai AS SV",
+      "rawProductNames": [
+        "TOKAI AS SV"
+      ],
+      "sourceCodes": [
+        "S67",
+        "TK"
+      ],
+      "materialRaw": "S67",
+      "material": "Hi-Index 1.67",
+      "materialColor": "Photochromic",
+      "colorRaw": [
+        "LTB",
+        "LTG"
+      ],
+      "availableColors": [
+        "Ltb",
+        "Ltg"
+      ],
+      "colorBrand": "Polarized Colors",
+      "edgedPrice": 164,
+      "uncutDeduct": 8,
+      "uncutPrice": 156,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [],
+      "duplicateSourceRows": 2,
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
+    },
+    {
+      "code": "TK",
+      "id": "tk-sv-tokai-as-sv-tokai-hi-index-1-70-clear-clear-122-8",
+      "brand": "Tokai",
+      "designType": "SV",
+      "designStyle": "Tokai AS SV",
+      "rawProductNames": [
+        "TOKAI AS SV"
+      ],
+      "sourceCodes": [
+        "TK",
+        "H70"
+      ],
+      "materialRaw": "H70",
+      "material": "Hi-Index 1.70",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "CLR"
+      ],
+      "availableColors": [
+        "Clear"
+      ],
+      "colorBrand": "Clear",
+      "edgedPrice": 122,
+      "uncutDeduct": 8,
+      "uncutPrice": 114,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [],
+      "duplicateSourceRows": 1,
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
+    },
+    {
+      "code": "TK",
+      "id": "tk-sv-tokai-as-sv-tokai-hi-index-1-70-clear-polarized-colors-137-8",
+      "brand": "Tokai",
+      "designType": "SV",
+      "designStyle": "Tokai AS SV",
+      "rawProductNames": [
+        "TOKAI AS SV"
+      ],
+      "sourceCodes": [
+        "TK",
+        "H70"
+      ],
+      "materialRaw": "H70",
+      "material": "Hi-Index 1.70",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LBF"
+      ],
+      "availableColors": [
+        "Lbf"
+      ],
+      "colorBrand": "Polarized Colors",
+      "edgedPrice": 137,
+      "uncutDeduct": 8,
+      "uncutPrice": 129,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [],
+      "duplicateSourceRows": 1,
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
+    },
+    {
+      "code": "TK",
+      "id": "tk-sv-tokai-as-sv-tokai-hi-index-1-76-clear-clear-167-8",
+      "brand": "Tokai",
+      "designType": "SV",
+      "designStyle": "Tokai AS SV",
+      "rawProductNames": [
+        "TOKAI AS SV"
+      ],
+      "sourceCodes": [
+        "TK",
+        "H76"
+      ],
+      "materialRaw": "H76",
+      "material": "Hi-Index 1.76",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "CLR"
+      ],
+      "availableColors": [
+        "Clear"
+      ],
+      "colorBrand": "Clear",
+      "edgedPrice": 167,
+      "uncutDeduct": 8,
+      "uncutPrice": 159,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [],
+      "duplicateSourceRows": 1,
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
+    },
+    {
+      "code": "TK",
+      "id": "tk-sv-tokai-as-sv-tokai-hi-index-1-76-clear-polarized-colors-182-8",
+      "brand": "Tokai",
+      "designType": "SV",
+      "designStyle": "Tokai AS SV",
+      "rawProductNames": [
+        "TOKAI AS SV"
+      ],
+      "sourceCodes": [
+        "TK",
+        "H76"
+      ],
+      "materialRaw": "H76",
+      "material": "Hi-Index 1.76",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LBF"
+      ],
+      "availableColors": [
+        "Lbf"
+      ],
+      "colorBrand": "Polarized Colors",
+      "edgedPrice": 182,
+      "uncutDeduct": 8,
+      "uncutPrice": 174,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [],
+      "duplicateSourceRows": 1,
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
+    },
+    {
+      "code": "TK",
+      "id": "tk-sv-tokai-as-sv-tokai-s76-clear-polarized-colors-164-8",
+      "brand": "Tokai",
+      "designType": "SV",
+      "designStyle": "Tokai AS SV",
+      "rawProductNames": [
+        "TOKAI AS SV"
+      ],
+      "sourceCodes": [
+        "S76",
+        "TK"
+      ],
+      "materialRaw": "S76",
+      "material": "S76",
+      "materialColor": "Clear",
+      "colorRaw": [
+        "LTB",
+        "LTG"
+      ],
+      "availableColors": [
+        "Ltb",
+        "Ltg"
+      ],
+      "colorBrand": "Polarized Colors",
+      "edgedPrice": 164,
+      "uncutDeduct": 8,
+      "uncutPrice": 156,
+      "recommended": false,
+      "outsourced": false,
+      "serviceNotes": [],
+      "duplicateSourceRows": 2,
+      "coatingScheduleRef": "P01",
+      "coatingOptions": [
+        {
+          "code": "SPS",
+          "name": "Super Power Shield",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        },
+        {
+          "code": "TBC",
+          "name": "Technical Blue Cut",
+          "brandFamily": "Tokai AR Coatings",
+          "price": 0,
+          "sourceSchedule": "P01",
+          "unresolved": false
+        }
+      ]
     }
   ],
   "arCoatings": [
@@ -2661,11 +3795,11 @@
       "/Users/jimday/Documents/GitHub/artisan-site/private-source/portal/lookup_docs/Lookup_AR.xlsx",
       "/Users/jimday/Documents/GitHub/artisan-site/private-source/pricing/generated/dvi-tk-pricing.json"
     ],
-    "rowCount": 44,
+    "rowCount": 66,
     "rawSourceRowsProcessed": 406,
-    "rowsExcludedMissingLookup": 168,
-    "displayRowCount": 20,
-    "generatedAt": "2026-06-10T02:14:54.676Z",
+    "rowsExcludedMissingLookup": 140,
+    "displayRowCount": 30,
+    "generatedAt": "2026-06-12T22:42:03.213Z",
     "rawColumns": [
       "PL",
       "Mat",
@@ -2713,8 +3847,6 @@
     "unmappedProducts": [
       "BI-AS *",
       "LARGO WS *",
-      "TOKAI AS SV",
-      "TOKAI EASYONE *",
       "TS 5X HM LG",
       "TS 5X HM LG *",
       "TS 5X TW",
@@ -2737,7 +3869,7 @@
     "missingCoatSchedules": [],
     "duplicatePriceConflictCount": 0,
     "duplicatePriceConflicts": [],
-    "colorVariantsCollapsedCount": 362,
+    "colorVariantsCollapsedCount": 340,
     "assumptions": [
       "Raw Style is the product/design key for Lookup.xlsx lenstyle.",
       "Rows with no lookup.xlsx product match are excluded from the customer-facing table.",

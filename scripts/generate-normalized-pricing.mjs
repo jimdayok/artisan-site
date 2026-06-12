@@ -15,13 +15,7 @@ const dashboardIndexPath = path.join(
   "current",
   "accounts_index.json"
 );
-const scopeConfigPath = path.join(root, "private-source", "pricing", "config", "pricing-scope.json");
-
-const canonicalMap = new Map([
-  ["G5", "G6"],
-  ["P5", "P6"],
-  ["A5", "A6"],
-]);
+const manifestPath = path.join(generatedDir, "pricing-manifest.json");
 
 const materialAddOnsByCode = {
   G6: [],
@@ -115,8 +109,7 @@ function normalizeArtisanDisplayStyle(styleRaw) {
 }
 
 function canonicalCode(code) {
-  const normalized = String(code ?? "").trim().toUpperCase();
-  return canonicalMap.get(normalized) ?? normalized;
+  return String(code ?? "").trim().toUpperCase();
 }
 
 function isBronzeOrBsRow(row) {
@@ -602,7 +595,6 @@ function dviRowsToGeneratedPayload(code, dviRows, lookupMap, arLookupMap) {
 
 async function readTargetCodes() {
   const targetCodes = new Set();
-  const ignoreCodes = new Set();
 
   if (existsSync(dashboardIndexPath)) {
     const index = await readJson(dashboardIndexPath);
@@ -614,21 +606,17 @@ async function readTargetCodes() {
     }
   }
 
-  if (existsSync(scopeConfigPath)) {
-    const scope = await readJson(scopeConfigPath);
-    for (const code of scope?.payAttention ?? []) {
+  if (existsSync(manifestPath)) {
+    const manifest = await readJson(manifestPath);
+    for (const code of manifest?.priceListCodesFound ?? []) {
       const normalized = canonicalCode(String(code || ""));
       if (normalized) targetCodes.add(normalized);
-    }
-    for (const code of scope?.ignore ?? []) {
-      const normalized = canonicalCode(String(code || ""));
-      if (normalized) ignoreCodes.add(normalized);
     }
   }
 
   return {
-    targetCodes: [...targetCodes].filter((code) => !ignoreCodes.has(code)).sort(),
-    ignoreCodes: [...ignoreCodes].sort(),
+    targetCodes: [...targetCodes].sort(),
+    ignoreCodes: [],
   };
 }
 
@@ -891,7 +879,7 @@ async function main() {
     `${JSON.stringify(
       {
         generatedAt: new Date().toISOString(),
-        legacyCanonicalMap: Object.fromEntries(canonicalMap),
+        legacyCanonicalMap: {},
         ignoredCodes: ignoreCodes,
         requestedTargetCodes: targetCodes,
         missingSourceCodes: targetCodes.filter((code) => {

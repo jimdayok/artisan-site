@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import {
+  getConfiguredDevelopmentAdminEmails,
   isLocalhostDevelopmentRequest,
   LOCAL_PORTAL_TEST_EMAIL_COOKIE,
 } from "@/lib/portal/auth";
@@ -19,10 +20,7 @@ function portalRedirect(request: NextRequest) {
 async function allowedLocalTestEmails() {
   const access = await loadPortalUserAccess();
   return new Set([
-    ...(process.env.PORTAL_ADMIN_EMAILS ?? "")
-      .split(",")
-      .map(normalizeEmail)
-      .filter(Boolean),
+    ...getConfiguredDevelopmentAdminEmails().map(normalizeEmail),
     ...access.usersByEmail.keys(),
   ]);
 }

@@ -2,7 +2,9 @@ import InteractivePriceListDashboard from "@/src/components/private-price/Intera
 import { getAuthorizedPriceListFromHeaders } from "@/lib/portal/priceListAccess";
 import { isLocalhostDevelopmentRequest } from "@/lib/portal/auth";
 import { canonicalPriceListCode } from "@/lib/portal/priceLists";
+import { isPortalAdminEmail } from "@/lib/portal/admin";
 import { loadGeneratedPriceListByCode } from "@/lib/pricing/loadGeneratedPriceList";
+import { customerFacingPriceList } from "@/lib/pricing/customerPriceList";
 import { headers } from "next/headers";
 import { forbidden } from "next/navigation";
 import { OnlinePriceListShell } from "./OnlinePriceListShell";
@@ -53,10 +55,14 @@ export default async function GeneratedInteractivePriceListPage({
 
   const generatedPriceList = await loadGeneratedPriceListByCode(normalizedCode);
   if (!generatedPriceList) {
+    const message = isPortalAdminEmail(access.authenticatedEmail)
+      ? `${normalizedCode} is assigned or registered, but no generated pricing rows are available. Check the price-list validation report.`
+      : "Pricing for this assigned list is temporarily unavailable. Please contact Artisan Lab Network support.";
     return (
-      <PriceListAccessMessage message={`${normalizedCode} interactive pricing data is not available yet.`} />
+      <PriceListAccessMessage message={message} />
     );
   }
+  const customerPriceList = customerFacingPriceList(generatedPriceList);
   const comparisonPriceList =
     normalizedCode === "B5" ? await loadGeneratedPriceListByCode("G6") : null;
 
@@ -70,12 +76,13 @@ export default async function GeneratedInteractivePriceListPage({
       priceList={access.priceList}
       accountPriceListCodes={accountPriceListCodes}
       previewAccountNumber={previewAccountNumber}
-      title={`${normalizedCode} Pricing`}
+      title={normalizedCode === "NL" ? "Neurolens Pricing" : `${normalizedCode} Pricing`}
       description="Interactive private pricing guide for assigned portal accounts."
     >
       <InteractivePriceListDashboard
-        priceList={generatedPriceList}
+        priceList={customerPriceList}
         comparisonPriceList={comparisonPriceList}
+        previewAccountNumber={previewAccountNumber}
       />
     </OnlinePriceListShell>
   );

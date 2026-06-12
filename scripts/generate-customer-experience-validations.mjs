@@ -8,13 +8,7 @@ const diagnosticsDir = path.join(rootDir, "private-source", "pricing", "generate
 
 mkdirSync(diagnosticsDir, { recursive: true });
 
-const canonical = (code) => {
-  const value = String(code || "").trim().toUpperCase();
-  if (value === "G5") return "G6";
-  if (value === "P5") return "P6";
-  if (value === "A5") return "A6";
-  return value;
-};
+const canonical = (code) => String(code || "").trim().toUpperCase();
 
 const readJson = (filePath, fallback) => {
   try {
@@ -28,11 +22,11 @@ const accounts = readJson(path.join(dashboardDir, "accounts_index.json"), []);
 
 const accessValidation = {
   generatedAt: new Date().toISOString(),
-  notes: ["Customer visible list should equal account effective lists plus globally granted M5/Y5."],
+  notes: ["Customer visible lists must exactly match account-assigned price lists."],
   rows: accounts.map((account) => {
     const assigned = Array.isArray(account.price_lists) ? account.price_lists : [];
     const effective = [...new Set(assigned.map(canonical).filter(Boolean))].sort();
-    const customerVisible = [...new Set([...effective, "M5", "Y5"])].sort();
+    const customerVisible = effective;
     return {
       account: String(account.account_id || "").trim(),
       businessName: String(account.business_name || "").trim(),

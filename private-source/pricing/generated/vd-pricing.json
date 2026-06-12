@@ -240,13 +240,14 @@
       "/Users/jimday/Documents/GitHub/artisan-site/private-source/portal/lookup_docs/Lookup.xlsx",
       "/Users/jimday/Documents/GitHub/artisan-site/private-source/portal/lookup_docs/Lookup_Mat.xlsx",
       "/Users/jimday/Documents/GitHub/artisan-site/private-source/price-lists/colors.txt",
-      "/Users/jimday/Documents/GitHub/artisan-site/private-source/portal/lookup_docs/Lookup_AR.xlsx"
+      "/Users/jimday/Documents/GitHub/artisan-site/private-source/portal/lookup_docs/Lookup_AR.xlsx",
+      "/Users/jimday/Documents/GitHub/artisan-site/private-source/pricing/generated/dvi-vd-pricing.json"
     ],
     "rowCount": 0,
     "rawSourceRowsProcessed": 0,
     "rowsExcludedMissingLookup": 0,
     "displayRowCount": 0,
-    "generatedAt": "2026-06-10T02:14:56.424Z",
+    "generatedAt": "2026-06-12T22:42:04.812Z",
     "rawColumns": [
       "PL",
       "Mat",
@@ -314,7 +315,8 @@
       "Uncut is calculated as Sphere minus Deduct.",
       "Duplicate normalized rows with identical prices are collapsed and retain their raw source names for expanded detail.",
       "VD rows are sourced from the same raw workbook family as standard designs.",
-      "VD excludes Artisan coatings; only non-Artisan options are surfaced."
+      "VD excludes Artisan coatings; only non-Artisan options are surfaced.",
+      "AR coating prices are sourced from DVI COT schedules matched by Style + Material + Price List."
     ]
   }
 }

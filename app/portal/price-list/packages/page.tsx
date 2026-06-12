@@ -1,6 +1,9 @@
-import { getAuthorizedPriceListForPage } from "@/lib/portal/priceListAccess";
-import { customerHasPortalSection } from "@/lib/portal/customers";
+import Link from "next/link";
+import { getAuthorizedPortalSectionForPage } from "@/lib/portal/priceListAccess";
+import { isPackagePriceListCode } from "@/lib/pricing/priceListCodes";
+import { canonicalPriceListCode } from "@/lib/portal/priceLists";
 import PriceListAccessMessage from "../PriceListAccessMessage";
+import GeneratedInteractivePriceListPage from "../GeneratedInteractivePriceListPage";
 import PackageQuoteBuilder from "../../../../src/components/private-price/PackageQuoteBuilder";
 import PricingCard from "../../../../src/components/private-price/PricingCard";
 import PricingHeader from "../../../../src/components/private-price/PricingHeader";
@@ -46,9 +49,9 @@ const packageProductMap: Record<string, string> = {
 export default async function PrivatePricePackagesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ product?: string }>;
+  searchParams: Promise<{ product?: string; code?: string }>;
 }) {
-  const access = await getAuthorizedPriceListForPage("B5");
+  const access = await getAuthorizedPortalSectionForPage("packages");
 
   if (access.status === "unauthenticated") {
     return (
@@ -56,21 +59,53 @@ export default async function PrivatePricePackagesPage({
     );
   }
 
-  if (
-    access.status !== "authorized" ||
-    !customerHasPortalSection(access.customer, "packages")
-  ) {
+  if (access.status !== "authorized") {
     return (
       <PriceListAccessMessage message="You do not have access to this price list." />
     );
   }
 
   const params = await searchParams;
+  const assignedPackageCodes = access.customer.priceLists
+    .map(canonicalPriceListCode)
+    .filter(isPackagePriceListCode)
+    .filter((code, index, values) => values.indexOf(code) === index)
+    .sort((a, b) => a.localeCompare(b));
+  const requestedCode = params.code ? canonicalPriceListCode(params.code) : "";
+  const selectedCode = requestedCode || assignedPackageCodes[0] || "";
+
+  if (!selectedCode || !assignedPackageCodes.includes(selectedCode)) {
+    return (
+      <PriceListAccessMessage message="No package price list is assigned to this account." />
+    );
+  }
+
+  if (selectedCode !== "B5") {
+    return <GeneratedInteractivePriceListPage code={selectedCode} />;
+  }
+
   const initialLensId = params.product ? packageProductMap[params.product] : undefined;
 
   return (
     <main className="min-h-screen bg-[#f4eee4] px-4 py-8 text-[#122033] md:px-8">
       <div className="mx-auto max-w-7xl">
+        {assignedPackageCodes.length > 1 ? (
+          <nav aria-label="Assigned package price lists" className="mb-5 flex flex-wrap gap-2">
+            {assignedPackageCodes.map((code) => (
+              <Link
+                key={code}
+                href={`/portal/price-list/packages?code=${encodeURIComponent(code)}`}
+                className={`inline-flex min-h-10 items-center rounded-full border px-4 text-sm font-semibold ${
+                  code === selectedCode
+                    ? "border-[#172a28] bg-[#172a28] text-white"
+                    : "border-[#d7c5a8] bg-white text-[#172a28] hover:bg-[#f8f1e6]"
+                }`}
+              >
+                {code} Package Pricing
+              </Link>
+            ))}
+          </nav>
+        ) : null}
         <PricingHeader
           eyebrow="Package Pricing"
           title={packageMeta.title}

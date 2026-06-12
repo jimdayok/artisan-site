@@ -34,6 +34,7 @@ import {
   hasProgramUsage,
 } from "@/lib/portal/accountInsights";
 import {
+  getConfiguredDevelopmentAdminEmails,
   getPortalAuthenticatedEmailFromHeaders,
   isLocalhostDevelopmentRequest,
 } from "@/lib/portal/auth";
@@ -52,7 +53,7 @@ import {
   loadPortalUserAccess,
 } from "@/lib/portal/userDataAccess";
 import { getPriceListByCode, type PortalPriceList } from "@/lib/portal/priceLists";
-import { canonicalPriceListCode } from "@/lib/portal/priceLists";
+import { isPackagePriceListCode } from "@/lib/pricing/priceListCodes";
 import {
   getPortalWorkbookProfileByEmail,
   getPortalWorkbookProfilesByEmail,
@@ -801,6 +802,7 @@ type PortalSectionCard = {
   href: string;
   cta: string;
   requiresPriceList?: string;
+  requiresPackagePriceList?: boolean;
 };
 
 const portalSectionCards: PortalSectionCard[] = [
@@ -810,7 +812,7 @@ const portalSectionCards: PortalSectionCard[] = [
     body: "View IOT Lens System package pricing and package quote tools.",
     href: "/portal/price-list/packages",
     cta: "Open Packages",
-    requiresPriceList: "B5",
+    requiresPackagePriceList: true,
   },
   {
     section: "calculator",
@@ -864,6 +866,9 @@ function visiblePortalSectionCards(customer: PortalCustomer) {
 
   return portalSectionCards.filter((card) => {
     if (!customerHasPortalSection(customer, card.section)) return false;
+    if (card.requiresPackagePriceList) {
+      return [...assignedCodes].some(isPackagePriceListCode);
+    }
     if (!card.requiresPriceList) return true;
 
     return assignedCodes.has(card.requiresPriceList);
@@ -3516,8 +3521,17 @@ export function PortalDashboardContent({
       label: `${normalizedCode} Price Sheet`,
       fileName: `Assigned ${normalizedCode} pricing`,
       r2Key: null,
-      onlineUrl: null,
+      onlineUrl: `/portal/price-list/${normalizedCode.toLowerCase()}`,
       configured: false,
+      generated: false,
+      package: isPackagePriceListCode(normalizedCode),
+      detected: false,
+      invalidOrUnknown: true,
+      generationStatus: "missing",
+      assignmentStatus: "assigned",
+      assignedAccountCount: 0,
+      visibleCustomerCount: 0,
+      rowCount: 0,
     } satisfies PortalPriceList & { configured: boolean };
   });
   const availablePortalSections = customer ? visiblePortalSectionCards(customer) : [];
@@ -3699,10 +3713,7 @@ export default async function PortalDashboard({
     if (isLocalhostDevelopment) {
       const workbookAccess = await loadPortalUserAccess();
       const emails = [
-        ...(process.env.PORTAL_ADMIN_EMAILS ?? "")
-          .split(",")
-          .map((email) => email.trim().toLowerCase())
-          .filter(Boolean),
+        ...getConfiguredDevelopmentAdminEmails(),
         ...workbookAccess.usersByEmail.keys(),
       ].filter((email, index, values) => values.indexOf(email) === index);
       return <LocalTestLoginPanel emails={emails} />;

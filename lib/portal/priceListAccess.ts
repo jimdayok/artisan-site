@@ -152,6 +152,9 @@ export async function getAuthorizedPortalSectionForPage(section: PortalSection) 
   }
 
   if (isPortalAdminEmail(authenticatedEmail)) {
+    const adminAccessiblePriceLists = [...new Set(priceLists.map((entry) => entry.code))]
+      .filter(Boolean)
+      .sort((a, b) => a.localeCompare(b));
     return {
       status: "authorized" as const,
       authenticatedEmail,
@@ -159,8 +162,8 @@ export async function getAuthorizedPortalSectionForPage(section: PortalSection) 
         accountNumber: "ADMIN",
         practiceName: "Portal Administrator",
         emails: [authenticatedEmail],
-        priceLists: ["P6", "G6", "A6", "B5", "S5", "VD", "M5", "Y5", "TK"],
-        allowedPriceLists: ["P6", "G6", "A6", "B5", "S5", "VD", "M5", "Y5", "TK"],
+        priceLists: adminAccessiblePriceLists,
+        allowedPriceLists: adminAccessiblePriceLists,
         portalSections: [
           "pricing",
           "packages",

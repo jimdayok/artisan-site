@@ -13,6 +13,7 @@ export type DashboardV1AdminManifest = {
   generated_at: string;
   data_refresh_date: string;
   row_count_output_accounts: number;
+  users_with_invalid_account_ids: number;
 };
 
 export type DashboardV1AdminAccount = {
@@ -27,6 +28,8 @@ export type DashboardV1AdminAccount = {
   data_refresh_date?: string;
   cm_sales?: number;
   cm_jobs?: number;
+  ppm_jpd?: number | null;
+  pm_jpd?: number | null;
   cm_jpd?: number | null;
   authorized_user_count?: number;
   price_lists?: string[];
@@ -131,10 +134,6 @@ function normalizePct(value: unknown) {
   const numeric = Number(value);
   if (!Number.isFinite(numeric)) return null;
   return numeric <= 1 ? numeric * 100 : numeric;
-}
-
-function calculateJpd(jobs: number) {
-  return jobs > 0 ? jobs / 22 : null;
 }
 
 function calculateSalesPerDay(sales: number, jobs: number, jobsPerDay: number | null) {
@@ -254,13 +253,20 @@ export function getDashboardV1AdminRows() {
     const ppmSales = Number(sales?.ppm ?? 0);
     const pmSales = Number(sales?.pm ?? 0);
     const cmSales = Number(sales?.cm ?? account.cm_sales ?? 0);
-    const ppmJpd = calculateJpd(ppmJobs);
-    const pmJpd = calculateJpd(pmJobs);
-    const explicitCmJpd =
-      typeof account.cm_jpd === "number" && Number.isFinite(account.cm_jpd)
-        ? account.cm_jpd
+    const explicitJpd = detail?.performance_rates?.jobs_per_day;
+    const ppmJpd =
+      Number(explicitJpd?.ppm ?? account.ppm_jpd) > 0
+        ? Number(explicitJpd?.ppm ?? account.ppm_jpd)
         : null;
-    const cmJpd = explicitCmJpd ?? calculateJpd(cmJobs);
+    const pmJpd =
+      Number(explicitJpd?.pm ?? account.pm_jpd) > 0
+        ? Number(explicitJpd?.pm ?? account.pm_jpd)
+        : null;
+    const explicitCmJpd =
+      Number(explicitJpd?.cm ?? account.cm_jpd) > 0
+        ? Number(explicitJpd?.cm ?? account.cm_jpd)
+        : null;
+    const cmJpd = explicitCmJpd;
     const cmBusinessDays = businessDaysInMonth(detail?.data_refresh_date || account.data_refresh_date || "");
     const cmProjectedJobs = projectedJobs(cmJpd, cmBusinessDays, cmJobs);
     const cmProjectedSales = projectedSales(cmSales, cmJobs, cmJpd, cmBusinessDays);

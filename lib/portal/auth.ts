@@ -88,6 +88,38 @@ export function getLocalDevelopmentPortalEmailFromHeaders(headers: Headers) {
   }
 }
 
+function getDevelopmentAdminOverrideEmail(headers: Headers) {
+  if (!isLocalhostDevelopmentRequest(headers)) return "";
+
+  const explicitEmail =
+    process.env.PORTAL_DEVELOPMENT_ADMIN_EMAIL?.trim().toLowerCase() ||
+    process.env.PORTAL_DEV_ADMIN_EMAIL?.trim().toLowerCase() ||
+    "";
+  if (explicitEmail) return explicitEmail;
+
+  const overrideEnabled = ["1", "true", "yes", "on"].includes(
+    process.env.PORTAL_DEV_ADMIN_OVERRIDE?.trim().toLowerCase() ?? ""
+  );
+  if (!overrideEnabled) return "";
+
+  return (
+    (process.env.PORTAL_ADMIN_EMAILS ?? "")
+      .split(",")
+      .map((email) => email.trim().toLowerCase())
+      .find(Boolean) ?? ""
+  );
+}
+
+export function getConfiguredDevelopmentAdminEmails() {
+  return [
+    process.env.PORTAL_DEVELOPMENT_ADMIN_EMAIL,
+    process.env.PORTAL_DEV_ADMIN_EMAIL,
+    ...(process.env.PORTAL_ADMIN_EMAILS ?? "").split(","),
+  ]
+    .map((email) => email?.trim().toLowerCase() ?? "")
+    .filter((email, index, values) => Boolean(email) && values.indexOf(email) === index);
+}
+
 export function getPortalAuthenticatedEmailFromHeaders(headers: Headers) {
   const trustedEmail =
     headers.get(TRUSTED_PORTAL_EMAIL_HEADER)?.trim().toLowerCase() ?? "";
@@ -106,7 +138,10 @@ export function getPortalAuthenticatedEmailFromHeaders(headers: Headers) {
 
   // Localhost-only explicit test login. Production requests never trust this
   // cookie; they must include Cloudflare Access' verified email header.
-  return getLocalDevelopmentPortalEmailFromHeaders(headers);
+  return (
+    getLocalDevelopmentPortalEmailFromHeaders(headers) ||
+    getDevelopmentAdminOverrideEmail(headers)
+  );
 }
 
 export function hasCloudflareAccessJwtCookie(headers: Headers) {

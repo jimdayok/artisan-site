@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { isPackagePriceListCode } from "@/lib/pricing/priceListCodes";
 import Link from "next/link";
 import { Fragment, useMemo, useState } from "react";
 import type {
@@ -9,6 +10,16 @@ import type {
   PriceListArCoating,
   PriceListPricingRow,
 } from "@/lib/pricing/types";
+import {
+  comparePriceDisplayBrand,
+  comparePriceDisplayCategory,
+  compareProgressiveTier,
+  priceDisplayCategory,
+  progressiveTierFor,
+  type PriceDisplayCategory,
+  type ProgressiveTier,
+} from "@/lib/pricing/displayTaxonomy";
+import GeneratedPriceListExportButton from "./GeneratedPriceListExportButton";
 
 type PriceMode = "edged" | "uncut";
 type ViewBy = "designType" | "brand";
@@ -26,6 +37,8 @@ type AvailabilityFilter = "all" | "yes" | "no";
 type DesignRow = {
   id: string;
   designType: string;
+  displayCategory: PriceDisplayCategory;
+  progressiveTier?: ProgressiveTier;
   brand: string;
   designStyle: string;
   rows: PriceListPricingRow[];
@@ -122,6 +135,8 @@ const titleByCode: Record<string, string> = {
   M5: "Artisan Frame System Pricing",
   Y5: "Artisan Safety System Pricing",
   TK: "Tokai Pricing",
+  VX: "Artisan VX Lens System Pricing",
+  NL: "Neurolens Pricing",
   VD: "VD Pricing",
 };
 
@@ -193,6 +208,16 @@ const metaByCode: Record<string, ProgramMeta> = {
     titleLogoSrc: "/tokai-logo.png",
     packageMark: "lens",
   },
+  VX: {
+    multiplePairEligible: false,
+    packageNotes: [
+      "ARTISAN LENS SYSTEMS: VX lens and coating package pricing.",
+      "Package prices and supported upgrades are shown from the assigned VX source list.",
+      "Products not listed are not available.",
+    ],
+    ruleNotes: [],
+    packageMark: "lens",
+  },
   VD: {
     multiplePairEligible: false,
     packageNotes: [
@@ -254,7 +279,7 @@ function PackageSystemMark({ variant }: { variant: NonNullable<ProgramMeta["pack
   return (
     <div className="relative flex min-h-[104px] w-full max-w-[360px] items-center justify-center overflow-hidden rounded-[2px] border border-[#d8c49b] bg-[#122033] px-6 py-5 text-center text-white shadow-[0_18px_48px_rgba(18,32,51,0.14)]">
       <Image
-        src="/rings.png"
+        src="/rings-transparent.png"
         alt=""
         width={500}
         height={500}
@@ -262,7 +287,7 @@ function PackageSystemMark({ variant }: { variant: NonNullable<ProgramMeta["pack
         aria-hidden="true"
       />
       <Image
-        src="/Rings 2.png"
+        src="/rings-transparent.png"
         alt=""
         width={500}
         height={500}
@@ -345,27 +370,8 @@ const iotDesignOrder = new Map(
   )
 );
 
-const brandDisplayOrder = new Map(
-  [
-    "Standard Designs",
-    "Artisan",
-    "Sequel by Newton",
-    "Varilux",
-    "Hoya",
-    "IOT",
-    "Tokai",
-    "Unity",
-    "Shamir",
-  ].map((value, index) => [value.toUpperCase(), index])
-);
-
 function compareBrandDisplayOrder(a: string, b: string) {
-  const aRank = brandDisplayOrder.get(a.trim().toUpperCase());
-  const bRank = brandDisplayOrder.get(b.trim().toUpperCase());
-  if (aRank !== undefined && bRank !== undefined) return aRank - bRank;
-  if (aRank !== undefined) return -1;
-  if (bRank !== undefined) return 1;
-  return compareText(a, b);
+  return comparePriceDisplayBrand(a, b);
 }
 
 function compareDesignStyleByBusinessOrder(a: DesignRow, b: DesignRow) {
@@ -389,7 +395,7 @@ function compareDesignStyleByBusinessOrder(a: DesignRow, b: DesignRow) {
 }
 
 const brandLogoMap: Record<string, string> = {
-  artisan: "/rings.png",
+  artisan: "/rings-transparent.png",
   hoya: "/hoya-logo.png",
   iot: "/iot-logo.png",
   shamir: "/shamir-logo.png",
@@ -401,6 +407,7 @@ const brandLogoMap: Record<string, string> = {
   sequel: "/logos/newton.svg",
   newton: "/logos/newton.svg",
   "sequel by newton": "/logos/newton.svg",
+  neurolens: "/logos/Neurolens_RGB_Primary-Brandmark_Black.png",
 };
 
 function brandLogoSrc(brand: string) {
@@ -512,6 +519,11 @@ function groupDesignRows(rows: PriceListPricingRow[], mode: PriceMode) {
       ({
         id: key.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
         designType: row.designType,
+        displayCategory: priceDisplayCategory(row),
+        progressiveTier:
+          priceDisplayCategory(row) === "Progressive Designs"
+            ? progressiveTierFor(row)
+            : undefined,
         brand: row.brand,
         designStyle: row.designStyle,
         rows: [],
@@ -540,8 +552,11 @@ function sortDesignRows(
   return [...rows].sort((a, b) => {
     if (!sort) {
       return (
-        compareText(a.designType, b.designType) ||
-        compareText(a.brand, b.brand) ||
+        comparePriceDisplayCategory(a.displayCategory, b.displayCategory) ||
+        (a.progressiveTier && b.progressiveTier
+          ? compareProgressiveTier(a.progressiveTier, b.progressiveTier)
+          : 0) ||
+        compareBrandDisplayOrder(a.brand, b.brand) ||
         compareDesignStyleByBusinessOrder(a, b)
       );
     }
@@ -631,14 +646,6 @@ function AvailabilitySelect({
   );
 }
 
-function formatGroupTitle(value: string) {
-  const map: Record<string, string> = {
-    SV: "Single Vision",
-    "ENHANCED SV": "Enhanced Single Vision",
-  };
-  return map[value.toUpperCase()] ?? value;
-}
-
 function normalizeDisplayName(value: string) {
   const raw = String(value ?? "").trim();
   if (!raw) return raw;
@@ -658,6 +665,8 @@ function isInternalMaterialCode(value: string) {
 
 function BrandGroupHeader({ label }: { label: string }) {
   const src = brandLogoSrc(label);
+  const normalizedLabel = label.trim().toUpperCase();
+  const isSquareCanvasLogo = ["HOYA", "IOT"].includes(normalizedLabel);
   const showTextLabel = ![
     "ARTISAN",
     "HOYA",
@@ -667,18 +676,36 @@ function BrandGroupHeader({ label }: { label: string }) {
     "NEWTON",
     "SEQUEL BY NEWTON",
     "VARILUX",
-  ].includes(label.trim().toUpperCase());
+    "NEUROLENS",
+    "IOT",
+  ].includes(normalizedLabel);
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex min-h-10 items-center gap-3">
       {src ? (
-        <Image
-          src={src}
-          alt={`${label} logo`}
-          width={120}
-          height={28}
-          className="h-7 w-auto object-contain"
-        />
+        isSquareCanvasLogo ? (
+          <span className="relative block h-10 w-36 overflow-hidden">
+            <Image
+              src={src}
+              alt={`${label} logo`}
+              width={160}
+              height={160}
+              className={`absolute left-1/2 top-1/2 h-36 w-36 -translate-x-1/2 object-contain ${
+                normalizedLabel === "HOYA"
+                  ? "-translate-y-[52%] scale-[1.35]"
+                  : "-translate-y-[53%] scale-110"
+              }`}
+            />
+          </span>
+        ) : (
+          <Image
+            src={src}
+            alt={`${label} logo`}
+            width={180}
+            height={44}
+            className="h-10 w-auto max-w-[190px] object-contain"
+          />
+        )
       ) : null}
       {showTextLabel ? (
         <span className="text-xs font-bold uppercase tracking-[0.16em] text-[#8a7654]">
@@ -692,15 +719,17 @@ function BrandGroupHeader({ label }: { label: string }) {
 export default function InteractivePriceListDashboard({
   priceList,
   comparisonPriceList,
+  previewAccountNumber,
 }: {
   priceList: GeneratedPriceListData;
   comparisonPriceList?: GeneratedPriceListData | null;
+  previewAccountNumber?: string;
 }) {
   const listCode = String(priceList.code ?? "").trim().toUpperCase();
-  const isPackageList = ["B5", "S5", "M5", "Y5"].includes(listCode);
+  const isPackageList = isPackagePriceListCode(listCode);
   const programTitle = resolveProgramTitle(listCode || "PRICING");
   const programMeta = resolveProgramMeta(listCode || "PRICING");
-  const [viewBy, setViewBy] = useState<ViewBy>("brand");
+  const [viewBy, setViewBy] = useState<ViewBy>("designType");
   const [designType, setDesignType] = useState("All");
   const [brand, setBrand] = useState("All");
   const [designStyle, setDesignStyle] = useState("All");
@@ -805,8 +834,11 @@ export default function InteractivePriceListDashboard({
   const groupedSections = useMemo(() => {
     const map = new Map<string, Map<string, DesignRow[]>>();
     for (const row of designRows) {
-      const top = viewBy === "designType" ? formatGroupTitle(row.designType) : row.brand;
-      const nested = viewBy === "designType" ? row.brand : formatGroupTitle(row.designType);
+      const top = viewBy === "designType" ? row.displayCategory : row.brand;
+      const nested =
+        viewBy === "designType"
+          ? `${row.progressiveTier ?? ""}|${row.brand}`
+          : `${row.displayCategory}|${row.progressiveTier ?? ""}`;
       if (!map.has(top)) map.set(top, new Map());
       const nestedMap = map.get(top)!;
       nestedMap.set(nested, [...(nestedMap.get(nested) ?? []), row]);
@@ -814,15 +846,45 @@ export default function InteractivePriceListDashboard({
 
     return [...map.entries()]
       .sort(([a], [b]) =>
-        viewBy === "brand" ? compareBrandDisplayOrder(a, b) : compareText(a, b)
+        viewBy === "brand"
+          ? compareBrandDisplayOrder(a, b)
+          : comparePriceDisplayCategory(
+              a as PriceDisplayCategory,
+              b as PriceDisplayCategory
+            )
       )
       .map(([section, nested]) => ({
         section,
         nestedGroups: [...nested.entries()]
-          .sort(([a], [b]) =>
-            viewBy === "brand" ? compareText(a, b) : compareBrandDisplayOrder(a, b)
-          )
-          .map(([label, rows]) => ({ label, rows })),
+          .map(([key, rows]) => {
+            const [first, second] = key.split("|");
+            return viewBy === "designType"
+              ? {
+                  label: second,
+                  tier: (first || undefined) as ProgressiveTier | undefined,
+                  category: section as PriceDisplayCategory,
+                  rows,
+                }
+              : {
+                  label: first,
+                  tier: (second || undefined) as ProgressiveTier | undefined,
+                  category: first as PriceDisplayCategory,
+                  rows,
+                };
+          })
+          .sort((a, b) => {
+            if (a.tier && b.tier) {
+              const tierComparison = compareProgressiveTier(a.tier, b.tier);
+              if (tierComparison) return tierComparison;
+            } else if (a.tier) {
+              return -1;
+            } else if (b.tier) {
+              return 1;
+            }
+            return viewBy === "designType"
+              ? compareBrandDisplayOrder(a.label, b.label)
+              : comparePriceDisplayCategory(a.category, b.category);
+          }),
       }));
   }, [designRows, viewBy]);
 
@@ -972,6 +1034,13 @@ export default function InteractivePriceListDashboard({
                 </button>
               ))}
             </div>
+            <div className="sm:col-span-2 sm:justify-self-end">
+              <GeneratedPriceListExportButton
+                code={listCode}
+                priceMode={priceMode}
+                previewAccountNumber={previewAccountNumber}
+              />
+            </div>
           </div>
         </div>
 
@@ -1061,10 +1130,23 @@ export default function InteractivePriceListDashboard({
                 )}
               </header>
               <div className="grid gap-2 p-3 md:p-3">
-                {section.nestedGroups.map((nested) => (
-                  <div key={`${section.section}-${nested.label}`} className="rounded-[2px] border border-[#eadfce] bg-white/82">
+                {section.nestedGroups.map((nested, nestedIndex) => (
+                  <Fragment key={`${section.section}-${nested.tier ?? "none"}-${nested.label}`}>
+                    {nested.tier &&
+                    nested.tier !== section.nestedGroups[nestedIndex - 1]?.tier ? (
+                      <div className="rounded-[2px] border border-[#cbb58d] bg-[#122033] px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-white">
+                        {nested.tier}
+                      </div>
+                    ) : null}
+                  <div className="rounded-[2px] border border-[#eadfce] bg-white/82">
                     <div className="border-b border-[#f0e6d8] px-3 py-2">
-                      <BrandGroupHeader label={nested.label} />
+                      {viewBy === "designType" ? (
+                        <BrandGroupHeader label={nested.label} />
+                      ) : (
+                        <h4 className="text-sm font-bold uppercase tracking-[0.16em] text-[#8a7654]">
+                          {nested.label}
+                        </h4>
+                      )}
                     </div>
                     <div className="overflow-x-auto md:overflow-visible">
                       <table className="w-full min-w-[760px] table-fixed border-separate border-spacing-0 text-left text-sm md:min-w-0">
@@ -1111,7 +1193,7 @@ export default function InteractivePriceListDashboard({
                               <Fragment key={row.id}>
                                 <tr className={index % 2 === 0 ? "bg-white/82" : "bg-[#fffaf2]/82"}>
                                   <td className="border-b border-r border-[#eadfce] px-3 py-2 text-[#2f3744]">
-                                    {formatGroupTitle(row.designType)}
+                                    {row.displayCategory}
                                   </td>
                                   <td className="border-b border-r border-[#eadfce] px-3 py-2 text-[#2f3744]">
                                     {row.brand}
@@ -1158,6 +1240,7 @@ export default function InteractivePriceListDashboard({
                       </table>
                     </div>
                   </div>
+                  </Fragment>
                 ))}
               </div>
             </section>
@@ -1206,7 +1289,7 @@ function ExpandedDesignBuilder({
     return /\bB(?:50|53|60|67|74|PY)\b/.test(source) || /\bB[A-Z]{2,4}\b/.test(source);
   };
 
-  const isPackageList = ["B5", "S5", "M5", "Y5"].includes(listCode);
+  const isPackageList = isPackagePriceListCode(String(listCode ?? ""));
   const includesFrame = ["M5", "Y5"].includes(listCode);
   const [blueLightEnabled, setBlueLightEnabled] = useState(false);
   const materialOptions = useMemo(() => {
@@ -1768,10 +1851,11 @@ function ArCoatingsSection({
     if (key.includes("crizal")) return "Crizal";
     if (key.includes("hoya")) return "Hoya";
     if (key.includes("shamir")) return "Shamir";
+    if (key.includes("neurolens")) return "Neurolens";
     return "";
   };
   const isAllowedArFamily = (family: string) =>
-    ["Artisan", "TechShield", "Tokai", "Crizal", "Hoya", "Shamir"].includes(family);
+    ["Artisan", "TechShield", "Tokai", "Crizal", "Hoya", "Shamir", "Neurolens"].includes(family);
   const groupedCoatings = useMemo(() => {
     const grouped = new Map<string, PriceListArCoating[]>();
     for (const coating of coatings) {
@@ -1789,7 +1873,10 @@ function ArCoatingsSection({
       grouped.set(family, current);
     }
 
-    const orderedFamilies = ["Artisan", "TechShield", "Tokai", "Crizal", "Hoya", "Shamir"];
+    const orderedFamilies =
+      String(listCode).toUpperCase() === "NL"
+        ? ["Neurolens"]
+        : ["Artisan", "TechShield", "Tokai", "Crizal", "Hoya", "Shamir"];
     return orderedFamilies
       .map((family) => {
         const items = grouped.get(family) ?? [];
@@ -1801,7 +1888,7 @@ function ArCoatingsSection({
         };
       })
       .filter((group) => group.items.length > 0);
-  }, [coatings, mirrorCodes, protectionCodes]);
+  }, [coatings, listCode, mirrorCodes, protectionCodes]);
 
   const protectionItems = useMemo(() => {
     const map = new Map<string, PriceListArCoating>();
@@ -1861,7 +1948,9 @@ function ArCoatingsSection({
     }
     return [...map.values()].sort((a, b) => compareText(a.name, b.name));
   }, [coatings, mirrorCodes]);
-  const preferredFamilies = new Set(["Artisan"]);
+  const preferredFamilies = new Set(
+    String(listCode).toUpperCase() === "NL" ? ["Neurolens"] : ["Artisan"]
+  );
   const primaryGroups = groupedCoatings.filter((group) => preferredFamilies.has(group.family));
   const otherGroups = groupedCoatings.filter((group) => !preferredFamilies.has(group.family));
   const hasPrimaryGroups = primaryGroups.length > 0;

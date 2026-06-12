@@ -1,8 +1,14 @@
 import Link from "next/link";
 import { headers } from "next/headers";
 import { Activity, ArrowDownRight, ArrowUpRight, CircleDollarSign, Mail, Package, ShieldAlert, Users } from "lucide-react";
-import { getPortalAdminEmailFromHeaders } from "@/lib/portal/admin";
+import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
 import { getDashboardV1AdminRows, resolveDashboardV1AcctId, type DashboardV1AdminRow } from "@/lib/portal/adminDashboardV1";
+import { parseComparisonMode } from "@/lib/portal/portalComparisons";
+import {
+  canAccessAdminAccount,
+  canAccessPortalAdmin,
+  getPortalStaffRole,
+} from "@/lib/portal/portalRoles";
 import { AdminAccessRequired, AdminShell, adminButtonClass } from "../../AdminShell";
 import { AdminCopyButton } from "../../AdminCopyButton";
 
@@ -162,15 +168,47 @@ function NotFound({ adminEmail }: { adminEmail: string }) {
   );
 }
 
-export default async function AdminAccountAnalysisPage({ params }: { params: Promise<{ accountNumber: string }> }) {
-  const adminEmail = getPortalAdminEmailFromHeaders(await headers());
-  if (!adminEmail) return <AdminAccessRequired />;
+function NotAuthorized({ email }: { email: string }) {
+  return (
+    <AdminShell title="Not authorized for this account" adminEmail={email}>
+      <section className="mt-8 rounded-md border border-[#d8a15e] bg-[#fff7e8] p-8">
+        <p className="text-sm leading-6 text-[#706759]">
+          This account is outside your assigned sales scope. No account metrics
+          were loaded into this page.
+        </p>
+        <Link href="/portal/admin" className={`${adminButtonClass} mt-6`}>
+          Back to JPD Watchlist
+        </Link>
+      </section>
+    </AdminShell>
+  );
+}
+
+export default async function AdminAccountAnalysisPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ accountNumber: string }>;
+  searchParams: Promise<{ view?: string }>;
+}) {
+  const authenticatedEmail = getPortalAuthenticatedEmailFromHeaders(
+    await headers()
+  );
+  const role = getPortalStaffRole(authenticatedEmail);
+  if (!authenticatedEmail || !canAccessPortalAdmin(role)) {
+    return <AdminAccessRequired />;
+  }
 
   const { accountNumber } = await params;
+  const query = await searchParams;
+  const mode = parseComparisonMode(query.view);
   const resolved = resolveDashboardV1AcctId(accountNumber);
   const rows = getDashboardV1AdminRows();
   const row = rows.find((entry) => entry.acctId.toUpperCase() === resolved.acctId.toUpperCase());
-  if (!row) return <NotFound adminEmail={adminEmail} />;
+  if (!row) return <NotFound adminEmail={authenticatedEmail} />;
+  if (!canAccessAdminAccount(role, row)) {
+    return <NotAuthorized email={authenticatedEmail} />;
+  }
 
   const salesChange = percentChange(row.pmSalesPerDay ?? 0, row.ppmSalesPerDay ?? 0);
   const jobsChange = percentChange(row.pmJpd ?? 0, row.ppmJpd ?? 0);
@@ -183,7 +221,7 @@ export default async function AdminAccountAnalysisPage({ params }: { params: Pro
   const pmTier = monthlyTierLabel(row.pmJobs);
 
   return (
-    <AdminShell title="Internal Account Analysis" adminEmail={adminEmail} eyebrow="ALN Customer Intelligence">
+    <AdminShell title="Internal Account Analysis" adminEmail={authenticatedEmail} eyebrow="ALN Customer Intelligence">
       <section className="mt-8 overflow-hidden rounded-md border border-[#d8c49b] bg-[#172a28] p-6 text-white shadow-[0_28px_90px_rgba(23,42,40,0.22)] sm:p-8">
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#d8c49b]">Internal ALN View · Not Customer-Facing</p>
         <div className="mt-4 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
@@ -195,7 +233,7 @@ export default async function AdminAccountAnalysisPage({ params }: { params: Pro
           </div>
           <div className="flex flex-wrap gap-3">
             <Link href={previewHref(row)} className={adminButtonClass}>Preview Customer Portal</Link>
-            <Link href="/portal/admin" className={adminButtonClass}>Back to Admin Dashboard</Link>
+            <Link href={`/portal/admin${mode ? `?view=${mode}` : ""}`} className={adminButtonClass}>Back to Admin Dashboard</Link>
           </div>
         </div>
       </section>

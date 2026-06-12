@@ -1,10 +1,10 @@
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { isPortalAdminEmail } from "@/lib/portal/admin";
 import {
   getCloudflareAccessEmailFromHeaders,
   getPortalAuthenticatedEmailFromHeaders,
 } from "@/lib/portal/auth";
-import AdminLandingDashboard from "./AdminLandingDashboard";
 import PortalDashboard from "./PortalDashboard";
 
 export const dynamic = "force-dynamic";
@@ -53,19 +53,16 @@ export default async function PortalPage({
     isPortalAdminEmail(authenticatedEmail) &&
     !showCustomerPortal
   ) {
-    return (
-      <AdminLandingDashboard
-        adminEmail={authenticatedEmail}
-        query={query.q ?? ""}
-        divisionFilter={query.division ?? ""}
-        labFilter={query.lab ?? ""}
-        priceListFilter={query.priceList ?? ""}
-        userFilter={query.hasUser ?? ""}
-        activityFilter={query.activity ?? ""}
-        trendFilter={query.trend ?? ""}
-        opportunityFilter={query.opportunity ?? ""}
-      />
-    );
+    const params = new URLSearchParams();
+    if (query.q) params.set("q", query.q);
+    if (query.division) params.set("division", query.division);
+    if (query.lab) params.set("lab", query.lab);
+    if (query.priceList) params.set("priceList", query.priceList);
+    if (query.hasUser) params.set("hasUser", query.hasUser);
+    if (query.activity) params.set("activity", query.activity);
+    if (query.trend) params.set("trend", query.trend);
+    if (query.opportunity) params.set("opportunity", query.opportunity);
+    redirect(`/portal/admin${params.size ? `?${params.toString()}` : ""}`);
   }
 
   return (

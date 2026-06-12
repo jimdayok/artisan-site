@@ -29,7 +29,9 @@ export type PortalExportRecord = {
   usedPriceLists: string[];
   dataRefreshDate: string;
   jobs: PortalExportMonthlyValues;
+  jobsPerDay: PortalExportMonthlyValues;
   sales: PortalExportMonthlyValues;
+  averageTurnaroundTime: PortalExportMonthlyValues;
   netLensJobs: PortalExportMonthlyValues;
   netLensShare: PortalExportMonthlyValues;
   sqlJobs: PortalExportMonthlyValues;
@@ -158,7 +160,9 @@ function normalizeRecord(row: PowerBiRow): PortalExportRecord {
     ),
     dataRefreshDate: dateValue(field(row, "[data_refresh_date]")),
     jobs: monthly(row, "jobs"),
+    jobsPerDay: monthly(row, "jpd"),
     sales: monthly(row, "sales"),
+    averageTurnaroundTime: monthly(row, "average_turnaround_time"),
     netLensJobs: monthly(row, "nl_jobs"),
     netLensShare: monthly(row, "nl_sow"),
     sqlJobs: monthly(row, "sql_jobs"),

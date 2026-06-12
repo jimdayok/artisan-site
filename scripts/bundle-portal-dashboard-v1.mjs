@@ -17,6 +17,8 @@ const outputPath = path.join(
   "generated",
   "dashboardV1Bundle.json"
 );
+const expectedAccountSource = "private-site/portal/portal_export.json";
+const expectedUserSource = "private-source/portal/user_data.xlsx";
 
 async function readJson(filePath) {
   return JSON.parse(await readFile(filePath, "utf8"));
@@ -34,6 +36,18 @@ const accountsById = {};
 for (const fileName of accountFiles.filter((name) => name.endsWith(".json"))) {
   const account = await readJson(path.join(accountsDir, fileName));
   if (account?.account_id) accountsById[account.account_id] = account;
+}
+
+if (manifest.source_account_file !== expectedAccountSource) {
+  throw new Error(
+    `Refusing to bundle unexpected account source: ${manifest.source_account_file}`
+  );
+}
+
+if (manifest.source_user_file.toLowerCase() !== expectedUserSource) {
+  throw new Error(
+    `Refusing to bundle unexpected user source: ${manifest.source_user_file}`
+  );
 }
 
 if (accountsIndex.length === 0 || Object.keys(accountsById).length === 0) {

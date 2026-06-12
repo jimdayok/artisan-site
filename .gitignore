@@ -51,9 +51,6 @@ public/hero-vertical.mp4
 # and runtime functions receive them. They remain outside public/.
 !/private-source/portal/
 /private-source/portal/*
-!/private-source/portal/acct_data_1.xlsx
-!/private-source/portal/acct_data_2.xlsx
-!/private-source/portal/acct_data_3.xlsx
 !/private-source/portal/location_data.xlsx
 !/private-source/portal/user_data.xlsx
 !/private-source/portal/User_Data.xlsx
@@ -64,10 +61,6 @@ public/hero-vertical.mp4
 !private-source/portal/lookup_docs/Lookup.xlsx
 !private-source/portal/lookup_docs/Lookup_Mat.xlsx
 !private-source/portal/lookup_docs/Lookup_AR.xlsx
-
-.playwright-cli/
-output/playwright/
-*.save
 
 .playwright-cli/
 output/playwright/

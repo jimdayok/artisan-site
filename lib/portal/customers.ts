@@ -1,10 +1,8 @@
 import "server-only";
 
-import { existsSync, readFileSync } from "node:fs";
-import path from "node:path";
+import { portalDashboardV1Bundle } from "@/lib/portal/dashboardV1Bundle";
 import type { PriceListCode } from "@/lib/portal/priceLists";
 import { canonicalPriceListCode, getPriceListByCode } from "@/lib/portal/priceLists";
-import { parseCsvList, readPrivatePortalCsv } from "@/lib/portal/privateCsv";
 import type { PortalCustomerTypeCode } from "@/lib/portal/customerTypes";
 import { getPortalCustomerTypeInfo } from "@/lib/portal/customerTypes";
 import { normalizeAccountNumber, normalizeEmail } from "@/lib/portal/normalizeAccounts";
@@ -55,7 +53,7 @@ type DashboardV1UserAccessRecord = {
   account_ids?: string[];
 };
 
-const portalSections = new Set<PortalSection>([
+const allPortalSections: PortalSection[] = [
   "pricing",
   "packages",
   "calculator",
@@ -64,23 +62,7 @@ const portalSections = new Set<PortalSection>([
   "exports",
   "performance",
   "onboarding",
-]);
-
-function isPortalSection(section: string): section is PortalSection {
-  return portalSections.has(section as PortalSection);
-}
-
-function toPriceListCodes(value: string) {
-  return parseCsvList(value)
-    .map((code) => canonicalPriceListCode(code))
-    .filter((code): code is PriceListCode => Boolean(getPriceListByCode(code)));
-}
-
-function toPortalSections(value: string) {
-  return parseCsvList(value)
-    .map((section) => section.toLowerCase())
-    .filter(isPortalSection);
-}
+];
 
 function toPriceListCodesFromList(values: string[] = []) {
   return values
@@ -92,36 +74,15 @@ function uniqueList<T extends string>(values: T[]) {
   return [...new Set(values)];
 }
 
-function withGlobalPackageAccess(values: PriceListCode[]) {
-  return uniqueList([...values, "M5", "Y5"]);
-}
-
-function readJsonFile<T>(filePath: string): T | undefined {
-  if (!existsSync(filePath)) return undefined;
-  try {
-    return JSON.parse(readFileSync(filePath, "utf8")) as T;
-  } catch {
-    return undefined;
-  }
+function uniqueAssignedPriceLists(values: PriceListCode[]) {
+  return uniqueList(values);
 }
 
 function getDashboardV1AccessRecords() {
-  const dashboardDir = path.join(
-    process.cwd(),
-    "private-source",
-    "portal",
-    "dashboard-v1",
-    "current"
-  );
-
   const accountsIndex =
-    readJsonFile<DashboardV1AccountIndexRecord[]>(
-      path.join(dashboardDir, "accounts_index.json")
-    ) ?? [];
+    portalDashboardV1Bundle.accountsIndex as DashboardV1AccountIndexRecord[];
   const usersToAccounts =
-    readJsonFile<DashboardV1UserAccessRecord[]>(
-      path.join(dashboardDir, "users_to_accounts.json")
-    ) ?? [];
+    portalDashboardV1Bundle.usersToAccounts as DashboardV1UserAccessRecord[];
 
   if (!accountsIndex.length || !usersToAccounts.length) return [];
 
@@ -150,19 +111,10 @@ function getDashboardV1AccessRecords() {
         email,
         accountNumber: accountId,
         practiceName: account.business_name?.trim() || accountId,
-        allowedPriceLists: withGlobalPackageAccess(
+        allowedPriceLists: uniqueAssignedPriceLists(
           toPriceListCodesFromList(account.price_lists ?? [])
         ),
-        portalSections: [
-          "pricing",
-          "packages",
-          "calculator",
-          "catalog",
-          "policies",
-          "exports",
-          "performance",
-          "onboarding",
-        ],
+        portalSections: allPortalSections,
         customerTypeCode: accountTypeCode,
         customerTypeLabel: accountTypeInfo?.label || accountTypeRaw || "",
       });
@@ -178,50 +130,18 @@ function getDashboardV1AccessRecords() {
   );
 }
 
-// ALN staff update customer portal permissions in:
-// private-source/portal/customers.csv
-// Keep one row per authorized user email. Only the listed price_list codes and
-// portal_sections are shown for that login.
-const manualCustomerPortalAccess: PortalCustomerAccess[] = readPrivatePortalCsv(
-  "customers.csv"
-)
-  .map((row) => ({
-    email: row.email?.trim().toLowerCase() ?? "",
-    accountNumber: row.account_number?.trim() ?? "",
-    practiceName: row.practice_name?.trim() ?? "",
-    allowedPriceLists: withGlobalPackageAccess(toPriceListCodes(row.price_lists ?? "")),
-    portalSections: toPortalSections(row.portal_sections ?? ""),
-  }))
-  .filter(
-    (entry) =>
-      entry.email &&
-      entry.accountNumber &&
-      entry.practiceName &&
-      entry.portalSections.length > 0
-  );
-
 const dashboardV1CustomerPortalAccess: PortalCustomerAccess[] =
   getDashboardV1AccessRecords();
 
-export const customerPortalAccess: PortalCustomerAccess[] = [
-  ...dashboardV1CustomerPortalAccess,
-  ...manualCustomerPortalAccess.filter((manualEntry) => {
-    const existsInDashboard = dashboardV1CustomerPortalAccess.some(
-      (dashboardEntry) =>
-        dashboardEntry.email === manualEntry.email &&
-        normalizeAccountNumber(dashboardEntry.accountNumber) ===
-          normalizeAccountNumber(manualEntry.accountNumber)
-    );
-    return !existsInDashboard;
-  }),
-];
+export const customerPortalAccess: PortalCustomerAccess[] =
+  dashboardV1CustomerPortalAccess;
 
 export const customers: PortalCustomer[] = customerPortalAccess.map((entry) => ({
   accountNumber: entry.accountNumber,
   practiceName: entry.practiceName,
   emails: [entry.email.toLowerCase()],
-  priceLists: withGlobalPackageAccess(entry.allowedPriceLists),
-  allowedPriceLists: withGlobalPackageAccess(entry.allowedPriceLists),
+  priceLists: uniqueAssignedPriceLists(entry.allowedPriceLists),
+  allowedPriceLists: uniqueAssignedPriceLists(entry.allowedPriceLists),
   portalSections: entry.portalSections,
   customerTypeCode: entry.customerTypeCode,
   customerTypeLabel: entry.customerTypeLabel,
@@ -237,10 +157,10 @@ function toPortalCustomer(entries: PortalCustomerAccess[]): PortalCustomer | und
     accountNumber: primaryEntry.accountNumber,
     practiceName: primaryEntry.practiceName,
     emails: uniqueList(entries.map((entry) => entry.email.toLowerCase())),
-    priceLists: withGlobalPackageAccess(
+    priceLists: uniqueAssignedPriceLists(
       uniqueList(entries.flatMap((entry) => entry.allowedPriceLists))
     ),
-    allowedPriceLists: withGlobalPackageAccess(
+    allowedPriceLists: uniqueAssignedPriceLists(
       uniqueList(entries.flatMap((entry) => entry.allowedPriceLists))
     ),
     portalSections: uniqueList(entries.flatMap((entry) => entry.portalSections)),

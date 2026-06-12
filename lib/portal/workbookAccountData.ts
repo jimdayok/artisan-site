@@ -8,7 +8,6 @@ import {
   normalizeAccountNumber,
   normalizeEmail,
 } from "@/lib/portal/normalizeAccounts";
-import { loadPortalExportData } from "@/lib/portal/portalExportData";
 
 export type PortalWorkbookPerson = {
   name: string;
@@ -146,55 +145,63 @@ function hasTargetedProgram(value: string, program: string) {
 }
 
 function readAccounts() {
-  return loadPortalExportData().records.map(
-    (record) =>
-      ({
-        acctId: record.acctId,
-        allAccountNumbers: record.allAccountNumbers,
-        accountName: record.businessName,
-        accountNumber: record.acctId,
-        division: record.division,
-        salesRep: "",
-        lastShippedDate: record.dateShipped,
-        primaryPalPrivatePay: record.primaryPalBrandPrivatePay,
-        primaryPalVsp: record.primaryPalBrandVsp,
-        lastLabName: record.labName,
-        fullAddress: record.fullAddress,
-        phoneNumber: record.phoneNumber,
-        state: record.state,
+  return Object.values(portalDashboardV1Bundle.accountsById).map(
+    (account) => {
+      const jobs = account.purchase_summary.jobs;
+      const netLensJobs = account.product_mix.net_lens_jobs;
+      const vspJobs = account.vsp_private_pay_mix.vsp_jobs;
+
+      return {
+        acctId: account.account_id,
+        allAccountNumbers: account.all_account_numbers
+          .split(",")
+          .map((value) => normalizePortalAccountNumber(value))
+          .filter(Boolean),
+        accountName: account.business_name,
+        accountNumber: account.account_id,
+        division: account.division,
+        salesRep: account.sales_rep ?? "",
+        lastShippedDate: account.latest_ship_date,
+        primaryPalPrivatePay: account.primary_pal_brand_private_pay,
+        primaryPalVsp: account.primary_pal_brand_vsp,
+        lastLabName: account.lab_name,
+        fullAddress: account.address,
+        phoneNumber: account.phone,
+        state: account.state,
         zipCode: "",
-        modernPkgUsage: record.modernPackageUsage,
-        modernFrmUsage: record.modernFrameUsage,
-        chemClipUsage: record.chemclipUsage,
-        specCheckUsage: record.specCheckUsage,
-        tokaiUsage: record.tokaiUsage,
-        tier: record.previousMonthTierRank,
-        ppmJobs: record.jobs.ppm,
-        pmJobs: record.jobs.pm,
-        cmJobs: record.jobs.cm,
-        ppmSales: record.sales.ppm,
-        pmSales: record.sales.pm,
-        cmSales: record.sales.cm,
-        ppmJpd: 0,
-        pmJpd: 0,
-        cmJpd: 0,
-        ppmNlJobs: record.netLensJobs.ppm,
-        pmNlJobs: record.netLensJobs.pm,
-        cmNlJobs: record.netLensJobs.cm,
-        pmNlSow: record.netLensShare.pm,
-        ppmNlSow: record.netLensShare.ppm,
-        cmNlSow: record.netLensShare.cm,
-        cmSqlJobs: record.sqlJobs.cm,
-        pmSqlJobs: record.sqlJobs.pm,
-        ppmSqlJobs: record.sqlJobs.ppm,
-        ppmVspJobs: record.vspJobs.ppm,
-        pmVspJobs: record.vspJobs.pm,
-        cmVspJobs: record.vspJobs.cm,
-        ppmVspSow: record.vspShare.ppm,
-        pmVspSow: record.vspShare.pm,
-        cmVspSow: record.vspShare.cm,
-        lastShippedDateGlobal: record.dataRefreshDate,
-      }) satisfies PortalWorkbookAccount
+        modernPkgUsage: account.program_usage.modern_package_usage,
+        modernFrmUsage: account.program_usage.modern_frame_usage,
+        chemClipUsage: account.program_usage.chemclip_usage,
+        specCheckUsage: account.program_usage.speccheck_usage,
+        tokaiUsage: account.program_usage.tokai_usage,
+        tier: account.tier_status.previous_month_tier_rank_by_acct_id,
+        ppmJobs: jobs.ppm,
+        pmJobs: jobs.pm,
+        cmJobs: jobs.cm,
+        ppmSales: account.purchase_summary.sales.ppm,
+        pmSales: account.purchase_summary.sales.pm,
+        cmSales: account.purchase_summary.sales.cm,
+        ppmJpd: account.performance_rates?.jobs_per_day?.ppm ?? 0,
+        pmJpd: account.performance_rates?.jobs_per_day?.pm ?? 0,
+        cmJpd: account.performance_rates?.jobs_per_day?.cm ?? 0,
+        ppmNlJobs: netLensJobs.ppm,
+        pmNlJobs: netLensJobs.pm,
+        cmNlJobs: netLensJobs.cm,
+        pmNlSow: jobs.pm > 0 ? netLensJobs.pm / jobs.pm : 0,
+        ppmNlSow: jobs.ppm > 0 ? netLensJobs.ppm / jobs.ppm : 0,
+        cmNlSow: account.vsp_private_pay_mix.net_lens_share,
+        cmSqlJobs: account.product_mix.sql_jobs.cm,
+        pmSqlJobs: account.product_mix.sql_jobs.pm,
+        ppmSqlJobs: account.product_mix.sql_jobs.ppm,
+        ppmVspJobs: vspJobs.ppm,
+        pmVspJobs: vspJobs.pm,
+        cmVspJobs: vspJobs.cm,
+        ppmVspSow: jobs.ppm > 0 ? vspJobs.ppm / jobs.ppm : 0,
+        pmVspSow: jobs.pm > 0 ? vspJobs.pm / jobs.pm : 0,
+        cmVspSow: account.vsp_private_pay_mix.vsp_share,
+        lastShippedDateGlobal: account.data_refresh_date,
+      } satisfies PortalWorkbookAccount;
+    }
   );
 }
 

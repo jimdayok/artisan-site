@@ -98,6 +98,7 @@ export type PortalDashboardV1Account = {
   lab_name: string;
   phone: string;
   state: string;
+  sales_rep?: string;
   used_price_lists?: string[];
   data_refresh_date: string;
   tier_status: {
@@ -106,6 +107,9 @@ export type PortalDashboardV1Account = {
   purchase_summary: {
     jobs: { ppm: number; pm: number; cm: number };
     sales: { ppm: number; pm: number; cm: number };
+  };
+  performance_rates?: {
+    jobs_per_day?: PortalDashboardV1MonthlyNumber;
   };
   product_mix: {
     net_lens_jobs: { ppm: number; pm: number; cm: number };

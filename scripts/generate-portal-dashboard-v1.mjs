@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync, cpSync, renameSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync, cpSync, renameSync } from "node:fs";
 import path from "node:path";
 import ExcelJS from "exceljs";
 import JSZip from "jszip";
@@ -21,7 +21,7 @@ const outputBaseDir = path.join(portalDir, "dashboard-v1");
 const releasesDir = path.join(outputBaseDir, "releases");
 const currentDir = path.join(outputBaseDir, "current");
 const tempCurrentDir = path.join(outputBaseDir, "current.tmp");
-const previousCurrentDir = path.join(outputBaseDir, "current.prev");
+const generationLockDir = path.join(outputBaseDir, ".generation.lock");
 const validationErrorsDir = path.join(outputBaseDir, "validation-errors");
 
 const REQUIRED_ACCOUNT_COLUMNS = [
@@ -1336,7 +1336,24 @@ function copyDir(source, destination) {
   cpSync(source, destination, { recursive: true });
 }
 
-async function main() {
+function acquireGenerationLock() {
+  try {
+    mkdirSync(generationLockDir);
+    return;
+  } catch (error) {
+    if (error?.code !== "EEXIST") throw error;
+  }
+
+  const lockAgeMs = Date.now() - statSync(generationLockDir).mtimeMs;
+  if (lockAgeMs < 60 * 60 * 1000) {
+    throw new Error("Another portal dashboard generation is already running.");
+  }
+
+  rmSync(generationLockDir, { recursive: true, force: true });
+  mkdirSync(generationLockDir);
+}
+
+async function generateDashboard() {
   const args = parseArgs();
   const accountInputPath = resolveInputPath(args.accountInput, defaultAccountInputCandidates, "account");
   const userInputPath = resolveInputPath(args.userInput, defaultUserInputCandidates, "user");
@@ -1485,9 +1502,20 @@ async function main() {
 
   mkdirSync(outputBaseDir, { recursive: true });
   copyDir(releaseDir, tempCurrentDir);
-  rmSync(previousCurrentDir, { recursive: true, force: true });
+  const previousCurrentDir = path.join(
+    outputBaseDir,
+    `current.prev.${process.pid}.${Date.now()}`
+  );
   if (existsSync(currentDir)) renameSync(currentDir, previousCurrentDir);
-  renameSync(tempCurrentDir, currentDir);
+  try {
+    renameSync(tempCurrentDir, currentDir);
+  } catch (error) {
+    if (existsSync(previousCurrentDir) && !existsSync(currentDir)) {
+      renameSync(previousCurrentDir, currentDir);
+    }
+    throw error;
+  }
+  rmSync(previousCurrentDir, { recursive: true, force: true });
 
   console.log(`[portal-dashboard-v1] source accounts: ${path.relative(root, accountInputPath)}`);
   console.log(`[portal-dashboard-v1] source users: ${path.relative(root, userInputPath)}`);
@@ -1502,6 +1530,17 @@ async function main() {
   console.log(`[portal-dashboard-v1] skipped user summary rows: ${userAccess.skippedUserSummaryRows}`);
   console.log(`[portal-dashboard-v1] snapshot refresh date: ${latestRefreshDate || "unknown"}`);
   console.log(`[portal-dashboard-v1] current output: ${path.relative(root, currentDir)}`);
+}
+
+async function main() {
+  mkdirSync(outputBaseDir, { recursive: true });
+  acquireGenerationLock();
+
+  try {
+    await generateDashboard();
+  } finally {
+    rmSync(generationLockDir, { recursive: true, force: true });
+  }
 }
 
 main().catch((error) => {

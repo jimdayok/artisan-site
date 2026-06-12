@@ -12,10 +12,14 @@ DEST_REL="private-site/portal/portal_export.json"
 BUNDLE_REL="lib/portal/generated/dashboardV1Bundle.json"
 DEST="$REPO/$DEST_REL"
 TEMP_DEST=""
+TEMP_INDEX=""
 
 cleanup() {
   if [ -n "$TEMP_DEST" ] && [ -f "$TEMP_DEST" ]; then
     rm -f "$TEMP_DEST"
+  fi
+  if [ -n "$TEMP_INDEX" ] && [ -f "$TEMP_INDEX" ]; then
+    rm -f "$TEMP_INDEX"
   fi
 }
 trap cleanup EXIT
@@ -41,6 +45,13 @@ cd "$REPO"
 npm run portal:generate-dashboard-v1:launch-safe
 npm run portal:bundle-dashboard-v1
 
+TEMP_INDEX="$(mktemp "$REPO/.git/portal-index.XXXXXX")"
+rm -f "$TEMP_INDEX"
+GIT_INDEX_FILE="$TEMP_INDEX" git read-tree HEAD
+GIT_INDEX_FILE="$TEMP_INDEX" git add -- "$DEST_REL" "$BUNDLE_REL"
+GIT_INDEX_FILE="$TEMP_INDEX" git commit -m "Daily portal data refresh"
+
+# Keep the normal index aligned with the new commit without disturbing
+# unrelated staged files.
 git add -- "$DEST_REL" "$BUNDLE_REL"
-git commit -m "Daily portal data refresh" -- "$DEST_REL" "$BUNDLE_REL"
 git push origin main

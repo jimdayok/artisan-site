@@ -17,7 +17,11 @@ cp "$SOURCE" "$DEST"
 
 cd "$REPO"
 
+node scripts/generate-portal-dashboard-v1.mjs
+
 git add private-site/portal/portal_export.json
+git add lib/portal/generated/dashboardV1Bundle.json
+git add scripts/sync-portal-export.sh
 
 if git diff --cached --quiet; then
   echo "No portal export changes to commit."

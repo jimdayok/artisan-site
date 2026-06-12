@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
+import { gunzipSync } from "node:zlib";
 import ExcelJS from "exceljs";
 import type { GeneratedPriceListData, PriceListAddOnSection, PriceListArCoating } from "@/lib/pricing/types";
 
@@ -30,6 +31,11 @@ function readJson<T>(filePath: string): T | undefined {
   return JSON.parse(readFileSync(filePath, "utf8")) as T;
 }
 
+function readGzipJson<T>(filePath: string): T | undefined {
+  if (!existsSync(filePath)) return undefined;
+  return JSON.parse(gunzipSync(readFileSync(filePath)).toString("utf8")) as T;
+}
+
 function toNumber(value: unknown) {
   const parsed = Number.parseFloat(String(value ?? ""));
   return Number.isFinite(parsed) ? parsed : 0;
@@ -52,11 +58,7 @@ function normalizeLookupKey(value: string) {
 }
 
 function canonicalPriceListCode(code: string) {
-  const normalized = code.trim().toUpperCase();
-  if (normalized === "G5") return "G6";
-  if (normalized === "P5") return "P6";
-  if (normalized === "A5") return "A6";
-  return normalized;
+  return code.trim().toUpperCase();
 }
 
 function normalizeDesignStyleName(value: string) {
@@ -359,12 +361,33 @@ export async function loadGeneratedPriceListByCode(code: string): Promise<Genera
     `${normalizedCode}.json`
   );
   const normalizedPayload = readJson<GeneratedPriceListData>(normalizedPath);
-  if (normalizedPayload?.rows && Array.isArray(normalizedPayload.rows)) {
+  if (
+    normalizedPayload?.rows &&
+    Array.isArray(normalizedPayload.rows) &&
+    normalizedPayload.rows.length > 0
+  ) {
     return normalizedPayload;
+  }
+  const packagedNormalizedPath = path.join(
+    process.cwd(),
+    "lib",
+    "pricing",
+    "generated",
+    "normalized",
+    `${normalizedCode}.json.gz`
+  );
+  const packagedNormalized =
+    readGzipJson<GeneratedPriceListData>(packagedNormalizedPath);
+  if (
+    packagedNormalized?.rows &&
+    Array.isArray(packagedNormalized.rows) &&
+    packagedNormalized.rows.length > 0
+  ) {
+    return packagedNormalized;
   }
   const standardPath = path.join(generatedDir, `${normalizedCode.toLowerCase()}-pricing.json`);
   const standard = readJson<GeneratedPriceListData>(standardPath);
-  if (standard?.rows && Array.isArray(standard.rows)) {
+  if (standard?.rows && Array.isArray(standard.rows) && standard.rows.length > 0) {
     if (!Array.isArray(standard.arCoatings) || standard.arCoatings.length === 0) {
       return {
         ...standard,
@@ -376,6 +399,6 @@ export async function loadGeneratedPriceListByCode(code: string): Promise<Genera
 
   const dviPath = path.join(generatedDir, `dvi-${normalizedCode.toLowerCase()}-pricing.json`);
   const dvi = readJson<{ rows?: DviRow[] }>(dviPath);
-  if (!dvi?.rows || !Array.isArray(dvi.rows)) return null;
+  if (!dvi?.rows || !Array.isArray(dvi.rows) || dvi.rows.length === 0) return null;
   return dviToGenerated(normalizedCode, dvi.rows);
 }

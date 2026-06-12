@@ -17,7 +17,8 @@ cp "$SOURCE" "$DEST"
 
 cd "$REPO"
 
-node scripts/generate-portal-dashboard-v1.mjs
+npm run portal:generate-dashboard-v1:launch-safe
+npm run portal:bundle-dashboard-v1
 
 git add private-site/portal/portal_export.json
 git add lib/portal/generated/dashboardV1Bundle.json

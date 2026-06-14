@@ -1,4 +1,4 @@
-import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import ExcelJS from "exceljs";
@@ -122,16 +122,36 @@ function isBronzeOrBsRow(row) {
   return false;
 }
 
-function isCustomerFacingPricingFile(fileName) {
-  return fileName.endsWith("-pricing.json") && !fileName.startsWith("dvi-");
+function getStandardSourcePath(code) {
+  return path.join(generatedDir, `${code.toLowerCase()}-pricing.json`);
 }
 
-function isDviPricingFile(fileName) {
-  return fileName.startsWith("dvi-") && fileName.endsWith("-pricing.json");
+function getDviSourcePath(code) {
+  return path.join(generatedDir, `dvi-${code.toLowerCase()}-pricing.json`);
 }
 
 async function readJson(filePath) {
   return JSON.parse(await readFile(filePath, "utf8"));
+}
+
+async function loadSourcePayloadForCode(code) {
+  const standardPath = getStandardSourcePath(code);
+  if (existsSync(standardPath)) {
+    return {
+      kind: "standard",
+      payload: await readJson(standardPath),
+    };
+  }
+
+  const dviPath = getDviSourcePath(code);
+  if (existsSync(dviPath)) {
+    return {
+      kind: "dvi",
+      payload: await readJson(dviPath),
+    };
+  }
+
+  return { kind: "missing", payload: null };
 }
 
 async function readLookupBrandAndName() {
@@ -625,68 +645,7 @@ async function main() {
   await mkdir(diagnosticsDir, { recursive: true });
   const lookupMap = await readLookupBrandAndName();
   const arLookupMap = await readLookupArMap();
-  const files = await readdir(generatedDir);
-  const standardByCode = new Map();
-  const dviByCode = new Map();
-  for (const fileName of files) {
-    const fullPath = path.join(generatedDir, fileName);
-    if (isCustomerFacingPricingFile(fileName)) {
-      const payload = await readJson(fullPath);
-      const code = canonicalCode(payload?.code || fileName.replace(/-pricing\.json$/i, ""));
-      if (code) standardByCode.set(code, payload);
-    } else if (isDviPricingFile(fileName)) {
-      const payload = await readJson(fullPath);
-      const rawCode = fileName.replace(/^dvi-/i, "").replace(/-pricing\.json$/i, "");
-      const code = canonicalCode(payload?.code || rawCode);
-      if (code) dviByCode.set(code, payload);
-    }
-  }
   const { targetCodes, ignoreCodes } = await readTargetCodes();
-  const mergedByCanonical = new Map();
-
-  for (const code of targetCodes) {
-    if (standardByCode.has(code)) {
-      mergedByCanonical.set(code, { ...standardByCode.get(code), code });
-      continue;
-    }
-    const dviPayload = dviByCode.get(code);
-    if (dviPayload?.rows) {
-      mergedByCanonical.set(
-        code,
-        dviRowsToGeneratedPayload(code, dviPayload.rows, lookupMap, arLookupMap)
-      );
-    }
-  }
-
-  for (const code of targetCodes) {
-    if (mergedByCanonical.has(code)) continue;
-    mergedByCanonical.set(code, {
-      code,
-      rows: [],
-      arCoatings: [],
-      materialAddOns: materialAddOnsByCode[code] ?? [],
-      addOnSections: [],
-      report: {
-        sourceFiles: [],
-        rowCount: 0,
-        rawSourceRowsProcessed: 0,
-        rowsExcludedMissingLookup: 0,
-        displayRowCount: 0,
-        generatedAt: new Date().toISOString(),
-        rawColumns: [],
-        mappedColumns: [],
-        ignoredColumns: [],
-        unmappedProducts: [],
-        unmappedMaterials: [],
-        unmappedColors: [],
-        duplicatePriceConflictCount: 0,
-        duplicatePriceConflicts: [],
-        colorVariantsCollapsedCount: 0,
-        assumptions: [`No standard or DVI source file found for ${code}.`],
-      },
-    });
-  }
-
   const validation = [];
   const taxonomyReport = [];
   const materialReport = [];
@@ -696,9 +655,42 @@ async function main() {
   const lensMatRuleReport = [];
   const artisanPortfolioRuleReport = [];
   const designTypeValidationReport = [];
-  for (const [code, payload] of [...mergedByCanonical.entries()].sort((a, b) =>
-    a[0].localeCompare(b[0])
-  )) {
+  for (const code of targetCodes) {
+    const source = await loadSourcePayloadForCode(code);
+    let payload;
+
+    if (source.kind === "standard" && source.payload) {
+      payload = { ...source.payload, code };
+    } else if (source.kind === "dvi" && source.payload?.rows) {
+      payload = dviRowsToGeneratedPayload(code, source.payload.rows, lookupMap, arLookupMap);
+    } else {
+      payload = {
+        code,
+        rows: [],
+        arCoatings: [],
+        materialAddOns: materialAddOnsByCode[code] ?? [],
+        addOnSections: [],
+        report: {
+          sourceFiles: [],
+          rowCount: 0,
+          rawSourceRowsProcessed: 0,
+          rowsExcludedMissingLookup: 0,
+          displayRowCount: 0,
+          generatedAt: new Date().toISOString(),
+          rawColumns: [],
+          mappedColumns: [],
+          ignoredColumns: [],
+          unmappedProducts: [],
+          unmappedMaterials: [],
+          unmappedColors: [],
+          duplicatePriceConflictCount: 0,
+          duplicatePriceConflicts: [],
+          colorVariantsCollapsedCount: 0,
+          assumptions: [`No standard or DVI source file found for ${code}.`],
+        },
+      };
+    }
+
     const normalizedRowsResult = normalizeRows(payload.rows ?? [], lookupMap, code);
     const arCoatings = normalizeArCoatings(normalizedRowsResult.rows);
     const materialAddOns = materialAddOnsFromSections(code, payload.addOnSections ?? []);
@@ -722,6 +714,8 @@ async function main() {
       `${JSON.stringify(normalizedPayload, null, 2)}\n`,
       "utf8"
     );
+
+    payload = null;
 
     validation.push({
       code,

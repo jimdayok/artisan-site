@@ -3,6 +3,10 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   experimental: {
     authInterrupts: true,
+    webpackBuildWorker: false,
+    webpackMemoryOptimizations: true,
+    parallelServerCompiles: false,
+    parallelServerBuildTraces: false,
   },
   outputFileTracingIncludes: {
     "/portal": [

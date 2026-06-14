@@ -22,7 +22,7 @@ import {
   type PriceDisplayCategory,
   type ProgressiveTier,
 } from "@/lib/pricing/displayTaxonomy";
-import { loadGeneratedPriceListByCode } from "@/lib/pricing/loadGeneratedPriceList";
+import { loadPackagedPriceListByCode } from "@/lib/pricing/loadPackagedPriceList";
 import type {
   GeneratedPriceListData,
   PriceListPricingRow,
@@ -148,25 +148,61 @@ async function buildPriceListPdf({
     path.join(process.cwd(), "public", "aln-white-logo.png")
   );
   const logo = await document.embedPng(logoBytes);
-  const brandLogoPaths: Record<string, string> = {
-    Artisan: "rings-transparent.png",
-    IOT: "iot-logo.png",
-    Unity: "unity-logo.png",
-    "Sequel by Newton": "logos/Sequel_Brandmark_Horizontal_RGB_Charcoal.png",
-    Tokai: "tokai-logo.png",
-    Shamir: "shamir-logo.png",
-    Hoya: "hoya-logo.png",
-    Varilux: "varilux-logo.png",
-  };
   const brandLogos = new Map<string, PDFImage>();
-  for (const [brand, relativePath] of Object.entries(brandLogoPaths)) {
+
+  const embedBrandLogo = async (
+    brand: string,
+    bytesPromise: Promise<Buffer>
+  ) => {
     try {
-      const bytes = await readFile(path.join(process.cwd(), "public", relativePath));
+      const bytes = await bytesPromise;
       brandLogos.set(brand, await document.embedPng(bytes));
     } catch {
       // Text remains as the fallback when a logo asset cannot be embedded.
     }
-  }
+  };
+
+  await Promise.all([
+    embedBrandLogo(
+      "Artisan",
+      readFile(path.join(process.cwd(), "public", "rings-transparent.png"))
+    ),
+    embedBrandLogo(
+      "IOT",
+      readFile(path.join(process.cwd(), "public", "iot-logo.png"))
+    ),
+    embedBrandLogo(
+      "Unity",
+      readFile(path.join(process.cwd(), "public", "unity-logo.png"))
+    ),
+    embedBrandLogo(
+      "Sequel by Newton",
+      readFile(
+        path.join(
+          process.cwd(),
+          "public",
+          "logos",
+          "Sequel_Brandmark_Horizontal_RGB_Charcoal.png"
+        )
+      )
+    ),
+    embedBrandLogo(
+      "Tokai",
+      readFile(path.join(process.cwd(), "public", "tokai-logo.png"))
+    ),
+    embedBrandLogo(
+      "Shamir",
+      readFile(path.join(process.cwd(), "public", "shamir-logo.png"))
+    ),
+    embedBrandLogo(
+      "Hoya",
+      readFile(path.join(process.cwd(), "public", "hoya-logo.png"))
+    ),
+    embedBrandLogo(
+      "Varilux",
+      readFile(path.join(process.cwd(), "public", "varilux-logo.png"))
+    ),
+  ]);
   const pages: PDFPage[] = [];
   let page!: PDFPage;
   let y = 0;
@@ -586,7 +622,7 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const generated = await loadGeneratedPriceListByCode(code);
+  const generated = await loadPackagedPriceListByCode(code);
   if (!generated) {
     return new NextResponse("Pricing data is not available for this list.", {
       status: 404,

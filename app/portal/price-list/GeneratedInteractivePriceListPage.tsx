@@ -3,7 +3,7 @@ import { getAuthorizedPriceListFromHeaders } from "@/lib/portal/priceListAccess"
 import { isLocalhostDevelopmentRequest } from "@/lib/portal/auth";
 import { canonicalPriceListCode } from "@/lib/portal/priceLists";
 import { isPortalAdminEmail } from "@/lib/portal/admin";
-import { loadGeneratedPriceListByCode } from "@/lib/pricing/loadGeneratedPriceList";
+import { loadPackagedPriceListByCode } from "@/lib/pricing/loadPackagedPriceList";
 import { customerFacingPriceList } from "@/lib/pricing/customerPriceList";
 import { headers } from "next/headers";
 import { forbidden } from "next/navigation";
@@ -53,7 +53,7 @@ export default async function GeneratedInteractivePriceListPage({
     forbidden();
   }
 
-  const generatedPriceList = await loadGeneratedPriceListByCode(normalizedCode);
+  const generatedPriceList = await loadPackagedPriceListByCode(normalizedCode);
   if (!generatedPriceList) {
     const message = isPortalAdminEmail(access.authenticatedEmail)
       ? `${normalizedCode} is assigned or registered, but no generated pricing rows are available. Check the price-list validation report.`
@@ -64,7 +64,7 @@ export default async function GeneratedInteractivePriceListPage({
   }
   const customerPriceList = customerFacingPriceList(generatedPriceList);
   const comparisonPriceList =
-    normalizedCode === "B5" ? await loadGeneratedPriceListByCode("G6") : null;
+    normalizedCode === "B5" ? await loadPackagedPriceListByCode("G6") : null;
 
   const accountPriceListCodes = access.customer.priceLists
     .map((entry) => canonicalPriceListCode(entry))

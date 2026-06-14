@@ -1,5 +1,5 @@
 import { existsSync } from "node:fs";
-import { mkdir, readdir, readFile, stat, writeFile } from "node:fs/promises";
+import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 const root = process.cwd();
@@ -35,6 +35,16 @@ async function readJson(filePath, fallback) {
   return JSON.parse(await readFile(filePath, "utf8"));
 }
 
+function getNormalizedPath(code) {
+  return path.join(normalizedDir, `${code.toUpperCase()}.json`);
+}
+
+async function readNormalizedPayload(code) {
+  const normalizedPath = getNormalizedPath(code);
+  if (!existsSync(normalizedPath)) return null;
+  return readJson(normalizedPath, null);
+}
+
 async function main() {
   const manifest = await readJson(manifestPath, { codeSummaries: [] });
   const accounts = await readJson(accountsPath, []);
@@ -54,28 +64,22 @@ async function main() {
     }
   }
 
-  const normalizedFiles = existsSync(normalizedDir)
-    ? (await readdir(normalizedDir)).filter((fileName) => fileName.endsWith(".json"))
-    : [];
-  const generatedCodes = new Set(
-    normalizedFiles.map((fileName) => normalizeCode(fileName.replace(/\.json$/i, "")))
-  );
   const codes = new Set([
     ...summaries.keys(),
     ...assignedCounts.keys(),
-    ...generatedCodes,
+    ...(manifest.codeSummaries ?? []).map((entry) => normalizeCode(entry.code)).filter(Boolean),
     ...packageCodes,
   ]);
 
   const entries = [];
   for (const code of [...codes].sort()) {
     const summary = summaries.get(code);
-    const normalizedPath = path.join(normalizedDir, `${code}.json`);
-    const payload = await readJson(normalizedPath, null);
+    const normalizedPath = getNormalizedPath(code);
+    const payload = await readNormalizedPayload(code);
     const normalizedStat = existsSync(normalizedPath) ? await stat(normalizedPath) : null;
     const rowCount = Array.isArray(payload?.rows) ? payload.rows.length : 0;
     const detected = summaries.has(code);
-    const generated = generatedCodes.has(code) && rowCount > 0;
+    const generated = Boolean(payload) && rowCount > 0;
     const assignedAccountCount = assignedCounts.get(code) ?? 0;
     const listName = String(summary?.listName ?? "").trim();
     const invalidOrUnknown =

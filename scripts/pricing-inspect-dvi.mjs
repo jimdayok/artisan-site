@@ -1,18 +1,19 @@
+import "./loadEnv.mjs";
+
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { inspectDviRawPriceFiles } from "../lib/pricing/parseDviRawPriceFiles.mjs";
 
 const root = process.cwd();
-const rawDir = path.join(root, "private-source", "pricing", "raw-price-files");
 const outputDir = path.join(root, "private-source", "pricing", "generated");
 
 async function main() {
-  const inspection = await inspectDviRawPriceFiles(rawDir);
+  const inspection = await inspectDviRawPriceFiles();
   await mkdir(outputDir, { recursive: true });
   const outputPath = path.join(outputDir, "dvi-inventory-report.json");
   await writeFile(outputPath, `${JSON.stringify({
     generatedAt: inspection.generatedAt,
-    rawDir: inspection.rawDir,
+    sourceDirectory: inspection.sourceDirectory,
     fileInventory: inspection.fileInventory,
     priceListCodes: inspection.priceListCodes,
     recordCounts: inspection.recordCounts,

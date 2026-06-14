@@ -1,9 +1,10 @@
+import "./loadEnv.mjs";
+
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { generateDviPricingArtifacts } from "../lib/pricing/parseDviRawPriceFiles.mjs";
 
 const root = process.cwd();
-const rawDir = path.join(root, "private-source", "pricing", "raw-price-files");
 const outputDir = path.join(root, "private-source", "pricing", "generated");
 const scopeConfigPath = path.join(root, "private-source", "pricing", "config", "pricing-scope.json");
 
@@ -42,7 +43,7 @@ async function readScopeConfig() {
 }
 
 async function main() {
-  const artifacts = await generateDviPricingArtifacts(rawDir);
+  const artifacts = await generateDviPricingArtifacts();
   await mkdir(outputDir, { recursive: true });
   const scope = await readScopeConfig();
 

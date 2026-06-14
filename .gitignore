@@ -69,3 +69,5 @@ output/playwright/
 # Generated pricing/build artifacts
 tmp/pdfs/
 private-source/pricing/generated/
+private-source/pricing/raw-price-files/
+xml_price_data/

@@ -6,7 +6,7 @@ import { generateDviPricingArtifacts } from "../lib/pricing/parseDviRawPriceFile
 
 const root = process.cwd();
 const outputDir = path.join(root, "private-source", "pricing", "generated");
-const scopeConfigPath = path.join(root, "private-source", "pricing", "config", "pricing-scope.json");
+const scopeConfigPath = path.join(root, "config", "pricing-scope.json");
 
 function asUpperSet(values) {
   return new Set((values ?? []).map((value) => String(value).trim().toUpperCase()).filter(Boolean));

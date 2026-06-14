@@ -1,0 +1,226 @@
+{
+  "payAttention": [
+    "A5",
+    "A6",
+    "B5",
+    "C3",
+    "CD",
+    "E4",
+    "E5",
+    "E7",
+    "E8",
+    "G5",
+    "G6",
+    "J1",
+    "J2",
+    "M5",
+    "NL",
+    "P5",
+    "P6",
+    "S5",
+    "TK",
+    "Y5"
+  ],
+  "ignore": ["11", "93", "V6", "VS", "X3", "XQ", "XX", "Z1", "ZX"],
+  "businessRulesByCode": {
+    "11": {
+      "displayWhenAssociatedToCustomer": false,
+      "referenceAnotherPriceList": null,
+      "label": "ignore this",
+      "notes": "Ignore"
+    },
+    "93": {
+      "displayWhenAssociatedToCustomer": false,
+      "referenceAnotherPriceList": null,
+      "label": "ignore this",
+      "notes": "Ignore"
+    },
+    "A5": {
+      "displayWhenAssociatedToCustomer": true,
+      "referenceAnotherPriceList": null,
+      "label": "2025 PMP Partner Price List"
+    },
+    "A6": {
+      "displayWhenAssociatedToCustomer": true,
+      "referenceAnotherPriceList": null,
+      "label": "2026 PMP Partner Price List"
+    },
+    "B5": {
+      "displayWhenAssociatedToCustomer": true,
+      "referenceAnotherPriceList": null,
+      "label": "Artisan IOT Lens System",
+      "notes": "Package with AR"
+    },
+    "CD": {
+      "displayWhenAssociatedToCustomer": true,
+      "referenceAnotherPriceList": null,
+      "label": "Cadre Price List",
+      "notes": "Package"
+    },
+    "E4": {
+      "displayWhenAssociatedToCustomer": true,
+      "referenceAnotherPriceList": null,
+      "label": "Special Partner Price List",
+      "notes": "Package with AR"
+    },
+    "E5": {
+      "displayWhenAssociatedToCustomer": true,
+      "referenceAnotherPriceList": null,
+      "label": "Special Partner Price List"
+    },
+    "E7": {
+      "displayWhenAssociatedToCustomer": true,
+      "referenceAnotherPriceList": null,
+      "label": "Special Partner Price List"
+    },
+    "E8": {
+      "displayWhenAssociatedToCustomer": true,
+      "referenceAnotherPriceList": null,
+      "label": "Special Partner Price List",
+      "notes": "Package with AR"
+    },
+    "G5": {
+      "displayWhenAssociatedToCustomer": true,
+      "referenceAnotherPriceList": null,
+      "label": "2025 Artisan General Price List"
+    },
+    "G6": {
+      "displayWhenAssociatedToCustomer": true,
+      "referenceAnotherPriceList": null,
+      "label": "2026 Artisan General Price List"
+    },
+    "M5": {
+      "displayWhenAssociatedToCustomer": true,
+      "referenceAnotherPriceList": null,
+      "label": "Modern Frame System",
+      "notes": "Package with frame"
+    },
+    "NL": {
+      "displayWhenAssociatedToCustomer": true,
+      "referenceAnotherPriceList": null,
+      "label": "Neurolens Price List"
+    },
+    "P5": {
+      "displayWhenAssociatedToCustomer": true,
+      "referenceAnotherPriceList": null,
+      "label": "2025 Equity Partner Price List"
+    },
+    "P6": {
+      "displayWhenAssociatedToCustomer": true,
+      "referenceAnotherPriceList": null,
+      "label": "2026 Equity Partner Price List"
+    },
+    "S5": {
+      "displayWhenAssociatedToCustomer": true,
+      "referenceAnotherPriceList": null,
+      "label": "Shamir Lens System",
+      "notes": "Package with AR"
+    },
+    "TK": {
+      "displayWhenAssociatedToCustomer": true,
+      "referenceAnotherPriceList": null,
+      "label": "Tokai Lens system",
+      "notes": "Package with AR"
+    },
+    "V6": {
+      "displayWhenAssociatedToCustomer": false,
+      "referenceAnotherPriceList": null,
+      "label": "ignore this",
+      "notes": "Ignore"
+    },
+    "VS": {
+      "displayWhenAssociatedToCustomer": false,
+      "referenceAnotherPriceList": null,
+      "label": "ignore this",
+      "notes": "Ignore"
+    },
+    "X3": {
+      "displayWhenAssociatedToCustomer": false,
+      "referenceAnotherPriceList": null,
+      "label": "ignore this",
+      "notes": "Ignore"
+    },
+    "XQ": {
+      "displayWhenAssociatedToCustomer": false,
+      "referenceAnotherPriceList": null,
+      "label": "ignore this",
+      "notes": "Ignore"
+    },
+    "XX": {
+      "displayWhenAssociatedToCustomer": false,
+      "referenceAnotherPriceList": null,
+      "label": "ignore this",
+      "notes": "Ignore"
+    },
+    "Y5": {
+      "displayWhenAssociatedToCustomer": true,
+      "referenceAnotherPriceList": null,
+      "label": "Artisan Safety Systems",
+      "notes": "Package with frame"
+    },
+    "Z1": {
+      "displayWhenAssociatedToCustomer": false,
+      "referenceAnotherPriceList": null,
+      "label": "ignore this",
+      "notes": "Ignore"
+    },
+    "ZX": {
+      "displayWhenAssociatedToCustomer": false,
+      "referenceAnotherPriceList": null,
+      "label": "ignore this",
+      "notes": "Ignore"
+    },
+    "J2": {
+      "displayWhenAssociatedToCustomer": true,
+      "referenceAnotherPriceList": null,
+      "label": "ADG&A Price List"
+    },
+    "J1": {
+      "displayWhenAssociatedToCustomer": true,
+      "referenceAnotherPriceList": null,
+      "label": "ADG&A SV Price List",
+      "notes": "Package with SV"
+    },
+    "C3": {
+      "displayWhenAssociatedToCustomer": true,
+      "referenceAnotherPriceList": null,
+      "label": "Supplemental Price List"
+    }
+  },
+  "includesAR": {
+    "B5": {
+      "includedRule": "AEM at $0",
+      "upchargeRule": "Other AR options are upcharges"
+    },
+    "E4": {
+      "includedRule": "Package with AR",
+      "upchargeRule": ""
+    },
+    "E8": {
+      "includedRule": "Package with AR",
+      "upchargeRule": ""
+    },
+    "S5": {
+      "includedRule": "Includes AR",
+      "upchargeRule": ""
+    },
+    "TK": {
+      "includedRule": "Package with AR",
+      "upchargeRule": ""
+    }
+  },
+  "includesFrames": ["M5", "Y5"],
+  "packagePriceLists": ["B5", "M5", "S5", "TK", "VX", "Y5"],
+  "aliasToDvi": {
+    "XP": "P6",
+    "XA": "A6",
+    "XG": "G6"
+  },
+  "aliasNotes": [
+    "XP, XA, XG mappings are business-confirmed."
+  ],
+  "notes": [
+    "All price lists not explicitly listed in includesAR are treated as AR additive by default.",
+    "All price lists not explicitly listed in includesFrames are treated as no included frame by default."
+  ]
+}

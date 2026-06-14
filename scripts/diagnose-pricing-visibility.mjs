@@ -14,8 +14,6 @@ const dashboardDir = path.join(
 );
 const scopeConfigPath = path.join(
   root,
-  "private-source",
-  "pricing",
   "config",
   "pricing-scope.json"
 );

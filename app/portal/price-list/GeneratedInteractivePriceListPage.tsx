@@ -4,6 +4,7 @@ import { isLocalhostDevelopmentRequest } from "@/lib/portal/auth";
 import { canonicalPriceListCode } from "@/lib/portal/priceLists";
 import { isPortalAdminEmail } from "@/lib/portal/admin";
 import { loadPackagedPriceListByCode } from "@/lib/pricing/loadPackagedPriceList";
+import { isVisiblePriceListCode } from "@/lib/pricing/priceListCodes";
 import { customerFacingPriceList } from "@/lib/pricing/customerPriceList";
 import { headers } from "next/headers";
 import { forbidden } from "next/navigation";
@@ -69,6 +70,7 @@ export default async function GeneratedInteractivePriceListPage({
   const accountPriceListCodes = access.customer.priceLists
     .map((entry) => canonicalPriceListCode(entry))
     .filter((value, index, values) => Boolean(value) && values.indexOf(value) === index)
+    .filter(isVisiblePriceListCode)
     .sort((a, b) => a.localeCompare(b));
 
   return (

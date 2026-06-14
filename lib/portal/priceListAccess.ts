@@ -16,7 +16,7 @@ import { normalizeAssignedPriceListCodes } from "@/lib/portal/assignedPriceLists
 import {
   canonicalPriceListCode,
   getPriceListByCode,
-  priceLists,
+  visiblePriceListCodes,
   type PortalPriceList,
   type PriceListCode,
 } from "@/lib/portal/priceLists";
@@ -84,9 +84,7 @@ export async function getAuthorizedPriceListFromHeaders(
       };
     }
 
-    const adminAccessiblePriceLists = [...new Set(priceLists.map((entry) => canonicalPriceListCode(entry.code)))]
-      .filter(Boolean)
-      .sort((a, b) => a.localeCompare(b));
+    const adminAccessiblePriceLists = [...visiblePriceListCodes];
     return {
       status: "authorized",
       authenticatedEmail,
@@ -152,9 +150,7 @@ export async function getAuthorizedPortalSectionForPage(section: PortalSection) 
   }
 
   if (isPortalAdminEmail(authenticatedEmail)) {
-    const adminAccessiblePriceLists = [...new Set(priceLists.map((entry) => entry.code))]
-      .filter(Boolean)
-      .sort((a, b) => a.localeCompare(b));
+    const adminAccessiblePriceLists = [...visiblePriceListCodes];
     return {
       status: "authorized" as const,
       authenticatedEmail,

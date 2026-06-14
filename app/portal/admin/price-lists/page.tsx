@@ -2,7 +2,7 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { AdminAccessRequired, AdminShell, adminButtonClass } from "../AdminShell";
 import { getPortalAdminEmailFromHeaders } from "@/lib/portal/admin";
-import { priceLists } from "@/lib/portal/priceLists";
+import { visiblePriceLists } from "@/lib/portal/priceLists";
 
 export const dynamic = "force-dynamic";
 
@@ -30,7 +30,7 @@ export default async function AdminPriceListsPage() {
   const adminEmail = getPortalAdminEmailFromHeaders(await headers());
   if (!adminEmail) return <AdminAccessRequired />;
 
-  const rows = [...priceLists].sort((a, b) => a.code.localeCompare(b.code));
+  const rows = [...visiblePriceLists].sort((a, b) => a.code.localeCompare(b.code));
   const missingAssigned = rows.filter(
     (row) => row.assignmentStatus === "assigned" && !row.generated
   );

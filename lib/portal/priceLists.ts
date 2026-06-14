@@ -1,5 +1,9 @@
 import registryJson from "@/lib/portal/generated/priceListRegistry.json";
-import { normalizePriceListCode } from "@/lib/pricing/priceListCodes";
+import {
+  filterVisiblePriceListCodes,
+  isVisiblePriceListCode,
+  normalizePriceListCode,
+} from "@/lib/pricing/priceListCodes";
 
 export type PriceListCode = string;
 
@@ -76,6 +80,14 @@ export const priceLists: PortalPriceList[] = (
     configured: entry.generated,
   };
 });
+
+export const visiblePriceLists = priceLists.filter((entry) =>
+  isVisiblePriceListCode(entry.code)
+);
+
+export const visiblePriceListCodes = filterVisiblePriceListCodes(
+  priceLists.map((entry) => entry.code)
+);
 
 const priceListByCode = new Map(
   priceLists.map((priceList) => [priceList.code, priceList])

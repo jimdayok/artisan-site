@@ -22,6 +22,7 @@ const runtimeOutputPath = path.join(
   "generated",
   "priceListRegistry.json"
 );
+const hiddenCodesPath = path.join(root, "config", "hidden-price-list-codes.json");
 
 const packageCodes = new Set(["B5", "S5", "TK", "VX", "M5", "Y5"]);
 const invalidNamePattern = /\b(TEST|TEMPLATE|DO NOT USE|NOT FOR BILLING)\b/i;
@@ -33,6 +34,11 @@ function normalizeCode(value) {
 async function readJson(filePath, fallback) {
   if (!existsSync(filePath)) return fallback;
   return JSON.parse(await readFile(filePath, "utf8"));
+}
+
+async function loadHiddenCodes() {
+  const raw = await readJson(hiddenCodesPath, []);
+  return new Set((raw ?? []).map((code) => normalizeCode(code)));
 }
 
 function getNormalizedPath(code) {
@@ -48,6 +54,7 @@ async function readNormalizedPayload(code) {
 async function main() {
   const manifest = await readJson(manifestPath, { codeSummaries: [] });
   const accounts = await readJson(accountsPath, []);
+  const hiddenCodes = await loadHiddenCodes();
   const summaries = new Map(
     (manifest.codeSummaries ?? []).map((entry) => [normalizeCode(entry.code), entry])
   );
@@ -119,6 +126,19 @@ async function main() {
       .filter((entry) => entry.invalidOrUnknown)
       .map((entry) => entry.code),
     entries,
+    visibleDetectedCodes: entries.filter((entry) => !hiddenCodes.has(entry.code) && entry.detected).map((entry) => entry.code),
+    visibleGeneratedCodes: entries.filter((entry) => !hiddenCodes.has(entry.code) && entry.generated).map((entry) => entry.code),
+    visibleAssignedMissingGenerated: entries
+      .filter((entry) => !hiddenCodes.has(entry.code) && entry.assignedAccountCount > 0 && !entry.generated)
+      .map((entry) => entry.code),
+    visibleGeneratedUnassigned: entries
+      .filter((entry) => !hiddenCodes.has(entry.code) && entry.generated && entry.assignedAccountCount === 0)
+      .map((entry) => entry.code),
+    visiblePackageCodes: entries.filter((entry) => !hiddenCodes.has(entry.code) && entry.package).map((entry) => entry.code),
+    visibleInvalidOrUnknownCodes: entries
+      .filter((entry) => !hiddenCodes.has(entry.code) && entry.invalidOrUnknown)
+      .map((entry) => entry.code),
+    visibleEntries: entries.filter((entry) => !hiddenCodes.has(entry.code)),
   };
 
   const serializedReport = `${JSON.stringify(report, null, 2)}\n`;
@@ -127,10 +147,10 @@ async function main() {
   await writeFile(reportOutputPath, serializedReport, "utf8");
   await writeFile(runtimeOutputPath, serializedReport, "utf8");
 
-  console.log(`[pricing:registry] detected ${report.detectedCodes.length} price lists`);
-  console.log(`[pricing:registry] generated ${report.generatedCodes.length} normalized files`);
+  console.log(`[pricing:registry] detected ${report.visibleDetectedCodes.length} visible price lists`);
+  console.log(`[pricing:registry] generated ${report.visibleGeneratedCodes.length} visible normalized files`);
   console.log(
-    `[pricing:registry] assigned without generated data: ${report.assignedMissingGenerated.join(", ") || "none"}`
+    `[pricing:registry] assigned without generated data: ${report.visibleAssignedMissingGenerated.join(", ") || "none"}`
   );
   console.log(`[pricing:registry] report: ${reportOutputPath}`);
   console.log(`[pricing:registry] runtime registry: ${runtimeOutputPath}`);

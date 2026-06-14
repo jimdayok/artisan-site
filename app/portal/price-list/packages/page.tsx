@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getAuthorizedPortalSectionForPage } from "@/lib/portal/priceListAccess";
-import { isPackagePriceListCode } from "@/lib/pricing/priceListCodes";
+import { isPackagePriceListCode, isVisiblePriceListCode } from "@/lib/pricing/priceListCodes";
 import { canonicalPriceListCode } from "@/lib/portal/priceLists";
 import PriceListAccessMessage from "../PriceListAccessMessage";
 import GeneratedInteractivePriceListPage from "../GeneratedInteractivePriceListPage";
@@ -71,6 +71,7 @@ export default async function PrivatePricePackagesPage({
     .filter(isPackagePriceListCode)
     .filter((code, index, values) => values.indexOf(code) === index)
     .sort((a, b) => a.localeCompare(b));
+  const visibleAssignedPackageCodes = assignedPackageCodes.filter(isVisiblePriceListCode);
   const requestedCode = params.code ? canonicalPriceListCode(params.code) : "";
   const selectedCode = requestedCode || assignedPackageCodes[0] || "";
 
@@ -89,9 +90,9 @@ export default async function PrivatePricePackagesPage({
   return (
     <main className="min-h-screen bg-[#f4eee4] px-4 py-8 text-[#122033] md:px-8">
       <div className="mx-auto max-w-7xl">
-        {assignedPackageCodes.length > 1 ? (
+        {visibleAssignedPackageCodes.length > 1 ? (
           <nav aria-label="Assigned package price lists" className="mb-5 flex flex-wrap gap-2">
-            {assignedPackageCodes.map((code) => (
+            {visibleAssignedPackageCodes.map((code) => (
               <Link
                 key={code}
                 href={`/portal/price-list/packages?code=${encodeURIComponent(code)}`}

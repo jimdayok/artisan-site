@@ -330,6 +330,16 @@ function AccountCommandStrip({
   );
 }
 
+function hasActiveAccountJumpFilter(query: DashboardQuery) {
+  return Boolean(
+    query.q ||
+      query.division ||
+      query.lab ||
+      query.rep ||
+      query.priceList
+  );
+}
+
 function ActionButtons({ item, mode }: { item: ComparedRow; mode: ComparisonMode }) {
   const email = firstEmail(item.row);
   const buttonClass =
@@ -361,6 +371,73 @@ function ActionButtons({ item, mode }: { item: ComparedRow; mode: ComparisonMode
         className={buttonClass}
       />
     </div>
+  );
+}
+
+function AccountResultList({
+  items,
+  mode,
+  title = "Matched Accounts",
+}: {
+  items: ComparedRow[];
+  mode: ComparisonMode;
+  title?: string;
+}) {
+  return (
+    <section className="mt-5 rounded-md border border-[#d8c49b] bg-[#fffaf1]/88 p-5 shadow-[0_18px_55px_rgba(23,42,40,0.08)]">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b7650]">
+            Account Results
+          </p>
+          <h2 className="mt-2 text-2xl font-semibold text-[#172a28]">
+            {title}
+          </h2>
+        </div>
+        <span className="rounded-full border border-[#d8c49b] bg-white px-3 py-2 text-xs font-bold uppercase tracking-[0.12em] text-[#706759]">
+          {items.length} match{items.length === 1 ? "" : "es"}
+        </span>
+      </div>
+      <div className="mt-4 grid gap-3">
+        {items.length ? (
+          items.slice(0, 12).map((item) => {
+            const { row, comparison } = item;
+
+            return (
+              <article
+                key={row.acctId}
+                className="rounded-md border border-[#eadfce] bg-white/82 p-4"
+              >
+                <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+                  <div>
+                    <Link
+                      href={accountHref(row, mode)}
+                      className="text-lg font-semibold text-[#172a28] underline-offset-4 hover:underline"
+                    >
+                      {row.businessName}
+                    </Link>
+                    <p className="mt-1 text-sm text-[#706759]">
+                      {row.acctId} · {row.accountNumbers} · {row.lab || "Lab unavailable"} · Rep {repDisplay(row)}
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-4 lg:min-w-[520px]">
+                    <Metric label="CM Jobs" value={number(row.cmJobs)} />
+                    <Metric label="PM Jobs" value={number(row.pmJobs)} />
+                    <Metric label="JPD Change" value={signed(comparison.jpdDelta)} />
+                    <Metric label="Sales at Risk" value={money(comparison.projectedSalesAtRisk)} />
+                  </div>
+                </div>
+                <ActionButtons item={item} mode={mode} />
+              </article>
+            );
+          })
+        ) : (
+          <p className="rounded-md border border-[#eadfce] bg-white/72 p-4 text-sm text-[#706759]">
+            No accounts match the current filters.
+          </p>
+        )}
+      </div>
+    </section>
   );
 }
 
@@ -758,6 +835,14 @@ export default function AdminLandingDashboard({
         totalCount={roleRows.length}
       />
 
+      {hasActiveAccountJumpFilter(query) ? (
+        <AccountResultList
+          items={filtered}
+          mode={mode}
+          title="Jump directly to these accounts"
+        />
+      ) : null}
+
       <section className="mt-8 rounded-md border border-[#d8c49b] bg-[#172a28] p-6 text-white shadow-[0_28px_90px_rgba(23,42,40,0.22)] sm:p-8">
         <div className="grid gap-6 lg:grid-cols-[1fr_420px] lg:items-end">
           <div>
@@ -873,6 +958,7 @@ export default function AdminLandingDashboard({
             <Search className="h-4 w-4" /> Apply filters
           </button>
         </form>
+        <AccountResultList items={filtered} mode={mode} title="Filtered accounts" />
       </section>
 
       {role.kind === "admin" ? (

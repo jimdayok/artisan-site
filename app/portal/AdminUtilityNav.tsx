@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const links = [
+  { href: "/", label: "Main Website" },
   { href: "/portal/admin", label: "Admin Dashboard" },
   { href: "/portal/admin/price-lists", label: "Price Lists" },
   { href: "/portal/admin/rewards", label: "Rewards" },
@@ -29,7 +30,9 @@ export default function AdminUtilityNav() {
               ? "Return to Admin Dashboard"
               : link.label;
           const active =
-            link.href === "/portal/admin"
+            link.href === "/"
+              ? pathname === "/"
+              : link.href === "/portal/admin"
               ? pathname === "/portal/admin"
               : link.href === "/portal"
                 ? isCustomerMode

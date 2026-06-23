@@ -721,8 +721,9 @@ function PolicyPanel({
       ) : null}
       <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-start">
         <div>
-          <div className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8a7654]">
-            {section.navLabel}
+          <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.24em] text-[#8a7654]">
+            <LineIcon name={section.icon} className="h-4 w-4" />
+            <span>{section.navLabel}</span>
           </div>
           <h3 className="mt-2 text-2xl font-semibold leading-tight text-[#1f1a17]">
             {section.title}

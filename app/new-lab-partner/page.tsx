@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   title: "New Lab Partner Onboarding | Artisan Lab Network",
   description:
     "A guided launch center for new Artisan Lab Network customers to set up ordering, learn their lab, access pricing and reports, and train their team.",
+  alternates: {
+    canonical: "/new-lab-partner",
+  },
 };
 
 export default function NewLabPartnerPage() {

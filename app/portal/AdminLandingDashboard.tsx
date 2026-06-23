@@ -273,6 +273,59 @@ function ModeToggle({
   );
 }
 
+function AccountCommandStrip({
+  mode,
+  query,
+  options,
+  visibleCount,
+  totalCount,
+}: {
+  mode: ComparisonMode;
+  query: DashboardQuery;
+  options: {
+    divisions: string[];
+    labs: string[];
+    reps: string[];
+    priceLists: string[];
+  };
+  visibleCount: number;
+  totalCount: number;
+}) {
+  return (
+    <section className="mt-6 rounded-md border border-[#d8c49b] bg-[#fffaf1]/92 p-4 shadow-[0_16px_44px_rgba(23,42,40,0.08)] sm:p-5">
+      <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b7650]">
+            Account Jump
+          </p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-[#172a28]">
+            Search or filter an account first.
+          </h2>
+          <p className="mt-1 text-sm text-[#706759]">
+            Showing {number(visibleCount)} of {number(totalCount)} visible accounts.
+          </p>
+        </div>
+        <form className="grid flex-1 gap-2 sm:grid-cols-2 lg:grid-cols-[minmax(220px,1.4fr)_repeat(4,minmax(130px,1fr))_auto]">
+          <input type="hidden" name="view" value={mode} />
+          <input
+            name="q"
+            defaultValue={query.q}
+            placeholder="Account, practice, email, lab, rep"
+            className="min-h-11 rounded-full border border-[#d8c49b] bg-white px-4 text-sm text-[#172a28] outline-none focus:border-[#172a28]"
+          />
+          <Select name="division" value={query.division} label="All Types" options={options.divisions} />
+          <Select name="lab" value={query.lab} label="All Labs" options={options.labs} />
+          <Select name="rep" value={query.rep} label="All Reps" options={options.reps} />
+          <Select name="priceList" value={query.priceList} label="All Lists" options={options.priceLists} />
+          <button className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#172a28] px-5 text-sm font-semibold text-white transition hover:bg-[#27433f]">
+            <Search className="h-4 w-4" /> Find
+          </button>
+        </form>
+      </div>
+    </section>
+  );
+}
+
 function ActionButtons({ item, mode }: { item: ComparedRow; mode: ComparisonMode }) {
   const email = firstEmail(item.row);
   const buttonClass =
@@ -682,6 +735,14 @@ export default function AdminLandingDashboard({
       adminEmail={authenticatedEmail}
       eyebrow="ALN Sales Intervention"
     >
+      <AccountCommandStrip
+        mode={mode}
+        query={query}
+        options={options}
+        visibleCount={filtered.length}
+        totalCount={roleRows.length}
+      />
+
       <section className="mt-8 rounded-md border border-[#d8c49b] bg-[#172a28] p-6 text-white shadow-[0_28px_90px_rgba(23,42,40,0.22)] sm:p-8">
         <div className="grid gap-6 lg:grid-cols-[1fr_420px] lg:items-end">
           <div>

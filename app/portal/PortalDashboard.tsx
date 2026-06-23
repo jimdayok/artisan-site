@@ -1,28 +1,21 @@
 import Link from "next/link";
 import Image from "next/image";
 import { forbidden } from "next/navigation";
-import { PortalPerformanceCharts } from "./PortalPerformanceCharts";
 import {
   Activity,
   BadgeCheck,
   BookOpen,
   CircleDollarSign,
   ExternalLink,
-  Eye,
-  Glasses,
   Home,
   Layers,
   LogOut,
-  Mail,
   MapPin,
-  Minus,
   Newspaper,
   Package,
   ShieldCheck,
   Sparkles,
   Target,
-  TrendingDown,
-  TrendingUp,
   Trophy,
   Users,
   type LucideIcon,
@@ -31,7 +24,6 @@ import { isPortalAdminEmail } from "@/lib/portal/admin";
 import {
   getCustomerTypeInfoFromProfile,
   hasModernPackageSavingsWarning,
-  hasProgramUsage,
 } from "@/lib/portal/accountInsights";
 import {
   getConfiguredDevelopmentAdminEmails,
@@ -57,7 +49,6 @@ import { isPackagePriceListCode } from "@/lib/pricing/priceListCodes";
 import {
   getPortalWorkbookProfileByEmail,
   getPortalWorkbookProfilesByEmail,
-  profileHasSequelRebateInvitation,
   type PortalWorkbookProfile,
   type PortalWorkbookAccount,
 } from "@/lib/portal/workbookAccountData";
@@ -91,14 +82,6 @@ const currencyFormatter = new Intl.NumberFormat("en-US", {
 });
 
 const numberFormatter = new Intl.NumberFormat("en-US");
-
-function formatCurrency(value: number) {
-  return currencyFormatter.format(value);
-}
-
-function formatNumber(value: number) {
-  return numberFormatter.format(value);
-}
 
 function formatPortalDate(value: string) {
   if (!value) return "Not available";
@@ -135,22 +118,6 @@ function correctionHref({
   return `mailto:sales@artisanlabnetwork.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
-function formatPercent(value: number) {
-  const normalizedValue = value <= 1 ? value * 100 : value;
-
-  return Math.max(0, Math.min(100, Math.round(normalizedValue)));
-}
-
-function formatDecimal(value: number) {
-  return new Intl.NumberFormat("en-US", {
-    maximumFractionDigits: 1,
-  }).format(value);
-}
-
-function containsText(value: string | undefined, match: string) {
-  return Boolean(value?.toLowerCase().includes(match.toLowerCase()));
-}
-
 function getPercentChange(current: number, previous: number) {
   if (previous === 0) {
     if (current === 0) return { direction: "flat" as const, label: "No change" };
@@ -168,22 +135,6 @@ function getPercentChange(current: number, previous: number) {
     direction: change > 0 ? ("up" as const) : ("down" as const),
     label: `${change > 0 ? "+" : ""}${change.toFixed(1)}% vs previous month`,
   };
-}
-
-function formatPerDayMetric(value: number, unit: string) {
-  return `${formatDecimal(value)} ${unit}/day`;
-}
-
-function formatCurrencyPerDay(value: number) {
-  if (!Number.isFinite(value) || value <= 0) return "$0/day";
-  return `${currencyFormatter.format(value)}/day`;
-}
-
-function getSalesPerDay(sales: number, jobs: number, jobsPerDay: number) {
-  if (sales <= 0 || jobs <= 0 || jobsPerDay <= 0) return 0;
-
-  // days = total jobs / jobs-per-day, then dollars-per-day = sales / days.
-  return sales / (jobs / jobsPerDay);
 }
 
 function loyaltyTierLabel(value?: string) {
@@ -223,47 +174,6 @@ function customerCategoryLabel({
         }
       : undefined
   )?.label;
-}
-
-function showNeurolensContent(account?: PortalWorkbookAccount) {
-  if (!account) return false;
-
-  return (
-    account.division.trim().toUpperCase() === "NL" ||
-    containsText(account.primaryPalPrivatePay, "neurolens") ||
-    account.cmNlJobs + account.pmNlJobs + account.ppmNlJobs > 0
-  );
-}
-
-function showSequelRewardsContent({
-  account,
-  invited,
-}: {
-  account?: PortalWorkbookAccount;
-  invited: boolean;
-}) {
-  return Boolean(
-    invited ||
-      (account &&
-        account.cmSqlJobs + account.pmSqlJobs + account.ppmSqlJobs > 0)
-  );
-}
-
-function mixData({
-  activeLabel,
-  activePercent,
-  activeColor = "#172a28",
-}: {
-  activeLabel: string;
-  activePercent: number;
-  activeColor?: string;
-}) {
-  const active = formatPercent(activePercent);
-
-  return [
-    { label: activeLabel, value: active, color: activeColor },
-    { label: `Non-${activeLabel}`, value: Math.max(0, 100 - active), color: "#e8ddca" },
-  ];
 }
 
 function formatAddressLines(value?: string) {
@@ -626,8 +536,20 @@ function PriceListCard({
   accountNumber?: string;
 }) {
   const downloadParams = new URLSearchParams({ code: priceList.code });
+  const exportParams = new URLSearchParams({
+    code: priceList.code,
+    priceMode: "edged",
+  });
 
-  if (accountNumber) downloadParams.set("account", accountNumber);
+  if (accountNumber) {
+    downloadParams.set("account", accountNumber);
+    exportParams.set("account", accountNumber);
+  }
+
+  const generatedExportHref = `/portal/price-list/export?${exportParams.toString()}`;
+  const staticDownloadHref = `/api/portal/download?${downloadParams.toString()}`;
+  const downloadHref = priceList.generated ? generatedExportHref : staticDownloadHref;
+  const canDownload = priceList.configured && (priceList.generated || Boolean(priceList.r2Key));
 
   return (
     <div className="group relative overflow-hidden border border-[#d8c49b] bg-white/64 p-5 shadow-[0_12px_34px_rgba(23,42,40,0.06)] transition hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_18px_44px_rgba(23,42,40,0.1)]">
@@ -669,9 +591,9 @@ function PriceListCard({
             View {priceList.code} Online Pricing
           </Link>
         ) : null}
-        {priceList.configured && priceList.r2Key ? (
+        {canDownload ? (
           <a
-            href={`/api/portal/download?${downloadParams.toString()}`}
+            href={downloadHref}
             className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#d8c49b] bg-[#fffaf1] px-5 py-2 text-sm font-semibold text-[#172a28] transition hover:bg-white"
           >
             Download PDF
@@ -895,113 +817,6 @@ function PortalResourceCard({ card }: { card: PortalSectionCard }) {
   );
 }
 
-function SequelRewardsInvitationCard({ invited }: { invited: boolean }) {
-  return (
-    <section className="relative isolate overflow-hidden border border-[#b89a61] bg-[#172a28] p-6 text-white shadow-[0_24px_90px_rgba(23,42,40,0.18)] sm:p-9 lg:col-span-3">
-      <div className="absolute inset-y-0 right-0 -z-10 w-1/2 bg-[radial-gradient(circle_at_70%_35%,rgba(216,196,155,0.22),transparent_42%)]" />
-      <div className="max-w-3xl">
-        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#d8c49b]">
-          Invitation Program
-        </p>
-        <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em]">
-          {invited
-            ? "You've Been Invited: Sequel Artisan Rewards"
-            : "Sequel Artisan Rewards"}
-        </h2>
-        <p className="mt-4 text-sm leading-7 text-white/76">
-          {invited
-            ? "Your practice has been invited to participate in the Sequel Artisan Rewards program. Learn how the program works and how your practice can qualify for rewards."
-            : "Your practice has Sequel Artisan Rewards activity. Review program details and see how Artisan supports independent practices using Sequel designs."}
-        </p>
-      </div>
-      <Link
-        href="/programs#sequel-artisan-rewards"
-        className="mt-6 inline-flex min-h-12 items-center justify-center rounded-full bg-[#d8c49b] px-6 py-3 text-sm font-semibold text-[#172a28] transition hover:bg-white"
-      >
-        Learn About Sequel Artisan Rewards
-      </Link>
-    </section>
-  );
-}
-
-function AccountStatCard({
-  label,
-  value,
-  detail,
-  tone = "light",
-  perDay,
-  trend,
-}: {
-  label: string;
-  value: string;
-  detail?: string;
-  tone?: "light" | "dark";
-  perDay?: string;
-  trend?: ReturnType<typeof getPercentChange>;
-}) {
-  const isDark = tone === "dark";
-  const TrendIcon =
-    trend?.direction === "up"
-      ? TrendingUp
-      : trend?.direction === "down"
-        ? TrendingDown
-        : Minus;
-  const trendClass =
-    trend?.direction === "up"
-      ? isDark
-        ? "text-[#9dbf9a]"
-        : "text-[#315f48]"
-      : trend?.direction === "down"
-        ? isDark
-          ? "text-[#d7aaa2]"
-          : "text-[#9b5148]"
-        : isDark
-          ? "text-white/62"
-          : "text-[#706759]";
-
-  return (
-    <div
-      className={`relative overflow-hidden border p-5 shadow-[0_14px_38px_rgba(23,42,40,0.07)] ${
-        isDark
-          ? "border-[#172a28] bg-[#172a28] text-white"
-          : "border-[#d8c49b] bg-[#fffaf1] text-[#172a28]"
-      }`}
-    >
-      <div
-        className={`absolute inset-x-0 top-0 h-1 ${
-          isDark ? "bg-[#d8c49b]" : "bg-[#b89a61]"
-        }`}
-      />
-      <p
-        className={`text-xs font-semibold uppercase tracking-[0.22em] ${
-          isDark ? "text-[#d8c49b]" : "text-[#8b7650]"
-        }`}
-      >
-        {label}
-      </p>
-      <p className="mt-4 text-3xl font-semibold tracking-[-0.035em]">
-        {value}
-      </p>
-      {perDay ? (
-        <p className={`mt-2 text-sm font-semibold ${isDark ? "text-white/72" : "text-[#5d5548]"}`}>
-          {perDay}
-        </p>
-      ) : null}
-      {trend ? (
-        <p className={`mt-3 inline-flex items-center gap-1.5 text-xs font-semibold ${trendClass}`}>
-          <TrendIcon className="h-4 w-4" />
-          {trend.label}
-        </p>
-      ) : null}
-      {detail ? (
-        <p className={`mt-2 text-xs leading-5 ${isDark ? "text-white/68" : "text-[#706759]"}`}>
-          {detail}
-        </p>
-      ) : null}
-    </div>
-  );
-}
-
 function UsageRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="grid gap-2 border-t border-[#d8c49b] py-4 text-sm sm:grid-cols-[minmax(9rem,1fr)_minmax(0,1.35fr)] sm:gap-5">
@@ -1010,390 +825,6 @@ function UsageRow({ label, value }: { label: string; value: string }) {
         {value || "Not available"}
       </span>
     </div>
-  );
-}
-
-function ProgramUsageCard({
-  label,
-  value,
-  href,
-  recommendation,
-  icon: Icon,
-}: {
-  label: string;
-  value: string;
-  href: string;
-  recommendation?: string;
-  icon: LucideIcon;
-}) {
-  const active = hasProgramUsage(value);
-
-  return (
-    <Link
-      href={href}
-      className="group relative flex min-h-56 flex-col overflow-hidden border border-[#d8c49b] bg-[#fffaf1] p-5 shadow-[0_12px_34px_rgba(23,42,40,0.06)] transition hover:-translate-y-0.5 hover:border-[#b89a61] hover:bg-white hover:shadow-[0_20px_46px_rgba(23,42,40,0.1)]"
-    >
-      <div
-        className={`absolute inset-x-0 top-0 h-1 ${
-          active ? "bg-[#172a28]" : "bg-[#d8c49b]"
-        }`}
-      />
-      <div className="flex items-start justify-between gap-4">
-        <span
-          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${
-            active ? "bg-[#172a28] text-white" : "bg-white text-[#8b7650]"
-          }`}
-        >
-          <Icon className="h-5 w-5" />
-        </span>
-        <span
-          className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${
-            active
-              ? "bg-[#e6f0e7] text-[#315f48]"
-              : "border border-[#d8c49b] bg-white/60 text-[#706759]"
-          }`}
-        >
-          {active ? "Active" : "Available"}
-        </span>
-      </div>
-      <div className="mt-5 flex flex-1 flex-col">
-        <h3 className="text-xl font-semibold leading-6 tracking-[-0.02em] text-[#172a28]">
-          {label}
-        </h3>
-        <p className="mt-3 min-h-12 text-sm leading-6 text-[#706759]">
-          {value || "No current activity"}
-        </p>
-        <div className="mt-auto pt-5">
-          {recommendation ? (
-            <p className="mb-4 border-t border-[#d8c49b] pt-4 text-xs leading-5 text-[#8b7650]">
-              {recommendation}
-            </p>
-          ) : null}
-          <span className="inline-flex items-center gap-2 text-sm font-semibold text-[#172a28] underline decoration-[#d8c49b] underline-offset-4 transition group-hover:decoration-[#172a28]">
-            Learn more
-            <ExternalLink className="h-3.5 w-3.5" />
-          </span>
-        </div>
-      </div>
-    </Link>
-  );
-}
-
-function ModernPackageSavingsAlert() {
-  return (
-    <section className="border border-[#b89a61] bg-[#172a28] p-6 text-white shadow-[0_24px_90px_rgba(23,42,40,0.16)] sm:p-8 lg:col-span-2">
-      <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#d8c49b]">
-        Package Opportunity
-      </p>
-      <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em]">
-        You May Be Missing Package Savings
-      </h2>
-      <p className="mt-4 max-w-3xl text-sm leading-7 text-white/76">
-        Your account shows Modern Frame System usage, but not Modern Package
-        System usage. You may be missing reduced costs available through our
-        package program.
-      </p>
-      <Link
-        href="/provider-resources#modern-package-system"
-        className="mt-6 inline-flex min-h-12 items-center justify-center rounded-full bg-[#d8c49b] px-6 py-3 text-sm font-semibold text-[#172a28] transition hover:bg-white"
-      >
-        Learn About Modern Package Savings
-      </Link>
-    </section>
-  );
-}
-
-function NeurolensExpansionInvitation() {
-  return (
-    <section className="relative isolate overflow-hidden border border-[#b89a61] bg-[#fffaf1]/90 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] sm:p-9 lg:col-span-3">
-      <div className="absolute right-0 top-0 -z-10 h-full w-1/2 bg-[radial-gradient(circle_at_68%_22%,rgba(49,95,88,0.15),transparent_42%)]" />
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-        <div className="max-w-3xl">
-          <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#172a28] text-white">
-            <Sparkles className="h-5 w-5" />
-          </span>
-          <p className="mt-5 text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
-            Lens Opportunities
-          </p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em] text-[#172a28]">
-            Explore More Artisan Lens Options
-          </h2>
-          <p className="mt-4 text-sm leading-7 text-[#706759]">
-            Your account currently utilizes Neurolens as a primary private-pay
-            design. Artisan also offers additional premium lens technologies and
-            independent-exclusive solutions through IOT, Tokai, Artisan Lens
-            Systems, and more.
-          </p>
-        </div>
-        <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
-          <Link
-            href="/provider-resources#lens-systems"
-            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#172a28] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#27433f]"
-          >
-            <BookOpen className="h-4 w-4" />
-            Explore Lens Technologies
-          </Link>
-          <a
-            href="mailto:sales@artisanlabnetwork.com"
-            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#d8c49b] bg-white/65 px-6 py-3 text-sm font-semibold text-[#172a28] transition hover:bg-white"
-          >
-            <Mail className="h-4 w-4" />
-            Contact Artisan Support
-          </a>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function PortalAccountHero({
-  practiceName,
-  accountNumber,
-  customerTypeLabel,
-  account,
-  dashboardAccount,
-  authenticatedEmail,
-  adminPreviewAccountName,
-}: {
-  practiceName: string;
-  accountNumber: string;
-  customerTypeLabel?: string;
-  account?: PortalWorkbookAccount;
-  dashboardAccount?: PortalDashboardV1Account;
-  authenticatedEmail: string;
-  adminPreviewAccountName?: string;
-}) {
-  const palItems = [
-    { label: "Primary PAL Private", value: account?.primaryPalPrivatePay },
-    { label: "Primary PAL VSP", value: account?.primaryPalVsp },
-  ].filter((item) => item.value);
-
-  return (
-    <section className="relative isolate overflow-hidden border border-[#b89a61] bg-[#172a28] p-6 text-white shadow-[0_28px_100px_rgba(23,42,40,0.22)] sm:p-8 lg:col-span-3">
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_78%_18%,rgba(216,196,155,0.2),transparent_34%),linear-gradient(135deg,rgba(49,95,88,0.38),transparent_52%)]" />
-      <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-        <div className="max-w-4xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#d8c49b]">
-            Acct ID {dashboardAccount?.account_id || accountNumber || "Unavailable"}
-          </p>
-          <h1 className="mt-5 break-words text-4xl font-semibold tracking-[-0.055em] sm:text-6xl lg:text-7xl">
-            {dashboardAccount?.business_name || practiceName}
-          </h1>
-          <div className="mt-6 flex flex-wrap gap-3">
-            {customerTypeLabel ? (
-              <span className="inline-flex items-center gap-2 rounded-full border border-[#d8c49b]/55 bg-[#fffaf1]/10 px-4 py-2 text-sm font-semibold">
-                {customerTypeLabel}
-              </span>
-            ) : null}
-            {(dashboardAccount?.all_account_numbers || accountNumber) ? (
-              <span className="rounded-full border border-white/18 px-4 py-2 text-sm text-white/82">
-                Accounts {dashboardAccount?.all_account_numbers || accountNumber}
-              </span>
-            ) : null}
-            {(dashboardAccount?.tier_status?.previous_month_tier_rank_by_acct_id || account?.tier) ? (
-              <span className="inline-flex items-center gap-2 rounded-full border border-[#d8c49b]/70 bg-[#d8c49b] px-4 py-2 text-sm font-semibold text-[#172a28] shadow-[0_10px_28px_rgba(0,0,0,0.12)]">
-                <BadgeCheck className="h-4 w-4" />
-                {loyaltyTierLabel(
-                  dashboardAccount?.tier_status?.previous_month_tier_rank_by_acct_id || account?.tier
-                )}
-              </span>
-            ) : null}
-          </div>
-          {palItems.length > 0 ? (
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
-              {palItems.map((item) => (
-                <div
-                  key={item.label}
-                  className="border border-white/16 bg-white/[0.06] p-4"
-                >
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d8c49b]">
-                    {item.label}
-                  </p>
-                  <p className="mt-2 text-sm font-semibold leading-6 text-white">
-                    {item.value}
-                  </p>
-                </div>
-              ))}
-            </div>
-          ) : null}
-        </div>
-
-        <div className="grid gap-3 text-sm leading-6 text-white/78 lg:min-w-80">
-          <p>
-            <span className="text-[#d8c49b]">Last shipped</span>
-            <br />
-            <span className="font-semibold text-white">
-              {formatPortalDate(
-                account?.lastShippedDate || dashboardAccount?.latest_ship_date || ""
-              )}
-            </span>
-          </p>
-          <p>
-            <span className="text-[#d8c49b]">Primary lab</span>
-            <br />
-            <span className="font-semibold text-white">
-              {account?.lastLabName || dashboardAccount?.lab_name || "Not available"}
-            </span>
-          </p>
-          <p>
-            <span className="text-[#d8c49b]">
-              {adminPreviewAccountName ? "Admin preview identity" : "Logged in as"}
-            </span>
-            <br />
-            <span className="font-semibold text-white">{authenticatedEmail}</span>
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function AccountPerformanceSection({
-  account,
-  showNeurolens,
-  showSequelRewards,
-}: {
-  account: PortalWorkbookAccount;
-  showNeurolens: boolean;
-  showSequelRewards: boolean;
-}) {
-  const vspShare =
-    account.cmVspSow || (account.cmJobs > 0 ? account.cmVspJobs / account.cmJobs : 0);
-  const nlShare =
-    account.cmNlSow || (account.cmJobs > 0 ? account.cmNlJobs / account.cmJobs : 0);
-  const sqlShare = account.cmJobs > 0 ? account.cmSqlJobs / account.cmJobs : 0;
-  const mixCharts = [
-    mixData({
-      activeLabel: "VSP",
-      activePercent: vspShare,
-    }),
-    ...(showNeurolens
-      ? [
-          mixData({
-            activeLabel: "Neurolens",
-            activePercent: nlShare,
-            activeColor: "#315f58",
-          }),
-        ]
-      : []),
-    ...(showSequelRewards
-      ? [
-          mixData({
-            activeLabel: "Sequel",
-            activePercent: sqlShare,
-            activeColor: "#8b7650",
-          }),
-        ]
-      : []),
-  ];
-  const trendData = [
-    {
-      label: "PPM",
-      purchases: account.ppmSales,
-      rxOrders: account.ppmJobs,
-      rxOrdersPerDay: account.ppmJpd,
-    },
-    {
-      label: "PM",
-      purchases: account.pmSales,
-      rxOrders: account.pmJobs,
-      rxOrdersPerDay: account.pmJpd,
-    },
-    {
-      label: "CM",
-      purchases: account.cmSales,
-      rxOrders: account.cmJobs,
-      rxOrdersPerDay: account.cmJpd,
-    },
-  ];
-
-  return (
-    <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9 lg:col-span-3">
-      <div className="mb-7 border-b border-[#d8c49b] pb-6">
-        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
-          Account Performance
-        </p>
-        <h2 className="mt-3 text-3xl font-semibold tracking-[-0.03em] text-[#172a28]">
-          Performance snapshot
-        </h2>
-        <p className="mt-3 max-w-3xl text-sm leading-6 text-[#706759]">
-          Purchases include the VSP portion paid directly to the lab when
-          applicable. Rx Orders are shown as current, previous, and prior
-          previous month views.
-        </p>
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
-        <AccountStatCard
-          label="Current Month Purchases"
-          value={formatCurrency(account.cmSales)}
-          tone="dark"
-          perDay={formatCurrencyPerDay(
-            getSalesPerDay(account.cmSales, account.cmJobs, account.cmJpd)
-          )}
-          trend={getPercentChange(account.cmSales, account.pmSales)}
-        />
-        <AccountStatCard
-          label="Previous Month Purchases"
-          value={formatCurrency(account.pmSales)}
-          perDay={formatCurrencyPerDay(
-            getSalesPerDay(account.pmSales, account.pmJobs, account.pmJpd)
-          )}
-          trend={getPercentChange(account.pmSales, account.ppmSales)}
-        />
-        <AccountStatCard
-          label="Current Month Rx Orders"
-          value={formatNumber(account.cmJobs)}
-          perDay={formatPerDayMetric(account.cmJpd, "orders")}
-          trend={getPercentChange(account.cmJobs, account.pmJobs)}
-        />
-        <AccountStatCard
-          label="Previous Month Rx Orders"
-          value={formatNumber(account.pmJobs)}
-          perDay={formatPerDayMetric(account.pmJpd, "orders")}
-          trend={getPercentChange(account.pmJobs, account.ppmJobs)}
-        />
-        <AccountStatCard
-          label="Current Month Redo %"
-          value="TBD"
-          detail="Live redo data will appear here when available."
-        />
-        <AccountStatCard
-          label="Previous Month Redo %"
-          value="TBD"
-          detail="Live redo data will appear here when available."
-        />
-      </div>
-
-      <div className="mt-8">
-        <PortalPerformanceCharts
-          trends={trendData}
-          mixes={mixCharts}
-        />
-      </div>
-
-      <div className="mt-8 grid gap-4 lg:grid-cols-3">
-        <AccountStatCard
-          label="VSP Rx Orders"
-          value={formatNumber(account.cmVspJobs)}
-          detail={`${formatPercent(vspShare)}% VSP · ${100 - formatPercent(vspShare)}% Non-VSP`}
-        />
-        {showNeurolens ? (
-          <AccountStatCard
-            label="Neurolens Rx Orders"
-            value={formatNumber(account.cmNlJobs)}
-            detail={`${formatPercent(nlShare)}% of current Rx order mix`}
-          />
-        ) : null}
-        {showSequelRewards ? (
-          <AccountStatCard
-            label="Sequel Rx Orders"
-            value={formatNumber(account.cmSqlJobs)}
-            detail={`${formatPercent(sqlShare)}% of current Rx order mix`}
-          />
-        ) : null}
-      </div>
-    </section>
   );
 }
 
@@ -1566,104 +997,6 @@ function UserContactSection({
   );
 }
 
-function ProgramUsageSection({
-  account,
-  showNeurolens,
-  showSequelRewards,
-  hasSequelRebateInvitation,
-}: {
-  account: PortalWorkbookAccount;
-  showNeurolens: boolean;
-  showSequelRewards: boolean;
-  hasSequelRebateInvitation: boolean;
-}) {
-  const missingPackageSavings = hasModernPackageSavingsWarning(account);
-  const programCards: Array<{
-    label: string;
-    value: string;
-    href: string;
-    icon: LucideIcon;
-    recommendation?: string;
-  }> = [
-    {
-      label: "Modern Package System",
-      value: account.modernPkgUsage,
-      href: "/provider-resources#modern-package-system",
-      icon: Package,
-      recommendation: missingPackageSavings
-        ? "Recommended: compare package savings for accounts already using Modern Frame."
-        : undefined,
-    },
-    {
-      label: "Modern Frame System",
-      value: account.modernFrmUsage,
-      href: "/provider-resources#modern-frame-system",
-      icon: Layers,
-    },
-    {
-      label: "Chemistrie/ChemClip",
-      value: account.chemClipUsage,
-      href: "/provider-resources#specialty-systems",
-      icon: Glasses,
-    },
-    {
-      label: "SpecCheck",
-      value: account.specCheckUsage,
-      href: "/provider-resources#speccheck",
-      icon: Eye,
-    },
-    {
-      label: "Tokai",
-      value: account.tokaiUsage,
-      href: "/provider-resources#tokai",
-      icon: Sparkles,
-    },
-    ...(showNeurolens
-      ? [
-          {
-            label: "Neurolens",
-            value:
-              account.cmNlJobs + account.pmNlJobs + account.ppmNlJobs > 0
-                ? `${formatNumber(account.cmNlJobs)} current month orders`
-                : account.primaryPalPrivatePay,
-            href: "/provider-resources#lens-systems",
-            icon: Activity,
-          },
-        ]
-      : []),
-    ...(showSequelRewards
-      ? [
-          {
-            label: "Sequel Artisan Rewards",
-            value: hasSequelRebateInvitation
-              ? "Invited account"
-              : `${formatNumber(account.cmSqlJobs)} current month orders`,
-            href: "/programs#sequel-artisan-rewards",
-            icon: BadgeCheck,
-          },
-        ]
-      : []),
-  ];
-
-  return (
-    <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9 lg:col-span-3">
-      <div className="mb-7 border-b border-[#d8c49b] pb-6">
-        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
-          Programs and Tools
-        </p>
-        <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em] text-[#172a28]">
-          System usage
-        </h2>
-      </div>
-      <div className="grid items-stretch gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {programCards.map((card) => (
-          <ProgramUsageCard key={card.label} {...card} />
-        ))}
-      </div>
-    </section>
-  );
-}
-
 function PortalHelpSection({
   isLocalhostDevelopment,
 }: {
@@ -1736,233 +1069,6 @@ function formatCount(value: unknown) {
   const numeric = Number(value);
   if (!Number.isFinite(numeric)) return "0";
   return numberFormatter.format(numeric);
-}
-
-function formatShare(value: unknown) {
-  const numeric = Number(value);
-  if (!Number.isFinite(numeric)) return "0%";
-  const percentage = numeric <= 1 ? numeric * 100 : numeric;
-  return `${Math.round(percentage)}%`;
-}
-
-function formatPct(value: unknown) {
-  const numeric = Number(value);
-  if (!Number.isFinite(numeric)) return "0%";
-  return `${numeric.toFixed(1)}%`;
-}
-
-function growthLabel(value: unknown) {
-  const numeric = Number(value);
-  if (!Number.isFinite(numeric)) return "0.0%";
-  const percent = numeric * 100;
-  return `${percent >= 0 ? "+" : ""}${percent.toFixed(1)}%`;
-}
-
-function DashboardV1Panel({
-  dashboardState,
-}: {
-  dashboardState: PortalDashboardV1State;
-}) {
-  const dashboard = dashboardState.account;
-  if (!dashboard) return null;
-  const jobs = dashboard.purchase_summary.jobs;
-  const sales = dashboard.purchase_summary.sales;
-  const cmJobs = Number(jobs.cm ?? 0);
-  const pmJobs = Number(jobs.pm ?? 0);
-  const cmSales = Number(sales.cm ?? 0);
-  const pmSales = Number(sales.pm ?? 0);
-  const jobsGrowth = pmJobs === 0 ? (cmJobs > 0 ? 1 : 0) : (cmJobs - pmJobs) / Math.abs(pmJobs);
-  const salesGrowth = pmSales === 0 ? (cmSales > 0 ? 1 : 0) : (cmSales - pmSales) / Math.abs(pmSales);
-  const jobsTrend = cmJobs > pmJobs ? "up" : cmJobs < pmJobs ? "down" : "flat";
-  const salesTrend = cmSales > pmSales ? "up" : cmSales < pmSales ? "down" : "flat";
-  const mix = dashboard.vsp_private_pay_mix;
-  const productMix = dashboard.product_mix;
-  const programUsage = dashboard.program_usage;
-  const quality = dashboard.quality_metrics;
-  const enrollment = dashboard.program_enrollment;
-  const userSummary = dashboard.authorized_users_summary;
-  const insights = dashboard.customer_insights?.suggestions ?? [];
-  const rewardPrograms = enrollment
-    ? [
-        enrollment.arpmp26 ? "Artisan Rewards PMP (ARPMP26)" : "",
-        enrollment.arsql26 ? "Artisan Rewards Sequel (ARSQL26)" : "",
-        enrollment.aruty26 ? "Artisan Rewards Unity (ARUTY26)" : "",
-      ].filter(Boolean)
-    : [];
-  const cmWarrantyPct = Number(quality?.warranty_pct?.cm ?? 0);
-  const cmOfficeRedoPct = Number(quality?.office_redo_pct?.cm ?? 0);
-  const cmLabRedoPct = Number(quality?.lab_redo_pct?.cm ?? 0);
-  const redoAlerts = [
-    cmWarrantyPct > 5
-      ? `Warranty redo is ${formatPct(cmWarrantyPct)} (above 5% average-practice benchmark).`
-      : "",
-    cmOfficeRedoPct > 10
-      ? `Office redo is ${formatPct(cmOfficeRedoPct)} (above 10% average-practice benchmark).`
-      : "",
-    cmLabRedoPct > 2
-      ? `Lab redo is ${formatPct(cmLabRedoPct)} (above 2% average-practice benchmark).`
-      : "",
-  ].filter(Boolean);
-
-  return (
-    <section className="border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur lg:col-span-3 sm:p-9">
-      <div className="mb-6 border-b border-[#d8c49b] pb-6">
-        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
-          Customer Dashboard v1
-        </p>
-        <h2 className="mt-3 text-3xl font-semibold tracking-[-0.03em] text-[#172a28]">
-          {dashboard.business_name || "Account Dashboard"}
-        </h2>
-        <p className="mt-2 text-sm text-[#706759]">
-          {dashboard.lab_name || "Unknown lab"} · {dashboard.division || "Unknown division"} ·{" "}
-          {dashboard.state || "Unknown state"} · Latest ship date {dashboard.latest_ship_date || "Not available"} · Tier{" "}
-          {dashboard.tier_status.previous_month_tier_rank_by_acct_id || "Unranked"}
-        </p>
-        <p className="mt-2 text-xs text-[#706759]">
-          Pipedrive ID: {dashboard.pipedrive_id || "N/A"} · Account numbers: {dashboard.all_account_numbers || "N/A"}
-        </p>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <DashboardV1Card
-          label="PPM / PM / CM Jobs"
-          value={`${formatCount(jobs.ppm)} / ${formatCount(jobs.pm)} / ${formatCount(jobs.cm)}`}
-          detail={`Trend ${growthLabel(jobsGrowth)} (${jobsTrend})`}
-        />
-        <DashboardV1Card
-          label="PPM / PM / CM Sales"
-          value={`${formatMoney(sales.ppm)} / ${formatMoney(sales.pm)} / ${formatMoney(sales.cm)}`}
-          detail={`Trend ${growthLabel(salesGrowth)} (${salesTrend})`}
-        />
-        <DashboardV1Card
-          label="Net Lens Share"
-          value={formatShare(mix.net_lens_share)}
-          detail={`CM Net Lens jobs ${formatCount(productMix.net_lens_jobs.cm)}`}
-        />
-        <DashboardV1Card
-          label="VSP / SQL Share"
-          value={`${formatShare(mix.vsp_share)} / ${formatShare(mix.sql_share)}`}
-          detail={`Private pay mix ${formatShare(mix.private_pay_mix)}`}
-        />
-      </div>
-
-      <div className="mt-6 grid gap-5 lg:grid-cols-3">
-        <div className="border border-[#d8c49b] bg-white/70 p-5">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8b7650]">
-            Product Mix
-          </p>
-          <ul className="mt-3 space-y-1 text-sm text-[#172a28]">
-            <li>Net Lens jobs (CM): {formatCount(productMix.net_lens_jobs.cm)}</li>
-            <li>SQL jobs (CM): {formatCount(productMix.sql_jobs.cm)}</li>
-            <li>VSP jobs (CM): {formatCount(mix.vsp_jobs.cm)}</li>
-            <li>Private pay brand: {dashboard.primary_pal_brand_private_pay || "N/A"}</li>
-            <li>VSP brand: {dashboard.primary_pal_brand_vsp || "N/A"}</li>
-          </ul>
-        </div>
-
-        <div className="border border-[#d8c49b] bg-white/70 p-5">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8b7650]">
-            Program Usage
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {[
-              ["Modern Pkg", programUsage.flags.modern_package],
-              ["Modern Frame", programUsage.flags.modern_frame],
-              ["ChemClip", programUsage.flags.chemclip],
-              ["SpecCheck", programUsage.flags.speccheck],
-              ["Tokai", programUsage.flags.tokai],
-            ].map(([label, active]) => (
-              <span
-                key={String(label)}
-                className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold ${
-                  active
-                    ? "border-[#172a28] bg-[#172a28] text-white"
-                    : "border-[#d8c49b] bg-[#fffaf1] text-[#706759]"
-                }`}
-              >
-                {label}
-              </span>
-            ))}
-          </div>
-          <p className="mt-3 text-xs text-[#706759]">
-            Values: Modern Pkg {programUsage.modern_package_usage || "blank"} · Modern Frame {programUsage.modern_frame_usage || "blank"} · ChemClip {programUsage.chemclip_usage || "blank"} · SpecCheck {programUsage.speccheck_usage || "blank"} · Tokai {programUsage.tokai_usage || "blank"}
-          </p>
-          {rewardPrograms.length > 0 ? (
-            <p className="mt-2 text-xs text-[#706759]">
-              Artisan Rewards: {rewardPrograms.join(" · ")}
-            </p>
-          ) : null}
-          {dashboard.used_price_lists?.length ? (
-            <p className="mt-2 text-xs text-[#706759]">
-              Used price lists: {dashboard.used_price_lists.join(", ")}
-            </p>
-          ) : null}
-        </div>
-
-        <div className="border border-[#d8c49b] bg-white/70 p-5">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8b7650]">
-            Customer Insights
-          </p>
-          {insights.length > 0 ? (
-            <ul className="mt-3 space-y-2 text-sm text-[#172a28]">
-              {insights.map((insight) => (
-                <li key={insight}>• {insight}</li>
-              ))}
-            </ul>
-          ) : (
-            <p className="mt-3 text-sm text-[#706759]">
-              No insights generated for this snapshot.
-            </p>
-          )}
-          <p className="mt-4 text-xs text-[#706759]">
-            Authorized users: {formatCount(userSummary.authorized_user_count)} · Primary emails: {userSummary.primary_emails.slice(0, 3).join(", ") || "None"}
-          </p>
-          <p className="mt-1 text-xs text-[#706759]">
-            Marketing statuses: {Object.entries(userSummary.marketing_status_summary)
-              .map(([status, count]) => `${status} (${count})`)
-              .join(", ") || "None"}
-          </p>
-          <p className="mt-4 text-xs text-[#706759]">
-            Data refresh date: {dashboard.data_refresh_date || "Unknown"}
-          </p>
-          {quality ? (
-            <div className="mt-3 border-t border-[#e7d9bb] pt-3 text-xs text-[#706759]">
-              <p>
-                Lab Redo % (PPM/PM/CM): {formatPct(quality.lab_redo_pct.ppm)} / {formatPct(quality.lab_redo_pct.pm)} / {formatPct(quality.lab_redo_pct.cm)}
-              </p>
-              <p>
-                Office Redo % (PPM/PM/CM): {formatPct(quality.office_redo_pct.ppm)} / {formatPct(quality.office_redo_pct.pm)} / {formatPct(quality.office_redo_pct.cm)}
-              </p>
-              <p>
-                Warranty % (PPM/PM/CM): {formatPct(quality.warranty_pct.ppm)} / {formatPct(quality.warranty_pct.pm)} / {formatPct(quality.warranty_pct.cm)}
-              </p>
-              <p>
-                Non-Adapt % (PPM/PM/CM): {formatPct(quality.non_adapt_pct.ppm)} / {formatPct(quality.non_adapt_pct.pm)} / {formatPct(quality.non_adapt_pct.cm)}
-              </p>
-            </div>
-          ) : null}
-          {redoAlerts.length > 0 ? (
-            <div className="mt-3 border-t border-[#e7d9bb] pt-3 text-xs text-[#7f2f2f]">
-              <p className="font-semibold uppercase tracking-[0.16em] text-[#8b3b3b]">
-                Support Alert
-              </p>
-              <ul className="mt-2 space-y-1">
-                {redoAlerts.map((alert) => (
-                  <li key={alert}>• {alert}</li>
-                ))}
-              </ul>
-              <a
-                href="mailto:sales@artisanlabnetwork.com?subject=Schedule%20Additional%20Support&body=Please%20schedule%20additional%20support%20for%20our%20account.%20We%20are%20seeing%20redo%20percentages%20above%20average-practice%20benchmarks."
-                className="mt-2 inline-flex text-xs font-semibold underline decoration-[#8b3b3b] underline-offset-4 hover:text-[#5a1e1e]"
-              >
-                Contact sales to schedule additional support
-              </a>
-            </div>
-          ) : null}
-        </div>
-      </div>
-    </section>
-  );
 }
 
 type PracticeIntelligenceModel = {
@@ -2050,10 +1156,6 @@ function isActiveUsage(value?: string) {
   return Boolean(normalized && !["0", "0%", "false", "no", "none", "n/a", "na"].includes(normalized));
 }
 
-function clampScore(value: number) {
-  return Math.max(0, Math.min(100, Math.round(value)));
-}
-
 function monthlyPoint(label: string, value?: { ppm?: number; pm?: number; cm?: number }): MonthlyUsagePoint {
   return {
     label,
@@ -2085,12 +1187,6 @@ function hasUsageData(points: MonthlyUsagePoint[]) {
   return points.some((point) => point.prior > 0 || point.previous > 0 || point.current > 0);
 }
 
-function rewardTrendLabel(current: number, previous: number, unit: string) {
-  const trend = getPercentChange(current, previous);
-  if (trend.direction === "flat") return `Flat vs previous month (${formatCount(previous)} ${unit})`;
-  return `${trend.label} vs previous month (${formatCount(previous)} ${unit})`;
-}
-
 function monthlyTierLabel(jobs: number) {
   if (jobs > 100) return "Tier 4";
   if (jobs >= 61) return "Tier 3";
@@ -2115,73 +1211,6 @@ function relativeMonthLabel(offset: number, anchorDate?: string) {
   }).format(
     new Date(Date.UTC(anchor.getUTCFullYear(), anchor.getUTCMonth() - offset, 1))
   );
-}
-
-function nthWeekdayOfMonth(year: number, monthIndex: number, weekday: number, ordinal: number) {
-  const first = new Date(year, monthIndex, 1);
-  const offset = (weekday - first.getDay() + 7) % 7;
-  return new Date(year, monthIndex, 1 + offset + (ordinal - 1) * 7);
-}
-
-function lastWeekdayOfMonth(year: number, monthIndex: number, weekday: number) {
-  const last = new Date(year, monthIndex + 1, 0);
-  const offset = (last.getDay() - weekday + 7) % 7;
-  return new Date(year, monthIndex, last.getDate() - offset);
-}
-
-function observedHoliday(date: Date) {
-  const observed = new Date(date);
-  if (date.getDay() === 0) observed.setDate(date.getDate() + 1);
-  if (date.getDay() === 6) observed.setDate(date.getDate() - 1);
-  return observed;
-}
-
-function dateKey(date: Date) {
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-}
-
-function nationalHolidayKeys(year: number) {
-  return new Set(
-    [
-      observedHoliday(new Date(year, 0, 1)),
-      nthWeekdayOfMonth(year, 0, 1, 3),
-      nthWeekdayOfMonth(year, 1, 1, 3),
-      lastWeekdayOfMonth(year, 4, 1),
-      observedHoliday(new Date(year, 5, 19)),
-      observedHoliday(new Date(year, 6, 4)),
-      nthWeekdayOfMonth(year, 8, 1, 1),
-      nthWeekdayOfMonth(year, 9, 1, 2),
-      observedHoliday(new Date(year, 10, 11)),
-      nthWeekdayOfMonth(year, 10, 4, 4),
-      observedHoliday(new Date(year, 11, 25)),
-    ].map(dateKey)
-  );
-}
-
-function businessDaysInMonth(anchorDate: string) {
-  const parsed = anchorDate ? new Date(`${anchorDate}T00:00:00`) : new Date();
-  const year = Number.isNaN(parsed.getTime()) ? new Date().getFullYear() : parsed.getFullYear();
-  const monthIndex = Number.isNaN(parsed.getTime()) ? new Date().getMonth() : parsed.getMonth();
-  const holidays = nationalHolidayKeys(year);
-  const lastDay = new Date(year, monthIndex + 1, 0).getDate();
-  let days = 0;
-  for (let day = 1; day <= lastDay; day += 1) {
-    const date = new Date(year, monthIndex, day);
-    if (date.getDay() === 0 || date.getDay() === 6) continue;
-    if (holidays.has(dateKey(date))) continue;
-    days += 1;
-  }
-  return days || 22;
-}
-
-function projectedJobsFromJpd(jpd: number | null, businessDays: number) {
-  return jpd === null ? 0 : Math.round(jpd * businessDays);
-}
-
-function projectedSalesFromPerDay(sales: number, jobs: number, jpd: number | null, businessDays: number) {
-  if (!sales || !jobs || !jpd) return sales;
-  const salesPerDay = sales / (jobs / jpd);
-  return Math.round(salesPerDay * businessDays);
 }
 
 function targetProgramTokens(dashboard?: PortalDashboardV1Account) {
@@ -2220,12 +1249,6 @@ function buildTargetInvitations(programs: string[]): PracticeIntelligenceModel["
   });
 }
 
-function scoreFromInverseMetric(value: number, goodThreshold: number, badThreshold: number) {
-  if (value <= goodThreshold) return 100;
-  if (value >= badThreshold) return 35;
-  return 100 - ((value - goodThreshold) / (badThreshold - goodThreshold)) * 65;
-}
-
 function statusForScore(score: number): PracticeIntelligenceModel["scoreLabel"] {
   if (score >= 82) return "Excellent";
   if (score >= 66) return "Good";
@@ -2236,14 +1259,10 @@ function buildPracticeIntelligenceModel({
   account,
   dashboard,
   hasModernPackageWarning,
-  showNeurolens,
-  showSequelRewards,
 }: {
   account?: PortalWorkbookAccount;
   dashboard?: PortalDashboardV1Account;
   hasModernPackageWarning: boolean;
-  showNeurolens: boolean;
-  showSequelRewards: boolean;
 }): PracticeIntelligenceModel {
   const jobs = dashboard?.purchase_summary?.jobs;
   const sales = dashboard?.purchase_summary?.sales;
@@ -2296,7 +1315,6 @@ function buildPracticeIntelligenceModel({
   const labRedoPpm = pctValue(quality?.lab_redo_pct?.ppm);
   const nonAdaptCm = pctValue(quality?.non_adapt_pct?.cm);
   const nonAdaptPm = pctValue(quality?.non_adapt_pct?.pm);
-  const nonAdaptPpm = pctValue(quality?.non_adapt_pct?.ppm);
   const turnaroundPm = asNumber(supplemental?.turnaround?.average_days?.pm);
   const labTurnaroundPm = asNumber(supplemental?.turnaround?.lab_average_days?.pm);
   const orderTrendPercent =
@@ -3173,17 +2191,17 @@ function ProductBrandIntelligenceSection({
         {hasUsageData(brandUsage) ? (
           <MonthlyUsageCharts eyebrow="Brand Usage" title="Brand Orders by Month" data={brandUsage} monthLabels={reportMonths} horizontal />
         ) : (
-          <PlaceholderInsightCard title="Brand Usage" label="Additional Product Intelligence Coming Soon" detail="Brand count fields are unavailable for this account." />
+          <PlaceholderInsightCard title="Brand Usage" label="Data Unavailable" detail="Brand count fields are unavailable for this account." />
         )}
         {hasUsageData(materialUsage) ? (
           <MonthlyUsageCharts eyebrow="Material Usage" title="Material Share of Monthly Orders" data={materialUsage} valueType="percent" monthLabels={reportMonths} />
         ) : (
-          <PlaceholderInsightCard title="Material Usage" label="Additional Product Intelligence Coming Soon" detail="Material count fields are unavailable for this account." />
+          <PlaceholderInsightCard title="Material Usage" label="Data Unavailable" detail="Material count fields are unavailable for this account." />
         )}
         {hasUsageData(specialtyUsage) ? (
           <MonthlyUsageCharts eyebrow="Specialty Usage" title="Specialty Share of Monthly Orders" data={specialtyUsage} valueType="percent" monthLabels={reportMonths} />
         ) : (
-          <PlaceholderInsightCard title="Specialty Usage" label="Additional Product Intelligence Coming Soon" detail="Specialty product count fields are unavailable for this account." />
+          <PlaceholderInsightCard title="Specialty Usage" label="Data Unavailable" detail="Specialty product count fields are unavailable for this account." />
         )}
         <div className="rounded-md border border-[#eadfce] bg-white/78 p-5">
           <span className="inline-flex rounded-md border border-[#d9c8a6] bg-[#f8f1e6] px-2.5 py-1 text-xs font-bold uppercase tracking-[0.12em] text-[#7a6b49]">
@@ -3220,11 +2238,11 @@ function BenchmarkingSection() {
           <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Your practice vs the network</h2>
         </div>
         <span className="inline-flex w-fit rounded-md border border-[#d9c8a6] bg-white/75 px-3 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#59635f]">
-          Benchmarking Available Soon
+          Benchmarking Requires Approved Dataset
         </span>
       </div>
       <div className="mt-6 grid gap-4 md:grid-cols-3">
-        <PlaceholderInsightCard title="Your Practice" label="Coming Soon" detail="Practice-level benchmarks will appear when network comparison data is approved for customer display." />
+        <PlaceholderInsightCard title="Your Practice" label="Requires Benchmark Dataset" detail="Practice-level benchmarks require approved network comparison data before display." />
         <PlaceholderInsightCard title="Network Average" label="Requires Benchmark Dataset" detail="Network averages require a customer-safe benchmark rollup before display." />
         <PlaceholderInsightCard title="Top 25%" label="Future Insight" detail="Top-quartile comparisons will be added once benchmarking definitions are finalized." />
       </div>
@@ -3394,9 +2412,6 @@ function PracticeIntelligenceCenter({
   availablePriceLists,
   availablePortalSections,
   isLocalhostDevelopment,
-  shouldShowNeurolens,
-  shouldShowSequelRewards,
-  hasSequelRebateInvitation,
 }: {
   practiceName: string;
   accountNumber: string;
@@ -3408,16 +2423,11 @@ function PracticeIntelligenceCenter({
   availablePriceLists: Array<PortalPriceList & { configured: boolean }>;
   availablePortalSections: PortalSectionCard[];
   isLocalhostDevelopment?: boolean;
-  shouldShowNeurolens: boolean;
-  shouldShowSequelRewards: boolean;
-  hasSequelRebateInvitation: boolean;
 }) {
   const intelligence = buildPracticeIntelligenceModel({
     account,
     dashboard: dashboardAccount,
     hasModernPackageWarning: Boolean(account && hasModernPackageSavingsWarning(account)),
-    showNeurolens: shouldShowNeurolens,
-    showSequelRewards: shouldShowSequelRewards,
   });
   return (
     <>
@@ -3551,13 +2561,6 @@ export function PortalDashboardContent({
   const customerTypeInfo = getCustomerTypeInfoFromProfile(workbookProfile);
   const customerTypeLabel =
     customerTypeInfo?.label || customer?.customerTypeLabel || "";
-  const hasSequelRebateInvitation =
-    profileHasSequelRebateInvitation(workbookProfile);
-  const shouldShowNeurolens = showNeurolensContent(account);
-  const shouldShowSequelRewards = showSequelRewardsContent({
-    account,
-    invited: hasSequelRebateInvitation,
-  });
   const showDashboardV1 = dashboardState?.status === "ok";
   const isAdmin = isPortalAdminEmail(authenticatedEmail);
   const showNewPartnerOnboarding = Boolean(
@@ -3673,9 +2676,6 @@ export function PortalDashboardContent({
           availablePriceLists={availablePriceLists}
           availablePortalSections={availablePortalSections}
           isLocalhostDevelopment={isLocalhostDevelopment}
-          shouldShowNeurolens={shouldShowNeurolens}
-          shouldShowSequelRewards={shouldShowSequelRewards}
-          hasSequelRebateInvitation={hasSequelRebateInvitation}
         />
 
         <AccountProfileSection

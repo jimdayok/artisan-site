@@ -1,8 +1,18 @@
+import type { Metadata } from "next";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import CookiePreferencesButton from "../components/CookiePreferencesButton";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
+
+export const metadata: Metadata = {
+  title: "Cookie Policy | Artisan Lab Network",
+  description:
+    "Review how Artisan Lab Network uses required cookies, consent-controlled services, analytics, and cookie preference controls.",
+  alternates: {
+    canonical: "/cookie-policy",
+  },
+};
 
 const sections = [
   {

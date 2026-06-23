@@ -1,7 +1,17 @@
+import type { Metadata } from "next";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy | Artisan Lab Network",
+  description:
+    "Learn how Artisan Lab Network collects, uses, protects, and shares information submitted through its website and public forms.",
+  alternates: {
+    canonical: "/privacy-policy",
+  },
+};
 
 const sections = [
   {

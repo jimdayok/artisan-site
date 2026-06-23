@@ -1,22 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 const links = [
   { href: "/portal/admin", label: "Admin Dashboard" },
   { href: "/portal/admin/price-lists", label: "Price Lists" },
   { href: "/portal/admin/rewards", label: "Rewards" },
-  { href: "/portal?mode=customer", label: "Customer Portal" },
+  { href: "/portal", label: "Customer Portal" },
   { href: "/portal/employee-resources", label: "Employee Resources" },
 ] as const;
 
 export default function AdminUtilityNav() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const isAdminRoute = pathname.startsWith("/portal/admin");
-  const isCustomerMode =
-    pathname === "/portal" && searchParams.get("mode") === "customer";
+  const isCustomerMode = pathname === "/portal";
   const showReturnLabel = !isAdminRoute || isCustomerMode;
 
   return (
@@ -33,7 +31,7 @@ export default function AdminUtilityNav() {
           const active =
             link.href === "/portal/admin"
               ? pathname === "/portal/admin"
-              : link.href === "/portal?mode=customer"
+              : link.href === "/portal"
                 ? isCustomerMode
                 : pathname.startsWith(link.href);
 

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { calculatedPrice, materialAdders, materialAdjustmentForItem, adjustmentLabel, edgeAdjustment, professionalResourceHref, isPackageEligible, logoByBrand, money, priceTypeLabel, type EdgeMode, type PriceItem } from "../../data/privatePriceList";
 import ARCompatibilityPanel from "./ARCompatibilityPanel";
 import PackageBadge from "./PackageBadge";
@@ -25,7 +26,7 @@ export default function ProductDetailPanel({
       <div className="grid gap-3 lg:grid-cols-[190px_minmax(0,1fr)_240px]">
         <div className="rounded-2xl border border-[#eadfce] bg-white p-3">
           <div className="flex h-20 items-center justify-center rounded-xl bg-[#f8f1e7]">
-            {logo ? <img src={logo} alt={`${item.brand} logo`} className="max-h-12 max-w-[150px] object-contain" /> : <span className="text-2xl font-semibold text-[#122033]">{item.brand.slice(0, 2).toUpperCase()}</span>}
+            {logo ? <Image src={logo} alt={`${item.brand} logo`} width={150} height={48} className="max-h-12 max-w-[150px] object-contain" /> : <span className="text-2xl font-semibold text-[#122033]">{item.brand.slice(0, 2).toUpperCase()}</span>}
           </div>
           <div className="mt-3 flex flex-wrap gap-1.5">
             <PriceBadge type={item.type}>{priceTypeLabel(item.type)}</PriceBadge>

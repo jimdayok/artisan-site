@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Header from "../../../components/Header";
@@ -8,6 +9,31 @@ const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
 
 export function generateStaticParams() {
   return troubleshootingGuides.map((guide) => ({ slug: guide.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const guide = getTroubleshootingGuide(slug);
+
+  if (!guide) {
+    return {
+      title: "Troubleshooting Guide | Artisan Lab Network",
+      description:
+        "Review Artisan Lab Network troubleshooting and best-practice guidance for provider teams.",
+    };
+  }
+
+  return {
+    title: `${guide.title} | Artisan Lab Network`,
+    description: guide.summary,
+    alternates: {
+      canonical: `/provider-resources/troubleshooting/${guide.slug}`,
+    },
+  };
 }
 
 export default async function TroubleshootingGuidePage({

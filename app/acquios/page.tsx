@@ -6,7 +6,7 @@ const description =
   "Acquios Alliance members can try Artisan Lab Network for 90 days and earn 30% back on qualifying private pay lab orders. Program Code AQU2630.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://artisanslabs.com"),
+  metadataBase: new URL("https://www.artisanslabs.com"),
   title,
   description,
   openGraph: {

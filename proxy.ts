@@ -1,23 +1,42 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { verifyCloudflareAccessJwt } from "@/lib/portal/accessJwt";
 import { isPortalAdminEmailAddress } from "@/lib/portal/adminAccess";
+import { isHiddenPriceListCode } from "@/lib/pricing/priceListCodes";
 
 const LOCALHOST_NAMES = new Set(["localhost", "127.0.0.1", "::1"]);
 const LOCAL_PORTAL_TEST_EMAIL_COOKIE = "portal_dev_email";
 const ACCESS_EMAIL_HEADER = "cf-access-authenticated-user-email";
 const ACCESS_JWT_HEADER = "cf-access-jwt-assertion";
 const ACCESS_JWT_COOKIE = "CF_Authorization";
+const contentSecurityPolicy = [
+  "default-src 'self'",
+  "img-src 'self' data: https:",
+  "style-src 'self' 'unsafe-inline'",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn-cookieyes.com https://*.cookieyes.com",
+  "font-src 'self' data: https:",
+  "connect-src 'self' https: https://cdn-cookieyes.com https://*.cookieyes.com",
+  "frame-src 'self' https://cdn-cookieyes.com https://*.cookieyes.com",
+  "worker-src 'self' blob:",
+  "frame-ancestors 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+].join("; ");
 
 const securityHeaders: Array<[string, string]> = [
   ["X-Frame-Options", "DENY"],
   ["X-Content-Type-Options", "nosniff"],
   ["Referrer-Policy", "strict-origin-when-cross-origin"],
   ["Permissions-Policy", "camera=(), microphone=(), geolocation=()"],
-  [
-    "Content-Security-Policy",
-    "default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; font-src 'self' data: https:; connect-src 'self' https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
-  ],
+  ["Content-Security-Policy", contentSecurityPolicy],
 ];
+
+const priceListUtilityRoutes = new Set([
+  "calculator",
+  "catalog",
+  "export",
+  "packages",
+  "policies",
+]);
 
 function normalizeHostname(host: string) {
   const firstHost = host.trim().split(",")[0]?.toLowerCase() ?? "";
@@ -65,6 +84,25 @@ function deny(request: NextRequest, status: number, message: string) {
   return NextResponse.next({ request: { headers: requestHeaders } });
 }
 
+function hiddenPriceListResponse() {
+  const response = new NextResponse("Price sheet not found.", { status: 404 });
+  for (const [key, value] of securityHeaders) response.headers.set(key, value);
+  response.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive, nosnippet");
+  response.headers.set("Cache-Control", "private, no-store");
+  return response;
+}
+
+function isHiddenDirectPriceListUrl(pathname: string) {
+  const match = pathname.match(/^\/(?:portal|private)\/price-list\/([^/]+)\/?$/);
+  const segment = match?.[1];
+  if (!segment) return false;
+
+  const decodedSegment = decodeURIComponent(segment).trim();
+  if (priceListUtilityRoutes.has(decodedSegment.toLowerCase())) return false;
+
+  return isHiddenPriceListCode(decodedSegment);
+}
+
 async function verifiedPortalEmail(request: NextRequest) {
   const jwtHeader = request.headers.get(ACCESS_JWT_HEADER)?.trim() ?? "";
   const jwtCookie = request.cookies.get(ACCESS_JWT_COOKIE)?.value?.trim() ?? "";
@@ -84,6 +122,10 @@ export async function proxy(request: NextRequest) {
 
   const response = NextResponse.next();
   for (const [key, value] of securityHeaders) response.headers.set(key, value);
+
+  if (isHiddenDirectPriceListUrl(pathname)) {
+    return hiddenPriceListResponse();
+  }
 
   if (!isPortalProtected) return response;
 

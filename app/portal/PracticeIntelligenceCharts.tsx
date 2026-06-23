@@ -90,9 +90,13 @@ function Panel({
       </p>
       <h3 className="mt-2 text-xl font-semibold text-[#142724]">{title}</h3>
       {legend?.length ? <ChartKey items={legend} /> : null}
-      <div className="mt-4 h-72 min-w-0">{children}</div>
+      <div className="mt-4 h-72 min-h-72 min-w-[240px] overflow-hidden">{children}</div>
     </div>
   );
+}
+
+function ChartFrame({ children }: { children: React.ReactNode }) {
+  return <div className="h-full min-h-[240px] min-w-[240px]">{children}</div>;
 }
 
 function ChartKey({ items }: { items: Array<{ label: string; color: string }> }) {
@@ -117,18 +121,20 @@ export function PracticePerformanceScoreChart({
 
   return (
     <div className="relative mx-auto aspect-square w-full max-w-[280px]">
-      <ResponsiveContainer width="100%" height="100%">
-        <RadialBarChart
-          data={[{ value: normalized }]}
-          innerRadius="72%"
-          outerRadius="98%"
-          startAngle={90}
-          endAngle={-270}
-        >
-          <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
-          <RadialBar dataKey="value" fill="#1f8a70" background={{ fill: "#e7ddcc" }} cornerRadius={16} />
-        </RadialBarChart>
-      </ResponsiveContainer>
+      <ChartFrame>
+        <ResponsiveContainer width="100%" height="100%" debounce={50}>
+          <RadialBarChart
+            data={[{ value: normalized }]}
+            innerRadius="72%"
+            outerRadius="98%"
+            startAngle={90}
+            endAngle={-270}
+          >
+            <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
+            <RadialBar dataKey="value" fill="#1f8a70" background={{ fill: "#e7ddcc" }} cornerRadius={16} />
+          </RadialBarChart>
+        </ResponsiveContainer>
+      </ChartFrame>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
         <p className="text-5xl font-semibold text-[#142724]">{Math.round(normalized)}</p>
         <p className="mt-1 text-xs font-bold uppercase tracking-[0.16em] text-[#7a6b49]">
@@ -149,7 +155,7 @@ export function TrendsPerformanceCharts({
   return (
     <div className="grid gap-5 xl:grid-cols-3">
       <Panel eyebrow="Purchases" title="Monthly Purchase Trend" legend={[{ label: "Completed months and current month-to-date actuals", color: "#1f8a70" }]}>
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" debounce={50}>
           <AreaChart data={trends} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="salesGradient" x1="0" x2="0" y1="0" y2="1">
@@ -167,7 +173,7 @@ export function TrendsPerformanceCharts({
       </Panel>
 
       <Panel eyebrow="Orders" title="Monthly Order Trend" legend={[{ label: "Completed months and current month-to-date actuals", color: "#2f5f9c" }]}>
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" debounce={50}>
           <AreaChart data={trends} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="jobsGradient" x1="0" x2="0" y1="0" y2="1">
@@ -186,7 +192,7 @@ export function TrendsPerformanceCharts({
 
       <Panel eyebrow="Mix" title="VSP Mix Trend" legend={vspMix.map((item) => ({ label: item.label, color: item.color }))}>
         <div className="relative h-full">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" debounce={50}>
             <PieChart>
             <Pie data={vspMix} dataKey="value" nameKey="label" innerRadius="62%" outerRadius="88%" stroke="none">
               {vspMix.map((entry) => (
@@ -234,7 +240,7 @@ export function MixIntelligenceCharts({
     <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
       {chartGroups.map(([title, data]) => (
         <Panel key={title} eyebrow="Mix Intelligence" title={title}>
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" debounce={50}>
             <BarChart data={data} layout="vertical" margin={{ top: 4, right: 18, left: 10, bottom: 4 }}>
               <CartesianGrid stroke="#eadfce" horizontal={false} />
               <XAxis type="number" hide domain={[0, 100]} />
@@ -268,7 +274,7 @@ export function ServiceExcellenceCharts({
     <div className="grid gap-5 xl:grid-cols-3">
       <Panel eyebrow="Service Timing" title="Turnaround Performance" legend={[{ label: "Average business days in lab production", color: "#1f8a70" }]}>
         {hasTurnaround ? (
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" debounce={50}>
             <BarChart data={turnaround} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
               <CartesianGrid stroke="#eadfce" vertical={false} />
               <XAxis dataKey="label" tick={{ fill: "#746b5f", fontSize: 12 }} tickLine={false} axisLine={false} />
@@ -280,7 +286,7 @@ export function ServiceExcellenceCharts({
         ) : (
           <div className="flex h-full flex-col justify-center rounded-md border border-dashed border-[#d9c8a6] bg-[#f8f1e6]/70 p-5 text-center">
             <p className="text-sm font-semibold text-[#142724]">
-              Turnaround Data Coming Soon
+              Turnaround data unavailable
             </p>
             <p className="mt-3 text-sm leading-6 text-[#6d746f]">
               Average turnaround appears when timing fields exist for this account.
@@ -295,7 +301,7 @@ export function ServiceExcellenceCharts({
         { label: "Lab Remake %", color: "#2f5f9c" },
         { label: "Non-Adapt %", color: "#8067aa" },
       ]}>
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" debounce={50}>
           <BarChart data={quality} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
             <CartesianGrid stroke="#eadfce" vertical={false} />
             <XAxis dataKey="label" tick={{ fill: "#746b5f", fontSize: 12 }} tickLine={false} axisLine={false} />
@@ -310,7 +316,7 @@ export function ServiceExcellenceCharts({
       </Panel>
 
       <Panel eyebrow="Order Volume" title="Orders Per Day Trend" legend={[{ label: "Actual orders per day, including current month-to-date", color: "#8067aa" }]}>
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" debounce={50}>
           <AreaChart data={orderVolume} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
             <CartesianGrid stroke="#eadfce" vertical={false} />
             <XAxis dataKey="label" tick={{ fill: "#746b5f", fontSize: 12 }} tickLine={false} axisLine={false} />
@@ -350,7 +356,7 @@ export function MonthlyUsageCharts({
       { label: monthLabels.previous, color: "#2f5f9c" },
       { label: `${monthLabels.current} MTD`, color: "#1f8a70" },
     ]}>
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer width="100%" height="100%" debounce={50}>
         <BarChart data={data} layout={horizontal ? "vertical" : "horizontal"} margin={{ top: 8, right: 12, left: horizontal ? 18 : 0, bottom: 0 }}>
           <CartesianGrid stroke="#eadfce" vertical={!horizontal} horizontal={horizontal} />
           {horizontal ? (
@@ -377,7 +383,7 @@ export function MonthlyUsageCharts({
 export function BenchmarkingChart({ data }: { data: BenchmarkPoint[] }) {
   return (
     <div className="h-80 min-w-0">
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer width="100%" height="100%" debounce={50}>
         <BarChart data={data} margin={{ top: 12, right: 16, left: 0, bottom: 0 }}>
           <CartesianGrid stroke="#eadfce" vertical={false} />
           <XAxis dataKey="label" tick={{ fill: "#746b5f", fontSize: 12 }} tickLine={false} axisLine={false} />

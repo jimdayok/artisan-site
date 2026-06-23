@@ -13,6 +13,7 @@ import {
 import { normalizeAccountNumber } from "@/lib/portal/normalizeAccounts";
 import { getPriceListByCode } from "@/lib/portal/priceLists";
 import { checkRateLimit } from "@/lib/portal/rateLimit";
+import { isVisiblePriceListCode } from "@/lib/pricing/priceListCodes";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -281,7 +282,7 @@ export async function GET(request: NextRequest) {
 
     const priceList = getPriceListByCode(requestedCode);
 
-    if (!priceList) {
+    if (!priceList || !isVisiblePriceListCode(requestedCode)) {
       logDownloadDiagnostic("Unknown price list code", diagnostics);
 
       return textResponse("Price sheet not found.", 404);

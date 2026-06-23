@@ -11,31 +11,31 @@ const items = [
   },
   {
     title: "Product Spotlight: Tokai Thin Lens Options",
-    date: "Coming Soon",
+    date: "Planned",
     description:
       "Product education and dispensing notes for helping patients understand advanced thin lens options.",
   },
   {
     title: "Building Stronger Independent Practices",
-    date: "Coming Soon",
+    date: "Planned",
     description:
       "Ideas for strengthening practice control, improving margins, and building more resilient lab relationships.",
   },
   {
     title: "Lab Updates: Service, Turnaround, and Support",
-    date: "Coming Soon",
+    date: "Planned",
     description:
       "Operational updates from the Artisan network, including service improvements and support reminders.",
   },
   {
     title: "Training Corner: Helping Opticians Explain Lens Options",
-    date: "Coming Soon",
+    date: "Planned",
     description:
       "Practical language and team education ideas for clearer lens conversations at the dispensing table.",
   },
   {
     title: "Artisan Intel: Smarter Practice Reporting",
-    date: "Coming Soon",
+    date: "Planned",
     description:
       "A preview of better reporting habits and the practice insights that help teams make confident decisions.",
   },

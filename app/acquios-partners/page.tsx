@@ -1,8 +1,18 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 const FORM_URL = "https://form.typeform.com/to/WCU5ReWQ";
+
+export const metadata: Metadata = {
+  title: "Acquios Partners | Artisan Lab Network",
+  description:
+    "Acquios practices can explore Artisan Lab Network onboarding, rebate structure, and support for independent optical lab partnership.",
+  alternates: {
+    canonical: "/acquios-partners",
+  },
+};
 
 const programSteps = [
   {

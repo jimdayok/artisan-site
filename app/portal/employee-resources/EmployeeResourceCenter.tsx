@@ -21,7 +21,7 @@ function categoryIcon(category: string) {
 function statusLabel(resource: EmployeeResource) {
   if (resource.status === "available") return "Available";
   if (resource.status === "future") return "Future";
-  return "Coming Soon";
+  return "Pending";
 }
 
 function ResourceCard({ resource }: { resource: EmployeeResource }) {
@@ -53,7 +53,7 @@ function ResourceCard({ resource }: { resource: EmployeeResource }) {
       </div>
       {disabled ? (
         <button disabled className="mt-4 inline-flex min-h-10 items-center justify-center rounded-full border border-[#d9c8a6] bg-[#f8f1e6] px-4 text-sm font-semibold text-[#7a6b49] opacity-80">
-          Coming Soon
+          Request Access
         </button>
       ) : resource.external ? (
         <a href={resource.href} target="_blank" rel="noreferrer" className="mt-4 inline-flex min-h-10 items-center gap-2 rounded-full bg-[#172a28] px-4 text-sm font-semibold text-white transition hover:bg-[#27433f]">
@@ -151,7 +151,7 @@ export default function EmployeeResourceCenter({ resources, categories }: { reso
           </section>
           <section className="rounded-md border border-dashed border-[#d9c8a6] bg-[#fffdf8]/70 p-5">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#7a6b49]">Most Downloaded</p>
-            <h2 className="mt-3 text-xl font-semibold text-[#142724]">Coming Soon</h2>
+            <h2 className="mt-3 text-xl font-semibold text-[#142724]">Download analytics</h2>
             <p className="mt-2 text-sm leading-6 text-[#6d746f]">Download analytics will populate this panel when resource management is added in a future phase.</p>
           </section>
         </div>

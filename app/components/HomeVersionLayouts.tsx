@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
+import { arTreatments } from "../artisan-ar/arData";
 import Header from "./Header";
 import Footer from "./Footer";
 
@@ -40,7 +41,7 @@ const capabilities = [
   {
     title: "AR treatments",
     icon: "/icons/artisan/transparency.svg",
-    detail: "Artisan AR treatments and TechShield AR treatments are produced on site, with additional premium brand access.",
+    detail: "Artisan AR treatments and TechShield AR treatments are produced on site. Artisan's in-house AR portfolio is ultra premium, and additional premium brand access is available when needed.",
   },
   {
     title: "Fast turnaround",
@@ -540,7 +541,7 @@ function BetterModel({ variant }: { variant: Variant }) {
   );
 }
 
-function Capabilities({ variant }: { variant: Variant }) {
+function Capabilities() {
   const [activeCapability, setActiveCapability] = useState<string | null>(null);
 
   useEffect(() => {
@@ -593,6 +594,28 @@ function Capabilities({ variant }: { variant: Variant }) {
                   {isActive ? (
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.22 }} className="mx-5 mb-5 overflow-hidden border-t border-white/10 pt-4">
                       <p className="text-sm leading-7 text-white/76">{cap.detail}</p>
+                      {cap.title === "AR treatments" ? (
+                        <div className="mt-5">
+                          <div className="flex flex-wrap gap-3">
+                            <Link href="/artisan-ar" className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#d4c09a]/55 bg-white/10 px-5 text-sm font-semibold text-white transition hover:bg-white/16">
+                              Open main AR coating page
+                            </Link>
+                            <Link href="/artisan-ar/nytopia" className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#d4c09a] px-5 text-sm font-semibold text-[#171311] transition hover:bg-[#e2cca2]">
+                              View Artisan AR treatments
+                            </Link>
+                          </div>
+                          <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                            {arTreatments.map((treatment) => (
+                              <div key={treatment.slug} className="flex h-20 items-center justify-center rounded-2xl border border-white/10 bg-white px-3">
+                                <Image src={treatment.logo} alt={treatment.name} width={160} height={72} className="max-h-10 w-auto max-w-full object-contain" />
+                              </div>
+                            ))}
+                          </div>
+                          <p className="mt-4 text-sm leading-7 text-white/72">
+                            Our in-house AR lineup is positioned as ultra premium for practices that want clear differentiation, stronger cosmetics, and a tighter story around value.
+                          </p>
+                        </div>
+                      ) : null}
                       {"integrations" in cap && cap.integrations ? (
                         <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
                           {cap.integrations.map((logo) => (
@@ -796,7 +819,7 @@ export default function HomeVersionLayout({ variant }: { variant: Variant }) {
       <ProofBand variant={variant} />
       <CorporateProblem variant={variant} />
       <BetterModel variant={variant} />
-      <Capabilities variant={variant} />
+      <Capabilities />
       <LabSection variant={variant} />
       <Ownership variant={variant} onContactClick={() => setContactOpen(true)} />
       <EventsAndIndustry variant={variant} onContactClick={() => setContactOpen(true)} />

@@ -13,6 +13,7 @@ import { getAuthorizedPriceListFromHeaders } from "@/lib/portal/priceListAccess"
 import { canonicalPriceListCode } from "@/lib/portal/priceLists";
 import { checkRateLimit } from "@/lib/portal/rateLimit";
 import { customerFacingPriceList } from "@/lib/pricing/customerPriceList";
+import { isVisiblePriceListCode } from "@/lib/pricing/priceListCodes";
 import {
   comparePriceDisplayBrand,
   comparePriceDisplayCategory,
@@ -42,6 +43,8 @@ const CREAM = rgb(248 / 255, 243 / 255, 235 / 255);
 const RULE = rgb(226 / 255, 213 / 255, 191 / 255);
 const TEXT = rgb(47 / 255, 55 / 255, 68 / 255);
 const MUTED = rgb(102 / 255, 92 / 255, 78 / 255);
+const PRICE_BASIS_NOTE =
+  "Design prices are shown in polycarbonate. Materials, blue filters, photochromics, polarized options, AR, finishing, and shipping are add-ons or deductions unless noted.";
 
 function cleanText(value: unknown) {
   return String(value ?? "")
@@ -286,7 +289,7 @@ async function buildPriceListPdf({
     y -= 34;
   };
 
-  const drawTableHeader = () => {
+  const drawTableHeader = (showBrand = false) => {
     ensureSpace(24);
     page.drawRectangle({
       x: MARGIN,
@@ -296,10 +299,11 @@ async function buildPriceListPdf({
       color: NAVY,
     });
     const headers = [
-      ["Design", MARGIN + 6],
-      ["Clear", MARGIN + 369],
-      ["Photo", MARGIN + 425],
-      ["Polar", MARGIN + 481],
+      ...(showBrand ? ([["Brand", MARGIN + 6]] as const) : []),
+      ["Design", showBrand ? MARGIN + 100 : MARGIN + 6],
+      ["Clear", MARGIN + 364],
+      ["Photo", MARGIN + 424],
+      ["Polar", MARGIN + 484],
     ] as const;
     for (const [label, x] of headers) {
       page.drawText(label, {
@@ -332,47 +336,148 @@ async function buildPriceListPdf({
     y -= 24;
   };
 
-  const drawBrandHeader = (brand: string) => {
-    ensureSpace(34);
+  const drawBrandCell = (brand: string, topY: number, height: number) => {
     page.drawRectangle({
       x: MARGIN,
-      y: y - 25,
-      width: CONTENT_WIDTH,
-      height: 28,
+      y: topY - height,
+      width: 92,
+      height,
       color: rgb(0.985, 0.972, 0.95),
       borderColor: RULE,
-      borderWidth: 0.6,
+      borderWidth: 0.45,
     });
     const brandLogo = brandLogos.get(brand);
     if (brandLogo) {
-      const maxWidth = 105;
-      const maxHeight = 20;
+      const maxWidth = brand === "IOT" ? 66 : 74;
+      const maxHeight = brand === "IOT" ? 20 : 24;
       const scale = Math.min(maxWidth / brandLogo.width, maxHeight / brandLogo.height);
       const width = brandLogo.width * scale;
       const height = brandLogo.height * scale;
       page.drawImage(brandLogo, {
-        x: MARGIN + 9,
-        y: y - 20 + (20 - height) / 2,
+        x: MARGIN + 8,
+        y: topY - 12 - height / 2,
         width,
         height,
       });
-      page.drawText(cleanText(brand), {
-        x: MARGIN + 124,
-        y: y - 14,
-        size: 8,
-        font: bold,
-        color: NAVY,
-      });
     } else {
-      page.drawText(cleanText(brand).toUpperCase(), {
-        x: MARGIN + 9,
-        y: y - 14,
-        size: 8,
+      page.drawText(fitText(bold, brand, 76, 7.5), {
+        x: MARGIN + 8,
+        y: topY - 15,
+        size: 7.5,
         font: bold,
         color: NAVY,
       });
     }
-    y -= 30;
+  };
+
+  const drawBrandRows = ({
+    category,
+    tier,
+    brand,
+    rows,
+  }: {
+    category: PriceDisplayCategory;
+    tier: ProgressiveTier | "All";
+    brand: string;
+    rows: ReturnType<typeof summarizeDesigns>;
+  }) => {
+    drawTableHeader(true);
+    rows.forEach((row, index) => {
+      if (y - 18 < 58) {
+        addPage(true);
+        sectionTitle(category, "continued");
+        if (tier !== "All") drawTierHeader(tier);
+        drawTableHeader(true);
+      }
+      const rowTop = y + 2;
+      const rowHeight = 17;
+      if (index % 2 === 1) {
+        page.drawRectangle({
+          x: MARGIN + 92,
+          y: y - 15,
+          width: CONTENT_WIDTH - 92,
+          height: rowHeight,
+          color: CREAM,
+        });
+      }
+      if (index === 0 || y > PAGE_HEIGHT - 150) {
+        const remainingRows = Math.min(rows.length - index, Math.floor((y - 58) / rowHeight));
+        drawBrandCell(brand, rowTop, Math.max(rowHeight, remainingRows * rowHeight));
+      }
+      const values: Array<[string, number, number, PDFFont, typeof TEXT]> = [
+        [row.designStyle, MARGIN + 100, 248, regular, TEXT],
+        [money(row.clear, mode), MARGIN + 364, 52, bold, NAVY],
+        [money(row.photochromic, mode), MARGIN + 424, 52, bold, NAVY],
+        [money(row.polarized, mode), MARGIN + 484, 50, bold, NAVY],
+      ];
+      values.forEach(([value, x, width, font, color]) => {
+        page.drawText(fitText(font, value, width, 7.2), {
+          x,
+          y: y - 10,
+          size: 7.2,
+          font,
+          color,
+        });
+      });
+      page.drawLine({
+        start: { x: MARGIN + 92, y: y - 15 },
+        end: { x: PAGE_WIDTH - MARGIN, y: y - 15 },
+        color: RULE,
+        thickness: 0.45,
+      });
+      y -= rowHeight;
+    });
+  };
+
+  const drawCompactItemGrid = (
+    items: Array<{ name: string; detail?: string; price: string }>,
+    detailWidth = 104
+  ) => {
+    const columns = items.length > 8 ? 2 : 1;
+    const gap = 16;
+    const columnWidth = (CONTENT_WIDTH - gap * (columns - 1)) / columns;
+    const rowHeight = 17;
+
+    for (let index = 0; index < items.length; index += columns) {
+      ensureSpace(rowHeight);
+      const rowItems = items.slice(index, index + columns);
+      rowItems.forEach((item, columnIndex) => {
+        const x = MARGIN + columnIndex * (columnWidth + gap);
+        if ((Math.floor(index / columns) + columnIndex) % 2 === 1) {
+          page.drawRectangle({
+            x,
+            y: y - 14,
+            width: columnWidth,
+            height: 16,
+            color: CREAM,
+          });
+        }
+        page.drawText(fitText(regular, item.name, columnWidth - detailWidth - 58, 7.4), {
+          x: x + 5,
+          y: y - 10,
+          size: 7.4,
+          font: regular,
+          color: TEXT,
+        });
+        if (item.detail) {
+          page.drawText(fitText(regular, item.detail, detailWidth, 7), {
+            x: x + columnWidth - detailWidth - 48,
+            y: y - 10,
+            size: 7,
+            font: regular,
+            color: MUTED,
+          });
+        }
+        page.drawText(fitText(bold, item.price, 46, 7.4), {
+          x: x + columnWidth - 45,
+          y: y - 10,
+          size: 7.4,
+          font: bold,
+          color: NAVY,
+        });
+      });
+      y -= rowHeight;
+    }
   };
 
   addPage();
@@ -423,51 +528,7 @@ async function buildPriceListPdf({
       for (const [brand, brandRows] of [...brandGroups.entries()].sort(
         ([a], [b]) => comparePriceDisplayBrand(a, b)
       )) {
-        drawBrandHeader(brand);
-        drawTableHeader();
-        brandRows.forEach((row, index) => {
-          if (y - 18 < 58) {
-            addPage(true);
-            sectionTitle(category, "continued");
-            if (tier !== "All") drawTierHeader(tier);
-            drawBrandHeader(brand);
-            drawTableHeader();
-          }
-          if (index % 2 === 1) {
-            page.drawRectangle({
-              x: MARGIN,
-              y: y - 15,
-              width: CONTENT_WIDTH,
-              height: 17,
-              color: CREAM,
-            });
-          }
-          const values: Array<[string, number, number]> = [
-            [row.designStyle, MARGIN + 6, 350],
-            [money(row.clear, mode), MARGIN + 369, 52],
-            [money(row.photochromic, mode), MARGIN + 425, 52],
-            [money(row.polarized, mode), MARGIN + 481, 50],
-          ];
-          values.forEach(([value, x, width], columnIndex) => {
-            page.drawText(
-              fitText(columnIndex === 0 ? regular : bold, value, width, 7.2),
-              {
-                x,
-                y: y - 10,
-                size: 7.2,
-                font: columnIndex === 0 ? regular : bold,
-                color: columnIndex === 0 ? TEXT : NAVY,
-              }
-            );
-          });
-          page.drawLine({
-            start: { x: MARGIN, y: y - 15 },
-            end: { x: PAGE_WIDTH - MARGIN, y: y - 15 },
-            color: RULE,
-            thickness: 0.45,
-          });
-          y -= 17;
-        });
+        drawBrandRows({ category, tier, brand, rows: brandRows });
       }
     }
   }
@@ -490,54 +551,26 @@ async function buildPriceListPdf({
           compareText(a.name, b.name)
         );
       });
-    for (const coating of coatings) {
-      ensureSpace(18);
-      page.drawText(fitText(bold, coating.name, 275, 8), {
-        x: MARGIN + 6,
-        y: y - 10,
-        size: 8,
-        font: bold,
-        color: NAVY,
-      });
-      page.drawText(fitText(regular, coating.brandFamily, 170, 7.5), {
-        x: MARGIN + 292,
-        y: y - 10,
-        size: 7.5,
-        font: regular,
-        color: MUTED,
-      });
-      page.drawText(`$${coating.price.toFixed(2)}`, {
-        x: PAGE_WIDTH - MARGIN - 55,
-        y: y - 10,
-        size: 8,
-        font: bold,
-        color: NAVY,
-      });
-      y -= 17;
-    }
+    drawCompactItemGrid(
+      coatings.map((coating) => ({
+        name: coating.name,
+        detail: coating.brandFamily,
+        price: `$${coating.price.toFixed(2)}`,
+      })),
+      96
+    );
   }
 
   for (const section of priceList.addOnSections) {
     if (!section.items.length) continue;
     sectionTitle(section.title);
-    for (const item of section.items) {
-      ensureSpace(18);
-      page.drawText(fitText(regular, item.name, 390, 8), {
-        x: MARGIN + 6,
-        y: y - 10,
-        size: 8,
-        font: regular,
-        color: TEXT,
-      });
-      page.drawText(cleanText(item.price), {
-        x: PAGE_WIDTH - MARGIN - 110,
-        y: y - 10,
-        size: 8,
-        font: bold,
-        color: NAVY,
-      });
-      y -= 17;
-    }
+    drawCompactItemGrid(
+      section.items.map((item) => ({
+        name: item.name,
+        price: cleanText(item.price),
+      })),
+      0
+    );
   }
 
   pages.forEach((currentPage, index) => {
@@ -569,6 +602,13 @@ async function buildPriceListPdf({
       font: regular,
       color: MUTED,
     });
+    currentPage.drawText(fitText(regular, PRICE_BASIS_NOTE, CONTENT_WIDTH, 6.6), {
+      x: MARGIN,
+      y: 16,
+      size: 6.6,
+      font: regular,
+      color: MUTED,
+    });
   });
 
   document.setTitle(`${priceList.code} Price List - ${customerName}`);
@@ -597,6 +637,12 @@ export async function GET(request: NextRequest) {
   const code = canonicalPriceListCode(
     request.nextUrl.searchParams.get("code") || "G6"
   );
+  if (!isVisiblePriceListCode(code)) {
+    return new NextResponse("Pricing data is not available for this list.", {
+      status: 404,
+      headers: { "Cache-Control": "private, no-store" },
+    });
+  }
   const previewAccountNumber =
     request.nextUrl.searchParams.get("account")?.trim() || undefined;
   const priceMode: PriceMode =

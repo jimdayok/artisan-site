@@ -148,7 +148,7 @@ export const sections: HubSection[] = [
     id: "pricing-safety",
     eyebrow: "Pricing",
     title: "Pricing and Safety Systems",
-    summary: "Find your price lists, understand Safety Systems pricing tiers, and prepare safety/frame orders correctly.",
+    summary: "Use the core price list, understand when bundled lens systems like B5 price first, and prepare safety/frame orders correctly.",
     icon: ShieldCheck,
   },
   {
@@ -228,10 +228,10 @@ export const portalFeatures: PortalFeature[] = [
     title: "Pricing & Policies",
     label: "Pricing",
     training:
-      "This is where staff should go before quoting or explaining account rules. Pricing is account-specific, so do not rely on a copied sheet from another practice.",
+      "This is where staff should go before quoting or explaining account rules. Pricing is account-specific, so do not rely on a copied sheet from another practice. Some lens systems, including B5, use bundled package pricing that should be quoted before the core list, and safety/frame programs may use their own package logic.",
     bullets: [
       "Open the assigned price list for the practice, not a generic public resource.",
-      "Review package pricing when the order uses a system or bundle.",
+      "Review package pricing first when the order uses a system or bundle, especially B5 lens systems and safety/frame packages.",
       "Check policies before promising remake, warranty, shipping, or frame handling outcomes.",
       "Use policy pages to train new staff on what the lab can approve and what needs review.",
     ],
@@ -252,10 +252,11 @@ export const portalFeatures: PortalFeature[] = [
     title: "Price Quote Builder",
     label: "Quote",
     training:
-      "Use the Price Quote Builder before quoting complex orders. It helps the team combine lens design, material, AR, finishing, and shipping choices into an estimated lab price.",
+      "Use the Price Quote Builder before quoting complex orders. It helps the team combine lens design, material, AR, finishing, and shipping choices into an estimated lab price. For B5 and other bundled lens systems, the package path should be used because the package prices the chosen products first.",
     bullets: [
-      "Start with the correct price list and product family.",
+      "Start with the correct price list and product family, then switch to the package path whenever the lens system is bundled.",
       "Add material, coating, finishing, and shipping selections in the same way the order will be placed.",
+      "If the system qualifies for bundled pricing, choose the package option first so the package components price out before the base list.",
       "Treat the result as an estimate and confirm unusual orders with the lab before promising a patient price.",
     ],
   },
@@ -290,12 +291,16 @@ export const orderingMethods: OrderingMethod[] = [
     logo: "/dvi-logo-color.png",
     summary: "Contact customer service to confirm lab setup.",
     setupHelp:
-      "DVI should be confirmed before live orders. Customer service can help verify the correct lab connection, account number, lab routing, product availability, and lens setup.",
+      "DVI should be confirmed before live orders. Customer service can help verify the correct lab connection, account number, lab routing, product availability, and lens setup. If the practice uses DVI, they can log in with the desktop client at https://thedvi.com/download-rxwizard/ or use the web-based version at https://www.rxwizardonline.com/.",
     steps: [
       "Call the customer service team for the lab selected above.",
       "Confirm whether the practice already has DVI access or needs setup assistance.",
       "Ask customer service to verify the account number, lab routing, product availability, and any VSP notes.",
       "Submit the first order only after the connection is confirmed.",
+    ],
+    watch: [
+      { label: "Download RxWizard client", href: "https://thedvi.com/download-rxwizard/", external: true },
+      { label: "Use RxWizard online", href: "https://www.rxwizardonline.com/", external: true },
     ],
   },
   {
@@ -303,7 +308,7 @@ export const orderingMethods: OrderingMethod[] = [
     logo: "/visionweb.png",
     summary: "Add the correct Artisan lab in VisionWeb. The lab will receive and approve the connection.",
     setupHelp:
-      "VisionWeb setup starts in the ordering platform. Add the correct Artisan lab and notify customer service so the request can be approved and the account connection can be checked.",
+      "VisionWeb setup starts in the ordering platform at www.visionweb.com. Add the correct Artisan lab and notify customer service so the request can be approved and the account connection can be checked.",
     steps: [
       "Add the correct ALN lab inside VisionWeb.",
       "The lab receives the connection request.",
@@ -316,7 +321,7 @@ export const orderingMethods: OrderingMethod[] = [
     logo: "/logos/speccheck.png",
     summary: "A guided setup path for practices using SpecCheck Rx.",
     setupHelp:
-      "SpecCheck users need the lab connected to the account before ordering. If the practice is new to SpecCheck, Artisan can help start the access flow and send ordering videos.",
+      "SpecCheck users need the lab connected to the account before ordering. If the practice is new to SpecCheck, start at SpecCheck.com and Artisan can help finish the access flow and send ordering videos.",
     steps: [
       "Contact customer service and identify the team member who should receive access.",
       "Receive the welcome email and follow the setup instructions.",
@@ -332,7 +337,7 @@ export const orderingMethods: OrderingMethod[] = [
     logo: "/logos/eyefinitypm.png",
     summary: "Common for VSP users and selected from the lab dropdown.",
     setupHelp:
-      "Eyefinity is commonly used when VSP routing is involved. If the practice uses VSP, pre-select this path and confirm exactly which lab should be chosen in the dropdown before orders begin.",
+      "Eyefinity is commonly used when VSP routing is involved. If the practice uses VSP, start at Eyefinity.com, pre-select this path, and confirm exactly which lab should be chosen in the dropdown before orders begin.",
     steps: [
       "Add the lab from the Eyefinity dropdown.",
       "Confirm whether VSP orders must route differently than private-pay orders.",
@@ -380,7 +385,7 @@ export const lensTrainingTracks: LensTrainingTrack[] = [
       { type: "Guide", label: "Varilux Comfort Max Guide", href: "/files/varilux-comfort-max.pdf", description: "Guide for Varilux Comfort Max recommendations." },
       { type: "Guide", label: "Varilux X Series Guide", href: "/files/varilux-x-series.pdf", description: "Guide for Varilux X Series positioning and order support." },
       { type: "Guide", label: "Varilux XR Series Guide", href: "/files/varilux-xr-series.pdf", description: "Guide for Varilux XR Series positioning and order support." },
-      { type: "Placeholder", label: "Layout Chart Coming Soon", href: "#lens", description: "Direct Varilux layout chart file is not published in this hub yet." },
+      { type: "Action", label: "Request Varilux Layout Chart", href: `mailto:${supportContacts.onboarding.email}?subject=Varilux%20Layout%20Chart%20Request`, description: "Ask the onboarding team for the current Varilux layout chart before placing first orders." },
     ],
   },
   {
@@ -397,7 +402,7 @@ export const lensTrainingTracks: LensTrainingTrack[] = [
       { type: "Guide", label: "Shamir Quick Reference", href: "/files/shamir-quick-reference.pdf", description: "Quick reference for Shamir design selection and staff support." },
       { type: "Guide", label: "Shamir Dispensing Guide", href: "/files/shamir-dispensing-guide.pdf", description: "Dispensing guide for Shamir measurements and patient conversations." },
       { type: "Guide", label: "Shamir Driver Intelligence", href: "/files/shamir-driver-intelligence.pdf", description: "Driver Intelligence guide for driving-specific recommendations." },
-      { type: "Placeholder", label: "Layout Chart Coming Soon", href: "#lens", description: "Direct Shamir layout chart file is not published in this hub yet." },
+      { type: "Action", label: "Request Shamir Layout Chart", href: `mailto:${supportContacts.onboarding.email}?subject=Shamir%20Layout%20Chart%20Request`, description: "Ask the onboarding team for the current Shamir layout chart before placing first orders." },
     ],
   },
   {
@@ -452,7 +457,7 @@ export const lensTrainingTracks: LensTrainingTrack[] = [
       { type: "Guide", label: "Unity V3 White Paper", href: "/files/5688bc8-2e3-c061-3d27-251215283ac_Unity_V3_Whitepaper.pdf", description: "Technical white paper for Unity V3 performance and product context." },
       { type: "Treatment", label: "TechShield AR Coatings Guide", href: "/files/TechShield_AR_Coatings_Sales_Sheet_2023.pdf", description: "Treatment guide for TechShield AR recommendations." },
       { type: "Guide", label: "TechShield FAQ", href: "/files/unity-performance-coatings_retirement_faqs.pdf", description: "FAQ for the Unity performance coatings retirement and TechShield transition." },
-      { type: "Placeholder", label: "Layout Chart Coming Soon", href: "#lens", description: "Direct Unity layout chart file is not published in this hub yet." },
+      { type: "Action", label: "Request Unity Layout Chart", href: `mailto:${supportContacts.onboarding.email}?subject=Unity%20Layout%20Chart%20Request`, description: "Ask the onboarding team for the current Unity layout chart before placing first orders." },
     ],
   },
   {
@@ -472,7 +477,7 @@ export const lensTrainingTracks: LensTrainingTrack[] = [
       { type: "Guide", label: "Tokai Reset Guide", href: "/files/tokai-reset-guide.pdf", description: "Tokai Reset resource for patient conversations and dispensing support." },
       { type: "Guide", label: "Tokai Largo Guide", href: "/files/tokai-largo-guide.pdf", description: "Tokai Largo guide for product positioning and lens selection." },
       { type: "Guide", label: "Tokai Tint Guide", href: "/files/tokai-tint-guide.pdf", description: "Tint reference for Tokai lens options and patient preferences." },
-      { type: "Placeholder", label: "Layout Chart Coming Soon", href: "#lens", description: "Direct Tokai layout chart file is not published in this hub yet." },
+      { type: "Action", label: "Request Tokai Layout Chart", href: `mailto:${supportContacts.onboarding.email}?subject=Tokai%20Layout%20Chart%20Request`, description: "Ask the onboarding team for the current Tokai layout chart before placing first orders." },
     ],
   },
   {
@@ -486,7 +491,7 @@ export const lensTrainingTracks: LensTrainingTrack[] = [
     ],
     resources: [
       { type: "Guide", label: "Neurolens Provider Brochure", href: "/files/neurolens-provider-brochure.pdf", description: "Provider-facing Neurolens brochure for patient conversations and practice education." },
-      { type: "Placeholder", label: "Layout Chart Coming Soon", href: "#lens", description: "Direct Neurolens layout chart file is not published in this hub yet." },
+      { type: "Action", label: "Request Neurolens Layout Chart", href: `mailto:${supportContacts.onboarding.email}?subject=Neurolens%20Layout%20Chart%20Request`, description: "Ask the onboarding team for the current Neurolens layout chart before placing first orders." },
     ],
   },
   {
@@ -501,7 +506,7 @@ export const lensTrainingTracks: LensTrainingTrack[] = [
     resources: [
       { type: "Guide", label: "Sequel Lens Overview", href: "/files/sequel-lens-overview.pdf", description: "Overview for Sequel lens product conversations." },
       { type: "Guide", label: "Sequel Promotion", href: "/files/sequel-promotion.pdf", description: "Practice-facing Sequel promotional resource." },
-      { type: "Placeholder", label: "Layout Chart Coming Soon", href: "#lens", description: "Direct Sequel layout chart file is not published in this hub yet." },
+      { type: "Action", label: "Request Sequel Layout Chart", href: `mailto:${supportContacts.onboarding.email}?subject=Sequel%20Layout%20Chart%20Request`, description: "Ask the onboarding team for the current Sequel layout chart before placing first orders." },
     ],
   },
 ];
@@ -520,10 +525,10 @@ export const safetyTrainingResources: TrainingResource[] = [
   { type: "Frame Book", label: "Wiley X Frame Book", href: "/files/wileyx-frame-book.pdf", description: "Wiley X frame book for ANSI-rated and performance-focused eyewear conversations." },
   { type: "Frame Book", label: "ArtCraft Frame Book", href: "/files/artcraft-frame-book.pdf", description: "ArtCraft frame references for safety and specialty frame selection." },
   { type: "Frame Book", label: "SafeVision Frame Book", href: "/files/safevision-frame-book.pdf", description: "SafeVision frame catalog for occupational eyewear and safety program support." },
-  { type: "Price List", label: "Safety Price List", href: "/portal/price-list/y5", description: "Open Artisan Safety Systems Y5 pricing. Safety pricing is tiered on the price list." },
+  { type: "Price List", label: "Safety Price List", href: "/portal/price-list/y5", description: "Open Artisan Safety Systems Y5 pricing. Safety pricing is tiered on the price list, and supply should be marked when the order uses supplied-inventory pricing." },
   { type: "Action", label: "Order Your Free Safety Kit", href: "https://form.typeform.com/to/rDUQssNn", external: true, description: "Request demonstration frames and safety program materials for your practice." },
   { type: "Action", label: "Request Current Program Pricing", href: "https://form.typeform.com/to/quuPCSff", external: true, description: "Request current program details and account-specific pricing support." },
-  { type: "Placeholder", label: "Download Frame Manifest PDF", href: "#shipping", description: "Use this manifest when sending frames to the lab so the lab can match frames, patients, accounts, and orders correctly. Final PDF placeholder." },
+  { type: "Action", label: "Request Frame Manifest PDF", href: `mailto:${supportContacts.onboarding.email}?subject=Frame%20Manifest%20PDF%20Request`, description: "Request the current manifest before sending frames so the lab can match frames, patients, accounts, and orders correctly." },
 ];
 
 export const shippingVisuals = [
@@ -536,8 +541,6 @@ export const shippingVisuals = [
 export const resourceLinks: ResourceLink[] = [
   { label: "Customer Portal", href: "/portal" },
   { label: "Price Quote Builder", href: "/portal/price-list/calculator" },
-  { label: "Pricing & Policies", href: "/portal/price-list" },
-  { label: "Safety Price List", href: "/portal/price-list/y5" },
   { label: "Provider Resources", href: "/provider-resources" },
   { label: "Patient Resources", href: "/patient-resources" },
 ];

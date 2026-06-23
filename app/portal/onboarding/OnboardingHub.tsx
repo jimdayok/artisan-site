@@ -62,6 +62,24 @@ function progressKey(email: string, accountNumber: string) {
   return `artisan-onboarding-progress:${email}:${accountNumber}`;
 }
 
+function isAnswerSnapshot(value: unknown): value is Partial<Answers> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function readStoredProgress(email: string, accountNumber: string) {
+  if (!email || !accountNumber || typeof window === "undefined") return defaultAnswers;
+
+  try {
+    const raw = window.localStorage.getItem(progressKey(email, accountNumber));
+    if (!raw) return defaultAnswers;
+
+    const parsed = JSON.parse(raw) as unknown;
+    return isAnswerSnapshot(parsed) ? { ...defaultAnswers, ...parsed } : defaultAnswers;
+  } catch {
+    return defaultAnswers;
+  }
+}
+
 function mailtoCorrection({
   email,
   name,
@@ -107,14 +125,13 @@ function ResourceButton({ link }: { link: ResourceLink }) {
 function VideoPlaceholder({ title }: { title: string }) {
   return (
     <div className="rounded-[20px] border border-dashed border-[#b8a27d]/70 bg-[#fbf8f3] p-5">
-      {/* TODO: Replace this placeholder with the final onboarding video asset when available. */}
       <div className="flex items-start gap-3">
         <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#1f1a17] text-[#d4c09a]">
           <PlayCircle className="h-5 w-5" aria-hidden="true" />
         </div>
         <div>
           <p className="text-sm font-semibold text-[#1f1a17]">{title}</p>
-          <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#8a7654]">Video placeholder</p>
+          <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#8a7654]">Training Video</p>
         </div>
       </div>
     </div>
@@ -124,7 +141,6 @@ function VideoPlaceholder({ title }: { title: string }) {
 function ScreenshotPlaceholder({ title }: { title: string }) {
   return (
     <div className="rounded-[20px] border border-dashed border-[#b8a27d]/70 bg-white p-4">
-      {/* TODO: Add generic sanitized screenshot for this portal/onboarding step. */}
       <div className="rounded-2xl bg-[#f5f1eb] p-4">
         <div className="h-3 w-28 rounded-full bg-[#d8c6a8]" />
         <div className="mt-4 grid gap-2">
@@ -134,7 +150,7 @@ function ScreenshotPlaceholder({ title }: { title: string }) {
         </div>
       </div>
       <p className="mt-3 text-sm font-semibold text-[#1f1a17]">{title}</p>
-      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#8a7654]">Generic screenshot placeholder</p>
+      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#8a7654]">Step Preview</p>
     </div>
   );
 }
@@ -148,22 +164,10 @@ function statusFor(completed: ModuleId[], id: ModuleId) {
 }
 
 function useStoredProgress(email: string, accountNumber: string) {
-  const [answers, setAnswers] = useState<Answers>(defaultAnswers);
-  const [hydrated, setHydrated] = useState(false);
+  const [answers, setAnswers] = useState<Answers>(() => readStoredProgress(email, accountNumber));
 
   useEffect(() => {
-    setHydrated(false);
-    try {
-      const raw = window.localStorage.getItem(progressKey(email, accountNumber));
-      setAnswers(raw ? { ...defaultAnswers, ...JSON.parse(raw) } : defaultAnswers);
-    } catch {
-      setAnswers(defaultAnswers);
-    }
-    setHydrated(true);
-  }, [email, accountNumber]);
-
-  useEffect(() => {
-    if (!hydrated || !email || !accountNumber) return;
+    if (!email || !accountNumber) return;
     const percentComplete = Math.round((answers.completedModules.length / modules.length) * 100);
     const payload = {
       ...answers,
@@ -172,7 +176,7 @@ function useStoredProgress(email: string, accountNumber: string) {
       updatedAt: new Date().toISOString(),
     };
     window.localStorage.setItem(progressKey(email, accountNumber), JSON.stringify(payload));
-  }, [answers, hydrated, email, accountNumber]);
+  }, [answers, email, accountNumber]);
 
   return [answers, setAnswers] as const;
 }
@@ -499,11 +503,11 @@ function LensModule({ answers }: { answers: Answers }) {
     <div className="space-y-5">
       <p className="text-sm font-semibold text-[#625b53]">Your selected lens training</p>
       {selected.includes("iot-progressive") ? <LensCard title="IOT Branded Progressive Lenses" cta="View IOT Pricing" items={["Best: Camber Pure or Camber Steady Plus", "Better: Endless Steady", "Good: Essential Steady", "Value Option: CFB", "IOT is known for advanced lens design technology and free-form design expertise.", "Artisan Lab Network makes these advanced designs accessible to independent practices.", "These designs are built for strong adaptation, broad utility, and premium patient experience when ordered and fit correctly."]} video="Understanding IOT Progressive Options"><details className="mt-4 rounded-2xl bg-white p-4"><summary className="cursor-pointer font-semibold">Why IOT matters</summary><p className="mt-3 text-sm leading-7 text-[#625b53]">The point is not just having more lens names. The point is giving opticians practical, dependable choices across best/better/good/value needs.</p></details></LensCard> : null}
-      {selected.includes("iot-sv") ? <LensCard title="IOT Branded Single Vision" cta="View Single Vision Pricing" items={["Use IOT single vision training for modern single vision options when your account uses this path.", "Review when to recommend, ordering/fitting basics, and portal pricing.", "TODO: Confirm IOT SV product ladder names with Artisan team."]} /> : null}
-      {selected.includes("iot-anti-fatigue") ? <LensCard title="IOT Branded Anti-Fatigue" cta="View Anti-Fatigue Pricing" items={["Anti-fatigue lenses support patients who need help with near demand and digital visual behavior.", "Review who they are for, ordering/fitting basics, and portal pricing.", "TODO: Confirm IOT anti-fatigue product ladder names with Artisan team."]} /> : null}
+      {selected.includes("iot-sv") ? <LensCard title="IOT Branded Single Vision" cta="View Single Vision Pricing" items={["Use IOT single vision training for modern single vision options when your account uses this path.", "Review when to recommend, ordering/fitting basics, and portal pricing.", "Ask your onboarding contact to confirm the current IOT single vision product ladder for your account."]} /> : null}
+      {selected.includes("iot-anti-fatigue") ? <LensCard title="IOT Branded Anti-Fatigue" cta="View Anti-Fatigue Pricing" items={["Anti-fatigue lenses support patients who need help with near demand and digital visual behavior.", "Review who they are for, ordering/fitting basics, and portal pricing.", "Ask your onboarding contact to confirm the current IOT anti-fatigue product ladder for your account."]} /> : null}
       {selected.includes("artisan-design") ? <LensCard title="Artisan Design Series" cta="View Artisan Design Series Pricing" items={["DS", "PS", "GS", "CFB", "Artisan Design Series is Artisan Lab Network's private-label lens portfolio.", "These private-label products were selected and curated with IOT-powered design options for independent practices.", "Private-label naming gives practices a cleaner way to present premium lenses."]} video="Understanding the Artisan Design Series" /> : null}
       {(selected.includes("unity-v3") || selected.includes("unity-office")) ? <LensCard title="Unity V3 / Unity Office / Unity Relieve" cta="Review Unity Pricing" items={["Unity V3 is the third iteration of the Unity progressive design family.", "Unity V3 is meaningfully different from earlier Unity versions.", "The design is intended to deliver a strong adaptation experience when ordered and fit correctly.", "Include Unity Office, Unity Relieve, SunSync, TechShield, and VSP/Unity Rewards where relevant."]} video="Unity V3: What Changed and How to Order" /> : null}
-      {showAdvanced ? <LensCard title="Advanced/customized lens versions" cta="Review advanced pricing" items={["Artisan Design Series: DS Stable, DS Mobile, DS Vista.", "TODO: Confirm exact DS variant positioning with product manager.", "IOT: Camber Steady D, Camber Steady I, Camber Steady N, and Camber Steady Balance as default.", "There is currently no special-fit/custom version for Camber Pure unless confirmed otherwise.", "There is currently no special-fit/custom version for CFB unless confirmed otherwise.", "TODO: Product manager review for advanced IOT variant positioning."]} /> : null}
+      {showAdvanced ? <LensCard title="Advanced/customized lens versions" cta="Review advanced pricing" items={["Artisan Design Series: DS Stable, DS Mobile, DS Vista.", "Confirm exact DS variant positioning with your product manager before launch.", "IOT: Camber Steady D, Camber Steady I, Camber Steady N, and Camber Steady Balance as default.", "There is currently no special-fit/custom version for Camber Pure unless confirmed otherwise.", "There is currently no special-fit/custom version for CFB unless confirmed otherwise.", "Ask your product manager to review advanced IOT variant positioning for your account."]} /> : null}
     </div>
   );
 }
@@ -517,12 +521,18 @@ function ARModule() {
 }
 
 function TeamProgress() {
-  return <section className="rounded-[28px] border border-[#d8c6a8]/70 bg-[#fbf8f3] p-5 md:p-7"><p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8a7654]">Team Progress</p><h2 className="mt-2 text-3xl font-semibold text-[#1f1a17]">Team progress will appear here.</h2><p className="mt-3 text-sm leading-7 text-[#625b53]">Team progress will appear here as your team members complete onboarding.</p>{/* TODO: Replace placeholder with server-backed account-level onboarding progress store. */}</section>;
+  return <section className="rounded-[28px] border border-[#d8c6a8]/70 bg-[#fbf8f3] p-5 md:p-7"><p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8a7654]">Team Progress</p><h2 className="mt-2 text-3xl font-semibold text-[#1f1a17]">Coordinate onboarding progress with your team.</h2><p className="mt-3 text-sm leading-7 text-[#625b53]">Use this hub as the shared checklist for account setup, product training, ordering, and first-order readiness.</p></section>;
 }
 
-export default function OnboardingHub({ access }: { access: Extract<OnboardingAccess, { status: "authorized" }> }) {
-  const [selectedAccountNumber, setSelectedAccountNumber] = useState(access.accounts[0]?.accountNumber ?? "");
-  const account = access.accounts.find((entry) => entry.accountNumber === selectedAccountNumber) ?? access.accounts[0]!;
+function OnboardingAccountContent({
+  access,
+  account,
+  setSelectedAccountNumber,
+}: {
+  access: Extract<OnboardingAccess, { status: "authorized" }>;
+  account: OnboardingAccount;
+  setSelectedAccountNumber: Dispatch<SetStateAction<string>>;
+}) {
   const [answers, setAnswers] = useStoredProgress(access.email, account.accountNumber);
 
   const resetProgress = () => {
@@ -565,12 +575,26 @@ export default function OnboardingHub({ access }: { access: Extract<OnboardingAc
             <ModuleShell id="systems" title="Artisan Systems / Safety / Bundles" answers={answers} setAnswers={setAnswers}><BulletGrid items={["Use Artisan Systems, lens/frame/safety bundles, and safety programs when they simplify ordering.", "Bundles help teams follow a cleaner order path for defined programs.", "Find pricing and resources in the portal and Provider Resources."]} /><div className="mt-5 flex flex-wrap gap-2"><ResourceButton link={{ label: "Review Safety and Bundle Resources", href: "/provider-resources#specialty-systems" }} /><ResourceButton link={{ label: "View System Pricing", href: "/portal/price-list/packages" }} /></div><div className="mt-5"><VideoPlaceholder title="Using Artisan Systems" /></div></ModuleShell>
             <ModuleShell id="vsp" title="VSP / Eyefinity / Managed Care" answers={answers} setAnswers={setAnswers}><BulletGrid items={["VSP orders may route through Eyefinity.", "You may need to add Pacific Artisan Labs in Eyefinity when instructed for VSP routing.", "Even if you primarily work with Peak or Pike, VSP routing may require Pacific depending on setup.", "Some managed vision care arrangements may restrict lab usage; some states may allow provider choice or freedom-of-choice lab access.", "This is operational guidance, not legal advice. If you are unsure, contact us and we can help review your setup."]} /><div className="mt-5 flex flex-wrap gap-2"><ResourceButton link={{ label: "Request VSP Setup Help", href: `mailto:${supportContacts.onboarding.email}?subject=VSP%20Setup%20Help` }} /><ResourceButton link={{ label: "Ask Us to Review Managed Care Setup", href: `mailto:${supportContacts.onboarding.email}?subject=Managed%20Care%20Setup%20Review` }} /></div><div className="mt-5"><VideoPlaceholder title="How to Add Artisan for VSP/Eyefinity" /></div></ModuleShell>
             <ModuleShell id="remakes" title="Remakes and Policies" answers={answers} setAnswers={setAnswers}><BulletGrid items={["Report a remake to customer service with the order number, patient initials, remake reason, and measurements or frame details when requested.", "Work with customer service to confirm what the lab needs before resubmission.", "Avoid remake delays by providing clear details and matching frame/order information.", "Use the official policy location for exact policy terms."]} /><div className="mt-5 flex flex-wrap gap-2"><ResourceButton link={{ label: "Open Lab Policies", href: "/portal/price-list/policies" }} /><ResourceButton link={{ label: "Contact Customer Service About a Remake", href: `mailto:${labs[account.labKey].email}?subject=Remake%20Question` }} /></div></ModuleShell>
-            <ModuleShell id="complimentary" title="Complimentary Lens Orders" answers={answers} setAnswers={setAnswers}><BulletGrid items={["Complimentary lenses are for practice owner/staff education and experience.", "They are not for normal patient orders.", "They are not for family/friends unless explicitly approved by program rules.", "Staff should experience products before recommending them.", "TODO: Replace this CTA with official complimentary lens rules when published."]} /><div className="mt-5 flex flex-wrap gap-2"><ResourceButton link={{ label: "Review Complimentary Lens Guidelines", href: `mailto:${supportContacts.onboarding.email}?subject=Complimentary%20Lens%20Guidelines` }} /></div><div className="mt-5"><VideoPlaceholder title="How to Use Staff Training Lens Orders" /></div></ModuleShell>
+            <ModuleShell id="complimentary" title="Complimentary Lens Orders" answers={answers} setAnswers={setAnswers}><BulletGrid items={["Complimentary lenses are for practice owner/staff education and experience.", "They are not for normal patient orders.", "They are not for family/friends unless explicitly approved by program rules.", "Staff should experience products before recommending them.", "Request the current complimentary lens guidelines before submitting staff training orders."]} /><div className="mt-5 flex flex-wrap gap-2"><ResourceButton link={{ label: "Review Complimentary Lens Guidelines", href: `mailto:${supportContacts.onboarding.email}?subject=Complimentary%20Lens%20Guidelines` }} /></div><div className="mt-5"><VideoPlaceholder title="How to Use Staff Training Lens Orders" /></div></ModuleShell>
             <ModuleShell id="launch" title="First Order Launch Checklist" answers={answers} setAnswers={setAnswers}><BulletGrid items={["I know which Artisan Lab Network lab I am working with.", "My account number is correct.", "My practice/team contacts are correct.", "My ordering platform is connected.", "My VSP/Eyefinity setup is complete or not needed.", "I know whether I am using IOT branded, Artisan Design Series, Unity, or mixed lens solutions.", "I know where to find my price list.", "I know where to find my reports.", "I know where to find Provider Resources.", "I understand AR treatment options.", "I understand how to send frames and request shipping labels.", "I know how to work with the lab on remakes.", "I know who to contact for help.", "I am ready to submit my first order."]} /><div className="mt-5 flex flex-wrap gap-2"><ResourceButton link={{ label: "Submit Your First Order", href: "#ordering" }} /><ResourceButton link={{ label: "Schedule Final Launch Help", href: `mailto:${supportContacts.onboarding.email}?subject=Final%20Launch%20Help` }} /><ResourceButton link={{ label: "Contact My Lab", href: `mailto:${labs[account.labKey].email}?subject=Launch%20Help` }} /></div></ModuleShell>
             <TeamProgress />
           </div>
         </div>
       </section>
     </main>
+  );
+}
+
+export default function OnboardingHub({ access }: { access: Extract<OnboardingAccess, { status: "authorized" }> }) {
+  const [selectedAccountNumber, setSelectedAccountNumber] = useState(access.accounts[0]?.accountNumber ?? "");
+  const account = access.accounts.find((entry) => entry.accountNumber === selectedAccountNumber) ?? access.accounts[0]!;
+
+  return (
+    <OnboardingAccountContent
+      key={`${access.email}:${account.accountNumber}`}
+      access={access}
+      account={account}
+      setSelectedAccountNumber={setSelectedAccountNumber}
+    />
   );
 }

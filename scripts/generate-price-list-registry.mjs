@@ -24,7 +24,7 @@ const runtimeOutputPath = path.join(
 );
 const hiddenCodesPath = path.join(root, "config", "hidden-price-list-codes.json");
 
-const packageCodes = new Set(["B5", "S5", "TK", "VX", "M5", "Y5"]);
+const packageCodes = new Set(["B5", "S5", "TK", "VX", "M5", "Y5", "VD"]);
 const invalidNamePattern = /\b(TEST|TEMPLATE|DO NOT USE|NOT FOR BILLING)\b/i;
 
 function normalizeCode(value) {

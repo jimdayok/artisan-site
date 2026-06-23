@@ -258,7 +258,7 @@ function Hero({ version }: { version: Version }) {
         </div>
         <motion.div {...fadeUp} className="relative min-h-[330px] overflow-hidden rounded-[28px] border border-white/60 shadow-[0_26px_70px_rgba(24,18,13,0.16)] lg:min-h-[430px]">
           <Image
-            src={version === "c" ? "/images/office-reception-desk-2025-1.jpg" : "/images/eyewear-brochure-meeting-2022-1.jpg"}
+            src={version === "c" ? "/images/office-reception-desk-2025-1.jpg" : "/images/eyewear-brochure-meeting-2022-1-optimized.jpg"}
             alt="Provider resources and practice support"
             fill
             sizes="(min-width: 1024px) 38vw, 100vw"

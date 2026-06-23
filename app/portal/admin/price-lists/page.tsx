@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { AdminAccessRequired, AdminShell, adminButtonClass } from "../AdminShell";
 import { getPortalAdminEmailFromHeaders } from "@/lib/portal/admin";
 import { visiblePriceLists } from "@/lib/portal/priceLists";
+import styleMappingGaps from "@/lib/portal/generated/priceListStyleMappingGaps.json";
 
 export const dynamic = "force-dynamic";
 
@@ -34,6 +35,7 @@ export default async function AdminPriceListsPage() {
   const missingAssigned = rows.filter(
     (row) => row.assignmentStatus === "assigned" && !row.generated
   );
+  const unmappedProducts = styleMappingGaps.unmappedProducts ?? [];
 
   return (
     <AdminShell title="Admin Price Lists" adminEmail={adminEmail}>
@@ -57,6 +59,70 @@ export default async function AdminPriceListsPage() {
             {missingAssigned.map((row) => row.code).join(", ")} are assigned to customers but have no generated pricing rows.
           </div>
         ) : null}
+
+        {unmappedProducts.length > 0 ? (
+          <section className="mt-5 border border-[#d9aa83] bg-[#fff4e8] p-4 text-sm text-[#172a28]">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8a421d]">
+                  Lens style naming gaps
+                </p>
+                <h2 className="mt-1 text-xl font-semibold">
+                  {unmappedProducts.length} styles.xml products are missing from Lookup.xlsx
+                </h2>
+                <p className="mt-1 text-[#6f3519]">
+                  Add these raw style names to the lens style naming normalization workbook so portal labels stay controlled.
+                </p>
+              </div>
+              <span className="rounded-full border border-[#d9aa83] bg-white px-3 py-1 text-xs font-semibold text-[#6f3519]">
+                Scanned {styleMappingGaps.priceListCountScanned} price lists
+              </span>
+            </div>
+            <div className="mt-4 max-h-[28rem] overflow-auto border border-[#ead4bc] bg-white">
+              <table className="w-full min-w-[860px] border-collapse text-left text-xs">
+                <thead>
+                  <tr className="border-b border-[#ead4bc] bg-[#fff8ee] text-[#172a28]">
+                    <th className="px-3 py-2">Raw styles.xml product</th>
+                    <th className="px-3 py-2">Lookup key needed</th>
+                    <th className="px-3 py-2">Price lists</th>
+                    <th className="px-3 py-2 text-right">Rows</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {unmappedProducts.map((product) => (
+                    <tr key={product.normalizedStyleKey} className="border-b border-[#f1e4d1]">
+                      <td className="px-3 py-2 font-semibold text-[#172a28]">
+                        {product.rawStyleName}
+                      </td>
+                      <td className="px-3 py-2 font-mono text-[11px] text-[#706759]">
+                        {product.normalizedStyleKey}
+                      </td>
+                      <td className="px-3 py-2">
+                        <div className="flex flex-wrap gap-1">
+                          {product.priceListCodes.map((code) => (
+                            <span
+                              key={`${product.normalizedStyleKey}-${code}`}
+                              className="rounded-full border border-[#d8c49b] bg-[#fffaf1] px-2 py-0.5 font-semibold text-[#172a28]"
+                            >
+                              {code}
+                            </span>
+                          ))}
+                        </div>
+                      </td>
+                      <td className="px-3 py-2 text-right font-semibold">
+                        {product.rowCount.toLocaleString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        ) : (
+          <div className="mt-5 border border-[#9dc4ad] bg-[#eef8f1] p-4 text-sm text-[#24543a]">
+            <strong>Lens style naming:</strong> All scanned styles.xml products are represented in Lookup.xlsx.
+          </div>
+        )}
 
         <div className="mt-5 overflow-x-auto">
           <table className="w-full min-w-[1120px] border-collapse text-left text-sm">
@@ -107,9 +173,13 @@ export default async function AdminPriceListsPage() {
                       >
                         Open Online
                       </Link>
-                      {row.r2Key ? (
+                      {row.generated || row.r2Key ? (
                         <Link
-                          href={`/api/portal/download?code=${encodeURIComponent(row.code)}`}
+                          href={
+                            row.generated
+                              ? `/portal/price-list/export?code=${encodeURIComponent(row.code)}&priceMode=edged`
+                              : `/api/portal/download?code=${encodeURIComponent(row.code)}`
+                          }
                           className="inline-flex min-h-8 items-center rounded-full border border-[#d7c5a8] px-3 text-xs font-semibold text-[#122033] hover:bg-[#f8f1e6]"
                         >
                           Download PDF

@@ -159,8 +159,6 @@ export const lensFamilyOptions: Array<{ id: LensFamilyId; label: string }> = [
 ];
 
 export const orderingMethodOptions: Array<{ id: OrderingMethodId; label: string }> = [
-  { id: "dvi", label: "DVI Rx Wizard" },
-  { id: "speccheck", label: "SpecCheck" },
   { id: "visionweb", label: "VisionWeb" },
   { id: "eyefinity", label: "Eyefinity" },
   { id: "not-sure", label: "Not sure" },
@@ -184,11 +182,9 @@ export const modules: OnboardingModule[] = [
 ];
 
 export const portalResources: ResourceLink[] = [
-  { label: "Open My Price List", href: "/portal/price-list" },
   { label: "View Packages", href: "/portal/price-list/packages" },
   { label: "Use Calculator", href: "/portal/price-list/calculator" },
   { label: "Product Catalog", href: "/portal/price-list/catalog" },
-  { label: "Policies", href: "/portal/price-list/policies" },
   { label: "Open My Reports", href: "/portal/performance" },
 ];
 

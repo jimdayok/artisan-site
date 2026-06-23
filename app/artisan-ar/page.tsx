@@ -21,8 +21,9 @@ export default function ArtisanArPage() {
         </h1>
         <p className="mt-6 max-w-3xl text-base leading-8 text-[#625b53] md:text-xl">
           Use this page before training staff on AR recommendations. Artisan AR
-          gives your team a clear good-better-best path across nighttime optics,
-          ultra premium durability, blue light performance, and premium everyday
+          gives your team a clear good-better-best path across our in-house,
+          ultra premium portfolio spanning nighttime optics, ultra premium
+          durability, blue light performance, and premium everyday
           anti-reflectance.
         </p>
 
@@ -34,9 +35,10 @@ export default function ArtisanArPage() {
             <h2 className="mt-5 text-2xl font-semibold tracking-tight">Artisan AR</h2>
             <p className="mt-3 text-sm leading-7 text-[#625b53]">
               Use Artisan AR when recommending a complete Artisan lens system.
-              Match the treatment to the patient conversation: nighttime driving,
-              extreme durability, blue light needs, premium clarity, glare
-              sensitivity, and visual comfort.
+              Match the treatment to the patient conversation: nighttime
+              driving, extreme durability, blue light needs, premium clarity,
+              glare sensitivity, and visual comfort. These are our in-house,
+              ultra premium coating options.
             </p>
           </article>
           <article className="rounded-[8px] border border-[#d8c6a8] bg-white p-6">

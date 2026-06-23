@@ -172,17 +172,6 @@ const fullServiceAddOns = [
   },
 ];
 
-const packageAddOns = [
-  {
-    title: "Package Notes",
-    items: [
-      { name: "Included AR", price: "Artisan Emerald", recommended: true },
-      { name: "Package pricing", price: "Edged and assembled package price" },
-    ],
-  },
-  ...fullServiceAddOns,
-];
-
 const b5PackageAddOns = [
   {
     title: "Package Notes",

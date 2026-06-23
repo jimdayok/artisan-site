@@ -26,11 +26,40 @@ const REDIRECT_ROUTES = [
   { source: "/practicematters", destination: "/newsletters/practice-matters" },
 ];
 
+const VERSION_REDIRECT_ROUTES = [
+  { source: "/home-original", destination: "/" },
+  { source: "/home-v2", destination: "/" },
+  { source: "/home-version-a", destination: "/" },
+  { source: "/home-version-b", destination: "/" },
+  { source: "/home-version-c", destination: "/" },
+  { source: "/resources-version-a", destination: "/provider-resources" },
+  { source: "/resources-version-b", destination: "/provider-resources" },
+  { source: "/resources-version-c", destination: "/provider-resources" },
+];
+
+const METADATA_ROUTES = [
+  "/",
+  "/about",
+  "/artisan-model",
+  "/provider-resources",
+  "/lab-policies",
+  "/new-lab-partner",
+  "/privacy-policy",
+  "/terms-and-conditions",
+];
+
+const PRODUCTION_ORIGIN = "https://www.artisanslabs.com";
+
 const PROTECTED_ROUTES = [
   "/portal",
   "/portal/price-list/g6",
   "/api/portal/download?code=G6",
   "/private/price-list/g6",
+];
+
+const HIDDEN_PRICE_LIST_ROUTES = [
+  "/portal/price-list/g5",
+  "/private/price-list/g5",
 ];
 
 const REQUIRED_NOINDEX_HEADERS = {
@@ -86,6 +115,40 @@ function parseLocation(baseUrl, locationHeader) {
   } catch {
     return locationHeader;
   }
+}
+
+function canonicalPath(path) {
+  return path === "/" ? "/" : path.replace(/\/$/, "");
+}
+
+function expectedCanonicalUrl(path) {
+  return `${PRODUCTION_ORIGIN}${path === "/" ? "" : canonicalPath(path)}`;
+}
+
+function htmlDecode(value) {
+  return value
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, "\"")
+    .replace(/&#x27;/g, "'")
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
+}
+
+function extractTitle(html) {
+  return htmlDecode(html.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1]?.trim() ?? "");
+}
+
+function extractMetaDescription(html) {
+  const match = html.match(/<meta\s+[^>]*name=["']description["'][^>]*content=["']([^"']+)["'][^>]*>/i)
+    ?? html.match(/<meta\s+[^>]*content=["']([^"']+)["'][^>]*name=["']description["'][^>]*>/i);
+  return htmlDecode(match?.[1]?.trim() ?? "");
+}
+
+function extractCanonical(html) {
+  const match = html.match(/<link\s+[^>]*rel=["']canonical["'][^>]*href=["']([^"']+)["'][^>]*>/i)
+    ?? html.match(/<link\s+[^>]*href=["']([^"']+)["'][^>]*rel=["']canonical["'][^>]*>/i);
+  return htmlDecode(match?.[1]?.trim() ?? "");
 }
 
 async function request(baseUrl, path, redirect = "manual") {
@@ -183,6 +246,108 @@ async function checkRedirects(baseUrl, options) {
           : "Redirect destination mismatch.",
     });
   }
+  return results;
+}
+
+async function checkVersionRedirects(baseUrl, options) {
+  const results = [];
+  for (const entry of VERSION_REDIRECT_ROUTES) {
+    const res = await request(baseUrl, entry.source, "manual");
+    if (!res.ok) {
+      results.push({
+        area: "version-redirect",
+        path: entry.source,
+        pass: false,
+        blocking: true,
+        status: "ERR",
+        expected: entry.destination,
+        note: `Request failed: ${res.error.message}`,
+      });
+      continue;
+    }
+
+    const status = res.response.status;
+    const location = parseLocation(baseUrl, res.response.headers.get("location"));
+    const redirectStatus = status >= 300 && status < 400;
+    const destinationMatch = location === entry.destination;
+    const edgeSelfRedirect = options.accessAware && isEdgeSelfRedirect(entry.source, status, location);
+    const pass = (redirectStatus && destinationMatch) || edgeSelfRedirect;
+
+    results.push({
+      area: "version-redirect",
+      path: entry.source,
+      pass,
+      blocking: !edgeSelfRedirect,
+      status,
+      destination: location || "",
+      expected: entry.destination,
+      note: edgeSelfRedirect
+        ? "Edge canonical/self-redirect observed. Validate version redirect on canonical launch domain."
+        : pass
+          ? "OK"
+          : !redirectStatus
+            ? "Expected staging/version page to redirect."
+            : "Version redirect destination mismatch.",
+    });
+  }
+  return results;
+}
+
+async function checkMetadata(baseUrl, options) {
+  const results = [];
+  const seenTitles = new Map();
+
+  for (const path of METADATA_ROUTES) {
+    const res = await request(baseUrl, path, "follow");
+    if (!res.ok) {
+      results.push({
+        area: "metadata",
+        path,
+        pass: false,
+        blocking: true,
+        status: "ERR",
+        note: `Request failed: ${res.error.message}`,
+      });
+      continue;
+    }
+
+    const status = res.response.status;
+    const contentType = res.response.headers.get("content-type") ?? "";
+    const html = contentType.includes("text/html") ? await res.response.text() : "";
+    const title = extractTitle(html);
+    const description = extractMetaDescription(html);
+    const canonical = extractCanonical(html);
+    const expectedCanonical = expectedCanonicalUrl(path);
+    const duplicateTitlePath = title ? seenTitles.get(title) : "";
+    if (title) seenTitles.set(title, path);
+
+    const missing = [];
+    if (!(status >= 200 && status < 300)) missing.push("2xx status");
+    if (!title) missing.push("title");
+    if (!description) missing.push("meta description");
+    if (duplicateTitlePath) missing.push(`unique title (duplicates ${duplicateTitlePath})`);
+    if (canonical !== expectedCanonical) {
+      missing.push(`canonical ${expectedCanonical}`);
+    }
+
+    const location = parseLocation(baseUrl, res.response.headers.get("location"));
+    const edgeSelfRedirect = options.accessAware && isEdgeSelfRedirect(path, status, location);
+
+    results.push({
+      area: "metadata",
+      path,
+      pass: missing.length === 0 || edgeSelfRedirect,
+      blocking: !edgeSelfRedirect,
+      status,
+      destination: location || "",
+      note: missing.length === 0
+        ? "OK"
+        : edgeSelfRedirect
+          ? "Edge canonical/self-redirect observed. Verify metadata on canonical host."
+          : `Missing or invalid: ${missing.join(", ")}`,
+    });
+  }
+
   return results;
 }
 
@@ -336,6 +501,96 @@ async function checkProtectedRoutes(baseUrl) {
   return results;
 }
 
+async function checkHiddenPriceLists(baseUrl) {
+  const results = [];
+  for (const path of HIDDEN_PRICE_LIST_ROUTES) {
+    const res = await request(baseUrl, path, "manual");
+    if (!res.ok) {
+      results.push({
+        area: "hidden-price-list",
+        path,
+        pass: false,
+        blocking: true,
+        status: "ERR",
+        note: `Request failed: ${res.error.message}`,
+      });
+      continue;
+    }
+
+    const status = res.response.status;
+    const missingNoindexHeaders = summarizeHeaders(res.response.headers, REQUIRED_NOINDEX_HEADERS);
+    const pass = status === 404 && missingNoindexHeaders.length === 0;
+    results.push({
+      area: "hidden-price-list",
+      path,
+      pass,
+      blocking: true,
+      status,
+      missingHeaders: missingNoindexHeaders,
+      note: pass
+        ? "OK"
+        : status !== 404
+          ? "Hidden price list direct URL must return 404."
+          : "Hidden price list response is missing noindex headers.",
+    });
+  }
+  return results;
+}
+
+async function checkPortalAuth(baseUrl, options) {
+  const res = await request(baseUrl, "/portal", "manual");
+  if (!res.ok) {
+    return [{
+      area: "portal-auth",
+      path: "/portal",
+      pass: false,
+      blocking: true,
+      status: "ERR",
+      note: `Request failed: ${res.error.message}`,
+    }];
+  }
+
+  const status = res.response.status;
+  const location = parseLocation(baseUrl, res.response.headers.get("location"));
+  const accessLoginIntercept = isCloudflareAccessLoginRedirect(location);
+  const missingNoindexHeaders = summarizeHeaders(res.response.headers, REQUIRED_NOINDEX_HEADERS);
+
+  let body = "";
+  const contentType = res.response.headers.get("content-type") ?? "";
+  if (contentType.includes("text/html")) {
+    body = await res.response.text();
+  }
+
+  const explicitAuthBlock =
+    [401, 403].includes(status) ||
+    accessLoginIntercept ||
+    body.includes("Unable to verify your secure login") ||
+    body.includes("Your login was verified, but your account has not yet been assigned portal access") ||
+    body.includes("Portal access unavailable") ||
+    body.includes("Local Test Login") ||
+    body.includes("Local Portal Test Login");
+  const pass =
+    (explicitAuthBlock && missingNoindexHeaders.length === 0) ||
+    (options.accessAware && accessLoginIntercept);
+
+  return [{
+    area: "portal-auth",
+    path: "/portal",
+    pass,
+    blocking: true,
+    status,
+    destination: location || "",
+    missingHeaders: missingNoindexHeaders,
+    note: pass
+      ? accessLoginIntercept
+        ? "Cloudflare Access login intercept observed."
+        : "Unauthenticated portal request did not expose portal data."
+      : !explicitAuthBlock
+        ? "Unauthenticated portal request did not show an auth block."
+        : "Portal auth response is missing noindex headers.",
+  }];
+}
+
 function printSection(title, rows) {
   console.log(`\n=== ${title} ===`);
   for (const row of rows) {
@@ -380,23 +635,44 @@ async function main() {
     }`
   );
 
-  const [publicChecks, redirectChecks, robotsSitemapChecks, protectedChecks] = await Promise.all([
+  const [
+    publicChecks,
+    redirectChecks,
+    versionRedirectChecks,
+    metadataChecks,
+    robotsSitemapChecks,
+    protectedChecks,
+    hiddenPriceListChecks,
+    portalAuthChecks,
+  ] = await Promise.all([
     checkPublicRoutes(baseUrl, args),
     checkRedirects(baseUrl, args),
+    checkVersionRedirects(baseUrl, args),
+    checkMetadata(baseUrl, args),
     checkRobotsAndSitemap(baseUrl, args),
     checkProtectedRoutes(baseUrl),
+    checkHiddenPriceLists(baseUrl),
+    checkPortalAuth(baseUrl, args),
   ]);
 
   printSection("Public Route Status", publicChecks);
   printSection("Redirect Status", redirectChecks);
+  printSection("Staging/Version Redirect Status", versionRedirectChecks);
+  printSection("Metadata Status", metadataChecks);
   printSection("Sitemap and Robots", robotsSitemapChecks);
   printSection("Protected Routes + Headers", protectedChecks);
+  printSection("Hidden Price List Direct URL Status", hiddenPriceListChecks);
+  printSection("Portal Auth Status", portalAuthChecks);
 
   const allRows = [
     ...publicChecks,
     ...redirectChecks,
+    ...versionRedirectChecks,
+    ...metadataChecks,
     ...robotsSitemapChecks,
     ...protectedChecks,
+    ...hiddenPriceListChecks,
+    ...portalAuthChecks,
   ];
   printSummary(allRows);
 

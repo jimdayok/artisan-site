@@ -61,7 +61,7 @@ const timelineMilestones: TimelineMilestone[] = [
     body: "Expansion into Colorado strengthens the Artisan model across another regional lab relationship.",
     quote: "Regional labs can grow together without losing the local relationships that make them matter.",
     photo: {
-      src: "/images/peak_employees.png",
+      src: "/images/peak_employees-optimized.jpg",
       alt: "Peak Artisan Labs team",
       kind: "photo",
     },
@@ -82,8 +82,8 @@ const timelineMilestones: TimelineMilestone[] = [
     body: "Expansion into Indianapolis adds another Artisan lab serving independent practices.",
     quote: "Every new lab relationship expands what independent eye care can own, build, and lead.",
     photo: {
-      src: "/images/storefront-group-photo-2025-1.jpg",
-      alt: "Pike Artisan Labs and practice partners",
+      src: "/images/team-at-lab-2025-1.jpg",
+      alt: "Pike Artisan Labs opening team",
       kind: "photo",
       className: "object-[50%_34%]",
     },

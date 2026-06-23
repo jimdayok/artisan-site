@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import CookiePreferencesButton from "./CookiePreferencesButton";
 
@@ -15,37 +14,11 @@ export default function Footer({
   },
   signUpHref,
 }: FooterProps) {
-  const [footerIconClicks, setFooterIconClicks] = useState(0);
-  const [privacyClicks, setPrivacyClicks] = useState(0);
   const socialLinks = [
     { label: "Facebook", icon: "/social/facebook.svg", href: "https://www.facebook.com/artisanlabnetwork" },
     { label: "Instagram", icon: "/social/instagram.svg", href: "https://www.instagram.com/artisanlabnetwork" },
     { label: "LinkedIn", icon: "/social/linkedin.svg", href: "https://www.linkedin.com/company/artisan-lab-network/" },
   ];
-
-  const handleFooterIconClick = () => {
-    setFooterIconClicks((current) => {
-      const next = current + 1;
-      if (next >= 5) {
-        window.location.href = "/programs?p=aln2026";
-        return 0;
-      }
-
-      return next;
-    });
-  };
-
-  const handlePrivacyClick = () => {
-    setPrivacyClicks((current) => {
-      const next = current + 1;
-      if (next >= 3) {
-        window.location.href = "/break-the-system";
-        return 0;
-      }
-
-      return next;
-    });
-  };
 
   return (
     <footer id="site-footer" className="relative z-20 bg-[#171311] text-[#f7f1e8]">
@@ -73,9 +46,8 @@ export default function Footer({
       <div className="mx-auto grid max-w-7xl gap-10 px-6 py-12 md:grid-cols-12 md:px-10">
         <div className="md:col-span-5">
           <div className="flex items-center gap-4">
-            <button
-              type="button"
-              onClick={handleFooterIconClick}
+            <Link
+              href="/"
               aria-label="Artisan Lab Network"
               className="rounded-full"
             >
@@ -85,7 +57,7 @@ export default function Footer({
                 alt=""
                 className="h-12 w-12 rounded-full border border-white/10 bg-white/5 p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
               />
-            </button>
+            </Link>
             <div>
               <div className="text-xl font-semibold">Artisan Lab Network</div>
               <div className="mt-1 text-xs uppercase tracking-[0.24em] text-[#c9b28b]">
@@ -210,15 +182,7 @@ export default function Footer({
               .
             </p>
             <p className="mt-1 max-w-2xl">
-              Privacy is not a game (
-              <button
-                type="button"
-                onClick={handlePrivacyClick}
-                className="inline cursor-default appearance-none border-0 bg-transparent p-0 text-inherit no-underline"
-              >
-                this is
-              </button>
-              ), and we respect your privacy. Information submitted through this site is used only to respond to your inquiry and support your relationship with Artisan Lab Network.
+              We respect your privacy. Information submitted through this site is used only to respond to your inquiry, provide requested resources, and support your relationship with Artisan Lab Network.
             </p>
           </div>
           <div className="flex shrink-0 flex-wrap gap-x-5 gap-y-2">

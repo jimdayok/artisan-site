@@ -108,8 +108,8 @@ const labs = [
 ];
 
 const futureLocations = [
-  { label: "Coming Soon", position: { left: "55%", top: "32%" } },
-  { label: "Coming Soon", position: { left: "78%", top: "58%" } },
+  { label: "Expansion Market", position: { left: "55%", top: "32%" } },
+  { label: "Expansion Market", position: { left: "78%", top: "58%" } },
 ];
 
 const futureNodes: Array<{

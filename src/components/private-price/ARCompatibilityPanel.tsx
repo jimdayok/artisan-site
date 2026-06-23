@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { arCompatibilityForItem } from "../../data/arCompatibility";
 import { coatingItems, logoForPriceItem, money, type PriceItem } from "../../data/privatePriceList";
@@ -33,7 +34,7 @@ export default function ARCompatibilityPanel({ item }: { item: PriceItem }) {
                   const logo = logoForPriceItem(coating);
                   return (
                     <a key={id} href={`/portal/price-list/g6?coating=${encodeURIComponent(id)}`} className="inline-flex items-center gap-1.5 rounded-full border border-[#dfd2bf] bg-white px-2.5 py-1 text-[11px] font-semibold text-[#122033]">
-                      {logo ? <img src={logo} alt="" className="h-4 max-w-14 object-contain" /> : <span className="grid h-4 min-w-4 place-items-center rounded-full bg-[#122033] px-1 text-[9px] text-white">{coating.name.slice(0, 2).toUpperCase()}</span>}
+                      {logo ? <Image src={logo} alt="" width={56} height={16} className="h-4 max-w-14 object-contain" /> : <span className="grid h-4 min-w-4 place-items-center rounded-full bg-[#122033] px-1 text-[9px] text-white">{coating.name.slice(0, 2).toUpperCase()}</span>}
                       {coating.name} {money(coating.price)}
                     </a>
                   );

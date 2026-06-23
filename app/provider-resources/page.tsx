@@ -9,13 +9,11 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import RingsAccent from "../components/RingsAccent";
 import SiteIcon from "../components/SiteIcon";
-import ArTransitionLink from "../components/ArTransitionLink";
 import VideoGallery, { type VideoGalleryItem } from "../components/video-gallery";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
 const CONTACT_FORM_URL = "https://form.typeform.com/to/m0lQ9zjD";
 const EXPERIENCE_FORM_URL = "https://form.typeform.com/to/iGoDcWlY";
-const EXPERIENCE_POPUP_STORAGE_KEY = "artisanExperiencePopupDismissed";
 
 const fadeInSection = {
   initial: { opacity: 0, y: 40 },
@@ -38,13 +36,6 @@ type ResourceItem = {
   pending?: boolean;
 };
 
-type ProductVisual = {
-  src: string;
-  alt: string;
-  label: string;
-  href?: string;
-};
-
 type FeaturedCard = {
   title: string;
   body: string;
@@ -52,20 +43,6 @@ type FeaturedCard = {
   href: string;
   type: ResourceType;
   icon?: string;
-};
-
-type BrandPanel = {
-  id: string;
-  label: string;
-  logo: string;
-  logoAlt: string;
-  logoClass: string;
-  intro: string;
-  websiteHref: string;
-  featuredCta?: ResourceItem;
-  visualTitle?: string;
-  visualAssets?: ProductVisual[];
-  resources: ResourceItem[];
 };
 
 type PracticeProgram = {
@@ -98,11 +75,6 @@ type LogoCard = {
     src: string;
     alt: string;
   }[];
-};
-
-type SingleLogoCard = LogoCard & {
-  logo: string;
-  logoAlt: string;
 };
 
 type DownloadResourceItem = {
@@ -1437,13 +1409,31 @@ const troubleshootingResources: SearchableResource[] = [
   },
 ];
 
-const comingSoonMarketingResources = [
-  "Social Posts",
-  "Email Templates",
-  "Posters",
-  "Counter Cards",
-  "Recall Campaigns",
-  "Multiple-Pair Promotions",
+const practiceGrowthResources = [
+  {
+    title: "Social Posts",
+    description: "Ask the Artisan team for patient-facing product and practice-growth social content.",
+  },
+  {
+    title: "Email Templates",
+    description: "Request campaign language for lens education, reactivation, and practice communication.",
+  },
+  {
+    title: "Posters",
+    description: "Coordinate printed or digital point-of-sale materials for in-office education.",
+  },
+  {
+    title: "Counter Cards",
+    description: "Get support selecting compact in-office messaging for premium lens conversations.",
+  },
+  {
+    title: "Recall Campaigns",
+    description: "Work with Artisan on patient recall messaging tied to product and service goals.",
+  },
+  {
+    title: "Multiple-Pair Promotions",
+    description: "Discuss multi-pair positioning, staff talking points, and offer support.",
+  },
 ];
 
 function inferVendor(resource: DownloadResourceItem, section: DownloadResourceSection): ResourceVendor {
@@ -2334,25 +2324,6 @@ function ResourceCard({
   );
 }
 
-function BrandWebsiteLink({ href }: { href: string }) {
-  return (
-    <ResourceLink
-      href={href}
-      className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#75664e] underline decoration-[#c9b28b] underline-offset-4 transition hover:text-[#1f1a17]"
-    >
-      Visit Company Website <span className="text-[#8a7654]">→</span>
-    </ResourceLink>
-  );
-}
-
-function getProfessionalServiceLogoScale(system: LogoCard) {
-  if (system.title === "Frame Systems" || system.title === "Safety Systems") {
-    return "scale-[1.5]";
-  }
-
-  return system.logoScale ?? "";
-}
-
 function BrandedSystemMark({
   title,
   dark = false,
@@ -2393,85 +2364,6 @@ function BrandedSystemMark({
         }`}>
           {title}
         </p>
-      </div>
-    </div>
-  );
-}
-
-function BrandLogo({ brand, compact = false }: { brand: BrandPanel; compact?: boolean }) {
-  return (
-    <div
-      className={`flex items-center justify-center rounded-2xl border border-[#e4d7c6] bg-white shadow-[0_10px_26px_rgba(24,18,13,0.05)] ${
-        compact ? "h-16 w-24 p-3" : "h-[76px] w-fit min-w-[132px] px-5 py-3"
-      }`}
-    >
-      <Image
-        src={brand.logo}
-        alt={brand.logoAlt}
-        width={240}
-        height={90}
-        className={`${brand.logoClass} max-w-full object-contain`}
-      />
-    </div>
-  );
-}
-
-function ProductVisualStrip({ title, assets }: { title: string; assets: ProductVisual[] }) {
-  if (assets.length === 0) return null;
-
-  return (
-    <div className="mt-7 rounded-[24px] border border-[#e4d7c6] bg-[#fbf8f3] p-4 shadow-[0_12px_32px_rgba(24,18,13,0.05)]">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8a7654]">
-        {title}
-      </p>
-      <div
-        className={`mt-4 grid gap-3 ${
-          assets.length === 2
-            ? "sm:grid-cols-2"
-            : assets.length === 4
-              ? "sm:grid-cols-2 lg:grid-cols-4"
-              : "sm:grid-cols-3"
-        }`}
-      >
-        {assets.map((asset) => (
-          asset.href?.startsWith("/artisan-ar/") ? (
-            <ArTransitionLink
-              key={asset.src}
-              href={asset.href}
-              logoSrc={asset.src}
-              label={asset.label}
-              className="flex min-h-[112px] flex-col items-center justify-center rounded-2xl border border-black/10 bg-white px-4 py-3 text-center shadow-[0_8px_20px_rgba(24,18,13,0.04)] transition hover:-translate-y-0.5 hover:border-[#d4c09a]"
-            >
-              <Image
-                src={asset.src}
-                alt={asset.alt}
-                width={240}
-                height={120}
-                className="max-h-[78px] w-auto max-w-full object-contain"
-              />
-              <span className="mt-2 text-xs font-semibold text-[#625b53]">
-                {asset.label}
-              </span>
-            </ArTransitionLink>
-          ) : (
-            <ResourceLink
-              key={asset.src}
-              href={asset.href ?? "#"}
-              className="flex min-h-[112px] flex-col items-center justify-center rounded-2xl border border-black/10 bg-white px-4 py-3 text-center shadow-[0_8px_20px_rgba(24,18,13,0.04)]"
-            >
-            <Image
-              src={asset.src}
-              alt={asset.alt}
-              width={220}
-              height={120}
-              className="max-h-[78px] w-auto max-w-full object-contain"
-            />
-            <span className="mt-2 text-xs font-semibold text-[#625b53]">
-              {asset.label}
-            </span>
-            </ResourceLink>
-          )
-        ))}
       </div>
     </div>
   );
@@ -2527,93 +2419,6 @@ function OrderingToolCard({ tool }: { tool: LogoCard }) {
         {isSafety ? "Order Demo Frames" : "Open"}
       </span>
     </a>
-  );
-}
-
-function SystemAccordion({
-  system,
-  open,
-  onToggle,
-}: {
-  system: LogoCard;
-  open: boolean;
-  onToggle: () => void;
-}) {
-  const featured = system.title === "Safety Systems";
-
-  return (
-    <article className={`overflow-hidden rounded-[28px] border bg-white shadow-[0_18px_48px_rgba(24,18,13,0.07)] transition hover:-translate-y-1 ${
-      featured ? "border-[#c9b28b] md:col-span-3" : "border-black/10"
-    }`}>
-      <button
-        type="button"
-        onClick={onToggle}
-        className={`grid w-full gap-5 p-6 text-left md:p-7 ${
-          featured ? "md:grid-cols-[260px_1fr_auto] md:items-center" : ""
-        }`}
-        aria-expanded={open}
-      >
-        <div className="flex h-24 items-center justify-center rounded-2xl border border-[#e4d7c6] bg-[#fbf8f3] px-5">
-          {system.title === "Frame Systems" || system.title === "Safety Systems" ? (
-            <BrandedSystemMark title={system.title} />
-          ) : system.logo ? (
-            <Image
-              src={system.logo}
-              alt={system.logoAlt ?? system.title}
-              width={320}
-              height={120}
-              className={`${system.logoScale ?? ""} max-h-16 w-auto max-w-full object-contain`}
-            />
-          ) : (
-            <span className="text-2xl font-semibold">{system.logoText ?? system.title}</span>
-          )}
-        </div>
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8a7654]">
-            Practice System
-          </p>
-          <h3 className="mt-3 text-2xl font-semibold text-[#1f1a17] md:text-3xl">
-            {system.title}
-          </h3>
-          <p className="mt-3 text-sm leading-7 text-[#625b53] md:text-base">
-            {system.body}
-          </p>
-        </div>
-        <span className="grid h-11 w-11 place-items-center rounded-full border border-[#d8c6a8] bg-[#fbf8f3] text-2xl text-[#8a7654]">
-          {open ? "−" : "+"}
-        </span>
-      </button>
-      <AnimatePresence initial={false}>
-        {open ? (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.24 }}
-            className="overflow-hidden"
-          >
-            <div className="border-t border-black/10 px-6 pb-6 pt-5 md:px-7">
-              <p className="max-w-4xl text-base leading-8 text-[#625b53]">
-                {system.detail}
-              </p>
-              {system.actions ? (
-                <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                  {system.actions.map((action) => (
-                    <ResourceLink
-                      key={action.label}
-                      href={action.href}
-                      className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#d8c6a8] bg-[#1f1a17] px-5 py-2.5 text-center text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#c9b28b] hover:text-[#1f1a17]"
-                    >
-                      {action.label}
-                    </ResourceLink>
-                  ))}
-                </div>
-              ) : null}
-            </div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
-    </article>
   );
 }
 
@@ -2967,26 +2772,6 @@ function ContactModal({ open, onClose }: { open: boolean; onClose: () => void })
   );
 }
 
-function hasDismissedExperiencePopup() {
-  if (typeof window === "undefined") return true;
-
-  try {
-    return window.localStorage.getItem(EXPERIENCE_POPUP_STORAGE_KEY) === "true";
-  } catch {
-    return true;
-  }
-}
-
-function markExperiencePopupDismissed() {
-  if (typeof window === "undefined") return;
-
-  try {
-    window.localStorage.setItem(EXPERIENCE_POPUP_STORAGE_KEY, "true");
-  } catch {
-    // If storage is unavailable, still let the visitor continue without interruption.
-  }
-}
-
 function ExperienceModal({
   open,
   onClose,
@@ -3100,18 +2885,7 @@ export default function ProviderResourcesPage({
     downloadResourceSections[0];
   const searchableResources = useMemo(() => buildSearchableResources(), []);
 
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      if (!showProfessionalEnhancements || hasDismissedExperiencePopup()) {
-        setShowExperienceModal(false);
-        return;
-      }
-      setShowExperienceModal(true);
-    });
-  }, [showProfessionalEnhancements]);
-
   const dismissExperienceModal = () => {
-    markExperiencePopupDismissed();
     setShowExperienceModal(false);
   };
 
@@ -3250,9 +3024,10 @@ export default function ProviderResourcesPage({
             className="relative min-h-[320px] overflow-hidden rounded-2xl shadow-[0_26px_70px_rgba(24,18,13,0.16)] lg:min-h-[430px]"
           >
             <Image
-              src="/images/eyewear-brochure-meeting-2022-1.jpg"
+              src="/images/eyewear-brochure-meeting-2022-1-optimized.jpg"
               alt="Eyewear brochure meeting for practice education and support"
               fill
+              priority
               sizes="(min-width: 1024px) 38vw, 100vw"
               className="object-cover"
             />
@@ -3827,24 +3602,30 @@ export default function ProviderResourcesPage({
         <div className="mx-auto max-w-7xl">
           <SectionHeader
             eyebrow="Marketing & Practice Growth Resources"
-            title="Roadmap items coming soon."
-            description="These resources are visible as a Phase 2 roadmap only. No placeholder links are attached until the assets are ready."
+            title="Practice-growth support is available through the Artisan team."
+            description="Use these categories to start a focused request for patient education, campaign planning, or in-office marketing support."
           />
           <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {comingSoonMarketingResources.map((title) => (
+            {practiceGrowthResources.map((resource) => (
               <article
-                key={title}
+                key={resource.title}
                 className="rounded-[24px] border border-[#e4d7c6] bg-white p-6 shadow-[0_16px_40px_rgba(24,18,13,0.06)]"
               >
                 <span className="inline-flex rounded-full border border-[#e5d2b2] bg-[#fbf3df] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8a7654]">
-                  Coming Soon
+                  Request Support
                 </span>
                 <h3 className="mt-5 text-xl font-semibold leading-tight text-[#1f1a17]">
-                  {title}
+                  {resource.title}
                 </h3>
                 <p className="mt-3 text-sm leading-7 text-[#625b53]">
-                  Planned practice-growth asset. This card is intentionally not linked until the resource is complete.
+                  {resource.description}
                 </p>
+                <a
+                  href={`mailto:sales@artisanlabnetwork.com?subject=${encodeURIComponent(`${resource.title} Request`)}`}
+                  className="mt-5 inline-flex rounded-full border border-[#d8cab7] bg-[#fbf8f3] px-4 py-2.5 text-sm font-semibold text-[#1f1a17] transition hover:border-[#c9b28b] hover:bg-[#c9b28b]"
+                >
+                  Start Request
+                </a>
               </article>
             ))}
           </div>
@@ -3952,6 +3733,15 @@ export default function ProviderResourcesPage({
             >
               Request Account Help
             </a>
+            {showProfessionalEnhancements ? (
+              <button
+                type="button"
+                onClick={() => setShowExperienceModal(true)}
+                className="rounded-full border border-black/10 bg-[#fbf8f3] px-7 py-3 text-sm font-semibold text-[#1f1a17] shadow-sm transition hover:-translate-y-0.5 hover:border-[#c9b28b] hover:bg-[#c9b28b]"
+              >
+                Share Your Experience
+              </button>
+            ) : null}
           </div>
         </div>
       </section>

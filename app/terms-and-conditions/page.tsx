@@ -1,7 +1,17 @@
+import type { Metadata } from "next";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
+
+export const metadata: Metadata = {
+  title: "Terms & Conditions | Artisan Lab Network",
+  description:
+    "Read the terms that govern use of the Artisan Lab Network website, public resources, programs, and third-party links.",
+  alternates: {
+    canonical: "/terms-and-conditions",
+  },
+};
 
 const sections = [
   {

@@ -74,7 +74,7 @@ const customerServicePhotos: Record<LabKey, ServicePhoto[]> = {
   ],
   peak: [
     {
-      src: "/images/peak_employees.png",
+      src: "/images/peak_employees-optimized.jpg",
       alt: "Peak Artisan customer service team",
       caption: "Peak Artisan Labs team",
     },
@@ -187,9 +187,9 @@ function ContactModal({
   );
 }
 
-function PhotoPlaceholder({ label = "Photo Coming Soon" }: { label?: string }) {
+function PhotoPlaceholder({ label = "Artisan Team" }: { label?: string }) {
   return (
-    <div className="aspect-square w-full rounded-xl bg-white/10 flex items-center justify-center text-white/40 text-sm">
+    <div className="flex aspect-square w-full items-center justify-center rounded-xl bg-white/10 text-sm font-semibold uppercase tracking-[0.18em] text-white/40">
       {label}
     </div>
   );
@@ -269,8 +269,8 @@ function SalesTeamCard({ member }: { member: TeamMember }) {
           />
         </div>
       ) : (
-        <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-center text-xs leading-5 text-white/38 sm:h-28 sm:w-28">
-          Photo Coming Soon
+        <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-center text-xs font-semibold uppercase tracking-[0.14em] text-white/38 sm:h-28 sm:w-28">
+          Artisan Team
         </div>
       )}
     </motion.article>

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useMemo, useState } from "react";
 import { compatibleCoatingIdsForItem } from "../../data/arCompatibility";
 import {
@@ -50,7 +51,7 @@ function LogoBadge({ item }: { item: PriceItem }) {
   const logo = logoForPriceItem(item);
   return (
     <span className="inline-flex w-fit items-center gap-2 rounded-full border border-[#eadfce] bg-[#fbf8f3] px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-[#75664e]">
-      {logo ? <img src={logo} alt="" className="h-4 max-w-16 object-contain" /> : <span className="grid h-5 min-w-5 place-items-center rounded-full bg-[#122033] px-1 text-[10px] text-white">{item.name.slice(0, 2).toUpperCase()}</span>}
+      {logo ? <Image src={logo} alt="" width={64} height={16} className="h-4 max-w-16 object-contain" /> : <span className="grid h-5 min-w-5 place-items-center rounded-full bg-[#122033] px-1 text-[10px] text-white">{item.name.slice(0, 2).toUpperCase()}</span>}
       {item.brand === "Lab Services" ? item.name : item.brand}
     </span>
   );

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
@@ -5,6 +6,15 @@ import SiteIcon from "../../components/SiteIcon";
 import { troubleshootingGuides } from "./content";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
+
+export const metadata: Metadata = {
+  title: "Troubleshooting & Best Practices | Artisan Lab Network",
+  description:
+    "Use Artisan Lab Network troubleshooting guides for common lens, frame, fit, measurement, material, and lab workflow questions.",
+  alternates: {
+    canonical: "/provider-resources/troubleshooting",
+  },
+};
 
 export default function TroubleshootingIndexPage() {
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import {
   Activity,
   Aperture,
@@ -622,7 +622,7 @@ export default function OpticalEngineeringPage() {
   const [openFrame, setOpenFrame] = useState(false);
   const activeCalculator = calculators.find((calculator) => calculator.id === activeCalculatorId) ?? calculators[0];
   const activeStatus = statusFor(data, activeCalculator.required);
-  const results = useMemo(() => activeCalculator.result(data), [activeCalculatorId, data]);
+  const results = activeCalculator.result(data);
 
   const updateNumber = (key: keyof OpticalData, value: string) => {
     setData((current) => ({ ...current, [key]: Number(value) }));

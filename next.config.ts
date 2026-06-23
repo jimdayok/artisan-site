@@ -49,6 +49,14 @@ const nextConfig: NextConfig = {
       { source: "/safetysystems", destination: "/provider-resources#safety-systems", permanent: true },
       { source: "/Shipping", destination: "/lab-policies#shipping", permanent: true },
       { source: "/shipping", destination: "/lab-policies#shipping", permanent: true },
+      { source: "/home-original", destination: "/", permanent: true },
+      { source: "/home-v2", destination: "/", permanent: true },
+      { source: "/home-version-a", destination: "/", permanent: true },
+      { source: "/home-version-b", destination: "/", permanent: true },
+      { source: "/home-version-c", destination: "/", permanent: true },
+      { source: "/resources-version-a", destination: "/provider-resources", permanent: true },
+      { source: "/resources-version-b", destination: "/provider-resources", permanent: true },
+      { source: "/resources-version-c", destination: "/provider-resources", permanent: true },
     ];
   },
   async headers() {

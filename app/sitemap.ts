@@ -25,7 +25,7 @@ const publicRoutes = [
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://www.artisanlabnetwork.com";
+  const baseUrl = "https://www.artisanslabs.com";
 
   return publicRoutes
     .filter((route) => !route.startsWith("/private"))

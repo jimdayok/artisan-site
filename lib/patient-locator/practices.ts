@@ -614,6 +614,6 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "numberOfLocations": 1,
     "placeId": "",
     "tokai": false,
-    "artisanPartner": true
+    "artisanPartner": false
   }
 ];

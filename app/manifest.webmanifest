@@ -1,0 +1,17 @@
+{
+  "name": "Artisan Lab Network",
+  "short_name": "Artisan",
+  "description": "Independent optical lab partnership, provider resources, and customer portal access from Artisan Lab Network.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f5f1eb",
+  "theme_color": "#171311",
+  "icons": [
+    {
+      "src": "/aln-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

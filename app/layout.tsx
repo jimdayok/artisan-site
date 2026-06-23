@@ -17,8 +17,14 @@ const nunito = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.artisanslabs.com"),
   title: "Artisan Lab Network",
-  description: "Artisan Quality for Every Lens",
+  description:
+    "Artisan Lab Network supports independent eye care practices with optical lab partnership, provider resources, programs, and lab access.",
+  alternates: {
+    canonical: "/",
+  },
+  manifest: "/manifest.webmanifest",
   icons: {
     icon: "/aln-icon.png",
   },

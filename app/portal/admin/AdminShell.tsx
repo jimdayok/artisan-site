@@ -30,11 +30,13 @@ export function AdminShell({
   eyebrow = "ALN Admin Portal",
   adminEmail,
   children,
+  showHeroNav = false,
 }: {
   title: string;
   eyebrow?: string;
   adminEmail: string;
   children: React.ReactNode;
+  showHeroNav?: boolean;
 }) {
   return (
     <main className="min-h-screen bg-[#f4efe6] px-5 py-10 text-[#172a28] sm:px-8 lg:px-10">
@@ -51,26 +53,28 @@ export function AdminShell({
               Signed in as {adminEmail}
             </p>
           </div>
-          <nav className="flex flex-wrap gap-3">
-            <Link href="/" className={adminButtonClass}>
-              Back to Main Website
-            </Link>
-            <Link href="/portal/admin" className={adminButtonClass}>
-              Admin Dashboard
-            </Link>
-            <Link href="/portal/admin/price-lists" className={adminButtonClass}>
-              All Price Lists
-            </Link>
-            <Link href="/portal/admin/rewards" className={adminButtonClass}>
-              Rewards Payouts
-            </Link>
-            <Link href="/portal/employee-resources" className={adminButtonClass}>
-              Employee Resources
-            </Link>
-            <Link href="/portal" className={adminButtonClass}>
-              Customer Portal
-            </Link>
-          </nav>
+          {showHeroNav ? (
+            <nav className="flex flex-wrap gap-3">
+              <Link href="/" className={adminButtonClass}>
+                Back to Main Website
+              </Link>
+              <Link href="/portal/admin" className={adminButtonClass}>
+                Admin Dashboard
+              </Link>
+              <Link href="/portal/admin/price-lists" className={adminButtonClass}>
+                All Price Lists
+              </Link>
+              <Link href="/portal/admin/rewards" className={adminButtonClass}>
+                Rewards Payouts
+              </Link>
+              <Link href="/portal/employee-resources" className={adminButtonClass}>
+                Employee Resources
+              </Link>
+              <Link href="/portal" className={adminButtonClass}>
+                Customer Portal
+              </Link>
+            </nav>
+          ) : null}
         </div>
         {children}
       </div>

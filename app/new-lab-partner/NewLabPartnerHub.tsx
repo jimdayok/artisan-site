@@ -15,6 +15,7 @@ import {
   Minus,
   Printer,
   RotateCcw,
+  Search,
   Slash,
 } from "lucide-react";
 import {
@@ -72,6 +73,10 @@ function safeRead<T>(key: string, fallback: T): T {
   } catch {
     return fallback;
   }
+}
+
+function normalizeSearchText(value: string) {
+  return value.toLowerCase().trim();
 }
 
 function ResourceButton({ link }: { link: ResourceLink }) {
@@ -511,10 +516,10 @@ function ProductComparisonGuide({
   const guideHtml = () => {
     const productHeaders = knownColumns.map((column) => `<th>${column.label}</th>`).join("");
     const productRows = productComparisonRows
-      .map((row) => `<tr><th>${row.category}</th>${knownColumns.map((column) => `<td>${row.values[column.lensId] || "Data coming soon"}</td>`).join("")}</tr>`)
+      .map((row) => `<tr><th>${row.category}</th>${knownColumns.map((column) => `<td>${row.values[column.lensId] || "Not mapped in the current comparison workbook"}</td>`).join("")}</tr>`)
       .join("");
     const missing = missingColumns.length
-      ? `<section class="placeholder"><h2>Comparison data coming soon</h2><p>${missingColumns.map((column) => column.label).join(", ")} ${missingColumns.length === 1 ? "is" : "are"} selected, but not yet mapped in Comparisons.xlsx.</p></section>`
+      ? `<section class="placeholder"><h2>Comparison data not mapped</h2><p>${missingColumns.map((column) => column.label).join(", ")} ${missingColumns.length === 1 ? "is" : "are"} selected, but not mapped in the current Comparisons.xlsx workbook.</p></section>`
       : "";
     const arHeaders = arComparisonColumns.map((label) => `<th>${label}</th>`).join("");
     const arRows = arComparisonRows
@@ -548,12 +553,34 @@ function ProductComparisonGuide({
   };
 
   const openPrintGuide = () => {
-    const printWindow = window.open("", "_blank", "noopener,noreferrer");
-    if (!printWindow) return;
-    printWindow.document.write(guideHtml());
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
+    const iframe = document.createElement("iframe");
+    iframe.setAttribute("aria-hidden", "true");
+    iframe.tabIndex = -1;
+    iframe.style.position = "fixed";
+    iframe.style.right = "0";
+    iframe.style.bottom = "0";
+    iframe.style.width = "0";
+    iframe.style.height = "0";
+    iframe.style.border = "0";
+    iframe.style.opacity = "0";
+    iframe.srcdoc = guideHtml();
+    iframe.onload = () => {
+      const printWindow = iframe.contentWindow;
+      if (!printWindow) {
+        iframe.remove();
+        return;
+      }
+
+      const cleanup = () => window.setTimeout(() => iframe.remove(), 500);
+
+      try {
+        printWindow.focus();
+        printWindow.print();
+      } finally {
+        cleanup();
+      }
+    };
+    document.body.appendChild(iframe);
   };
 
   const downloadGuide = () => {
@@ -589,7 +616,7 @@ function ProductComparisonGuide({
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#d4c09a]">Branded Setup Tool</p>
           <h3 className="mt-2 text-2xl font-semibold tracking-tight">Product Comparison Guide</h3>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-white/72">
-            Generate a customer-ready crosswalk from Comparisons.xlsx. The guide only includes the brands selected above and adds placeholders when comparison data is not available yet.
+            Generate a customer-ready crosswalk from Comparisons.xlsx. The guide only includes the brands selected above and clearly marks any workbook data that is not mapped.
           </p>
         </div>
         <label className="grid w-full min-w-0 gap-2 text-sm font-semibold text-white lg:w-72">
@@ -647,7 +674,7 @@ function ProductComparisonGuide({
                       <tr key={row.category}>
                         <th className="border border-[#d8c6a8] bg-white p-3 text-left font-bold leading-5">{row.category}</th>
                         {knownColumns.map((column) => (
-                          <td key={column.lensId} className="border border-[#d8c6a8] bg-white p-3 leading-5">{row.values[column.lensId] || "Data coming soon"}</td>
+                          <td key={column.lensId} className="border border-[#d8c6a8] bg-white p-3 leading-5">{row.values[column.lensId] || "Not mapped in the current comparison workbook"}</td>
                         ))}
                       </tr>
                     ))}
@@ -657,9 +684,9 @@ function ProductComparisonGuide({
             ) : null}
             {missingColumns.length ? (
               <div className="mt-4 rounded-[8px] border border-[#d8c6a8] bg-white p-4">
-                <p className="font-semibold">Comparison data coming soon</p>
+                <p className="font-semibold">Comparison data not mapped</p>
                 <p className="mt-2 text-sm leading-6 text-[#625b53]">
-                  {missingColumns.map((column) => column.label).join(", ")} {missingColumns.length === 1 ? "is" : "are"} selected but not mapped in Comparisons.xlsx yet.
+                  {missingColumns.map((column) => column.label).join(", ")} {missingColumns.length === 1 ? "is" : "are"} selected but not mapped in the current Comparisons.xlsx workbook.
                 </p>
               </div>
             ) : null}
@@ -893,17 +920,17 @@ function SafetySection() {
     {
       title: "What Artisan Safety Systems is",
       body:
-        "Artisan Safety Systems is a safety frame and lens program for practices serving employers, workers, and occupational eyewear needs. It gives the office a defined frame path, tiered pricing, and ordering support instead of forcing staff to treat safety work like an ordinary retail frame order.",
+        "Artisan Safety Systems is a safety frame and lens program for practices serving employers, workers, and occupational eyewear needs. It is packaged as frames plus lenses, so staff should treat it as a bundled order path instead of a normal retail frame sale.",
     },
     {
       title: "Where safety pricing lives",
       body:
-        "Safety pricing is tiered on the Y5 safety price list. Use the tier shown on the price list before quoting frames, safety lenses, upgrades, side-shield needs, or package combinations.",
+        "Safety pricing is tiered on the Y5 safety price list. Use the tier shown on the price list before quoting frames, safety lenses, upgrades, side-shield needs, or package combinations, and mark the order as supply when the practice is using supplied-inventory pricing.",
     },
     {
       title: "How to order safety",
       body:
-        "Confirm the employer or occupational need, choose an approved safety frame option, then place the lens order through the correct ordering method. Ask customer service to review the first safety orders if the practice has not used the program before.",
+        "Confirm the employer or occupational need, choose an approved safety frame option, then place the lens order through the correct ordering method. The frame system and the modern optical safety path are both packages that include frames and lenses, and the package should price first. Ask customer service to review the first safety orders if the practice has not used the program before.",
     },
     {
       title: "How to obtain safety frames",
@@ -917,7 +944,7 @@ function SafetySection() {
       <div className="rounded-[8px] border border-[#d8c6a8] bg-[#171311] p-7 text-center text-white">
         <Image src="/logos/safetysystemswhite.png" alt="Artisan Safety Systems" width={760} height={280} className="mx-auto h-auto max-h-44 w-auto max-w-[560px]" />
         <p className="mx-auto mt-6 max-w-3xl text-sm leading-7 text-white/76 md:text-base">
-          Artisan Safety Systems is a frame and lens safety program. It includes safety frames, safety lenses, and tiered pricing shown on the safety price list. Use this section before quoting safety jobs, ordering frames, or sending safety work to the lab.
+          Artisan Safety Systems is a frame and lens safety program. It includes safety frames, safety lenses, and tiered pricing shown on the safety price list. Use this section before quoting safety jobs, ordering frames, or sending safety work to the lab, and mark supply when the order should price from supplied inventory.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <ResourceButton link={{ label: "Open Safety Price List", href: "/portal/price-list/y5" }} />
@@ -942,7 +969,9 @@ function SafetySection() {
               "Open the Y5 Safety Systems price list and review frame tiers.",
               "Order the free safety kit or use the vendor frame books to choose frames.",
               "Confirm ordering method and lab routing before sending safety jobs.",
+              "Remember that safety systems and frame systems are packages with frames and lenses, so the package should price before the core list when it applies.",
               "Include a frame manifest for customer-supplied frames or safety frames sent to the lab.",
+              "Mark supply when appropriate so the correct pricing path is used.",
               "Ask customer service to review anything unusual before promising the patient or employer.",
             ].map((item, index) => (
               <li key={item} className="flex gap-3">
@@ -1070,11 +1099,11 @@ function ShippingSection() {
   const steps = [
     {
       title: "Sending frames to the lab",
-      body: "Confirm whether the order is frame-to-come, traced, uncuts only, or part of a complete-pair/frame program. Package frames so they arrive with the order information the lab needs to match the job.",
+      body: "Confirm whether the order is frame-to-come, traced, uncuts only, or part of a complete-pair/frame program. Package frames so they arrive with the order information the lab needs to match the job. If the order is Neurolens only, shipping is charged by the box and the practice can choose ground, 2-day, or overnight.",
     },
     {
       title: "Labels and order paperwork",
-      body: "Use the shipping label or ordering paperwork tied to the correct lab and account. If the practice works with more than one Artisan lab, do not reuse labels without confirming the route.",
+      body: "Use the shipping label or ordering paperwork tied to the correct lab and account. If the practice works with more than one Artisan lab, do not reuse labels without confirming the route. For mixed orders beyond Neurolens, traditional shipping options should follow the standard overnight path.",
     },
     {
       title: "Packaging expectations",
@@ -1111,7 +1140,7 @@ function ShippingSection() {
       <div className="rounded-[8px] border border-[#d8c6a8] bg-white p-5">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8a7654]">Shipping Actions</p>
         <p className="mt-2 text-sm leading-6 text-[#625b53]">
-          Use the frame manifest when sending frames to the lab so the lab can match frames, patients, accounts, and orders correctly. Request labels before the first shipment so frames route to the correct lab.
+          Use the frame manifest when sending frames to the lab so the lab can match frames, patients, accounts, and orders correctly. Request labels before the first shipment so frames route to the correct lab. Neurolens-only shipments use box-based shipping, while mixed orders follow the usual shipping options.
         </p>
         <div className="mt-5 flex flex-wrap gap-2">
           <ResourceButton link={{ label: "Download Frame Manifest PDF", href: "#shipping" }} />
@@ -1239,6 +1268,7 @@ export default function NewLabPartnerHub() {
   const [pmsAnswer, setPmsAnswer] = useState<PracticeManagementAnswer>("");
   const [practiceName, setPracticeName] = useState("");
   const [activeSection, setActiveSection] = useState(sections[0]?.id ?? "lab");
+  const [searchQuery, setSearchQuery] = useState("");
   const [hasHydrated, setHasHydrated] = useState(false);
 
   useEffect(() => {
@@ -1338,6 +1368,40 @@ export default function NewLabPartnerHub() {
     return Math.round((complete / sections.length) * 100);
   }, [statuses]);
 
+  const hubSearchResults = useMemo(() => {
+    const query = normalizeSearchText(searchQuery);
+    if (!query) return [];
+
+    const searchable = [
+      ...sections.map((section) => ({
+        label: section.title,
+        href: `#${section.id}`,
+        detail: section.summary,
+        haystack: `${section.title} ${section.summary} ${section.eyebrow}`,
+      })),
+      ...portalFeatures.map((feature) => ({
+        label: feature.title,
+        href: "#portal",
+        detail: feature.training,
+        haystack: `${feature.title} ${feature.training} ${feature.bullets.join(" ")}`,
+      })),
+      ...orderingMethods.map((method) => ({
+        label: method.name,
+        href: "#ordering",
+        detail: method.setupHelp,
+        haystack: `${method.name} ${method.summary} ${method.setupHelp} ${(method.steps || []).join(" ")} ${(method.watch || []).map((link) => link.label).join(" ")}`,
+      })),
+      ...resourceLinks.map((link) => ({
+        label: link.label,
+        href: link.href,
+        detail: "Quick resource link",
+        haystack: `${link.label} ${link.href}`,
+      })),
+    ];
+
+    return searchable.filter((entry) => normalizeSearchText(entry.haystack).includes(query)).slice(0, 8);
+  }, [searchQuery]);
+
   const resetAll = () => {
     setStatuses({});
     setSelectedLab("peak");
@@ -1371,6 +1435,34 @@ export default function NewLabPartnerHub() {
                 Contact Customer Service
                 <Mail className="h-4 w-4" aria-hidden="true" />
               </a>
+            </div>
+            <div className="mt-8 max-w-3xl rounded-[8px] border border-white/12 bg-white/10 p-4 backdrop-blur">
+              <label className="flex items-center gap-3 rounded-full border border-white/15 bg-white/8 px-4 py-3">
+                <Search className="h-4 w-4 shrink-0 text-[#d4c09a]" aria-hidden="true" />
+                <input
+                  type="search"
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  placeholder="Search this training hub"
+                  className="w-full bg-transparent text-sm text-white placeholder:text-white/48 outline-none"
+                />
+              </label>
+              {searchQuery.trim() ? (
+                <div className="mt-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#d4c09a]">Search results</p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {hubSearchResults.length ? (
+                      hubSearchResults.map((result) => (
+                        <a key={`${result.label}-${result.href}`} href={result.href} className="inline-flex min-h-10 items-center rounded-full border border-white/12 bg-white/8 px-4 text-sm font-semibold text-white transition hover:bg-white/14">
+                          {result.label}
+                        </a>
+                      ))
+                    ) : (
+                      <p className="text-sm text-white/70">No matches found. Try a section title like DVI, Shipping, or Price Quote Builder.</p>
+                    )}
+                  </div>
+                </div>
+              ) : null}
             </div>
           </div>
           <div className="rounded-[8px] border border-white/12 bg-white/[0.06] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.28)]">

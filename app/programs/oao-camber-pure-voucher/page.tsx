@@ -70,9 +70,11 @@ export default function OaoCamberPureVoucherPage() {
             priority
             className="h-12 w-auto object-contain md:h-14"
           />
-          <img
+          <Image
             src={OAO_LOGO_URL}
             alt="Opticians Association of Oregon"
+            width={150}
+            height={56}
             className="max-h-14 w-auto max-w-[150px] rounded-[8px] bg-white p-2"
           />
         </div>

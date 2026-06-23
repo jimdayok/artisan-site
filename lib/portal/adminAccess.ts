@@ -2,6 +2,13 @@ export function normalizePortalEmail(email: unknown) {
   return String(email ?? "").trim().toLowerCase();
 }
 
+const DEFAULT_ADMIN_EMAIL_DOMAINS = [
+  "artisanlabnetwork.com",
+  "pacificartisanlabs.com",
+  "pikeartisanlabs.com",
+  "peakartisanlabs.com",
+];
+
 export function isPortalAdminEmailAddress(email: string) {
   const normalizedEmail = normalizePortalEmail(email);
   if (!normalizedEmail) return false;
@@ -10,7 +17,7 @@ export function isPortalAdminEmailAddress(email: string) {
     (
       process.env.PORTAL_ADMIN_EMAIL_DOMAINS ||
       process.env.PORTAL_ADMIN_EMAIL_DOMAIN ||
-      "artisanlabnetwork.com"
+      DEFAULT_ADMIN_EMAIL_DOMAINS.join(",")
     )
       .split(",")
       .map((domain) => domain.trim().replace(/^@/, "").toLowerCase())

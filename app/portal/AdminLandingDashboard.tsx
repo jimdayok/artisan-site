@@ -161,6 +161,10 @@ function flagsFor(item: ComparedRow) {
   ].filter(Boolean);
 }
 
+function repDisplay(row: DashboardV1AdminRow) {
+  return row.salesRep || "Unassigned";
+}
+
 function firstEmail(row: DashboardV1AdminRow) {
   return row.authorizedUserEmails.find(Boolean) || "";
 }
@@ -374,7 +378,7 @@ function WatchlistCard({ item, mode }: { item: ComparedRow; mode: ComparisonMode
               {comparison.severity}
             </span>
             <span className="text-xs font-semibold uppercase tracking-[0.12em] text-[#8b7650]">
-              Rep {row.salesRep || "—"}
+              Rep {repDisplay(row)}
             </span>
           </div>
           <Link
@@ -632,7 +636,12 @@ export default function AdminLandingDashboard({
   const filtered = compared.filter(({ row, comparison }) => {
     if (query.division && row.customerType !== query.division) return false;
     if (query.lab && row.lab !== query.lab) return false;
-    if (role.kind === "admin" && query.rep && row.salesRep !== query.rep) return false;
+    if (
+      role.kind === "admin" &&
+      query.rep &&
+      repDisplay(row) !== query.rep &&
+      row.salesRepCode !== query.rep.trim().toUpperCase()
+    ) return false;
     if (query.priceList && !row.priceListCodes.includes(query.priceList)) return false;
     if (query.hasUser === "yes" && row.authorizedUsers === 0) return false;
     if (query.hasUser === "no" && row.authorizedUsers > 0) return false;
@@ -675,6 +684,7 @@ export default function AdminLandingDashboard({
         row.accountNumbers,
         row.lab,
         row.salesRep,
+        row.salesRepCode,
         row.customerType,
         row.priceLists,
         row.authorizedUserEmails.join(" "),
@@ -715,17 +725,22 @@ export default function AdminLandingDashboard({
   const missingPriceLists = compared.filter(
     ({ row }) => row.priceListCodes.length === 0
   ).length;
-  const missingRep = allRows.filter(
-    (row) => !row.salesRep || row.salesRep === "—"
-  ).length;
+  const missingRep = allRows.filter((row) => !row.salesRep).length;
   const missingLab = allRows.filter((row) => !row.lab || row.lab === "—").length;
   const missingEmail = allRows.filter((row) => !firstEmail(row)).length;
-  const repSummaries = groupSummary(compared, (row) => row.salesRep || "Unassigned");
+  const repSummaries = groupSummary(compared, repDisplay);
   const labSummaries = groupSummary(compared, (row) => row.lab || "Unassigned");
+  const repOptions = [
+    ...new Set(roleRows.map((row) => repDisplay(row)).filter(Boolean)),
+  ].sort((a, b) => {
+    if (a === "Unassigned") return 1;
+    if (b === "Unassigned") return -1;
+    return a.localeCompare(b);
+  });
   const options = {
     divisions: [...new Set(roleRows.map((row) => row.customerType).filter(Boolean))].sort(),
     labs: [...new Set(roleRows.map((row) => row.lab).filter((value) => value && value !== "—"))].sort(),
-    reps: [...new Set(roleRows.map((row) => row.salesRep).filter((value) => value && value !== "—"))].sort(),
+    reps: repOptions,
     priceLists: [...new Set(roleRows.flatMap((row) => row.priceListCodes))].sort(),
   };
 

@@ -2,6 +2,7 @@ import "server-only";
 
 import type { DashboardV1AdminRow } from "@/lib/portal/adminDashboardV1";
 import { isPortalAdminEmailAddress, normalizePortalEmail } from "@/lib/portal/adminAccess";
+import { normalizeSalesRepCode } from "@/lib/portal/salesReps";
 
 export type PortalStaffRole =
   | { kind: "admin"; email: string; label: string }
@@ -85,8 +86,8 @@ export function canAccessAdminAccount(
   if (role.kind === "admin") return true;
   if (role.kind !== "sales-rep") return false;
 
-  const rowRepCode = row.salesRep.trim().toUpperCase();
-  if (rowRepCode && rowRepCode !== "—") return rowRepCode === role.repCode;
+  const rowRepCode = normalizeSalesRepCode(row.salesRepCode);
+  if (rowRepCode) return rowRepCode === role.repCode;
 
   return (
     configuredRepAssignments()

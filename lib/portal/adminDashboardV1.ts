@@ -2,6 +2,10 @@ import "server-only";
 
 import { canonicalPriceListCode } from "@/lib/portal/priceLists";
 import { portalDashboardV1Bundle } from "@/lib/portal/dashboardV1Bundle";
+import {
+  normalizeSalesRepCode,
+  salesRepLabel,
+} from "@/lib/portal/salesReps";
 import type {
   PortalDashboardV1Account,
   PortalDashboardV1MonthlyNumber,
@@ -62,6 +66,7 @@ export type DashboardV1AdminRow = {
   accountNumbers: string;
   division: string;
   customerType: string;
+  salesRepCode: string;
   salesRep: string;
   lab: string;
   state: string;
@@ -271,13 +276,16 @@ export function getDashboardV1AdminRows() {
     const cmProjectedJobs = projectedJobs(cmJpd, cmBusinessDays, cmJobs);
     const cmProjectedSales = projectedSales(cmSales, cmJobs, cmJpd, cmBusinessDays);
 
+    const salesRepCode = normalizeSalesRepCode(account.sales_rep);
+
     rows.push({
       businessName: account.business_name || "Unknown",
       acctId: account.account_id,
       accountNumbers: account.all_account_numbers || "—",
       division: parseCustomerType(account.customer_type || ""),
       customerType: parseCustomerType(account.customer_type || ""),
-      salesRep: account.sales_rep || "—",
+      salesRepCode,
+      salesRep: salesRepLabel(salesRepCode),
       lab: detail?.lab_name || account.lab || "—",
       state: detail?.state || account.state || "",
       address: detail?.address || "",

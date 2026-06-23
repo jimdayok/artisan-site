@@ -207,7 +207,7 @@ const POWER_BI_ACCOUNT_FIELDS = {
   "Last Lab Name": "[lab_name]",
   "Last Phone Number": "[phone_number]",
   "Last State": "[state]",
-  "Last Sales Rep": "[sales_rep_code]",
+  "Last Sales Rep": ["[sales_rep_code]", "[last_sales_rep]"],
   "Modern Pkg Usage": "[modern_pkg_usage]",
   "Modern Frm Usage": "[modern_frm_usage]",
   "ChemClip Usage": "[chemclip_usage]",
@@ -441,10 +441,13 @@ async function readRows(inputFile, sheetName, aliasMap) {
       .filter((row) => row && typeof row === "object" && !Array.isArray(row))
       .map((row) =>
         Object.fromEntries(
-          Object.entries(POWER_BI_ACCOUNT_FIELDS).map(([canonical, source]) => [
-            canonical,
-            row[source] ?? "",
-          ])
+          Object.entries(POWER_BI_ACCOUNT_FIELDS).map(([canonical, source]) => {
+            const sourceKeys = Array.isArray(source) ? source : [source];
+            return [
+              canonical,
+              sourceKeys.map((key) => row[key]).find((value) => toText(value)) ?? "",
+            ];
+          })
         )
       );
   }

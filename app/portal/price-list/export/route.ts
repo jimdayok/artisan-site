@@ -24,7 +24,10 @@ import {
   type ProgressiveTier,
 } from "@/lib/pricing/displayTaxonomy";
 import { loadPackagedPriceListByCode } from "@/lib/pricing/loadPackagedPriceList";
+import type { PortalPriceList } from "@/lib/portal/priceLists";
 import type {
+  PriceListAddOnSection,
+  PriceListArCoating,
   GeneratedPriceListData,
   PriceListPricingRow,
 } from "@/lib/pricing/types";
@@ -45,6 +48,7 @@ const TEXT = rgb(47 / 255, 55 / 255, 68 / 255);
 const MUTED = rgb(102 / 255, 92 / 255, 78 / 255);
 const PRICE_BASIS_NOTE =
   "Design prices are shown in polycarbonate. Materials, blue filters, photochromics, polarized options, AR, finishing, and shipping are add-ons or deductions unless noted.";
+const ADMIN_CUSTOMER_NAME = "Artisan Customer Pricing";
 
 function cleanText(value: unknown) {
   return String(value ?? "")
@@ -59,6 +63,42 @@ function compareText(a: string, b: string) {
   return a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
 }
 
+function titleCasePriceListName(value: string) {
+  const acronyms = new Set(["AR", "CD", "IOT", "PMP", "SV", "VSP"]);
+  return cleanText(value)
+    .toLowerCase()
+    .split(" ")
+    .map((word) => {
+      const upper = word.toUpperCase();
+      if (acronyms.has(upper)) return upper;
+      if (/^\d+$/.test(word)) return word;
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join(" ");
+}
+
+function parseRevisionDate(label: string) {
+  const match = cleanText(label).match(
+    /(?:\bREV(?:ISION)?\.?\s*)?(\d{2})(\d{2})(\d{2}|\d{4})\s*$/i
+  );
+  if (!match) return undefined;
+  const [, month, day, year] = match;
+  const fullYear = year.length === 2 ? `20${year}` : year;
+  return `${month}/${day}/${fullYear}`;
+}
+
+function displayPriceListName(label: string, code: string) {
+  const withoutRevision = cleanText(label)
+    .replace(/\s+(?:REV(?:ISION)?\.?\s*)?\d{6,8}\s*$/i, "")
+    .replace(/\s+\bREV(?:ISION)?\.?\s*$/i, "")
+    .trim();
+  return titleCasePriceListName(withoutRevision || `${code} Price List`);
+}
+
+function isAdminCustomer(customerName: string) {
+  return cleanText(customerName).toLowerCase() === "portal administrator";
+}
+
 function rowPrice(row: PriceListPricingRow | undefined, mode: PriceMode) {
   if (!row) return Number.POSITIVE_INFINITY;
   return mode === "uncut" ? row.uncutPrice : row.edgedPrice;
@@ -68,6 +108,11 @@ function money(row: PriceListPricingRow | undefined, mode: PriceMode) {
   const value = rowPrice(row, mode);
   if (!Number.isFinite(value) || value <= 0) return "-";
   return `$${value.toFixed(2)}+`;
+}
+
+function priceText(value: number | string) {
+  if (typeof value === "number") return `$${value.toFixed(2)}`;
+  return cleanText(value);
 }
 
 function lowestRow(
@@ -137,10 +182,12 @@ function fitText(font: PDFFont, value: string, maxWidth: number, size: number) {
 
 async function buildPriceListPdf({
   priceList,
+  portalPriceList,
   customerName,
   mode,
 }: {
   priceList: GeneratedPriceListData;
+  portalPriceList: PortalPriceList;
   customerName: string;
   mode: PriceMode;
 }) {
@@ -215,6 +262,11 @@ async function buildPriceListPdf({
     day: "numeric",
     year: "numeric",
   }).format(new Date());
+  const listDisplayName = displayPriceListName(portalPriceList.label, priceList.code);
+  const revisionDate = parseRevisionDate(portalPriceList.label);
+  const customerDisplayName = isAdminCustomer(customerName)
+    ? ADMIN_CUSTOMER_NAME
+    : customerName;
 
   const addPage = (continuation = false) => {
     page = document.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
@@ -233,17 +285,22 @@ async function buildPriceListPdf({
       height: 53,
     });
     page.drawText(
-      priceList.code === "NL" ? "NEUROLENS PRICE LIST" : `${cleanText(priceList.code)} PRICE LIST`,
+      fitText(
+        bold,
+        priceList.code === "NL" ? "Neurolens Price List" : listDisplayName,
+        340,
+        16
+      ),
       {
       x: 176,
       y: PAGE_HEIGHT - 44,
-      size: 17,
+      size: 16,
       font: bold,
       color: rgb(1, 1, 1),
       }
     );
     page.drawText(
-      continuation ? "Customer pricing guide - continued" : "Customer pricing guide",
+      continuation ? "Customer pricing guide - continued" : `Price List Code: ${cleanText(priceList.code)}`,
       {
         x: 176,
         y: PAGE_HEIGHT - 63,
@@ -252,6 +309,15 @@ async function buildPriceListPdf({
         color: rgb(0.86, 0.81, 0.71),
       }
     );
+    if (!continuation && revisionDate) {
+      page.drawText(`Revised: ${revisionDate}`, {
+        x: 176,
+        y: PAGE_HEIGHT - 76,
+        size: 8,
+        font: regular,
+        color: rgb(0.86, 0.81, 0.71),
+      });
+    }
     y = PAGE_HEIGHT - 116;
   };
 
@@ -347,27 +413,45 @@ async function buildPriceListPdf({
       borderWidth: 0.45,
     });
     const brandLogo = brandLogos.get(brand);
-    if (brandLogo) {
-      const maxWidth = brand === "IOT" ? 66 : 74;
-      const maxHeight = brand === "IOT" ? 20 : 24;
-      const scale = Math.min(maxWidth / brandLogo.width, maxHeight / brandLogo.height);
+    if (brandLogo && height < 32) {
+      const scale = Math.min(31 / brandLogo.width, 12 / brandLogo.height);
       const width = brandLogo.width * scale;
-      const height = brandLogo.height * scale;
+      const logoHeight = brandLogo.height * scale;
       page.drawImage(brandLogo, {
-        x: MARGIN + 8,
-        y: topY - 12 - height / 2,
+        x: MARGIN + 7,
+        y: topY - height / 2 - logoHeight / 2,
         width,
-        height,
+        height: logoHeight,
       });
-    } else {
-      page.drawText(fitText(bold, brand, 76, 7.5), {
-        x: MARGIN + 8,
-        y: topY - 15,
-        size: 7.5,
+      page.drawText(fitText(bold, brand, 44, 6.8), {
+        x: MARGIN + 43,
+        y: topY - height / 2 - 2.5,
+        size: 6.8,
         font: bold,
         color: NAVY,
       });
+      return;
     }
+    if (brandLogo) {
+      const maxWidth = brand === "IOT" ? 46 : 58;
+      const maxHeight = 13;
+      const scale = Math.min(maxWidth / brandLogo.width, maxHeight / brandLogo.height);
+      const width = brandLogo.width * scale;
+      const logoHeight = brandLogo.height * scale;
+      page.drawImage(brandLogo, {
+        x: MARGIN + 46 - width / 2,
+        y: topY - Math.min(16, Math.max(9, height / 2 - 3)) - logoHeight / 2,
+        width,
+        height: logoHeight,
+      });
+    }
+    page.drawText(fitText(bold, brand, 78, 7.2), {
+      x: MARGIN + 7,
+      y: topY - Math.min(height - 10, brandLogo ? 25 : 15),
+      size: 7.2,
+      font: bold,
+      color: NAVY,
+    });
   };
 
   const drawBrandRows = ({
@@ -381,16 +465,15 @@ async function buildPriceListPdf({
     brand: string;
     rows: ReturnType<typeof summarizeDesigns>;
   }) => {
-    drawTableHeader(true);
     rows.forEach((row, index) => {
-      if (y - 18 < 58) {
+      if (y - 25 < 58) {
         addPage(true);
         sectionTitle(category, "continued");
         if (tier !== "All") drawTierHeader(tier);
         drawTableHeader(true);
       }
       const rowTop = y + 2;
-      const rowHeight = 17;
+      const rowHeight = 19;
       if (index % 2 === 1) {
         page.drawRectangle({
           x: MARGIN + 92,
@@ -436,7 +519,7 @@ async function buildPriceListPdf({
     const columns = items.length > 8 ? 2 : 1;
     const gap = 16;
     const columnWidth = (CONTENT_WIDTH - gap * (columns - 1)) / columns;
-    const rowHeight = 17;
+    const rowHeight = 18;
 
     for (let index = 0; index < items.length; index += columns) {
       ensureSpace(rowHeight);
@@ -452,7 +535,8 @@ async function buildPriceListPdf({
             color: CREAM,
           });
         }
-        page.drawText(fitText(regular, item.name, columnWidth - detailWidth - 58, 7.4), {
+        const priceWidth = Math.min(86, Math.max(48, columnWidth * 0.22));
+        page.drawText(fitText(regular, item.name, columnWidth - detailWidth - priceWidth - 12, 7.4), {
           x: x + 5,
           y: y - 10,
           size: 7.4,
@@ -468,8 +552,8 @@ async function buildPriceListPdf({
             color: MUTED,
           });
         }
-        page.drawText(fitText(bold, item.price, 46, 7.4), {
-          x: x + columnWidth - 45,
+        page.drawText(fitText(bold, item.price, priceWidth - 5, 7.4), {
+          x: x + columnWidth - priceWidth,
           y: y - 10,
           size: 7.4,
           font: bold,
@@ -480,8 +564,201 @@ async function buildPriceListPdf({
     }
   };
 
+  const drawBoxedItemGroups = (
+    groups: Array<{ title: string; logoBrand?: string; items: Array<{ name: string; price: string }> }>
+  ) => {
+    for (const group of groups) {
+      const rowHeight = 17;
+      const boxHeight = 30 + group.items.length * rowHeight;
+      ensureSpace(boxHeight + 8);
+      page.drawRectangle({
+        x: MARGIN,
+        y: y - boxHeight + 4,
+        width: CONTENT_WIDTH,
+        height: boxHeight,
+        color: rgb(1, 1, 1),
+        borderColor: RULE,
+        borderWidth: 0.8,
+      });
+      const logoImage = group.logoBrand ? brandLogos.get(group.logoBrand) : undefined;
+      if (logoImage) {
+        const scale = Math.min(58 / logoImage.width, 15 / logoImage.height);
+        const width = logoImage.width * scale;
+        const height = logoImage.height * scale;
+        page.drawImage(logoImage, {
+          x: MARGIN + 10,
+          y: y - 16,
+          width,
+          height,
+        });
+      }
+      page.drawText(group.title, {
+        x: MARGIN + (logoImage ? 78 : 10),
+        y: y - 13,
+        size: 9,
+        font: bold,
+        color: NAVY,
+      });
+      y -= 28;
+      group.items.forEach((item, index) => {
+        if (index % 2 === 0) {
+          page.drawRectangle({
+            x: MARGIN + 8,
+            y: y - 13,
+            width: CONTENT_WIDTH - 16,
+            height: 15,
+            color: CREAM,
+          });
+        }
+        page.drawText(fitText(regular, item.name, CONTENT_WIDTH - 120, 7.4), {
+          x: MARGIN + 14,
+          y: y - 9,
+          size: 7.4,
+          font: regular,
+          color: TEXT,
+        });
+        page.drawText(fitText(bold, item.price, 80, 7.4), {
+          x: PAGE_WIDTH - MARGIN - 86,
+          y: y - 9,
+          size: 7.4,
+          font: bold,
+          color: NAVY,
+        });
+        y -= rowHeight;
+      });
+      y -= 8;
+    }
+  };
+
+  const deriveSvOptionAddOn = (brand: string) => {
+    const baseline = priceList.rows.find(
+      (row) =>
+        row.designStyle === "SV" &&
+        row.materialRaw === "PLY" &&
+        row.materialColor === "Clear" &&
+        row.colorRaw.includes("CLR")
+    );
+    if (!baseline) return undefined;
+    const grayPreference = ["TGY", "SEG", "2GY", "DGY", "NAG", "NCG"];
+    const optionRows = priceList.rows
+      .filter(
+        (row) =>
+          row.designStyle === "SV" &&
+          row.materialColor === "Photochromic" &&
+          row.colorBrand.toLowerCase() === brand.toLowerCase()
+      )
+      .sort((a, b) => {
+        const aGray = a.colorRaw.some((color) => grayPreference.includes(color)) ? 0 : 1;
+        const bGray = b.colorRaw.some((color) => grayPreference.includes(color)) ? 0 : 1;
+        return aGray - bGray || rowPrice(a, mode) - rowPrice(b, mode);
+      });
+    const option = optionRows[0];
+    if (!option) return undefined;
+    const addOn = rowPrice(option, mode) - rowPrice(baseline, mode);
+    if (!Number.isFinite(addOn) || addOn <= 0) return undefined;
+    return `$${addOn.toFixed(2)}`;
+  };
+
+  const normalizeAddOnSections = (sections: PriceListAddOnSection[]) =>
+    sections.map((section) => {
+      if (!/photochromic/i.test(section.title)) return section;
+      return {
+        ...section,
+        items: section.items.map((item) => {
+          const currentPrice = priceText(item.price);
+          if (!/see lens option/i.test(currentPrice)) return item;
+          const derived = deriveSvOptionAddOn(item.name);
+          return derived ? { ...item, price: derived } : item;
+        }),
+      };
+    });
+
+  const cleanCoatingBrand = (brandFamily: string) =>
+    cleanText(brandFamily)
+      .replace(/\s+AR\s+Coatings?$/i, "")
+      .replace(/\s+Coatings?$/i, "")
+      .replace(/^Techshield$/i, "TechShield")
+      .replace(/^Shamir$/i, "Shamir");
+
+  const cleanCoatingName = (coating: PriceListArCoating) => {
+    const brand = cleanCoatingBrand(coating.brandFamily);
+    let name = cleanText(coating.name)
+      .replace(/^Tecshield\b/i, "TechShield")
+      .replace(/^Techshield\b/i, "TechShield")
+      .replace(/^Nytopia$/i, "Nyoptia");
+    if (/^Artisan$/i.test(brand) && !/^Artisan\b/i.test(name)) {
+      if (/^Standard$/i.test(name)) name = "Artisan Standard";
+      else name = `Artisan ${name}`;
+    }
+    return name;
+  };
+
+  const coatingGroupLogo = (brand: string) => {
+    if (/^Artisan$/i.test(brand)) return "Artisan";
+    if (/^Hoya$/i.test(brand)) return "Hoya";
+    if (/^Shamir$/i.test(brand)) return "Shamir";
+    if (/^Tokai$/i.test(brand)) return "Tokai";
+    if (/^TechShield$/i.test(brand)) return "Unity";
+    return undefined;
+  };
+
+  const drawPolicyPage = () => {
+    addPage(true);
+    sectionTitle("Artisan Policies");
+    const policies = [
+      {
+        title: "Remakes and redos",
+        body: "Submit remake details with the original order, patient initials, remake reason, and updated measurements or frame details when requested.",
+      },
+      {
+        title: "AR, scratch, and warranty",
+        body: "Warranty handling depends on product, age, damage type, and account status. Specialty vendor policies may supersede standard lab policy.",
+      },
+      {
+        title: "Patient-owned frames",
+        body: "Patient-owned frames and older orders require careful handling and may not be guaranteed by the lab during processing.",
+      },
+      {
+        title: "Shipping and cancellations",
+        body: "Shipping, cancellation, and specialty processing charges may apply based on order status, timing, service level, and vendor involvement.",
+      },
+      {
+        title: "Official guide",
+        body: "Use the Artisan policies guide as the source of truth for current warranty, remake, frame handling, shipping, and account support terms.",
+      },
+    ];
+    for (const policy of policies) {
+      ensureSpace(62);
+      page.drawText(policy.title, {
+        x: MARGIN,
+        y,
+        size: 10,
+        font: bold,
+        color: NAVY,
+      });
+      y -= 15;
+      const words = cleanText(policy.body).split(" ");
+      let line = "";
+      for (const word of words) {
+        const next = line ? `${line} ${word}` : word;
+        if (regular.widthOfTextAtSize(next, 8) > CONTENT_WIDTH) {
+          page.drawText(line, { x: MARGIN, y, size: 8, font: regular, color: TEXT });
+          y -= 12;
+          line = word;
+        } else {
+          line = next;
+        }
+      }
+      if (line) {
+        page.drawText(line, { x: MARGIN, y, size: 8, font: regular, color: TEXT });
+        y -= 12;
+      }
+      y -= 12;
+    }
+  };
+
   addPage();
-  page.drawText(cleanText(customerName), {
+  page.drawText(cleanText(customerDisplayName), {
     x: MARGIN,
     y,
     size: 21,
@@ -525,12 +802,14 @@ async function buildPriceListPdf({
         brandGroups.set(row.brand, [...(brandGroups.get(row.brand) ?? []), row]);
       }
 
+      drawTableHeader(true);
       for (const [brand, brandRows] of [...brandGroups.entries()].sort(
         ([a], [b]) => comparePriceDisplayBrand(a, b)
       )) {
         drawBrandRows({ category, tier, brand, rows: brandRows });
       }
     }
+    y -= 8;
   }
 
   if (priceList.arCoatings.length) {
@@ -541,37 +820,49 @@ async function buildPriceListPdf({
         : "Artisan coatings first; additional options follow"
     );
     const coatings = [...priceList.arCoatings]
-      .filter((coating) => !coating.unresolved)
+      .filter((coating) => !coating.unresolved && !/^UV Coating$/i.test(coating.name))
       .sort((a, b) => {
-        const aArtisan = /artisan/i.test(a.brandFamily) ? 0 : 1;
-        const bArtisan = /artisan/i.test(b.brandFamily) ? 0 : 1;
+        const aBrand = cleanCoatingBrand(a.brandFamily);
+        const bBrand = cleanCoatingBrand(b.brandFamily);
+        const aArtisan = /^Artisan$/i.test(aBrand) ? 0 : 1;
+        const bArtisan = /^Artisan$/i.test(bBrand) ? 0 : 1;
         return (
           aArtisan - bArtisan ||
-          compareText(a.brandFamily, b.brandFamily) ||
-          compareText(a.name, b.name)
+          compareText(aBrand, bBrand) ||
+          compareText(cleanCoatingName(a), cleanCoatingName(b))
         );
       });
-    drawCompactItemGrid(
-      coatings.map((coating) => ({
-        name: coating.name,
-        detail: coating.brandFamily,
-        price: `$${coating.price.toFixed(2)}`,
-      })),
-      96
+    const coatingGroups = new Map<string, PriceListArCoating[]>();
+    for (const coating of coatings) {
+      const brand = cleanCoatingBrand(coating.brandFamily);
+      coatingGroups.set(brand, [...(coatingGroups.get(brand) ?? []), coating]);
+    }
+    drawBoxedItemGroups(
+      [...coatingGroups.entries()].map(([brand, entries]) => ({
+        title: brand,
+        logoBrand: coatingGroupLogo(brand),
+        items: entries.map((coating) => ({
+          name: cleanCoatingName(coating),
+          price: `$${coating.price.toFixed(2)}`,
+        })),
+      }))
     );
   }
 
-  for (const section of priceList.addOnSections) {
+  for (const section of normalizeAddOnSections(priceList.addOnSections)) {
     if (!section.items.length) continue;
+    ensureSpace(34 + Math.ceil(section.items.length / (section.items.length > 8 ? 2 : 1)) * 18);
     sectionTitle(section.title);
     drawCompactItemGrid(
       section.items.map((item) => ({
         name: item.name,
-        price: cleanText(item.price),
+        price: priceText(item.price),
       })),
       0
     );
   }
+
+  drawPolicyPage();
 
   pages.forEach((currentPage, index) => {
     currentPage.drawLine({
@@ -583,7 +874,9 @@ async function buildPriceListPdf({
     currentPage.drawText(
       fitText(
         bold,
-        `CONFIDENTIAL - Prepared for ${customerName}`,
+        isAdminCustomer(customerName)
+          ? `CONFIDENTIAL - ${ADMIN_CUSTOMER_NAME}`
+          : `CONFIDENTIAL - Prepared for ${customerDisplayName}`,
         CONTENT_WIDTH - 95,
         7.5
       ),
@@ -611,7 +904,7 @@ async function buildPriceListPdf({
     });
   });
 
-  document.setTitle(`${priceList.code} Price List - ${customerName}`);
+  document.setTitle(`${listDisplayName} - ${customerDisplayName}`);
   document.setAuthor("Artisan Lab Network");
   document.setSubject("Confidential customer pricing");
   return document.save();
@@ -682,6 +975,7 @@ export async function GET(request: NextRequest) {
     `Account ${access.customer.accountNumber}`;
   const pdf = await buildPriceListPdf({
     priceList,
+    portalPriceList: access.priceList,
     customerName,
     mode: priceMode,
   });

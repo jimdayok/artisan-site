@@ -6,7 +6,6 @@ import {
   StandardFonts,
   rgb,
   type PDFFont,
-  type PDFImage,
   type PDFPage,
 } from "pdf-lib";
 import { getAuthorizedPriceListFromHeaders } from "@/lib/portal/priceListAccess";
@@ -198,61 +197,15 @@ async function buildPriceListPdf({
     path.join(process.cwd(), "public", "aln-white-logo.png")
   );
   const logo = await document.embedPng(logoBytes);
-  const brandLogos = new Map<string, PDFImage>();
-
-  const embedBrandLogo = async (
-    brand: string,
-    bytesPromise: Promise<Buffer>
-  ) => {
-    try {
-      const bytes = await bytesPromise;
-      brandLogos.set(brand, await document.embedPng(bytes));
-    } catch {
-      // Text remains as the fallback when a logo asset cannot be embedded.
-    }
-  };
-
-  await Promise.all([
-    embedBrandLogo(
-      "Artisan",
-      readFile(path.join(process.cwd(), "public", "rings-transparent.png"))
-    ),
-    embedBrandLogo(
-      "IOT",
-      readFile(path.join(process.cwd(), "public", "iot-logo.png"))
-    ),
-    embedBrandLogo(
-      "Unity",
-      readFile(path.join(process.cwd(), "public", "unity-logo.png"))
-    ),
-    embedBrandLogo(
-      "Sequel by Newton",
-      readFile(
-        path.join(
-          process.cwd(),
-          "public",
-          "logos",
-          "Sequel_Brandmark_Horizontal_RGB_Charcoal.png"
-        )
-      )
-    ),
-    embedBrandLogo(
-      "Tokai",
-      readFile(path.join(process.cwd(), "public", "tokai-logo.png"))
-    ),
-    embedBrandLogo(
-      "Shamir",
-      readFile(path.join(process.cwd(), "public", "shamir-logo.png"))
-    ),
-    embedBrandLogo(
-      "Hoya",
-      readFile(path.join(process.cwd(), "public", "hoya-logo.png"))
-    ),
-    embedBrandLogo(
-      "Varilux",
-      readFile(path.join(process.cwd(), "public", "varilux-logo.png"))
-    ),
-  ]);
+  let artisanMark;
+  try {
+    const artisanBytes = await readFile(
+      path.join(process.cwd(), "public", "rings-transparent.png")
+    );
+    artisanMark = await document.embedPng(artisanBytes);
+  } catch {
+    artisanMark = undefined;
+  }
   const pages: PDFPage[] = [];
   let page!: PDFPage;
   let y = 0;
@@ -412,42 +365,23 @@ async function buildPriceListPdf({
       borderColor: RULE,
       borderWidth: 0.45,
     });
-    const brandLogo = brandLogos.get(brand);
-    if (brandLogo && height < 32) {
-      const scale = Math.min(31 / brandLogo.width, 12 / brandLogo.height);
-      const width = brandLogo.width * scale;
-      const logoHeight = brandLogo.height * scale;
-      page.drawImage(brandLogo, {
-        x: MARGIN + 7,
-        y: topY - height / 2 - logoHeight / 2,
+    const isArtisanBrand = /^Artisan$/i.test(brand);
+    if (isArtisanBrand && artisanMark) {
+      const scale = Math.min(16 / artisanMark.width, 16 / artisanMark.height);
+      const width = artisanMark.width * scale;
+      const markHeight = artisanMark.height * scale;
+      page.drawImage(artisanMark, {
+        x: MARGIN + 8,
+        y: topY - height / 2 - markHeight / 2,
         width,
-        height: logoHeight,
-      });
-      page.drawText(fitText(bold, brand, 44, 6.8), {
-        x: MARGIN + 43,
-        y: topY - height / 2 - 2.5,
-        size: 6.8,
-        font: bold,
-        color: NAVY,
-      });
-      return;
-    }
-    if (brandLogo) {
-      const maxWidth = brand === "IOT" ? 46 : 58;
-      const maxHeight = 13;
-      const scale = Math.min(maxWidth / brandLogo.width, maxHeight / brandLogo.height);
-      const width = brandLogo.width * scale;
-      const logoHeight = brandLogo.height * scale;
-      page.drawImage(brandLogo, {
-        x: MARGIN + 46 - width / 2,
-        y: topY - Math.min(16, Math.max(9, height / 2 - 3)) - logoHeight / 2,
-        width,
-        height: logoHeight,
+        height: markHeight,
       });
     }
-    page.drawText(fitText(bold, brand, 78, 7.2), {
-      x: MARGIN + 7,
-      y: topY - Math.min(height - 10, brandLogo ? 25 : 15),
+    const textX = isArtisanBrand && artisanMark ? MARGIN + 30 : MARGIN + 7;
+    const textWidth = isArtisanBrand && artisanMark ? 58 : 78;
+    page.drawText(fitText(bold, brand, textWidth, 7.2), {
+      x: textX,
+      y: topY - Math.min(height - 10, height / 2 + 3),
       size: 7.2,
       font: bold,
       color: NAVY,
@@ -580,14 +514,14 @@ async function buildPriceListPdf({
         borderColor: RULE,
         borderWidth: 0.8,
       });
-      const logoImage = group.logoBrand ? brandLogos.get(group.logoBrand) : undefined;
+      const logoImage = group.logoBrand === "Artisan" ? artisanMark : undefined;
       if (logoImage) {
-        const scale = Math.min(58 / logoImage.width, 15 / logoImage.height);
+        const scale = Math.min(18 / logoImage.width, 18 / logoImage.height);
         const width = logoImage.width * scale;
         const height = logoImage.height * scale;
         page.drawImage(logoImage, {
           x: MARGIN + 10,
-          y: y - 16,
+          y: y - 18,
           width,
           height,
         });
@@ -695,11 +629,49 @@ async function buildPriceListPdf({
 
   const coatingGroupLogo = (brand: string) => {
     if (/^Artisan$/i.test(brand)) return "Artisan";
-    if (/^Hoya$/i.test(brand)) return "Hoya";
-    if (/^Shamir$/i.test(brand)) return "Shamir";
-    if (/^Tokai$/i.test(brand)) return "Tokai";
-    if (/^TechShield$/i.test(brand)) return "Unity";
     return undefined;
+  };
+
+  const drawWrappedParagraph = (
+    text: string,
+    {
+      x,
+      maxWidth,
+      size = 8,
+      font = regular,
+      color = TEXT,
+      lineHeight = 11,
+      prefix = "",
+      hangingIndent = 0,
+    }: {
+      x: number;
+      maxWidth: number;
+      size?: number;
+      font?: PDFFont;
+      color?: ReturnType<typeof rgb>;
+      lineHeight?: number;
+      prefix?: string;
+      hangingIndent?: number;
+    }
+  ) => {
+    const words = cleanText(text).split(" ").filter(Boolean);
+    let line = prefix;
+    let lineX = x;
+    for (const word of words) {
+      const next = line.trim() ? `${line} ${word}` : `${prefix}${word}`;
+      if (font.widthOfTextAtSize(next, size) > maxWidth && line.trim()) {
+        page.drawText(line.trimEnd(), { x: lineX, y, size, font, color });
+        y -= lineHeight;
+        line = `${" ".repeat(hangingIndent)}${word}`;
+        lineX = x;
+      } else {
+        line = next;
+      }
+    }
+    if (line.trim()) {
+      page.drawText(line.trimEnd(), { x: lineX, y, size, font, color });
+      y -= lineHeight;
+    }
   };
 
   const drawPolicyPage = () => {
@@ -707,53 +679,79 @@ async function buildPriceListPdf({
     sectionTitle("Artisan Policies");
     const policies = [
       {
-        title: "Remakes and redos",
-        body: "Submit remake details with the original order, patient initials, remake reason, and updated measurements or frame details when requested.",
+        title: "AR and scratch warranties",
+        bullets: [
+          "Artisan Standard: 1 year, 1 time.",
+          "Artisan premium AR treatments including Artisan Armour, Artisan Emerald, Artisan Azure, Artisan Nyoptia, and Diamond Sun: 2 years, 2 times.",
+          "TechShield, Tokai, Crizal, Shamir, and Hoya AR technologies: 2 years, 2 times.",
+          "Factory scratch coat: 1 year, 1 time. Diamond Defence: 2 years, 2 times.",
+          "Covered AR and scratch claims do not require lenses to be returned before the warranty is used.",
+        ],
       },
       {
-        title: "AR, scratch, and warranty",
-        body: "Warranty handling depends on product, age, damage type, and account status. Specialty vendor policies may supersede standard lab policy.",
+        title: "Doctor redos and non-adapts",
+        bullets: [
+          "Changes to design, power, PD, prism, frame, segment height, or other patient non-adaptable elements may be accommodated 1 time at no charge within the first year.",
+          "If a remake upgrades to a higher-priced product, the original invoice is credited and the remake is invoiced at the new product price when shipped.",
+          "Submit remake details with the original order, patient initials, remake reason, and updated measurements or frame details when requested.",
+        ],
       },
       {
-        title: "Patient-owned frames",
-        body: "Patient-owned frames and older orders require careful handling and may not be guaranteed by the lab during processing.",
+        title: "Lab error remakes",
+        bullets: [
+          "Valid lab error remakes received within 30 days from ship date are processed at no charge.",
+          "Returned lenses may be required for inspection and quality control.",
+          "If the request does not qualify as lab error, the available doctor redo may be used instead.",
+        ],
       },
       {
-        title: "Shipping and cancellations",
-        body: "Shipping, cancellation, and specialty processing charges may apply based on order status, timing, service level, and vendor involvement.",
+        title: "Frames and patient-owned frames",
+        bullets: [
+          "Frames will only be replaced when accompanied by a frame manifest.",
+          "The lab may reject frames that are fragile or unsuitable for the Rx and lens order.",
+          "Patient-owned frames are processed at the practice's risk and are not guaranteed against breakage during handling or processing.",
+          "If an order is more than 30 days old, patient-owned frame policies apply and the practice is responsible for replacement if the frame breaks during processing.",
+        ],
       },
       {
-        title: "Official guide",
-        body: "Use the Artisan policies guide as the source of truth for current warranty, remake, frame handling, shipping, and account support terms.",
+        title: "Second pair and multiple-pair discounts",
+        bullets: [
+          "Additional pairs ordered within 30 days of the original invoice date are eligible for a 50% discount on the lesser-priced pair.",
+          "Each qualifying pair must include premium AR or polarization.",
+          "Neurolens, Chemiclips, and some specialty work may be excluded or follow separate rules.",
+        ],
+      },
+      {
+        title: "Shipping, cancellations, and specialty work",
+        bullets: [
+          "Next Day Air: $4 per job. 2-Day Shipping: $16 per box. Ground Delivery: $8 per box. Mail to Patient: $8.",
+          "Inbound shipping is complimentary.",
+          "Orders cancelled after production begins are billed as an uncut. Orders cancelled before production begins are not billed.",
+          "Specialty, outsourced, manufacturer, VSP, Unity, and vendor-directed jobs may follow separate pricing, lead times, return rules, or warranty requirements.",
+        ],
       },
     ];
     for (const policy of policies) {
-      ensureSpace(62);
+      ensureSpace(36 + policy.bullets.length * 28);
       page.drawText(policy.title, {
         x: MARGIN,
         y,
-        size: 10,
+        size: 9.6,
         font: bold,
         color: NAVY,
       });
-      y -= 15;
-      const words = cleanText(policy.body).split(" ");
-      let line = "";
-      for (const word of words) {
-        const next = line ? `${line} ${word}` : word;
-        if (regular.widthOfTextAtSize(next, 8) > CONTENT_WIDTH) {
-          page.drawText(line, { x: MARGIN, y, size: 8, font: regular, color: TEXT });
-          y -= 12;
-          line = word;
-        } else {
-          line = next;
-        }
+      y -= 14;
+      for (const bullet of policy.bullets) {
+        drawWrappedParagraph(bullet, {
+          x: MARGIN + 10,
+          maxWidth: CONTENT_WIDTH - 10,
+          size: 7.9,
+          lineHeight: 10,
+          prefix: "- ",
+        });
+        y -= 2;
       }
-      if (line) {
-        page.drawText(line, { x: MARGIN, y, size: 8, font: regular, color: TEXT });
-        y -= 12;
-      }
-      y -= 12;
+      y -= 7;
     }
   };
 

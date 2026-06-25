@@ -45,9 +45,18 @@ const CREAM = rgb(248 / 255, 243 / 255, 235 / 255);
 const RULE = rgb(226 / 255, 213 / 255, 191 / 255);
 const TEXT = rgb(47 / 255, 55 / 255, 68 / 255);
 const MUTED = rgb(102 / 255, 92 / 255, 78 / 255);
+const SOFT_FILL = rgb(252 / 255, 250 / 255, 246 / 255);
 const PRICE_BASIS_NOTE =
   "Design prices are shown in polycarbonate. Materials, blue filters, photochromics, polarized options, AR, finishing, and shipping are add-ons or deductions unless noted.";
 const ADMIN_CUSTOMER_NAME = "Artisan Customer Pricing";
+const BRAND_COLUMN_WIDTH = 120;
+const DESIGN_COLUMN_X = MARGIN + BRAND_COLUMN_WIDTH;
+const DESIGN_TEXT_X = DESIGN_COLUMN_X + 8;
+const CLEAR_COLUMN_X = MARGIN + 364;
+const PHOTO_COLUMN_X = MARGIN + 424;
+const POLAR_COLUMN_X = MARGIN + 484;
+const TABLE_ROW_HEIGHT = 19;
+const TABLE_HEADER_HEIGHT = 20;
 
 function cleanText(value: unknown) {
   return String(value ?? "")
@@ -197,15 +206,6 @@ async function buildPriceListPdf({
     path.join(process.cwd(), "public", "aln-white-logo.png")
   );
   const logo = await document.embedPng(logoBytes);
-  let artisanMark;
-  try {
-    const artisanBytes = await readFile(
-      path.join(process.cwd(), "public", "rings-transparent.png")
-    );
-    artisanMark = await document.embedPng(artisanBytes);
-  } catch {
-    artisanMark = undefined;
-  }
   const pages: PDFPage[] = [];
   let page!: PDFPage;
   let y = 0;
@@ -314,15 +314,15 @@ async function buildPriceListPdf({
       x: MARGIN,
       y: y - 17,
       width: CONTENT_WIDTH,
-      height: 20,
+      height: TABLE_HEADER_HEIGHT,
       color: NAVY,
     });
     const headers = [
       ...(showBrand ? ([["Brand", MARGIN + 6]] as const) : []),
-      ["Design", showBrand ? MARGIN + 100 : MARGIN + 6],
-      ["Clear", MARGIN + 364],
-      ["Photo", MARGIN + 424],
-      ["Polar", MARGIN + 484],
+      ["Design", showBrand ? DESIGN_TEXT_X : MARGIN + 6],
+      ["Clear", CLEAR_COLUMN_X],
+      ["Photo", PHOTO_COLUMN_X],
+      ["Polar", POLAR_COLUMN_X],
     ] as const;
     for (const [label, x] of headers) {
       page.drawText(label, {
@@ -333,7 +333,7 @@ async function buildPriceListPdf({
         color: rgb(1, 1, 1),
       });
     }
-    y -= 20;
+    y -= TABLE_HEADER_HEIGHT;
   };
 
   const drawTierHeader = (tier: ProgressiveTier) => {
@@ -359,29 +359,18 @@ async function buildPriceListPdf({
     page.drawRectangle({
       x: MARGIN,
       y: topY - height,
-      width: 92,
+      width: BRAND_COLUMN_WIDTH,
       height,
-      color: rgb(0.985, 0.972, 0.95),
+      color: SOFT_FILL,
       borderColor: RULE,
-      borderWidth: 0.45,
+      borderWidth: 0.6,
     });
-    const isArtisanBrand = /^Artisan$/i.test(brand);
-    if (isArtisanBrand && artisanMark) {
-      const scale = Math.min(16 / artisanMark.width, 16 / artisanMark.height);
-      const width = artisanMark.width * scale;
-      const markHeight = artisanMark.height * scale;
-      page.drawImage(artisanMark, {
-        x: MARGIN + 8,
-        y: topY - height / 2 - markHeight / 2,
-        width,
-        height: markHeight,
-      });
-    }
-    const textX = isArtisanBrand && artisanMark ? MARGIN + 30 : MARGIN + 7;
-    const textWidth = isArtisanBrand && artisanMark ? 58 : 78;
+    const textX = MARGIN + 8;
+    const textWidth = BRAND_COLUMN_WIDTH - 16;
+    const textY = topY - height / 2 - 3;
     page.drawText(fitText(bold, brand, textWidth, 7.2), {
       x: textX,
-      y: topY - Math.min(height - 10, height / 2 + 3),
+      y: textY,
       size: 7.2,
       font: bold,
       color: NAVY,
@@ -399,51 +388,61 @@ async function buildPriceListPdf({
     brand: string;
     rows: ReturnType<typeof summarizeDesigns>;
   }) => {
-    rows.forEach((row, index) => {
+    let rowIndex = 0;
+    while (rowIndex < rows.length) {
       if (y - 25 < 58) {
         addPage(true);
         sectionTitle(category, "continued");
         if (tier !== "All") drawTierHeader(tier);
         drawTableHeader(true);
       }
-      const rowTop = y + 2;
-      const rowHeight = 19;
-      if (index % 2 === 1) {
+      const availableRows = Math.max(1, Math.floor((y - 58) / TABLE_ROW_HEIGHT));
+      const chunk = rows.slice(rowIndex, rowIndex + availableRows);
+      const groupTop = y + 2;
+      const groupHeight = chunk.length * TABLE_ROW_HEIGHT;
+      drawBrandCell(brand, groupTop, groupHeight);
+      chunk.forEach((row, chunkIndex) => {
+        const absoluteIndex = rowIndex + chunkIndex;
+        const rowTop = y + 2;
+        const zebraFill = absoluteIndex % 2 === 1 ? CREAM : rgb(1, 1, 1);
         page.drawRectangle({
-          x: MARGIN + 92,
-          y: y - 15,
-          width: CONTENT_WIDTH - 92,
-          height: rowHeight,
-          color: CREAM,
+          x: DESIGN_COLUMN_X,
+          y: rowTop - TABLE_ROW_HEIGHT,
+          width: CONTENT_WIDTH - BRAND_COLUMN_WIDTH,
+          height: TABLE_ROW_HEIGHT,
+          color: zebraFill,
         });
-      }
-      if (index === 0 || y > PAGE_HEIGHT - 150) {
-        const remainingRows = Math.min(rows.length - index, Math.floor((y - 58) / rowHeight));
-        drawBrandCell(brand, rowTop, Math.max(rowHeight, remainingRows * rowHeight));
-      }
-      const values: Array<[string, number, number, PDFFont, typeof TEXT]> = [
-        [row.designStyle, MARGIN + 100, 248, regular, TEXT],
-        [money(row.clear, mode), MARGIN + 364, 52, bold, NAVY],
-        [money(row.photochromic, mode), MARGIN + 424, 52, bold, NAVY],
-        [money(row.polarized, mode), MARGIN + 484, 50, bold, NAVY],
-      ];
-      values.forEach(([value, x, width, font, color]) => {
-        page.drawText(fitText(font, value, width, 7.2), {
-          x,
-          y: y - 10,
-          size: 7.2,
-          font,
-          color,
+        page.drawLine({
+          start: { x: DESIGN_COLUMN_X, y: rowTop - TABLE_ROW_HEIGHT },
+          end: { x: DESIGN_COLUMN_X, y: rowTop },
+          color: RULE,
+          thickness: 0.6,
         });
+        const values: Array<[string, number, number, PDFFont, typeof TEXT]> = [
+          [row.designStyle, DESIGN_TEXT_X, 248, regular, TEXT],
+          [money(row.clear, mode), CLEAR_COLUMN_X, 52, bold, NAVY],
+          [money(row.photochromic, mode), PHOTO_COLUMN_X, 52, bold, NAVY],
+          [money(row.polarized, mode), POLAR_COLUMN_X, 50, bold, NAVY],
+        ];
+        values.forEach(([value, x, width, font, color]) => {
+          page.drawText(fitText(font, value, width, 7.2), {
+            x,
+            y: y - 10,
+            size: 7.2,
+            font,
+            color,
+          });
+        });
+        page.drawLine({
+          start: { x: MARGIN, y: rowTop - TABLE_ROW_HEIGHT },
+          end: { x: PAGE_WIDTH - MARGIN, y: rowTop - TABLE_ROW_HEIGHT },
+          color: RULE,
+          thickness: 0.45,
+        });
+        y -= TABLE_ROW_HEIGHT;
       });
-      page.drawLine({
-        start: { x: MARGIN + 92, y: y - 15 },
-        end: { x: PAGE_WIDTH - MARGIN, y: y - 15 },
-        color: RULE,
-        thickness: 0.45,
-      });
-      y -= rowHeight;
-    });
+      rowIndex += chunk.length;
+    }
   };
 
   const drawCompactItemGrid = (
@@ -451,22 +450,30 @@ async function buildPriceListPdf({
     detailWidth = 104
   ) => {
     const columns = items.length > 8 ? 2 : 1;
-    const gap = 16;
+    const gap = 0;
     const columnWidth = (CONTENT_WIDTH - gap * (columns - 1)) / columns;
-    const rowHeight = 18;
+    const rowHeight = 19;
 
     for (let index = 0; index < items.length; index += columns) {
       ensureSpace(rowHeight);
       const rowItems = items.slice(index, index + columns);
+      const rowTop = y + 2;
+      const zebraFill = Math.floor(index / columns) % 2 === 1 ? CREAM : rgb(1, 1, 1);
+      page.drawRectangle({
+        x: MARGIN,
+        y: rowTop - rowHeight,
+        width: CONTENT_WIDTH,
+        height: rowHeight,
+        color: zebraFill,
+      });
       rowItems.forEach((item, columnIndex) => {
         const x = MARGIN + columnIndex * (columnWidth + gap);
-        if ((Math.floor(index / columns) + columnIndex) % 2 === 1) {
-          page.drawRectangle({
-            x,
-            y: y - 14,
-            width: columnWidth,
-            height: 16,
-            color: CREAM,
+        if (columnIndex > 0) {
+          page.drawLine({
+            start: { x, y: rowTop - rowHeight },
+            end: { x, y: rowTop },
+            color: RULE,
+            thickness: 0.45,
           });
         }
         const priceWidth = Math.min(86, Math.max(48, columnWidth * 0.22));
@@ -494,6 +501,12 @@ async function buildPriceListPdf({
           color: NAVY,
         });
       });
+      page.drawLine({
+        start: { x: MARGIN, y: rowTop - rowHeight },
+        end: { x: PAGE_WIDTH - MARGIN, y: rowTop - rowHeight },
+        color: RULE,
+        thickness: 0.45,
+      });
       y -= rowHeight;
     }
   };
@@ -514,20 +527,8 @@ async function buildPriceListPdf({
         borderColor: RULE,
         borderWidth: 0.8,
       });
-      const logoImage = group.logoBrand === "Artisan" ? artisanMark : undefined;
-      if (logoImage) {
-        const scale = Math.min(18 / logoImage.width, 18 / logoImage.height);
-        const width = logoImage.width * scale;
-        const height = logoImage.height * scale;
-        page.drawImage(logoImage, {
-          x: MARGIN + 10,
-          y: y - 18,
-          width,
-          height,
-        });
-      }
       page.drawText(group.title, {
-        x: MARGIN + (logoImage ? 78 : 10),
+        x: MARGIN + 10,
         y: y - 13,
         size: 9,
         font: bold,

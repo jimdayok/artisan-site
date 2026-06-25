@@ -2,16 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { headers } from "next/headers";
 import {
-  AlertTriangle,
-  BadgeCheck,
-  ClipboardList,
   FileText,
   Handshake,
   PackageCheck,
   RefreshCcw,
   ShieldCheck,
   Truck,
-  Users,
   Wrench,
   type LucideIcon,
 } from "lucide-react";
@@ -38,16 +34,18 @@ type PolicySection = {
 
 const policySections: PolicySection[] = [
   {
-    id: "ar-policies",
-    title: "AR Policies",
+    id: "ar-and-scratch-warranties",
+    title: "AR and Scratch Warranties",
     icon: ShieldCheck,
-    summary: "Warranty support for AR treatments, including Artisan coating-specific warranty terms.",
-    body: ["We do not require lenses to be returned for AR treatment warranty usage."],
+    summary: "Coverage terms for Artisan coatings, premium AR options, and scratch warranties.",
+    body: [
+      "Covered AR and scratch warranty claims do not require lenses to be returned before the warranty is used.",
+      "Vendor-specific programs may still carry separate return, credit, or documentation requirements.",
+    ],
     terms: [
       { label: "Artisan Standard (AST)", value: "1 year, 1 time" },
       {
-        label:
-          "Artisan Premium AR Treatments: Azure (AAZ), Nytopia (NYT), Emerald (AEM), Armour (AAR), Diamond Sun (ADS)",
+        label: "Artisan premium AR treatments: Azure, Nyoptia, Emerald, Armour, Diamond Sun",
         value: "2 years, 2 times",
       },
       { label: "TechShield AR Technologies", value: "2 years, 2 times" },
@@ -55,27 +53,19 @@ const policySections: PolicySection[] = [
       { label: "Crizal AR Technologies", value: "2 years, 2 times" },
       { label: "Shamir AR Technologies", value: "2 years, 2 times" },
       { label: "Hoya AR Technologies", value: "2 years, 2 times" },
-    ],
-  },
-  {
-    id: "scratch-coating-policies",
-    title: "Scratch Coating Policies",
-    icon: BadgeCheck,
-    summary: "Scratch coating warranty terms for factory and Diamond Defence coating support.",
-    body: ["We do not require lenses to be returned for scratch coating warranty usage."],
-    terms: [
       { label: "Factory Scratch Coat", value: "1 year, 1 time" },
       { label: "Diamond Defence (DDE)", value: "2 years, 2 times" },
     ],
   },
   {
     id: "doctor-remake-non-adapt",
-    title: "Doctor Remake and Non Adapt Changes",
+    title: "Doctor Redos and Non-Adapt Changes",
     icon: RefreshCcw,
-    summary: "Guidance for patient non-adaptable elements and doctor-requested changes.",
+    summary: "How patient-driven changes and doctor redos are handled after the original order ships.",
     body: [
-      "Requests for changes to design, power, PD, frame, segment height, or any other patient non adaptable elements within the first year will be accommodated 1 time at no charge.",
+      "Requests for changes to design, power, PD, prism, frame, segment height, or any other patient non-adaptable elements within the first year are accommodated 1 time at no charge.",
       "If a lens remake involves upgrading to a higher priced product, the original invoice will be credited, and the new, higher priced lens order will be invoiced when the remake is shipped.",
+      "Submit the remake with the updated order details, the patient initials, and the reason for the change.",
     ],
   },
   {
@@ -86,14 +76,14 @@ const policySections: PolicySection[] = [
     body: [
       "All remakes due to lab error will be processed at no charge with valid reason or reasons if received within 30 days from the date the order was shipped.",
       "If, upon evaluation, the remake request is not valid, the customer's 1 time remake will be used.",
-      "Lenses are required to be returned for inspection and quality control when requested.",
+      "Returned lenses are required for inspection and quality control when the lab requests them.",
     ],
   },
   {
-    id: "frame-policies",
-    title: "Frame Policies",
+    id: "patient-owned-frame-policies",
+    title: "Frame and Patient-Owned Frame Policies",
     icon: Wrench,
-    summary: "Frame manifest, suitability, patient-owned frame, and replacement guidance.",
+    summary: "Frame manifest, frame suitability, and patient-owned frame responsibility rules.",
     body: [
       "Frames will only be replaced if accompanied by a frame manifest, available on the Artisan Lab Network Practice Resources page.",
       "PAL may reject frames prone to damage or unsuitable for the Rx and lens order.",
@@ -102,111 +92,45 @@ const policySections: PolicySection[] = [
     ],
   },
   {
-    id: "shipping-policies",
-    title: "Shipping Policies",
-    icon: Truck,
-    summary: "Outbound and inbound shipping guidance for Artisan lab orders.",
-    body: [
-      "Next Day Air: $4.",
-      "2 Day Shipping: $16.",
-      "Inbound shipping is provided complimentary.",
-      "The shipping method is determined by the lab based on order flow, volume, and delivery needs.",
-    ],
-  },
-  {
-    id: "canceled-orders",
-    title: "Canceled Orders",
-    icon: AlertTriangle,
-    summary: "How charges apply when an order is canceled before or after production begins.",
-    body: [
-      "Canceled orders that have already started will be charged as an uncut.",
-      "Canceled orders that have not been started will not be charged.",
-    ],
-  },
-  {
     id: "multiple-pair-program",
-    title: "Multiple Pair Program: Pair Up with PAL",
+    title: "Multiple Pair and Second Pair Discounts",
     icon: PackageCheck,
-    summary: "Discount guidance for eligible additional lens pairs.",
+    summary: "Discount guidance for eligible additional lens pairs ordered soon after the original pair.",
     body: [
       "Additional pairs purchased within 30 days of the original pair are eligible for a 50% discount on the lesser priced invoice. There are no limits to the number of additional lens pairs eligible for the multiple pair discount program.",
       "Each pair must include one of the following: AR Treatment or Polarization.",
+      "Neurolens, Chemiclips, and some specialty work may follow separate rules or be excluded.",
     ],
   },
   {
-    id: "account-portal-use",
-    title: "Account and Portal Use",
-    icon: Users,
-    summary: "Authorized access, credential responsibility, and partner resource use.",
+    id: "shipping-and-cancellations",
+    title: "Shipping and Cancellations",
+    icon: Truck,
+    summary: "Outbound shipping rates, inbound shipping, and cancellation billing rules.",
     body: [
-      "Pricing, policy tools, and private partner resources are intended for authorized Artisan Lab Network partners only.",
-      "Customers are responsible for protecting their login credentials and keeping confidential pricing information inside their practice.",
+      "Next Day Air: $4 per job. 2 Day Shipping: $16 per box. Inbound shipping is complimentary.",
+      "The outbound shipping method is determined by the lab based on order flow, volume, and delivery needs.",
+      "Canceled orders that have already started will be charged as an uncut. Canceled orders that have not been started will not be charged.",
     ],
   },
   {
-    id: "confidential-pricing",
-    title: "Confidential Pricing",
+    id: "vendor-and-specialty-policies",
+    title: "Vendor, VSP, and Specialty Order Policies",
+    icon: Handshake,
+    summary: "When outside manufacturers, Unity/VSP, or specialty labs control parts of the policy.",
+    body: [
+      "Unity VSP doctor redos are handled within the available coverage window, and non-adapt reimbursements may require a new VSP authorization.",
+      "Some specialty, outsourced, out-of-range, or vendor-directed orders may follow separate manufacturer or subcontractor policies.",
+      "Manufacturer credits and refunds may require returned lenses even when standard Artisan AR claims do not.",
+    ],
+  },
+  {
+    id: "support-and-confidentiality",
+    title: "Support and Confidentiality",
     icon: FileText,
-    summary: "Private pricing and customer-specific terms must stay inside the authorized practice team.",
+    summary: "How private pricing and policy tools should be handled inside each authorized practice.",
     body: [
       "Price lists, program pricing, partner terms, and customer specific pricing are confidential and should not be shared outside the authorized practice team.",
-    ],
-  },
-  {
-    id: "warranty-remake-guidelines",
-    title: "Warranty and Remake Guidelines",
-    icon: ShieldCheck,
-    summary: "Fair-use guidance for warranty and remake support.",
-    body: [
-      "Warranty and remake support is designed to help practices serve patients well while protecting fair use of lab resources.",
-      "Warranty terms may vary by product, coating, vendor, material, or program.",
-    ],
-  },
-  {
-    id: "returned-lens-requirements",
-    title: "Returned Lens Requirements",
-    icon: ClipboardList,
-    summary: "When lenses may or may not need to be returned for warranty or remake review.",
-    body: [
-      "Some warranty claims do not require returned lenses, including AR and scratch coating warranty usage as stated above.",
-      "Lab error remake evaluation may require returned lenses for inspection and quality control.",
-    ],
-  },
-  {
-    id: "patient-owned-frame-risk",
-    title: "Patient Owned Frame Risk",
-    icon: AlertTriangle,
-    summary: "Practice responsibility for patient-owned frame handling risk.",
-    body: [
-      "Patient owned frames are processed at the practice's risk. The lab is not liable for breakage during handling or processing.",
-      "Practices should review patient-owned frame condition and suitability before sending orders to the lab.",
-    ],
-  },
-  {
-    id: "outsourced-specialty-orders",
-    title: "Outsourced or Specialty Orders",
-    icon: Wrench,
-    summary: "Special handling guidance for out-of-range, specialty, vendor-required, or outsourced work.",
-    body: [
-      "Some specialty, out of range, or vendor required orders may follow separate manufacturer or subcontractor policies.",
-      "When special handling applies, the practice should be notified when possible before the order is completed.",
-    ],
-  },
-  {
-    id: "program-eligibility",
-    title: "Program Eligibility",
-    icon: Handshake,
-    summary: "Eligibility guidance for promotions, discounts, and partner programs.",
-    body: [
-      "Promotions, discounts, multiple pair benefits, and partner programs may be subject to eligibility rules, product requirements, timing rules, and account standing.",
-    ],
-  },
-  {
-    id: "contact-support",
-    title: "Contact and Support",
-    icon: Users,
-    summary: "Where practices should go for policy questions and customer service support.",
-    body: [
       "For questions about policies, practices should contact customer service or their Artisan Lab Network representative.",
       "Customer service contacts are available on the Provider Resources page.",
     ],
@@ -258,9 +182,6 @@ export default async function ArtisanPoliciesPage() {
       <section className="border-b border-[#dfd2bf] bg-[#fbf8f3] px-5 py-6 md:px-10">
         <nav aria-label="Policy categories" className="relative mx-auto max-w-7xl">
           <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-14 bg-gradient-to-l from-[#fbf8f3] to-transparent" aria-hidden="true" />
-          <div className="pointer-events-none absolute -bottom-3 right-2 z-10 hidden rounded-full border border-[#dfd2bf] bg-white/92 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8a7654] shadow-sm sm:block">
-            Scroll for more
-          </div>
           <div className="flex gap-2 overflow-x-auto overscroll-x-contain pb-4 pr-14 [scrollbar-gutter:stable] [scrollbar-width:thin]">
             {policySections.map((section) => (
               <a key={section.id} href={`#${section.id}`} className="inline-flex min-h-10 shrink-0 items-center rounded-full border border-[#dfd2bf] bg-white px-4 text-sm font-semibold text-[#122033] transition hover:border-[#c9b28b] hover:bg-[#eadcc6]">
@@ -286,9 +207,9 @@ function PolicyCard({ section, featured }: { section: PolicySection; featured?: 
   const Icon = section.icon;
 
   return (
-    <section id={section.id} className={`scroll-mt-24 rounded-[2rem] border bg-white/90 p-5 shadow-[0_18px_48px_rgba(18,32,51,0.08)] md:p-6 ${featured ? "border-[#d6bd84] ring-1 ring-[#f2dfad]" : "border-[#dfd2bf]"}`}>
+    <section id={section.id} className={`scroll-mt-24 rounded-[12px] border bg-white/90 p-5 shadow-[0_18px_48px_rgba(18,32,51,0.08)] md:p-6 ${featured ? "border-[#d6bd84] ring-1 ring-[#f2dfad]" : "border-[#dfd2bf]"}`}>
       <div className="flex items-start gap-4">
-        <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl ${featured ? "bg-[#122033] text-[#d4c09a]" : "bg-[#fbf8f3] text-[#8a7654]"}`}>
+        <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-[10px] ${featured ? "bg-[#122033] text-[#d4c09a]" : "bg-[#fbf8f3] text-[#8a7654]"}`}>
           <Icon className="h-5 w-5" aria-hidden="true" />
         </span>
         <div>
@@ -299,14 +220,14 @@ function PolicyCard({ section, featured }: { section: PolicySection; featured?: 
 
       <div className="mt-5 grid gap-3">
         {section.body.map((line) => (
-          <p key={line} className="rounded-2xl border border-[#eadfce] bg-[#fbf8f3] px-4 py-3 text-sm leading-7 text-[#4d5664]">
+          <p key={line} className="rounded-[10px] border border-[#eadfce] bg-[#fbf8f3] px-4 py-3 text-sm leading-7 text-[#4d5664]">
             {line}
           </p>
         ))}
       </div>
 
       {section.terms ? (
-        <div className="mt-5 overflow-hidden rounded-2xl border border-[#eadfce]">
+        <div className="mt-5 overflow-hidden rounded-[10px] border border-[#eadfce]">
           {section.terms.map((term) => (
             <div key={term.label} className="grid gap-2 border-b border-[#eadfce] bg-white px-4 py-3 text-sm last:border-b-0 sm:grid-cols-[1fr_auto] sm:items-center">
               <span className="font-semibold text-[#122033]">{term.label}</span>

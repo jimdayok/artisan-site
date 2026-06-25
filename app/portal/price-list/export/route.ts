@@ -57,6 +57,11 @@ const PHOTO_COLUMN_X = MARGIN + 424;
 const POLAR_COLUMN_X = MARGIN + 484;
 const TABLE_ROW_HEIGHT = 19;
 const TABLE_HEADER_HEIGHT = 20;
+const LAB_CONTACTS = [
+  "Pacific Artisan Labs 877.390.6900 customerservice@pacificartisanlabs.com",
+  "Peak Artisan Labs 833.690.4321 customerservice@peakartisanlabs.com",
+  "Pike Artisan Labs 888.239.0303 customerservice@pikeartisanlabs.com",
+] as const;
 
 function cleanText(value: unknown) {
   return String(value ?? "")
@@ -377,6 +382,38 @@ async function buildPriceListPdf({
     });
   };
 
+  const drawLabContactsPanel = () => {
+    ensureSpace(54);
+    page.drawRectangle({
+      x: MARGIN,
+      y: y - 39,
+      width: CONTENT_WIDTH,
+      height: 42,
+      color: SOFT_FILL,
+      borderColor: RULE,
+      borderWidth: 0.8,
+    });
+    page.drawText("Lab Contact Information", {
+      x: MARGIN + 10,
+      y: y - 11,
+      size: 8.6,
+      font: bold,
+      color: NAVY,
+    });
+    let contactY = y - 23;
+    for (const contact of LAB_CONTACTS) {
+      page.drawText(fitText(regular, contact, CONTENT_WIDTH - 20, 7.1), {
+        x: MARGIN + 10,
+        y: contactY,
+        size: 7.1,
+        font: regular,
+        color: TEXT,
+      });
+      contactY -= 10;
+    }
+    y -= 50;
+  };
+
   const drawBrandRows = ({
     category,
     tier,
@@ -434,7 +471,7 @@ async function buildPriceListPdf({
           });
         });
         page.drawLine({
-          start: { x: MARGIN, y: rowTop - TABLE_ROW_HEIGHT },
+          start: { x: DESIGN_COLUMN_X, y: rowTop - TABLE_ROW_HEIGHT },
           end: { x: PAGE_WIDTH - MARGIN, y: rowTop - TABLE_ROW_HEIGHT },
           color: RULE,
           thickness: 0.45,
@@ -770,6 +807,7 @@ async function buildPriceListPdf({
     { x: MARGIN, y, size: 9, font: regular, color: MUTED }
   );
   y -= 25;
+  drawLabContactsPanel();
 
   const summaries = summarizeDesigns(priceList, mode);
   const categoryGroups = new Map<PriceDisplayCategory, typeof summaries>();
@@ -848,8 +886,10 @@ async function buildPriceListPdf({
     );
   }
 
-  for (const section of normalizeAddOnSections(priceList.addOnSections)) {
+  const normalizedAddOnSections = normalizeAddOnSections(priceList.addOnSections);
+  for (const [sectionIndex, section] of normalizedAddOnSections.entries()) {
     if (!section.items.length) continue;
+    if (sectionIndex > 0) y -= 8;
     ensureSpace(34 + Math.ceil(section.items.length / (section.items.length > 8 ? 2 : 1)) * 18);
     sectionTitle(section.title);
     drawCompactItemGrid(

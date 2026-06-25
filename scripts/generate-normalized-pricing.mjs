@@ -640,6 +640,12 @@ async function readTargetCodes() {
   };
 }
 
+async function writeJson(filePath, value, { pretty = true } = {}) {
+  const suffix = "\n";
+  const payload = pretty ? JSON.stringify(value, null, 2) : JSON.stringify(value);
+  await writeFile(filePath, `${payload}${suffix}`, "utf8");
+}
+
 async function main() {
   await mkdir(normalizedDir, { recursive: true });
   await mkdir(diagnosticsDir, { recursive: true });
@@ -656,6 +662,7 @@ async function main() {
   const artisanPortfolioRuleReport = [];
   const designTypeValidationReport = [];
   for (const code of targetCodes) {
+    console.log(`[pricing:normalize] normalizing ${code}`);
     const source = await loadSourcePayloadForCode(code);
     let payload;
 
@@ -709,11 +716,12 @@ async function main() {
       designTypeValidationReport.push(correction);
     }
 
-    await writeFile(
-      path.join(normalizedDir, `${code}.json`),
-      `${JSON.stringify(normalizedPayload, null, 2)}\n`,
-      "utf8"
+    console.log(
+      `[pricing:normalize] writing normalized payload for ${code} (${normalizedRowsResult.rows.length} rows)`
     );
+    await writeJson(path.join(normalizedDir, `${code}.json`), normalizedPayload, {
+      pretty: false,
+    });
 
     payload = null;
 
@@ -868,151 +876,82 @@ async function main() {
     }
   }
 
-  await writeFile(
-    path.join(diagnosticsDir, "price-list-display-validation.json"),
-    `${JSON.stringify(
-      {
-        generatedAt: new Date().toISOString(),
-        legacyCanonicalMap: {},
-        ignoredCodes: ignoreCodes,
-        requestedTargetCodes: targetCodes,
-        missingSourceCodes: targetCodes.filter((code) => {
-          const list = validation.find((entry) => entry.code === code);
-          return !list || list.rows === 0;
-        }),
-        lists: validation,
-      },
-      null,
-      2
-    )}\n`,
-    "utf8"
-  );
+  await writeJson(path.join(diagnosticsDir, "price-list-display-validation.json"), {
+    generatedAt: new Date().toISOString(),
+    legacyCanonicalMap: {},
+    ignoredCodes: ignoreCodes,
+    requestedTargetCodes: targetCodes,
+    missingSourceCodes: targetCodes.filter((code) => {
+      const list = validation.find((entry) => entry.code === code);
+      return !list || list.rows === 0;
+    }),
+    lists: validation,
+  });
 
-  await writeFile(
-    path.join(diagnosticsDir, "design-type-validation-report.json"),
-    `${JSON.stringify(
-      {
-        generatedAt: new Date().toISOString(),
-        scope: "E-series",
-        report: designTypeValidationReport.sort(
-          (a, b) =>
-            compareText(a.priceListCode, b.priceListCode) ||
-            compareText(a.productStyle, b.productStyle)
-        ),
-      },
-      null,
-      2
-    )}\n`,
-    "utf8"
-  );
+  await writeJson(path.join(diagnosticsDir, "design-type-validation-report.json"), {
+    generatedAt: new Date().toISOString(),
+    scope: "E-series",
+    report: designTypeValidationReport.sort(
+      (a, b) =>
+        compareText(a.priceListCode, b.priceListCode) ||
+        compareText(a.productStyle, b.productStyle)
+    ),
+  });
 
-  await writeFile(
-    path.join(diagnosticsDir, "product-taxonomy-report.json"),
-    `${JSON.stringify(
-      {
-        generatedAt: new Date().toISOString(),
-        scope: ["G6", "P6", "A6"],
-        taxonomyBrandMap: Object.fromEntries(taxonomyBrandMap),
-        hiddenBrandSet: [...hiddenBrandSet],
-        report: taxonomyReport,
-      },
-      null,
-      2
-    )}\n`,
-    "utf8"
-  );
+  await writeJson(path.join(diagnosticsDir, "product-taxonomy-report.json"), {
+    generatedAt: new Date().toISOString(),
+    scope: ["G6", "P6", "A6"],
+    taxonomyBrandMap: Object.fromEntries(taxonomyBrandMap),
+    hiddenBrandSet: [...hiddenBrandSet],
+    report: taxonomyReport,
+  });
 
-  await writeFile(
-    path.join(diagnosticsDir, "material-validation-report.json"),
-    `${JSON.stringify(
-      {
-        generatedAt: new Date().toISOString(),
-        scope: ["G6", "P6", "A6"],
-        report: materialReport,
-      },
-      null,
-      2
-    )}\n`,
-    "utf8"
-  );
+  await writeJson(path.join(diagnosticsDir, "material-validation-report.json"), {
+    generatedAt: new Date().toISOString(),
+    scope: ["G6", "P6", "A6"],
+    report: materialReport,
+  });
 
-  await writeFile(
-    path.join(diagnosticsDir, "color-option-validation-report.json"),
-    `${JSON.stringify(
-      {
-        generatedAt: new Date().toISOString(),
-        scope: ["G6", "P6", "A6"],
-        report: colorReport,
-      },
-      null,
-      2
-    )}\n`,
-    "utf8"
-  );
+  await writeJson(path.join(diagnosticsDir, "color-option-validation-report.json"), {
+    generatedAt: new Date().toISOString(),
+    scope: ["G6", "P6", "A6"],
+    report: colorReport,
+  });
 
-  await writeFile(
-    path.join(diagnosticsDir, "ar-validation-report.json"),
-    `${JSON.stringify(
-      {
-        generatedAt: new Date().toISOString(),
-        scope: ["G6", "P6", "A6"],
-        report: arReport,
-      },
-      null,
-      2
-    )}\n`,
-    "utf8"
-  );
+  await writeJson(path.join(diagnosticsDir, "ar-validation-report.json"), {
+    generatedAt: new Date().toISOString(),
+    scope: ["G6", "P6", "A6"],
+    report: arReport,
+  });
 
-  await writeFile(
-    path.join(diagnosticsDir, "pdf-parity-report.json"),
-    `${JSON.stringify(
-      {
-        generatedAt: new Date().toISOString(),
-        scope: ["G6", "P6", "A6"],
-        sourceArtifacts: [
-          "private-source/price-lists/alnpricing_2026_G6.pdf",
-          "private-source/price-lists/alnpricing_2026_P6.pdf",
-          "private-source/price-lists/alnpricing_2026_A6.pdf",
-          "private-source/portal/lookup_docs/Lookup.xlsx",
-          "private-source/portal/lookup_docs/Lookup_AR.xlsx",
-          "private-source/portal/lookup_docs/Lookup_Mat.xlsx",
-        ],
-        report: parityReport,
-      },
-      null,
-      2
-    )}\n`,
-    "utf8"
-  );
+  await writeJson(path.join(diagnosticsDir, "pdf-parity-report.json"), {
+    generatedAt: new Date().toISOString(),
+    scope: ["G6", "P6", "A6"],
+    sourceArtifacts: [
+      "private-source/price-lists/alnpricing_2026_G6.pdf",
+      "private-source/price-lists/alnpricing_2026_P6.pdf",
+      "private-source/price-lists/alnpricing_2026_A6.pdf",
+      "private-source/portal/lookup_docs/Lookup.xlsx",
+      "private-source/portal/lookup_docs/Lookup_AR.xlsx",
+      "private-source/portal/lookup_docs/Lookup_Mat.xlsx",
+    ],
+    report: parityReport,
+  });
 
-  await writeFile(
-    path.join(diagnosticsDir, "lensmat-category-report.json"),
-    `${JSON.stringify(
-      {
-        generatedAt: new Date().toISOString(),
-        scope: ["G6", "P6", "A6"],
-        report: lensMatRuleReport,
-      },
-      null,
-      2
-    )}\n`,
-    "utf8"
-  );
+  await writeJson(path.join(diagnosticsDir, "lensmat-category-report.json"), {
+    generatedAt: new Date().toISOString(),
+    scope: ["G6", "P6", "A6"],
+    report: lensMatRuleReport,
+  });
 
-  await writeFile(
+  await writeJson(
     path.join(diagnosticsDir, "artisan-portfolio-normalization-report.json"),
-    `${JSON.stringify(
-      {
-        generatedAt: new Date().toISOString(),
-        scope: ["G6", "P6", "A6"],
-        authoritativeStyles: ["DS*", "PS*", "GS*", "CFB", "SD Concept", "SD Reach"],
-        report: artisanPortfolioRuleReport,
-      },
-      null,
-      2
-    )}\n`,
-    "utf8"
+    {
+      generatedAt: new Date().toISOString(),
+      scope: ["G6", "P6", "A6"],
+      authoritativeStyles: ["DS*", "PS*", "GS*", "CFB", "SD Concept", "SD Reach"],
+      report: artisanPortfolioRuleReport,
+    }
   );
 
   console.log(

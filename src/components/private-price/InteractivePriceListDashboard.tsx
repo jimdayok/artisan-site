@@ -434,6 +434,26 @@ function normalizePhotoFamily(value: string) {
   return raw;
 }
 
+function optionGroupForRow(row: PriceListPricingRow): MaterialGroup {
+  if (row.materialColor !== "Photochromic") return row.materialColor as MaterialGroup;
+
+  const normalizedFamily = normalizePhotoFamily(row.colorBrand || "Other Photo");
+  if (/POLARIZED|DRIVEWEAR/i.test(normalizedFamily)) return "Polarized";
+
+  const source = [
+    row.colorBrand,
+    row.availableColors.join(" "),
+    row.rawProductNames.join(" "),
+  ]
+    .join(" ")
+    .toUpperCase();
+
+  if (source.includes("POLAR")) return "Polarized";
+  if (source.includes("DRIVEWEAR")) return "Polarized";
+
+  return "Photochromic";
+}
+
 function extractDesignVersions(rows: PriceListPricingRow[]) {
   return [...new Set(rows.flatMap((row) => row.rawProductNames.map((value) => value.trim())).filter(Boolean))]
     .map((value) =>
@@ -1647,7 +1667,7 @@ function buildOptionFamilies(
 ): OptionFamily[] {
   const map = new Map<string, OptionFamily>();
   for (const row of rows) {
-    if (row.materialColor !== group) continue;
+    if (optionGroupForRow(row) !== group) continue;
     const key = group === "Photochromic" ? normalizePhotoFamily(row.colorBrand || "Other Photo") : row.colorBrand || "Other";
     const current =
       map.get(key) ||

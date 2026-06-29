@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
+import { gunzipSync } from "node:zlib";
 import {
   getPricingLookupData,
   normalizeLookupKey as normalizeWorkbookLookupKey,
@@ -11,6 +12,13 @@ const root = process.cwd();
 const generatedDir = path.join(root, "private-source", "pricing", "generated");
 const normalizedDir = path.join(generatedDir, "normalized");
 const diagnosticsDir = path.join(generatedDir, "diagnostics");
+const packagedNormalizedDir = path.join(
+  root,
+  "lib",
+  "pricing",
+  "generated",
+  "normalized"
+);
 const dashboardIndexPath = path.join(
   root,
   "private-source",
@@ -20,6 +28,16 @@ const dashboardIndexPath = path.join(
   "accounts_index.json"
 );
 const manifestPath = path.join(generatedDir, "pricing-manifest.json");
+const SITE_SUPPORTED_CODES = new Set([
+  "A6",
+  "B5",
+  "G6",
+  "M5",
+  "P6",
+  "S5",
+  "VD",
+  "Y5",
+]);
 
 const materialAddOnsByCode = {
   G6: [],
@@ -134,20 +152,52 @@ async function readJson(filePath) {
   return JSON.parse(await readFile(filePath, "utf8"));
 }
 
+async function readGzipJson(filePath) {
+  return JSON.parse(gunzipSync(await readFile(filePath)).toString("utf8"));
+}
+
 async function loadSourcePayloadForCode(code) {
   const standardPath = getStandardSourcePath(code);
   if (existsSync(standardPath)) {
-    return {
-      kind: "standard",
-      payload: await readJson(standardPath),
-    };
+    try {
+      return {
+        kind: "standard",
+        payload: await readJson(standardPath),
+      };
+    } catch (error) {
+      console.warn(
+        `[pricing:normalize] unable to read ${path.basename(
+          standardPath
+        )}; falling back to packaged payload for ${code}: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      );
+    }
   }
 
   const dviPath = getDviSourcePath(code);
   if (existsSync(dviPath)) {
+    try {
+      return {
+        kind: "dvi",
+        payload: await readJson(dviPath),
+      };
+    } catch (error) {
+      console.warn(
+        `[pricing:normalize] unable to read ${path.basename(
+          dviPath
+        )}; falling back to packaged payload for ${code}: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      );
+    }
+  }
+
+  const packagedPath = path.join(packagedNormalizedDir, `${code}.json.gz`);
+  if (existsSync(packagedPath)) {
     return {
-      kind: "dvi",
-      payload: await readJson(dviPath),
+      kind: "standard",
+      payload: await readGzipJson(packagedPath),
     };
   }
 
@@ -610,8 +660,16 @@ async function readTargetCodes() {
     }
   }
 
+  const filteredCodes = [...targetCodes]
+    .filter((code) => SITE_SUPPORTED_CODES.has(code))
+    .filter(
+      (code) =>
+        existsSync(getStandardSourcePath(code)) || existsSync(getDviSourcePath(code))
+    )
+    .sort();
+
   return {
-    targetCodes: [...targetCodes].sort(),
+    targetCodes: filteredCodes,
     ignoreCodes: [],
   };
 }

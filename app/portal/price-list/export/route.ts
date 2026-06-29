@@ -526,11 +526,11 @@ async function buildPriceListPdf({
 
   const drawLabShowcasePage = () => {
     addPage(true);
-    const statementTop = PAGE_HEIGHT - 176;
-    const panelBottom = 76;
-    const panelHeight = 222;
+    const statementTop = PAGE_HEIGHT - 170;
+    const panelBottom = 88;
+    const panelHeight = 458;
     const panelTop = panelBottom + panelHeight;
-    const gap = 14;
+    const gap = 16;
     const columnWidth = (CONTENT_WIDTH - gap * 2) / 3;
 
     page.drawText("Questions or order support?", {
@@ -548,7 +548,7 @@ async function buildPriceListPdf({
       color: NAVY,
     });
     page.drawText(
-      "Contact details are collected here so the pricing pages stay clean and easy to scan.",
+      "Each lab logo is paired with direct support details here so the pricing pages stay clean and easy to scan.",
       {
         x: MARGIN,
         y: statementTop - 35,
@@ -567,85 +567,100 @@ async function buildPriceListPdf({
       borderColor: RULE,
       borderWidth: 0.9,
     });
-    page.drawRectangle({
-      x: MARGIN,
-      y: panelTop - 9,
-      width: CONTENT_WIDTH,
-      height: 9,
-      color: NAVY,
-    });
-    page.drawText("Lab Contact Information", {
-      x: MARGIN + 16,
-      y: panelTop - 28,
-      size: 15,
-      font: bold,
-      color: rgb(1, 1, 1),
-    });
-
-    const logoCardTop = panelTop - 48;
-    const logoCardHeight = 58;
+    const cardTop = panelTop - 24;
+    const cardHeight = 392;
+    const logoPanelHeight = 118;
     labShowcases.forEach((lab, index) => {
       const x = MARGIN + index * (columnWidth + gap);
       page.drawRectangle({
         x,
-        y: logoCardTop - logoCardHeight,
+        y: cardTop - cardHeight,
         width: columnWidth,
-        height: logoCardHeight,
+        height: cardHeight,
         color: rgb(1, 1, 1),
         borderColor: RULE,
-        borderWidth: 0.8,
+        borderWidth: 0.9,
       });
       page.drawRectangle({
         x,
-        y: logoCardTop - 4,
+        y: cardTop - 5,
         width: columnWidth,
-        height: 4,
+        height: 5,
         color: lab.accent,
       });
+      page.drawRectangle({
+        x: x + 10,
+        y: cardTop - logoPanelHeight - 14,
+        width: columnWidth - 20,
+        height: logoPanelHeight,
+        color: lab.panel,
+      });
 
-      const imageBounds = lab.image.scaleToFit(columnWidth - 22, logoCardHeight - 20);
+      const imageBounds = lab.image.scaleToFit(columnWidth - 28, logoPanelHeight - 28);
       page.drawImage(lab.image, {
         x: x + (columnWidth - imageBounds.width) / 2,
-        y: logoCardTop - logoCardHeight + (logoCardHeight - imageBounds.height) / 2,
+        y:
+          cardTop -
+          logoPanelHeight -
+          14 +
+          (logoPanelHeight - imageBounds.height) / 2,
         width: imageBounds.width,
         height: imageBounds.height,
       });
-    });
-
-    const infoTop = logoCardTop - 82;
-    labShowcases.forEach((lab, index) => {
-      const x = MARGIN + index * (columnWidth + gap);
-      page.drawText(fitText(bold, lab.name, columnWidth - 18, 8.3), {
-        x: x + 9,
-        y: infoTop,
-        size: 8.3,
+      page.drawText(fitText(bold, lab.name, columnWidth - 20, 10.4), {
+        x: x + 10,
+        y: cardTop - 154,
+        size: 10.4,
         font: bold,
         color: NAVY,
       });
       page.drawText("Customer Support", {
-        x: x + 9,
-        y: infoTop - 14,
-        size: 6.7,
+        x: x + 10,
+        y: cardTop - 171,
+        size: 6.9,
         font: bold,
         color: lab.accent,
       });
-      page.drawLine({
-        start: { x: x + 9, y: infoTop - 20 },
-        end: { x: x + columnWidth - 9, y: infoTop - 20 },
-        color: RULE,
-        thickness: 0.8,
+      page.drawRectangle({
+        x: x + 10,
+        y: cardTop - 306,
+        width: columnWidth - 20,
+        height: 112,
+        color: SOFT_FILL,
+        borderColor: RULE,
+        borderWidth: 0.7,
+      });
+      page.drawText("Phone", {
+        x: x + 18,
+        y: cardTop - 215,
+        size: 6.8,
+        font: bold,
+        color: MUTED,
       });
       page.drawText(lab.phone, {
-        x: x + 9,
-        y: infoTop - 37,
-        size: 8.1,
+        x: x + 18,
+        y: cardTop - 234,
+        size: 10.2,
         font: bold,
         color: NAVY,
       });
-      page.drawText(fitText(regular, lab.email, columnWidth - 18, 6.8), {
-        x: x + 9,
-        y: infoTop - 54,
+      page.drawLine({
+        start: { x: x + 18, y: cardTop - 247 },
+        end: { x: x + columnWidth - 18, y: cardTop - 247 },
+        color: RULE,
+        thickness: 0.8,
+      });
+      page.drawText("Email", {
+        x: x + 18,
+        y: cardTop - 267,
         size: 6.8,
+        font: bold,
+        color: MUTED,
+      });
+      page.drawText(fitText(regular, lab.email, columnWidth - 36, 7.2), {
+        x: x + 18,
+        y: cardTop - 286,
+        size: 7.2,
         font: regular,
         color: TEXT,
       });

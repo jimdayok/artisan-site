@@ -3,7 +3,7 @@ import { createReadStream } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import readline from "node:readline";
-import { getPricingLookupData, normalizeLookupKey, stripSdPrefix } from "../lib/pricing/lookupData.mjs";
+import { getPricingLookupData, normalizeLookupKey } from "../lib/pricing/lookupData.mjs";
 
 const root = process.cwd();
 const generatedDir = path.join(root, "private-source", "pricing", "generated");
@@ -77,7 +77,10 @@ async function collectRawProductNamesFromFile(filePath) {
 }
 
 async function readLookupKeys() {
-  const lookupData = await getPricingLookupData({ rootDir: root });
+  const lookupData = await getPricingLookupData({
+    rootDir: root,
+    preferSnapshot: false,
+  });
   const keys = new Set();
   for (const row of lookupData.workbooks.products.rows) {
     const key = normalizeKey(row.lenstyle);
@@ -109,7 +112,7 @@ async function main() {
 
     const rawNames = await collectRawProductNamesFromFile(sourcePath);
     for (const rawName of rawNames) {
-      const rawStyleName = stripSdPrefix(String(rawName ?? "").trim());
+      const rawStyleName = String(rawName ?? "").trim();
       const normalizedStyleKey = normalizeKey(rawStyleName);
       if (!rawStyleName || !normalizedStyleKey || lookupKeys.has(normalizedStyleKey)) {
         continue;

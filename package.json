@@ -17,6 +17,7 @@
     "portal:generate-dashboard-v1:launch-safe": "node scripts/generate-portal-dashboard-v1.mjs --ignore-empty-summary-rows --allow-duplicate-acct-id --allow-invalid-user-account-links",
     "portal:bundle-dashboard-v1": "node scripts/bundle-portal-dashboard-v1.mjs",
     "locator:generate": "node scripts/generate-patient-locator-data.mjs",
+    "build:pricing": "node scripts/build-pricing.mjs",
     "pricing:generate": "node scripts/generate-price-list-data.mjs",
     "pricing:normalize": "NODE_OPTIONS='--max-old-space-size=12288' node scripts/generate-normalized-pricing.mjs",
     "pricing:inspect-dvi": "node scripts/pricing-inspect-dvi.mjs",

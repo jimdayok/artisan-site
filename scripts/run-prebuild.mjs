@@ -6,10 +6,7 @@ const steps = [
   "portal:generate-dashboard-v1:launch-safe",
   "portal:bundle-dashboard-v1",
   "locator:generate",
-  "pricing:generate-dvi",
-  "pricing:generate",
-  "pricing:normalize",
-  "pricing:registry",
+  "build:pricing",
 ];
 
 const rootDir = process.cwd();
@@ -62,7 +59,7 @@ function hasCommittedPricingArtifacts() {
 }
 
 function shouldSkipPricingRebuild(step) {
-  if (!step.startsWith("pricing:")) return false;
+  if (!(step.startsWith("pricing:") || step === "build:pricing")) return false;
   if (!isVercelBuild()) return false;
   if (shouldForcePricingRebuild()) return false;
   return hasCommittedPricingArtifacts();

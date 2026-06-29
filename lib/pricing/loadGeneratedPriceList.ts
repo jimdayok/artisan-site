@@ -1,8 +1,8 @@
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { gunzipSync } from "node:zlib";
-import ExcelJS from "exceljs";
 import type { GeneratedPriceListData, PriceListAddOnSection, PriceListArCoating } from "@/lib/pricing/types";
+import { getPricingLookupData, stripSdPrefix } from "@/lib/pricing/lookupData.mjs";
 
 type DviRow = {
   priceListCode: string;
@@ -62,7 +62,7 @@ function canonicalPriceListCode(code: string) {
 }
 
 function normalizeDesignStyleName(value: string) {
-  return String(value || "")
+  return stripSdPrefix(String(value || ""))
     .replace(/[™®]/g, "")
     .replace(/\*/g, "")
     .replace(/\s+/g, " ")
@@ -77,62 +77,39 @@ type LookupMaps = {
 
 let lookupMapsPromise: Promise<LookupMaps> | null = null;
 
-async function readFirstWorksheetRows(filePath: string) {
-  if (!existsSync(filePath)) return [] as string[][];
-  const workbook = new ExcelJS.Workbook();
-  await workbook.xlsx.readFile(filePath);
-  const worksheet = workbook.worksheets[0];
-  if (!worksheet) return [] as string[][];
-  const rows: string[][] = [];
-  worksheet.eachRow((row) => {
-    const values = Array.isArray(row.values) ? row.values.slice(1) : [];
-    rows.push(values.map((value) => String(value ?? "").trim()));
-  });
-  return rows;
-}
-
 async function loadLookupMaps(): Promise<LookupMaps> {
   if (lookupMapsPromise) return lookupMapsPromise;
   lookupMapsPromise = (async () => {
-    const root = process.cwd();
-    const docsDir = path.join(root, "private-source", "portal", "lookup_docs");
-    const lookupRows = await readFirstWorksheetRows(path.join(docsDir, "Lookup.xlsx"));
-    const materialRows = await readFirstWorksheetRows(path.join(docsDir, "Lookup_Mat.xlsx"));
-    const arRows = await readFirstWorksheetRows(path.join(docsDir, "Lookup_AR.xlsx"));
+    const lookupData = await getPricingLookupData({ rootDir: process.cwd() });
 
     const productByDvi = new Map<string, { name: string; designType: string; brand: string }>();
-    for (const row of lookupRows.slice(1)) {
-      const dvi = normalizeLookupKey(row[0] || "");
-      const name = (row[1] || "").trim();
+    for (const row of lookupData.workbooks.products.rows) {
+      const dvi = normalizeLookupKey(row.lenstyle || "");
+      const name = stripSdPrefix(row.styleconsollidated || "");
       if (!dvi || !name) continue;
       productByDvi.set(dvi, {
         name,
-        designType: (row[3] || "").trim(),
-        brand: (row[5] || "").trim(),
+        designType: String(row["Type Revised"] || "").trim(),
+        brand: String(row.lensbrand || "").trim(),
       });
     }
 
     const materialByDvi = new Map<string, string>();
-    for (const row of materialRows.slice(1)) {
-      const dvi = normalizeLookupKey(row[0] || "");
-      const name = (row[1] || "").trim();
+    for (const row of lookupData.workbooks.materials.rows) {
+      const dvi = normalizeLookupKey(row.lensmat || "");
+      const name = String(row["Material Name"] || "").trim();
       if (!dvi || !name) continue;
       materialByDvi.set(dvi, name);
     }
 
     const arByCode = new Map<string, { name: string; brand: string }>();
-    for (const row of arRows.slice(1)) {
-      const dviCode = normalizeLookupKey(row[0] || "");
-      const name = (row[1] || "").trim();
-      const brand = (row[2] || "").trim();
+    for (const row of lookupData.workbooks.ar.rows) {
+      const dviCode = normalizeLookupKey(row.dvi || "");
+      const name = String(row.name || "").trim();
+      const brand = String(row.brand || "").trim();
       if (!dviCode || !name) continue;
       arByCode.set(dviCode, { name, brand });
     }
-
-    // Authoritative ALN overrides.
-    arByCode.set("MMI", { name: "Mirror Matched", brand: "Mirror Treatments" });
-    arByCode.set("GMR", { name: "Gradient Mirror", brand: "Mirror Treatments" });
-    arByCode.set("DDE", { name: "Diamond Defence", brand: "Protection Options" });
 
     return { productByDvi, materialByDvi, arByCode };
   })();

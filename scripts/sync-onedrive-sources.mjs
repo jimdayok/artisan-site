@@ -29,8 +29,7 @@ const sourceManifest = [
     destination: path.join(
       root,
       "private-source",
-      "portal",
-      "lookup_docs",
+      "price-lists",
       "Lookup.xlsx"
     ),
     required: true,
@@ -78,7 +77,7 @@ const generatorCommands = [
   ["npm", ["run", "portal:generate-dashboard-v1:launch-safe"]],
   ["npm", ["run", "portal:bundle-dashboard-v1"]],
   ["npm", ["run", "locator:generate"]],
-  ["npm", ["run", "pricing:generate"]],
+  ["npm", ["run", "build:pricing"]],
 ];
 
 const commitPaths = [

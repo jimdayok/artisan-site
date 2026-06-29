@@ -57,11 +57,42 @@ const PHOTO_COLUMN_X = MARGIN + 424;
 const POLAR_COLUMN_X = MARGIN + 484;
 const TABLE_ROW_HEIGHT = 19;
 const TABLE_HEADER_HEIGHT = 20;
-const LAB_CONTACTS = [
-  "Pacific Artisan Labs 877.390.6900 customerservice@pacificartisanlabs.com",
-  "Peak Artisan Labs 833.690.4321 customerservice@peakartisanlabs.com",
-  "Pike Artisan Labs 888.239.0303 customerservice@pikeartisanlabs.com",
-] as const;
+
+type LabShowcase = {
+  name: string;
+  phone: string;
+  email: string;
+  imagePath: string;
+  accent: ReturnType<typeof rgb>;
+  panel: ReturnType<typeof rgb>;
+};
+
+const LAB_SHOWCASES: LabShowcase[] = [
+  {
+    name: "Pacific Artisan Labs",
+    phone: "877.390.6900",
+    email: "customerservice@pacificartisanlabs.com",
+    imagePath: "logos/PAL_2CTan.png",
+    accent: rgb(133 / 255, 111 / 255, 78 / 255),
+    panel: rgb(245 / 255, 239 / 255, 231 / 255),
+  },
+  {
+    name: "Peak Artisan Labs",
+    phone: "833.690.4321",
+    email: "customerservice@peakartisanlabs.com",
+    imagePath: "logos/Peak_Artisan_Logo 9-1-23_FINAL.png",
+    accent: rgb(83 / 255, 127 / 255, 158 / 255),
+    panel: rgb(235 / 255, 243 / 255, 248 / 255),
+  },
+  {
+    name: "Pike Artisan Labs",
+    phone: "888.239.0303",
+    email: "customerservice@pikeartisanlabs.com",
+    imagePath: "logos/Pike_Labs_Logo-4C.png",
+    accent: rgb(150 / 255, 56 / 255, 51 / 255),
+    panel: rgb(249 / 255, 238 / 255, 235 / 255),
+  },
+];
 
 function cleanText(value: unknown) {
   return String(value ?? "")
@@ -121,6 +152,12 @@ function money(row: PriceListPricingRow | undefined, mode: PriceMode) {
   const value = rowPrice(row, mode);
   if (!Number.isFinite(value) || value <= 0) return "-";
   return `$${value.toFixed(2)}+`;
+}
+
+async function embedImageFromPublic(document: PDFDocument, relativePath: string) {
+  const imageBytes = await readFile(path.join(process.cwd(), "public", relativePath));
+  if (/\.png$/i.test(relativePath)) return document.embedPng(imageBytes);
+  return document.embedJpg(imageBytes);
 }
 
 function priceText(value: number | string) {
@@ -211,6 +248,12 @@ async function buildPriceListPdf({
     path.join(process.cwd(), "public", "aln-white-logo.png")
   );
   const logo = await document.embedPng(logoBytes);
+  const labShowcases = await Promise.all(
+    LAB_SHOWCASES.map(async (lab) => ({
+      ...lab,
+      image: await embedImageFromPublic(document, lab.imagePath),
+    }))
+  );
   const pages: PDFPage[] = [];
   let page!: PDFPage;
   let y = 0;
@@ -382,36 +425,213 @@ async function buildPriceListPdf({
     });
   };
 
-  const drawLabContactsPanel = () => {
-    ensureSpace(54);
+  const drawIntroPanel = () => {
+    ensureSpace(82);
     page.drawRectangle({
       x: MARGIN,
-      y: y - 39,
+      y: y - 67,
       width: CONTENT_WIDTH,
-      height: 42,
+      height: 70,
       color: SOFT_FILL,
       borderColor: RULE,
       borderWidth: 0.8,
     });
-    page.drawText("Lab Contact Information", {
+    page.drawRectangle({
+      x: MARGIN,
+      y: y - 67,
+      width: 7,
+      height: 70,
+      color: GOLD,
+    });
+    page.drawText("Confidential pricing guide", {
       x: MARGIN + 10,
-      y: y - 11,
-      size: 8.6,
+      y: y - 18,
+      size: 10,
       font: bold,
       color: NAVY,
     });
-    let contactY = y - 23;
-    for (const contact of LAB_CONTACTS) {
-      page.drawText(fitText(regular, contact, CONTENT_WIDTH - 20, 7.1), {
-        x: MARGIN + 10,
-        y: contactY,
-        size: 7.1,
+    page.drawText(
+      fitText(
+        regular,
+        "Clean customer-ready pricing, organized by design family with coatings, add-ons, and policy notes in one place.",
+        CONTENT_WIDTH - 120,
+        8
+      ),
+      {
+        x: MARGIN + 18,
+        y: y - 33,
+        size: 8,
+        font: regular,
+        color: TEXT,
+      }
+    );
+    page.drawText(
+      fitText(
+        regular,
+        "Lab contact details are grouped on the final page for a cleaner opening presentation.",
+        CONTENT_WIDTH - 120,
+        7.4
+      ),
+      {
+        x: MARGIN + 18,
+        y: y - 48,
+        size: 7.4,
+        font: regular,
+        color: MUTED,
+      }
+    );
+    page.drawRectangle({
+      x: PAGE_WIDTH - MARGIN - 126,
+      y: y - 45,
+      width: 108,
+      height: 28,
+      color: rgb(1, 1, 1),
+      borderColor: RULE,
+      borderWidth: 0.8,
+    });
+    page.drawText(mode === "uncut" ? "UNCUT" : "EDGED", {
+      x: PAGE_WIDTH - MARGIN - 116,
+      y: y - 29,
+      size: 8.2,
+      font: bold,
+      color: NAVY,
+    });
+    page.drawText("CUSTOMER PRICING", {
+      x: PAGE_WIDTH - MARGIN - 116,
+      y: y - 39,
+      size: 5.8,
+      font: regular,
+      color: MUTED,
+    });
+    y -= 78;
+  };
+
+  const drawLabShowcasePage = () => {
+    addPage(true);
+    const statementTop = PAGE_HEIGHT - 176;
+    const panelBottom = 76;
+    const panelHeight = 222;
+    const panelTop = panelBottom + panelHeight;
+    const gap = 14;
+    const columnWidth = (CONTENT_WIDTH - gap * 2) / 3;
+
+    page.drawText("Questions or order support?", {
+      x: MARGIN,
+      y: statementTop,
+      size: 8.5,
+      font: bold,
+      color: GOLD,
+    });
+    page.drawText("Connect directly with your regional Artisan lab.", {
+      x: MARGIN,
+      y: statementTop - 18,
+      size: 20,
+      font: bold,
+      color: NAVY,
+    });
+    page.drawText(
+      "Contact details are collected here so the pricing pages stay clean and easy to scan.",
+      {
+        x: MARGIN,
+        y: statementTop - 35,
+        size: 8.5,
+        font: regular,
+        color: MUTED,
+      }
+    );
+
+    page.drawRectangle({
+      x: MARGIN,
+      y: panelBottom,
+      width: CONTENT_WIDTH,
+      height: panelHeight,
+      color: SOFT_FILL,
+      borderColor: RULE,
+      borderWidth: 0.9,
+    });
+    page.drawRectangle({
+      x: MARGIN,
+      y: panelTop - 9,
+      width: CONTENT_WIDTH,
+      height: 9,
+      color: NAVY,
+    });
+    page.drawText("Lab Contact Information", {
+      x: MARGIN + 16,
+      y: panelTop - 28,
+      size: 15,
+      font: bold,
+      color: rgb(1, 1, 1),
+    });
+
+    const logoCardTop = panelTop - 48;
+    const logoCardHeight = 58;
+    labShowcases.forEach((lab, index) => {
+      const x = MARGIN + index * (columnWidth + gap);
+      page.drawRectangle({
+        x,
+        y: logoCardTop - logoCardHeight,
+        width: columnWidth,
+        height: logoCardHeight,
+        color: rgb(1, 1, 1),
+        borderColor: RULE,
+        borderWidth: 0.8,
+      });
+      page.drawRectangle({
+        x,
+        y: logoCardTop - 4,
+        width: columnWidth,
+        height: 4,
+        color: lab.accent,
+      });
+
+      const imageBounds = lab.image.scaleToFit(columnWidth - 22, logoCardHeight - 20);
+      page.drawImage(lab.image, {
+        x: x + (columnWidth - imageBounds.width) / 2,
+        y: logoCardTop - logoCardHeight + (logoCardHeight - imageBounds.height) / 2,
+        width: imageBounds.width,
+        height: imageBounds.height,
+      });
+    });
+
+    const infoTop = logoCardTop - 82;
+    labShowcases.forEach((lab, index) => {
+      const x = MARGIN + index * (columnWidth + gap);
+      page.drawText(fitText(bold, lab.name, columnWidth - 18, 8.3), {
+        x: x + 9,
+        y: infoTop,
+        size: 8.3,
+        font: bold,
+        color: NAVY,
+      });
+      page.drawText("Customer Support", {
+        x: x + 9,
+        y: infoTop - 14,
+        size: 6.7,
+        font: bold,
+        color: lab.accent,
+      });
+      page.drawLine({
+        start: { x: x + 9, y: infoTop - 20 },
+        end: { x: x + columnWidth - 9, y: infoTop - 20 },
+        color: RULE,
+        thickness: 0.8,
+      });
+      page.drawText(lab.phone, {
+        x: x + 9,
+        y: infoTop - 37,
+        size: 8.1,
+        font: bold,
+        color: NAVY,
+      });
+      page.drawText(fitText(regular, lab.email, columnWidth - 18, 6.8), {
+        x: x + 9,
+        y: infoTop - 54,
+        size: 6.8,
         font: regular,
         color: TEXT,
       });
-      contactY -= 10;
-    }
-    y -= 50;
+    });
   };
 
   const drawBrandRows = ({
@@ -807,7 +1027,7 @@ async function buildPriceListPdf({
     { x: MARGIN, y, size: 9, font: regular, color: MUTED }
   );
   y -= 25;
-  drawLabContactsPanel();
+  drawIntroPanel();
 
   const summaries = summarizeDesigns(priceList, mode);
   const categoryGroups = new Map<PriceDisplayCategory, typeof summaries>();
@@ -821,7 +1041,6 @@ async function buildPriceListPdf({
   for (const [category, categoryRows] of [...categoryGroups.entries()].sort(
     ([a], [b]) => comparePriceDisplayCategory(a, b)
   )) {
-    sectionTitle(category, `${categoryRows.length} designs`);
     const tierGroups = new Map<ProgressiveTier | "All", typeof summaries>();
     for (const row of categoryRows) {
       const tier = row.progressiveTier ?? "All";
@@ -831,6 +1050,15 @@ async function buildPriceListPdf({
       if (a === "All" || b === "All") return 0;
       return compareProgressiveTier(a, b);
     });
+    const firstTier = orderedTierGroups[0]?.[0];
+    const openingHeight =
+      34 +
+      (firstTier && firstTier !== "All" ? 24 : 0) +
+      TABLE_HEADER_HEIGHT +
+      TABLE_ROW_HEIGHT +
+      12;
+    ensureSpace(openingHeight);
+    sectionTitle(category, `${categoryRows.length} designs`);
 
     for (const [tier, tierRows] of orderedTierGroups) {
       if (tier !== "All") drawTierHeader(tier);
@@ -850,6 +1078,7 @@ async function buildPriceListPdf({
   }
 
   if (priceList.arCoatings.length) {
+    ensureSpace(100);
     sectionTitle(
       "Anti-Reflective Coatings",
       priceList.code === "NL"
@@ -890,7 +1119,7 @@ async function buildPriceListPdf({
   for (const [sectionIndex, section] of normalizedAddOnSections.entries()) {
     if (!section.items.length) continue;
     if (sectionIndex > 0) y -= 8;
-    ensureSpace(34 + Math.ceil(section.items.length / (section.items.length > 8 ? 2 : 1)) * 18);
+    ensureSpace(62);
     sectionTitle(section.title);
     drawCompactItemGrid(
       section.items.map((item) => ({
@@ -902,6 +1131,7 @@ async function buildPriceListPdf({
   }
 
   drawPolicyPage();
+  drawLabShowcasePage();
 
   pages.forEach((currentPage, index) => {
     currentPage.drawLine({

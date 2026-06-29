@@ -3,8 +3,8 @@ import type { PriceListPricingRow } from "./types";
 export const priceDisplayCategories = [
   "SV",
   "Digital SV",
-  "Multifocals",
   "Enhanced SV",
+  "Multifocals",
   "Occupational Designs",
   "Progressive Designs",
 ] as const;

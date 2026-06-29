@@ -1,12 +1,11 @@
 import { existsSync, readFileSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import ExcelJS from "exceljs";
 import { parsePriceList } from "../lib/pricing/parsePriceList.mjs";
+import { getPricingLookupData, normalizeLookupKey } from "../lib/pricing/lookupData.mjs";
 
 const root = process.cwd();
 const priceListSourceDir = path.join(root, "private-source", "price-lists");
-const portalLookupDir = path.join(root, "private-source", "portal", "lookup_docs");
 const outputDir = path.join(root, "private-source", "pricing", "generated");
 
 function resolveSourceFile(candidates) {
@@ -17,52 +16,8 @@ function resolveSourceFile(candidates) {
   throw new Error(`Missing source file. Tried: ${candidates.join(", ")}`);
 }
 
-function resolveLookupFile(candidates) {
-  const roots = [portalLookupDir, priceListSourceDir];
-  for (const base of roots) {
-    for (const candidate of candidates) {
-      const fullPath = path.join(base, candidate);
-      if (existsSync(fullPath)) return fullPath;
-    }
-  }
-  throw new Error(`Missing lookup file. Tried: ${candidates.join(", ")} in ${roots.map((p) => path.relative(root, p)).join(", ")}`);
-}
-
-async function readLookupArMap(filePath) {
-  const workbook = new ExcelJS.Workbook();
-  await workbook.xlsx.readFile(filePath);
-  const worksheet = workbook.worksheets[0];
-  if (!worksheet) return new Map();
-
-  const headerRow = worksheet.getRow(1).values.slice(1).map((value) => String(value ?? "").trim().toLowerCase());
-  const dviIndex = headerRow.findIndex((h) => h.includes("dvi") || h.includes("column a"));
-  const nameIndex = headerRow.findIndex((h) => h === "name" || h.includes("column b"));
-  const brandIndex = headerRow.findIndex((h) => h === "brand" || h.includes("column c"));
-
-  const map = new Map();
-  const byCode = new Map();
-  worksheet.eachRow((row, rowNumber) => {
-    if (rowNumber === 1) return;
-    const values = row.values.slice(1);
-    const dvi = String(values[dviIndex >= 0 ? dviIndex : 0] ?? "").trim();
-    const name = String(values[nameIndex >= 0 ? nameIndex : 1] ?? "").trim();
-    const brand = String(values[brandIndex >= 0 ? brandIndex : 2] ?? "").trim();
-    if (!dvi) return;
-    const normalizedCode = dvi.toUpperCase();
-    const entry = {
-      name: name || dvi,
-      brand,
-      brandFamily: brand ? `${brand} AR Coatings` : "Other AR Coatings",
-    };
-    map.set(normalizedCode, entry);
-    if (entry.name) map.set(normalizeKey(entry.name), entry);
-    byCode.set(normalizedCode, entry);
-  });
-  return { byName: map, byCode };
-}
-
 function normalizeKey(value) {
-  return String(value ?? "").trim().toUpperCase().replace(/[™®]/g, "").replace(/\s+/g, " ");
+  return normalizeLookupKey(value);
 }
 
 function applyArLookup(arCoatings, lookupMap) {
@@ -278,11 +233,28 @@ const y5AddOns = [
   ...fullServiceAddOns,
 ];
 
-const productLookupPath = resolveLookupFile(["Lookup.xlsx", "lookup.xlsx"]);
-const materialLookupPath = resolveLookupFile(["Lookup_Mat.xlsx", "lookup_mat.xlsx"]);
-const arLookupPath = resolveLookupFile(["Lookup_AR.xlsx", "lookup_ar.xlsx"]);
 const colorLookupPath = resolveSourceFile(["colors.txt"]);
-const arLookupMaps = await readLookupArMap(arLookupPath);
+const lookupData = await getPricingLookupData({ rootDir: root });
+const productLookupRows = lookupData.workbooks.products.rows;
+const materialLookupRows = lookupData.workbooks.materials.rows;
+const productLookupSourcePath = lookupData.sourceFiles.products;
+const materialLookupSourcePath = lookupData.sourceFiles.materials;
+const arLookupPath = lookupData.sourceFiles.ar;
+const arLookupMaps = {
+  byName: new Map(),
+  byCode: new Map(),
+};
+for (const row of lookupData.workbooks.ar.rows) {
+  const normalizedCode = normalizeLookupKey(row.dvi);
+  const entry = {
+    name: row.name || row.dvi,
+    brand: row.brand || "",
+    brandFamily: row.brand ? `${row.brand} AR Coatings` : "Other AR Coatings",
+  };
+  arLookupMaps.byName.set(normalizedCode, entry);
+  arLookupMaps.byName.set(normalizeKey(entry.name), entry);
+  arLookupMaps.byCode.set(normalizedCode, entry);
+}
 
 function loadDviRowsByCode(code) {
   const filePath = path.join(outputDir, `dvi-${code.toLowerCase()}-pricing.json`);
@@ -404,8 +376,10 @@ for (const config of configs) {
   const parsed = await parsePriceList({
     code: config.code,
     rawPath: config.rawPath,
-    productLookupPath,
-    materialLookupPath,
+    productLookupRows,
+    materialLookupRows,
+    productLookupSourcePath,
+    materialLookupSourcePath,
     colorLookupPath,
     arCoatings: mappedArCoatings,
     arLookupByCode: arLookupMaps.byCode,

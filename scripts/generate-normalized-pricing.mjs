@@ -1,7 +1,11 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import ExcelJS from "exceljs";
+import {
+  getPricingLookupData,
+  normalizeLookupKey as normalizeWorkbookLookupKey,
+  stripSdPrefix,
+} from "../lib/pricing/lookupData.mjs";
 
 const root = process.cwd();
 const generatedDir = path.join(root, "private-source", "pricing", "generated");
@@ -74,12 +78,7 @@ const polarizedLensMatCodes = new Set([
 ]);
 
 function normalizeKey(value) {
-  return String(value ?? "")
-    .toUpperCase()
-    .replace(/[™®]/g, "")
-    .replace(/\*/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
+  return normalizeWorkbookLookupKey(value);
 }
 
 function compareText(a, b) {
@@ -103,9 +102,10 @@ function normalizeArtisanDisplayStyle(styleRaw) {
   if (/^PS[A-Z0-9]*/.test(style)) return { displayName: "Platinum Series", matched: true, family: "PS*" };
   if (/^GS[A-Z0-9]*/.test(style)) return { displayName: "Gold Series", matched: true, family: "GS*" };
   if (style === "CFB") return { displayName: "CFB", matched: true, family: "CFB" };
-  if (style === "SD CONCEPT") return { displayName: "SD Concept", matched: true, family: "SD Concept" };
-  if (style === "SD REACH") return { displayName: "SD Reach", matched: true, family: "SD Reach" };
-  return { displayName: String(styleRaw ?? "").trim(), matched: false, family: null };
+  if (style === "SD CONCEPT") return { displayName: "Concept", matched: true, family: "Concept" };
+  if (style === "SD REACH") return { displayName: "Reach", matched: true, family: "Reach" };
+  if (style === "SD RADIUS") return { displayName: "Radius", matched: true, family: "Radius" };
+  return { displayName: stripSdPrefix(String(styleRaw ?? "").trim()), matched: false, family: null };
 }
 
 function canonicalCode(code) {
@@ -154,59 +154,35 @@ async function loadSourcePayloadForCode(code) {
   return { kind: "missing", payload: null };
 }
 
-async function readLookupBrandAndName() {
-  const lookupPath = path.join(root, "private-source", "portal", "lookup_docs", "Lookup.xlsx");
+async function readLookupBrandAndName(lookupData) {
   const map = new Map();
-  if (!existsSync(lookupPath)) return map;
-
-  const workbook = new ExcelJS.Workbook();
-  await workbook.xlsx.readFile(lookupPath);
-  const sheet = workbook.worksheets[0];
-  if (!sheet) return map;
-
-  sheet.eachRow((row, index) => {
-    if (index === 1) return;
-    const dvi = normalizeKey(row.getCell(1).value);
-    const normalizedName = String(row.getCell(2).value ?? "").trim();
-    const brand = String(row.getCell(6).value ?? "").trim();
-    if (!dvi || !normalizedName) return;
+  for (const row of lookupData.workbooks.products.rows) {
+    const dvi = normalizeKey(row.lenstyle);
+    const normalizedName = stripSdPrefix(row.styleconsollidated);
+    const brand = String(row.lensbrand ?? "").trim();
+    if (!dvi || !normalizedName) continue;
     map.set(dvi, {
       name: normalizedName,
-      designType: String(row.getCell(4).value ?? "").trim(),
+      designType: String(row["Type Revised"] ?? "").trim(),
       brand,
     });
-  });
+  }
 
   return map;
 }
 
-async function readLookupArMap() {
-  const lookupPath = path.join(root, "private-source", "portal", "lookup_docs", "Lookup_AR.xlsx");
+async function readLookupArMap(lookupData) {
   const map = new Map();
-  if (!existsSync(lookupPath)) return map;
-
-  const workbook = new ExcelJS.Workbook();
-  await workbook.xlsx.readFile(lookupPath);
-  const sheet = workbook.worksheets[0];
-  if (!sheet) return map;
-
-  sheet.eachRow((row, index) => {
-    if (index === 1) return;
-    const code = normalizeKey(row.getCell(1).value);
-    const name = String(row.getCell(2).value ?? "").trim();
-    const brand = String(row.getCell(3).value ?? "").trim();
-    if (!code || !name) return;
+  for (const row of lookupData.workbooks.ar.rows) {
+    const code = normalizeKey(row.dvi);
+    const name = String(row.name ?? "").trim();
+    const brand = String(row.brand ?? "").trim();
+    if (!code || !name) continue;
     map.set(code, {
       name,
       brandFamily: brand ? `${brand} AR Coatings` : "AR Coatings",
     });
-  });
-
-  // Authoritative ALN overrides for customer-facing AR normalization.
-  // These codes must never appear raw in customer UI.
-  map.set("MMI", { name: "Mirror Matched", brandFamily: "Mirror Treatments" });
-  map.set("GMR", { name: "Gradient Mirror", brandFamily: "Mirror Treatments" });
-  map.set("DDE", { name: "Diamond Defence", brandFamily: "Protection Options" });
+  }
 
   return map;
 }
@@ -230,7 +206,7 @@ function normalizeBrandAndStyle(row, lookupMap) {
   }
   return {
     brand: row.brand,
-    designStyle: row.designStyle,
+    designStyle: stripSdPrefix(row.designStyle),
     designType: row.designType,
   };
 }
@@ -649,8 +625,9 @@ async function writeJson(filePath, value, { pretty = true } = {}) {
 async function main() {
   await mkdir(normalizedDir, { recursive: true });
   await mkdir(diagnosticsDir, { recursive: true });
-  const lookupMap = await readLookupBrandAndName();
-  const arLookupMap = await readLookupArMap();
+  const lookupData = await getPricingLookupData({ rootDir: root });
+  const lookupMap = await readLookupBrandAndName(lookupData);
+  const arLookupMap = await readLookupArMap(lookupData);
   const { targetCodes, ignoreCodes } = await readTargetCodes();
   const validation = [];
   const taxonomyReport = [];
@@ -931,9 +908,9 @@ async function main() {
       "private-source/price-lists/alnpricing_2026_G6.pdf",
       "private-source/price-lists/alnpricing_2026_P6.pdf",
       "private-source/price-lists/alnpricing_2026_A6.pdf",
-      "private-source/portal/lookup_docs/Lookup.xlsx",
-      "private-source/portal/lookup_docs/Lookup_AR.xlsx",
-      "private-source/portal/lookup_docs/Lookup_Mat.xlsx",
+      path.relative(root, lookupData.sourceFiles.products),
+      path.relative(root, lookupData.sourceFiles.ar),
+      path.relative(root, lookupData.sourceFiles.materials),
     ],
     report: parityReport,
   });
@@ -949,7 +926,7 @@ async function main() {
     {
       generatedAt: new Date().toISOString(),
       scope: ["G6", "P6", "A6"],
-      authoritativeStyles: ["DS*", "PS*", "GS*", "CFB", "SD Concept", "SD Reach"],
+      authoritativeStyles: ["DS*", "PS*", "GS*", "CFB", "Concept", "Reach", "Radius"],
       report: artisanPortfolioRuleReport,
     }
   );

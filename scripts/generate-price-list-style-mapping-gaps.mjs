@@ -3,19 +3,11 @@ import { createReadStream } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import readline from "node:readline";
-import JSZip from "jszip";
-import { XMLParser } from "fast-xml-parser";
+import { getPricingLookupData, normalizeLookupKey, stripSdPrefix } from "../lib/pricing/lookupData.mjs";
 
 const root = process.cwd();
 const generatedDir = path.join(root, "private-source", "pricing", "generated");
 const registryPath = path.join(generatedDir, "price-list-registry.json");
-const lookupWorkbookPath = path.join(
-  root,
-  "private-source",
-  "portal",
-  "lookup_docs",
-  "Lookup.xlsx"
-);
 const reportOutputPath = path.join(generatedDir, "price-list-style-mapping-gaps.json");
 const runtimeOutputPath = path.join(
   root,
@@ -25,35 +17,8 @@ const runtimeOutputPath = path.join(
   "priceListStyleMappingGaps.json"
 );
 
-const xmlParser = new XMLParser({
-  ignoreAttributes: false,
-  attributeNamePrefix: "",
-  textNodeName: "_text",
-});
-
-function asArray(value) {
-  if (!value) return [];
-  return Array.isArray(value) ? value : [value];
-}
-
 function normalizeKey(value) {
-  return String(value ?? "")
-    .toUpperCase()
-    .replace(/[™®]/g, "")
-    .replace(/\*/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function columnLetters(cellRef) {
-  return String(cellRef ?? "").replace(/\d+/g, "");
-}
-
-function excelCellValue(cell, sharedStrings) {
-  if (!cell) return "";
-  if (cell.t === "s") return String(sharedStrings[Number(cell.v)] ?? "").trim();
-  if (cell.t === "inlineStr") return String(cell.is?.t?._text ?? cell.is?.t ?? "").trim();
-  return String(cell.v ?? "").trim();
+  return normalizeLookupKey(value);
 }
 
 function extractJsonStringValues(arrayBody) {
@@ -112,34 +77,13 @@ async function collectRawProductNamesFromFile(filePath) {
 }
 
 async function readLookupKeys() {
-  if (!existsSync(lookupWorkbookPath)) return new Set();
-
-  const zip = await JSZip.loadAsync(await readFile(lookupWorkbookPath));
-  const sharedStringsXml = await zip.file("xl/sharedStrings.xml")?.async("string");
-  const sheetXml = await zip.file("xl/worksheets/sheet1.xml")?.async("string");
-  if (!sheetXml) return new Set();
-
-  const sharedStrings = sharedStringsXml
-    ? asArray(xmlParser.parse(sharedStringsXml).sst?.si).map((entry) =>
-        asArray(entry?.t)
-          .map((part) =>
-            typeof part === "object" ? String(part._text ?? "") : String(part ?? "")
-          )
-          .join("")
-      )
-    : [];
-  const sheet = xmlParser.parse(sheetXml);
+  const lookupData = await getPricingLookupData({ rootDir: root });
   const keys = new Set();
-
-  for (const row of asArray(sheet.worksheet?.sheetData?.row)) {
-    for (const cell of asArray(row.c)) {
-      if (columnLetters(cell.r) !== "A") continue;
-      const key = normalizeKey(excelCellValue(cell, sharedStrings));
-      if (key) keys.add(key);
-    }
+  for (const row of lookupData.workbooks.products.rows) {
+    const key = normalizeKey(row.lenstyle);
+    if (key) keys.add(key);
   }
-
-  return keys;
+  return { keys, lookupWorkbookPath: lookupData.sourceFiles.products };
 }
 
 async function readRegistry() {
@@ -147,7 +91,10 @@ async function readRegistry() {
 }
 
 async function main() {
-  const [lookupKeys, registry] = await Promise.all([readLookupKeys(), readRegistry()]);
+  const [{ keys: lookupKeys, lookupWorkbookPath }, registry] = await Promise.all([
+    readLookupKeys(),
+    readRegistry(),
+  ]);
   const byStyle = new Map();
   const entries = (registry.visibleEntries ?? registry.entries ?? []).filter(
     (entry) => entry.generated
@@ -162,7 +109,7 @@ async function main() {
 
     const rawNames = await collectRawProductNamesFromFile(sourcePath);
     for (const rawName of rawNames) {
-      const rawStyleName = String(rawName ?? "").trim();
+      const rawStyleName = stripSdPrefix(String(rawName ?? "").trim());
       const normalizedStyleKey = normalizeKey(rawStyleName);
       if (!rawStyleName || !normalizedStyleKey || lookupKeys.has(normalizedStyleKey)) {
         continue;
@@ -199,7 +146,7 @@ async function main() {
     generatedAt: new Date().toISOString(),
     sourceFiles: {
       styleRows: "private-source/pricing/generated/*-pricing.json",
-      lookupWorkbook: "private-source/portal/lookup_docs/Lookup.xlsx",
+      lookupWorkbook: path.relative(root, lookupWorkbookPath),
     },
     lookupKeyCount: lookupKeys.size,
     priceListCountScanned: entries.length,

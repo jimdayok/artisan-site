@@ -7,6 +7,13 @@ import styleMappingGaps from "@/lib/portal/generated/priceListStyleMappingGaps.j
 
 export const dynamic = "force-dynamic";
 
+type UnmappedProduct = {
+  rawStyleName: string;
+  normalizedStyleKey: string;
+  priceListCodes: string[];
+  rowCount: number;
+};
+
 function statusClass(tone: "ok" | "warning" | "neutral") {
   if (tone === "ok") return "border-[#9dc4ad] bg-[#eef8f1] text-[#24543a]";
   if (tone === "warning") return "border-[#d9aa83] bg-[#fff4e8] text-[#8a421d]";
@@ -35,7 +42,8 @@ export default async function AdminPriceListsPage() {
   const missingAssigned = rows.filter(
     (row) => row.assignmentStatus === "assigned" && !row.generated
   );
-  const unmappedProducts = styleMappingGaps.unmappedProducts ?? [];
+  const unmappedProducts = (styleMappingGaps.unmappedProducts ??
+    []) as UnmappedProduct[];
 
   return (
     <AdminShell title="Admin Price Lists" adminEmail={adminEmail}>

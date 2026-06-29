@@ -1,5 +1,3 @@
-import { readFile } from "node:fs/promises";
-import path from "node:path";
 import { NextRequest, NextResponse } from "next/server";
 import {
   PDFDocument,
@@ -8,7 +6,7 @@ import {
   type PDFFont,
   type PDFPage,
 } from "pdf-lib";
-import { getAuthorizedPriceListFromHeaders } from "@/lib/portal/priceListAccess";
+import { getAuthorizedRuntimePriceListFromHeaders } from "@/lib/portal/priceListRuntimeAccess";
 import { canonicalPriceListCode } from "@/lib/portal/priceLists";
 import { checkRateLimit } from "@/lib/portal/rateLimit";
 import { customerFacingPriceList } from "@/lib/pricing/customerPriceList";
@@ -22,7 +20,7 @@ import {
   type PriceDisplayCategory,
   type ProgressiveTier,
 } from "@/lib/pricing/displayTaxonomy";
-import { loadPackagedPriceListByCode } from "@/lib/pricing/loadPackagedPriceList";
+import { loadRuntimePackagedPriceListByCode } from "@/lib/pricing/loadRuntimePackagedPriceList";
 import type { PortalPriceList } from "@/lib/portal/priceLists";
 import type {
   PriceListAddOnSection,
@@ -154,8 +152,20 @@ function money(row: PriceListPricingRow | undefined, mode: PriceMode) {
   return `$${value.toFixed(2)}+`;
 }
 
-async function embedImageFromPublic(document: PDFDocument, relativePath: string) {
-  const imageBytes = await readFile(path.join(process.cwd(), "public", relativePath));
+async function embedImageFromPublic(
+  document: PDFDocument,
+  requestOrigin: string,
+  relativePath: string
+) {
+  const response = await fetch(new URL(`/${relativePath}`, requestOrigin), {
+    cache: "force-cache",
+  });
+  if (!response.ok) {
+    throw new Error(
+      `Unable to load public image ${relativePath} (${response.status} ${response.statusText}).`
+    );
+  }
+  const imageBytes = new Uint8Array(await response.arrayBuffer());
   if (/\.png$/i.test(relativePath)) return document.embedPng(imageBytes);
   return document.embedJpg(imageBytes);
 }
@@ -235,23 +245,31 @@ async function buildPriceListPdf({
   portalPriceList,
   customerName,
   mode,
+  requestOrigin,
 }: {
   priceList: GeneratedPriceListData;
   portalPriceList: PortalPriceList;
   customerName: string;
   mode: PriceMode;
+  requestOrigin: string;
 }) {
   const document = await PDFDocument.create();
   const regular = await document.embedFont(StandardFonts.Helvetica);
   const bold = await document.embedFont(StandardFonts.HelveticaBold);
-  const logoBytes = await readFile(
-    path.join(process.cwd(), "public", "aln-white-logo.png")
-  );
+  const logoResponse = await fetch(new URL("/aln-white-logo.png", requestOrigin), {
+    cache: "force-cache",
+  });
+  if (!logoResponse.ok) {
+    throw new Error(
+      `Unable to load public image aln-white-logo.png (${logoResponse.status} ${logoResponse.statusText}).`
+    );
+  }
+  const logoBytes = new Uint8Array(await logoResponse.arrayBuffer());
   const logo = await document.embedPng(logoBytes);
   const labShowcases = await Promise.all(
     LAB_SHOWCASES.map(async (lab) => ({
       ...lab,
-      image: await embedImageFromPublic(document, lab.imagePath),
+      image: await embedImageFromPublic(document, requestOrigin, lab.imagePath),
     }))
   );
   const pages: PDFPage[] = [];
@@ -1211,7 +1229,7 @@ export async function GET(request: NextRequest) {
     request.nextUrl.searchParams.get("priceMode") === "uncut"
       ? "uncut"
       : "edged";
-  const access = await getAuthorizedPriceListFromHeaders(
+  const access = await getAuthorizedRuntimePriceListFromHeaders(
     request.headers,
     code,
     previewAccountNumber ? { previewAccountNumber } : undefined
@@ -1230,9 +1248,10 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const generated = await loadPackagedPriceListByCode(code, {
-    requestOrigin: request.nextUrl.origin,
-  });
+  const generated = await loadRuntimePackagedPriceListByCode(
+    code,
+    request.nextUrl.origin
+  );
   if (!generated) {
     return new NextResponse("Pricing data is not available for this list.", {
       status: 404,
@@ -1249,6 +1268,7 @@ export async function GET(request: NextRequest) {
     portalPriceList: access.priceList,
     customerName,
     mode: priceMode,
+    requestOrigin: request.nextUrl.origin,
   });
   const safeCode = cleanText(code).toLowerCase();
 

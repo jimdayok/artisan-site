@@ -19,8 +19,35 @@ function shouldForcePricingRebuild() {
   return isTruthyEnv(process.env.FORCE_PRICING_PREBUILD);
 }
 
+function shouldForcePortalRebuild() {
+  return isTruthyEnv(process.env.FORCE_PORTAL_PREBUILD);
+}
+
 function isVercelBuild() {
   return Boolean(process.env.VERCEL || process.env.VERCEL_ENV);
+}
+
+function hasCommittedPortalArtifacts() {
+  const requiredFiles = [
+    path.join(rootDir, "lib", "portal", "generated", "dashboardV1Bundle.json"),
+    path.join(rootDir, "lib", "portal", "generated", "priceListAccessIndex.json"),
+    path.join(rootDir, "private-source", "portal", "dashboard-v1", "current", "accounts_index.json"),
+    path.join(rootDir, "private-source", "portal", "dashboard-v1", "current", "users_to_accounts.json"),
+    path.join(rootDir, "private-source", "portal", "dashboard-v1", "current", "latest_snapshot_manifest.json"),
+  ];
+
+  const missing = requiredFiles.filter((filePath) => !existsSync(filePath));
+  if (missing.length > 0) {
+    console.log(
+      `[prebuild] portal artifacts incomplete; missing: ${missing
+        .map((filePath) => path.relative(rootDir, filePath))
+        .join(", ")}`
+    );
+    return false;
+  }
+
+  console.log("[prebuild] detected committed portal dashboard artifacts");
+  return true;
 }
 
 function hasCommittedPricingArtifacts() {
@@ -58,6 +85,43 @@ function hasCommittedPricingArtifacts() {
   }
 }
 
+function shouldSkipPortalRebuild(step) {
+  if (
+    step !== "portal:generate-dashboard-v1:launch-safe" &&
+    step !== "portal:bundle-dashboard-v1"
+  ) {
+    return false;
+  }
+  if (!isVercelBuild()) return false;
+  if (shouldForcePortalRebuild()) return false;
+  return hasCommittedPortalArtifacts();
+}
+
+function hasCommittedLocatorArtifacts() {
+  const outputPath = path.join(
+    rootDir,
+    "lib",
+    "patient-locator",
+    "practices.ts"
+  );
+
+  if (!existsSync(outputPath)) {
+    console.log(
+      `[prebuild] locator artifacts incomplete; missing: ${path.relative(rootDir, outputPath)}`
+    );
+    return false;
+  }
+
+  console.log("[prebuild] detected committed patient locator artifacts");
+  return true;
+}
+
+function shouldSkipLocatorRebuild(step) {
+  if (step !== "locator:generate") return false;
+  if (!isVercelBuild()) return false;
+  return hasCommittedLocatorArtifacts();
+}
+
 function shouldSkipPricingRebuild(step) {
   if (!(step.startsWith("pricing:") || step === "build:pricing")) return false;
   if (!isVercelBuild()) return false;
@@ -67,6 +131,22 @@ function shouldSkipPricingRebuild(step) {
 
 function runStep(step) {
   return new Promise((resolve, reject) => {
+    if (shouldSkipPortalRebuild(step)) {
+      console.log(
+        `[prebuild] skipping ${step} on Vercel because committed portal artifacts are present`
+      );
+      resolve();
+      return;
+    }
+
+    if (shouldSkipLocatorRebuild(step)) {
+      console.log(
+        `[prebuild] skipping ${step} on Vercel because committed locator artifacts are present`
+      );
+      resolve();
+      return;
+    }
+
     if (shouldSkipPricingRebuild(step)) {
       console.log(
         `[prebuild] skipping ${step} on Vercel because committed pricing artifacts are present`

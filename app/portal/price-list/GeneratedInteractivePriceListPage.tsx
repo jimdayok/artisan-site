@@ -1,9 +1,9 @@
 import InteractivePriceListDashboard from "@/src/components/private-price/InteractivePriceListDashboard";
-import { getAuthorizedPriceListFromHeaders } from "@/lib/portal/priceListAccess";
 import { isLocalhostDevelopmentRequest } from "@/lib/portal/auth";
+import { getAuthorizedRuntimePriceListFromHeaders } from "@/lib/portal/priceListRuntimeAccess";
 import { canonicalPriceListCode } from "@/lib/portal/priceLists";
 import { isPortalAdminEmail } from "@/lib/portal/admin";
-import { loadPackagedPriceListByCode } from "@/lib/pricing/loadPackagedPriceList";
+import { loadRuntimePackagedPriceListByCode } from "@/lib/pricing/loadRuntimePackagedPriceList";
 import { isVisiblePriceListCode } from "@/lib/pricing/priceListCodes";
 import { customerFacingPriceList } from "@/lib/pricing/customerPriceList";
 import { headers } from "next/headers";
@@ -36,7 +36,7 @@ export default async function GeneratedInteractivePriceListPage({
   const requestHeaders = await headers();
   const requestOrigin = requestOriginFromHeaders(requestHeaders);
   const isLocalhostDevelopment = isLocalhostDevelopmentRequest(requestHeaders);
-  const access = await getAuthorizedPriceListFromHeaders(
+  const access = await getAuthorizedRuntimePriceListFromHeaders(
     requestHeaders,
     normalizedCode,
     previewAccountNumber ? { previewAccountNumber } : undefined
@@ -69,9 +69,16 @@ export default async function GeneratedInteractivePriceListPage({
     forbidden();
   }
 
-  const generatedPriceList = await loadPackagedPriceListByCode(normalizedCode, {
-    requestOrigin,
-  });
+  if (!requestOrigin) {
+    return (
+      <PriceListAccessMessage message="Unable to resolve the pricing asset origin for this request." />
+    );
+  }
+
+  const generatedPriceList = await loadRuntimePackagedPriceListByCode(
+    normalizedCode,
+    requestOrigin
+  );
   if (!generatedPriceList) {
     const message = isPortalAdminEmail(access.authenticatedEmail)
       ? `${normalizedCode} is assigned or registered, but no generated pricing rows are available. Check the price-list validation report.`
@@ -83,7 +90,7 @@ export default async function GeneratedInteractivePriceListPage({
   const customerPriceList = customerFacingPriceList(generatedPriceList);
   const comparisonPriceList =
     normalizedCode === "B5"
-      ? await loadPackagedPriceListByCode("G6", { requestOrigin })
+      ? await loadRuntimePackagedPriceListByCode("G6", requestOrigin)
       : null;
 
   const accountPriceListCodes = access.customer.priceLists

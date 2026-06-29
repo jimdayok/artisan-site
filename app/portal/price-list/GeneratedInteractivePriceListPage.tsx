@@ -11,6 +11,20 @@ import { forbidden } from "next/navigation";
 import { OnlinePriceListShell } from "./OnlinePriceListShell";
 import PriceListAccessMessage from "./PriceListAccessMessage";
 
+function requestOriginFromHeaders(headerList: Headers) {
+  const host =
+    headerList.get("x-forwarded-host")?.split(",")[0]?.trim() ||
+    headerList.get("host")?.split(",")[0]?.trim() ||
+    "";
+  if (!host) return undefined;
+
+  const proto =
+    headerList.get("x-forwarded-proto")?.split(",")[0]?.trim() ||
+    (host.startsWith("localhost") || host.startsWith("127.0.0.1") ? "http" : "https");
+
+  return `${proto}://${host}`;
+}
+
 export default async function GeneratedInteractivePriceListPage({
   code,
   previewAccountNumber,
@@ -20,6 +34,7 @@ export default async function GeneratedInteractivePriceListPage({
 }) {
   const normalizedCode = canonicalPriceListCode(code);
   const requestHeaders = await headers();
+  const requestOrigin = requestOriginFromHeaders(requestHeaders);
   const isLocalhostDevelopment = isLocalhostDevelopmentRequest(requestHeaders);
   const access = await getAuthorizedPriceListFromHeaders(
     requestHeaders,
@@ -54,7 +69,9 @@ export default async function GeneratedInteractivePriceListPage({
     forbidden();
   }
 
-  const generatedPriceList = await loadPackagedPriceListByCode(normalizedCode);
+  const generatedPriceList = await loadPackagedPriceListByCode(normalizedCode, {
+    requestOrigin,
+  });
   if (!generatedPriceList) {
     const message = isPortalAdminEmail(access.authenticatedEmail)
       ? `${normalizedCode} is assigned or registered, but no generated pricing rows are available. Check the price-list validation report.`
@@ -65,7 +82,9 @@ export default async function GeneratedInteractivePriceListPage({
   }
   const customerPriceList = customerFacingPriceList(generatedPriceList);
   const comparisonPriceList =
-    normalizedCode === "B5" ? await loadPackagedPriceListByCode("G6") : null;
+    normalizedCode === "B5"
+      ? await loadPackagedPriceListByCode("G6", { requestOrigin })
+      : null;
 
   const accountPriceListCodes = access.customer.priceLists
     .map((entry) => canonicalPriceListCode(entry))

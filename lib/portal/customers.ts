@@ -1,6 +1,6 @@
 import "server-only";
 
-import { portalDashboardV1Bundle } from "@/lib/portal/dashboardV1Bundle";
+import { portalDashboardV1AccessIndex } from "@/lib/portal/dashboardV1AccessIndex";
 import type { PriceListCode } from "@/lib/portal/priceLists";
 import { canonicalPriceListCode, getPriceListByCode } from "@/lib/portal/priceLists";
 import type { PortalCustomerTypeCode } from "@/lib/portal/customerTypes";
@@ -80,9 +80,9 @@ function uniqueAssignedPriceLists(values: PriceListCode[]) {
 
 function getDashboardV1AccessRecords() {
   const accountsIndex =
-    portalDashboardV1Bundle.accountsIndex as DashboardV1AccountIndexRecord[];
+    portalDashboardV1AccessIndex.accountsIndex as DashboardV1AccountIndexRecord[];
   const usersToAccounts =
-    portalDashboardV1Bundle.usersToAccounts as DashboardV1UserAccessRecord[];
+    portalDashboardV1AccessIndex.usersToAccounts as DashboardV1UserAccessRecord[];
 
   if (!accountsIndex.length || !usersToAccounts.length) return [];
 

@@ -6,7 +6,7 @@ import type {
   PortalSection,
 } from "@/lib/portal/customers";
 import { getPortalCustomerTypeInfo } from "@/lib/portal/customerTypes";
-import { portalDashboardV1Bundle } from "@/lib/portal/dashboardV1Bundle";
+import { portalDashboardV1AccessIndex } from "@/lib/portal/dashboardV1AccessIndex";
 import {
   assertAccountAccess,
   getAllowedAccountsForEmail,
@@ -36,7 +36,7 @@ const ALL_PORTAL_SECTIONS: PortalSection[] = [
 ];
 
 function getAccountIndex() {
-  return portalDashboardV1Bundle.accountsIndex as AccountIndexRow[];
+  return portalDashboardV1AccessIndex.accountsIndex as AccountIndexRow[];
 }
 
 function customerFromAccount(

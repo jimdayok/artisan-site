@@ -1230,7 +1230,9 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const generated = await loadPackagedPriceListByCode(code);
+  const generated = await loadPackagedPriceListByCode(code, {
+    requestOrigin: request.nextUrl.origin,
+  });
   if (!generated) {
     return new NextResponse("Pricing data is not available for this list.", {
       status: 404,

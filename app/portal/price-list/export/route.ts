@@ -371,7 +371,7 @@ async function buildPriceListPdf({
         color: MUTED,
       });
     }
-    y -= 34;
+    y -= 26;
   };
 
   const drawTableHeader = (showBrand = false) => {
@@ -418,7 +418,7 @@ async function buildPriceListPdf({
       font: bold,
       color: rgb(1, 1, 1),
     });
-    y -= 24;
+    y -= 20;
   };
 
   const drawBrandCell = (brand: string, topY: number, height: number) => {
@@ -445,6 +445,11 @@ async function buildPriceListPdf({
 
   const drawIntroPanel = () => {
     ensureSpace(82);
+    const badgeWidth = 124;
+    const badgeHeight = 36;
+    const badgeX = PAGE_WIDTH - MARGIN - badgeWidth - 18;
+    const badgeY = y - 50;
+    const introTextWidth = badgeX - (MARGIN + 18) - 24;
     page.drawRectangle({
       x: MARGIN,
       y: y - 67,
@@ -472,7 +477,7 @@ async function buildPriceListPdf({
       fitText(
         regular,
         "Clean customer-ready pricing, organized by design family with coatings, add-ons, and policy notes in one place.",
-        CONTENT_WIDTH - 120,
+        introTextWidth,
         8
       ),
       {
@@ -487,7 +492,7 @@ async function buildPriceListPdf({
       fitText(
         regular,
         "Lab contact details are grouped on the final page for a cleaner opening presentation.",
-        CONTENT_WIDTH - 120,
+        introTextWidth,
         7.4
       ),
       {
@@ -499,25 +504,25 @@ async function buildPriceListPdf({
       }
     );
     page.drawRectangle({
-      x: PAGE_WIDTH - MARGIN - 126,
-      y: y - 45,
-      width: 108,
-      height: 28,
+      x: badgeX,
+      y: badgeY,
+      width: badgeWidth,
+      height: badgeHeight,
       color: rgb(1, 1, 1),
       borderColor: RULE,
       borderWidth: 0.8,
     });
     page.drawText(mode === "uncut" ? "UNCUT" : "EDGED", {
-      x: PAGE_WIDTH - MARGIN - 116,
-      y: y - 29,
-      size: 8.2,
+      x: badgeX + 12,
+      y: badgeY + 21,
+      size: 8.8,
       font: bold,
       color: NAVY,
     });
     page.drawText("CUSTOMER PRICING", {
-      x: PAGE_WIDTH - MARGIN - 116,
-      y: y - 39,
-      size: 5.8,
+      x: badgeX + 12,
+      y: badgeY + 9,
+      size: 5.9,
       font: regular,
       color: MUTED,
     });
@@ -810,7 +815,7 @@ async function buildPriceListPdf({
       ensureSpace(boxHeight + 8);
       page.drawRectangle({
         x: MARGIN,
-        y: y - boxHeight + 4,
+        y: y - boxHeight + 3,
         width: CONTENT_WIDTH,
         height: boxHeight,
         color: rgb(1, 1, 1),

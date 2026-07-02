@@ -24,6 +24,7 @@ import {
   Target,
   Triangle,
   Workflow,
+  X,
 } from "lucide-react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -614,6 +615,65 @@ function SetupAccordion({
   );
 }
 
+function ResultModal({
+  open,
+  title,
+  category,
+  results,
+  ready,
+  missing,
+  onClose,
+  onCopy,
+  onPrint,
+  onShare,
+}: {
+  open: boolean;
+  title: string;
+  category: string;
+  results: Array<[string, string]>;
+  ready: boolean;
+  missing: string[];
+  onClose: () => void;
+  onCopy: () => void;
+  onPrint: () => void;
+  onShare: () => void;
+}) {
+  if (!open) {
+    return null;
+  }
+
+  return (
+    <div className="fixed inset-0 z-[1200] flex items-center justify-center bg-black/55 px-4 py-6 backdrop-blur-sm">
+      <button type="button" aria-label="Close results" className="absolute inset-0" onClick={onClose} />
+      <div className="relative z-10 flex max-h-[90vh] w-full max-w-6xl flex-col overflow-hidden rounded-[32px] border border-[#d8c6a8] bg-[#f5f1eb] shadow-[0_28px_90px_rgba(0,0,0,0.34)]">
+        <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#eadfce] bg-white/72 px-5 py-5 md:px-6">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">{category}</p>
+            <h2 className="mt-2 text-3xl font-semibold tracking-tight text-[#172a28]">{title}</h2>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <button onClick={onCopy} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#d8c6a8] bg-white px-4 text-sm font-semibold text-[#172a28] transition hover:bg-[#d4c09a]"><Copy className="h-4 w-4" />Copy</button>
+            <button onClick={onPrint} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#d8c6a8] bg-white px-4 text-sm font-semibold text-[#172a28] transition hover:bg-[#d4c09a]"><Printer className="h-4 w-4" />Print</button>
+            <button onClick={onShare} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#d8c6a8] bg-white px-4 text-sm font-semibold text-[#172a28] transition hover:bg-[#d4c09a]"><Share2 className="h-4 w-4" />Share</button>
+            <button onClick={onPrint} className="inline-flex min-h-10 items-center gap-2 rounded-full bg-[#172a28] px-4 text-sm font-semibold text-white transition hover:bg-[#27433f]"><Download className="h-4 w-4" />PDF</button>
+            <button onClick={onClose} className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#d8c6a8] bg-[#fbf8f3] text-[#172a28] transition hover:bg-[#d4c09a]"><X className="h-4 w-4" /></button>
+          </div>
+        </div>
+        <div className="overflow-y-auto px-5 py-5 md:px-6 md:py-6">
+          {!ready ? (
+            <div className="rounded-2xl border border-[#e7bea5] bg-[#fff1e8] p-4 text-sm font-semibold text-[#8a3f21]">
+              Missing: {missing.join(", ")}
+            </div>
+          ) : null}
+          <div className={ready ? "" : "mt-5"}>
+            <ResultRows results={results} onCopy={(value) => void navigator.clipboard?.writeText(value)} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const calculators: CalculatorDefinition[] = [
   {
     id: "transposition",
@@ -1127,6 +1187,7 @@ export default function OpticalEngineeringPage() {
   const [openPrescription, setOpenPrescription] = useState(true);
   const [openLens, setOpenLens] = useState(false);
   const [openFrame, setOpenFrame] = useState(false);
+  const [resultsOpen, setResultsOpen] = useState(false);
 
   const activeCalculator = calculators.find((calculator) => calculator.id === activeCalculatorId) ?? calculators[0];
   const activeStatus = statusFor(data, activeCalculator.required);
@@ -1134,6 +1195,18 @@ export default function OpticalEngineeringPage() {
   const calculatorCount = calculators.length;
 
   const groupedCalculators = useMemo(() => calculators, []);
+  const activeFieldKeys = useMemo(() => new Set(activeCalculator.required), [activeCalculator]);
+  const requiredGroups = useMemo(
+    () => ({
+      Prescription: numericFields.some((field) => field.group === "Prescription" && activeFieldKeys.has(field.key)),
+      Lens: numericFields.some((field) => field.group === "Lens" && activeFieldKeys.has(field.key)),
+      Frame: numericFields.some((field) => field.group === "Frame" && activeFieldKeys.has(field.key)),
+    }),
+    [activeFieldKeys],
+  );
+  const needsFrameShape = activeFieldKeys.has("frameShape");
+  const needsFrameType = activeFieldKeys.has("frameType");
+  const needsMaterialPresets = activeFieldKeys.has("lensIndex") || activeFieldKeys.has("actualIndex");
 
   const updateNumber = (key: keyof OpticalData, value: string) => {
     setData((current) => ({ ...current, [key]: value === "" ? Number.NaN : Number(value) }));
@@ -1182,10 +1255,42 @@ export default function OpticalEngineeringPage() {
     await copyText(url);
   };
 
+  const openCalculator = (id: string) => {
+    const calculator = calculators.find((entry) => entry.id === id);
+    setActiveCalculatorId(id);
+    setResultsOpen(false);
+    if (!calculator) {
+      return;
+    }
+
+    const keys = new Set(calculator.required);
+    setOpenPrescription(numericFields.some((field) => field.group === "Prescription" && keys.has(field.key)));
+    setOpenLens(numericFields.some((field) => field.group === "Lens" && keys.has(field.key)));
+    setOpenFrame(
+      numericFields.some((field) => field.group === "Frame" && keys.has(field.key)) || keys.has("frameShape") || keys.has("frameType"),
+    );
+
+    requestAnimationFrame(() => {
+      document.getElementById("calculator-setup")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
+  const runCalculation = () => {
+    if (activeStatus.ready) {
+      setResultsOpen(true);
+      return;
+    }
+
+    setOpenPrescription(requiredGroups.Prescription);
+    setOpenLens(requiredGroups.Lens);
+    setOpenFrame(requiredGroups.Frame || needsFrameShape || needsFrameType);
+    document.getElementById("calculator-setup")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   const numericInputs = (group: GroupName) => (
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {numericFields
-        .filter((field) => field.group === group)
+        .filter((field) => field.group === group && activeFieldKeys.has(field.key))
         .map((field) => (
           <label key={field.key} className="grid gap-1">
             <span className="text-xs font-semibold text-[#625b53]">{field.label}</span>
@@ -1219,6 +1324,18 @@ export default function OpticalEngineeringPage() {
           body { background: white !important; }
         }
       `}</style>
+      <ResultModal
+        open={resultsOpen}
+        title={activeCalculator.title}
+        category={activeCalculator.category}
+        results={results}
+        ready={activeStatus.ready}
+        missing={activeStatus.missing}
+        onClose={() => setResultsOpen(false)}
+        onCopy={copyResults}
+        onPrint={printReport}
+        onShare={shareScenario}
+      />
 
       <section className="relative overflow-hidden bg-[#101820] px-6 pb-16 pt-32 text-white md:px-10 md:pb-20 md:pt-40">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(212,192,154,0.22),transparent_28%),radial-gradient(circle_at_86%_14%,rgba(126,226,170,0.13),transparent_28%),linear-gradient(135deg,#101820_0%,#172a28_58%,#0c1117_100%)]" />
@@ -1252,44 +1369,6 @@ export default function OpticalEngineeringPage() {
       </section>
 
       <section id="workspace" className="px-6 py-10 md:px-10 md:py-12">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">Results</p>
-              <h2 className="mt-2 text-4xl font-semibold tracking-tight text-[#172a28]">{activeCalculator.title}</h2>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <button onClick={copyResults} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#d8c6a8] bg-white px-4 text-sm font-semibold transition hover:bg-[#d4c09a]"><Copy className="h-4 w-4" />Copy</button>
-              <button onClick={printReport} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#d8c6a8] bg-white px-4 text-sm font-semibold transition hover:bg-[#d4c09a]"><Printer className="h-4 w-4" />Print</button>
-              <button onClick={shareScenario} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#d8c6a8] bg-white px-4 text-sm font-semibold transition hover:bg-[#d4c09a]"><Share2 className="h-4 w-4" />Share</button>
-              <button onClick={printReport} className="inline-flex min-h-10 items-center gap-2 rounded-full bg-[#172a28] px-4 text-sm font-semibold text-white transition hover:bg-[#27433f]"><Download className="h-4 w-4" />PDF</button>
-            </div>
-          </div>
-
-          <div className="grid gap-5">
-            <div id="calculator-results" className="scroll-mt-28 rounded-[32px] border border-[#d8c6a8] bg-white/86 p-6 shadow-[0_18px_48px_rgba(24,18,13,0.07)]">
-              <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">{activeCalculator.category}</p>
-                  <h2 className="mt-3 text-3xl font-semibold tracking-tight">{activeCalculator.title}</h2>
-                </div>
-                <button onClick={copyResults} className="inline-flex min-h-10 w-fit items-center gap-2 rounded-full border border-[#d8c6a8] bg-[#fbf8f3] px-4 text-sm font-semibold transition hover:bg-[#d4c09a]"><Copy className="h-4 w-4" />Copy All</button>
-              </div>
-              {!activeStatus.ready ? (
-                <div className="mt-5 rounded-2xl border border-[#e7bea5] bg-[#fff1e8] p-4 text-sm font-semibold text-[#8a3f21]">
-                  Missing: {activeStatus.missing.join(", ")}
-                </div>
-              ) : null}
-              <div className="mt-6">
-                <ResultRows results={results} onCopy={copyText} />
-              </div>
-            </div>
-            <MaterialComparison data={data} />
-          </div>
-        </div>
-      </section>
-
-      <section className="px-6 pb-10 md:px-10">
         <div className="mx-auto max-w-7xl rounded-[32px] border border-[#d8c6a8] bg-[#fbf8f3]/88 p-5 shadow-[0_18px_48px_rgba(24,18,13,0.07)] md:p-6">
           <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
@@ -1304,72 +1383,103 @@ export default function OpticalEngineeringPage() {
             calculators={groupedCalculators}
             activeCalculatorId={activeCalculatorId}
             data={data}
-            onSelect={setActiveCalculatorId}
+            onSelect={openCalculator}
           />
         </div>
       </section>
 
-      <section className="px-6 pb-12 md:px-10">
+      <section id="calculator-setup" className="px-6 pb-12 md:px-10">
         <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-[1fr_260px]">
           <div className="grid gap-5">
-            <SetupAccordion
-              title="Prescription"
-              summary={rxSummary(data)}
-              open={openPrescription}
-              onToggle={() => setOpenPrescription((value) => !value)}
-            >
-              {numericInputs("Prescription")}
-            </SetupAccordion>
+            <div className="rounded-[32px] border border-[#d8c6a8] bg-white/86 p-6 shadow-[0_18px_48px_rgba(24,18,13,0.07)]">
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">{activeCalculator.category}</p>
+              <div className="mt-3 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+                <div>
+                  <h2 className="text-3xl font-semibold tracking-tight text-[#172a28]">{activeCalculator.title}</h2>
+                  <p className="mt-2 max-w-3xl text-sm font-semibold text-[#625b53]">{activeCalculator.description}</p>
+                </div>
+                <button onClick={runCalculation} className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#172a28] px-5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#27433f]">
+                  Calculate
+                </button>
+              </div>
+              {!activeStatus.ready ? (
+                <div className="mt-5 rounded-2xl border border-[#e7bea5] bg-[#fff1e8] p-4 text-sm font-semibold text-[#8a3f21]">
+                  Missing: {activeStatus.missing.join(", ")}
+                </div>
+              ) : null}
+            </div>
+            {requiredGroups.Prescription ? (
+              <SetupAccordion
+                title="Prescription"
+                summary={rxSummary(data)}
+                open={openPrescription}
+                onToggle={() => setOpenPrescription((value) => !value)}
+              >
+                {numericInputs("Prescription")}
+              </SetupAccordion>
+            ) : null}
             <div className="grid gap-5 lg:grid-cols-2">
-              <SetupAccordion title="Lens" summary={lensSummary(data)} open={openLens} onToggle={() => setOpenLens((value) => !value)}>
-                <div className="mb-5 grid gap-2 sm:grid-cols-2">
-                  {materialProperties.map((material) => {
-                    const selected = data.lensMaterial === material.name;
-                    return (
-                      <button
-                        key={material.name}
-                        type="button"
-                        onClick={() => selectMaterial(material.name, material.index)}
-                        className={`rounded-2xl border p-3 text-left text-sm font-semibold transition hover:-translate-y-0.5 ${
-                          selected ? "border-[#172a28] bg-[#172a28] text-white" : "border-[#eadfce] bg-[#fbf8f3] text-[#172a28]"
-                        }`}
-                      >
-                        {materialLabel(material.name, material.index)}
-                      </button>
-                    );
-                  })}
-                </div>
-                {numericInputs("Lens")}
-              </SetupAccordion>
-              <SetupAccordion title="Frame" summary={frameSummary(data)} open={openFrame} onToggle={() => setOpenFrame((value) => !value)}>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <label className="grid gap-1">
-                    <span className="text-xs font-semibold text-[#625b53]">Frame Shape</span>
-                    <select
-                      value={data.frameShape}
-                      onChange={(event) => setData((current) => ({ ...current, frameShape: event.target.value as FrameShape }))}
-                      className="min-h-11 rounded-2xl border border-[#eadfce] bg-[#fbf8f3] px-3 text-sm font-semibold outline-none"
-                    >
-                      {["Round", "Rectangle", "Geometric"].map((value) => (
-                        <option key={value}>{value}</option>
-                      ))}
-                    </select>
-                  </label>
-                  <label className="grid gap-1">
-                    <span className="text-xs font-semibold text-[#625b53]">Frame Type</span>
-                    <select
-                      value={data.frameType}
-                      onChange={(event) => setData((current) => ({ ...current, frameType: event.target.value }))}
-                      className="min-h-11 rounded-2xl border border-[#eadfce] bg-[#fbf8f3] px-3 text-sm font-semibold outline-none"
-                    >
-                      {["Full Rim", "Semi-Rimless", "Rimless"].map((value) => (
-                        <option key={value}>{value}</option>
-                      ))}
-                    </select>
-                  </label>
-                </div>
-                <div className="mt-5">{numericInputs("Frame")}</div>
-              </SetupAccordion>
+              {requiredGroups.Lens ? (
+                <SetupAccordion title="Lens" summary={lensSummary(data)} open={openLens} onToggle={() => setOpenLens((value) => !value)}>
+                  {needsMaterialPresets ? (
+                    <div className="mb-5 grid gap-2 sm:grid-cols-2">
+                      {materialProperties.map((material) => {
+                        const selected = data.lensMaterial === material.name;
+                        return (
+                          <button
+                            key={material.name}
+                            type="button"
+                            onClick={() => selectMaterial(material.name, material.index)}
+                            className={`rounded-2xl border p-3 text-left text-sm font-semibold transition hover:-translate-y-0.5 ${
+                              selected ? "border-[#172a28] bg-[#172a28] text-white" : "border-[#eadfce] bg-[#fbf8f3] text-[#172a28]"
+                            }`}
+                          >
+                            {materialLabel(material.name, material.index)}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : null}
+                  {numericInputs("Lens")}
+                </SetupAccordion>
+              ) : null}
+              {requiredGroups.Frame || needsFrameShape || needsFrameType ? (
+                <SetupAccordion title="Frame" summary={frameSummary(data)} open={openFrame} onToggle={() => setOpenFrame((value) => !value)}>
+                  {needsFrameShape || needsFrameType ? (
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      {needsFrameShape ? (
+                        <label className="grid gap-1">
+                          <span className="text-xs font-semibold text-[#625b53]">Frame Shape</span>
+                          <select
+                            value={data.frameShape}
+                            onChange={(event) => setData((current) => ({ ...current, frameShape: event.target.value as FrameShape }))}
+                            className="min-h-11 rounded-2xl border border-[#eadfce] bg-[#fbf8f3] px-3 text-sm font-semibold outline-none"
+                          >
+                            {["Round", "Rectangle", "Geometric"].map((value) => (
+                              <option key={value}>{value}</option>
+                            ))}
+                          </select>
+                        </label>
+                      ) : null}
+                      {needsFrameType ? (
+                        <label className="grid gap-1">
+                          <span className="text-xs font-semibold text-[#625b53]">Frame Type</span>
+                          <select
+                            value={data.frameType}
+                            onChange={(event) => setData((current) => ({ ...current, frameType: event.target.value }))}
+                            className="min-h-11 rounded-2xl border border-[#eadfce] bg-[#fbf8f3] px-3 text-sm font-semibold outline-none"
+                          >
+                            {["Full Rim", "Semi-Rimless", "Rimless"].map((value) => (
+                              <option key={value}>{value}</option>
+                            ))}
+                          </select>
+                        </label>
+                      ) : null}
+                    </div>
+                  ) : null}
+                  {requiredGroups.Frame ? <div className={needsFrameShape || needsFrameType ? "mt-5" : ""}>{numericInputs("Frame")}</div> : null}
+                </SetupAccordion>
+              ) : null}
             </div>
           </div>
           <aside className="lg:sticky lg:top-24 lg:h-fit">
@@ -1381,9 +1491,17 @@ export default function OpticalEngineeringPage() {
                 <p>{lensSummary(data)}</p>
                 <p>{frameSummary(data)}</p>
               </div>
-              <a href="#calculator-results" className="mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[#d4c09a] px-5 text-sm font-semibold text-[#172a28] transition hover:-translate-y-0.5 hover:bg-[#ead7ad]">
-                View Results
-              </a>
+              <div className="mt-5 grid gap-3">
+                <button onClick={runCalculation} className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[#d4c09a] px-5 text-sm font-semibold text-[#172a28] transition hover:-translate-y-0.5 hover:bg-[#ead7ad]">
+                  Calculate
+                </button>
+                <button onClick={shareScenario} className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-white/12 bg-white/8 px-5 text-sm font-semibold text-white transition hover:bg-white/12">
+                  Copy Scenario
+                </button>
+              </div>
+            </div>
+            <div className="mt-5">
+              <MaterialComparison data={data} />
             </div>
           </aside>
         </div>

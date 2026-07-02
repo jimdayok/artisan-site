@@ -120,7 +120,9 @@ const editorialSections = [
     eyebrow: "Exclusive Tokai Partnership",
     title: "A stronger U.S. relationship with Tokai.",
     image: "/images/group-office-photo-2023-1.jpg",
-    imageAlt: "Brandon Butler with Hideyuki Hayashi",
+    imageAlt: "Hideyuki Hayashi, Brandon Butler, and Dean Butler",
+    caption:
+      "Left to right: Hideyuki Hayashi, International Sales, Tokai Corporation; Brandon Butler, President and CEO, Artisan Lab Network; Dean Butler, Founder and former CEO of LensCrafters, Vision Express, LensPro, LensMaster.",
     body:
       "Artisan's relationship with Hideyuki Hayashi and Tokai gives independent practices access to a differentiated lens technology partner with a deep commitment to optical performance. It is a credibility point, but also a practical advantage for practices looking for better product stories.",
     detail:

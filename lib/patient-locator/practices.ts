@@ -375,7 +375,7 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "tokai": true,
+    "tokai": false,
     "artisanPartner": false
   },
   {

@@ -14,6 +14,8 @@ import Header from "../components/Header";
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
 const CONTACT_FORM_URL = "https://form.typeform.com/to/m0lQ9zjD";
 const CAMBER_PURE_HREF = "/provider-resources#iot";
+const PROFESSIONAL_SERVICES_HREF = "/provider-resources/professional-resources";
+const OPTICAL_ENGINEERING_HREF = "/optical-engineering";
 
 const switchReasons = [
   {
@@ -48,6 +50,27 @@ const proofItems = [
   "Independent choice",
   "Premium lens access",
   "Real lab partnership",
+];
+
+const actionLinks = [
+  {
+    title: "Professional Services",
+    body: "Practical resources, product education, and support tools for independent optical teams.",
+    href: PROFESSIONAL_SERVICES_HREF,
+    cta: "Explore Services",
+  },
+  {
+    title: "Optical Engineering Center",
+    body: "Calculators, references, and technical optical tools built for real-world troubleshooting.",
+    href: OPTICAL_ENGINEERING_HREF,
+    cta: "Open Engineering Center",
+  },
+  {
+    title: "Camber Pure",
+    body: "See the premium progressive story you can bring to patients without sacrificing choice.",
+    href: CAMBER_PURE_HREF,
+    cta: "View Camber Pure",
+  },
 ];
 
 const camberRequirements = [
@@ -359,11 +382,11 @@ export default function UoaLandingPage() {
                 <span className="mt-5 block space-y-1 text-3xl font-semibold uppercase leading-tight tracking-[0.08em] text-white md:text-4xl">
                   <span className="block">No limits.</span>
                   <span className="block">No pressure.</span>
-                  <span className="block">No sellouts.</span>
+                  <span className="block text-[#ead8b4]">No compromises.</span>
                 </span>
               </div>
 
-              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <PrimaryButton href={SIGNUP_URL}>Open an Account</PrimaryButton>
                 <SecondaryButton href={CAMBER_PURE_HREF}>
                   Learn More About Camber Pure
@@ -400,6 +423,20 @@ export default function UoaLandingPage() {
                     </p>
                   ))}
                 </div>
+                <div className="relative mt-6 flex flex-wrap gap-3">
+                  <Link
+                    href={PROFESSIONAL_SERVICES_HREF}
+                    className="inline-flex items-center rounded-full border border-[#d4c09a]/40 bg-[#d4c09a]/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#ead8b4] transition hover:bg-[#d4c09a]/18"
+                  >
+                    Professional Services
+                  </Link>
+                  <Link
+                    href={OPTICAL_ENGINEERING_HREF}
+                    className="inline-flex items-center rounded-full border border-white/15 bg-white/[0.05] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/86 transition hover:bg-white/[0.08]"
+                  >
+                    Optical Engineering Center
+                  </Link>
+                </div>
                 <p className="relative mt-6 text-sm leading-7 text-white/64">
                   Stop by after the session, scan the code, or start here. We will
                   help you find the right lab path without asking you to surrender
@@ -435,6 +472,34 @@ export default function UoaLandingPage() {
         </div>
       </section>
 
+      <section data-theme="light" className="bg-[#f4efe6] px-6 pb-8 text-[#1f1a17] md:px-10 md:pb-12">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-4 lg:grid-cols-3">
+            {actionLinks.map((link) => (
+              <Link
+                key={link.title}
+                href={link.href}
+                data-uoa-box
+                className="group rounded-[28px] border border-[#d6c3a1]/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(244,239,230,0.96))] p-6 shadow-[0_20px_45px_rgba(62,46,24,0.08)] transition hover:-translate-y-1 hover:shadow-[0_26px_60px_rgba(62,46,24,0.14)]"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8a7654]">
+                  Quick Path
+                </p>
+                <h3 className="mt-4 text-2xl font-semibold text-[#1f1a17]">
+                  {link.title}
+                </h3>
+                <p className="mt-3 text-base leading-7 text-[#625b53]">
+                  {link.body}
+                </p>
+                <span className="mt-6 inline-flex items-center text-sm font-semibold uppercase tracking-[0.16em] text-[#7a6340] transition group-hover:translate-x-1">
+                  {link.cta}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section data-theme="light" className="bg-[#f4efe6] px-6 py-20 text-[#1f1a17] md:px-10 md:py-24">
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.74fr_1.26fr]">
           <div data-uoa-reveal className="max-w-3xl">
@@ -464,7 +529,7 @@ export default function UoaLandingPage() {
               <article
                 key={reason.title}
                 data-uoa-reveal
-                className="grid gap-4 border-b border-[#d6c3a1]/75 py-6 md:grid-cols-[0.42fr_0.58fr]"
+                className="grid gap-4 border-b border-[#d6c3a1]/75 py-6 transition hover:bg-white/30 md:grid-cols-[0.42fr_0.58fr] md:px-4"
               >
                 <h3 className="text-2xl font-semibold">{reason.title}</h3>
                 <p className="text-base leading-7 text-[#625b53]">
@@ -558,10 +623,17 @@ export default function UoaLandingPage() {
               The right lab partner protects your independence, respects your
               clinical judgment, and helps you bring better options to patients.
               Artisan Lab Network gives independent practices premium lens
-              access, real optical support, and room to make the right call.
+              access, real optical support, and room to make the right call with
+              no compromises.
             </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <PrimaryButton href={SIGNUP_URL}>Open an Account</PrimaryButton>
+              <SecondaryButton href={PROFESSIONAL_SERVICES_HREF}>
+                Professional Services
+              </SecondaryButton>
+              <SecondaryButton href={OPTICAL_ENGINEERING_HREF}>
+                Optical Engineering Center
+              </SecondaryButton>
               <button
                 type="button"
                 onClick={() => setContactOpen(true)}
@@ -584,9 +656,15 @@ export default function UoaLandingPage() {
             Bring your patients more options and your practice a more Artisan
             lab partner.
           </h2>
-          <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap">
+          <div className="mx-auto mt-10 flex max-w-4xl flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap">
             <PrimaryButton href={SIGNUP_URL}>Open an Account</PrimaryButton>
             <SecondaryButton onClick={() => setContactOpen(true)}>Contact Us</SecondaryButton>
+            <SecondaryButton href={PROFESSIONAL_SERVICES_HREF}>
+              Professional Services
+            </SecondaryButton>
+            <SecondaryButton href={OPTICAL_ENGINEERING_HREF}>
+              Optical Engineering Center
+            </SecondaryButton>
             <SecondaryButton href={CAMBER_PURE_HREF}>
               Try Camber Pure
             </SecondaryButton>

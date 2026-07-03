@@ -4,6 +4,9 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 const DEFAULT_PORTAL_EXPORT_PATH = "private-site/portal/portal_export.json";
+const DEBUG_PORTAL_DATA = ["1", "true", "yes", "on"].includes(
+  String(process.env.DEBUG_PORTAL_DATA ?? "").toLowerCase()
+);
 
 type PowerBiRow = Record<string, unknown>;
 
@@ -227,7 +230,7 @@ export function loadPortalExportData(): PortalExportData {
 
   if (!existsSync(resolvedPath)) {
     const error = `Portal export JSON not found at ${resolvedPath}.`;
-    console.error("[PORTAL EXPORT]", error);
+    if (DEBUG_PORTAL_DATA) console.error("[PORTAL EXPORT]", error);
     cachedPortalExportData = emptyData(configuredPath, resolvedPath, error);
     return cachedPortalExportData;
   }
@@ -290,16 +293,18 @@ export function loadPortalExportData(): PortalExportData {
       byBusinessName,
       byAccountNumber,
     };
-    console.log("[PORTAL EXPORT]", cachedPortalExportData.diagnostics);
+    if (DEBUG_PORTAL_DATA) console.log("[PORTAL EXPORT]", cachedPortalExportData.diagnostics);
     return cachedPortalExportData;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    console.error("[PORTAL EXPORT]", {
-      configuredPath,
-      resolvedPath,
-      loaded: false,
-      error: message,
-    });
+    if (DEBUG_PORTAL_DATA) {
+      console.error("[PORTAL EXPORT]", {
+        configuredPath,
+        resolvedPath,
+        loaded: false,
+        error: message,
+      });
+    }
     cachedPortalExportData = emptyData(configuredPath, resolvedPath, message);
     return cachedPortalExportData;
   }

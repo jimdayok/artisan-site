@@ -63,7 +63,7 @@ export type OrderingMethod = {
 };
 
 export type TrainingResource = ResourceLink & {
-  type: "Video" | "Guide" | "Brochure" | "Layout Chart" | "Comparison" | "Treatment" | "Frame Book" | "Action" | "Price List" | "Placeholder";
+  type: "Video" | "Guide" | "Brochure" | "Layout Chart" | "Comparison" | "Treatment" | "Frame Book" | "Action" | "Price List" | "Reference";
   description: string;
 };
 
@@ -329,7 +329,7 @@ export const orderingMethods: OrderingMethod[] = [
       "Confirm the correct lab appears and ask Artisan to review the first order if anything looks unfamiliar.",
     ],
     watch: [
-      { label: "SpecCheck Rx Video Placeholder", href: "/provider-resources#videos" },
+      { label: "SpecCheck Rx Ordering Video", href: "/provider-resources#videos" },
     ],
   },
   {

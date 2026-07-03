@@ -86,7 +86,6 @@ type DownloadResourceItem = {
   cta?: string;
   logo?: string;
   logoAlt?: string;
-  placeholder?: boolean;
   category?: ResourceCategory;
   vendor?: ResourceVendor;
 };
@@ -302,7 +301,7 @@ const downloadResourceSections: DownloadResourceSection[] = [
         description: "Premium everyday AR clarity and comfort for strong everyday recommendations.",
         label: "Artisan Treatment",
         externalHref: "/artisan-ar/emerald",
-        cta: "Learn More",
+        cta: "Explore Emerald",
         logo: "/ar/emerald.png",
         logoAlt: "Artisan Emerald",
       },
@@ -311,7 +310,7 @@ const downloadResourceSections: DownloadResourceSection[] = [
         description: "Artisan's premium AR experience for advanced clarity, durability, and visual comfort.",
         label: "Artisan Treatment",
         externalHref: "/artisan-ar/nytopia",
-        cta: "Learn More",
+        cta: "Explore Nytopia",
         logo: "/ar/nytopia.png",
         logoAlt: "Artisan Nytopia",
       },
@@ -320,7 +319,7 @@ const downloadResourceSections: DownloadResourceSection[] = [
         description: "Durable everyday AR performance for patients who need reliable clarity.",
         label: "Artisan Treatment",
         externalHref: "/artisan-ar/armour",
-        cta: "Learn More",
+        cta: "Explore Armour",
         logo: "/ar/armour.png",
         logoAlt: "Artisan Armour",
       },
@@ -329,7 +328,7 @@ const downloadResourceSections: DownloadResourceSection[] = [
         description: "Balanced clarity and appearance with clean visual performance.",
         label: "Artisan Treatment",
         externalHref: "/artisan-ar/azure",
-        cta: "Learn More",
+        cta: "Explore Azure",
         logo: "/ar/azure.png",
         logoAlt: "Artisan Azure",
       },
@@ -1863,7 +1862,6 @@ function resourceHref(resource: DownloadResourceItem) {
 }
 
 function resourceIsAvailable(resource: DownloadResourceItem) {
-  if (resource.placeholder) return false;
   return resource.filename ? localResourceFiles.has(resource.filename) : Boolean(resource.externalHref);
 }
 
@@ -3435,7 +3433,7 @@ export default function ProviderResourcesPage({
                   href="/programs"
                   className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#c9b28b] transition group-hover:translate-x-1"
                 >
-                  Learn More <span>→</span>
+                  View Program Details <span>→</span>
                 </Link>
               </article>
             ))}

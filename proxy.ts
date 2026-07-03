@@ -8,6 +8,9 @@ const LOCAL_PORTAL_TEST_EMAIL_COOKIE = "portal_dev_email";
 const ACCESS_EMAIL_HEADER = "cf-access-authenticated-user-email";
 const ACCESS_JWT_HEADER = "cf-access-jwt-assertion";
 const ACCESS_JWT_COOKIE = "CF_Authorization";
+const DEBUG_PORTAL_AUTH = ["1", "true", "yes", "on"].includes(
+  String(process.env.DEBUG_PORTAL_AUTH ?? "").toLowerCase()
+);
 const contentSecurityPolicy = [
   "default-src 'self'",
   "img-src 'self' data: https:",
@@ -69,17 +72,19 @@ function deny(request: NextRequest, status: number, message: string) {
   requestHeaders.set("x-portal-auth-error", message);
   requestHeaders.set("x-portal-auth-status", String(status));
 
-  console.error("[PORTAL AUTH]", {
-    path: request.nextUrl.pathname,
-    authenticatedEmail: "",
-    cloudflareEmail:
-      request.headers.get(ACCESS_EMAIL_HEADER)?.trim().toLowerCase() ?? "",
-    authorized: false,
-    authorizationDecision: "render-auth-error",
-    redirectTarget: null,
-    status,
-    message,
-  });
+  if (DEBUG_PORTAL_AUTH) {
+    console.error("[PORTAL AUTH]", {
+      path: request.nextUrl.pathname,
+      authenticatedEmail: "",
+      cloudflareEmail:
+        request.headers.get(ACCESS_EMAIL_HEADER)?.trim().toLowerCase() ?? "",
+      authorized: false,
+      authorizationDecision: "render-auth-error",
+      redirectTarget: null,
+      status,
+      message,
+    });
+  }
 
   return NextResponse.next({ request: { headers: requestHeaders } });
 }
@@ -163,14 +168,16 @@ export async function proxy(request: NextRequest) {
     return deny(request, 403, "Admin access required.");
   }
 
-  console.log("[PORTAL AUTH]", {
-    path: pathname,
-    authenticatedEmail: verifiedEmail,
-    cloudflareEmail: emailHeader,
-    authorized: true,
-    authorizationDecision: "allow",
-    redirectTarget: null,
-  });
+  if (DEBUG_PORTAL_AUTH) {
+    console.log("[PORTAL AUTH]", {
+      path: pathname,
+      authenticatedEmail: verifiedEmail,
+      cloudflareEmail: emailHeader,
+      authorized: true,
+      authorizationDecision: "allow",
+      redirectTarget: null,
+    });
+  }
 
   return NextResponse.next({
     request: { headers: requestHeaders },

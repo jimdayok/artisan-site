@@ -160,6 +160,7 @@ function ContactModal({
           exit={{ opacity: 0 }}
           role="dialog"
           aria-modal="true"
+          aria-labelledby="contact-modal-title"
         >
           <motion.div
             initial={{ opacity: 0, y: 18, scale: 0.98 }}
@@ -171,10 +172,13 @@ function ContactModal({
             <button
               type="button"
               onClick={onClose}
-              className="absolute right-4 top-4 z-10 rounded-full border border-white/15 bg-black/45 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
+              className="absolute right-4 top-4 z-10 rounded-full border border-white/15 bg-black/45 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
             >
               Close
             </button>
+            <h2 id="contact-modal-title" className="sr-only">
+              Contact Artisan Lab Network
+            </h2>
             <iframe
               title="Contact Artisan Lab Network"
               src={CONTACT_FORM_URL}
@@ -187,10 +191,16 @@ function ContactModal({
   );
 }
 
-function PhotoPlaceholder({ label = "Artisan Team" }: { label?: string }) {
+function PortraitFallback({ name }: { name: string }) {
+  const initials = name
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2);
+
   return (
-    <div className="flex aspect-square w-full items-center justify-center rounded-xl bg-white/10 text-sm font-semibold uppercase tracking-[0.18em] text-white/40">
-      {label}
+    <div className="flex aspect-square w-full items-center justify-center rounded-xl border border-[#d4c09a]/25 bg-[linear-gradient(135deg,rgba(212,192,154,0.18),rgba(255,255,255,0.06))] text-3xl font-semibold tracking-[0.08em] text-[#f7ead0]">
+      {initials}
     </div>
   );
 }
@@ -212,7 +222,7 @@ function TeamCard({ member }: { member: TeamMember }) {
           />
         </div>
       ) : (
-        <PhotoPlaceholder />
+        <PortraitFallback name={member.name} />
       )}
       <div className="mt-5">
         <h3 className="text-xl font-semibold tracking-tight text-white">
@@ -269,8 +279,12 @@ function SalesTeamCard({ member }: { member: TeamMember }) {
           />
         </div>
       ) : (
-        <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-center text-xs font-semibold uppercase tracking-[0.14em] text-white/38 sm:h-28 sm:w-28">
-          Artisan Team
+        <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl border border-[#d4c09a]/25 bg-white/10 text-center text-2xl font-semibold tracking-[0.08em] text-[#f7ead0] sm:h-28 sm:w-28">
+          {member.name
+            .split(" ")
+            .map((part) => part[0])
+            .join("")
+            .slice(0, 2)}
         </div>
       )}
     </motion.article>

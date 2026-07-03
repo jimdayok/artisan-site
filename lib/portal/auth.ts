@@ -179,7 +179,11 @@ function isCloudflareAccessConfigured() {
 }
 
 function logMissingCloudflareAccessEnv(headers: Headers) {
-  if (process.env.NODE_ENV !== "production" || hasLoggedMissingCloudflareEnv) {
+  if (
+    process.env.NODE_ENV !== "production" ||
+    hasLoggedMissingCloudflareEnv ||
+    !["1", "true", "yes", "on"].includes(String(process.env.DEBUG_PORTAL_AUTH ?? "").toLowerCase())
+  ) {
     return;
   }
 

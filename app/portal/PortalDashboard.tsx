@@ -1814,7 +1814,7 @@ function PracticePerformanceScoreSection({ intelligence }: { intelligence: Pract
               <div className="h-full rounded-full bg-[#1f8a70]" style={{ width: `${value === 0 ? 0 : Math.max(8, Math.min(100, value))}%` }} />
             </div>
             <p className="text-sm font-semibold text-[#59635f] sm:text-right">
-              {value === 0 ? "Placeholder" : Math.round(value)}
+              {value === 0 ? "Pending" : Math.round(value)}
             </p>
           </div>
         ))}
@@ -2145,7 +2145,7 @@ function TurnaroundBenchmarkCenter({
   );
 }
 
-function PlaceholderInsightCard({
+function DataAvailabilityCard({
   title,
   label,
   detail,
@@ -2191,17 +2191,17 @@ function ProductBrandIntelligenceSection({
         {hasUsageData(brandUsage) ? (
           <MonthlyUsageCharts eyebrow="Brand Usage" title="Brand Orders by Month" data={brandUsage} monthLabels={reportMonths} horizontal />
         ) : (
-          <PlaceholderInsightCard title="Brand Usage" label="Data Unavailable" detail="Brand count fields are unavailable for this account." />
+          <DataAvailabilityCard title="Brand Usage" label="Data Unavailable" detail="Brand count fields are unavailable for this account." />
         )}
         {hasUsageData(materialUsage) ? (
           <MonthlyUsageCharts eyebrow="Material Usage" title="Material Share of Monthly Orders" data={materialUsage} valueType="percent" monthLabels={reportMonths} />
         ) : (
-          <PlaceholderInsightCard title="Material Usage" label="Data Unavailable" detail="Material count fields are unavailable for this account." />
+          <DataAvailabilityCard title="Material Usage" label="Data Unavailable" detail="Material count fields are unavailable for this account." />
         )}
         {hasUsageData(specialtyUsage) ? (
           <MonthlyUsageCharts eyebrow="Specialty Usage" title="Specialty Share of Monthly Orders" data={specialtyUsage} valueType="percent" monthLabels={reportMonths} />
         ) : (
-          <PlaceholderInsightCard title="Specialty Usage" label="Data Unavailable" detail="Specialty product count fields are unavailable for this account." />
+          <DataAvailabilityCard title="Specialty Usage" label="Data Unavailable" detail="Specialty product count fields are unavailable for this account." />
         )}
         <div className="rounded-md border border-[#eadfce] bg-white/78 p-5">
           <span className="inline-flex rounded-md border border-[#d9c8a6] bg-[#f8f1e6] px-2.5 py-1 text-xs font-bold uppercase tracking-[0.12em] text-[#7a6b49]">
@@ -2242,9 +2242,9 @@ function BenchmarkingSection() {
         </span>
       </div>
       <div className="mt-6 grid gap-4 md:grid-cols-3">
-        <PlaceholderInsightCard title="Your Practice" label="Requires Benchmark Dataset" detail="Practice-level benchmarks require approved network comparison data before display." />
-        <PlaceholderInsightCard title="Network Average" label="Requires Benchmark Dataset" detail="Network averages require a customer-safe benchmark rollup before display." />
-        <PlaceholderInsightCard title="Top 25%" label="Future Insight" detail="Top-quartile comparisons will be added once benchmarking definitions are finalized." />
+        <DataAvailabilityCard title="Your Practice" label="Requires Benchmark Dataset" detail="Practice-level benchmarks require approved network comparison data before display." />
+        <DataAvailabilityCard title="Network Average" label="Requires Benchmark Dataset" detail="Network averages require a customer-safe benchmark rollup before display." />
+        <DataAvailabilityCard title="Top 25%" label="Not Yet Available" detail="Top-quartile comparisons will be added once benchmarking definitions are finalized." />
       </div>
     </section>
   );
@@ -2733,15 +2733,6 @@ export default async function PortalDashboard({
     customers = await getAuthorizedPortalCustomers(authenticatedEmail);
     profiles = getPortalWorkbookProfilesByEmail(authenticatedEmail);
   } catch (error) {
-    console.error("[PORTAL AUTH]", {
-      email: authenticatedEmail,
-      authorized: false,
-      accountCount: 0,
-      authorizationDecision: "workbook-load-error",
-      redirectTarget: null,
-      error: error instanceof Error ? error.message : String(error),
-      workbook: getPortalWorkbookDiagnostics(),
-    });
     return (
       <PortalWorkbookError
         authenticatedEmail={authenticatedEmail}
@@ -2751,13 +2742,6 @@ export default async function PortalDashboard({
   }
 
   if (!isPortalAdminEmail(authenticatedEmail) && customers.length === 0) {
-    console.log("[PORTAL AUTH]", {
-      email: authenticatedEmail,
-      authorized: false,
-      accountCount: 0,
-      authorizationDecision: "render-unauthorized",
-      redirectTarget: null,
-    });
     forbidden();
   }
   const selectedAccountKey = normalizeAccountNumber(selectedAccountNumber);
@@ -2781,20 +2765,6 @@ export default async function PortalDashboard({
       )
     ),
   ]).size;
-
-  console.log("[PORTAL AUTH]", {
-    email: authenticatedEmail,
-    authorized: Boolean(matchedCustomer) || isPortalAdminEmail(authenticatedEmail),
-    accountCount: selectableAccountCount,
-    requestedAccount: selectedAccountNumber ?? "",
-    matchedAccount: matchedCustomer?.accountNumber ?? "",
-    dashboardStatus: dashboardState.status,
-    authorizationDecision:
-      selectableAccountCount > 1 && !selectedAccountKey
-        ? "render-account-selector"
-        : "render-customer-dashboard",
-    redirectTarget: null,
-  });
 
   if (
     selectedAccountKey &&

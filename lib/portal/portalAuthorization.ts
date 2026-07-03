@@ -35,6 +35,14 @@ const ALL_PORTAL_SECTIONS: PortalSection[] = [
   "onboarding",
 ];
 
+const DEBUG_PORTAL_AUTH = ["1", "true", "yes", "on"].includes(
+  String(process.env.DEBUG_PORTAL_AUTH ?? "").toLowerCase()
+);
+
+function logPortalAuth(details: Record<string, unknown>) {
+  if (DEBUG_PORTAL_AUTH) console.log("[PORTAL AUTH]", details);
+}
+
 function getAccountIndex() {
   return portalDashboardV1AccessIndex.accountsIndex as AccountIndexRow[];
 }
@@ -92,7 +100,7 @@ function adminAccountsFromIndex() {
 
 export async function getAuthorizedPortalCustomers(email: string) {
   if (!email) {
-    console.log("[PORTAL AUTH]", {
+    logPortalAuth({
       email,
       userFound: false,
       accountCount: 0,
@@ -104,7 +112,7 @@ export async function getAuthorizedPortalCustomers(email: string) {
     const accounts = adminAccountsFromIndex();
     if (accounts.length === 0) {
       const workbookAccounts = await getAllowedAccountsForEmail(email);
-      console.log("[PORTAL AUTH]", {
+      logPortalAuth({
         email,
         userFound: true,
         role: "admin",
@@ -113,7 +121,7 @@ export async function getAuthorizedPortalCustomers(email: string) {
       });
       return workbookAccounts.map((account) => customerFromAccount(account, email));
     }
-    console.log("[PORTAL AUTH]", {
+    logPortalAuth({
       email,
       userFound: true,
       role: "admin",
@@ -124,7 +132,7 @@ export async function getAuthorizedPortalCustomers(email: string) {
   }
   const user = await getPortalUserByEmail(email);
   if (!user) {
-    console.log("[PORTAL AUTH]", {
+    logPortalAuth({
       email,
       userFound: false,
       role: "unauthorized",
@@ -133,7 +141,7 @@ export async function getAuthorizedPortalCustomers(email: string) {
     });
     return [];
   }
-  console.log("[PORTAL AUTH]", {
+  logPortalAuth({
     email,
     userFound: true,
     role: "customer",

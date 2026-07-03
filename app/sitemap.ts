@@ -3,7 +3,10 @@ import type { MetadataRoute } from "next";
 const publicRoutes = [
   "",
   "/about",
+  "/acquios",
+  "/acquios-partners",
   "/advocacy",
+  "/artisan-ar",
   "/artisan-model",
   "/careers",
   "/cookie-policy",
@@ -19,9 +22,15 @@ const publicRoutes = [
   "/patient-resources",
   "/peak-artisan-labs",
   "/pike-artisan-labs",
+  "/policies",
+  "/programs",
   "/provider-resources",
   "/privacy-policy",
+  "/sir-clifford-optical",
+  "/switch-to-artisan",
   "/terms-and-conditions",
+  "/uoa",
+  "/welcome-to-artisan",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

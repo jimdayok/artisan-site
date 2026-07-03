@@ -5,6 +5,10 @@ type VerifiedPortalJwt = {
   payload: JWTPayload;
 };
 
+const DEBUG_PORTAL_AUTH = ["1", "true", "yes", "on"].includes(
+  String(process.env.DEBUG_PORTAL_AUTH ?? "").toLowerCase()
+);
+
 function teamDomain() {
   return (
     process.env.CLOUDFLARE_ACCESS_TEAM_DOMAIN?.trim() ||
@@ -42,7 +46,7 @@ export async function verifyCloudflareAccessJwt(
   const verificationTeamDomain = teamDomain();
 
   if (!verificationAudience || !verificationTeamDomain) {
-    if (process.env.NODE_ENV === "production") {
+    if (process.env.NODE_ENV === "production" && DEBUG_PORTAL_AUTH) {
       console.error(
         "[portal-auth] Missing Cloudflare Access JWT verification env. Expected CLOUDFLARE_ACCESS_TEAM_DOMAIN (or CF_ACCESS_TEAM_DOMAIN) and CLOUDFLARE_ACCESS_AUD (or CF_ACCESS_AUD)."
       );
@@ -62,11 +66,13 @@ export async function verifyCloudflareAccessJwt(
 
     return { email, payload };
   } catch (error) {
-    console.error("[PORTAL AUTH]", {
-      authorizationDecision: "cloudflare-jwt-rejected",
-      verified: false,
-      error: error instanceof Error ? error.message : String(error),
-    });
+    if (DEBUG_PORTAL_AUTH) {
+      console.error("[PORTAL AUTH]", {
+        authorizationDecision: "cloudflare-jwt-rejected",
+        verified: false,
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
     return null;
   }
 }

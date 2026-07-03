@@ -20,13 +20,17 @@ function notifyStoreChanged() {
 
 function getSnapshot() {
   if (typeof window === "undefined") {
-    return JSON.stringify({ returnUrl: "", dismissed: true });
+    return getServerSnapshot();
   }
 
   return JSON.stringify({
     returnUrl: window.sessionStorage.getItem(RETURN_URL_KEY) || "",
     dismissed: window.sessionStorage.getItem(DISMISSED_KEY) === "true",
   });
+}
+
+function getServerSnapshot() {
+  return JSON.stringify({ returnUrl: "", dismissed: true });
 }
 
 function subscribe(onStoreChange: () => void) {
@@ -41,7 +45,7 @@ function subscribe(onStoreChange: () => void) {
 
 export default function TrainingHubReturnButton() {
   const pathname = usePathname();
-  const snapshot = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+  const snapshot = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const { returnUrl, dismissed } = JSON.parse(snapshot) as {
     returnUrl: string;
     dismissed: boolean;

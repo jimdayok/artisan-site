@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import Script from "next/script";
 import CookieConsentProvider from "./components/CookieConsentProvider";
+import CookieYesScript from "./components/CookieYesScript";
 import TrainingHubReturnButton from "./components/TrainingHubReturnButton";
 import "./globals.css";
 
@@ -18,11 +18,38 @@ const nunito = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.artisanslabs.com"),
-  title: "Artisan Lab Network",
+  applicationName: "Artisan Lab Network",
+  title: {
+    default: "Artisan Lab Network",
+    template: "%s",
+  },
   description:
     "Artisan Lab Network supports independent eye care practices with optical lab partnership, provider resources, programs, and lab access.",
   alternates: {
     canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    siteName: "Artisan Lab Network",
+    title: "Artisan Lab Network",
+    description:
+      "Independent optical lab partnership, provider resources, programs, and lab access for eye care practices.",
+    url: "https://www.artisanslabs.com",
+    images: [
+      {
+        url: "/aln-icon.png",
+        width: 512,
+        height: 512,
+        alt: "Artisan Lab Network",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: "Artisan Lab Network",
+    description:
+      "Independent optical lab partnership, provider resources, programs, and lab access for eye care practices.",
+    images: ["/aln-icon.png"],
   },
   manifest: "/manifest.webmanifest",
   icons: {
@@ -44,15 +71,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={nunito.variable}>
-      <head>
-        <Script
-          id="cookieyes"
-          src="https://cdn-cookieyes.com/client_data/e83ecccf3618d9b417487e7baad2c2f1/script.js"
-          strategy="beforeInteractive"
-        />
-      </head>
       <body className="min-h-screen antialiased">
         <CookieConsentProvider>
+          <CookieYesScript />
           {children}
           <TrainingHubReturnButton />
         </CookieConsentProvider>

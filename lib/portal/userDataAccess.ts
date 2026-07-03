@@ -8,6 +8,10 @@ import {
   normalizePortalEmail,
 } from "@/lib/portal/adminAccess";
 
+const DEBUG_PORTAL_DATA = ["1", "true", "yes", "on"].includes(
+  String(process.env.DEBUG_PORTAL_DATA ?? "").toLowerCase()
+);
+
 export type PortalUserAccount = {
   acctId: string;
   accountNumbers: string[];
@@ -138,7 +142,7 @@ function mergeUser(
 
 async function readPortalUserAccess(): Promise<PortalUserAccessData> {
   const diagnostics = getPortalWorkbookDiagnostics();
-  console.log("[PORTAL WORKBOOK]", diagnostics);
+  if (DEBUG_PORTAL_DATA) console.log("[PORTAL WORKBOOK]", diagnostics);
 
   if (!diagnostics.exists) {
     throw new Error(
@@ -228,23 +232,27 @@ async function readPortalUserAccess(): Promise<PortalUserAccessData> {
     accountsByCanonicalId,
     accountAliasToCanonicalId,
   };
-  console.log("[PORTAL WORKBOOK]", {
-    ...diagnostics,
-    loaded: true,
-    userCount: usersByEmail.size,
-    accountCount: accountsByCanonicalId.size,
-  });
+  if (DEBUG_PORTAL_DATA) {
+    console.log("[PORTAL WORKBOOK]", {
+      ...diagnostics,
+      loaded: true,
+      userCount: usersByEmail.size,
+      accountCount: accountsByCanonicalId.size,
+    });
+  }
   return result;
 }
 
 export function loadPortalUserAccess() {
   portalUserAccessPromise ??= readPortalUserAccess().catch((error) => {
     portalUserAccessPromise = undefined;
-    console.error("[PORTAL WORKBOOK]", {
-      ...getPortalWorkbookDiagnostics(),
-      loaded: false,
-      error: error instanceof Error ? error.message : String(error),
-    });
+    if (DEBUG_PORTAL_DATA) {
+      console.error("[PORTAL WORKBOOK]", {
+        ...getPortalWorkbookDiagnostics(),
+        loaded: false,
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
     throw error;
   });
   return portalUserAccessPromise;

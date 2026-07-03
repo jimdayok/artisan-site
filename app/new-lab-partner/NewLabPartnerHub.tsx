@@ -519,7 +519,7 @@ function ProductComparisonGuide({
       .map((row) => `<tr><th>${row.category}</th>${knownColumns.map((column) => `<td>${row.values[column.lensId] || "Not mapped in the current comparison workbook"}</td>`).join("")}</tr>`)
       .join("");
     const missing = missingColumns.length
-      ? `<section class="placeholder"><h2>Comparison data not mapped</h2><p>${missingColumns.map((column) => column.label).join(", ")} ${missingColumns.length === 1 ? "is" : "are"} selected, but not mapped in the current Comparisons.xlsx workbook.</p></section>`
+      ? `<section class="data-notice"><h2>Comparison data not mapped</h2><p>${missingColumns.map((column) => column.label).join(", ")} ${missingColumns.length === 1 ? "is" : "are"} selected, but not mapped in the current Comparisons.xlsx workbook.</p></section>`
       : "";
     const arHeaders = arComparisonColumns.map((label) => `<th>${label}</th>`).join("");
     const arRows = arComparisonRows
@@ -542,7 +542,7 @@ function ProductComparisonGuide({
       tbody th{background:#fbf8f3;width:24%}
       td{background:#fff}
       span{display:block;color:#8a7654;font-size:11px;margin-top:4px}
-      .placeholder{background:#fbf8f3}
+      .data-notice{background:#fbf8f3}
       @media print{body{background:#fff} main{padding:0} section,header{break-inside:avoid}}
     </style></head><body><main>
       <header><img class="logo" src="/aln-white-logo.png" alt="Artisan Lab Network"><div class="eyebrow">Product Comparison Guide</div><h1>${printableName}</h1><p class="meta">Generated ${generatedDate}. Built from Comparisons.xlsx and filtered to selected launch brands.</p></header>
@@ -840,7 +840,7 @@ function ResourceCard({ resource }: { resource: TrainingResource }) {
               ? "Download Frame Book"
               : resource.type === "Price List"
                 ? "Open Safety Price List"
-                : resource.type === "Placeholder"
+                : resource.type === "Reference"
                   ? resource.label
                   : resource.type === "Treatment"
                     ? "Open AR Resource"

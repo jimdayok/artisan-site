@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import {
   Activity,
   Aperture,
@@ -1194,16 +1194,13 @@ export default function OpticalEngineeringPage() {
   const results = activeCalculator.result(data);
   const calculatorCount = calculators.length;
 
-  const groupedCalculators = useMemo(() => calculators, []);
-  const activeFieldKeys = useMemo(() => new Set(activeCalculator.required), [activeCalculator]);
-  const requiredGroups = useMemo(
-    () => ({
-      Prescription: numericFields.some((field) => field.group === "Prescription" && activeFieldKeys.has(field.key)),
-      Lens: numericFields.some((field) => field.group === "Lens" && activeFieldKeys.has(field.key)),
-      Frame: numericFields.some((field) => field.group === "Frame" && activeFieldKeys.has(field.key)),
-    }),
-    [activeFieldKeys],
-  );
+  const groupedCalculators = calculators;
+  const activeFieldKeys = new Set(activeCalculator.required);
+  const requiredGroups = {
+    Prescription: numericFields.some((field) => field.group === "Prescription" && activeFieldKeys.has(field.key)),
+    Lens: numericFields.some((field) => field.group === "Lens" && activeFieldKeys.has(field.key)),
+    Frame: numericFields.some((field) => field.group === "Frame" && activeFieldKeys.has(field.key)),
+  };
   const needsFrameShape = activeFieldKeys.has("frameShape");
   const needsFrameType = activeFieldKeys.has("frameType");
   const needsMaterialPresets = activeFieldKeys.has("lensIndex") || activeFieldKeys.has("actualIndex");
@@ -1220,7 +1217,7 @@ export default function OpticalEngineeringPage() {
     try {
       await navigator.clipboard.writeText(text);
     } catch {
-      console.warn("Clipboard unavailable");
+      return;
     }
   };
 
@@ -1250,7 +1247,7 @@ export default function OpticalEngineeringPage() {
         return;
       }
     } catch {
-      console.warn("Share dismissed");
+      // Fall back to copying the scenario URL when native sharing is dismissed.
     }
     await copyText(url);
   };

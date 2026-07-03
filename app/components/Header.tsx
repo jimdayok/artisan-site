@@ -25,8 +25,8 @@ function Capsule({
 }) {
   const base =
     theme === "light"
-      ? "px-4 py-2 text-sm font-medium rounded-full border border-black/10 bg-white/50 backdrop-blur-md text-black transition hover:bg-white/70 hover:border-black/20"
-      : "px-4 py-2 text-sm font-medium rounded-full border border-white/15 bg-white/10 backdrop-blur-md text-white transition hover:bg-white/15 hover:border-white/25";
+      ? "px-4 py-2 text-sm font-medium rounded-full border border-black/10 bg-white/50 backdrop-blur-md text-black transition hover:bg-white/70 hover:border-black/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8a7654] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+      : "px-4 py-2 text-sm font-medium rounded-full border border-white/15 bg-white/10 backdrop-blur-md text-white transition hover:bg-white/15 hover:border-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a] focus-visible:ring-offset-2 focus-visible:ring-offset-black";
 
   if (!href)
     return (
@@ -59,8 +59,8 @@ function DropdownMenu({
 
   const trigger =
     theme === "light"
-      ? "px-4 py-2 text-sm font-medium rounded-full border border-black/10 bg-white/50 backdrop-blur-md text-black transition hover:bg-white/70 hover:border-black/20 flex items-center gap-2"
-      : "px-4 py-2 text-sm font-medium rounded-full border border-white/15 bg-white/10 backdrop-blur-md text-white transition hover:bg-white/15 hover:border-white/25 flex items-center gap-2";
+      ? "px-4 py-2 text-sm font-medium rounded-full border border-black/10 bg-white/50 backdrop-blur-md text-black transition hover:bg-white/70 hover:border-black/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8a7654] focus-visible:ring-offset-2 focus-visible:ring-offset-white flex items-center gap-2"
+      : "px-4 py-2 text-sm font-medium rounded-full border border-white/15 bg-white/10 backdrop-blur-md text-white transition hover:bg-white/15 hover:border-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a] focus-visible:ring-offset-2 focus-visible:ring-offset-black flex items-center gap-2";
 
   const menu =
     theme === "light"
@@ -82,6 +82,7 @@ function DropdownMenu({
         className={trigger}
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
+        aria-haspopup="menu"
       >
         {label}
         <span className="text-xs opacity-70">{open ? "▲" : "▼"}</span>
@@ -115,7 +116,7 @@ function DropdownMenu({
                     ) : null}
                     <Link
                       href={href}
-                      className={itemCls}
+                      className={`${itemCls} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a] focus-visible:ring-inset`}
                       onClick={handleClick}
                     >
                       {item.label}
@@ -135,7 +136,7 @@ function DropdownMenu({
                   ) : null}
                   <a
                     href={href}
-                    className={itemCls}
+                    className={`${itemCls} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a] focus-visible:ring-inset`}
                     onClick={handleClick}
                   >
                     {item.label}
@@ -267,20 +268,21 @@ export default function Header({
               href={signUpHref}
               target="_blank"
               rel="noreferrer"
-              className="ml-1 px-6 py-2 text-sm font-semibold rounded-full bg-[#d4c09a] text-black border border-[#d4c09a] shadow hover:opacity-90"
+              className="ml-1 rounded-full border border-[#d4c09a] bg-[#d4c09a] px-6 py-2 text-sm font-semibold text-black shadow transition hover:-translate-y-0.5 hover:bg-[#e2cca2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a] focus-visible:ring-offset-2 focus-visible:ring-offset-black active:translate-y-0"
             >
               Get Started
             </a>
           </nav>
 
           <button
-            className="flex flex-col items-center justify-center lg:hidden p-2"
+            className="flex flex-col items-center justify-center rounded-full p-2 transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a] lg:hidden"
             onClick={handleMobileIconClick}
-            aria-label="Toggle menu"
+            aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={mobileOpen}
           >
             <Image
               src="/aln-icon.png"
-              alt="Menu"
+              alt=""
               width={260}
               height={260}
               className="h-7 w-7 object-contain"
@@ -310,14 +312,14 @@ export default function Header({
           >
             <div className="max-w-7xl mx-auto px-5 py-4 space-y-3">
               <Link
-                className="block text-sm font-semibold"
+                className="block min-h-10 rounded-lg px-2 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
                 href="/"
                 onClick={() => setMobileOpen(false)}
               >
                 Home
               </Link>
               <Link
-                className="block text-sm font-semibold"
+                className="block min-h-10 rounded-lg px-2 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
                 href="/about"
                 onClick={() => setMobileOpen(false)}
               >
@@ -337,7 +339,7 @@ export default function Header({
                     ) : null}
                     {item.href?.startsWith("/") ? (
                       <Link
-                        className="block text-sm font-semibold mt-2"
+                        className="mt-2 block min-h-10 rounded-lg px-2 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
                         href={item.href}
                         onClick={() => setMobileOpen(false)}
                       >
@@ -345,7 +347,7 @@ export default function Header({
                       </Link>
                     ) : (
                       <a
-                        className="block text-sm font-semibold mt-2"
+                        className="mt-2 block min-h-10 rounded-lg px-2 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
                         href={item.href}
                         onClick={() => setMobileOpen(false)}
                       >
@@ -360,7 +362,7 @@ export default function Header({
                 <div className="text-xs uppercase tracking-[0.28em] opacity-60 mb-2">Resources</div>
                 {resources.items.map((item) => {
                   const href = item.href ?? "#";
-                  const className = "block text-sm font-semibold mt-2";
+                  const className = "mt-2 block min-h-10 rounded-lg px-2 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]";
 
                   if (href.startsWith("/")) {
                     return (
@@ -390,7 +392,7 @@ export default function Header({
 
               <button
                 type="button"
-                className="block text-sm font-semibold mt-3 text-left"
+                className="mt-3 block min-h-10 rounded-lg px-2 py-2 text-left text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
                 onClick={() => {
                   setMobileOpen(false);
                   onContactClick?.();
@@ -403,9 +405,9 @@ export default function Header({
                 href={signUpHref}
                 target="_blank"
                 rel="noreferrer"
-                className={`mt-4 inline-flex rounded-full px-6 py-2 text-sm font-semibold ${
+                className={`mt-4 inline-flex min-h-11 items-center rounded-full px-6 py-2 text-sm font-semibold transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a] ${
                   theme === "light" ? "bg-black text-white" : "bg-[#d4c09a] text-black"
-                } shadow`}
+                } shadow active:translate-y-0`}
                 onClick={() => setMobileOpen(false)}
               >
                 Get Started

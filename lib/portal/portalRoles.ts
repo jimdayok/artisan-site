@@ -34,14 +34,6 @@ function configuredAdminEmails() {
 export function getPortalStaffRole(email: string): PortalStaffRole {
   const normalizedEmail = normalizePortalEmail(email);
 
-  if (
-    BUILT_IN_ADMIN_EMAILS.has(normalizedEmail) ||
-    configuredAdminEmails().has(normalizedEmail) ||
-    isPortalAdminEmailAddress(normalizedEmail)
-  ) {
-    return { kind: "admin", email: normalizedEmail, label: "Administrator" };
-  }
-
   const rep = SALES_REPS.get(normalizedEmail);
   if (rep) {
     return {
@@ -50,6 +42,14 @@ export function getPortalStaffRole(email: string): PortalStaffRole {
       label: rep.label,
       repCode: rep.repCode,
     };
+  }
+
+  if (
+    BUILT_IN_ADMIN_EMAILS.has(normalizedEmail) ||
+    configuredAdminEmails().has(normalizedEmail) ||
+    isPortalAdminEmailAddress(normalizedEmail)
+  ) {
+    return { kind: "admin", email: normalizedEmail, label: "Administrator" };
   }
 
   return { kind: "unassigned", email: normalizedEmail, label: "Unassigned" };

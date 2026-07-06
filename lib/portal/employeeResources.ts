@@ -200,7 +200,6 @@ export const employeeResources: EmployeeResource[] = [
   } satisfies EmployeeResource)),
   ...[
     ["organizational-structure", "ALN Organizational Structure", "Company structure and functional ownership framework."],
-    ["contact-directory", "Contact Directory", "Internal contact directory framework."],
     ["lab-information", "Lab Information", "Lab locations, capabilities, and support contacts."],
     ["program-overview", "Program Overview", "Internal program summary and reference framework."],
     ["ownership-model", "Ownership Model", "Internal reference for ALN ownership and partnership model."],
@@ -216,4 +215,20 @@ export const employeeResources: EmployeeResource[] = [
     dateAdded: "2026-06-04",
     status: "coming-soon",
   } satisfies EmployeeResource)),
+  {
+    id: "contact-directory",
+    title: "Professional Contact Directory",
+    description: "Live internal directory for ALN leadership and Pacific, Peak, and Pike customer service teams.",
+    category: "company",
+    subcategory: "Company Reference",
+    tags: ["company", "reference", "contacts", "directory", "labs"],
+    fileType: "Directory",
+    dateAdded: "2026-07-06",
+    href: "/portal/employee-resources#contact-directory",
+    version: "Internal",
+    lastUpdated: "2026-07-06",
+    featured: true,
+    recentlyAdded: true,
+    status: "available",
+  },
 ];

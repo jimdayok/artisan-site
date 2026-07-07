@@ -14,6 +14,10 @@ const SALES_REPS = new Map([
     "heather.branderhorst@pacificartisanlabs.com",
     { label: "Heather Branderhorst", repCode: "HB" },
   ],
+  [
+    "heather@pacificartisanlabs.com",
+    { label: "Heather Branderhorst", repCode: "HB" },
+  ],
   ["jropiol@live.com", { label: "Josh Opiol", repCode: "OP" }],
 ]);
 

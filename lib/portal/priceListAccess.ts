@@ -1,7 +1,6 @@
 import { headers } from "next/headers";
 import { forbidden } from "next/navigation";
 import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
-import { isPortalAdminEmail } from "@/lib/portal/admin";
 import {
   customerHasPortalSection,
   getCustomerByAccountNumber,
@@ -12,6 +11,10 @@ import {
   getAuthorizedPortalCustomer,
   getAuthorizedPortalCustomers,
 } from "@/lib/portal/portalAuthorization";
+import {
+  canAccessPortalAdmin,
+  getPortalStaffRole,
+} from "@/lib/portal/portalRoles";
 import { normalizeAssignedPriceListCodes } from "@/lib/portal/assignedPriceLists";
 import {
   canonicalPriceListCode,
@@ -51,7 +54,10 @@ export async function getAuthorizedPriceListFromHeaders(
     return { status: "unauthenticated", authenticatedEmail: "", priceList };
   }
 
-  if (priceList && isPortalAdminEmail(authenticatedEmail)) {
+  const portalRole = getPortalStaffRole(authenticatedEmail);
+  const hasStaffPortalAccess = canAccessPortalAdmin(portalRole);
+
+  if (priceList && hasStaffPortalAccess) {
     const previewAccountNumber = options?.previewAccountNumber?.trim();
     const previewCustomer = previewAccountNumber
       ? getCustomerByAccountNumber(previewAccountNumber)
@@ -149,7 +155,10 @@ export async function getAuthorizedPortalSectionForPage(section: PortalSection) 
     return { status: "unauthenticated" as const, authenticatedEmail: "" };
   }
 
-  if (isPortalAdminEmail(authenticatedEmail)) {
+  const portalRole = getPortalStaffRole(authenticatedEmail);
+  const hasStaffPortalAccess = canAccessPortalAdmin(portalRole);
+
+  if (hasStaffPortalAccess) {
     const adminAccessiblePriceLists = [...visiblePriceListCodes];
     return {
       status: "authorized" as const,

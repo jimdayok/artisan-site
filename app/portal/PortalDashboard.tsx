@@ -2775,7 +2775,7 @@ export default async function PortalDashboard({
   if (
     selectedAccountKey &&
     !matchedCustomer &&
-    !isPortalAdminEmail(authenticatedEmail)
+    !hasStaffPortalAccess
   ) {
     forbidden();
   }

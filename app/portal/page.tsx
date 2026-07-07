@@ -1,9 +1,12 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { isPortalAdminEmail } from "@/lib/portal/admin";
 import {
   getPortalAuthenticatedEmailFromHeaders,
 } from "@/lib/portal/auth";
+import {
+  canAccessPortalAdmin,
+  getPortalStaffRole,
+} from "@/lib/portal/portalRoles";
 import PortalDashboard from "./PortalDashboard";
 
 export const dynamic = "force-dynamic";
@@ -27,11 +30,11 @@ export default async function PortalPage({
   const headerList = await headers();
   const query = await searchParams;
   const authenticatedEmail = getPortalAuthenticatedEmailFromHeaders(headerList);
-  const isAdminEmail = Boolean(
-    authenticatedEmail && isPortalAdminEmail(authenticatedEmail)
-  );
+  const portalRole = getPortalStaffRole(authenticatedEmail);
+  const hasStaffPortalAccess =
+    Boolean(authenticatedEmail) && canAccessPortalAdmin(portalRole);
 
-  if (isAdminEmail) {
+  if (hasStaffPortalAccess) {
     const params = new URLSearchParams();
     if (query.q) params.set("q", query.q);
     if (query.division) params.set("division", query.division);

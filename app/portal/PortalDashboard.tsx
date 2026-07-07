@@ -20,7 +20,6 @@ import {
   Users,
   type LucideIcon,
 } from "lucide-react";
-import { isPortalAdminEmail } from "@/lib/portal/admin";
 import {
   getCustomerTypeInfoFromProfile,
   hasModernPackageSavingsWarning,
@@ -39,6 +38,10 @@ import {
   getAuthorizedPortalCustomer,
   getAuthorizedPortalCustomers,
 } from "@/lib/portal/portalAuthorization";
+import {
+  canAccessPortalAdmin,
+  getPortalStaffRole,
+} from "@/lib/portal/portalRoles";
 import { normalizeAssignedPriceListCodes } from "@/lib/portal/assignedPriceLists";
 import {
   getPortalWorkbookDiagnostics,
@@ -2741,7 +2744,10 @@ export default async function PortalDashboard({
     );
   }
 
-  if (!isPortalAdminEmail(authenticatedEmail) && customers.length === 0) {
+  const portalRole = getPortalStaffRole(authenticatedEmail);
+  const hasStaffPortalAccess = canAccessPortalAdmin(portalRole);
+
+  if (!hasStaffPortalAccess && customers.length === 0) {
     forbidden();
   }
   const selectedAccountKey = normalizeAccountNumber(selectedAccountNumber);

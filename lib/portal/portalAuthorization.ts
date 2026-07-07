@@ -8,10 +8,13 @@ import type {
 import { getPortalCustomerTypeInfo } from "@/lib/portal/customerTypes";
 import { portalDashboardV1AccessIndex } from "@/lib/portal/dashboardV1AccessIndex";
 import {
+  canAccessPortalAdmin,
+  getPortalStaffRole,
+} from "@/lib/portal/portalRoles";
+import {
   assertAccountAccess,
   getAllowedAccountsForEmail,
   getPortalUserByEmail,
-  isPortalAdmin,
   PortalAccountAccessError,
   type PortalUserAccount,
 } from "@/lib/portal/userDataAccess";
@@ -108,25 +111,28 @@ export async function getAuthorizedPortalCustomers(email: string) {
     });
     return [];
   }
-  if (isPortalAdmin(email)) {
+  const portalRole = getPortalStaffRole(email);
+  const hasStaffPortalAccess = canAccessPortalAdmin(portalRole);
+
+  if (hasStaffPortalAccess) {
     const accounts = adminAccountsFromIndex();
     if (accounts.length === 0) {
       const workbookAccounts = await getAllowedAccountsForEmail(email);
       logPortalAuth({
         email,
         userFound: true,
-        role: "admin",
+        role: portalRole.kind,
         accountCount: workbookAccounts.length,
-        authorizationDecision: "admin-workbook-fallback",
+        authorizationDecision: "staff-workbook-fallback",
       });
       return workbookAccounts.map((account) => customerFromAccount(account, email));
     }
     logPortalAuth({
       email,
       userFound: true,
-      role: "admin",
+      role: portalRole.kind,
       accountCount: accounts.length,
-      authorizationDecision: "admin-dashboard-access",
+      authorizationDecision: "staff-dashboard-access",
     });
     return accounts.map((account) => customerFromAccount(account, email));
   }
@@ -158,7 +164,8 @@ export async function getAuthorizedPortalCustomer(
   const customers = await getAuthorizedPortalCustomers(email);
   if (!accountId) return customers[0];
 
-  if (isPortalAdmin(email)) {
+  const portalRole = getPortalStaffRole(email);
+  if (canAccessPortalAdmin(portalRole)) {
     const normalizedAccount = accountId.trim().toUpperCase().replace(/\.0$/, "");
     return customers.find(
       (customer) =>
@@ -182,7 +189,8 @@ export async function getAuthorizedPortalCustomer(
 }
 
 export async function getPortalAuthorization(email: string) {
-  if (isPortalAdmin(email)) {
+  const portalRole = getPortalStaffRole(email);
+  if (canAccessPortalAdmin(portalRole)) {
     return {
       role: "admin" as const,
       email,

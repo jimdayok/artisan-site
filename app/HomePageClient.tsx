@@ -27,6 +27,18 @@ const heroPaths = [
   },
 ];
 
+const heroSignals = [
+  { value: "3 Labs", label: "Connected network" },
+  { value: "U.S.", label: "Production focus" },
+  { value: "Doctor-owned", label: "Independent model" },
+];
+
+const heroTrustNotes = [
+  "Freedom to choose lens designs",
+  "Faster, clearer lab communication",
+  "A partner model built for independent practices",
+];
+
 const eventCards = [
   {
     name: "UOA Leadership Conference",
@@ -732,6 +744,8 @@ export default function Home() {
           </video>
         </div>
         <div className={`pointer-events-none absolute inset-0 transition-colors duration-500 ${showHeroBox ? "bg-black/54" : "bg-transparent"}`} />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/55 via-black/15 to-transparent" />
+        <div className="pointer-events-none absolute inset-0 opacity-80" style={{ backgroundImage: "radial-gradient(circle at 50% 22%, rgba(212,192,154,0.2), transparent 28%), radial-gradient(circle at 82% 70%, rgba(255,255,255,0.08), transparent 22%)" }} />
 
         <div className="relative z-20 flex min-h-[100svh] items-center justify-center px-5 pb-20 pt-24 text-center md:px-6 md:pb-24 md:pt-28">
           <AnimatePresence mode="wait">
@@ -742,8 +756,10 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -10, scale: 0.98 }}
                 transition={{ duration: 0.45, ease: "easeOut" }}
-                className="relative w-full max-w-5xl rounded-[28px] border border-white/15 bg-black/48 px-5 py-5 text-center shadow-[0_28px_90px_rgba(0,0,0,0.42)] backdrop-blur-xl md:px-7 md:py-7"
+                className="relative w-full max-w-5xl overflow-hidden rounded-[30px] border border-white/15 bg-[linear-gradient(145deg,rgba(0,0,0,0.60),rgba(10,10,10,0.42))] px-5 py-5 text-center shadow-[0_28px_90px_rgba(0,0,0,0.42)] backdrop-blur-xl md:px-7 md:py-7"
               >
+                <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-white/45 to-transparent" />
+                <div className="pointer-events-none absolute -right-20 top-8 h-48 w-48 rounded-full bg-[#d4c09a]/10 blur-3xl" />
                 <button
                   type="button"
                   onClick={() => setShowHeroBox(false)}
@@ -759,12 +775,28 @@ export default function Home() {
                   <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#d4c09a]">
                     Artisan Lab Network
                   </p>
-                  <h1 className="mt-3 text-3xl font-semibold leading-tight md:mt-4 md:text-6xl">
+                  <h1 className="mt-3 text-3xl font-semibold leading-tight md:mt-4 md:text-[3.8rem]">
                     What brought you to Artisan?
                   </h1>
                   <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-white/74 md:mt-4 md:text-lg md:leading-7">
                     Choose the path that fits you best and we&apos;ll help you find the right next step.
                   </p>
+                </div>
+
+                <div className="mx-auto mt-5 grid max-w-3xl gap-3 sm:grid-cols-3">
+                  {heroSignals.map((signal) => (
+                    <div
+                      key={signal.label}
+                      className="rounded-2xl border border-white/12 bg-white/[0.06] px-4 py-3 text-center shadow-[0_10px_28px_rgba(0,0,0,0.18)]"
+                    >
+                      <div className="text-lg font-semibold text-[#f3e7cf] md:text-xl">
+                        {signal.value}
+                      </div>
+                      <div className="mt-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/54">
+                        {signal.label}
+                      </div>
+                    </div>
+                  ))}
                 </div>
 
                 <motion.div
@@ -778,8 +810,12 @@ export default function Home() {
                       key={path.title}
                       href={path.href}
                       variants={cardReveal}
-                      className="group flex min-h-0 flex-col rounded-xl border border-white/12 bg-white/[0.075] p-4 text-left shadow-[0_14px_44px_rgba(0,0,0,0.20)] transition duration-300 hover:-translate-y-1 hover:border-[#d4c09a]/55 hover:bg-white/[0.105] md:min-h-[172px] md:p-5"
+                      className="group relative flex min-h-0 flex-col overflow-hidden rounded-[22px] border border-white/12 bg-[linear-gradient(160deg,rgba(255,255,255,0.11),rgba(255,255,255,0.05))] p-4 text-left shadow-[0_14px_44px_rgba(0,0,0,0.20)] transition duration-300 hover:-translate-y-1 hover:border-[#d4c09a]/55 hover:bg-white/[0.105] md:min-h-[172px] md:p-5"
                     >
+                      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/35 to-transparent" />
+                      <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#d4c09a]/90">
+                        {path.href.startsWith("/") ? "Existing partner path" : "New to Artisan"}
+                      </div>
                       <h2 className="text-lg font-semibold leading-tight text-white md:text-2xl">
                         {path.title}
                       </h2>
@@ -813,6 +849,15 @@ export default function Home() {
                     </Link>
                   </p>
                 </div>
+
+                <div className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 border-t border-white/10 pt-4 text-[11px] font-medium uppercase tracking-[0.18em] text-white/50">
+                  {heroTrustNotes.map((note) => (
+                    <span key={note} className="inline-flex items-center gap-2">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#d4c09a]/85" />
+                      {note}
+                    </span>
+                  ))}
+                </div>
               </motion.div>
             ) : null}
           </AnimatePresence>
@@ -839,7 +884,7 @@ export default function Home() {
             transition={{ duration: 0.35, ease: "easeOut" }}
             className="relative z-10 border-b border-[#d6c3a1]/35 bg-[#f5f1eb] px-5 py-5 text-[#1f1a17] md:px-8 md:py-6"
           >
-            <div className="mx-auto flex max-w-4xl flex-col gap-4 rounded-lg border border-black/10 bg-white/62 px-5 py-4 shadow-[0_14px_36px_rgba(31,26,23,0.07)] backdrop-blur-md sm:flex-row sm:items-center sm:gap-5 md:px-6">
+            <div className="mx-auto flex max-w-4xl flex-col gap-4 rounded-[22px] border border-black/10 bg-white/66 px-5 py-4 shadow-[0_14px_36px_rgba(31,26,23,0.07)] backdrop-blur-md sm:flex-row sm:items-center sm:gap-5 md:px-6">
               <div className="flex shrink-0 items-center sm:w-28 sm:justify-center">
                 <Image
                   src="/iot-logo.png"
@@ -876,6 +921,7 @@ export default function Home() {
         data-theme="dark"
         className="relative scroll-mt-24 border-y border-white/10 bg-[#171311] px-6 py-14 text-white md:px-10 md:py-18"
       >
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(212,192,154,0.14),transparent_28%),radial-gradient(circle_at_82%_78%,rgba(255,255,255,0.08),transparent_22%)]" />
         <div className="mx-auto max-w-7xl">
           <motion.div {...fadeUp} className="grid gap-9 lg:grid-cols-[0.72fr_1.28fr] lg:items-center">
             <div className="max-w-xl">
@@ -883,11 +929,20 @@ export default function Home() {
                 Why We Win
               </p>
               <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-[3.4rem]">
-                Why We Win.
+                Performance your team can actually feel.
               </h2>
               <p className="mt-4 text-base leading-8 text-white/68">
                 Practices need a lab relationship they can feel in turnaround, communication, quality, and control.
               </p>
+              <div className="mt-6 inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.055] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-white/54 shadow-[0_12px_34px_rgba(0,0,0,0.16)]">
+                <span className="text-[#d4c09a]">Measured</span>
+                <span className="h-1 w-1 rounded-full bg-white/25" />
+                <span>Turnaround</span>
+                <span className="h-1 w-1 rounded-full bg-white/25" />
+                <span>Quality</span>
+                <span className="h-1 w-1 rounded-full bg-white/25" />
+                <span>Service</span>
+              </div>
             </div>
             <div
               className="grid gap-4"

@@ -42,6 +42,7 @@ import {
   canAccessPortalAdmin,
   getPortalStaffRole,
 } from "@/lib/portal/portalRoles";
+import { isPortalAdminEmail } from "@/lib/portal/admin";
 import { normalizeAssignedPriceListCodes } from "@/lib/portal/assignedPriceLists";
 import {
   getPortalWorkbookDiagnostics,

@@ -78,6 +78,111 @@ function normalizeDesignStyleName(value: string) {
     .trim();
 }
 
+function normalizeMaterialDisplayName(value: string) {
+  const normalized = normalizeLookupKey(value);
+  if (normalized === "POLYCARB" || normalized === "POLYCARBONATE") return "Polycarbonate";
+  if (normalized === "PLASTIC") return "Plastic";
+  if (normalized === "TRIVEX") return "Trivex";
+  if (normalized === "HI INDEX 1.60" || normalized === "HI-INDEX 1.60" || normalized === "HIGH INDEX 1.60") return "Hi-Index 1.60";
+  if (normalized === "HI INDEX 1.67" || normalized === "HI-INDEX 1.67" || normalized === "HIGH INDEX 1.67") return "Hi-Index 1.67";
+  if (normalized === "HI INDEX 1.74" || normalized === "HI-INDEX 1.74" || normalized === "HIGH INDEX 1.74") return "Hi-Index 1.74";
+  return String(value || "").trim();
+}
+
+const materialDeltaTargets = [
+  { codes: ["P"], material: "Plastic" },
+  { codes: ["H53"], material: "Trivex" },
+  { codes: ["H60"], material: "Hi-Index 1.60" },
+  { codes: ["H67"], material: "Hi-Index 1.67" },
+  { codes: ["H74"], material: "Hi-Index 1.74" },
+];
+
+const polycarbonateBaselineMaterialCodes = ["PLY", "TPY", "SPY", "PRY", "BLY"];
+
+function formatAddOnPrice(addOn: number) {
+  if (addOn === 0) return "$0";
+  const sign = addOn < 0 ? "-" : "";
+  return `${sign}$${Math.abs(addOn).toFixed(2).replace(/\.00$/u, "")}`;
+}
+
+function mostCommonNumber(values: number[]) {
+  const counts = new Map<number, number>();
+  for (const value of values) {
+    const normalized = Number(value.toFixed(2));
+    counts.set(normalized, (counts.get(normalized) ?? 0) + 1);
+  }
+  return [...counts.entries()].sort(
+    (a, b) => b[1] - a[1] || Math.abs(a[0]) - Math.abs(b[0]) || a[0] - b[0]
+  )[0]?.[0];
+}
+
+function deriveMaterialAddOnsFromRows(rows: Array<{
+  brand: string;
+  designType: string;
+  designStyle: string;
+  materialRaw?: string;
+  materialColor: string;
+  colorRaw: string[];
+  edgedPrice: number;
+}>) {
+  const groups = new Map<string, Map<string, number>>();
+  for (const row of rows) {
+    const materialCode = normalizeLookupKey(row.materialRaw || "");
+    if (!materialCode || !Number.isFinite(row.edgedPrice)) continue;
+    const color = normalizeLookupKey(row.colorRaw?.[0] || "CLR");
+    const key = [
+      normalizeLookupKey(row.brand),
+      normalizeLookupKey(row.designType),
+      normalizeLookupKey(row.designStyle),
+      normalizeLookupKey(row.materialColor),
+      color,
+    ].join("|");
+    const group = groups.get(key) ?? new Map<string, number>();
+    group.set(materialCode, row.edgedPrice);
+    groups.set(key, group);
+  }
+
+  return materialDeltaTargets.flatMap((target) => {
+    const deltas: number[] = [];
+    for (const materialPrices of groups.values()) {
+      const baselineCode = polycarbonateBaselineMaterialCodes.find((code) => materialPrices.has(code));
+      if (!baselineCode) continue;
+      const baseline = materialPrices.get(baselineCode);
+      if (typeof baseline !== "number" || !Number.isFinite(baseline)) continue;
+      for (const targetCode of target.codes) {
+        const targetPrice = materialPrices.get(targetCode);
+        if (typeof targetPrice === "number" && Number.isFinite(targetPrice)) {
+          deltas.push(Number((targetPrice - baseline).toFixed(2)));
+        }
+      }
+    }
+    const addOn = mostCommonNumber(deltas);
+    return Number.isFinite(addOn) ? [{ material: target.material, addOn: addOn! }] : [];
+  });
+}
+
+function addInferredMaterialSection(
+  addOnSections: PriceListAddOnSection[],
+  materialAddOns: Array<{ material: string; addOn: number }>
+) {
+  if (
+    !materialAddOns.length ||
+    addOnSections.some((section) => /add for material/i.test(section.title))
+  ) {
+    return addOnSections;
+  }
+  return [
+    {
+      title: "Add for Material",
+      items: materialAddOns.map((entry) => ({
+        name: entry.material,
+        price: formatAddOnPrice(entry.addOn),
+      })),
+    },
+    ...addOnSections,
+  ];
+}
+
 type LookupMaps = {
   productByDvi: Map<string, { name: string; designType: string; brand: string }>;
   materialByDvi: Map<
@@ -320,10 +425,12 @@ async function dviToGenerated(code: string, payload: DviPayload): Promise<Genera
     }));
 
     const materialLookup = lookups.materialByDvi.get(normalizeLookupKey(row.materialCode || ""));
-    const mappedMaterial =
+    const mappedMaterial = normalizeMaterialDisplayName(
       materialLookup?.name ||
-      row.materialLensType ||
-      row.materialCode;
+        row.materialLensType ||
+        row.materialCode ||
+        ""
+    );
     const materialColor =
       normalizeLookupKey(materialLookup?.polarized || "") === "YES"
         ? "Polarized"
@@ -369,7 +476,8 @@ async function dviToGenerated(code: string, payload: DviPayload): Promise<Genera
     lookups.arByCode
   );
 
-  const addOnSections: PriceListAddOnSection[] = [
+  const materialAddOns = deriveMaterialAddOnsFromRows(pricingRows);
+  const addOnSections: PriceListAddOnSection[] = addInferredMaterialSection([
     {
       title: "Program Notes",
       items: [
@@ -379,12 +487,13 @@ async function dviToGenerated(code: string, payload: DviPayload): Promise<Genera
         },
       ],
     },
-  ];
+  ], materialAddOns);
 
   return {
     code,
     rows: pricingRows,
     arCoatings,
+    materialAddOns,
     addOnSections,
     report: {
       sourceFiles: [`dvi-${code.toLowerCase()}-pricing.json`],

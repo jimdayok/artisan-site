@@ -60,6 +60,7 @@ const hiddenStylePattern = /\b(BRONZE|BS)\b/i;
 
 const materialDisplayMap = new Map([
   ["PLASTIC", "Plastic"],
+  ["POLYCARB", "Polycarbonate"],
   ["POLYCARBONATE", "Polycarbonate"],
   ["TRIVEX", "Trivex"],
   ["MID INDEX 1.56", "Mid Index 1.56"],
@@ -79,6 +80,16 @@ const materialDisplayMap = new Map([
   ["HIGH INDEX 1.76", "Hi-Index 1.76"],
   ["HI INDEX 1.76", "Hi-Index 1.76"],
 ]);
+
+const materialDeltaTargets = [
+  { codes: ["P"], material: "Plastic" },
+  { codes: ["H53"], material: "Trivex" },
+  { codes: ["H60"], material: "Hi-Index 1.60" },
+  { codes: ["H67"], material: "Hi-Index 1.67" },
+  { codes: ["H74"], material: "Hi-Index 1.74" },
+];
+
+const polycarbonateBaselineMaterialCodes = ["PLY", "TPY", "SPY", "PRY", "BLY"];
 
 const polarizedLensMatCodes = new Set([
   "P60",
@@ -300,12 +311,99 @@ function parsePriceToNumber(value) {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-function materialAddOnsFromSections(code, addOnSections) {
+function formatAddOnPrice(addOn) {
+  if (addOn === 0) return "$0";
+  const sign = addOn < 0 ? "-" : "";
+  return `${sign}$${Math.abs(addOn).toFixed(2).replace(/\.00$/u, "")}`;
+}
+
+function rowColorKey(row) {
+  const colorRaw = Array.isArray(row.colorRaw) ? row.colorRaw[0] : row.colorRaw;
+  return normalizeKey(colorRaw || "CLR");
+}
+
+function rowStyleKey(row) {
+  return [
+    normalizeKey(row.brand),
+    normalizeKey(row.designType),
+    normalizeKey(row.designStyle),
+    rowColorKey(row),
+    normalizeKey(row.materialColor),
+  ].join("|");
+}
+
+function mostCommonNumber(values) {
+  const counts = new Map();
+  for (const value of values) {
+    const normalized = Number(Number(value).toFixed(2));
+    counts.set(normalized, (counts.get(normalized) ?? 0) + 1);
+  }
+  return [...counts.entries()]
+    .sort((a, b) => b[1] - a[1] || Math.abs(a[0]) - Math.abs(b[0]) || a[0] - b[0])[0]?.[0];
+}
+
+function deriveMaterialAddOnsFromRows(rows) {
+  const groups = new Map();
+  for (const row of rows ?? []) {
+    const materialCode = normalizeKey(row.materialRaw || row.lensMatCode);
+    if (!materialCode) continue;
+    const price = parsePriceToNumber(row.edgedPrice);
+    if (!Number.isFinite(price)) continue;
+    const key = rowStyleKey(row);
+    const group = groups.get(key) ?? new Map();
+    group.set(materialCode, price);
+    groups.set(key, group);
+  }
+
+  const addOns = [];
+  for (const target of materialDeltaTargets) {
+    const deltas = [];
+    for (const materialPrices of groups.values()) {
+      const baselineCode = polycarbonateBaselineMaterialCodes.find((code) => materialPrices.has(code));
+      if (!baselineCode) continue;
+      const baseline = materialPrices.get(baselineCode);
+      for (const targetCode of target.codes) {
+        if (materialPrices.has(targetCode)) {
+          deltas.push(Number((materialPrices.get(targetCode) - baseline).toFixed(2)));
+        }
+      }
+    }
+    const addOn = mostCommonNumber(deltas);
+    if (Number.isFinite(addOn)) {
+      addOns.push({ material: target.material, addOn });
+    }
+  }
+
+  return addOns;
+}
+
+function hasMaterialAddOnSection(addOnSections) {
+  return (addOnSections ?? []).some((entry) => /add for material/i.test(String(entry.title || "")));
+}
+
+function addInferredMaterialSection(addOnSections, materialAddOns) {
+  if (hasMaterialAddOnSection(addOnSections) || !materialAddOns.length) return addOnSections ?? [];
+  return [
+    {
+      title: "Add for Material",
+      items: materialAddOns.map((entry) => ({
+        name: entry.material,
+        price: formatAddOnPrice(entry.addOn),
+      })),
+    },
+    ...(addOnSections ?? []),
+  ];
+}
+
+function materialAddOnsFromSections(code, addOnSections, rows = []) {
   const fallback = materialAddOnsByCode[code] ?? [];
   const section = (addOnSections ?? []).find((entry) =>
     /add for material/i.test(String(entry.title || ""))
   );
-  if (!section?.items?.length) return fallback;
+  if (!section?.items?.length) {
+    const derived = deriveMaterialAddOnsFromRows(rows);
+    return derived.length > 0 ? derived : fallback;
+  }
 
   const parsed = section.items
     .map((item) => ({
@@ -315,7 +413,9 @@ function materialAddOnsFromSections(code, addOnSections) {
     }))
     .filter((entry) => entry.material && Number.isFinite(entry.addOn));
 
-  return parsed.length > 0 ? parsed : fallback;
+  if (parsed.length > 0) return parsed;
+  const derived = deriveMaterialAddOnsFromRows(rows);
+  return derived.length > 0 ? derived : fallback;
 }
 
 function normalizeRows(rows, lookupMap, priceListCode) {
@@ -806,7 +906,8 @@ async function main() {
       payload.scheduleCatalog?.coating ?? [],
       arLookupMap
     );
-    const materialAddOns = materialAddOnsFromSections(code, payload.addOnSections ?? []);
+    const materialAddOns = materialAddOnsFromSections(code, payload.addOnSections ?? [], normalizedRowsResult.rows);
+    const addOnSections = addInferredMaterialSection(payload.addOnSections ?? [], materialAddOns);
     const normalizedPayload = {
       ...payload,
       code,
@@ -815,6 +916,7 @@ async function main() {
       rows: normalizedRowsResult.rows,
       arCoatings,
       materialAddOns,
+      addOnSections,
       report: sanitizeReport(payload.report),
     };
 

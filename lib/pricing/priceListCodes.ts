@@ -1,6 +1,6 @@
 import hiddenPriceListCodeList from "@/config/hidden-price-list-codes.json";
 
-export const PACKAGE_PRICE_LIST_CODES = ["B5", "S5", "TK", "VX", "M5", "Y5", "VD"] as const;
+export const PACKAGE_PRICE_LIST_CODES = ["B5", "C3", "S5", "TK", "VX", "M5", "Y5", "VD"] as const;
 
 const packagePriceListCodes = new Set<string>(PACKAGE_PRICE_LIST_CODES);
 const hiddenPriceListCodes = new Set<string>(

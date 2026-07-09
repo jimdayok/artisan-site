@@ -188,8 +188,8 @@ const brandLibraries: BrandLibrary[] = [
       resource("artisan", "Artisan", "Lens Designs", "PDF", "Diamond Series", "Premium design guide for Diamond Series patient conversations.", fileHref("artisan-diamond-series-guide.pdf"), ["progressive", "design"], { popular: true }),
       resource("artisan", "Artisan", "Lens Designs", "PDF", "Gold Series", "Product guide for Gold Series positioning and recommendations.", fileHref("artisan-gold-series-guide.pdf"), ["progressive", "design"]),
       resource("artisan", "Artisan", "Lens Designs", "PDF", "Platinum Series", "Premium design support for Platinum Series recommendations.", fileHref("artisan-platinum-series-guide.pdf"), ["progressive", "design"]),
-      resource("artisan", "Artisan", "Lens Designs", "PDF", "Artisan Design Series", "Overview guide for Artisan design families and recommendation paths.", fileHref("artisan-design-series.pdf"), ["design", "quick guide"]),
-      resource("artisan", "Artisan", "Lens Designs", "PDF", "SD Reach", "Current SD Reach guide for office-reader and near-work recommendations.", fileHref("sd-reach-guide-2025.pdf"), ["office", "occupational"]),
+      resource("artisan", "Artisan", "Lens Designs", "PDF", "Artisan Design Series", "Overview guide for Artisan design families and recommendation paths.", fileHref("artisan-design-series.pdf"), ["design", "quick guide", "progressive"]),
+      resource("artisan", "Artisan", "Lens Designs", "PDF", "SD Reach", "Current SD Reach guide for office-reader and near-work recommendations.", fileHref("sd-reach-guide-2025.pdf"), ["office", "office lens", "occupational"]),
       resource("artisan", "Artisan", "Layout Charts", "PDF", "Diamond Series Layout Chart", "Measurement and placement guide for Diamond Series designs.", fileHref("ArtisanDesigns/diamond_series.pdf"), ["layout chart", "fitting"], { staffPick: true }),
       resource("artisan", "Artisan", "Layout Charts", "PDF", "Gold Series Layout Chart", "Fitting reference for Gold Series lens design selection.", fileHref("ArtisanDesigns/gold_series.pdf"), ["layout chart", "fitting"]),
       resource("artisan", "Artisan", "Layout Charts", "PDF", "Platinum Series Layout Chart", "Centration chart for Platinum Series ordering support.", fileHref("ArtisanDesigns/platinum_series.pdf"), ["layout chart", "fitting"]),
@@ -211,8 +211,8 @@ const brandLibraries: BrandLibrary[] = [
     resources: [
       resource("iot", "IOT", "Lens Designs", "PDF", "IOT Portfolio Guide", "Portfolio overview for IOT lens designs and platform options.", fileHref("iot-portfolio-guide.pdf"), ["portfolio", "design"], { popular: true }),
       resource("iot", "IOT", "Lens Designs", "PDF", "IOT Camber Pure", "Camber Pure guide for IOT-powered lens recommendations.", fileHref("iot-camber-pure.pdf"), ["Camber Pure", "progressive"], { popular: true, staffPick: true }),
-      resource("iot", "IOT", "Lens Designs", "PDF", "Camber Steady Plus", "Guide for Camber Steady Plus recommendations and patient conversations.", fileHref("camber-steady-plus.pdf"), ["Camber", "progressive"]),
-      resource("iot", "IOT", "Lens Designs", "PDF", "Endless Office", "Occupational lens guide for workspace-specific visual needs.", fileHref("endless-office.pdf"), ["office", "occupational"]),
+      resource("iot", "IOT", "Lens Designs", "PDF", "Camber Plus", "Guide for Camber Steady Plus recommendations and patient conversations.", fileHref("camber-steady-plus.pdf"), ["Camber", "Camber Plus", "progressive"]),
+      resource("iot", "IOT", "Lens Designs", "PDF", "Endless Office", "Occupational lens guide for workspace-specific visual needs.", fileHref("endless-office.pdf"), ["office", "office lens", "occupational"]),
       resource("iot", "IOT", "Lens Designs", "PDF", "Endless Office Degression Chart", "Degression chart for fitting and explaining Endless Office options.", fileHref("endless-office-degression-chart.pdf"), ["office", "degression", "layout chart"]),
       resource("iot", "IOT", "Lens Designs", "PDF", "Neochromes", "Photochromic lens guide for Neochromes product conversations.", fileHref("neochromes-guide.pdf"), ["photochromic", "sun"]),
       resource("iot", "IOT", "Layout Charts", "PDF", "IOT Centration Charts", "Fitting and centration charts for IOT-powered lens designs.", fileHref("iot-centration-charts.pdf"), ["layout chart", "fitting"], { popular: true }),
@@ -229,10 +229,10 @@ const brandLibraries: BrandLibrary[] = [
     accent: "#b45309",
     logo: "/tokai-logo.png",
     resources: [
-      resource("tokai", "Tokai", "Materials", "PDF", "Tokai Select Guide", "Overview guide for Tokai Select options and positioning.", fileHref("tokai-select-guide.pdf"), ["material", "select"], { popular: true }),
+      resource("tokai", "Tokai", "Lens Designs", "PDF", "Tokai Select Guide", "Overview guide for Tokai Select options and positioning.", fileHref("tokai-select-guide.pdf"), ["material", "select", "progressive"], { popular: true }),
       resource("tokai", "Tokai", "Lens Designs", "PDF", "Tokai Bi-AS SV Guide", "Single vision Bi-AS reference for fitting and product selection.", fileHref("tokai-bias-sv-guide.pdf"), ["single vision", "SV"]),
       resource("tokai", "Tokai", "Lens Designs", "PDF", "Tokai Reset Guide", "Tokai Reset resource for patient conversations and dispensing support.", fileHref("tokai-reset-guide.pdf"), ["Reset", "patient conversation"]),
-      resource("tokai", "Tokai", "Materials", "PDF", "Tokai Largo Guide", "Tokai Largo guide for product positioning and lens selection.", fileHref("tokai-largo-guide.pdf"), ["material", "high Rx"]),
+      resource("tokai", "Tokai", "Lens Designs", "PDF", "Tokai Largo Guide", "Tokai Largo guide for product positioning and office-lens selection.", fileHref("tokai-largo-guide.pdf"), ["material", "high Rx", "office", "office lens", "occupational"]),
       resource("tokai", "Tokai", "Materials", "PDF", "Tokai Tint Guide", "Tint reference for Tokai lens options and patient preferences.", fileHref("tokai-tint-guide.pdf"), ["tint", "sun"]),
       resource("tokai", "Tokai", "Videos", "Training", "Tokai Product Training", "Tokai product training for design selection and dispensing support.", "https://youtu.be/9P7VEmI0ZwY", ["video", "training"], { newest: true }),
     ],
@@ -260,7 +260,7 @@ const brandLibraries: BrandLibrary[] = [
     accent: "#0e7490",
     logo: "/shamir-logo.png",
     resources: [
-      resource("shamir", "Shamir", "Technical Bulletins", "PDF", "Driver Intelligence Technical Guide", "Technical guide for Shamir Driver Intelligence recommendations.", fileHref("Shamir-Driver-Intelligence-Technical-Sheet.pdf"), ["driving", "technical"], { staffPick: true }),
+      resource("shamir", "Shamir", "Technical Bulletins", "PDF", "Driver Intelligence Technical Guide", "Technical guide for Shamir Driver Intelligence recommendations.", fileHref("Shamir-Driver-Intelligence-Technical-Sheet.pdf"), ["driving", "technical", "progressive"]),
     ],
   },
   {
@@ -272,7 +272,7 @@ const brandLibraries: BrandLibrary[] = [
     accent: "#4d7c0f",
     logo: "/unity-logo.png",
     resources: [
-      resource("unity", "Unity / VSP", "Lens Designs", "PDF", "Unity V3 Sales Guide", "Sales guide for Unity V3 lens positioning and plan conversations.", fileHref("unity-v3-sales-guide.pdf"), ["VSP", "Unity V3"], { popular: true }),
+      resource("unity", "Unity / VSP", "Lens Designs", "PDF", "Unity V3 Sales Guide", "Sales guide for Unity V3 lens positioning and plan conversations.", fileHref("unity-v3-sales-guide.pdf"), ["VSP", "Unity V3", "progressive"], { popular: true }),
       resource("unity", "Unity / VSP", "Technical Bulletins", "PDF", "Unity V3 White Paper", "Technical white paper for Unity V3 performance and product context.", fileHref("5688bc8-2e3-c061-3d27-251215283ac_Unity_V3_Whitepaper.pdf"), ["white paper"]),
       resource("unity", "Unity / VSP", "Programs", "PDF", "Unity Rewards Flyer", "Standard Unity Rewards program flyer and payout overview.", fileHref("unity-rewards-flyer.pdf"), ["Unity Rewards", "VSP"], { popular: true }),
       resource("unity", "Unity / VSP", "Programs", "PDF", "PECAA Max Unity Rewards Flyer", "PECAA Max Unity Rewards flyer and program overview.", fileHref("unity-rewards-pecaa.pdf"), ["Unity Rewards", "PECAA"]),
@@ -292,7 +292,7 @@ const brandLibraries: BrandLibrary[] = [
     resources: [
       resource("varilux", "Varilux / Crizal", "Lens Designs", "PDF", "Varilux Product Guide", "Portfolio guide for Varilux progressive lens recommendations.", fileHref("varilux-product-guide.pdf"), ["progressive"], { popular: true }),
       resource("varilux", "Varilux / Crizal", "Lens Designs", "PDF", "Varilux Comfort", "Reference sheet for Varilux Comfort features and patient fit.", fileHref("varilux-comfort.pdf"), ["progressive"]),
-      resource("varilux", "Varilux / Crizal", "Patient Materials", "PDF", "Varilux Immersia Sales Aid", "Sales aid for positioning Varilux Immersia.", fileHref("404700_PRO_VAR.pdf"), ["sales aid", "patient conversation"]),
+      resource("varilux", "Varilux / Crizal", "Lens Designs", "PDF", "Varilux Immersia Sales Aid", "Sales aid for positioning Varilux Immersia as an office-lens solution.", fileHref("404700_PRO_VAR.pdf"), ["sales aid", "office", "office lens", "occupational"]),
       resource("varilux", "Varilux / Crizal", "Technical Bulletins", "PDF", "Varilux Physio Extensee Scientific Paper", "Scientific paper for Varilux Physio Extensee design context.", fileHref("401050_PRO_VAR-Varilux_Physio_Extensee_Scientific_Paper_FNL.pdf"), ["scientific", "technical"]),
       resource("varilux", "Varilux / Crizal", "AR Coatings", "PDF", "Crizal Natural Product Sheet", "Product information sheet for Crizal Natural Look.", fileHref("456102_PRO_ZAL.pdf"), ["Crizal", "AR"]),
       resource("varilux", "Varilux / Crizal", "AR Coatings", "PDF", "Crizal Product Guide 2026", "Updated Crizal product guide including Crizal Natural Look.", fileHref("462850_PRO_ZAL-Crizal_Product_Guide_2026_Update_with_Crizal_Natural_Look_LR.pdf"), ["Crizal", "AR"], { newest: true }),
@@ -439,6 +439,7 @@ const filterOptions = [
   "Training",
   "Layout Charts",
   "Progressives",
+  "Office Lens",
   "Single Vision",
   "AR",
   "Photochromic",
@@ -751,16 +752,16 @@ export default function ProviderResourcesPage({
         className={`fixed right-4 top-1/2 z-40 hidden -translate-y-1/2 rounded-[2rem] border border-[#d7ded9]/80 bg-white/68 p-4 shadow-[0_18px_55px_rgba(17,24,39,0.14)] backdrop-blur-2xl transition-all duration-500 xl:block ${
           showSectionNav && !sectionNavDismissed ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-8 opacity-0"
         }`}
-      >
+        >
         <button
           type="button"
           onClick={() => setSectionNavDismissed(true)}
-          className="absolute right-3 top-3 grid h-7 w-7 place-items-center rounded-full border border-[#d7ded9]/80 bg-white/70 text-[#64748b] transition hover:border-[#0f766e] hover:text-[#0f766e]"
+          className="absolute right-4 top-4 grid h-8 w-8 place-items-center rounded-full border border-[#d7ded9]/80 bg-white/82 text-[#64748b] shadow-sm transition hover:border-[#0f766e] hover:text-[#0f766e]"
           aria-label="Hide section navigation"
         >
           <X className="h-3.5 w-3.5" />
         </button>
-        <div className="grid gap-3 pt-5">
+        <div className="grid gap-3 pt-10">
           {sectionNavItems.map(([label, href], index) => (
             <a
               key={href}

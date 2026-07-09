@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { gunzipSync } from "node:zlib";
+import { gunzipSync, gzipSync } from "node:zlib";
 import {
   getPricingLookupData,
   normalizeLookupKey as normalizeWorkbookLookupKey,
@@ -19,6 +19,13 @@ const packagedNormalizedDir = path.join(
   "generated",
   "normalized"
 );
+const publicPackagedNormalizedDir = path.join(
+  root,
+  "public",
+  "pricing",
+  "generated",
+  "normalized"
+);
 const dashboardIndexPath = path.join(
   root,
   "private-source",
@@ -28,17 +35,6 @@ const dashboardIndexPath = path.join(
   "accounts_index.json"
 );
 const manifestPath = path.join(generatedDir, "pricing-manifest.json");
-const SITE_SUPPORTED_CODES = new Set([
-  "A6",
-  "B5",
-  "G6",
-  "M5",
-  "P6",
-  "S5",
-  "VD",
-  "Y5",
-]);
-
 const materialAddOnsByCode = {
   G6: [],
   P6: [],
@@ -237,6 +233,26 @@ async function readLookupArMap(lookupData) {
   return map;
 }
 
+async function readLookupMaterialMap(lookupData) {
+  const map = new Map();
+  for (const row of lookupData.workbooks.materials.rows) {
+    const code = normalizeKey(row.lensmat);
+    if (!code) continue;
+    map.set(code, {
+      name: normalizeTextValue(row["Material Name"]),
+      materialColor: normalizeTextValue(row["Material Color"]),
+      colorBrand: normalizeTextValue(row["Material Color Brand"]),
+      photochromic: normalizeTextValue(row.Photochromic),
+      polarized: normalizeTextValue(row.Polarized),
+    });
+  }
+  return map;
+}
+
+function normalizeTextValue(value) {
+  return String(value ?? "").trim();
+}
+
 function normalizeBrandAndStyle(row, lookupMap) {
   const rawCandidates = [
     row.designStyle,
@@ -396,25 +412,46 @@ function normalizeRows(rows, lookupMap, priceListCode) {
   };
 }
 
-function normalizeArCoatings(rows) {
+function mergeArCoating(byCode, coating) {
+  if (!coating?.code || coating.unresolved) return;
+  const code = String(coating.code).trim().toUpperCase();
+  if (!code) return;
+  const current = byCode.get(code);
+  if (!current || Number(coating.price) > Number(current.price)) {
+    byCode.set(code, {
+      code,
+      name: coating.name,
+      brandFamily: coating.brandFamily,
+      price: Number(coating.price),
+      recommended: false,
+      outsourced: false,
+    });
+  }
+}
+
+function normalizeArCoatings(rows, supplementalSchedules = [], arLookupMap = null) {
   const byCode = new Map();
   for (const row of rows) {
     for (const coating of row.coatingOptions ?? []) {
-      if (!coating.code || coating.unresolved) continue;
-      const code = String(coating.code).trim().toUpperCase();
-      const current = byCode.get(code);
-      if (!current || Number(coating.price) > Number(current.price)) {
-        byCode.set(code, {
-          code,
-          name: coating.name,
-          brandFamily: coating.brandFamily,
-          price: Number(coating.price),
-          recommended: false,
-          outsourced: false,
-        });
-      }
+      mergeArCoating(byCode, coating);
     }
   }
+
+  for (const schedule of supplementalSchedules ?? []) {
+    for (const coating of schedule?.entries ?? []) {
+      const rawCode = String(coating?.Code ?? "").trim().toUpperCase();
+      if (!rawCode) continue;
+      const match = arLookupMap?.get(normalizeKey(rawCode));
+      mergeArCoating(byCode, {
+        code: rawCode,
+        name: match?.name || rawCode,
+        brandFamily: match?.brandFamily || "Unmapped AR",
+        price: Number(coating?.Price ?? 0),
+        unresolved: !match,
+      });
+    }
+  }
+
   return [...byCode.values()].sort(
     (a, b) =>
       a.brandFamily.localeCompare(b.brandFamily) ||
@@ -522,7 +559,14 @@ function resolveESeriesDesignTypeRule(listCode, styleName, fallbackDesignType) {
   };
 }
 
-function dviRowsToGeneratedPayload(code, dviRows, lookupMap, arLookupMap) {
+function dviRowsToGeneratedPayload(
+  code,
+  dviRows,
+  lookupMap,
+  arLookupMap,
+  materialLookupMap,
+  scheduleCatalog = {}
+) {
   const rows = [];
   const designTypeCorrections = [];
   for (const [index, row] of dviRows.entries()) {
@@ -539,13 +583,21 @@ function dviRowsToGeneratedPayload(code, dviRows, lookupMap, arLookupMap) {
       String(row?.productStyleDescription || "").split(" ")[0] ||
       "Design";
     const materialCode = String(row?.materialCode ?? "").trim();
-    const materialLookup = lookupMap.get(normalizeKey(materialCode));
-    const material = materialLookup?.name || String(row?.materialLensType || materialCode || "Unknown Material");
+    const materialLookup = materialLookupMap.get(normalizeKey(materialCode));
+    const material = normalizeMaterialName(
+      materialLookup?.name || String(row?.materialLensType || materialCode || "Unknown Material")
+    );
     const colorRaw = String(
       row?.sourceRefs?.styleRow?.COL || row?.sourceRefs?.styleRow?.Col || "CLR"
     ).trim();
     const colorUpper = colorRaw.toUpperCase();
-    const materialColor = colorUpper === "CLR" || colorUpper === "CLEAR" ? "Clear" : "Photochromic";
+    const materialColor =
+      normalizeKey(materialLookup?.polarized) === "YES"
+        ? "Polarized"
+        : normalizeKey(materialLookup?.photochromic) === "YES"
+          ? "Photochromic"
+          : materialLookup?.materialColor || (colorUpper === "CLR" || colorUpper === "CLEAR" ? "Clear" : "Photochromic");
+    const colorBrand = materialLookup?.colorBrand || (colorRaw || "CLR");
     const basePrice = Number(row?.basePrice ?? 0);
     const uncutDeduct = Number(row?.sourceRefs?.styleRow?.UncutDeduct ?? 0);
     const coatingSchedule = String(
@@ -597,7 +649,7 @@ function dviRowsToGeneratedPayload(code, dviRows, lookupMap, arLookupMap) {
       materialColor,
       colorRaw: [colorRaw || "CLR"],
       availableColors: [colorRaw || "CLR"],
-      colorBrand: colorRaw || "CLR",
+      colorBrand,
       edgedPrice: basePrice,
       uncutDeduct,
       uncutPrice: Number((basePrice - uncutDeduct).toFixed(2)),
@@ -613,8 +665,9 @@ function dviRowsToGeneratedPayload(code, dviRows, lookupMap, arLookupMap) {
   return {
     code,
     rows,
-    arCoatings: normalizeArCoatings(rows),
+    arCoatings: normalizeArCoatings(rows, scheduleCatalog.coating ?? [], arLookupMap),
     addOnSections: [],
+    scheduleCatalog,
     report: {
       sourceFiles: [`dvi-${code.toLowerCase()}-pricing.json`],
       rowCount: rows.length,
@@ -661,7 +714,6 @@ async function readTargetCodes() {
   }
 
   const filteredCodes = [...targetCodes]
-    .filter((code) => SITE_SUPPORTED_CODES.has(code))
     .filter(
       (code) =>
         existsSync(getStandardSourcePath(code)) || existsSync(getDviSourcePath(code))
@@ -680,12 +732,20 @@ async function writeJson(filePath, value, { pretty = true } = {}) {
   await writeFile(filePath, `${payload}${suffix}`, "utf8");
 }
 
+async function writeGzipJson(filePath, value) {
+  const payload = `${JSON.stringify(value)}\n`;
+  await writeFile(filePath, gzipSync(Buffer.from(payload, "utf8")));
+}
+
 async function main() {
   await mkdir(normalizedDir, { recursive: true });
   await mkdir(diagnosticsDir, { recursive: true });
+  await mkdir(packagedNormalizedDir, { recursive: true });
+  await mkdir(publicPackagedNormalizedDir, { recursive: true });
   const lookupData = await getPricingLookupData({ rootDir: root });
   const lookupMap = await readLookupBrandAndName(lookupData);
   const arLookupMap = await readLookupArMap(lookupData);
+  const materialLookupMap = await readLookupMaterialMap(lookupData);
   const { targetCodes, ignoreCodes } = await readTargetCodes();
   const validation = [];
   const taxonomyReport = [];
@@ -704,7 +764,14 @@ async function main() {
     if (source.kind === "standard" && source.payload) {
       payload = { ...source.payload, code };
     } else if (source.kind === "dvi" && source.payload?.rows) {
-      payload = dviRowsToGeneratedPayload(code, source.payload.rows, lookupMap, arLookupMap);
+      payload = dviRowsToGeneratedPayload(
+        code,
+        source.payload.rows,
+        lookupMap,
+        arLookupMap,
+        materialLookupMap,
+        source.payload.scheduleCatalog ?? {}
+      );
     } else {
       payload = {
         code,
@@ -734,7 +801,11 @@ async function main() {
     }
 
     const normalizedRowsResult = normalizeRows(payload.rows ?? [], lookupMap, code);
-    const arCoatings = normalizeArCoatings(normalizedRowsResult.rows);
+    const arCoatings = normalizeArCoatings(
+      normalizedRowsResult.rows,
+      payload.scheduleCatalog?.coating ?? [],
+      arLookupMap
+    );
     const materialAddOns = materialAddOnsFromSections(code, payload.addOnSections ?? []);
     const normalizedPayload = {
       ...payload,
@@ -757,6 +828,8 @@ async function main() {
     await writeJson(path.join(normalizedDir, `${code}.json`), normalizedPayload, {
       pretty: false,
     });
+    await writeGzipJson(path.join(packagedNormalizedDir, `${code}.json.gz`), normalizedPayload);
+    await writeGzipJson(path.join(publicPackagedNormalizedDir, `${code}.json.gz`), normalizedPayload);
 
     payload = null;
 

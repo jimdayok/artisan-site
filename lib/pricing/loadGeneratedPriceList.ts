@@ -26,6 +26,15 @@ type DviRow = {
   };
 };
 
+type DviPayload = {
+  rows?: DviRow[];
+  scheduleCatalog?: {
+    coating?: Array<{
+      entries?: Array<{ Code?: string; Price?: string | number }>;
+    }>;
+  };
+};
+
 function readJson<T>(filePath: string): T | undefined {
   if (!existsSync(filePath)) return undefined;
   return JSON.parse(readFileSync(filePath, "utf8")) as T;
@@ -71,7 +80,16 @@ function normalizeDesignStyleName(value: string) {
 
 type LookupMaps = {
   productByDvi: Map<string, { name: string; designType: string; brand: string }>;
-  materialByDvi: Map<string, string>;
+  materialByDvi: Map<
+    string,
+    {
+      name: string;
+      materialColor: string;
+      colorBrand: string;
+      photochromic: string;
+      polarized: string;
+    }
+  >;
   arByCode: Map<string, { name: string; brand: string }>;
 };
 
@@ -94,12 +112,27 @@ async function loadLookupMaps(): Promise<LookupMaps> {
       });
     }
 
-    const materialByDvi = new Map<string, string>();
+    const materialByDvi = new Map<
+      string,
+      {
+        name: string;
+        materialColor: string;
+        colorBrand: string;
+        photochromic: string;
+        polarized: string;
+      }
+    >();
     for (const row of lookupData.workbooks.materials.rows) {
       const dvi = normalizeLookupKey(row.lensmat || "");
       const name = String(row["Material Name"] || "").trim();
       if (!dvi || !name) continue;
-      materialByDvi.set(dvi, name);
+      materialByDvi.set(dvi, {
+        name,
+        materialColor: String(row["Material Color"] || "").trim(),
+        colorBrand: String(row["Material Color Brand"] || "").trim(),
+        photochromic: String(row.Photochromic || "").trim(),
+        polarized: String(row.Polarized || "").trim(),
+      });
     }
 
     const arByCode = new Map<string, { name: string; brand: string }>();
@@ -172,6 +205,37 @@ function dedupePricingRows<T extends {
   return [...byKey.values()];
 }
 
+function mergeArCoating(
+  arMap: Map<string, PriceListArCoating>,
+  coating: {
+    code: string;
+    name: string;
+    brandFamily: string;
+    price: number;
+    sourceSchedule: string;
+    unresolved?: boolean;
+  }
+) {
+  if (coating.unresolved || !coating.code) return;
+  const key = `${coating.code}|${coating.name}|${coating.sourceSchedule}`;
+  const existing = arMap.get(key);
+  if (!existing || coating.price < existing.price) {
+    arMap.set(key, {
+      code: coating.code,
+      name: coating.name || coating.code,
+      brandFamily: coating.brandFamily || "AR Coatings",
+      price: coating.price,
+      sourceSchedule: coating.sourceSchedule,
+      unresolved: Boolean(coating.unresolved),
+      notes: coating.unresolved
+        ? `Confirm availability. Unresolved AR code ${coating.code} from COT schedule ${coating.sourceSchedule}.`
+        : `Price sourced from COT schedule ${coating.sourceSchedule}.`,
+      recommended: false,
+      outsourced: false,
+    });
+  }
+}
+
 function deriveArCoatingsFromRows(
   rows: Array<{
     coatingOptions?: Array<{
@@ -182,32 +246,33 @@ function deriveArCoatingsFromRows(
       sourceSchedule: string;
       unresolved?: boolean;
     }>;
-  }>
+  }>,
+  scheduleCatalog?: DviPayload["scheduleCatalog"],
+  arByCode?: LookupMaps["arByCode"]
 ) {
   const arMap = new Map<string, PriceListArCoating>();
   for (const row of rows) {
     for (const coating of row.coatingOptions ?? []) {
-      if (coating.unresolved) continue;
-      if (!coating.code) continue;
-      const key = `${coating.code}|${coating.name}|${coating.sourceSchedule}`;
-      const existing = arMap.get(key);
-      if (!existing || coating.price < existing.price) {
-        arMap.set(key, {
-          code: coating.code,
-          name: coating.name || coating.code,
-          brandFamily: coating.brandFamily || "AR Coatings",
-          price: coating.price,
-          sourceSchedule: coating.sourceSchedule,
-          unresolved: Boolean(coating.unresolved),
-          notes: coating.unresolved
-            ? `Confirm availability. Unresolved AR code ${coating.code} from COT schedule ${coating.sourceSchedule}.`
-            : `Price sourced from COT schedule ${coating.sourceSchedule}.`,
-          recommended: false,
-          outsourced: false,
-        });
-      }
+      mergeArCoating(arMap, coating);
     }
   }
+
+  for (const schedule of scheduleCatalog?.coating ?? []) {
+    for (const entry of schedule.entries ?? []) {
+      const code = String(entry.Code ?? "").trim().toUpperCase();
+      if (!code) continue;
+      const match = arByCode?.get(normalizeLookupKey(code));
+      mergeArCoating(arMap, {
+        code,
+        name: match?.name || code,
+        brandFamily: match?.brand ? `${match.brand} AR Coatings` : "AR Coatings",
+        price: toNumber(entry.Price),
+        sourceSchedule: "Supplemental",
+        unresolved: !match,
+      });
+    }
+  }
+
   return [...arMap.values()].sort(
     (a, b) =>
       a.brandFamily.localeCompare(b.brandFamily) ||
@@ -216,8 +281,9 @@ function deriveArCoatingsFromRows(
   );
 }
 
-async function dviToGenerated(code: string, rows: DviRow[]): Promise<GeneratedPriceListData> {
+async function dviToGenerated(code: string, payload: DviPayload): Promise<GeneratedPriceListData> {
   const lookups = await loadLookupMaps();
+  const rows = payload.rows ?? [];
   const rawPricingRows = rows.map((row, index) => {
     const uncutDeduct = toNumber(row.sourceRefs?.styleRow?.UncutDeduct);
     const edgedPrice = toNumber(row.basePrice);
@@ -253,10 +319,19 @@ async function dviToGenerated(code: string, rows: DviRow[]): Promise<GeneratedPr
       unresolved: !lookups.arByCode.has(normalizeLookupKey(String(coating.Code ?? ""))),
     }));
 
+    const materialLookup = lookups.materialByDvi.get(normalizeLookupKey(row.materialCode || ""));
     const mappedMaterial =
-      lookups.materialByDvi.get(normalizeLookupKey(row.materialCode || "")) ||
+      materialLookup?.name ||
       row.materialLensType ||
       row.materialCode;
+    const materialColor =
+      normalizeLookupKey(materialLookup?.polarized || "") === "YES"
+        ? "Polarized"
+        : normalizeLookupKey(materialLookup?.photochromic || "") === "YES"
+          ? "Photochromic"
+          : color === "CLEAR"
+            ? "Clear"
+            : "Photochromic";
 
     return {
       code,
@@ -268,10 +343,10 @@ async function dviToGenerated(code: string, rows: DviRow[]): Promise<GeneratedPr
       sourceCodes: [row.productStyleCode, row.materialCode].filter(Boolean),
       materialRaw: row.materialCode,
       material: mappedMaterial,
-      materialColor: color === "CLEAR" ? "Clear" : "Photochromic",
+      materialColor,
       colorRaw: [color],
       availableColors: [color],
-      colorBrand: color,
+      colorBrand: materialLookup?.colorBrand || color,
       edgedPrice,
       uncutDeduct,
       uncutPrice: Number((edgedPrice - uncutDeduct).toFixed(2)),
@@ -288,7 +363,11 @@ async function dviToGenerated(code: string, rows: DviRow[]): Promise<GeneratedPr
     id: `${code}-${index}`,
   }));
 
-  const arCoatings = deriveArCoatingsFromRows(pricingRows);
+  const arCoatings = deriveArCoatingsFromRows(
+    pricingRows,
+    payload.scheduleCatalog,
+    lookups.arByCode
+  );
 
   const addOnSections: PriceListAddOnSection[] = [
     {
@@ -375,7 +454,7 @@ export async function loadGeneratedPriceListByCode(code: string): Promise<Genera
   }
 
   const dviPath = path.join(generatedDir, `dvi-${normalizedCode.toLowerCase()}-pricing.json`);
-  const dvi = readJson<{ rows?: DviRow[] }>(dviPath);
+  const dvi = readJson<DviPayload>(dviPath);
   if (!dvi?.rows || !Array.isArray(dvi.rows) || dvi.rows.length === 0) return null;
-  return dviToGenerated(normalizedCode, dvi.rows);
+  return dviToGenerated(normalizedCode, dvi);
 }

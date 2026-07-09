@@ -13,6 +13,89 @@ BUNDLE_REL="lib/portal/generated/dashboardV1Bundle.json"
 DEST="$REPO/$DEST_REL"
 TEMP_DEST=""
 TEMP_INDEX=""
+LOCK_DIR="/tmp/artisan-portal-sync.lock"
+SOURCE_STABLE_ATTEMPTS="${PORTAL_SOURCE_STABLE_ATTEMPTS:-3}"
+SOURCE_STABLE_SLEEP_SECONDS="${PORTAL_SOURCE_STABLE_SLEEP_SECONDS:-20}"
+COMMAND_RETRY_ATTEMPTS="${PORTAL_COMMAND_RETRY_ATTEMPTS:-4}"
+PUSH_RETRY_ATTEMPTS="${PORTAL_PUSH_RETRY_ATTEMPTS:-6}"
+RETRY_SLEEP_SECONDS="${PORTAL_RETRY_SLEEP_SECONDS:-15}"
+
+timestamp() {
+  date +"%Y-%m-%d %H:%M:%S"
+}
+
+log() {
+  echo "[$(timestamp)] $*"
+}
+
+retry_command() {
+  local attempts="$1"
+  shift
+  local try=1
+
+  while true; do
+    if "$@"; then
+      return 0
+    fi
+
+    if [ "$try" -ge "$attempts" ]; then
+      log "Command failed after ${attempts} attempts: $*"
+      return 1
+    fi
+
+    log "Command failed (attempt ${try}/${attempts}): $*"
+    sleep "$RETRY_SLEEP_SECONDS"
+    try=$((try + 1))
+  done
+}
+
+wait_for_stable_source() {
+  local candidate="$1"
+  local previous_signature=""
+  local stable_count=0
+  local attempt=1
+  local max_attempts
+
+  max_attempts=$((SOURCE_STABLE_ATTEMPTS + 6))
+
+  while [ "$attempt" -le "$max_attempts" ]; do
+    if [ ! -f "$candidate" ]; then
+      log "Source file not found yet: $candidate"
+      sleep "$SOURCE_STABLE_SLEEP_SECONDS"
+      attempt=$((attempt + 1))
+      continue
+    fi
+
+    local current_signature
+    current_signature="$(stat -f "%z:%m" "$candidate" 2>/dev/null || true)"
+
+    if [ -z "$current_signature" ]; then
+      log "Unable to stat source file yet: $candidate"
+      sleep "$SOURCE_STABLE_SLEEP_SECONDS"
+      attempt=$((attempt + 1))
+      continue
+    fi
+
+    if [ "$current_signature" = "$previous_signature" ]; then
+      stable_count=$((stable_count + 1))
+    else
+      stable_count=1
+      previous_signature="$current_signature"
+    fi
+
+    if [ "$stable_count" -ge "$SOURCE_STABLE_ATTEMPTS" ]; then
+      log "Source file looks stable: $candidate ($current_signature)"
+      return 0
+    fi
+
+    log "Waiting for source file to stabilize (${stable_count}/${SOURCE_STABLE_ATTEMPTS}): $candidate"
+    sleep "$SOURCE_STABLE_SLEEP_SECONDS"
+    attempt=$((attempt + 1))
+  done
+
+  log "Source file never stabilized: $candidate"
+  return 1
+}
 
 cleanup() {
   if [ -n "$TEMP_DEST" ] && [ -f "$TEMP_DEST" ]; then
@@ -21,16 +104,21 @@ cleanup() {
   if [ -n "$TEMP_INDEX" ] && [ -f "$TEMP_INDEX" ]; then
     rm -f "$TEMP_INDEX"
   fi
+  if [ -d "$LOCK_DIR" ]; then
+    rmdir "$LOCK_DIR" >/dev/null 2>&1 || true
+  fi
 }
 trap cleanup EXIT
 
-if [ ! -f "$SOURCE" ]; then
-  echo "Source file not found: $SOURCE"
+if ! mkdir "$LOCK_DIR" 2>/dev/null; then
+  log "Another portal sync is already running. Exiting."
   exit 1
 fi
 
+wait_for_stable_source "$SOURCE"
+
 if [ "$(git -C "$REPO" branch --show-current)" != "main" ]; then
-  echo "Portal refresh must run from the main branch."
+  log "Portal refresh must run from the main branch."
   exit 1
 fi
 
@@ -40,23 +128,31 @@ cp "$SOURCE" "$TEMP_DEST"
 node -e 'JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8"))' "$TEMP_DEST"
 mv "$TEMP_DEST" "$DEST"
 TEMP_DEST=""
+log "Copied portal export into repo."
 
 cd "$REPO"
-npm run portal:generate-dashboard-v1:launch-safe
-npm run portal:bundle-dashboard-v1
+retry_command "$COMMAND_RETRY_ATTEMPTS" npm run portal:generate-dashboard-v1:launch-safe
+retry_command "$COMMAND_RETRY_ATTEMPTS" npm run portal:bundle-dashboard-v1
 
 TEMP_INDEX="$(mktemp "/tmp/artisan-portal-index.XXXXXX")"
 rm -f "$TEMP_INDEX"
-echo "Preparing isolated Git index."
+log "Preparing isolated Git index."
 GIT_INDEX_FILE="$TEMP_INDEX" git read-tree HEAD
-echo "Staging portal refresh."
+log "Staging portal refresh."
 GIT_INDEX_FILE="$TEMP_INDEX" git add -- "$DEST_REL" "$BUNDLE_REL"
-echo "Committing portal refresh."
+
+if GIT_INDEX_FILE="$TEMP_INDEX" git diff --cached --quiet; then
+  log "No portal changes detected. Skipping commit and push."
+  exit 0
+fi
+
+log "Committing portal refresh."
 GIT_INDEX_FILE="$TEMP_INDEX" git commit -m "Daily portal data refresh"
 
 # Keep the normal index aligned with the new commit without disturbing
 # unrelated staged files.
-echo "Aligning the working index."
+log "Aligning the working index."
 git add -- "$DEST_REL" "$BUNDLE_REL"
-echo "Pushing portal refresh."
-git push origin main
+log "Pushing portal refresh."
+retry_command "$PUSH_RETRY_ATTEMPTS" git push origin main
+log "Portal sync complete."

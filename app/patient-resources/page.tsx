@@ -6,6 +6,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import RingsAccent from "../components/RingsAccent";
 import SiteIcon from "../components/SiteIcon";
+import AnimatedWordPanel from "../components/AnimatedWordPanel";
 import PatientPracticeLocator from "./PatientPracticeLocator";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
@@ -344,15 +345,7 @@ export default function PatientResources() {
               team that treats clarity like craft.
             </p>
           </SectionIntro>
-          <div className="relative min-h-[430px] overflow-hidden rounded-[32px] shadow-[0_30px_90px_rgba(73,48,28,0.22)]">
-            <Image
-              src="/artisanquality.jpeg"
-              alt="Technician inspecting lenses in an optical lab"
-              fill
-              sizes="(min-width: 1024px) 45vw, 100vw"
-              className="object-cover"
-            />
-          </div>
+          <AnimatedWordPanel word="Artisan Quality" eyebrow="Crafted with care" />
         </div>
       </section>
 

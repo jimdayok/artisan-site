@@ -219,6 +219,39 @@ body {
   will-change: opacity, transform;
 }
 
+.aln-word-panel {
+  --aln-word-pan: min(34vw, 19rem);
+}
+
+.aln-contained-word {
+  display: inline-block;
+  padding-inline: 8vw;
+  animation: aln-contained-word-pan 18s ease-in-out infinite alternate;
+  text-rendering: geometricPrecision;
+  will-change: transform;
+}
+
+@keyframes aln-contained-word-pan {
+  0% {
+    transform: translateX(calc(var(--aln-word-pan) * -0.42));
+  }
+
+  45% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(calc(var(--aln-word-pan) * -1));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aln-contained-word {
+    animation: none;
+    transform: translateX(-12%);
+  }
+}
+
 .premium-image-hover img {
   transform: scale(1);
   transition: transform 1400ms cubic-bezier(0.22, 1, 0.36, 1);

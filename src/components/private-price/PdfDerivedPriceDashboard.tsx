@@ -57,7 +57,7 @@ export default function PdfDerivedPriceDashboard({
         </label>
       </div>
 
-      <div className="mt-5 overflow-x-auto">
+      <div className="mobile-scroll-row mt-5 overflow-x-auto">
         <table className="min-w-full border-separate border-spacing-0 text-left text-sm">
           <tbody>
             {visibleRows.map((row, rowIndex) => {

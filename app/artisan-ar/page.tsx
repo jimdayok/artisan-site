@@ -105,7 +105,7 @@ export default function ArtisanArPage() {
               place the Artisan portfolio beside familiar premium AR options.
             </p>
           </div>
-          <div className="mt-6 overflow-x-auto">
+          <div className="mobile-scroll-row mt-6 overflow-x-auto">
             <table className="w-full min-w-[760px] border-collapse text-left text-sm">
               <thead>
                 <tr className="border-b border-[#d8c6a8] text-xs uppercase tracking-[0.16em] text-[#8a7654]">

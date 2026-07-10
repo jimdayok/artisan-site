@@ -64,7 +64,7 @@ export default function TrainingHubReturnButton() {
   if (!returnUrl || dismissed || pathname === TRAINING_HUB_PATH) return null;
 
   return (
-    <div className="fixed bottom-5 right-5 z-[80] flex max-w-[calc(100vw-2.5rem)] items-center gap-2 rounded-full border border-[#d8c49b] bg-[#172a28] p-1.5 pl-2 shadow-[0_18px_55px_rgba(23,42,40,0.24)]">
+    <div className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-[max(1.25rem,env(safe-area-inset-right))] z-[80] flex max-w-[calc(100vw-2.5rem)] items-center gap-2 rounded-full border border-[#d8c49b] bg-[#172a28] p-1.5 pl-2 shadow-[0_18px_55px_rgba(23,42,40,0.24)]">
       <Link
         href={returnUrl}
         className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[#d8c49b] px-4 py-2 text-sm font-semibold text-[#172a28] transition hover:bg-[#e4cca0]"

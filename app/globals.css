@@ -44,13 +44,47 @@
   --foreground: #ededed;
 }
 
-html,
-body {
-  overflow-x: clip;
-}
-
 html {
   scroll-behavior: smooth;
+}
+
+body {
+  min-width: 0;
+}
+
+img,
+svg,
+video,
+canvas,
+iframe {
+  max-width: 100%;
+}
+
+:where(p, h1, h2, h3, h4, h5, h6, a, button, label, dd, dt, li) {
+  overflow-wrap: break-word;
+}
+
+.mobile-scroll-row {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(15, 118, 110, 0.45) transparent;
+  overscroll-behavior-inline: contain;
+  scroll-padding-inline: 1rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mobile-scroll-row::-webkit-scrollbar {
+  height: 4px;
+}
+
+.mobile-scroll-row::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(15, 118, 110, 0.45);
+}
+
+@media (hover: none), (pointer: coarse) {
+  .resource-preview-hint {
+    display: none;
+  }
 }
 
 .issue-nav {

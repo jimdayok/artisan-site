@@ -923,18 +923,18 @@ export default function Home() {
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(212,192,154,0.14),transparent_28%),radial-gradient(circle_at_82%_78%,rgba(255,255,255,0.08),transparent_22%)]" />
         <div className="mx-auto max-w-7xl">
-          <motion.div {...fadeUp} className="grid gap-9 lg:grid-cols-[0.72fr_1.28fr] lg:items-center">
-            <div className="max-w-xl">
+          <motion.div {...fadeUp} className="grid min-w-0 gap-9 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:items-center">
+            <div className="min-w-0 max-w-xl">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#d4c09a]">
                 Why We Win
               </p>
-              <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-[3.4rem]">
+              <h2 className="mt-4 text-[clamp(2rem,10vw,3.4rem)] font-semibold leading-[1.08] tracking-tight">
                 Performance your team can actually feel.
               </h2>
               <p className="mt-4 text-base leading-8 text-white/68">
                 Practices need a lab relationship they can feel in turnaround, communication, quality, and control.
               </p>
-              <div className="mt-6 inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.055] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-white/54 shadow-[0_12px_34px_rgba(0,0,0,0.16)]">
+              <div className="mobile-scroll-row mt-6 flex max-w-full items-center gap-3 overflow-x-auto rounded-full border border-white/10 bg-white/[0.055] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-white/54 shadow-[0_12px_34px_rgba(0,0,0,0.16)]">
                 <span className="text-[#d4c09a]">Measured</span>
                 <span className="h-1 w-1 rounded-full bg-white/25" />
                 <span>Turnaround</span>
@@ -945,7 +945,7 @@ export default function Home() {
               </div>
             </div>
             <div
-              className="grid gap-4"
+              className="grid min-w-0 gap-4"
               onMouseEnter={() => setIsProofStatHovering(true)}
               onMouseLeave={() => setIsProofStatHovering(false)}
             >

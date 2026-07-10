@@ -86,7 +86,7 @@ export default async function AdminPriceListsPage() {
                 Scanned {styleMappingGaps.priceListCountScanned} price lists
               </span>
             </div>
-            <div className="mt-4 max-h-[28rem] overflow-auto border border-[#ead4bc] bg-white">
+            <div className="mobile-scroll-row mt-4 max-h-[28rem] overflow-auto border border-[#ead4bc] bg-white">
               <table className="w-full min-w-[860px] border-collapse text-left text-xs">
                 <thead>
                   <tr className="border-b border-[#ead4bc] bg-[#fff8ee] text-[#172a28]">
@@ -132,7 +132,7 @@ export default async function AdminPriceListsPage() {
           </div>
         )}
 
-        <div className="mt-5 overflow-x-auto">
+        <div className="mobile-scroll-row mt-5 overflow-x-auto">
           <table className="w-full min-w-[1120px] border-collapse text-left text-sm">
             <thead>
               <tr className="border-b border-[#d8c49b] bg-[#f8f1e6] text-[#172a28]">

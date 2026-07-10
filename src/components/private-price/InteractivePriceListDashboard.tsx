@@ -1168,7 +1168,7 @@ export default function InteractivePriceListDashboard({
                         </h4>
                       )}
                     </div>
-                    <div className="overflow-x-auto md:overflow-visible">
+                    <div className="mobile-scroll-row overflow-x-auto md:overflow-visible">
                       <table className="w-full min-w-[760px] table-fixed border-separate border-spacing-0 text-left text-sm md:min-w-0">
                         <colgroup>
                           <col className="w-[14%]" />
@@ -2223,7 +2223,7 @@ function ModernFramePackageSection() {
   return (
     <section className="rounded-[2px] border border-[#dfd2bf] bg-[#fbf8f3]/94 p-4 shadow-[0_22px_60px_rgba(18,32,51,0.08)] md:p-6">
       <SectionHeading title="Modern Frame System Package Tiers" eyebrow="M5 Program" />
-      <div className="mt-4 overflow-x-auto">
+      <div className="mobile-scroll-row mt-4 overflow-x-auto">
         <table className="w-full min-w-[640px] border-collapse text-left text-sm">
           <thead>
             <tr className="border-b border-[#d8c49b] bg-[#f8f1e6] text-[#172a28]">
@@ -2289,7 +2289,7 @@ function SafetyPackageTierSection() {
   return (
     <section className="rounded-[2px] border border-[#dfd2bf] bg-[#fbf8f3]/94 p-4 shadow-[0_22px_60px_rgba(18,32,51,0.08)] md:p-6">
       <SectionHeading title="Artisan Safety Package Frame Tiers" eyebrow="Y5 Program" />
-      <div className="mt-4 overflow-x-auto">
+      <div className="mobile-scroll-row mt-4 overflow-x-auto">
         <table className="w-full min-w-[720px] border-collapse text-left text-sm">
           <thead>
             <tr className="border-b border-[#d8c49b] bg-[#f8f1e6] text-[#172a28]">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useDeferredValue, useEffect, useMemo, useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -619,20 +619,31 @@ function IconForResource({ resource }: { resource: Resource }) {
 }
 
 function ResourceLink({ resource, dense = false }: { resource: Resource; dense?: boolean }) {
+  const previewContent = resource.previewImage ? (
+    <>
+      <span className="relative block h-40 overflow-hidden rounded bg-[#f7f8f5]">
+        <Image
+          src={resource.previewImage}
+          alt={resource.previewAlt ?? `${resource.title} preview`}
+          fill
+          sizes="260px"
+          className="object-contain"
+        />
+      </span>
+      <span className="mt-2 block text-xs font-semibold text-[#374151]">{resource.title}</span>
+    </>
+  ) : null;
+
   const body = (
     <>
       {resource.previewImage ? (
-        <span className="pointer-events-none absolute left-4 right-4 top-4 z-20 hidden rounded-lg border border-[#d7ded9] bg-white p-2 shadow-2xl group-hover:block group-focus:block">
-          <span className="relative block h-40 overflow-hidden rounded bg-[#f7f8f5]">
-            <Image
-              src={resource.previewImage}
-              alt={resource.previewAlt ?? `${resource.title} preview`}
-              fill
-              sizes="260px"
-              className="object-contain"
-            />
-          </span>
-          <span className="mt-2 block text-xs font-semibold text-[#374151]">{resource.title}</span>
+        <span className="mb-4 block rounded-lg border border-[#d7ded9] bg-white p-2 shadow-sm sm:hidden">
+          {previewContent}
+        </span>
+      ) : null}
+      {resource.previewImage ? (
+        <span className="pointer-events-none absolute left-4 right-4 top-4 z-20 hidden rounded-lg border border-[#d7ded9] bg-white p-2 shadow-2xl sm:group-hover:block sm:group-focus:block sm:group-focus-visible:block">
+          {previewContent}
         </span>
       ) : null}
       <div className="flex items-start justify-between gap-3">
@@ -658,8 +669,8 @@ function ResourceLink({ resource, dense = false }: { resource: Resource; dense?:
         </p>
       ) : null}
       {resource.previewImage ? (
-        <p className="mt-3 rounded bg-[#f7f8f5] px-3 py-2 text-xs font-semibold text-[#0f766e]">
-          Hover or focus to preview the display image.
+        <p className="resource-preview-hint mt-3 rounded bg-[#f7f8f5] px-3 py-2 text-xs font-semibold text-[#0f766e]">
+          Hover or focus to preview the display image. On touch devices, the image is shown above.
         </p>
       ) : null}
       <div className="mt-4 flex items-center justify-between gap-3 text-sm font-semibold text-[#111827]">
@@ -719,7 +730,14 @@ export default function ProviderResourcesPage({
   const [showSectionNav, setShowSectionNav] = useState(false);
   const [sectionNavDismissed, setSectionNavDismissed] = useState(false);
   const [activeSectionHref, setActiveSectionHref] = useState(sectionNavItems[0][1]);
+  const mobileSectionNavRef = useRef<HTMLDivElement>(null);
   const deferredQuery = useDeferredValue(query);
+
+  useEffect(() => {
+    mobileSectionNavRef.current
+      ?.querySelector<HTMLElement>("[aria-current='true']")
+      ?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  }, [activeSectionHref]);
 
   useEffect(() => {
     const updateSectionNav = () => {
@@ -897,7 +915,7 @@ export default function ProviderResourcesPage({
         <button
           type="button"
           onClick={() => setSectionNavDismissed(true)}
-          className="absolute right-4 top-4 grid h-8 w-8 place-items-center rounded-full border border-[#d7ded9]/80 bg-white/82 text-[#64748b] shadow-sm transition hover:border-[#0f766e] hover:text-[#0f766e]"
+          className="absolute right-3 top-3 grid h-11 w-11 place-items-center rounded-full border border-[#d7ded9]/80 bg-white/82 text-[#64748b] shadow-sm transition hover:border-[#0f766e] hover:text-[#0f766e]"
           aria-label="Hide section navigation"
         >
           <X className="h-3.5 w-3.5" />
@@ -930,7 +948,7 @@ export default function ProviderResourcesPage({
         aria-label="Provider resources mobile sections"
         className="sticky top-[72px] z-30 border-y border-[#d7ded9] bg-white/94 px-4 py-2 backdrop-blur xl:hidden"
       >
-        <div className="mx-auto flex max-w-7xl items-center gap-3 overflow-x-auto [scrollbar-color:#0f766e_#e5e7eb] [scrollbar-width:thin]">
+        <div ref={mobileSectionNavRef} className="mobile-scroll-row mx-auto flex max-w-7xl items-center gap-3 overflow-x-auto [scrollbar-color:#0f766e_#e5e7eb] [scrollbar-width:thin]">
           <span className="shrink-0 text-xs font-semibold uppercase tracking-[0.16em] text-[#0f766e]">Jump to</span>
           {sectionNavItems.map(([label, href]) => (
             <a
@@ -1031,7 +1049,7 @@ export default function ProviderResourcesPage({
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0f766e]">
                 Scroll sideways to see more filter options.
               </p>
-              <div className="flex items-center gap-2 overflow-x-auto pb-2 [scrollbar-color:#0f766e_#e5e7eb] [scrollbar-width:thin]">
+              <div className="mobile-scroll-row flex items-center gap-2 overflow-x-auto pb-2 [scrollbar-color:#0f766e_#e5e7eb] [scrollbar-width:thin]">
                 <SlidersHorizontal className="h-4 w-4 shrink-0 text-[#6b7280]" />
                 {filterOptions.map((filter) => (
                   <button

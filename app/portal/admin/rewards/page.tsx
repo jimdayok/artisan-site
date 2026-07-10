@@ -191,7 +191,7 @@ export default async function AdminRewardsPayoutsPage({ searchParams }: { search
       </section>
 
       <section className="mt-8 overflow-hidden rounded-md border border-[#d8c49b] bg-[#fffaf1]/88 shadow-[0_18px_55px_rgba(23,42,40,0.08)]">
-        <div className="overflow-x-auto">
+        <div className="mobile-scroll-row overflow-x-auto">
           <table className="min-w-full border-collapse text-left text-sm">
             <thead className="bg-[#172a28] text-white">
               <tr>

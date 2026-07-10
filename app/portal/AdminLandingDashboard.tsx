@@ -631,7 +631,7 @@ function SummaryTable({
       <h2 className="mt-2 text-2xl font-semibold tracking-[-0.035em] text-[#172a28]">
         {title}
       </h2>
-      <div className="mt-5 overflow-x-auto">
+      <div className="mobile-scroll-row mt-5 overflow-x-auto">
         <table className="min-w-full text-left text-sm">
           <thead>
             <tr className="border-b border-[#d8c49b] text-[10px] uppercase tracking-[0.13em] text-[#8b7650]">

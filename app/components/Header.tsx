@@ -185,7 +185,7 @@ function SocialLink({ label, href, icon, theme }: { label: string; href: string;
       target="_blank"
       rel="noreferrer"
       aria-label={label}
-      className={`grid h-10 w-10 place-items-center rounded-lg border backdrop-blur-md transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a] ${
+      className={`grid h-11 w-11 place-items-center rounded-lg border backdrop-blur-md transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a] ${
         theme === "light"
           ? "border-black/10 bg-white/55 hover:bg-white"
           : "border-white/15 bg-white/10 hover:border-white/25 hover:bg-white/15"
@@ -344,7 +344,7 @@ export default function Header({
               theme === "light"
                 ? "bg-[#f2eee7]/92 border-[#d6c3a1]/35 text-black"
                 : "bg-black/70 border-white/10 text-white"
-            } backdrop-blur-xl`}
+            } max-h-[calc(100dvh-72px)] overflow-y-auto overscroll-contain pb-[env(safe-area-inset-bottom)] backdrop-blur-xl`}
           >
             <div className="mx-auto max-w-7xl px-5 py-5">
               <div className="grid gap-2">
@@ -360,14 +360,14 @@ export default function Header({
 
               <div className={`mt-5 flex flex-wrap gap-2 border-t pt-4 ${theme === "light" ? "border-black/10" : "border-white/12"}`}>
                 <Link
-                  className="inline-flex min-h-10 items-center rounded-lg px-3 text-sm font-semibold transition hover:bg-current/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
+                  className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-semibold transition hover:bg-current/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
                   href="/"
                   onClick={() => setMobileOpen(false)}
                 >
                   Home
                 </Link>
                 <Link
-                  className="inline-flex min-h-10 items-center rounded-lg px-3 text-sm font-semibold transition hover:bg-current/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
+                  className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-semibold transition hover:bg-current/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
                   href="/about"
                   onClick={() => setMobileOpen(false)}
                 >
@@ -375,7 +375,7 @@ export default function Header({
                 </Link>
                 <button
                   type="button"
-                  className="inline-flex min-h-10 items-center gap-2 rounded-lg px-3 text-left text-sm font-semibold transition hover:bg-current/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-left text-sm font-semibold transition hover:bg-current/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
                   onClick={() => {
                     setMobileOpen(false);
                     onContactClick?.();
@@ -411,8 +411,8 @@ function MobileLinkGroup({
 }) {
   const linkClass =
     theme === "light"
-      ? "block rounded-lg px-3 py-2 text-sm font-semibold text-black/78 transition hover:bg-black/5 hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8a7654]"
-      : "block rounded-lg px-3 py-2 text-sm font-semibold text-white/82 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]";
+      ? "flex min-h-11 items-center rounded-lg px-3 py-2 text-sm font-semibold text-black/78 transition hover:bg-black/5 hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8a7654]"
+      : "flex min-h-11 items-center rounded-lg px-3 py-2 text-sm font-semibold text-white/82 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]";
 
   return (
     <section>

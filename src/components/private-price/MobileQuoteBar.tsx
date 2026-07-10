@@ -6,7 +6,7 @@ export default function MobileQuoteBar({ item, materialId, edgeMode }: { item?: 
   if (!item) return null;
 
   return (
-    <div className="fixed inset-x-3 bottom-3 z-30 rounded-2xl border border-[#d7c5a8] bg-[#122033] px-4 py-3 text-white shadow-[0_18px_50px_rgba(18,32,51,0.28)]">
+    <div className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-30 rounded-2xl border border-[#d7c5a8] bg-[#122033] px-4 py-3 text-white shadow-[0_18px_50px_rgba(18,32,51,0.28)]">
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold">{item.name}</p>

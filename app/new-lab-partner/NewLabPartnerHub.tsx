@@ -659,7 +659,7 @@ function ProductComparisonGuide({
           </div>
           <div className="p-5">
             {knownColumns.length ? (
-              <div className="overflow-x-auto">
+              <div className="mobile-scroll-row overflow-x-auto">
                 <table className="w-full min-w-[680px] border-collapse text-sm leading-5">
                   <thead>
                     <tr>
@@ -690,7 +690,7 @@ function ProductComparisonGuide({
                 </p>
               </div>
             ) : null}
-            <div className="mt-6 overflow-x-auto">
+            <div className="mobile-scroll-row mt-6 overflow-x-auto">
               <table className="w-full min-w-[760px] border-collapse text-sm leading-5">
                 <thead>
                   <tr>

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { ReactNode } from "react";
 
 type BackgroundSectionProps = {
@@ -28,14 +29,14 @@ export default function BackgroundSection({
       id={id}
       data-theme={theme}
       className={[
-        "relative isolate overflow-hidden bg-cover bg-center bg-no-repeat bg-fixed",
+        "relative isolate overflow-hidden",
         minHeightClass,
         className,
       ]
         .filter(Boolean)
         .join(" ")}
-      style={{ backgroundImage: `url('${backgroundImage}')` }}
     >
+      <Image src={backgroundImage} alt="" fill sizes="100vw" className="absolute inset-0 -z-20 object-cover" />
       <div className={["pointer-events-none absolute inset-0 -z-10", overlayClassName].join(" ")} />
       <div className={["relative z-20", contentClassName].filter(Boolean).join(" ")}>
         {children}

@@ -15,6 +15,7 @@ import {
   Glasses,
   Handshake,
   Leaf,
+  Mail,
   MapPin,
   Mountain,
   Route,
@@ -30,6 +31,7 @@ import {
 } from "lucide-react";
 import Header from "./Header";
 import Footer from "./Footer";
+import SiteButton from "./SiteButton";
 
 type IconName =
   | "arrowRight"
@@ -226,12 +228,14 @@ function Hero({ config }: { config: LabLandingConfig }) {
 
   return (
     <section data-theme="dark" className="relative isolate min-h-[92svh] overflow-hidden pt-24 text-white">
-      <div
-        aria-hidden
-        className={`absolute inset-0 -z-20 bg-cover bg-center bg-no-repeat md:bg-fixed ${heroPositionClass(config.theme)}`}
-        style={{ backgroundImage: `url(${config.heroImage})` }}
+      <Image
+        src={config.heroImage}
+        alt=""
+        fill
+        preload
+        sizes="100vw"
+        className={`absolute inset-0 -z-20 object-cover ${heroPositionClass(config.theme)}`}
       />
-      <Image src={config.heroImage} alt={config.heroAlt} width={1} height={1} priority className="sr-only" />
       <div className={`absolute inset-0 -z-10 ${config.heroOverlay}`} />
       <div className={heroAccentClass(config.theme)} aria-hidden />
       <BackgroundWord light className="bottom-20 left-[-1rem] md:left-[5vw]">
@@ -262,8 +266,8 @@ function Hero({ config }: { config: LabLandingConfig }) {
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-white/82 md:text-xl">{config.subheadline}</p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <ButtonLink href={config.primaryHref} variant="gold">Become an Artisan Partner</ButtonLink>
-              <ButtonLink href={config.contactHref} variant="light">Contact the Lab</ButtonLink>
+              <ButtonLink href={config.primaryHref} variant="gold" icon={Handshake}>Become an Artisan Partner</ButtonLink>
+              <ButtonLink href={config.contactHref} variant="light" icon={Mail}>Contact the Lab</ButtonLink>
             </div>
           </div>
 
@@ -686,8 +690,8 @@ function Partnership({ config }: { config: LabLandingConfig }) {
           <h2 className="mt-4 max-w-4xl text-4xl font-semibold tracking-tight md:text-5xl">{config.partnership.title}</h2>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-white/72">{config.partnership.body}</p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <ButtonLink href={config.primaryHref} variant="gold">Become an Artisan Partner</ButtonLink>
-            <ButtonLink href={config.resourcesHref} variant="ghost">Explore Practice Resources</ButtonLink>
+            <ButtonLink href={config.primaryHref} variant="gold" icon={Handshake}>Become an Artisan Partner</ButtonLink>
+            <ButtonLink href={config.resourcesHref} variant="ghost" icon={Compass}>Explore Practice Resources</ButtonLink>
           </div>
         </PremiumReveal>
         <PremiumReveal className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
@@ -773,9 +777,9 @@ function FinalCta({ config }: { config: LabLandingConfig }) {
         <h2 className="mt-6 text-4xl font-semibold tracking-tight md:text-6xl">{config.finalCta.title}</h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-white/76">{config.finalCta.body}</p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-          <ButtonLink href={config.primaryHref} variant="gold">Become an Artisan Partner</ButtonLink>
-          <ButtonLink href={config.contactHref} variant="light">Contact the Lab</ButtonLink>
-          <ButtonLink href={config.resourcesHref} variant="ghost">Explore Practice Resources</ButtonLink>
+          <ButtonLink href={config.primaryHref} variant="gold" icon={Handshake}>Become an Artisan Partner</ButtonLink>
+          <ButtonLink href={config.contactHref} variant="light" icon={Mail}>Contact the Lab</ButtonLink>
+          <ButtonLink href={config.resourcesHref} variant="ghost" icon={Compass}>Explore Practice Resources</ButtonLink>
         </div>
       </PremiumReveal>
     </section>
@@ -903,23 +907,25 @@ function ButtonLink({
   href,
   children,
   variant,
+  icon,
 }: {
   href: string;
   children: React.ReactNode;
   variant: "gold" | "light" | "ghost";
+  icon?: LucideIcon;
 }) {
-  const classes = {
-    gold: "bg-[#d4c09a] text-[#121a25] border-[#d4c09a] hover:bg-[#e2cca2]",
-    light: "bg-white text-[#121a25] border-white hover:bg-[#f7efe3]",
-    ghost: "bg-white/10 text-white border-white/25 hover:bg-white/18",
+  const mappedVariant = {
+    gold: "primary",
+    light: "light",
+    ghost: "quiet",
   }[variant];
-  const shared = `inline-flex min-h-12 items-center justify-center rounded-full border px-6 text-sm font-semibold shadow-sm transition hover:-translate-y-0.5 ${classes}`;
+  const className = variant === "ghost" ? "border-white/25 bg-white/10 text-white hover:bg-white/18" : "";
 
-  if (href.startsWith("/")) {
-    return <Link href={href} className={shared}>{children}</Link>;
-  }
-
-  return <a href={href} target="_blank" rel="noreferrer" className={shared}>{children}</a>;
+  return (
+    <SiteButton href={href} variant={mappedVariant as "primary" | "light" | "quiet"} size="lg" icon={icon} className={className}>
+      {children}
+    </SiteButton>
+  );
 }
 
 function DecorativeRings({ config }: { config: LabLandingConfig }) {
@@ -944,9 +950,9 @@ function heroAccentClass(theme: LabLandingConfig["theme"]) {
 }
 
 function heroPositionClass(theme: LabLandingConfig["theme"]) {
-  if (theme === "pacific") return "bg-[position:center_center]";
-  if (theme === "peak") return "bg-[position:center_center]";
-  return "bg-[position:center_center]";
+  if (theme === "pacific") return "object-center";
+  if (theme === "peak") return "object-center";
+  return "object-center";
 }
 
 function differenceTextureClass(theme: LabLandingConfig["theme"]) {

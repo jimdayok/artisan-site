@@ -3,7 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { BookOpen, Building2, ChevronDown, Handshake, LogIn, Mail, Menu, Sparkles, X, type LucideIcon } from "lucide-react";
+import SiteButton from "./SiteButton";
 
 type Theme = "dark" | "light";
 
@@ -17,16 +20,26 @@ function Capsule({
   href,
   theme,
   onClick,
+  active = false,
 }: {
   children: React.ReactNode;
   href?: string;
   theme: Theme;
   onClick?: () => void;
+  active?: boolean;
 }) {
   const base =
     theme === "light"
-      ? "px-4 py-2 text-sm font-medium rounded-full border border-black/10 bg-white/50 backdrop-blur-md text-black transition hover:bg-white/70 hover:border-black/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8a7654] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-      : "px-4 py-2 text-sm font-medium rounded-full border border-white/15 bg-white/10 backdrop-blur-md text-white transition hover:bg-white/15 hover:border-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a] focus-visible:ring-offset-2 focus-visible:ring-offset-black";
+      ? `px-4 py-2 text-sm font-semibold rounded-lg border backdrop-blur-md transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8a7654] focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
+          active
+            ? "border-[#8a7654]/45 bg-[#d4c09a]/35 text-black"
+            : "border-black/10 bg-white/55 text-black hover:bg-white/80 hover:border-black/20"
+        }`
+      : `px-4 py-2 text-sm font-semibold rounded-lg border backdrop-blur-md transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a] focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
+          active
+            ? "border-[#d4c09a]/55 bg-[#d4c09a]/18 text-white"
+            : "border-white/15 bg-white/10 text-white hover:bg-white/15 hover:border-white/25"
+        }`;
 
   if (!href)
     return (
@@ -54,13 +67,22 @@ function DropdownMenu({
   items,
   theme,
   onAnyClick,
-}: Dropdown & { theme: Theme; onAnyClick: () => void }) {
+  active = false,
+}: Dropdown & { theme: Theme; onAnyClick: () => void; active?: boolean }) {
   const [open, setOpen] = useState(false);
 
   const trigger =
     theme === "light"
-      ? "px-4 py-2 text-sm font-medium rounded-full border border-black/10 bg-white/50 backdrop-blur-md text-black transition hover:bg-white/70 hover:border-black/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8a7654] focus-visible:ring-offset-2 focus-visible:ring-offset-white flex items-center gap-2"
-      : "px-4 py-2 text-sm font-medium rounded-full border border-white/15 bg-white/10 backdrop-blur-md text-white transition hover:bg-white/15 hover:border-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a] focus-visible:ring-offset-2 focus-visible:ring-offset-black flex items-center gap-2";
+      ? `px-4 py-2 text-sm font-semibold rounded-lg border backdrop-blur-md transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8a7654] focus-visible:ring-offset-2 focus-visible:ring-offset-white flex items-center gap-2 ${
+          active
+            ? "border-[#8a7654]/45 bg-[#d4c09a]/35 text-black"
+            : "border-black/10 bg-white/55 text-black hover:bg-white/80 hover:border-black/20"
+        }`
+      : `px-4 py-2 text-sm font-semibold rounded-lg border backdrop-blur-md transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a] focus-visible:ring-offset-2 focus-visible:ring-offset-black flex items-center gap-2 ${
+          active
+            ? "border-[#d4c09a]/55 bg-[#d4c09a]/18 text-white"
+            : "border-white/15 bg-white/10 text-white hover:bg-white/15 hover:border-white/25"
+        }`;
 
   const menu =
     theme === "light"
@@ -85,7 +107,7 @@ function DropdownMenu({
         aria-haspopup="menu"
       >
         {label}
-        <span className="text-xs opacity-70">{open ? "▲" : "▼"}</span>
+        <ChevronDown className={`h-4 w-4 opacity-70 transition ${open ? "rotate-180" : ""}`} aria-hidden="true" />
       </button>
 
       <AnimatePresence>
@@ -160,6 +182,7 @@ export default function Header({
 }) {
   const [theme, setTheme] = useState<Theme>("dark");
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
 
   const resources: Dropdown = useMemo(
     () => ({
@@ -167,6 +190,9 @@ export default function Header({
       items: [
         { label: "Professional Resources", href: "/provider-resources" },
         { label: "Patient Resources", href: "/patient-resources" },
+        { label: "Optical Engineering Center", href: "/optical-engineering" },
+        { label: "AR Treatments", href: "/artisan-ar" },
+        { label: "Lab Policies", href: "/lab-policies" },
         { label: "Lab Ownership & Partnership", href: "/artisan-model" },
         { label: "Customer Portal", href: CUSTOMER_PORTAL_URL, dividerBefore: true },
       ],
@@ -186,6 +212,24 @@ export default function Header({
     }),
     []
   );
+
+  const programs: Dropdown = useMemo(
+    () => ({
+      label: "Programs",
+      items: [
+        { label: "All Programs", href: "/programs" },
+        { label: "Artisan AR Treatments", href: "/artisan-ar" },
+        { label: "Acquios Alliance", href: "/acquios" },
+        { label: "United Opticians Association", href: "/uoa" },
+      ],
+    }),
+    []
+  );
+
+  const navIsActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+  const dropdownIsActive = (dropdown: Dropdown) =>
+    dropdown.items.some((item) => item.href?.startsWith("/") && navIsActive(item.href));
 
   useEffect(() => {
     const watched = document.querySelectorAll("[data-theme]");
@@ -214,11 +258,6 @@ export default function Header({
       ? "brightness(0) saturate(100%) drop-shadow(0 1px 0 rgba(255,255,255,0.2))"
       : "drop-shadow(0 0 10px rgba(0,0,0,0.6))";
 
-  const iconFilter =
-    theme === "light"
-      ? "brightness(0) saturate(100%) drop-shadow(0 1px 0 rgba(255,255,255,0.2))"
-      : "drop-shadow(0 0 10px rgba(0,0,0,0.55))";
-
   const handleMobileIconClick = () => {
     setMobileOpen((v) => !v);
   };
@@ -239,7 +278,7 @@ export default function Header({
               alt="Artisan Lab Network"
               width={1000}
               height={471}
-              priority
+              preload
               className="h-12 w-auto md:h-[60px]"
               style={{
                 maxHeight: 62,
@@ -248,51 +287,35 @@ export default function Header({
             />
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-3">
-            <Capsule href="/" theme={theme}>
-              Home
+          <nav className="hidden lg:flex items-center gap-2">
+            <Capsule href={CUSTOMER_PORTAL_URL} theme={theme} active={navIsActive(CUSTOMER_PORTAL_URL)}>
+              Portal
             </Capsule>
-            <Capsule href="/about" theme={theme}>
-              About Us
+            <DropdownMenu {...resources} theme={theme} active={dropdownIsActive(resources)} onAnyClick={() => setMobileOpen(false)} />
+            <DropdownMenu {...labs} theme={theme} active={dropdownIsActive(labs)} onAnyClick={() => setMobileOpen(false)} />
+            <DropdownMenu {...programs} theme={theme} active={dropdownIsActive(programs)} onAnyClick={() => setMobileOpen(false)} />
+            <Capsule href="/about" theme={theme} active={navIsActive("/about")}>
+              About
             </Capsule>
-
-            <DropdownMenu {...labs} theme={theme} onAnyClick={() => setMobileOpen(false)} />
-
-            <DropdownMenu {...resources} theme={theme} onAnyClick={() => setMobileOpen(false)} />
-
             <Capsule theme={theme} onClick={onContactClick}>
-              Contact Us
+              Contact
             </Capsule>
-
-            <a
-              href={signUpHref}
-              target="_blank"
-              rel="noreferrer"
-              className="ml-1 rounded-full border border-[#d4c09a] bg-[#d4c09a] px-6 py-2 text-sm font-semibold text-black shadow transition hover:-translate-y-0.5 hover:bg-[#e2cca2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a] focus-visible:ring-offset-2 focus-visible:ring-offset-black active:translate-y-0"
-            >
-              Get Started
-            </a>
+            <SiteButton href={signUpHref} variant="primary" size="sm" icon={Handshake} className="ml-1" external>
+              Partner With Us
+            </SiteButton>
           </nav>
 
           <button
-            className="flex flex-col items-center justify-center rounded-full p-2 transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a] lg:hidden"
+            className={`grid h-11 w-11 place-items-center rounded-lg border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a] lg:hidden ${
+              theme === "light"
+                ? "border-black/10 bg-white/60 text-[#142033] hover:bg-white"
+                : "border-white/15 bg-white/10 text-white hover:bg-white/15"
+            }`}
             onClick={handleMobileIconClick}
             aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={mobileOpen}
           >
-            <Image
-              src="/aln-icon.png"
-              alt=""
-              width={260}
-              height={260}
-              className="h-7 w-7 object-contain"
-              style={{ filter: iconFilter }}
-            />
-            <span className="mt-1 flex flex-col items-center gap-[3px]" aria-hidden="true">
-              <span className="block h-[2px] w-7 rounded-full bg-[#d4c09a]" />
-              <span className="block h-[2px] w-7 rounded-full bg-[#d4c09a]" />
-              <span className="block h-[2px] w-7 rounded-full bg-[#d4c09a]" />
-            </span>
+            {mobileOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
           </button>
         </div>
       </div>
@@ -310,112 +333,109 @@ export default function Header({
                 : "bg-black/70 border-white/10 text-white"
             } backdrop-blur-xl`}
           >
-            <div className="max-w-7xl mx-auto px-5 py-4 space-y-3">
-              <Link
-                className="block min-h-10 rounded-lg px-2 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
-                href="/"
-                onClick={() => setMobileOpen(false)}
-              >
-                Home
-              </Link>
-              <Link
-                className="block min-h-10 rounded-lg px-2 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
-                href="/about"
-                onClick={() => setMobileOpen(false)}
-              >
-                About Us
-              </Link>
-
-              <div className="mt-3">
-                <div className="text-xs uppercase tracking-[0.28em] opacity-60 mb-2">Our Labs</div>
-                {labs.items.map((item) => (
-                  <div key={item.label}>
-                    {item.dividerBefore ? (
-                      <div
-                        className={`my-3 border-t ${
-                          theme === "light" ? "border-black/10" : "border-white/12"
-                        }`}
-                      />
-                    ) : null}
-                    {item.href?.startsWith("/") ? (
-                      <Link
-                        className="mt-2 block min-h-10 rounded-lg px-2 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
-                        href={item.href}
-                        onClick={() => setMobileOpen(false)}
-                      >
-                        {item.label}
-                      </Link>
-                    ) : (
-                      <a
-                        className="mt-2 block min-h-10 rounded-lg px-2 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
-                        href={item.href}
-                        onClick={() => setMobileOpen(false)}
-                      >
-                        {item.label}
-                      </a>
-                    )}
-                  </div>
-                ))}
+            <div className="mx-auto max-w-7xl px-5 py-5">
+              <div className="grid gap-2 sm:grid-cols-2">
+                <SiteButton href={CUSTOMER_PORTAL_URL} variant="portal" icon={LogIn} trailingIcon={false} onClick={() => setMobileOpen(false)}>
+                  Customer Portal
+                </SiteButton>
+                <SiteButton href={signUpHref} variant={theme === "light" ? "dark" : "primary"} icon={Handshake} onClick={() => setMobileOpen(false)} external>
+                  Partner With Us
+                </SiteButton>
               </div>
 
-              <div className="mt-3">
-                <div className="text-xs uppercase tracking-[0.28em] opacity-60 mb-2">Resources</div>
-                {resources.items.map((item) => {
-                  const href = item.href ?? "#";
-                  const className = "mt-2 block min-h-10 rounded-lg px-2 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]";
-
-                  if (href.startsWith("/")) {
-                    return (
-                      <Link
-                        key={item.label}
-                        className={className}
-                        href={href}
-                        onClick={() => setMobileOpen(false)}
-                      >
-                        {item.label}
-                      </Link>
-                    );
-                  }
-
-                  return (
-                    <a
-                      key={item.label}
-                      className={className}
-                      href={href}
-                      onClick={() => setMobileOpen(false)}
-                    >
-                      {item.label}
-                    </a>
-                  );
-                })}
+              <div className="mt-5 grid gap-5 md:grid-cols-3">
+                <MobileLinkGroup title="Resources" icon={BookOpen} items={resources.items} theme={theme} onAnyClick={() => setMobileOpen(false)} />
+                <MobileLinkGroup title="Our Labs" icon={Building2} items={labs.items} theme={theme} onAnyClick={() => setMobileOpen(false)} />
+                <MobileLinkGroup title="Programs" icon={Sparkles} items={programs.items} theme={theme} onAnyClick={() => setMobileOpen(false)} />
               </div>
 
-              <button
-                type="button"
-                className="mt-3 block min-h-10 rounded-lg px-2 py-2 text-left text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
-                onClick={() => {
-                  setMobileOpen(false);
-                  onContactClick?.();
-                }}
-              >
-                Contact Us
-              </button>
-
-              <a
-                href={signUpHref}
-                target="_blank"
-                rel="noreferrer"
-                className={`mt-4 inline-flex min-h-11 items-center rounded-full px-6 py-2 text-sm font-semibold transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a] ${
-                  theme === "light" ? "bg-black text-white" : "bg-[#d4c09a] text-black"
-                } shadow active:translate-y-0`}
-                onClick={() => setMobileOpen(false)}
-              >
-                Get Started
-              </a>
+              <div className={`mt-5 flex flex-wrap gap-2 border-t pt-4 ${theme === "light" ? "border-black/10" : "border-white/12"}`}>
+                <Link
+                  className="inline-flex min-h-10 items-center rounded-lg px-3 text-sm font-semibold transition hover:bg-current/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
+                  href="/"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Home
+                </Link>
+                <Link
+                  className="inline-flex min-h-10 items-center rounded-lg px-3 text-sm font-semibold transition hover:bg-current/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
+                  href="/about"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  About
+                </Link>
+                <button
+                  type="button"
+                  className="inline-flex min-h-10 items-center gap-2 rounded-lg px-3 text-left text-sm font-semibold transition hover:bg-current/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
+                  onClick={() => {
+                    setMobileOpen(false);
+                    onContactClick?.();
+                  }}
+                >
+                  <Mail className="h-4 w-4" aria-hidden="true" />
+                  Contact
+                </button>
+              </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
     </header>
+  );
+}
+
+function MobileLinkGroup({
+  title,
+  icon: Icon,
+  items,
+  theme,
+  onAnyClick,
+}: {
+  title: string;
+  icon: LucideIcon;
+  items: NavItem[];
+  theme: Theme;
+  onAnyClick: () => void;
+}) {
+  const linkClass =
+    theme === "light"
+      ? "block rounded-lg px-3 py-2 text-sm font-semibold text-black/78 transition hover:bg-black/5 hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8a7654]"
+      : "block rounded-lg px-3 py-2 text-sm font-semibold text-white/82 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]";
+
+  return (
+    <section>
+      <div className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.22em] opacity-60">
+        <Icon className="h-4 w-4" aria-hidden="true" />
+        {title}
+      </div>
+      <div className="grid gap-1">
+        {items.map((item) => {
+          const href = item.href ?? "#";
+          const spacer = item.dividerBefore ? (
+            <div className={`my-1 border-t ${theme === "light" ? "border-black/10" : "border-white/12"}`} />
+          ) : null;
+
+          if (href.startsWith("/")) {
+            return (
+              <div key={item.label}>
+                {spacer}
+                <Link href={href} className={linkClass} onClick={onAnyClick}>
+                  {item.label}
+                </Link>
+              </div>
+            );
+          }
+
+          return (
+            <div key={item.label}>
+              {spacer}
+              <a href={href} className={linkClass} onClick={onAnyClick}>
+                {item.label}
+              </a>
+            </div>
+          );
+        })}
+      </div>
+    </section>
   );
 }

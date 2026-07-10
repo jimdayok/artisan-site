@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { BookOpen, Building2, Handshake, LogIn, Mail, MapPin, Phone } from "lucide-react";
 import CookiePreferencesButton from "./CookiePreferencesButton";
+import SiteButton from "./SiteButton";
 
 type FooterProps = {
   onContactClick?: () => void;
@@ -19,6 +21,12 @@ export default function Footer({
     { label: "Instagram", icon: "/social/instagram.svg", href: "https://www.instagram.com/artisanlabnetwork" },
     { label: "LinkedIn", icon: "/social/linkedin.svg", href: "https://www.linkedin.com/company/artisan-lab-network/" },
   ];
+  const actionLinks = [
+    { label: "Customer Portal", href: "/portal", icon: LogIn, variant: "portal" as const },
+    { label: "Provider Resources", href: "/provider-resources", icon: BookOpen, variant: "secondary" as const },
+    { label: "Meet the Labs", href: "/meet-the-artisans", icon: Building2, variant: "secondary" as const },
+    { label: "Partner With Us", href: signUpHref, icon: Handshake, variant: "primary" as const, external: true },
+  ];
 
   return (
     <footer id="site-footer" className="relative z-20 bg-[#171311] text-[#f7f1e8]">
@@ -32,19 +40,14 @@ export default function Footer({
               Independent eye care deserves a better lab model.
             </h2>
           </div>
-          <a
-            href={signUpHref}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex w-fit items-center justify-center rounded-full bg-[#d4c09a] px-6 py-3 text-sm font-semibold text-[#171311] shadow-sm transition hover:-translate-y-0.5 hover:bg-[#e2cca2]"
-          >
-            Get Started
-          </a>
+          <SiteButton href={signUpHref} variant="primary" size="lg" icon={Handshake} external>
+            Partner With Us
+          </SiteButton>
         </div>
       </div>
 
       <div className="mx-auto grid max-w-7xl gap-10 px-6 py-12 md:grid-cols-12 md:px-10">
-        <div className="md:col-span-5">
+        <div className="md:col-span-4">
           <div className="flex items-center gap-4">
             <Link
               href="/"
@@ -64,6 +67,21 @@ export default function Footer({
                 Doctor-owned network
               </div>
             </div>
+          </div>
+          <div className="mt-7 grid gap-2 sm:grid-cols-2">
+            {actionLinks.map((action) => (
+              <SiteButton
+                key={action.label}
+                href={action.href}
+                variant={action.variant}
+                icon={action.icon}
+                size="sm"
+                className={action.variant === "secondary" ? "border-white/12 bg-white/[0.055] text-white hover:border-[#c9b28b]/70 hover:bg-white/10" : ""}
+                external={action.external}
+              >
+                {action.label}
+              </SiteButton>
+            ))}
           </div>
           <p className="mt-5 max-w-md text-sm leading-7 text-white/68">
             Artisan Lab Network is the parent organization supporting{" "}
@@ -96,15 +114,14 @@ export default function Footer({
 
         <div className="md:col-span-2">
           <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-[#c9b28b]">
-            Explore
+            Start Here
           </h3>
           <ul className="mt-5 space-y-3.5 text-sm text-white/72">
-            <li><Link href="/" className="transition hover:text-white">Home</Link></li>
-            <li><Link href="/about" className="transition hover:text-white">About Us</Link></li>
-            <li><Link href="/meet-the-artisans" className="transition hover:text-white">Meet the Artisans</Link></li>
-            <li><Link href="/#labs" className="transition hover:text-white">Our Labs</Link></li>
-            <li><Link href="/provider-resources" className="transition hover:text-white">Resources</Link></li>
+            <li><Link href="/provider-resources" className="transition hover:text-white">Provider Resources</Link></li>
             <li><Link href="/portal" className="transition hover:text-white">Customer Portal</Link></li>
+            <li><Link href="/patient-resources" className="transition hover:text-white">Patient Resources</Link></li>
+            <li><Link href="/optical-engineering" className="transition hover:text-white">Engineering Center</Link></li>
+            <li><Link href="/lab-policies" className="transition hover:text-white">Lab Policies</Link></li>
             <li>
               <button type="button" onClick={onContactClick} className="transition hover:text-white">
                 Contact Us
@@ -115,16 +132,31 @@ export default function Footer({
 
         <div className="md:col-span-2">
           <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-[#c9b28b]">
+            Labs
+          </h3>
+          <ul className="mt-5 space-y-3.5 text-sm text-white/72">
+            <li><Link href="/pacific-artisan-labs" className="transition hover:text-white">Pacific Artisan Labs</Link></li>
+            <li><Link href="/peak-artisan-labs" className="transition hover:text-white">Peak Artisan Labs</Link></li>
+            <li><Link href="/pike-artisan-labs" className="transition hover:text-white">Pike Artisan Labs</Link></li>
+            <li><Link href="/meet-the-artisans" className="transition hover:text-white">Meet the Artisans</Link></li>
+          </ul>
+        </div>
+
+        <div className="md:col-span-2">
+          <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-[#c9b28b]">
             Company
           </h3>
           <ul className="mt-5 space-y-3.5 text-sm text-white/72">
+            <li><Link href="/about" className="transition hover:text-white">About Us</Link></li>
+            <li><Link href="/artisan-model" className="transition hover:text-white">Ownership Model</Link></li>
+            <li><Link href="/programs" className="transition hover:text-white">Programs</Link></li>
             <li><Link href="/careers" className="transition hover:text-white">Careers</Link></li>
             <li><Link href="/about#press-releases" className="transition hover:text-white">Press Releases</Link></li>
             <li><Link href="/newsletter" className="transition hover:text-white">Newsletter</Link></li>
           </ul>
         </div>
 
-        <div className="md:col-span-3">
+        <div className="md:col-span-2">
           <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-[#c9b28b]">
             Contact
           </h3>
@@ -134,10 +166,10 @@ export default function Footer({
                 href="https://www.google.com/maps/search/?api=1&query=12302%20NE%20Marx%20St%20Portland%20OR%2097230"
                 target="_blank"
                 rel="noreferrer"
-                className="transition hover:text-white"
+                className="inline-flex gap-2 transition hover:text-white"
               >
-                12302 NE Marx St.<br />
-                Portland, OR 97230
+                <MapPin className="mt-1 h-4 w-4 shrink-0 text-[#c9b28b]" aria-hidden="true" />
+                <span>12302 NE Marx St.<br />Portland, OR 97230</span>
               </a>
               <a
                 href="https://www.google.com/maps/search/?api=1&query=12302%20NE%20Marx%20St%20Portland%20OR%2097230"
@@ -149,15 +181,17 @@ export default function Footer({
               </a>
             </p>
             <p>
-              <a href="tel:8773906900" className="transition hover:text-white">
+              <a href="tel:8773906900" className="inline-flex items-center gap-2 transition hover:text-white">
+                <Phone className="h-4 w-4 text-[#c9b28b]" aria-hidden="true" />
                 877.390.6900
               </a>
             </p>
             <p>
               <a
                 href="mailto:info@artisanlabnetwork.com"
-                className="transition hover:text-white"
+                className="inline-flex items-center gap-2 transition hover:text-white"
               >
+                <Mail className="h-4 w-4 text-[#c9b28b]" aria-hidden="true" />
                 info@artisanlabnetwork.com
               </a>
             </p>

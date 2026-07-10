@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
+import SiteButton from "./SiteButton";
 import {
   COMPLIANCE_NOTE,
   type ProgramPageData,
@@ -65,9 +66,9 @@ function BackgroundSection({
   return (
     <section
       data-theme={theme}
-      className={`relative isolate overflow-hidden bg-cover bg-center bg-scroll md:bg-fixed ${className}`}
-      style={{ backgroundImage: `url('${image}')` }}
+      className={`relative isolate overflow-hidden ${className}`}
     >
+      <Image src={image} alt="" fill sizes="100vw" className="absolute inset-0 -z-20 object-cover" />
       <div className={`pointer-events-none absolute inset-0 -z-10 ${overlay}`} />
       {children}
     </section>
@@ -123,17 +124,13 @@ function CtaLink({
   children: ReactNode;
   variant?: "primary" | "secondary" | "dark";
 }) {
-  const className =
-    variant === "primary"
-      ? "inline-flex min-h-12 items-center justify-center rounded-full bg-[#d4c09a] px-7 py-3 text-sm font-semibold text-[#171311] shadow-[0_18px_45px_rgba(0,0,0,0.22)] transition hover:-translate-y-0.5 hover:bg-[#e2cca2]"
-      : variant === "dark"
-        ? "inline-flex min-h-12 items-center justify-center rounded-full bg-[#1f1a17] px-7 py-3 text-sm font-semibold text-white shadow-[0_18px_45px_rgba(49,39,26,0.14)] transition hover:-translate-y-0.5 hover:bg-[#c9b28b] hover:text-[#1f1a17]"
-        : "inline-flex min-h-12 items-center justify-center rounded-full border border-white/18 bg-white/8 px-7 py-3 text-sm font-semibold text-white backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[#d4c09a]/65 hover:bg-white/14";
+  const mappedVariant = variant === "dark" ? "dark" : variant === "secondary" ? "quiet" : "primary";
+  const className = variant === "secondary" ? "border-white/18 bg-white/8 text-white backdrop-blur-md hover:border-[#d4c09a]/65 hover:bg-white/14" : "";
 
   return (
-    <a href={href} target="_blank" rel="noreferrer" className={className}>
+    <SiteButton href={href} variant={mappedVariant} size="lg" className={className} external>
       {children}
-    </a>
+    </SiteButton>
   );
 }
 
@@ -152,7 +149,7 @@ function ProgramLogo({ program }: { program: ProgramPageData }) {
         alt={program.logo.alt}
         width={560}
         height={220}
-        priority
+        preload
         className={`w-auto object-contain ${
           isUnity ? "max-h-[150px] max-w-[380px] scale-[1.25]" : "max-h-[100px] max-w-[300px] scale-[1.15]"
         }`}

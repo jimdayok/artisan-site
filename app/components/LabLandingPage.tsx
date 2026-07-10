@@ -474,19 +474,12 @@ function MeetArtisans({ config }: { config: LabLandingConfig }) {
           </p>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
-          <Link
-            href={config.websiteHref}
-            className="inline-flex min-h-12 items-center justify-center rounded-full px-6 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5"
-            style={{ backgroundColor: config.dark }}
-          >
-            Visit Lab Website
-          </Link>
-          <Link
-            href={config.meetHref}
-            className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#d8c6a8] bg-[#fbf8f3] px-6 text-sm font-semibold text-[#1f1a17] transition hover:-translate-y-0.5 hover:border-[#c9b28b] hover:bg-white"
-          >
+          <SiteButton href={config.resourcesHref} variant="dark" size="lg" icon={Compass}>
+            Provider Resources
+          </SiteButton>
+          <SiteButton href={config.meetHref} variant="secondary" size="lg" icon={Users}>
             Meet Your Lab
-          </Link>
+          </SiteButton>
         </div>
       </PremiumReveal>
     </section>

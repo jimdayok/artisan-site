@@ -272,19 +272,19 @@ export default function NetworkMap({
                             <div className="grid grid-cols-2 gap-2">
                               <a
                                 href={`mailto:${lab.email}`}
-                                className="inline-flex min-h-10 items-center justify-center rounded-full border border-white/12 bg-white/8 px-3 py-2 text-center text-xs font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-black"
+                                className="inline-flex min-h-10 items-center justify-center rounded-lg border border-white/12 bg-white/8 px-3 py-2 text-center text-xs font-semibold text-white transition hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-black"
                               >
                                 Email Customer Service
                               </a>
                               <a
                                 href={lab.website}
-                                className="inline-flex min-h-10 items-center justify-center rounded-full border border-white/12 bg-white/8 px-3 py-2 text-center text-xs font-semibold text-white transition hover:-translate-y-0.5 hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-black"
+                                className="inline-flex min-h-10 items-center justify-center rounded-lg border border-white/12 bg-white/8 px-3 py-2 text-center text-xs font-semibold text-white transition hover:-translate-y-0.5 hover:border-[#d4c09a]/55 hover:bg-[#d4c09a] hover:text-black"
                               >
-                                Visit Lab Website
+                                View Lab Details
                               </a>
                               <a
                                 href={lab.meetHref}
-                                className="col-span-2 inline-flex min-h-10 items-center justify-center rounded-full border border-[#d4c09a]/45 bg-[#d4c09a] px-3 py-2 text-center text-xs font-semibold text-[#171311] transition hover:bg-[#e2cca2]"
+                                className="col-span-2 inline-flex min-h-10 items-center justify-center rounded-lg border border-[#d4c09a]/45 bg-[#d4c09a] px-3 py-2 text-center text-xs font-semibold text-[#171311] transition hover:bg-[#e2cca2]"
                               >
                                 Meet Your Lab
                               </a>

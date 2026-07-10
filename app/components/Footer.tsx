@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { BookOpen, Building2, Handshake, LogIn, Mail, MapPin, Phone } from "lucide-react";
+import { BookOpen, Building2, Handshake, Mail, MapPin, Phone } from "lucide-react";
 import CookiePreferencesButton from "./CookiePreferencesButton";
 import SiteButton from "./SiteButton";
 
@@ -22,7 +22,6 @@ export default function Footer({
     { label: "LinkedIn", icon: "/social/linkedin.svg", href: "https://www.linkedin.com/company/artisan-lab-network/" },
   ];
   const actionLinks = [
-    { label: "Customer Portal", href: "/portal", icon: LogIn, variant: "portal" as const },
     { label: "Provider Resources", href: "/provider-resources", icon: BookOpen, variant: "secondary" as const },
     { label: "Meet the Labs", href: "/meet-the-artisans", icon: Building2, variant: "secondary" as const },
     { label: "Partner With Us", href: signUpHref, icon: Handshake, variant: "primary" as const, external: true },
@@ -120,7 +119,6 @@ export default function Footer({
             <li><Link href="/provider-resources" className="transition hover:text-white">Provider Resources</Link></li>
             <li><Link href="/portal" className="transition hover:text-white">Customer Portal</Link></li>
             <li><Link href="/patient-resources" className="transition hover:text-white">Patient Resources</Link></li>
-            <li><Link href="/optical-engineering" className="transition hover:text-white">Engineering Center</Link></li>
             <li><Link href="/lab-policies" className="transition hover:text-white">Lab Policies</Link></li>
             <li>
               <button type="button" onClick={onContactClick} className="transition hover:text-white">
@@ -149,7 +147,6 @@ export default function Footer({
           <ul className="mt-5 space-y-3.5 text-sm text-white/72">
             <li><Link href="/about" className="transition hover:text-white">About Us</Link></li>
             <li><Link href="/artisan-model" className="transition hover:text-white">Ownership Model</Link></li>
-            <li><Link href="/programs" className="transition hover:text-white">Programs</Link></li>
             <li><Link href="/careers" className="transition hover:text-white">Careers</Link></li>
             <li><Link href="/about#press-releases" className="transition hover:text-white">Press Releases</Link></li>
             <li><Link href="/newsletter" className="transition hover:text-white">Newsletter</Link></li>

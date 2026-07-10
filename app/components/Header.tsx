@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Building2, ChevronDown, Handshake, LogIn, Mail, Menu, Sparkles, X, type LucideIcon } from "lucide-react";
+import { BookOpen, Building2, ChevronDown, Handshake, Mail, Menu, X, type LucideIcon } from "lucide-react";
 import SiteButton from "./SiteButton";
 
 type Theme = "dark" | "light";
@@ -191,8 +191,7 @@ export default function Header({
         { label: "Professional Resources", href: "/provider-resources" },
         { label: "Patient Resources", href: "/patient-resources" },
         { label: "Optical Engineering Center", href: "/optical-engineering" },
-        { label: "AR Treatments", href: "/artisan-ar" },
-        { label: "Lab Policies", href: "/lab-policies" },
+        { label: "Freedom of Choice", href: "/advocacy" },
         { label: "Lab Ownership & Partnership", href: "/artisan-model" },
         { label: "Customer Portal", href: CUSTOMER_PORTAL_URL, dividerBefore: true },
       ],
@@ -208,19 +207,6 @@ export default function Header({
         { label: "Peak Artisan Labs", href: "/peak-artisan-labs" },
         { label: "Pike Artisan Labs", href: "/pike-artisan-labs" },
         { label: "Meet the Artisans", href: "/meet-the-artisans", dividerBefore: true },
-      ],
-    }),
-    []
-  );
-
-  const programs: Dropdown = useMemo(
-    () => ({
-      label: "Programs",
-      items: [
-        { label: "All Programs", href: "/programs" },
-        { label: "Artisan AR Treatments", href: "/artisan-ar" },
-        { label: "Acquios Alliance", href: "/acquios" },
-        { label: "United Opticians Association", href: "/uoa" },
       ],
     }),
     []
@@ -288,12 +274,8 @@ export default function Header({
           </Link>
 
           <nav className="hidden lg:flex items-center gap-2">
-            <Capsule href={CUSTOMER_PORTAL_URL} theme={theme} active={navIsActive(CUSTOMER_PORTAL_URL)}>
-              Portal
-            </Capsule>
             <DropdownMenu {...resources} theme={theme} active={dropdownIsActive(resources)} onAnyClick={() => setMobileOpen(false)} />
             <DropdownMenu {...labs} theme={theme} active={dropdownIsActive(labs)} onAnyClick={() => setMobileOpen(false)} />
-            <DropdownMenu {...programs} theme={theme} active={dropdownIsActive(programs)} onAnyClick={() => setMobileOpen(false)} />
             <Capsule href="/about" theme={theme} active={navIsActive("/about")}>
               About
             </Capsule>
@@ -334,19 +316,15 @@ export default function Header({
             } backdrop-blur-xl`}
           >
             <div className="mx-auto max-w-7xl px-5 py-5">
-              <div className="grid gap-2 sm:grid-cols-2">
-                <SiteButton href={CUSTOMER_PORTAL_URL} variant="portal" icon={LogIn} trailingIcon={false} onClick={() => setMobileOpen(false)}>
-                  Customer Portal
-                </SiteButton>
+              <div className="grid gap-2">
                 <SiteButton href={signUpHref} variant={theme === "light" ? "dark" : "primary"} icon={Handshake} onClick={() => setMobileOpen(false)} external>
                   Partner With Us
                 </SiteButton>
               </div>
 
-              <div className="mt-5 grid gap-5 md:grid-cols-3">
+              <div className="mt-5 grid gap-5 md:grid-cols-2">
                 <MobileLinkGroup title="Resources" icon={BookOpen} items={resources.items} theme={theme} onAnyClick={() => setMobileOpen(false)} />
                 <MobileLinkGroup title="Our Labs" icon={Building2} items={labs.items} theme={theme} onAnyClick={() => setMobileOpen(false)} />
-                <MobileLinkGroup title="Programs" icon={Sparkles} items={programs.items} theme={theme} onAnyClick={() => setMobileOpen(false)} />
               </div>
 
               <div className={`mt-5 flex flex-wrap gap-2 border-t pt-4 ${theme === "light" ? "border-black/10" : "border-white/12"}`}>

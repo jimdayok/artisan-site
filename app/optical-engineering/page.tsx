@@ -502,9 +502,8 @@ function frameSummary(data: OpticalData) {
 
 function FormulaWall({ onCopy }: { onCopy: (value: string) => void }) {
   return (
-    <div className="relative h-full min-h-[420px] overflow-hidden rounded-[32px] border border-white/10 bg-[#071017] p-6 shadow-[0_28px_90px_rgba(0,0,0,0.34)]">
+    <div className="relative h-full min-h-[420px] overflow-hidden rounded-lg border border-white/10 bg-[#071017] p-6 shadow-[0_28px_90px_rgba(0,0,0,0.34)]">
       <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(212,192,154,0.16)_1px,transparent_1px),linear-gradient(90deg,rgba(212,192,154,0.12)_1px,transparent_1px)] [background-size:28px_28px]" />
-      <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full border border-[#d4c09a]/20 shadow-[0_0_0_38px_rgba(212,192,154,0.035),0_0_0_76px_rgba(212,192,154,0.025)]" />
       <div className="relative z-10 flex h-full flex-col justify-between gap-6">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#d4c09a]">Applied Optical Engineering</p>
@@ -518,7 +517,7 @@ function FormulaWall({ onCopy }: { onCopy: (value: string) => void }) {
               key={item.label}
               type="button"
               onClick={() => onCopy(`${item.label}: ${item.formula}`)}
-              className="group rounded-2xl border border-white/10 bg-white/[0.055] p-4 text-left transition hover:border-[#d4c09a]/55 hover:bg-white/[0.085]"
+              className="group rounded-lg border border-white/10 bg-white/[0.055] p-4 text-left transition hover:border-[#d4c09a]/55 hover:bg-white/[0.085]"
             >
               <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#d4c09a]">{item.label}</span>
               <span className="mt-2 block font-mono text-lg leading-7 text-white md:text-xl">{item.formula}</span>
@@ -559,8 +558,14 @@ function ResultRows({
 
 function MaterialComparison({ data }: { data: OpticalData }) {
   return (
-    <div className="rounded-[28px] border border-[#d8c6a8] bg-[#172a28] p-5 text-white shadow-[0_18px_48px_rgba(24,18,13,0.12)]">
-      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#d4c09a]">Material Engine</p>
+    <div className="rounded-lg border border-[#d8c6a8] bg-[#172a28] p-5 text-white shadow-[0_18px_48px_rgba(24,18,13,0.12)]">
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#d4c09a]">Material Engine</p>
+          <p className="mt-2 text-sm leading-6 text-white/64">Compare estimated thickness and weight for the same scenario.</p>
+        </div>
+        <Layers className="h-5 w-5 shrink-0 text-[#d4c09a]" aria-hidden="true" />
+      </div>
       <div className="mt-4 grid gap-2">
         {materialProperties.map((material) => {
           const thickness = edgeEstimate(data, material.index);
@@ -568,12 +573,12 @@ function MaterialComparison({ data }: { data: OpticalData }) {
           return (
             <div
               key={material.name}
-              className="grid gap-2 rounded-2xl border border-white/10 bg-white/[0.055] px-4 py-3 md:grid-cols-[130px_1fr_88px_74px]"
+              className="grid gap-2 rounded-lg border border-white/10 bg-white/[0.055] px-4 py-3 sm:grid-cols-[92px_minmax(0,1fr)] xl:grid-cols-[82px_minmax(0,1fr)_70px_64px]"
             >
               <span className="font-semibold">{material.name}</span>
               <span className="text-white/70">{fmt(thickness)} mm · Abbe {material.abbe}</span>
-              <span className="text-right text-white/70">{fmt(material.specificGravity)} SG</span>
-              <span className="text-right font-semibold text-[#d4c09a]">{fmt(weight)} g</span>
+              <span className="text-white/70 xl:text-right">{fmt(material.specificGravity)} SG</span>
+              <span className="font-semibold text-[#d4c09a] xl:text-right">{fmt(weight)} g</span>
             </div>
           );
         })}
@@ -596,7 +601,7 @@ function SetupAccordion({
   children: ReactNode;
 }) {
   return (
-    <div className="rounded-[28px] border border-[#d8c6a8] bg-white/86 shadow-[0_18px_48px_rgba(24,18,13,0.07)]">
+    <div className="rounded-lg border border-[#d8c6a8] bg-white/86 shadow-[0_18px_48px_rgba(24,18,13,0.07)]">
       <button
         type="button"
         onClick={onToggle}
@@ -606,7 +611,7 @@ function SetupAccordion({
           <span className="block text-xs font-bold uppercase tracking-[0.24em] text-[#8a7654]">{title}</span>
           <span className="mt-2 block text-sm font-semibold text-[#625b53]">{summary}</span>
         </span>
-        <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#d8c6a8] bg-[#fbf8f3] text-xl font-semibold text-[#172a28]">
+        <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[#d8c6a8] bg-[#fbf8f3] text-xl font-semibold text-[#172a28]">
           {open ? "−" : "+"}
         </span>
       </button>
@@ -652,11 +657,11 @@ function ResultModal({
             <h2 className="mt-2 text-3xl font-semibold tracking-tight text-[#172a28]">{title}</h2>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <button onClick={onCopy} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#d8c6a8] bg-white px-4 text-sm font-semibold text-[#172a28] transition hover:bg-[#d4c09a]"><Copy className="h-4 w-4" />Copy</button>
-            <button onClick={onPrint} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#d8c6a8] bg-white px-4 text-sm font-semibold text-[#172a28] transition hover:bg-[#d4c09a]"><Printer className="h-4 w-4" />Print</button>
-            <button onClick={onShare} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#d8c6a8] bg-white px-4 text-sm font-semibold text-[#172a28] transition hover:bg-[#d4c09a]"><Share2 className="h-4 w-4" />Share</button>
-            <button onClick={onPrint} className="inline-flex min-h-10 items-center gap-2 rounded-full bg-[#172a28] px-4 text-sm font-semibold text-white transition hover:bg-[#27433f]"><Download className="h-4 w-4" />PDF</button>
-            <button onClick={onClose} className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#d8c6a8] bg-[#fbf8f3] text-[#172a28] transition hover:bg-[#d4c09a]"><X className="h-4 w-4" /></button>
+            <button onClick={onCopy} className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-[#d8c6a8] bg-white px-4 text-sm font-semibold text-[#172a28] transition hover:bg-[#d4c09a]"><Copy className="h-4 w-4" />Copy</button>
+            <button onClick={onPrint} className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-[#d8c6a8] bg-white px-4 text-sm font-semibold text-[#172a28] transition hover:bg-[#d4c09a]"><Printer className="h-4 w-4" />Print</button>
+            <button onClick={onShare} className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-[#d8c6a8] bg-white px-4 text-sm font-semibold text-[#172a28] transition hover:bg-[#d4c09a]"><Share2 className="h-4 w-4" />Share</button>
+            <button onClick={onPrint} className="inline-flex min-h-10 items-center gap-2 rounded-lg bg-[#172a28] px-4 text-sm font-semibold text-white transition hover:bg-[#27433f]"><Download className="h-4 w-4" />PDF</button>
+            <button onClick={onClose} className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[#d8c6a8] bg-[#fbf8f3] text-[#172a28] transition hover:bg-[#d4c09a]"><X className="h-4 w-4" /></button>
           </div>
         </div>
         <div className="overflow-y-auto px-5 py-5 md:px-6 md:py-6">
@@ -1135,7 +1140,7 @@ function CategoryGrid({
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8a7654]">{category}</p>
                 <p className="mt-1 text-sm font-semibold text-[#625b53]">{categoryDescriptions[category]}</p>
               </div>
-              <span className="rounded-full border border-[#d8c6a8] bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#625b53]">
+              <span className="rounded-lg border border-[#d8c6a8] bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#625b53]">
                 {modules.length}
               </span>
             </div>
@@ -1149,18 +1154,18 @@ function CategoryGrid({
                     key={calculator.id}
                     type="button"
                     onClick={() => onSelect(calculator.id)}
-                    className={`group min-h-40 rounded-[24px] border p-4 text-left transition hover:-translate-y-1 ${
+                    className={`group min-h-40 rounded-lg border p-4 text-left transition hover:-translate-y-1 ${
                       selected
                         ? "border-[#172a28] bg-[#172a28] text-white shadow-[0_22px_62px_rgba(23,42,40,0.22)]"
                         : "border-[#eadfce] bg-white/86 text-[#172a28] hover:border-[#c9b28b]"
                     }`}
                   >
                     <div className="flex items-start justify-between gap-3">
-                      <span className={`grid h-11 w-11 place-items-center rounded-2xl ${selected ? "bg-[#d4c09a] text-[#172a28]" : "bg-[#fbf8f3] text-[#8a7654]"}`}>
+                      <span className={`grid h-11 w-11 place-items-center rounded-lg ${selected ? "bg-[#d4c09a] text-[#172a28]" : "bg-[#fbf8f3] text-[#8a7654]"}`}>
                         <Icon className="h-5 w-5" />
                       </span>
                       <span
-                        className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
+                        className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${
                           status.ready ? "bg-[#e7f7ed] text-[#21633c]" : "bg-[#fff1e8] text-[#9b4a22]"
                         }`}
                       >
@@ -1334,28 +1339,27 @@ export default function OpticalEngineeringPage() {
         onShare={shareScenario}
       />
 
-      <section className="relative overflow-hidden bg-[#101820] px-6 pb-16 pt-32 text-white md:px-10 md:pb-20 md:pt-40">
+      <section className="relative overflow-hidden bg-[#101820] px-6 pb-14 pt-30 text-white md:px-10 md:pb-18 md:pt-36">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(212,192,154,0.22),transparent_28%),radial-gradient(circle_at_86%_14%,rgba(126,226,170,0.13),transparent_28%),linear-gradient(135deg,#101820_0%,#172a28_58%,#0c1117_100%)]" />
         <div className="absolute inset-0 opacity-25 [background-image:linear-gradient(rgba(212,192,154,0.14)_1px,transparent_1px),linear-gradient(90deg,rgba(212,192,154,0.12)_1px,transparent_1px)] [background-size:34px_34px]" />
-        <div className="absolute -right-24 top-20 h-[460px] w-[460px] rounded-full border border-[#d4c09a]/22 shadow-[0_0_0_44px_rgba(212,192,154,0.035),0_0_0_88px_rgba(212,192,154,0.025)]" />
         <div className="relative z-10 mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#d4c09a]">Artisan Lab Network</p>
-            <h1 className="mt-5 text-5xl font-semibold tracking-tight md:text-7xl">Optical Engineering Center</h1>
+            <h1 className="mt-5 text-4xl font-semibold tracking-tight md:text-6xl">Optical Engineering Center</h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-white/72 md:text-2xl md:leading-10">
               Laboratory-grade optical calculators, reference formulas, and tolerance tools.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a href="#workspace" className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#d4c09a] px-6 text-sm font-semibold text-[#101820] transition hover:-translate-y-0.5 hover:bg-[#ead7ad]">
+              <a href="#workspace" className="inline-flex min-h-12 items-center justify-center rounded-lg bg-[#d4c09a] px-6 text-sm font-semibold text-[#101820] transition hover:-translate-y-0.5 hover:bg-[#ead7ad]">
                 Select Calculator
               </a>
-              <a href="#references" className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/16 bg-white/8 px-6 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-[#d4c09a]/60 hover:bg-white/12">
+              <a href="#references" className="inline-flex min-h-12 items-center justify-center rounded-lg border border-white/16 bg-white/8 px-6 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-[#d4c09a]/60 hover:bg-white/12">
                 Reference Library
               </a>
             </div>
             <div className="mt-10 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
               {[`${calculatorCount} Calculators`, "Engineering Reference", "Real-Time Results", "Laboratory Grade"].map((stat) => (
-                <div key={stat} className="rounded-2xl border border-white/10 bg-white/[0.055] p-4 backdrop-blur">
+                <div key={stat} className="rounded-lg border border-white/10 bg-white/[0.055] p-4 backdrop-blur">
                   <p className="text-sm font-semibold text-white">{stat}</p>
                 </div>
               ))}
@@ -1366,13 +1370,13 @@ export default function OpticalEngineeringPage() {
       </section>
 
       <section id="workspace" className="px-6 py-10 md:px-10 md:py-12">
-        <div className="mx-auto max-w-7xl rounded-[32px] border border-[#d8c6a8] bg-[#fbf8f3]/88 p-5 shadow-[0_18px_48px_rgba(24,18,13,0.07)] md:p-6">
+        <div className="mx-auto max-w-7xl rounded-lg border border-[#d8c6a8] bg-[#fbf8f3]/88 p-5 shadow-[0_18px_48px_rgba(24,18,13,0.07)] md:p-6">
           <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">Calculator Modules</p>
               <h2 className="mt-2 text-3xl font-semibold tracking-tight text-[#172a28]">Select Calculator</h2>
             </div>
-            <span className="inline-flex w-fit rounded-full border border-[#d8c6a8] bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#625b53]">
+            <span className="inline-flex w-fit rounded-lg border border-[#d8c6a8] bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#625b53]">
               {calculatorCount} modules
             </span>
           </div>
@@ -1386,16 +1390,16 @@ export default function OpticalEngineeringPage() {
       </section>
 
       <section id="calculator-setup" className="px-6 pb-12 md:px-10">
-        <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-[1fr_260px]">
+        <div className="mx-auto grid max-w-7xl gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(320px,380px)]">
           <div className="grid gap-5">
-            <div className="rounded-[32px] border border-[#d8c6a8] bg-white/86 p-6 shadow-[0_18px_48px_rgba(24,18,13,0.07)]">
+            <div className="rounded-lg border border-[#d8c6a8] bg-white/86 p-6 shadow-[0_18px_48px_rgba(24,18,13,0.07)]">
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">{activeCalculator.category}</p>
               <div className="mt-3 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                 <div>
                   <h2 className="text-3xl font-semibold tracking-tight text-[#172a28]">{activeCalculator.title}</h2>
                   <p className="mt-2 max-w-3xl text-sm font-semibold text-[#625b53]">{activeCalculator.description}</p>
                 </div>
-                <button onClick={runCalculation} className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#172a28] px-5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#27433f]">
+                <button onClick={runCalculation} className="inline-flex min-h-11 items-center justify-center rounded-lg bg-[#172a28] px-5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#27433f]">
                   Calculate
                 </button>
               </div>
@@ -1427,7 +1431,7 @@ export default function OpticalEngineeringPage() {
                             key={material.name}
                             type="button"
                             onClick={() => selectMaterial(material.name, material.index)}
-                            className={`rounded-2xl border p-3 text-left text-sm font-semibold transition hover:-translate-y-0.5 ${
+                            className={`rounded-lg border p-3 text-left text-sm font-semibold transition hover:-translate-y-0.5 ${
                               selected ? "border-[#172a28] bg-[#172a28] text-white" : "border-[#eadfce] bg-[#fbf8f3] text-[#172a28]"
                             }`}
                           >
@@ -1479,8 +1483,8 @@ export default function OpticalEngineeringPage() {
               ) : null}
             </div>
           </div>
-          <aside className="lg:sticky lg:top-24 lg:h-fit">
-            <div className="rounded-[28px] border border-[#d8c6a8] bg-[#172a28] p-5 text-white shadow-[0_18px_48px_rgba(24,18,13,0.12)]">
+          <aside className="xl:sticky xl:top-24 xl:h-fit">
+            <div className="rounded-lg border border-[#d8c6a8] bg-[#172a28] p-5 text-white shadow-[0_18px_48px_rgba(24,18,13,0.12)]">
               <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#d4c09a]">Scenario</p>
               <h3 className="mt-3 text-2xl font-semibold tracking-tight">{activeCalculator.title}</h3>
               <div className="mt-4 grid gap-3 text-sm text-white/72">
@@ -1489,10 +1493,10 @@ export default function OpticalEngineeringPage() {
                 <p>{frameSummary(data)}</p>
               </div>
               <div className="mt-5 grid gap-3">
-                <button onClick={runCalculation} className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[#d4c09a] px-5 text-sm font-semibold text-[#172a28] transition hover:-translate-y-0.5 hover:bg-[#ead7ad]">
+                <button onClick={runCalculation} className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-[#d4c09a] px-5 text-sm font-semibold text-[#172a28] transition hover:-translate-y-0.5 hover:bg-[#ead7ad]">
                   Calculate
                 </button>
-                <button onClick={shareScenario} className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-white/12 bg-white/8 px-5 text-sm font-semibold text-white transition hover:bg-white/12">
+                <button onClick={shareScenario} className="inline-flex min-h-11 w-full items-center justify-center rounded-lg border border-white/12 bg-white/8 px-5 text-sm font-semibold text-white transition hover:bg-white/12">
                   Copy Scenario
                 </button>
               </div>

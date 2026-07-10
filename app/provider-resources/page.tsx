@@ -49,7 +49,8 @@ type ResourceCategory =
   | "FAQs"
   | "Ordering"
   | "Pricing"
-  | "Programs";
+  | "Programs"
+  | "Display Tools";
 
 type BrandId =
   | "artisan"
@@ -77,6 +78,8 @@ type Resource = {
   popular?: boolean;
   newest?: boolean;
   staffPick?: boolean;
+  previewImage?: string;
+  previewAlt?: string;
 };
 
 type BrandLibrary = {
@@ -117,6 +120,40 @@ const resource = (
   href,
   tags: [brandLabel, category, type, ...tags],
   ...flags,
+});
+
+const tokaiDisplayRequestHref = (displayTool: string) => {
+  const subject = `Tokai Display Request * ${displayTool}`;
+  const body = [
+    `I am interested in this Tokai display tool: ${displayTool}`,
+    "",
+    "Account number:",
+    "Location name:",
+    "Address:",
+    "State:",
+    "",
+    "Please send current pricing and availability.",
+  ].join("\n");
+
+  return `mailto:sales@artisanlabnetwork.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+};
+
+const tokaiDisplayResource = (
+  title: string,
+  description: string,
+  image: string,
+  tags: string[] = []
+): Resource => ({
+  ...resource("tokai", "Tokai", "Display Tools", "Tool", title, description, tokaiDisplayRequestHref(title), [
+    "display",
+    "tool",
+    "quote",
+    "Tokai display tools",
+    ...tags,
+  ]),
+  cta: "Request current quote",
+  previewImage: image,
+  previewAlt: `${title} preview`,
 });
 
 const portalHighlights = [
@@ -235,6 +272,48 @@ const brandLibraries: BrandLibrary[] = [
       resource("tokai", "Tokai", "Lens Designs", "PDF", "Tokai Largo Guide", "Tokai Largo guide for product positioning and office-lens selection.", fileHref("tokai-largo-guide.pdf"), ["material", "high Rx", "office", "office lens", "occupational"]),
       resource("tokai", "Tokai", "Materials", "PDF", "Tokai Tint Guide", "Tint reference for Tokai lens options and patient preferences.", fileHref("tokai-tint-guide.pdf"), ["tint", "sun"]),
       resource("tokai", "Tokai", "Videos", "Training", "Tokai Product Training", "Tokai product training for design selection and dispensing support.", "https://youtu.be/9P7VEmI0ZwY", ["video", "training"], { newest: true }),
+      tokaiDisplayResource(
+        "Lutina Photochromic Display",
+        "Counter display for demonstrating Tokai Lutina photochromic lens benefits.",
+        "/images/tokaitools-lutinadisplay.png",
+        ["Lutina", "photochromic", "counter display"]
+      ),
+      tokaiDisplayResource(
+        "Lutina Blue Filter Display",
+        "Display tool for explaining Lutina blue-filter technology and patient-facing benefits.",
+        "/images/tokai-tools-lutina-display.png",
+        ["Lutina", "blue filter", "counter display"]
+      ),
+      tokaiDisplayResource(
+        "Lutina ESC Checker",
+        "Diagnostic demonstration tool that measures HEV, near infrared rays, and UV rays.",
+        "/images/lutina-esc-checker.png",
+        ["Lutina", "HEV", "near infrared", "UV", "checker"]
+      ),
+      tokaiDisplayResource(
+        "Six-Lens Comparison Display",
+        "Six-lens display for comparing thickness, USC AR performance, and Lutina benefits.",
+        "/images/comparison-display.png",
+        ["comparison", "thickness", "USC AR", "Lutina"]
+      ),
+      tokaiDisplayResource(
+        "Thickness Display and Comparison Tool",
+        "Physical thickness display and comparison tool for high-index conversations.",
+        "/images/thickness-comparison-tokai.jpg",
+        ["thickness", "high index", "comparison"]
+      ),
+      tokaiDisplayResource(
+        "NRC Display",
+        "Tokai NRC display for supporting in-office product education.",
+        "/images/nrc-display-tokai.png",
+        ["NRC", "display"]
+      ),
+      tokaiDisplayResource(
+        "Thickness Comparison Display",
+        "Tokai thickness comparison display for showing material differences at the counter.",
+        "/images/thickness-comparison-tokai.png",
+        ["thickness", "comparison", "materials"]
+      ),
     ],
   },
   {
@@ -438,6 +517,7 @@ const filterOptions = [
   "Video",
   "Training",
   "Layout Charts",
+  "Display Tools",
   "Progressives",
   "Office Lens",
   "Single Vision",
@@ -455,6 +535,7 @@ const categoryOrder: ResourceCategory[] = [
   "Layout Charts",
   "AR Coatings",
   "Materials",
+  "Display Tools",
   "Videos",
   "Patient Materials",
   "Troubleshooting",
@@ -540,6 +621,20 @@ function IconForResource({ resource }: { resource: Resource }) {
 function ResourceLink({ resource, dense = false }: { resource: Resource; dense?: boolean }) {
   const body = (
     <>
+      {resource.previewImage ? (
+        <span className="pointer-events-none absolute left-4 right-4 top-4 z-20 hidden rounded-lg border border-[#d7ded9] bg-white p-2 shadow-2xl group-hover:block group-focus:block">
+          <span className="relative block h-40 overflow-hidden rounded bg-[#f7f8f5]">
+            <Image
+              src={resource.previewImage}
+              alt={resource.previewAlt ?? `${resource.title} preview`}
+              fill
+              sizes="260px"
+              className="object-contain"
+            />
+          </span>
+          <span className="mt-2 block text-xs font-semibold text-[#374151]">{resource.title}</span>
+        </span>
+      ) : null}
       <div className="flex items-start justify-between gap-3">
         <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase text-[#0f766e]">
           <IconForResource resource={resource} />
@@ -557,6 +652,16 @@ function ResourceLink({ resource, dense = false }: { resource: Resource; dense?:
       <p className={`${dense ? "mt-2 line-clamp-2 text-sm" : "mt-3 text-sm"} leading-6 text-[#4b5563]`}>
         {resource.description}
       </p>
+      {resource.category === "Display Tools" ? (
+        <p className="mt-3 rounded bg-[#fff8ed] px-3 py-2 text-xs font-semibold leading-5 text-[#8a5a19]">
+          Pricing changes with availability and exchange rates; current quotes are provided as needed.
+        </p>
+      ) : null}
+      {resource.previewImage ? (
+        <p className="mt-3 rounded bg-[#f7f8f5] px-3 py-2 text-xs font-semibold text-[#0f766e]">
+          Hover or focus to preview the display image.
+        </p>
+      ) : null}
       <div className="mt-4 flex items-center justify-between gap-3 text-sm font-semibold text-[#111827]">
         <span>{resource.cta ?? (resource.type === "PDF" ? "Open PDF" : "Open resource")}</span>
         {external(resource.href) ? <ExternalLink className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
@@ -565,7 +670,7 @@ function ResourceLink({ resource, dense = false }: { resource: Resource; dense?:
   );
 
   const className =
-    "group block h-full rounded-lg border border-[#d7ded9] bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-[#0f766e] hover:shadow-md";
+    "group relative block h-full rounded-lg border border-[#d7ded9] bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-[#0f766e] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0f766e]";
 
   return external(resource.href) ? (
     <a href={resource.href} className={className} target={resource.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer">
@@ -977,6 +1082,11 @@ export default function ProviderResourcesPage({
                             <Tags className="h-4 w-4 text-[#0f766e]" />
                             <h4 className="text-base font-semibold">{group.category}</h4>
                           </div>
+                          {group.category === "Display Tools" ? (
+                            <p className="mb-3 rounded-lg border border-[#d8c6a8] bg-[#fbf8f3] p-3 text-sm leading-6 text-[#625b53]">
+                              Tokai display-tool pricing changes frequently based on availability and exchange rates, so current pricing is quoted as needed.
+                            </p>
+                          ) : null}
                           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
                             {group.resources.map((item) => (
                               <ResourceLink key={`${item.brand}-${item.category}-${item.title}`} resource={item} dense />

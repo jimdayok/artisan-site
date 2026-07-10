@@ -718,6 +718,7 @@ export default function ProviderResourcesPage({
   const [activeBrand, setActiveBrand] = useState<BrandId>("artisan");
   const [showSectionNav, setShowSectionNav] = useState(false);
   const [sectionNavDismissed, setSectionNavDismissed] = useState(false);
+  const [activeSectionHref, setActiveSectionHref] = useState(sectionNavItems[0][1]);
   const deferredQuery = useDeferredValue(query);
 
   useEffect(() => {
@@ -732,6 +733,41 @@ export default function ProviderResourcesPage({
     return () => {
       window.removeEventListener("scroll", updateSectionNav);
       window.removeEventListener("resize", updateSectionNav);
+    };
+  }, []);
+
+  useEffect(() => {
+    const sectionTargets = sectionNavItems
+      .map(([, href]) => document.getElementById(href.replace("#", "")))
+      .filter((element): element is HTMLElement => Boolean(element));
+
+    if (!sectionTargets.length) return undefined;
+
+    const updateActiveSection = () => {
+      const activationLine = window.innerHeight * 0.38;
+      const current = sectionTargets.reduce((active, section) => {
+        const top = section.getBoundingClientRect().top;
+        if (top <= activationLine) return section;
+        return active;
+      }, sectionTargets[0]);
+
+      setActiveSectionHref(`#${current.id}`);
+    };
+
+    const observer = new IntersectionObserver(updateActiveSection, {
+      rootMargin: "-24% 0px -58% 0px",
+      threshold: [0, 0.01, 0.25, 0.5, 1],
+    });
+
+    sectionTargets.forEach((section) => observer.observe(section));
+    updateActiveSection();
+    window.addEventListener("scroll", updateActiveSection, { passive: true });
+    window.addEventListener("resize", updateActiveSection);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", updateActiveSection);
+      window.removeEventListener("resize", updateActiveSection);
     };
   }, []);
 
@@ -867,20 +903,26 @@ export default function ProviderResourcesPage({
           <X className="h-3.5 w-3.5" />
         </button>
         <div className="grid gap-3 pt-10">
-          {sectionNavItems.map(([label, href], index) => (
+          {sectionNavItems.map(([label, href]) => {
+            const isActive = activeSectionHref === href;
+            return (
             <a
               key={href}
               href={href}
-              className="group flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#64748b] transition hover:text-[#111827]"
+              aria-current={isActive ? "true" : undefined}
+              className={`group flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.18em] transition hover:text-[#111827] ${
+                isActive ? "text-[#0f766e]" : "text-[#64748b]"
+              }`}
             >
               <span
                 className={`h-3 w-3 rounded-full transition group-hover:bg-[#0f766e] ${
-                  index === 0 ? "bg-[#0f766e]" : "bg-[#cbd5cf]"
+                  isActive ? "bg-[#0f766e]" : "bg-[#cbd5cf]"
                 }`}
               />
               <span>{label}</span>
             </a>
-          ))}
+            );
+          })}
         </div>
       </nav>
 
@@ -891,7 +933,14 @@ export default function ProviderResourcesPage({
         <div className="mx-auto flex max-w-7xl items-center gap-3 overflow-x-auto [scrollbar-color:#0f766e_#e5e7eb] [scrollbar-width:thin]">
           <span className="shrink-0 text-xs font-semibold uppercase tracking-[0.16em] text-[#0f766e]">Jump to</span>
           {sectionNavItems.map(([label, href]) => (
-            <a key={href} href={href} className="shrink-0 py-2 text-sm font-semibold text-[#111827] underline-offset-4 hover:underline">
+            <a
+              key={href}
+              href={href}
+              aria-current={activeSectionHref === href ? "true" : undefined}
+              className={`shrink-0 rounded px-2 py-2 text-sm font-semibold underline-offset-4 transition hover:underline ${
+                activeSectionHref === href ? "bg-[#e8f5f1] text-[#0f766e]" : "text-[#111827]"
+              }`}
+            >
               {label}
             </a>
           ))}

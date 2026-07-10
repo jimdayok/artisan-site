@@ -320,8 +320,8 @@ export const pikeLabConfig = {
   logo: `${pikeBase}/33e621-ca6-84b-bf0a-f854bfbc6d2a_Pike_Labs_Logo-4C.png`,
   logoAlt: "Pike Artisan Labs logo",
   logoDark: true,
-  heroImage: "/pike_inside_1-optimized.jpg",
-  heroAlt: "Inside the Pike Artisan Labs production facility",
+  heroImage: `${pikeBase}/fc1b02-878-0ef7-0715-5dd4b8f727e3_PIKE_Cover_2880x1200.jpg`,
+  heroAlt: "Pike Artisan Labs racing-inspired hero background",
   heroEyebrowIcon: "gauge",
   headline: "Precision at Full Speed.",
   subheadline:

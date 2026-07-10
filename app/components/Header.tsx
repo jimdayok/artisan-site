@@ -14,6 +14,11 @@ type NavItem = { label: string; href?: string; dividerBefore?: boolean };
 type Dropdown = { label: string; items: NavItem[] };
 
 const CUSTOMER_PORTAL_URL = "/portal";
+const socialLinks = [
+  { label: "Facebook", href: "https://www.facebook.com/artisanlabnetwork", icon: "/social/facebook.svg" },
+  { label: "Instagram", href: "https://www.instagram.com/artisanlabnetwork", icon: "/social/instagram.svg" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/artisan-lab-network/", icon: "/social/linkedin.svg" },
+];
 
 function Capsule({
   children,
@@ -173,6 +178,24 @@ function DropdownMenu({
   );
 }
 
+function SocialLink({ label, href, icon, theme }: { label: string; href: string; icon: string; theme: Theme }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      aria-label={label}
+      className={`grid h-10 w-10 place-items-center rounded-lg border backdrop-blur-md transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a] ${
+        theme === "light"
+          ? "border-black/10 bg-white/55 hover:bg-white"
+          : "border-white/15 bg-white/10 hover:border-white/25 hover:bg-white/15"
+      }`}
+    >
+      <Image src={icon} alt="" width={18} height={18} className={theme === "light" ? "opacity-80" : "brightness-0 invert opacity-90"} />
+    </a>
+  );
+}
+
 export default function Header({
   onContactClick,
   signUpHref = "https://form.typeform.com/to/quuPCSff",
@@ -274,17 +297,25 @@ export default function Header({
           </Link>
 
           <nav className="hidden lg:flex items-center gap-2">
-            <DropdownMenu {...resources} theme={theme} active={dropdownIsActive(resources)} onAnyClick={() => setMobileOpen(false)} />
-            <DropdownMenu {...labs} theme={theme} active={dropdownIsActive(labs)} onAnyClick={() => setMobileOpen(false)} />
+            <Capsule href="/" theme={theme} active={navIsActive("/")}>
+              Home
+            </Capsule>
             <Capsule href="/about" theme={theme} active={navIsActive("/about")}>
               About
             </Capsule>
+            <DropdownMenu {...labs} theme={theme} active={dropdownIsActive(labs)} onAnyClick={() => setMobileOpen(false)} />
+            <DropdownMenu {...resources} theme={theme} active={dropdownIsActive(resources)} onAnyClick={() => setMobileOpen(false)} />
             <Capsule theme={theme} onClick={onContactClick}>
               Contact
             </Capsule>
             <SiteButton href={signUpHref} variant="primary" size="sm" icon={Handshake} className="ml-1" external>
               Partner With Us
             </SiteButton>
+            <div className="ml-1 flex items-center gap-2">
+              {socialLinks.map((item) => (
+                <SocialLink key={item.label} {...item} theme={theme} />
+              ))}
+            </div>
           </nav>
 
           <button
@@ -323,8 +354,8 @@ export default function Header({
               </div>
 
               <div className="mt-5 grid gap-5 md:grid-cols-2">
-                <MobileLinkGroup title="Resources" icon={BookOpen} items={resources.items} theme={theme} onAnyClick={() => setMobileOpen(false)} />
                 <MobileLinkGroup title="Our Labs" icon={Building2} items={labs.items} theme={theme} onAnyClick={() => setMobileOpen(false)} />
+                <MobileLinkGroup title="Resources" icon={BookOpen} items={resources.items} theme={theme} onAnyClick={() => setMobileOpen(false)} />
               </div>
 
               <div className={`mt-5 flex flex-wrap gap-2 border-t pt-4 ${theme === "light" ? "border-black/10" : "border-white/12"}`}>
@@ -353,6 +384,9 @@ export default function Header({
                   <Mail className="h-4 w-4" aria-hidden="true" />
                   Contact
                 </button>
+                {socialLinks.map((item) => (
+                  <SocialLink key={item.label} {...item} theme={theme} />
+                ))}
               </div>
             </div>
           </motion.div>

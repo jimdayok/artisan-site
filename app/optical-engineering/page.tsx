@@ -178,6 +178,9 @@ const categoryDescriptions: Record<CalculatorCategory, string> = {
   "Quality Control": "Tolerance checks",
 };
 
+const engineeringDisclaimer =
+  "These calculators, formulas, and results are provided for general informational and workflow-assistance purposes only. They are not a substitute for professional judgment, independent verification, applicable standards, patient-specific evaluation, or laboratory quality-control procedures. Artisan Lab Network does not warrant that the formulas, calculations, assumptions, source information, or user-entered values are complete, accurate, current, or appropriate for any specific order or patient. Users are responsible for verifying all measurements, inputs, calculations, and production decisions before relying on them. Artisan Lab Network disclaims responsibility for errors, omissions, incorrect inputs, formula defects, calculation inaccuracies, or any outcomes resulting from use of these tools.";
+
 const numericFields: Array<{
   key: keyof OpticalData;
   label: string;
@@ -1290,22 +1293,22 @@ export default function OpticalEngineeringPage() {
   };
 
   const numericInputs = (group: GroupName) => (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
       {numericFields
         .filter((field) => field.group === group && activeFieldKeys.has(field.key))
         .map((field) => (
           <label key={field.key} className="grid gap-1">
             <span className="text-xs font-semibold text-[#625b53]">{field.label}</span>
-            <span className="flex overflow-hidden rounded-2xl border border-[#eadfce] bg-[#fbf8f3]">
+            <span className="grid min-w-[150px] grid-cols-[minmax(76px,1fr)_56px] overflow-hidden rounded-lg border border-[#eadfce] bg-[#fbf8f3] focus-within:border-[#c9b28b] focus-within:ring-2 focus-within:ring-[#d4c09a]/35">
               <input
                 type="number"
                 step={field.step}
                 value={inputValue(data[field.key] as number, field.decimals ?? 2)}
                 onChange={(event) => updateNumber(field.key, event.target.value)}
-                className="min-h-11 min-w-0 flex-1 bg-transparent px-3 text-sm font-semibold text-[#172a28] outline-none"
+                className="min-h-12 min-w-0 bg-transparent px-4 text-base font-semibold text-[#172a28] outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
               />
               {field.suffix ? (
-                <span className="grid min-w-16 place-items-center border-l border-[#eadfce] px-2 text-xs font-semibold text-[#8a7654]">
+                <span className="grid place-items-center border-l border-[#eadfce] px-2 text-sm font-semibold text-[#8a7654]">
                   {field.suffix}
                 </span>
               ) : null}
@@ -1366,6 +1369,20 @@ export default function OpticalEngineeringPage() {
             </div>
           </div>
           <FormulaWall onCopy={copyText} />
+        </div>
+      </section>
+
+      <section className="px-6 pb-8 pt-8 md:px-10">
+        <div className="mx-auto max-w-7xl rounded-lg border border-[#d8c6a8] bg-white/82 p-5 shadow-[0_14px_34px_rgba(24,18,13,0.05)]">
+          <div className="flex flex-col gap-3 md:flex-row md:items-start">
+            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#172a28] text-[#d4c09a]">
+              <FileText className="h-5 w-5" aria-hidden="true" />
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#8a7654]">Important Use Note</p>
+              <p className="mt-2 text-sm leading-7 text-[#625b53]">{engineeringDisclaimer}</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1454,7 +1471,7 @@ export default function OpticalEngineeringPage() {
                           <select
                             value={data.frameShape}
                             onChange={(event) => setData((current) => ({ ...current, frameShape: event.target.value as FrameShape }))}
-                            className="min-h-11 rounded-2xl border border-[#eadfce] bg-[#fbf8f3] px-3 text-sm font-semibold outline-none"
+                            className="min-h-12 rounded-lg border border-[#eadfce] bg-[#fbf8f3] px-4 text-base font-semibold outline-none focus:border-[#c9b28b] focus:ring-2 focus:ring-[#d4c09a]/35"
                           >
                             {["Round", "Rectangle", "Geometric"].map((value) => (
                               <option key={value}>{value}</option>
@@ -1468,7 +1485,7 @@ export default function OpticalEngineeringPage() {
                           <select
                             value={data.frameType}
                             onChange={(event) => setData((current) => ({ ...current, frameType: event.target.value }))}
-                            className="min-h-11 rounded-2xl border border-[#eadfce] bg-[#fbf8f3] px-3 text-sm font-semibold outline-none"
+                            className="min-h-12 rounded-lg border border-[#eadfce] bg-[#fbf8f3] px-4 text-base font-semibold outline-none focus:border-[#c9b28b] focus:ring-2 focus:ring-[#d4c09a]/35"
                           >
                             {["Full Rim", "Semi-Rimless", "Rimless"].map((value) => (
                               <option key={value}>{value}</option>
@@ -1542,6 +1559,10 @@ export default function OpticalEngineeringPage() {
             <p style={{ margin: "6px 0" }}><strong>Prescription:</strong> {rxSummary(data)}</p>
             <p style={{ margin: "6px 0" }}><strong>Lens:</strong> {lensSummary(data)}</p>
             <p style={{ margin: "6px 0" }}><strong>Frame:</strong> {frameSummary(data)}</p>
+          </div>
+          <div style={{ border: "1px solid #d8c6a8", borderRadius: 16, padding: 18, marginBottom: 18 }}>
+            <h2 style={{ fontSize: 16, margin: "0 0 12px", color: "#172a28" }}>Important Use Note</h2>
+            <p style={{ margin: 0, color: "#625b53", lineHeight: 1.6 }}>{engineeringDisclaimer}</p>
           </div>
           <div style={{ border: "1px solid #d8c6a8", borderRadius: 16, padding: 18 }}>
             <h2 style={{ fontSize: 16, margin: "0 0 12px", color: "#172a28" }}>Results</h2>

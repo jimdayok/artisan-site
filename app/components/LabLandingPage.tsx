@@ -202,9 +202,10 @@ export default function LabLandingPage({ config }: { config: LabLandingConfig })
       <main className="min-h-screen bg-[#f4eee4] text-[#142033]">
         <Header signUpHref={config.primaryHref} />
         <Hero config={config} />
+        <LabActionStrip config={config} />
         <Identity config={config} />
-        <LabPersonalityPanel config={config} />
         <LabStats config={config} />
+        <LabPersonalityPanel config={config} />
         <MeetArtisans config={config} />
         <Difference config={config} />
         <Strengths config={config} />
@@ -224,7 +225,7 @@ function Hero({ config }: { config: LabLandingConfig }) {
   const EyebrowIcon = iconMap[config.heroEyebrowIcon];
 
   return (
-    <section data-theme="dark" className="relative isolate min-h-screen overflow-hidden pt-24 text-white">
+    <section data-theme="dark" className="relative isolate min-h-[92svh] overflow-hidden pt-24 text-white">
       <div
         aria-hidden
         className={`absolute inset-0 -z-20 bg-cover bg-center bg-no-repeat md:bg-fixed ${heroPositionClass(config.theme)}`}
@@ -233,40 +234,99 @@ function Hero({ config }: { config: LabLandingConfig }) {
       <Image src={config.heroImage} alt={config.heroAlt} width={1} height={1} priority className="sr-only" />
       <div className={`absolute inset-0 -z-10 ${config.heroOverlay}`} />
       <div className={heroAccentClass(config.theme)} aria-hidden />
-      <BackgroundWord light className="bottom-28 left-[-1rem] md:left-[5vw]">
+      <BackgroundWord light className="bottom-20 left-[-1rem] md:left-[5vw]">
         {config.backgroundWords.hero}
       </BackgroundWord>
 
-      <div className="mx-auto flex min-h-[calc(100vh-6rem)] max-w-7xl flex-col justify-end px-5 pb-12 md:px-10 md:pb-20">
+      <div className="mx-auto flex min-h-[calc(92svh-6rem)] max-w-7xl flex-col justify-end px-5 pb-10 md:px-10 md:pb-16">
         <motion.div
-          initial={{ opacity: 0, y: 22 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="relative z-10 max-w-3xl premium-reveal"
+          className="relative z-10 grid gap-8 premium-reveal lg:grid-cols-[minmax(0,1fr)_26rem] lg:items-end"
         >
-          <Image
-            src={config.logo}
-            alt={config.logoAlt}
-            width={360}
-            height={160}
-            className={`mb-8 h-auto max-h-28 w-52 object-contain sm:w-72 ${config.logoDark ? "rounded-3xl bg-white/86 p-4 shadow-2xl" : ""}`}
-          />
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/82 backdrop-blur">
-            <EyebrowIcon className="h-4 w-4" />
-            {config.locationLabel}
+          <div className="max-w-4xl">
+            <Image
+              src={config.logo}
+              alt={config.logoAlt}
+              width={360}
+              height={160}
+              className={`mb-7 h-auto max-h-24 w-52 object-contain sm:w-72 ${config.logoDark ? "rounded-md bg-white/90 p-4 shadow-2xl" : ""}`}
+            />
+            <div className="inline-flex items-center gap-2 border border-white/16 bg-black/22 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/82 backdrop-blur">
+              <EyebrowIcon className="h-4 w-4" />
+              {config.locationLabel}
+            </div>
+            <h1 className="mt-6 max-w-4xl text-5xl font-semibold sm:text-6xl lg:text-7xl">
+              {config.headline}
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-white/82 md:text-xl">{config.subheadline}</p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <ButtonLink href={config.primaryHref} variant="gold">Become an Artisan Partner</ButtonLink>
+              <ButtonLink href={config.contactHref} variant="light">Contact the Lab</ButtonLink>
+            </div>
           </div>
-          <h1 className="mt-6 max-w-4xl text-5xl font-semibold tracking-tight sm:text-6xl lg:text-7xl">
-            {config.headline}
-          </h1>
-          <div className="font-alfons-display mt-4 text-3xl leading-none text-white/70 md:text-5xl">
-            {config.personality.words[0]}
-          </div>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-white/80 md:text-xl">{config.subheadline}</p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <ButtonLink href={config.primaryHref} variant="gold">Become an Artisan Partner</ButtonLink>
-            <ButtonLink href={config.contactHref} variant="light">Contact the Lab</ButtonLink>
+
+          <div className="hidden border border-white/14 bg-black/24 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur lg:block">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/56">Lab Snapshot</p>
+            <div className="mt-5 grid gap-4">
+              <HeroFact value={String(config.stats.partnerLocations)} label="equity ownership partner locations" config={config} />
+              <HeroFact value="VSP + NBN" label="network compatible ordering" config={config} />
+              <HeroFact value={config.personality.words[0]} label={config.personality.eyebrow} config={config} />
+            </div>
           </div>
         </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function HeroFact({ value, label, config }: { value: string; label: string; config: LabLandingConfig }) {
+  return (
+    <div className="border-t border-white/12 pt-4">
+      <div className="text-3xl font-semibold" style={{ color: config.accent }}>{value}</div>
+      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.2em] text-white/58">{label}</p>
+    </div>
+  );
+}
+
+function LabActionStrip({ config }: { config: LabLandingConfig }) {
+  const actions = [
+    { href: config.meetHref, label: "Meet the Lab", icon: Users },
+    { href: config.resourcesHref, label: "Provider Resources", icon: Compass },
+    { href: config.contactHref, label: "Contact", icon: Handshake },
+    { href: config.primaryHref, label: "Open Account", icon: ArrowRight },
+  ];
+
+  return (
+    <section data-theme="light" className="border-b border-[#d9ccb7] bg-[#fbf8f2]/96 px-5 py-5 md:px-10">
+      <div className="mx-auto flex max-w-7xl flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8a7654]">Local Lab Profile</p>
+          <p className="mt-1 text-sm leading-6 text-[#4f5662]">{config.stats.regionLine}</p>
+        </div>
+        <div className="flex gap-2 overflow-x-auto pb-1 lg:shrink-0">
+          {actions.map((action) => {
+            const Icon = action.icon;
+            const className = "inline-flex min-h-11 shrink-0 items-center gap-2 border border-[#d8c6a8] bg-white px-4 text-sm font-semibold text-[#142033] shadow-sm transition hover:-translate-y-0.5 hover:border-[#b9a783]";
+
+            if (action.href.startsWith("/")) {
+              return (
+                <Link key={action.label} href={action.href} className={className}>
+                  <Icon className="h-4 w-4" style={{ color: config.dark }} />
+                  {action.label}
+                </Link>
+              );
+            }
+
+            return (
+              <a key={action.label} href={action.href} target="_blank" rel="noreferrer" className={className}>
+                <Icon className="h-4 w-4" style={{ color: config.dark }} />
+                {action.label}
+              </a>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
@@ -285,9 +345,7 @@ function LabStats({ config }: { config: LabLandingConfig }) {
       <BackgroundWord light className="right-[-12rem] top-16">
         {config.backgroundWords.stats}
       </BackgroundWord>
-      <div className="pointer-events-none absolute -left-28 top-8 -z-10 h-80 w-80 rounded-full border border-white/10" />
-      <div className="pointer-events-none absolute right-[-8rem] top-20 -z-10 h-[28rem] w-[28rem] rounded-full border opacity-35" style={{ borderColor: config.accent }} />
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_15%,rgba(212,192,154,0.14),transparent_34%),radial-gradient(circle_at_82%_60%,rgba(255,255,255,0.08),transparent_30%)]" />
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(135deg,rgba(255,255,255,0.08),transparent_42%,rgba(255,255,255,0.05))]" />
       <div className="mx-auto max-w-7xl">
         <motion.div {...reveal} className="relative z-10 grid gap-8 premium-reveal lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
           <div>
@@ -310,7 +368,7 @@ function LabStats({ config }: { config: LabLandingConfig }) {
                 key={card.label}
                 {...reveal}
                 transition={{ duration: 0.8, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-                className="group rounded-[1.75rem] border border-white/12 bg-white/[0.065] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur transition hover:-translate-y-1 hover:border-white/24 hover:bg-white/[0.09]"
+                className="group border border-white/12 bg-white/[0.065] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur transition hover:-translate-y-1 hover:border-white/24 hover:bg-white/[0.09]"
               >
                 <span className="grid h-12 w-12 place-items-center rounded-2xl border border-white/12 bg-white/10">
                   <Icon className="h-5 w-5" style={{ color: config.accent }} />
@@ -327,7 +385,7 @@ function LabStats({ config }: { config: LabLandingConfig }) {
 
         <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {networkNotes.map((note) => (
-            <div key={note} className="rounded-2xl border border-white/10 bg-black/18 px-4 py-4 text-sm font-semibold text-white/72 backdrop-blur">
+            <div key={note} className="border border-white/10 bg-black/18 px-4 py-4 text-sm font-semibold text-white/72 backdrop-blur">
               {note}
             </div>
           ))}

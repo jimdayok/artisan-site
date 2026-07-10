@@ -176,8 +176,8 @@ export const peakLabConfig = {
   locationLabel: "Peak Artisan Labs | Denver, Colorado",
   logo: `${peakBase}/01566-0744-4e88-4e8a-cf414f64a51b_Peak_Artisan_Logo_LIGHTBLUE_5-30-23_FINAL.png`,
   logoAlt: "Peak Artisan Labs logo",
-  heroImage: `${peakBase}/284f314-0271-d8c3-565c-353313efff5_Pacific_Artisan_Labs_PEAK_Kajabi_Cover.jpg`,
-  heroAlt: "Peak Artisan Labs mountain-inspired hero background",
+  heroImage: "/peak_inside_1-optimized.jpg",
+  heroAlt: "Inside the Peak Artisan Labs production facility",
   heroEyebrowIcon: "mountain",
   headline: "Crafted at Elevation.",
   subheadline:
@@ -320,8 +320,8 @@ export const pikeLabConfig = {
   logo: `${pikeBase}/33e621-ca6-84b-bf0a-f854bfbc6d2a_Pike_Labs_Logo-4C.png`,
   logoAlt: "Pike Artisan Labs logo",
   logoDark: true,
-  heroImage: `${pikeBase}/fc1b02-878-0ef7-0715-5dd4b8f727e3_PIKE_Cover_2880x1200.jpg`,
-  heroAlt: "Pike Artisan Labs original Indianapolis hero background",
+  heroImage: "/pike_inside_1-optimized.jpg",
+  heroAlt: "Inside the Pike Artisan Labs production facility",
   heroEyebrowIcon: "gauge",
   headline: "Precision at Full Speed.",
   subheadline:

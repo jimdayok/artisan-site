@@ -903,7 +903,6 @@ function buildSupplementalIntelligence(row) {
     pm: toNumber(row["PM ARSQL26 Sequel PAL Rebate Total"]),
     cm: toNumber(row["CM ARSQL26 Sequel PAL Rebate Total"]),
   };
-  const hasMonthlyActivity = (value) => value.ppm > 0 || value.pm > 0 || value.cm > 0;
 
   return {
     brand_usage: {
@@ -932,17 +931,17 @@ function buildSupplementalIntelligence(row) {
     },
     rewards: {
       arpmp26: {
-        enrolled: truthyUsage(row["Is Enrolled in ARPMP26 Display"]) || hasMonthlyActivity(arpmpQualifiedJobs) || hasMonthlyActivity(arpmpRebateTotal),
+        enrolled: truthyUsage(row["Is Enrolled in ARPMP26 Display"]),
         qualified_pmp_jobs: arpmpQualifiedJobs,
         rebate_total: arpmpRebateTotal,
       },
       aruty26: {
-        enrolled: truthyUsage(row["Is Enrolled in ARUTY26 Display"]) || hasMonthlyActivity(arutyQualifiedJobs) || hasMonthlyActivity(arutyRewardsEarned),
+        enrolled: truthyUsage(row["Is Enrolled in ARUTY26 Display"]),
         qualified_jobs: arutyQualifiedJobs,
         rewards_earned: arutyRewardsEarned,
       },
       arsql26: {
-        enrolled: truthyUsage(row["Is ARSQL26 Customer"]) || hasMonthlyActivity(arsqlQualifiedJobs) || hasMonthlyActivity(arsqlRebateTotal),
+        enrolled: truthyUsage(row["Is ARSQL26 Customer"]),
         qualified_sequel_pal_jobs: arsqlQualifiedJobs,
         rebate_total: arsqlRebateTotal,
       },

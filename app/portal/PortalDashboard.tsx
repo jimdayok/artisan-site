@@ -53,7 +53,11 @@ import {
   loadPortalUserAccess,
 } from "@/lib/portal/userDataAccess";
 import { getPriceListByCode, type PortalPriceList } from "@/lib/portal/priceLists";
-import { isPackagePriceListCode } from "@/lib/pricing/priceListCodes";
+import {
+  isPackagePriceListCode,
+  isVisiblePriceListCode,
+  priceListDisplayName,
+} from "@/lib/pricing/priceListCodes";
 import {
   getPortalWorkbookProfileByEmail,
   getPortalWorkbookProfilesByEmail,
@@ -62,7 +66,9 @@ import {
 } from "@/lib/portal/workbookAccountData";
 import { normalizeAccountNumber } from "@/lib/portal/normalizeAccounts";
 import {
+  getPortalPeerBenchmarks,
   getPortalDashboardV1ByAccount,
+  type PortalPeerBenchmarks,
   type PortalDashboardV1Account,
   type PortalDashboardV1State,
 } from "@/lib/portal/dashboardV1";
@@ -77,7 +83,7 @@ import {
   type TrendPoint,
 } from "./PracticeIntelligenceCharts";
 import {
-  calculatePracticePerformanceScore,
+  calculateCustomerPracticePerformanceScore,
   type PracticePerformanceScoreFactors,
 } from "@/lib/portal/performanceScore";
 
@@ -740,10 +746,10 @@ type PortalSectionCard = {
 const portalSectionCards: PortalSectionCard[] = [
   {
     section: "packages",
-    title: "Package Pricing",
-    body: "View IOT Lens System package pricing and package quote tools.",
+    title: "Lens Systems",
+    body: "View assigned Artisan, Shamir, Tokai, Varilux, frame, safety, and add-on Lens System pricing.",
     href: "/portal/price-list/packages",
-    cta: "Open Packages",
+    cta: "Open Lens Systems",
     requiresPackagePriceList: true,
   },
   {
@@ -772,7 +778,7 @@ const portalSectionCards: PortalSectionCard[] = [
   {
     section: "performance",
     title: "Performance Review",
-    body: "Review monthly lens pairs, purchase mix, premium adoption, and remake activity.",
+    body: "Review your practice trends, practice-controlled remake signals, and anonymous peer benchmarks without exposing lab-wide performance.",
     href: "/portal/performance",
     cta: "Open Performance",
   },
@@ -1114,7 +1120,7 @@ type PracticeIntelligenceModel = {
   turnaround: MonthlyUsagePoint[];
   quality: QualityPoint[];
   score: number;
-  scoreFactors: PracticePerformanceScoreFactors;
+  scoreFactors: Omit<PracticePerformanceScoreFactors, "previousMonthLabRemakes">;
   scoreLabel: "Excellent" | "Good" | "Needs Attention";
   reportMonths: {
     prior: string;
@@ -1130,12 +1136,12 @@ type PracticeIntelligenceModel = {
   priorJpd: number | null;
   currentJpd: number | null;
   previousJpd: number | null;
-  labTurnaround: MonthlyUsagePoint[];
   vspShare: number;
   privatePayShare: number;
   salesTrend: ReturnType<typeof getPercentChange>;
   jobsTrend: ReturnType<typeof getPercentChange>;
   jpdTrend: ReturnType<typeof getPercentChange> | null;
+  peerBenchmarks: PortalPeerBenchmarks;
   opportunities: Array<{
     title: string;
     priority: "green" | "yellow" | "red";
@@ -1342,22 +1348,17 @@ function buildPracticeIntelligenceModel({
   const officeRedoCm = pctValue(quality?.office_redo_pct?.cm);
   const officeRedoPm = pctValue(quality?.office_redo_pct?.pm);
   const officeRedoPpm = pctValue(quality?.office_redo_pct?.ppm);
-  const labRedoCm = pctValue(quality?.lab_redo_pct?.cm);
-  const labRedoPm = pctValue(quality?.lab_redo_pct?.pm);
-  const labRedoPpm = pctValue(quality?.lab_redo_pct?.ppm);
   const nonAdaptCm = pctValue(quality?.non_adapt_pct?.cm);
   const nonAdaptPm = pctValue(quality?.non_adapt_pct?.pm);
   const turnaroundPm = asNumber(supplemental?.turnaround?.average_days?.pm);
-  const labTurnaroundPm = asNumber(supplemental?.turnaround?.lab_average_days?.pm);
   const orderTrendPercent =
     previousJpd !== null && priorJpd !== null && priorJpd > 0
       ? (previousJpd / priorJpd) * 100
       : 0;
-  const performanceScore = calculatePracticePerformanceScore({
+  const performanceScore = calculateCustomerPracticePerformanceScore({
     previousMonthTurnaround: turnaroundPm,
     previousMonthOrderTrend: orderTrendPercent,
     previousMonthOfficeRemakes: officeRedoPm,
-    previousMonthLabRemakes: labRedoPm,
   });
   const score = performanceScore.score;
   const trends = [
@@ -1409,24 +1410,6 @@ function buildPracticeIntelligenceModel({
       action: "Review measurements, progressive fitting, and frame selection with the team.",
     });
   }
-  if (labRedoPm > labRedoPpm + 0.5) {
-    opportunities.push({
-      title: "High lab remakes",
-      priority: "red",
-      current: `${reportMonths.previous} ${labRedoPm.toFixed(1)}% vs ${reportMonths.prior} ${labRedoPpm.toFixed(1)}%`,
-      why: "Lab remake increases should be reviewed with Artisan support so causes are identified quickly.",
-      action: "Contact Artisan support for a remake review.",
-    });
-  }
-  if (turnaroundPm > 0 && labTurnaroundPm > 0 && turnaroundPm > labTurnaroundPm + 1) {
-    opportunities.push({
-      title: "Turnaround above lab average",
-      priority: "yellow",
-      current: `Your ${reportMonths.previous} turnaround ${turnaroundPm.toFixed(1)} days vs lab ${labTurnaroundPm.toFixed(1)} days`,
-      why: "Turnaround is measured as average business days in lab production, excluding shipping and frame wait.",
-      action: "Review order complexity, frame availability, and support tickets with the lab team.",
-    });
-  }
   opportunities.push(
     {
       title: "Activate Tokai",
@@ -1451,11 +1434,11 @@ function buildPracticeIntelligenceModel({
   opportunities.push(
     {
       title: "Reduce Remakes",
-      priority: warrantyPm > 5 || officeRedoPm > 10 || labRedoPm > 2 ? "red" : "green",
-      current: `${reportMonths.previous} Warranty ${warrantyPm.toFixed(1)}% · Office ${officeRedoPm.toFixed(1)}% · Lab ${labRedoPm.toFixed(1)}%`,
+      priority: warrantyPm > 5 || officeRedoPm > 10 ? "red" : "green",
+      current: `${reportMonths.previous} Warranty ${warrantyPm.toFixed(1)}% · Office ${officeRedoPm.toFixed(1)}% · Non-Adapt ${nonAdaptPm.toFixed(1)}%`,
       why: "Remake, warranty, and non-adapt rates directly affect chair time, patient trust, and margin.",
       action:
-        warrantyPm > 5 || officeRedoPm > 10 || labRedoPm > 2
+        warrantyPm > 5 || officeRedoPm > 10
           ? "Leverage our partnership with OTI's online web portal for staff training; special rates apply."
           : "Keep using consistent measurements, frame adjustment checks, and remake notes to protect chair time.",
     },
@@ -1492,11 +1475,6 @@ function buildPracticeIntelligenceModel({
     monthlyPoint(reportMonths.prior, { cm: supplemental?.turnaround?.average_days?.ppm }),
     monthlyPoint(reportMonths.previous, { cm: supplemental?.turnaround?.average_days?.pm }),
     monthlyPoint(`${reportMonths.current} MTD`, { cm: supplemental?.turnaround?.average_days?.cm }),
-  ];
-  const labTurnaround = [
-    monthlyPoint(reportMonths.prior, { cm: supplemental?.turnaround?.lab_average_days?.ppm }),
-    monthlyPoint(reportMonths.previous, { cm: supplemental?.turnaround?.lab_average_days?.pm }),
-    monthlyPoint(`${reportMonths.current} MTD`, { cm: supplemental?.turnaround?.lab_average_days?.cm }),
   ];
   const rewards: PracticeIntelligenceModel["rewards"] = [];
   const rewardsData = supplemental?.rewards;
@@ -1602,11 +1580,10 @@ function buildPracticeIntelligenceModel({
     materialUsage,
     specialtyUsage,
     turnaround,
-    labTurnaround,
     quality: [
-      { label: reportMonths.prior, warranty: warrantyPpm, officeRedo: officeRedoPpm, labRedo: labRedoPpm, nonAdapt: pctValue(quality?.non_adapt_pct?.ppm) },
-      { label: reportMonths.previous, warranty: warrantyPm, officeRedo: officeRedoPm, labRedo: labRedoPm, nonAdapt: nonAdaptPm },
-      { label: `${reportMonths.current} MTD`, warranty: warrantyCm, officeRedo: officeRedoCm, labRedo: labRedoCm, nonAdapt: nonAdaptCm },
+      { label: reportMonths.prior, warranty: warrantyPpm, officeRedo: officeRedoPpm, labRedo: 0, nonAdapt: pctValue(quality?.non_adapt_pct?.ppm) },
+      { label: reportMonths.previous, warranty: warrantyPm, officeRedo: officeRedoPm, labRedo: 0, nonAdapt: nonAdaptPm },
+      { label: `${reportMonths.current} MTD`, warranty: warrantyCm, officeRedo: officeRedoCm, labRedo: 0, nonAdapt: nonAdaptCm },
     ],
     score,
     scoreFactors: {
@@ -1614,7 +1591,6 @@ function buildPracticeIntelligenceModel({
       previousMonthOrderTrend: performanceScore.factors.previousMonthOrderTrend,
       previousMonthOfficeRemakes:
         performanceScore.factors.previousMonthOfficeRemakes,
-      previousMonthLabRemakes: performanceScore.factors.previousMonthLabRemakes,
     },
     scoreLabel: statusForScore(score),
     reportMonths,
@@ -1638,6 +1614,7 @@ function buildPracticeIntelligenceModel({
       previousJpd !== null && priorJpd !== null
         ? getPercentChange(previousJpd, priorJpd)
         : null,
+    peerBenchmarks: getPortalPeerBenchmarks(dashboard?.account_id || account?.accountNumber),
     opportunities,
     programs,
     rewards,
@@ -1816,7 +1793,6 @@ function PracticePerformanceScoreSection({ intelligence }: { intelligence: Pract
     ["Previous Month Turnaround", intelligence.scoreFactors.previousMonthTurnaround],
     ["Previous Month Order Trend", intelligence.scoreFactors.previousMonthOrderTrend],
     ["Previous Month Office Remakes", intelligence.scoreFactors.previousMonthOfficeRemakes],
-    ["Previous Month Lab Remakes", intelligence.scoreFactors.previousMonthLabRemakes],
   ] as const;
 
   return (
@@ -1826,7 +1802,7 @@ function PracticePerformanceScoreSection({ intelligence }: { intelligence: Pract
           Practice Performance Score Preview
         </p>
         <p className="mt-3 rounded-md border border-[#d9c8a6] bg-white/75 px-3 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#59635f]">
-          Previous-month turnaround, order trend, and remake scoring
+          Previous-month turnaround, order trend, and practice-controlled remake scoring
         </p>
         <div className="mt-5">
           <PracticePerformanceScoreChart score={intelligence.score} />
@@ -2073,18 +2049,19 @@ function RewardsCenter({ rewards }: { rewards: PracticeIntelligenceModel["reward
 function RemakePerformanceCenter({
   quality,
   reportMonths,
+  peerBenchmarks,
 }: {
   quality: QualityPoint[];
   reportMonths: PracticeIntelligenceModel["reportMonths"];
+  peerBenchmarks: PortalPeerBenchmarks;
 }) {
   const current = quality[quality.length - 1];
   const previous = quality[quality.length - 2];
   const prior = quality[0];
   const metrics = [
-    { label: "Warranty Remake", current: current?.warranty ?? 0, previous: previous?.warranty ?? 0, prior: prior?.warranty ?? 0 },
-    { label: "Office Remake", current: current?.officeRedo ?? 0, previous: previous?.officeRedo ?? 0, prior: prior?.officeRedo ?? 0 },
-    { label: "Lab Remake", current: current?.labRedo ?? 0, previous: previous?.labRedo ?? 0, prior: prior?.labRedo ?? 0 },
-    { label: "Non-Adapt", current: current?.nonAdapt ?? 0, previous: previous?.nonAdapt ?? 0, prior: prior?.nonAdapt ?? 0 },
+    { label: "Warranty Remake", current: current?.warranty ?? 0, previous: previous?.warranty ?? 0, prior: prior?.warranty ?? 0, peer: peerBenchmarks.medianWarrantyPct },
+    { label: "Office Remake", current: current?.officeRedo ?? 0, previous: previous?.officeRedo ?? 0, prior: prior?.officeRedo ?? 0, peer: peerBenchmarks.medianOfficeRedoPct },
+    { label: "Non-Adapt", current: current?.nonAdapt ?? 0, previous: previous?.nonAdapt ?? 0, prior: prior?.nonAdapt ?? 0, peer: peerBenchmarks.medianNonAdaptPct },
   ];
 
   return (
@@ -2094,9 +2071,9 @@ function RemakePerformanceCenter({
       </p>
       <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Quality and remake signals</h2>
       <p className="mt-3 max-w-3xl text-sm leading-6 text-[#6d746f]">
-        These rates use the remake percentages in the unified account record. {reportMonths.previous} is the completed comparison month and {reportMonths.current} is month-to-date.
+        Compare practice-controlled remake signals over time and against an anonymous practice median. No lab-wide remake or business-volume data is included.
       </p>
-      <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {metrics.map((metric) => {
           const change = metric.current - metric.previous;
           const isWorse = change > 0.05;
@@ -2134,6 +2111,11 @@ function RemakePerformanceCenter({
                 {reportMonths.previous} vs {reportMonths.prior} {metric.previous - metric.prior >= 0 ? "+" : ""}
                 {(metric.previous - metric.prior).toFixed(1)} pts
               </p>
+              {metric.peer !== null ? (
+                <p className="mt-2 rounded-full bg-[#f4eee4] px-3 py-1.5 text-xs font-semibold text-[#59635f]">
+                  Anonymous practice median: {metric.peer.toFixed(1)}%
+                </p>
+              ) : null}
             </article>
           );
         })}
@@ -2144,33 +2126,33 @@ function RemakePerformanceCenter({
 
 function TurnaroundBenchmarkCenter({
   turnaround,
-  labTurnaround,
   reportMonths,
+  peerBenchmarks,
 }: {
   turnaround: MonthlyUsagePoint[];
-  labTurnaround: MonthlyUsagePoint[];
   reportMonths: PracticeIntelligenceModel["reportMonths"];
+  peerBenchmarks: PortalPeerBenchmarks;
 }) {
   const pmCustomer = turnaround[1]?.current ?? 0;
-  const pmLab = labTurnaround[1]?.current ?? 0;
-  const difference = pmCustomer && pmLab ? pmCustomer - pmLab : 0;
+  const peerMedian = peerBenchmarks.medianTurnaroundDays ?? 0;
+  const difference = pmCustomer && peerMedian ? pmCustomer - peerMedian : 0;
 
   return (
     <section className="rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3">
       <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#7a6b49]">
         Turnaround Performance
       </p>
-      <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Your average vs entire lab average</h2>
+      <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Your turnaround vs anonymous practice median</h2>
       <p className="mt-3 max-w-3xl text-sm leading-6 text-[#6d746f]">
         Turnaround Time = Average business days in lab production. Does not include shipping time. Does not include frame wait time.
       </p>
       <div className="mt-6 grid gap-4 md:grid-cols-3">
         <DashboardV1Card label={`Your ${reportMonths.previous} Avg Turnaround`} value={pmCustomer ? `${pmCustomer.toFixed(1)} days` : "Pending"} />
-        <DashboardV1Card label={`Lab ${reportMonths.previous} Avg Turnaround`} value={pmLab ? `${pmLab.toFixed(1)} days` : "Pending"} />
+        <DashboardV1Card label="Anonymous Practice Median" value={peerMedian ? `${peerMedian.toFixed(1)} days` : "Pending"} />
         <DashboardV1Card
           label="Difference"
-          value={pmCustomer && pmLab ? `${difference >= 0 ? "+" : ""}${difference.toFixed(1)} days` : "Pending"}
-          detail={difference > 0 ? "Above lab average" : difference < 0 ? "Better than lab average" : "Aligned with lab average"}
+          value={pmCustomer && peerMedian ? `${difference >= 0 ? "+" : ""}${difference.toFixed(1)} days` : "Pending"}
+          detail={difference > 0 ? "Longer than the anonymous practice median" : difference < 0 ? "Faster than the anonymous practice median" : "Aligned with the anonymous practice median"}
         />
       </div>
     </section>
@@ -2259,7 +2241,14 @@ function ProductBrandIntelligenceSection({
   );
 }
 
-function BenchmarkingSection() {
+function BenchmarkingSection({ benchmarks }: { benchmarks: PortalPeerBenchmarks }) {
+  const position = benchmarks.growthPercentile === null
+    ? "Pending"
+    : benchmarks.growthPercentile >= 67
+      ? "Upper third"
+      : benchmarks.growthPercentile >= 34
+        ? "Middle third"
+        : "Opportunity range";
   return (
     <section className="rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3">
       <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
@@ -2267,16 +2256,16 @@ function BenchmarkingSection() {
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#7a6b49]">
             Benchmarking
           </p>
-          <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Your practice vs the network</h2>
+          <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Anonymous practice comparisons</h2>
         </div>
         <span className="inline-flex w-fit rounded-md border border-[#d9c8a6] bg-white/75 px-3 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#59635f]">
-          Benchmarking Requires Approved Dataset
+          {benchmarks.cohortSize} active practices
         </span>
       </div>
       <div className="mt-6 grid gap-4 md:grid-cols-3">
-        <DataAvailabilityCard title="Your Practice" label="Requires Benchmark Dataset" detail="Practice-level benchmarks require approved network comparison data before display." />
-        <DataAvailabilityCard title="Network Average" label="Requires Benchmark Dataset" detail="Network averages require a customer-safe benchmark rollup before display." />
-        <DataAvailabilityCard title="Top 25%" label="Not Yet Available" detail="Top-quartile comparisons will be added once benchmarking definitions are finalized." />
+        <DataAvailabilityCard title="Growth Position" label={position} detail="Relative completed-month growth position. Peer direction, totals, and individual practices remain private." />
+        <DataAvailabilityCard title="Office Remake Median" label={benchmarks.medianOfficeRedoPct === null ? "Pending" : `${benchmarks.medianOfficeRedoPct.toFixed(1)}%`} detail="Anonymous completed-month practice median." />
+        <DataAvailabilityCard title="Turnaround Median" label={benchmarks.medianTurnaroundDays === null ? "Pending" : `${benchmarks.medianTurnaroundDays.toFixed(1)} days`} detail="Anonymous completed-month practice median without lab-wide operational disclosure." />
       </div>
     </section>
   );
@@ -2501,14 +2490,14 @@ function PracticeIntelligenceCenter({
           turnaround={intelligence.turnaround}
         />
       </section>
-      <TurnaroundBenchmarkCenter turnaround={intelligence.turnaround} labTurnaround={intelligence.labTurnaround} reportMonths={intelligence.reportMonths} />
-      <RemakePerformanceCenter quality={intelligence.quality} reportMonths={intelligence.reportMonths} />
+      <TurnaroundBenchmarkCenter turnaround={intelligence.turnaround} reportMonths={intelligence.reportMonths} peerBenchmarks={intelligence.peerBenchmarks} />
+      <RemakePerformanceCenter quality={intelligence.quality} reportMonths={intelligence.reportMonths} peerBenchmarks={intelligence.peerBenchmarks} />
       <RewardsCenter rewards={intelligence.rewards} />
       <div id="programs" className="scroll-mt-24 lg:col-span-3">
         <ProgramParticipationCenter programs={intelligence.programs} />
       </div>
       <CustomerEngagementCenter invitations={intelligence.targetInvitations} />
-      <BenchmarkingSection />
+      <BenchmarkingSection benchmarks={intelligence.peerBenchmarks} />
       <ResourceCenter
         availablePriceLists={availablePriceLists}
         availablePortalSections={availablePortalSections}
@@ -2553,14 +2542,14 @@ export function PortalDashboardContent({
     dashboardAssignedPriceLists.length > 0
       ? normalizeAssignedPriceListCodes(dashboardAssignedPriceLists)
       : normalizeAssignedPriceListCodes(customer?.priceLists ?? []);
-  const availablePriceLists = effectivePriceListCodes.map((rawCode) => {
+  const availablePriceLists = effectivePriceListCodes.filter(isVisiblePriceListCode).map((rawCode) => {
     const normalizedCode = rawCode.trim().toUpperCase();
     const configured = getPriceListByCode(normalizedCode);
     if (configured) return { ...configured, configured: true } satisfies PortalPriceList & { configured: boolean };
 
     return {
       code: normalizedCode as PortalPriceList["code"],
-      label: `${normalizedCode} Price Sheet`,
+      label: priceListDisplayName(normalizedCode),
       fileName: `Assigned ${normalizedCode} pricing`,
       r2Key: null,
       onlineUrl: `/portal/price-list/${normalizedCode.toLowerCase()}`,

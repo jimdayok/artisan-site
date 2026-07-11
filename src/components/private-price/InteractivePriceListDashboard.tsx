@@ -704,27 +704,25 @@ function BrandGroupHeader({ label }: { label: string }) {
     <div className="flex min-h-10 items-center gap-3">
       {src ? (
         isSquareCanvasLogo ? (
-          <span className="relative block h-10 w-36 overflow-hidden">
+          <span className="relative flex h-16 w-48 items-center justify-center overflow-hidden rounded-[2px] border border-[#eadfce] bg-white px-3">
             <Image
               src={src}
               alt={`${label} logo`}
               width={160}
               height={160}
-              className={`absolute left-1/2 top-1/2 h-36 w-36 -translate-x-1/2 object-contain ${
-                normalizedLabel === "HOYA"
-                  ? "-translate-y-[52%] scale-[1.35]"
-                  : "-translate-y-[53%] scale-110"
-              }`}
+              className="absolute left-1/2 top-1/2 h-44 w-44 -translate-x-1/2 -translate-y-1/2 object-contain"
             />
           </span>
         ) : (
-          <Image
-            src={src}
-            alt={`${label} logo`}
-            width={180}
-            height={44}
-            className="h-10 w-auto max-w-[190px] object-contain"
-          />
+          <span className="flex h-16 w-48 items-center justify-center rounded-[2px] border border-[#eadfce] bg-white px-4">
+            <Image
+              src={src}
+              alt={`${label} logo`}
+              width={180}
+              height={44}
+              className="max-h-9 w-auto max-w-40 object-contain"
+            />
+          </span>
         )
       ) : null}
       {showTextLabel ? (

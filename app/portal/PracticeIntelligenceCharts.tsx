@@ -298,7 +298,6 @@ export function ServiceExcellenceCharts({
       <Panel eyebrow="Quality" title="Remake Intelligence" legend={[
         { label: "Warranty Remake %", color: "#c9a24f" },
         { label: "Office Remake %", color: "#c96856" },
-        { label: "Lab Remake %", color: "#2f5f9c" },
         { label: "Non-Adapt %", color: "#8067aa" },
       ]}>
         <ResponsiveContainer width="100%" height="100%" debounce={50}>
@@ -309,7 +308,6 @@ export function ServiceExcellenceCharts({
             <Tooltip formatter={(value) => [`${Number(value).toFixed(1)}%`, ""]} contentStyle={tooltipStyle()} />
             <Bar dataKey="warranty" stackId="quality" fill="#c9a24f" radius={[4, 4, 0, 0]} />
             <Bar dataKey="officeRedo" stackId="quality" fill="#c96856" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="labRedo" stackId="quality" fill="#2f5f9c" radius={[4, 4, 0, 0]} />
             <Bar dataKey="nonAdapt" stackId="quality" fill="#8067aa" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
@@ -390,7 +388,7 @@ export function BenchmarkingChart({ data }: { data: BenchmarkPoint[] }) {
           <YAxis tick={{ fill: "#746b5f", fontSize: 12 }} tickLine={false} axisLine={false} />
           <Tooltip contentStyle={tooltipStyle()} />
           <Bar dataKey="practice" name="Your Practice" fill="#1f8a70" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="average" name="Network Average" fill="#c9a24f" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="average" name="Anonymous Practice Median" fill="#c9a24f" radius={[4, 4, 0, 0]} />
           <Bar dataKey="top" name="Top 25%" fill="#2f5f9c" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>

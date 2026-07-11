@@ -6,6 +6,7 @@ import {
   type MonthlyPerformanceRecord,
 } from "@/lib/portal/performance";
 import PriceListAccessMessage from "../price-list/PriceListAccessMessage";
+import { getPortalPeerBenchmarks } from "@/lib/portal/dashboardV1";
 
 export const dynamic = "force-dynamic";
 
@@ -128,6 +129,13 @@ export default async function PortalPerformancePage() {
   const latestRecord = getLatestPerformanceByAccountNumber(
     access.customer.accountNumber
   );
+  const completedRecord = records.at(-2);
+  const priorRecord = records.at(-3);
+  const benchmarks = getPortalPeerBenchmarks(access.customer.accountNumber);
+  const completedGrowth =
+    completedRecord && priorRecord && priorRecord.lensPairs > 0
+      ? ((completedRecord.lensPairs - priorRecord.lensPairs) / priorRecord.lensPairs) * 100
+      : null;
 
   return (
     <main className="min-h-screen bg-[#f4efe6] px-5 py-10 text-[#172a28] sm:px-8 lg:px-10">
@@ -179,9 +187,24 @@ export default async function PortalPerformancePage() {
                   detail="Premium lens pair volume."
                 />
                 <StatCard
-                  label="Remakes"
+                  label="Practice-Origin Remakes"
                   value={numberFormatter.format(latestRecord.remakes)}
-                  detail="Recorded remake count."
+                  detail="Estimated from practice-origin remake activity; lab-redo information is excluded."
+                />
+              </div>
+            </section>
+            <section className="mt-10 border border-[#d8c49b] bg-[#fffaf1]/72 p-6 shadow-[0_18px_55px_rgba(23,42,40,0.08)] sm:p-8">
+              <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[#8b7650]">Anonymous Practice Benchmarks</p>
+              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em] text-[#172a28]">Understand your position without exposing another practice or lab</h2>
+              <p className="mt-3 max-w-3xl text-sm leading-6 text-[#706759]">Benchmarks use medians and percentile bands across {benchmarks.cohortSize} active practices. No lab-wide sales, lab-redo, or individual-practice data is shown.</p>
+              <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <StatCard label="Office Remake Median" value={benchmarks.medianOfficeRedoPct === null ? "Pending" : `${benchmarks.medianOfficeRedoPct.toFixed(1)}%`} detail="Anonymous completed-month practice median." />
+                <StatCard label="Warranty Median" value={benchmarks.medianWarrantyPct === null ? "Pending" : `${benchmarks.medianWarrantyPct.toFixed(1)}%`} detail="Anonymous completed-month practice median." />
+                <StatCard label="Non-Adapt Median" value={benchmarks.medianNonAdaptPct === null ? "Pending" : `${benchmarks.medianNonAdaptPct.toFixed(1)}%`} detail="Anonymous completed-month practice median." />
+                <StatCard
+                  label="Growth Position"
+                  value={benchmarks.growthPercentile === null ? "Pending" : `${benchmarks.growthPercentile}th percentile`}
+                  detail={completedGrowth === null ? "Completed-month comparison pending." : `Your completed-month lens-pair change: ${completedGrowth >= 0 ? "+" : ""}${completedGrowth.toFixed(1)}%. Peer direction and totals remain private.`}
                 />
               </div>
             </section>

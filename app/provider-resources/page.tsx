@@ -916,10 +916,10 @@ export default function ProviderResourcesPage({
         <button
           type="button"
           onClick={() => setSectionNavDismissed(true)}
-          className="absolute right-3 top-3 grid h-11 w-11 place-items-center rounded-full border border-[#d7ded9]/80 bg-white/82 text-[#64748b] shadow-sm transition hover:border-[#0f766e] hover:text-[#0f766e]"
+          className="absolute right-3 top-3 grid h-11 w-11 place-items-center rounded-full border-2 border-[#c9d4cf] bg-white text-[#42566c] shadow-[0_8px_22px_rgba(17,24,39,0.16)] transition hover:rotate-90 hover:border-[#0f766e] hover:bg-[#edf8f5] hover:text-[#0f766e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0f766e] focus-visible:ring-offset-2"
           aria-label="Hide section navigation"
         >
-          <X className="h-3.5 w-3.5" />
+          <X className="h-5 w-5" strokeWidth={2.25} />
         </button>
         <div className="grid gap-3 pt-10">
           {sectionNavItems.map(([label, href]) => {
@@ -1052,15 +1052,17 @@ export default function ProviderResourcesPage({
               </p>
               <div className={`mobile-scroll-row flex pb-1 ${artisanSegmentGroupClass}`}>
                 <SlidersHorizontal className="h-4 w-4 shrink-0 text-[#6b7280]" />
-                {filterOptions.map((filter) => (
-                  <button
-                    key={filter}
-                    type="button"
-                    onClick={() => setActiveFilter(filter)}
-                    className={artisanSegmentClass(activeFilter === filter)}
-                  >
-                    {filter}
-                  </button>
+                {filterOptions.map((filter, index) => (
+                  <div key={filter} className="flex shrink-0 items-center gap-1">
+                    {index > 0 ? <span aria-hidden="true" className="px-1 text-[#c8bda9]">|</span> : null}
+                    <button
+                      type="button"
+                      onClick={() => setActiveFilter(filter)}
+                      className={artisanSegmentClass(activeFilter === filter)}
+                    >
+                      {filter}
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>

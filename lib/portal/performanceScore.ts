@@ -62,3 +62,25 @@ export function calculatePracticePerformanceScore(
   };
 }
 
+export function calculateCustomerPracticePerformanceScore(
+  factors: Omit<PracticePerformanceScoreFactors, "previousMonthLabRemakes">
+) {
+  const scores = {
+    previousMonthTurnaround: scorePreviousMonthTurnaround(
+      factors.previousMonthTurnaround
+    ),
+    previousMonthOrderTrend: scorePreviousMonthOrderTrend(
+      factors.previousMonthOrderTrend
+    ),
+    previousMonthOfficeRemakes: scorePreviousMonthOfficeRemakes(
+      factors.previousMonthOfficeRemakes
+    ),
+  };
+  return {
+    score: Math.round(
+      Object.values(scores).reduce((total, value) => total + value, 0) /
+        Object.values(scores).length
+    ),
+    factors: scores,
+  };
+}

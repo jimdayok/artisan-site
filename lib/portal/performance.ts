@@ -37,7 +37,7 @@ function recordForPeriod(
   const totalSales = account.purchase_summary.sales[period];
   const vspJobs = account.vsp_private_pay_mix.vsp_jobs[period];
   const vspShare = lensPairs > 0 ? vspJobs / lensPairs : 0;
-  const labRedoRate = account.quality_metrics?.lab_redo_pct[period] ?? 0;
+  const practiceRedoRate = account.quality_metrics?.office_redo_pct[period] ?? 0;
 
   return {
     accountNumber,
@@ -47,7 +47,7 @@ function recordForPeriod(
     privatePaySales: totalSales * Math.max(0, 1 - vspShare),
     arSales: 0,
     premiumPairs: account.product_mix.sql_jobs[period],
-    remakes: Math.round(lensPairs * labRedoRate),
+    remakes: Math.round(lensPairs * practiceRedoRate),
   };
 }
 

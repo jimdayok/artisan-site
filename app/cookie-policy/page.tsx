@@ -46,7 +46,7 @@ export default function CookiePolicyPage() {
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#8a7654]">Legal</p>
           <h1 className="mt-5 text-5xl font-semibold tracking-tight md:text-7xl">Cookie Policy</h1>
           <p className="mt-6 text-lg leading-8 text-[#625b53]">
-            Last updated June 7, 2026. This policy explains how cookies and consent-controlled services are used on the Artisan Lab Network website.
+            Last updated July 11, 2026. This policy explains how cookies and consent-controlled services are used on the Artisan Lab Network website.
           </p>
           <CookiePreferencesButton className="mt-6 inline-flex rounded-full bg-[#15342f] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#23453f]" />
         </div>

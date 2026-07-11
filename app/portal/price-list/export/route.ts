@@ -240,6 +240,24 @@ function fitText(font: PDFFont, value: string, maxWidth: number, size: number) {
   return `${output.trim()}...`;
 }
 
+function wrapText(font: PDFFont, value: string, maxWidth: number, size: number) {
+  const words = cleanText(value).split(/\s+/).filter(Boolean);
+  const lines: string[] = [];
+  let current = "";
+
+  for (const word of words) {
+    const candidate = current ? `${current} ${word}` : word;
+    if (font.widthOfTextAtSize(candidate, size) <= maxWidth) {
+      current = candidate;
+      continue;
+    }
+    if (current) lines.push(current);
+    current = word;
+  }
+  if (current) lines.push(current);
+  return lines;
+}
+
 async function buildPriceListPdf({
   priceList,
   portalPriceList,
@@ -290,6 +308,13 @@ async function buildPriceListPdf({
   const addPage = (continuation = false) => {
     page = document.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
     pages.push(page);
+    page.drawRectangle({
+      x: 0,
+      y: 0,
+      width: PAGE_WIDTH,
+      height: PAGE_HEIGHT,
+      color: rgb(1, 1, 1),
+    });
     page.drawRectangle({
       x: 0,
       y: PAGE_HEIGHT - 92,
@@ -444,26 +469,47 @@ async function buildPriceListPdf({
   };
 
   const drawIntroPanel = () => {
-    ensureSpace(82);
+    const includedTreatments = portalPriceList.package
+      ? priceList.arCoatings
+          .filter((coating) => !coating.unresolved && coating.price === 0)
+          .map((coating) => cleanCoatingName(coating))
+          .filter((name, index, values) => values.indexOf(name) === index)
+      : [];
     const badgeWidth = 124;
     const badgeHeight = 36;
     const badgeX = PAGE_WIDTH - MARGIN - badgeWidth - 18;
     const badgeY = y - 50;
     const introTextWidth = badgeX - (MARGIN + 18) - 24;
+    const summaryLines = wrapText(
+      regular,
+      "Customer-ready pricing organized by design family, coatings, add-ons, and policy notes.",
+      introTextWidth,
+      8
+    );
+    const includedLines = includedTreatments.length
+      ? wrapText(
+          bold,
+          `Included AR treatment${includedTreatments.length === 1 ? "" : "s"}: ${includedTreatments.join(", ")}.`,
+          introTextWidth,
+          7.4
+        )
+      : [];
+    const panelHeight = Math.max(76, 50 + summaryLines.length * 10 + includedLines.length * 9);
+    ensureSpace(panelHeight + 12);
     page.drawRectangle({
       x: MARGIN,
-      y: y - 67,
+      y: y - panelHeight + 3,
       width: CONTENT_WIDTH,
-      height: 70,
+      height: panelHeight,
       color: SOFT_FILL,
       borderColor: RULE,
       borderWidth: 0.8,
     });
     page.drawRectangle({
       x: MARGIN,
-      y: y - 67,
+      y: y - panelHeight + 3,
       width: 7,
-      height: 70,
+      height: panelHeight,
       color: GOLD,
     });
     page.drawText("Confidential pricing guide", {
@@ -473,21 +519,25 @@ async function buildPriceListPdf({
       font: bold,
       color: NAVY,
     });
-    page.drawText(
-      fitText(
-        regular,
-        "Clean customer-ready pricing, organized by design family with coatings, add-ons, and policy notes in one place.",
-        introTextWidth,
-        8
-      ),
-      {
+    summaryLines.forEach((line, index) => {
+      page.drawText(line, {
         x: MARGIN + 18,
-        y: y - 33,
+        y: y - 33 - index * 10,
         size: 8,
         font: regular,
         color: TEXT,
-      }
-    );
+      });
+    });
+    const includedStartY = y - 33 - summaryLines.length * 10 - 2;
+    includedLines.forEach((line, index) => {
+      page.drawText(line, {
+        x: MARGIN + 18,
+        y: includedStartY - index * 9,
+        size: 7.4,
+        font: bold,
+        color: NAVY,
+      });
+    });
     page.drawText(
       fitText(
         regular,
@@ -497,7 +547,7 @@ async function buildPriceListPdf({
       ),
       {
         x: MARGIN + 18,
-        y: y - 48,
+        y: y - panelHeight + 14,
         size: 7.4,
         font: regular,
         color: MUTED,
@@ -526,7 +576,7 @@ async function buildPriceListPdf({
       font: regular,
       color: MUTED,
     });
-    y -= 78;
+    y -= panelHeight + 8;
   };
 
   const drawLabShowcasePage = () => {
@@ -1147,7 +1197,9 @@ async function buildPriceListPdf({
         logoBrand: coatingGroupLogo(brand),
         items: entries.map((coating) => ({
           name: cleanCoatingName(coating),
-          price: `$${coating.price.toFixed(2)}`,
+          price: portalPriceList.package && coating.price === 0
+            ? "Included"
+            : `$${coating.price.toFixed(2)}`,
         })),
       }))
     );

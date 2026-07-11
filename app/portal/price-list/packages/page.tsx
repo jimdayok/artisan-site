@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getAuthorizedPortalSectionForPage } from "@/lib/portal/priceListAccess";
-import { isPackagePriceListCode, isVisiblePriceListCode } from "@/lib/pricing/priceListCodes";
+import { isPackagePriceListCode, isVisiblePriceListCode, priceListDisplayName } from "@/lib/pricing/priceListCodes";
 import { canonicalPriceListCode } from "@/lib/portal/priceLists";
 import PriceListAccessMessage from "../PriceListAccessMessage";
 import GeneratedInteractivePriceListPage from "../GeneratedInteractivePriceListPage";
@@ -102,7 +102,7 @@ export default async function PrivatePricePackagesPage({
                     : "border-[#d7c5a8] bg-white text-[#172a28] hover:bg-[#f8f1e6]"
                 }`}
               >
-                {code} Package Pricing
+                {priceListDisplayName(code)}
               </Link>
             ))}
           </nav>

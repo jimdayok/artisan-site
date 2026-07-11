@@ -181,6 +181,15 @@ export type PortalDashboardV1State = {
   staleReason?: string;
 };
 
+export type PortalPeerBenchmarks = {
+  cohortSize: number;
+  medianWarrantyPct: number | null;
+  medianOfficeRedoPct: number | null;
+  medianNonAdaptPct: number | null;
+  medianTurnaroundDays: number | null;
+  growthPercentile: number | null;
+};
+
 type DashboardV1IndexRow = {
   account_id?: string;
   all_account_numbers?: string;
@@ -296,5 +305,63 @@ export function getPortalDashboardV1ByAccount(accountNumber?: string): PortalDas
     manifest,
     stale: staleState.stale,
     staleReason: staleState.staleReason,
+  };
+}
+
+function median(values: number[]) {
+  const sorted = values.filter(Number.isFinite).sort((a, b) => a - b);
+  if (!sorted.length) return null;
+  const middle = Math.floor(sorted.length / 2);
+  return sorted.length % 2
+    ? sorted[middle]
+    : (sorted[middle - 1] + sorted[middle]) / 2;
+}
+
+export function getPortalPeerBenchmarks(accountNumber?: string): PortalPeerBenchmarks {
+  const resolvedAccountId = resolveAccountId(accountNumber ?? "");
+  const accounts = Object.values(portalDashboardV1Bundle.accountsById as Record<string, PortalDashboardV1Account>)
+    .filter((account) => account.account_id !== resolvedAccountId)
+    .filter((account) => account.purchase_summary.jobs.pm > 0);
+  const currentAccount = resolvedAccountId
+    ? (portalDashboardV1Bundle.accountsById as Record<string, PortalDashboardV1Account>)[resolvedAccountId]
+    : undefined;
+  const peerGrowth = accounts
+    .filter((account) => account.purchase_summary.jobs.ppm > 0)
+    .map((account) =>
+      ((account.purchase_summary.jobs.pm - account.purchase_summary.jobs.ppm) /
+        account.purchase_summary.jobs.ppm) *
+      100
+    );
+  const currentGrowth =
+    currentAccount && currentAccount.purchase_summary.jobs.ppm > 0
+      ? ((currentAccount.purchase_summary.jobs.pm - currentAccount.purchase_summary.jobs.ppm) /
+          currentAccount.purchase_summary.jobs.ppm) *
+        100
+      : null;
+  const growthPercentile =
+    currentGrowth === null || !peerGrowth.length
+      ? null
+      : Math.round(
+          (peerGrowth.filter((value) => value <= currentGrowth).length / peerGrowth.length) * 100
+        );
+
+  return {
+    cohortSize: accounts.length,
+    medianWarrantyPct: median(
+      accounts.map((account) => (account.quality_metrics?.warranty_pct.pm ?? Number.NaN) * 100)
+    ),
+    medianOfficeRedoPct: median(
+      accounts.map((account) => (account.quality_metrics?.office_redo_pct.pm ?? Number.NaN) * 100)
+    ),
+    medianNonAdaptPct: median(
+      accounts.map((account) => (account.quality_metrics?.non_adapt_pct.pm ?? Number.NaN) * 100)
+    ),
+    medianTurnaroundDays: median(
+      accounts.map(
+        (account) =>
+          account.supplemental_intelligence?.turnaround?.average_days?.pm ?? Number.NaN
+      )
+    ),
+    growthPercentile,
   };
 }

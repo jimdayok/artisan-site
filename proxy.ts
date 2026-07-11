@@ -69,6 +69,8 @@ function deny(request: NextRequest, status: number, message: string) {
 
   const requestHeaders = new Headers(request.headers);
   requestHeaders.delete("x-portal-auth-email");
+  requestHeaders.set("x-portal-request-path", `${request.nextUrl.pathname}${request.nextUrl.search}`);
+  requestHeaders.set("x-portal-request-method", request.method);
   requestHeaders.set("x-portal-auth-error", message);
   requestHeaders.set("x-portal-auth-status", String(status));
 
@@ -136,6 +138,8 @@ export async function proxy(request: NextRequest) {
 
   const requestHeaders = new Headers(request.headers);
   requestHeaders.delete("x-portal-auth-email");
+  requestHeaders.set("x-portal-request-path", `${pathname}${request.nextUrl.search}`);
+  requestHeaders.set("x-portal-request-method", request.method);
 
   if (localhostDev) {
     const localEmail = request.cookies.get(LOCAL_PORTAL_TEST_EMAIL_COOKIE)?.value?.trim().toLowerCase() ?? "";

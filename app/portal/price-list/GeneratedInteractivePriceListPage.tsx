@@ -4,7 +4,7 @@ import { getAuthorizedRuntimePriceListFromHeaders } from "@/lib/portal/priceList
 import { canonicalPriceListCode } from "@/lib/portal/priceLists";
 import { isPortalAdminEmail } from "@/lib/portal/admin";
 import { loadRuntimePackagedPriceListByCode } from "@/lib/pricing/loadRuntimePackagedPriceList";
-import { isVisiblePriceListCode } from "@/lib/pricing/priceListCodes";
+import { isVisiblePriceListCode, priceListDisplayName } from "@/lib/pricing/priceListCodes";
 import { customerFacingPriceList } from "@/lib/pricing/customerPriceList";
 import { headers } from "next/headers";
 import { forbidden } from "next/navigation";
@@ -104,7 +104,7 @@ export default async function GeneratedInteractivePriceListPage({
       priceList={access.priceList}
       accountPriceListCodes={accountPriceListCodes}
       previewAccountNumber={previewAccountNumber}
-      title={normalizedCode === "NL" ? "Neurolens Pricing" : `${normalizedCode} Pricing`}
+      title={priceListDisplayName(normalizedCode)}
       description="Interactive private pricing guide for assigned portal accounts."
     >
       <InteractivePriceListDashboard

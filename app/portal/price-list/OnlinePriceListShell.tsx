@@ -6,6 +6,7 @@ import { isPortalAdminEmail } from "@/lib/portal/admin";
 import PricingHeader from "../../../src/components/private-price/PricingHeader";
 import type { PortalPriceList } from "@/lib/portal/priceLists";
 import PortalPriceListScrollReset from "./PortalPriceListScrollReset";
+import { priceListDisplayName } from "@/lib/pricing/priceListCodes";
 
 export async function OnlinePriceListShell({
   priceList,
@@ -57,7 +58,7 @@ export async function OnlinePriceListShell({
                       : "border-[#d7c5a8] bg-white/85 text-[#122033] hover:bg-white"
                   }`}
                 >
-                  {code} Pricing
+                  {priceListDisplayName(code)}
                 </Link>
               ))}
             </div>

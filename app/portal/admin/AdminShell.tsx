@@ -68,6 +68,9 @@ export function AdminShell({
               <Link href="/portal/admin/users" className={adminButtonClass}>
                 User Invites
               </Link>
+              <Link href="/portal/admin/access-log" className={adminButtonClass}>
+                Access Log
+              </Link>
               <Link href="/portal/admin/rewards" className={adminButtonClass}>
                 Rewards Payouts
               </Link>

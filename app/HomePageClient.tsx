@@ -41,16 +41,6 @@ const heroTrustNotes = [
 
 const eventCards = [
   {
-    name: "UOA Leadership Conference",
-    date: "June 25–27, 2026",
-    location: "Chicago, IL",
-    description:
-      "Opticians and industry leaders gather to explore innovation, leadership, and the future of opticianry.",
-    logo: "/uoa-logo.jpg",
-    logoAlt: "UOA Leadership Conference logo",
-    href: "https://www.uoaleadership.org/",
-  },
-  {
     name: "Vision Council 2026 Lab Leadership Forum",
     date: "Sept. 16 to 18, 2026",
     location: "M Resort Spa Casino, Henderson, NV",

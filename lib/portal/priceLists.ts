@@ -3,6 +3,7 @@ import {
   filterVisiblePriceListCodes,
   isVisiblePriceListCode,
   normalizePriceListCode,
+  priceListDisplayName,
 } from "@/lib/pricing/priceListCodes";
 
 export type PriceListCode = string;
@@ -73,7 +74,7 @@ export const priceLists: PortalPriceList[] = (
   const pdf = pdfByCode[entry.code];
   return {
     ...entry,
-    label: entry.label || `${entry.code} Price List`,
+    label: priceListDisplayName(entry.code, entry.label || `${entry.code} Price List`),
     fileName: pdf?.fileName ?? `Interactive ${entry.code} pricing`,
     r2Key: pdf?.r2Key ?? null,
     onlineUrl: `/portal/price-list/${entry.code.toLowerCase()}`,

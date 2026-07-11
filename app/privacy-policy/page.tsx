@@ -32,7 +32,7 @@ const sections = [
   },
   {
     title: "Data Security",
-    body: "We use reasonable administrative and technical safeguards, but no website or transmission method is completely secure. Please avoid submitting sensitive health, payment, or confidential patient information through general website forms.",
+    body: "We use reasonable administrative and technical safeguards. Authenticated customer-portal visits may be logged with the account email, IP address, timestamp, requested portal path, and browser user agent for access auditing, credential-sharing detection, fraud prevention, and incident response. Security logs are restricted to authorized administrators and retained only as reasonably needed for those purposes. No website or transmission method is completely secure. Please avoid submitting sensitive health, payment, or confidential patient information through general website forms.",
   },
   {
     title: "Your Choices",
@@ -53,7 +53,7 @@ export default function PrivacyPolicyPage() {
             Privacy Policy
           </h1>
           <p className="mt-6 text-lg leading-8 text-[#625b53]">
-            Last updated May 1, 2026. This policy explains how Artisan Lab Network handles website information.
+            Last updated July 11, 2026. This policy explains how Artisan Lab Network handles website information.
           </p>
         </div>
       </section>

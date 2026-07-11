@@ -48,8 +48,13 @@ function AuthMessage({
   );
 }
 
-export default async function PortalOnboardingPage() {
-  const access = await getOnboardingAccess();
+export default async function PortalOnboardingPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ account?: string }>;
+}) {
+  const query = (await searchParams) ?? {};
+  const access = await getOnboardingAccess(query.account);
 
   if (access.status === "unauthenticated") {
     return (

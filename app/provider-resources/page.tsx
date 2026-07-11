@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { artisanControlClass, artisanSegmentClass, artisanSegmentGroupClass } from "../components/controlStyles";
 
 type ResourceType =
   | "PDF"
@@ -891,13 +892,13 @@ export default function ProviderResourcesPage({
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
                 href="/portal"
-                className="inline-flex min-h-11 items-center gap-2 rounded bg-[#9ee6d8] px-4 py-2 text-sm font-semibold text-[#09201c] transition hover:bg-white"
+                className={artisanControlClass({ tone: "accent" })}
               >
                 Log Into Customer Portal <ArrowRight className="h-4 w-4" />
               </Link>
               <a
                 href="#resource-library"
-                className="inline-flex min-h-11 items-center gap-2 rounded border border-white/18 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:border-white hover:bg-white hover:text-[#111827]"
+                className={artisanControlClass({ tone: "inverse" })}
               >
                 Browse Library <LayoutGrid className="h-4 w-4" />
               </a>
@@ -1049,18 +1050,14 @@ export default function ProviderResourcesPage({
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0f766e]">
                 Scroll sideways to see more filter options.
               </p>
-              <div className="mobile-scroll-row flex items-center gap-2 overflow-x-auto pb-2 [scrollbar-color:#0f766e_#e5e7eb] [scrollbar-width:thin]">
+              <div className={`mobile-scroll-row flex pb-1 ${artisanSegmentGroupClass}`}>
                 <SlidersHorizontal className="h-4 w-4 shrink-0 text-[#6b7280]" />
                 {filterOptions.map((filter) => (
                   <button
                     key={filter}
                     type="button"
                     onClick={() => setActiveFilter(filter)}
-                    className={`h-9 shrink-0 rounded border px-3 text-sm font-semibold transition ${
-                      activeFilter === filter
-                        ? "border-[#0f766e] bg-[#0f766e] text-white"
-                        : "border-[#d7ded9] bg-white text-[#374151] hover:border-[#0f766e]"
-                    }`}
+                    className={artisanSegmentClass(activeFilter === filter)}
                   >
                     {filter}
                   </button>
@@ -1101,10 +1098,10 @@ export default function ProviderResourcesPage({
                         id={brand.id}
                         type="button"
                         onClick={() => setActiveBrand(brand.id)}
-                        className={`flex w-full items-center justify-between rounded px-3 py-3 text-left text-sm font-semibold transition ${
+                        className={`flex min-h-11 w-full items-center justify-between rounded-full border px-4 py-2.5 text-left text-sm font-semibold transition ${
                           activeBrand === brand.id
-                            ? "bg-[#e8f5f1] text-[#0f766e]"
-                            : "text-[#374151] hover:bg-[#f3f4f6] hover:text-[#111827]"
+                            ? "border-[#d8c49b] bg-[#d8c49b] text-[#172a28]"
+                            : "border-transparent text-[#374151] hover:border-[#d8c49b] hover:bg-[#fffaf1] hover:text-[#172a28]"
                         }`}
                       >
                         <span>{brand.label}</span>
@@ -1388,7 +1385,7 @@ export default function ProviderResourcesPage({
                   <a href={`mailto:${lab.email}`} className="inline-flex h-10 items-center justify-center rounded bg-[#9ee6d8] px-4 text-sm font-semibold text-[#09201c]">
                     Email customer service
                   </a>
-                  <Link href={lab.meetHref} className="inline-flex h-10 items-center justify-center rounded border border-white/18 px-4 text-sm font-semibold text-white">
+                  <Link href={lab.meetHref} className={artisanControlClass({ tone: "inverse", size: "sm" })}>
                     Meet your lab
                   </Link>
                 </div>

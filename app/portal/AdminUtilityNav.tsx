@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { artisanControlClass } from "@/app/components/controlStyles";
 
 const links = [
   { href: "/", label: "Main Website" },
   { href: "/portal/admin", label: "Admin Dashboard" },
   { href: "/portal/admin/price-lists", label: "Price Lists" },
+  { href: "/portal/admin/users", label: "User Invites" },
   { href: "/portal/admin/rewards", label: "Rewards" },
   { href: "/portal", label: "Customer Portal" },
   { href: "/portal/employee-resources", label: "Employee Resources" },
@@ -43,11 +45,11 @@ export default function AdminUtilityNav() {
               key={link.href}
               href={link.href}
               aria-current={active ? "page" : undefined}
-              className={`inline-flex min-h-11 shrink-0 items-center justify-center rounded-full border px-3 py-1.5 text-xs font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
-                active
-                  ? "border-[#d8c49b] bg-[#d8c49b] text-[#172a28]"
-                  : "border-white/20 bg-white/5 text-white hover:border-white/45 hover:bg-white/12"
-              }`}
+              className={artisanControlClass({
+                tone: active ? "accent" : "inverse",
+                size: "sm",
+                className: "focus-visible:ring-white focus-visible:ring-offset-[#172a28]",
+              })}
             >
               {label}
             </Link>

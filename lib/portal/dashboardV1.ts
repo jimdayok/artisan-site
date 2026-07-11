@@ -219,21 +219,38 @@ function getManifest() {
   return portalDashboardV1Bundle.manifest ?? undefined;
 }
 
+function calendarDayDiffFromToday(refreshDate: string) {
+  const parts = refreshDate.split("-").map((value) => Number(value));
+  if (parts.length !== 3 || parts.some((value) => !Number.isFinite(value))) return Number.NaN;
+
+  const [year, month, day] = parts;
+  const refreshUtc = Date.UTC(year, month - 1, day);
+  const now = new Date();
+  const todayUtc = Date.UTC(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate()
+  );
+
+  return Math.floor((todayUtc - refreshUtc) / (1000 * 60 * 60 * 24));
+}
+
 function isStale(manifest?: PortalDashboardV1Manifest) {
   if (!manifest) return { stale: true, staleReason: "Snapshot manifest missing." };
 
   const refreshDate = manifest.data_refresh_date;
   if (!refreshDate) return { stale: true, staleReason: "Data refresh date missing." };
 
-  const parsed = new Date(`${refreshDate}T00:00:00`);
-  if (Number.isNaN(parsed.getTime())) {
+  const ageDays = calendarDayDiffFromToday(refreshDate);
+  if (!Number.isFinite(ageDays)) {
     return { stale: true, staleReason: "Data refresh date invalid." };
   }
 
-  const ageMs = Date.now() - parsed.getTime();
-  const staleMs = 1000 * 60 * 60 * 24 * 2;
-  if (ageMs > staleMs) {
-    return { stale: true, staleReason: `Snapshot is older than 2 days (${refreshDate}).` };
+  if (ageDays > 2) {
+    return {
+      stale: true,
+      staleReason: `Snapshot data is ${ageDays} days old (data refresh date ${refreshDate}).`,
+    };
   }
 
   return { stale: false as const, staleReason: "" };

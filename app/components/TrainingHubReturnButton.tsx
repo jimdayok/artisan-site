@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowLeft, X } from "lucide-react";
 import { useEffect, useSyncExternalStore } from "react";
+import { artisanControlClass } from "./controlStyles";
 
 const TRAINING_HUB_PATH = "/new-lab-partner";
 const RETURN_URL_KEY = "artisan-training-hub-return-url";
@@ -67,7 +68,7 @@ export default function TrainingHubReturnButton() {
     <div className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-[max(1.25rem,env(safe-area-inset-right))] z-[80] flex max-w-[calc(100vw-2.5rem)] items-center gap-2 rounded-full border border-[#d8c49b] bg-[#172a28] p-1.5 pl-2 shadow-[0_18px_55px_rgba(23,42,40,0.24)]">
       <Link
         href={returnUrl}
-        className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[#d8c49b] px-4 py-2 text-sm font-semibold text-[#172a28] transition hover:bg-[#e4cca0]"
+        className={artisanControlClass({ tone: "accent", size: "sm" })}
       >
         <ArrowLeft className="h-4 w-4" />
         Return to Setup Hub

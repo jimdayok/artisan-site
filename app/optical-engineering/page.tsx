@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { artisanControlClass } from "../components/controlStyles";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
 
@@ -660,10 +661,10 @@ function ResultModal({
             <h2 className="mt-2 text-3xl font-semibold tracking-tight text-[#172a28]">{title}</h2>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <button onClick={onCopy} className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-[#d8c6a8] bg-white px-4 text-sm font-semibold text-[#172a28] transition hover:bg-[#d4c09a]"><Copy className="h-4 w-4" />Copy</button>
-            <button onClick={onPrint} className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-[#d8c6a8] bg-white px-4 text-sm font-semibold text-[#172a28] transition hover:bg-[#d4c09a]"><Printer className="h-4 w-4" />Print</button>
-            <button onClick={onShare} className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-[#d8c6a8] bg-white px-4 text-sm font-semibold text-[#172a28] transition hover:bg-[#d4c09a]"><Share2 className="h-4 w-4" />Share</button>
-            <button onClick={onPrint} className="inline-flex min-h-10 items-center gap-2 rounded-lg bg-[#172a28] px-4 text-sm font-semibold text-white transition hover:bg-[#27433f]"><Download className="h-4 w-4" />PDF</button>
+            <button onClick={onCopy} className={artisanControlClass({ tone: "secondary", size: "sm" })}><Copy className="h-4 w-4" />Copy</button>
+            <button onClick={onPrint} className={artisanControlClass({ tone: "secondary", size: "sm" })}><Printer className="h-4 w-4" />Print</button>
+            <button onClick={onShare} className={artisanControlClass({ tone: "secondary", size: "sm" })}><Share2 className="h-4 w-4" />Share</button>
+            <button onClick={onPrint} className={artisanControlClass({ tone: "primary", size: "sm" })}><Download className="h-4 w-4" />PDF</button>
             <button onClick={onClose} className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[#d8c6a8] bg-[#fbf8f3] text-[#172a28] transition hover:bg-[#d4c09a]"><X className="h-4 w-4" /></button>
           </div>
         </div>
@@ -1353,10 +1354,10 @@ export default function OpticalEngineeringPage() {
               Laboratory-grade optical calculators, reference formulas, and tolerance tools.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a href="#workspace" className="inline-flex min-h-12 items-center justify-center rounded-lg bg-[#d4c09a] px-6 text-sm font-semibold text-[#101820] transition hover:-translate-y-0.5 hover:bg-[#ead7ad]">
+              <a href="#workspace" className={artisanControlClass({ tone: "accent", size: "lg" })}>
                 Select Calculator
               </a>
-              <a href="#references" className="inline-flex min-h-12 items-center justify-center rounded-lg border border-white/16 bg-white/8 px-6 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-[#d4c09a]/60 hover:bg-white/12">
+              <a href="#references" className={artisanControlClass({ tone: "inverse", size: "lg" })}>
                 Reference Library
               </a>
             </div>
@@ -1416,7 +1417,7 @@ export default function OpticalEngineeringPage() {
                   <h2 className="text-3xl font-semibold tracking-tight text-[#172a28]">{activeCalculator.title}</h2>
                   <p className="mt-2 max-w-3xl text-sm font-semibold text-[#625b53]">{activeCalculator.description}</p>
                 </div>
-                <button onClick={runCalculation} className="inline-flex min-h-11 items-center justify-center rounded-lg bg-[#172a28] px-5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#27433f]">
+                <button onClick={runCalculation} className={artisanControlClass({ tone: "primary" })}>
                   Calculate
                 </button>
               </div>
@@ -1510,10 +1511,10 @@ export default function OpticalEngineeringPage() {
                 <p>{frameSummary(data)}</p>
               </div>
               <div className="mt-5 grid gap-3">
-                <button onClick={runCalculation} className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-[#d4c09a] px-5 text-sm font-semibold text-[#172a28] transition hover:-translate-y-0.5 hover:bg-[#ead7ad]">
+                <button onClick={runCalculation} className={artisanControlClass({ tone: "accent", className: "w-full" })}>
                   Calculate
                 </button>
-                <button onClick={shareScenario} className="inline-flex min-h-11 w-full items-center justify-center rounded-lg border border-white/12 bg-white/8 px-5 text-sm font-semibold text-white transition hover:bg-white/12">
+                <button onClick={shareScenario} className={artisanControlClass({ tone: "inverse", className: "w-full" })}>
                   Copy Scenario
                 </button>
               </div>

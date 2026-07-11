@@ -7,6 +7,10 @@ import { getAuthorizedPortalCustomers } from "@/lib/portal/portalAuthorization";
 import { getPortalUserByEmail } from "@/lib/portal/userDataAccess";
 import { getPortalDashboardV1ByAccount, type PortalDashboardV1Account } from "@/lib/portal/dashboardV1";
 import { portalDashboardV1Bundle } from "@/lib/portal/dashboardV1Bundle";
+import {
+  isEligibleOnboardingAccount,
+  normalizeOnboardingAccount,
+} from "@/lib/portal/onboardingEligibility";
 import { labs, type LabKey } from "./onboardingData";
 
 export type OnboardingAccount = {
@@ -38,43 +42,12 @@ export type OnboardingAccess =
       adminAccounts: OnboardingAccount[];
     };
 
-const eligibilityThresholds: Record<string, number> = {
-  PDX: 3950,
-  IND: 20050,
-  DEN: 10050,
-};
-
 function clean(value: unknown) {
   return String(value ?? "").trim();
 }
 
-function normalizeAccount(value: unknown) {
-  return clean(value).toUpperCase().replace(/\.0$/, "");
-}
-
-export function isEligibleOnboardingAccountNumber(value: unknown) {
-  const normalized = normalizeAccount(value);
-  const match = normalized.match(/\b(PDX|IND|DEN)[-\s]?(\d+)\b/);
-  if (!match) return false;
-
-  const prefix = match[1] as keyof typeof eligibilityThresholds;
-  const numeric = Number(match[2]);
-  return Number.isFinite(numeric) && numeric >= eligibilityThresholds[prefix];
-}
-
 function isEligibleAccount(account: { accountNumber: string; aliases?: string[] }) {
-  const values = [account.accountNumber, ...(account.aliases ?? [])].map(normalizeAccount);
-  if (values.some(isEligibleOnboardingAccountNumber)) return true;
-
-  const labPrefix = values
-    .map((value) => value.match(/\b(PDX|IND|DEN)\b/)?.[1] as keyof typeof eligibilityThresholds | undefined)
-    .find(Boolean);
-  if (!labPrefix) return false;
-
-  return values.some((value) => {
-    const numeric = Number(value.match(/^\d+$/)?.[0] ?? "");
-    return Number.isFinite(numeric) && numeric >= eligibilityThresholds[labPrefix];
-  });
+  return isEligibleOnboardingAccount([account.accountNumber, ...(account.aliases ?? [])]);
 }
 
 function labKeyFromName(value: unknown): LabKey {
@@ -91,7 +64,7 @@ function aliasesFromAccount(account: PortalDashboardV1Account | undefined, fallb
     account?.account_id,
     ...(account?.all_account_numbers ?? "").split(","),
   ]
-    .map(normalizeAccount)
+    .map(normalizeOnboardingAccount)
     .filter(Boolean)
     .filter((value, index, values) => values.indexOf(value) === index);
 }
@@ -104,7 +77,7 @@ function accountFromDashboard(accountNumber: string, fallbackName = ""): Onboard
   const labKey = labKeyFromName(rawLabName);
 
   return {
-    accountNumber: normalizeAccount(account?.account_id || accountNumber),
+    accountNumber: normalizeOnboardingAccount(account?.account_id || accountNumber),
     aliases,
     practiceName: account?.business_name || fallbackName || accountNumber,
     labKey,
@@ -134,7 +107,26 @@ function nameFromDashboardAuthorizedUsers(email: string, accountNumber: string) 
   return authorizedUser?.name ?? "";
 }
 
-export async function getOnboardingAccess(): Promise<OnboardingAccess> {
+function prioritizeRequestedAccount(
+  accounts: OnboardingAccount[],
+  requestedAccountNumber?: string
+) {
+  const requested = normalizeOnboardingAccount(requestedAccountNumber);
+  if (!requested) return accounts;
+
+  const index = accounts.findIndex(
+    (account) =>
+      account.accountNumber === requested ||
+      account.aliases.includes(requested)
+  );
+  if (index <= 0) return accounts;
+
+  return [accounts[index], ...accounts.slice(0, index), ...accounts.slice(index + 1)];
+}
+
+export async function getOnboardingAccess(
+  requestedAccountNumber?: string
+): Promise<OnboardingAccess> {
   const headerList = await headers();
   const email = getPortalAuthenticatedEmailFromHeaders(headerList);
   if (!email) return { status: "unauthenticated", email: "" };
@@ -145,7 +137,10 @@ export async function getOnboardingAccess(): Promise<OnboardingAccess> {
   const accounts = portalCustomers.map((customer) =>
     accountFromDashboard(customer.accountNumber, customer.practiceName)
   );
-  const eligibleAccounts = accounts.filter(isEligibleAccount);
+  const eligibleAccounts = prioritizeRequestedAccount(
+    accounts.filter(isEligibleAccount),
+    requestedAccountNumber
+  );
   const allAdminAccounts = isAdmin ? adminAccounts() : [];
   const userName =
     user?.personName ||
@@ -158,7 +153,7 @@ export async function getOnboardingAccess(): Promise<OnboardingAccess> {
       email,
       userName,
       isAdmin,
-      accounts: allAdminAccounts,
+      accounts: prioritizeRequestedAccount(allAdminAccounts, requestedAccountNumber),
       adminAccounts: allAdminAccounts,
     };
   }

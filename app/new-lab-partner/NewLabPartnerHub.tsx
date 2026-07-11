@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { artisanControlClass } from "@/app/components/controlStyles";
 import {
   ArrowRight,
   Check,
@@ -80,8 +81,7 @@ function normalizeSearchText(value: string) {
 }
 
 function ResourceButton({ link }: { link: ResourceLink }) {
-  const className =
-    "inline-flex min-h-11 max-w-full items-center justify-center gap-2 rounded-full border border-[#d8c6a8] bg-white px-4 py-2 text-center text-sm font-semibold leading-5 text-[#1f1a17] shadow-sm transition hover:-translate-y-0.5 hover:border-[#b99355] hover:bg-[#fbf8f3]";
+  const className = artisanControlClass({ tone: "secondary", className: "text-center" });
 
   if (link.href.startsWith("mailto:") || link.href.startsWith("tel:") || link.external) {
     return (

@@ -30,6 +30,10 @@ import {
   isLocalhostDevelopmentRequest,
 } from "@/lib/portal/auth";
 import {
+  buildPortalOnboardingHref,
+  isEligibleOnboardingAccount,
+} from "@/lib/portal/onboardingEligibility";
+import {
   customerHasPortalSection,
   type PortalCustomer,
   type PortalSection,
@@ -241,12 +245,14 @@ function PortalHeader({
   isAdminPreview,
   isEmployee,
   showNewPartnerOnboarding,
+  onboardingHref,
 }: {
   practiceName: string;
   hasMultipleAccounts?: boolean;
   isAdminPreview?: boolean;
   isEmployee?: boolean;
   showNewPartnerOnboarding?: boolean;
+  onboardingHref?: string;
 }) {
   return (
     <header className="mb-7 border border-[#d8c49b] bg-[#fffaf1]/88 px-4 py-3 shadow-[0_18px_55px_rgba(23,42,40,0.09)] backdrop-blur sm:px-5">
@@ -293,11 +299,11 @@ function PortalHeader({
           </Link>
           {showNewPartnerOnboarding ? (
             <Link
-              href="/new-lab-partner"
+              href={onboardingHref ?? "/portal/onboarding"}
               className="inline-flex min-h-10 items-center gap-2 rounded-full bg-[#d8c49b] px-4 text-[#172a28] shadow-[0_10px_24px_rgba(184,154,97,0.2)] transition hover:bg-[#e4cca0]"
             >
               <BadgeCheck className="h-4 w-4" />
-              New Partner Setup
+              Onboarding Center
             </Link>
           ) : null}
           <Link
@@ -772,10 +778,10 @@ const portalSectionCards: PortalSectionCard[] = [
   },
   {
     section: "onboarding",
-    title: "New Partner Onboarding",
-    body: "Open the guided setup hub for lab contacts, portal access, ordering methods, pricing, safety, shipping, and first orders.",
-    href: "/new-lab-partner",
-    cta: "Open Setup Hub",
+    title: "Customer Onboarding Center",
+    body: "Open the guided onboarding center for lab contacts, portal access, ordering methods, pricing, safety, shipping, and first orders.",
+    href: "/portal/onboarding",
+    cta: "Open Onboarding",
   },
   {
     section: "exports",
@@ -799,6 +805,26 @@ function visiblePortalSectionCards(customer: PortalCustomer) {
 
     return assignedCodes.has(card.requiresPriceList);
   });
+}
+
+function isPortalOnboardingVisible({
+  customer,
+  workbookProfile,
+  dashboardState,
+}: {
+  customer?: PortalCustomer;
+  workbookProfile?: PortalWorkbookProfile;
+  dashboardState?: PortalDashboardV1State;
+}) {
+  if (customer && !customerHasPortalSection(customer, "onboarding")) return false;
+
+  return isEligibleOnboardingAccount([
+    customer?.accountNumber,
+    workbookProfile?.account?.accountNumber,
+    workbookProfile?.person.accountNumber,
+    dashboardState?.status === "ok" ? dashboardState.account?.account_id : "",
+    dashboardState?.status === "ok" ? dashboardState.account?.all_account_numbers : "",
+  ]);
 }
 
 function PortalResourceCard({ card }: { card: PortalSectionCard }) {
@@ -839,6 +865,7 @@ function AccountProfileSection({
   practiceName,
   accountNumber,
   showNewPartnerOnboarding,
+  onboardingHref,
 }: {
   account?: PortalWorkbookAccount;
   dashboardAccount?: PortalDashboardV1Account;
@@ -846,6 +873,7 @@ function AccountProfileSection({
   practiceName: string;
   accountNumber: string;
   showNewPartnerOnboarding?: boolean;
+  onboardingHref?: string;
 }) {
   if (!account && !dashboardAccount && !practiceName && !accountNumber) return null;
 
@@ -885,7 +913,7 @@ function AccountProfileSection({
       </p>
       {showNewPartnerOnboarding ? (
         <Link
-          href="/new-lab-partner"
+          href={onboardingHref ?? "/portal/onboarding"}
           className="mt-6 flex flex-col gap-4 border border-[#172a28] bg-[#172a28] p-5 text-white shadow-[0_18px_55px_rgba(23,42,40,0.16)] transition hover:-translate-y-0.5 hover:bg-[#243f3b] sm:flex-row sm:items-center sm:justify-between"
         >
           <span>
@@ -894,16 +922,16 @@ function AccountProfileSection({
               Customer Activation
             </span>
             <span className="mt-3 block text-2xl font-semibold tracking-[-0.03em]">
-              New Lab Partner Setup
+              Customer Onboarding Center
             </span>
             <span className="mt-2 block text-sm leading-6 text-white/78">
-              Use the setup hub to confirm lab contacts, portal access,
+              Use the onboarding center to confirm lab contacts, portal access,
               ordering methods, pricing, safety resources, shipping, and first
               orders.
             </span>
           </span>
           <span className="inline-flex min-h-11 w-fit shrink-0 items-center justify-center rounded-full bg-[#d8c49b] px-5 py-2 text-sm font-semibold text-[#172a28]">
-            Start Setup
+            Open Onboarding
           </span>
         </Link>
       ) : null}
@@ -2548,7 +2576,6 @@ export function PortalDashboardContent({
       rowCount: 0,
     } satisfies PortalPriceList & { configured: boolean };
   });
-  const availablePortalSections = customer ? visiblePortalSectionCards(customer) : [];
   const account = workbookProfile?.account;
   const practiceName =
     dashboardState?.account?.business_name ||
@@ -2567,9 +2594,19 @@ export function PortalDashboardContent({
     customerTypeInfo?.label || customer?.customerTypeLabel || "";
   const showDashboardV1 = dashboardState?.status === "ok";
   const isAdmin = isPortalAdminEmail(authenticatedEmail);
-  const showNewPartnerOnboarding = Boolean(
-    customer && customerHasPortalSection(customer, "onboarding")
-  );
+  const showNewPartnerOnboarding = isPortalOnboardingVisible({
+    customer,
+    workbookProfile,
+    dashboardState,
+  });
+  const onboardingHref = buildPortalOnboardingHref(accountNumber);
+  const availablePortalSections = customer
+    ? visiblePortalSectionCards(customer).filter(
+        (card) => card.section !== "onboarding" || showNewPartnerOnboarding
+      ).map((card) =>
+        card.section === "onboarding" ? { ...card, href: onboardingHref } : card
+      )
+    : [];
   const shouldShowDashboardWarnings =
     isAdmin && Boolean(dashboardState) && (!showDashboardV1 || Boolean(dashboardState?.stale));
 
@@ -2583,6 +2620,7 @@ export function PortalDashboardContent({
           isAdminPreview={Boolean(adminPreviewAccountName)}
           isEmployee={isAdmin && !adminPreviewAccountName}
           showNewPartnerOnboarding={showNewPartnerOnboarding}
+          onboardingHref={onboardingHref}
         />
       }
       footer={<PortalFooter />}
@@ -2689,6 +2727,7 @@ export function PortalDashboardContent({
           practiceName={practiceName}
           accountNumber={accountNumber}
           showNewPartnerOnboarding={showNewPartnerOnboarding}
+          onboardingHref={onboardingHref}
         />
 
         <UserContactSection

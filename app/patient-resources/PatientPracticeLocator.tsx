@@ -6,6 +6,7 @@ import { MapPin, Navigation, Phone, Search, ShieldCheck, Sparkles, Globe2, Build
 import { approvedPatientPractices } from "@/lib/patient-locator/practices";
 import type { PracticeWithDistance } from "@/lib/patient-locator/types";
 import { useCookieConsent } from "@/app/components/CookieConsentProvider";
+import { artisanControlClass } from "@/app/components/controlStyles";
 
 const RADIUS_OPTIONS = [25, 50, 100, 500] as const;
 type RadiusMiles = (typeof RADIUS_OPTIONS)[number];
@@ -571,7 +572,7 @@ export default function PatientPracticeLocator() {
               <button
                 type="submit"
                 disabled={isLoading || isFindingLocation}
-                className="inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-[#15342f] px-6 text-base font-semibold text-[#f7efe2] transition hover:bg-[#23453f] disabled:cursor-not-allowed disabled:opacity-60"
+                className={artisanControlClass({ tone: "primary", size: "lg", className: "min-h-14 w-full text-base" })}
               >
                 <Search className="h-5 w-5" />
                 {isLoading ? "Searching" : "Find Practices"}
@@ -580,7 +581,7 @@ export default function PatientPracticeLocator() {
                 type="button"
                 onClick={handleFindMyLocation}
                 disabled={isLoading || isFindingLocation}
-                className="inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl border border-[#b48a52] bg-[#fffaf2] px-6 text-base font-semibold text-[#15342f] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+                className={artisanControlClass({ tone: "secondary", size: "lg", className: "min-h-14 w-full text-base" })}
               >
                 <LocateFixed className="h-5 w-5" />
                 {isFindingLocation ? "Finding location…" : "Find My Location"}

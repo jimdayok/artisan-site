@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { Dispatch, ReactNode, SetStateAction } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { artisanControlClass } from "@/app/components/controlStyles";
 import {
   ArrowRight,
   Check,
@@ -103,8 +104,7 @@ function mailtoCorrection({
 }
 
 function ResourceButton({ link }: { link: ResourceLink }) {
-  const base =
-    "inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#d8c6a8]/70 bg-white px-4 py-2 text-sm font-semibold text-[#1f1a17] shadow-sm transition hover:-translate-y-0.5 hover:border-[#c9b28b] hover:bg-[#fbf8f3]";
+  const base = artisanControlClass({ tone: "secondary" });
 
   if (link.href.startsWith("mailto:") || link.external) {
     return (

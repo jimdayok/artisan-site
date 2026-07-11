@@ -360,14 +360,14 @@ export default function Header({
 
               <div className={`mt-5 flex flex-wrap gap-2 border-t pt-4 ${theme === "light" ? "border-black/10" : "border-white/12"}`}>
                 <Link
-                  className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-semibold transition hover:bg-current/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
+                  className="inline-flex min-h-11 items-center rounded-full border border-transparent px-4 text-sm font-semibold transition hover:border-current/15 hover:bg-current/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
                   href="/"
                   onClick={() => setMobileOpen(false)}
                 >
                   Home
                 </Link>
                 <Link
-                  className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-semibold transition hover:bg-current/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
+                  className="inline-flex min-h-11 items-center rounded-full border border-transparent px-4 text-sm font-semibold transition hover:border-current/15 hover:bg-current/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
                   href="/about"
                   onClick={() => setMobileOpen(false)}
                 >
@@ -375,7 +375,7 @@ export default function Header({
                 </Link>
                 <button
                   type="button"
-                  className="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-left text-sm font-semibold transition hover:bg-current/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-full border border-transparent px-4 text-left text-sm font-semibold transition hover:border-current/15 hover:bg-current/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
                   onClick={() => {
                     setMobileOpen(false);
                     onContactClick?.();

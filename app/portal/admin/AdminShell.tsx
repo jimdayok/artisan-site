@@ -1,7 +1,8 @@
 import Link from "next/link";
+import { artisanControlClass } from "@/app/components/controlStyles";
 
 export const adminButtonClass =
-  "inline-flex min-h-11 items-center justify-center rounded-full border border-[#d8c49b] bg-[#fffaf1] px-5 py-2 text-sm font-semibold text-[#172a28] transition hover:bg-white";
+  artisanControlClass({ tone: "secondary" });
 
 export function AdminAccessRequired() {
   return (
@@ -64,6 +65,9 @@ export function AdminShell({
               <Link href="/portal/admin/price-lists" className={adminButtonClass}>
                 All Price Lists
               </Link>
+              <Link href="/portal/admin/users" className={adminButtonClass}>
+                User Invites
+              </Link>
               <Link href="/portal/admin/rewards" className={adminButtonClass}>
                 Rewards Payouts
               </Link>
@@ -97,7 +101,7 @@ export function SearchBox({
         placeholder={placeholder}
         className="min-h-12 flex-1 border border-[#d8c49b] bg-[#fffaf1] px-4 text-sm text-[#172a28] outline-none transition focus:border-[#172a28]"
       />
-      <button className="min-h-12 rounded-full bg-[#172a28] px-6 text-sm font-semibold text-white transition hover:bg-[#27433f]">
+      <button className={artisanControlClass({ tone: "primary", size: "lg" })}>
         Search
       </button>
     </form>

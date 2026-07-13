@@ -395,11 +395,16 @@ const brandLibraries: BrandLibrary[] = [
   {
     id: "newton",
     label: "Newton / Neurolens",
-    headline: "Neurolens clinical support",
+    headline: "Sequel lens portfolio and Neurolens clinical support",
     description:
-      "Clinical and patient-comfort resources for Neurolens and related Newton products.",
+      "Product, pricing, training, and clinical resources for the Newton lens portfolio.",
     accent: "#4338ca",
     resources: [
+      resource("newton", "Newton / Neurolens", "Lens Designs", "PDF", "Sequel Lens Portfolio", "At-a-glance guide to Sequel single-vision and progressive designs featuring Convergence Boost technology.", fileHref("Sequel-LensPortfolio-ConvergenceBoost-10312025.pdf"), ["Sequel", "portfolio", "Convergence Boost"], { newest: true }),
+      resource("newton", "Newton / Neurolens", "Lens Designs", "PDF", "Sequel Overview", "Two-page overview of the Sequel portfolio, its patient benefits, and design selection guidance.", fileHref("Sequel Overview One Pager DIGITAL.pdf"), ["Sequel", "overview", "Convergence Boost"]),
+      resource("newton", "Newton / Neurolens", "Pricing", "PDF", "Sequel MSRP", "Suggested retail pricing for Sequel designs, coatings, treatments, and photochromic add-ons.", fileHref("Sequel MSRP.pdf"), ["Sequel", "MSRP", "pricing"]),
+      resource("newton", "Newton / Neurolens", "Lens Designs", "Training", "Sequel Portfolio Guide", "Training guide covering Sequel everyday, computer, and meeting lens options and dispensing guidance.", fileHref("Sequel-Training-SequelPortfolioGuideComputerMeeting-08302025.pdf"), ["Sequel", "training", "computer", "meeting"]),
+      resource("newton", "Newton / Neurolens", "Ordering", "Training", "Sequel VSP Eyefinity Guide", "Step-by-step guide for setting up and ordering Sequel designs through VSP Eyefinity.", fileHref("Sequel-Training-VSP-Eyefinity-10312025.pdf"), ["Sequel", "VSP", "Eyefinity", "ordering"]),
       resource("newton", "Newton / Neurolens", "Technical Bulletins", "PDF", "Neurolens Clinical Study", "Clinical study showing Neurolenses proven to reduce headache symptoms.", fileHref("Neurolenses-proven-to-reduce-headache-symptoms.pdf"), ["Neurolens", "clinical"], { staffPick: true }),
     ],
   },

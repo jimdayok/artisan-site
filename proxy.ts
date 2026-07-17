@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { verifyCloudflareAccessJwt } from "@/lib/portal/accessJwt";
-import { isPortalAdminEmailAddress } from "@/lib/portal/adminAccess";
+import { isPortalStaffEmailAddress } from "@/lib/portal/adminAccess";
 import { isHiddenPriceListCode } from "@/lib/pricing/priceListCodes";
 
 const LOCALHOST_NAMES = new Set(["localhost", "127.0.0.1", "::1"]);
@@ -148,7 +148,7 @@ export async function proxy(request: NextRequest) {
     if (
       pathname.startsWith("/portal/admin") &&
       localEmail &&
-      !isPortalAdminEmailAddress(localEmail)
+      !isPortalStaffEmailAddress(localEmail)
     ) {
       return deny(request, 403, "Admin access required.");
     }
@@ -167,7 +167,7 @@ export async function proxy(request: NextRequest) {
 
   if (
     pathname.startsWith("/portal/admin") &&
-    !isPortalAdminEmailAddress(verifiedEmail)
+    !isPortalStaffEmailAddress(verifiedEmail)
   ) {
     return deny(request, 403, "Admin access required.");
   }

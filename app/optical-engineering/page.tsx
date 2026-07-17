@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import {
   Activity,
   Aperture,
@@ -29,55 +29,32 @@ import {
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { artisanControlClass } from "../components/controlStyles";
+import {
+  averageHorizontalDecentration,
+  engineeringEd,
+  equivalentSphere,
+  estimatedEd,
+  estimatedLensVolumeCm3,
+  framePd,
+  horizontalPower,
+  lensWeight,
+  materialProperties,
+  minimumBlank,
+  monocularDecentrationValues,
+  surfaceRadiusMm,
+  surfaceSagMm,
+  thicknessEstimate,
+  totalHorizontalDecentration,
+  totalPd,
+  vertexCompensation,
+  verticalDecentration,
+  verticalPower,
+  vogelBaseCurve,
+  type FrameShape,
+  type OpticalData,
+} from "@/lib/optical/calculations";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
-
-type FrameShape = "Round" | "Rectangle" | "Geometric";
-
-type OpticalData = {
-  sphere: number;
-  cylinder: number;
-  axis: number;
-  add: number;
-  prismHorizontal: number;
-  prismVertical: number;
-  pdRight: number;
-  pdLeft: number;
-  segHeight: number;
-  vertexDistance: number;
-  originalVertex: number;
-  newVertex: number;
-  pantoscopicTilt: number;
-  wrapAngle: number;
-  baseCurve: number;
-  lensIndex: number;
-  lensMaterial: string;
-  centerThickness: number;
-  edgeThickness: number;
-  aSize: number;
-  bSize: number;
-  dbl: number;
-  effectiveDiameter: number;
-  frameShape: FrameShape;
-  frameType: string;
-  readingDepth: number;
-  prismAmount: number;
-  prismDirection: number;
-  safetyMargin: number;
-  measuredCurve: number;
-  lensClockIndex: number;
-  actualIndex: number;
-  orderedSphere: number;
-  orderedCylinder: number;
-  orderedAxis: number;
-  measuredSphere: number;
-  measuredCylinder: number;
-  measuredAxis: number;
-  orderedPrismHorizontal: number;
-  orderedPrismVertical: number;
-  measuredPrismHorizontal: number;
-  measuredPrismVertical: number;
-};
 
 type CalcStatus = {
   ready: boolean;
@@ -119,7 +96,6 @@ const initialData: OpticalData = {
   pdRight: 31,
   pdLeft: 31,
   segHeight: 22,
-  vertexDistance: 12,
   originalVertex: 12,
   newVertex: 14,
   pantoscopicTilt: 8,
@@ -128,11 +104,11 @@ const initialData: OpticalData = {
   lensIndex: 1.6,
   lensMaterial: "1.60",
   centerThickness: 2,
-  edgeThickness: 3,
+  edgeThickness: 1.5,
   aSize: 52,
   bSize: 38,
   dbl: 18,
-  effectiveDiameter: 56,
+  effectiveDiameter: 0,
   frameShape: "Rectangle",
   frameType: "Full Rim",
   readingDepth: 10,
@@ -154,15 +130,6 @@ const initialData: OpticalData = {
   measuredPrismVertical: 0.28,
 };
 
-const materialProperties = [
-  { name: "Plastic", index: 1.5, abbe: 58, specificGravity: 1.32 },
-  { name: "Trivex", index: 1.53, abbe: 43, specificGravity: 1.11 },
-  { name: "Poly", index: 1.59, abbe: 30, specificGravity: 1.2 },
-  { name: "1.60", index: 1.6, abbe: 42, specificGravity: 1.3 },
-  { name: "1.67", index: 1.67, abbe: 32, specificGravity: 1.36 },
-  { name: "1.74", index: 1.74, abbe: 33, specificGravity: 1.47 },
-] as const;
-
 const categoryOrder: CalculatorCategory[] = [
   "Prescription",
   "Lens Design",
@@ -180,7 +147,7 @@ const categoryDescriptions: Record<CalculatorCategory, string> = {
 };
 
 const engineeringDisclaimer =
-  "These calculators, formulas, and results are provided for general informational and workflow-assistance purposes only. They are not a substitute for professional judgment, independent verification, applicable standards, patient-specific evaluation, or laboratory quality-control procedures. Artisan Lab Network does not warrant that the formulas, calculations, assumptions, source information, or user-entered values are complete, accurate, current, or appropriate for any specific order or patient. Users are responsible for verifying all measurements, inputs, calculations, and production decisions before relying on them. Artisan Lab Network disclaims responsibility for errors, omissions, incorrect inputs, formula defects, calculation inaccuracies, or any outcomes resulting from use of these tools.";
+  "Thickness and weight results are estimates, not guaranteed production specifications. The model uses thin-lens surface powers, boxing dimensions, an elliptical finished-lens area, entered minimum center and edge thicknesses, and typical material properties. Final results can vary with lens design, blank availability, surfacing system, traced frame shape, bevel placement, safety minimums, manufacturer requirements, prism, coatings, and laboratory processing. Verify every order against current manufacturer, laboratory, safety, and applicable standards requirements.";
 
 const numericFields: Array<{
   key: keyof OpticalData;
@@ -188,21 +155,24 @@ const numericFields: Array<{
   suffix?: string;
   step?: string;
   decimals?: number;
+  min?: number;
+  max?: number;
+  optional?: boolean;
   group: GroupName;
 }> = [
-  { key: "sphere", label: "Sphere", suffix: "D", step: "0.25", decimals: 2, group: "Prescription" },
-  { key: "cylinder", label: "Cylinder", suffix: "D", step: "0.25", decimals: 2, group: "Prescription" },
-  { key: "axis", label: "Axis", suffix: "°", step: "1", decimals: 0, group: "Prescription" },
-  { key: "add", label: "Add", suffix: "D", step: "0.25", decimals: 2, group: "Prescription" },
-  { key: "prismHorizontal", label: "H Prism", suffix: "Δ", step: "0.25", decimals: 2, group: "Prescription" },
-  { key: "prismVertical", label: "V Prism", suffix: "Δ", step: "0.25", decimals: 2, group: "Prescription" },
-  { key: "pdRight", label: "PD Right", suffix: "mm", step: "0.5", decimals: 2, group: "Prescription" },
-  { key: "pdLeft", label: "PD Left", suffix: "mm", step: "0.5", decimals: 2, group: "Prescription" },
-  { key: "segHeight", label: "Seg Height", suffix: "mm", step: "0.5", decimals: 2, group: "Prescription" },
-  { key: "originalVertex", label: "Orig Vertex", suffix: "mm", step: "0.5", decimals: 2, group: "Prescription" },
-  { key: "newVertex", label: "New Vertex", suffix: "mm", step: "0.5", decimals: 2, group: "Prescription" },
-  { key: "pantoscopicTilt", label: "Panto Tilt", suffix: "°", step: "0.5", decimals: 2, group: "Prescription" },
-  { key: "wrapAngle", label: "Wrap", suffix: "°", step: "0.5", decimals: 2, group: "Prescription" },
+  { key: "sphere", label: "Sphere", suffix: "D", step: "0.25", decimals: 2, min: -30, max: 30, group: "Prescription" },
+  { key: "cylinder", label: "Cylinder", suffix: "D", step: "0.25", decimals: 2, min: -15, max: 15, group: "Prescription" },
+  { key: "axis", label: "Axis", suffix: "°", step: "1", decimals: 0, min: 1, max: 180, group: "Prescription" },
+  { key: "add", label: "Add", suffix: "D", step: "0.25", decimals: 2, min: 0, max: 4, group: "Prescription" },
+  { key: "prismHorizontal", label: "H Prism", suffix: "Δ", step: "0.25", decimals: 2, min: -20, max: 20, group: "Prescription" },
+  { key: "prismVertical", label: "V Prism", suffix: "Δ", step: "0.25", decimals: 2, min: -20, max: 20, group: "Prescription" },
+  { key: "pdRight", label: "PD Right", suffix: "mm", step: "0.5", decimals: 2, min: 20, max: 45, group: "Prescription" },
+  { key: "pdLeft", label: "PD Left", suffix: "mm", step: "0.5", decimals: 2, min: 20, max: 45, group: "Prescription" },
+  { key: "segHeight", label: "Fitting Height", suffix: "mm", step: "0.5", decimals: 2, min: 5, max: 55, group: "Prescription" },
+  { key: "originalVertex", label: "Original Vertex", suffix: "mm", step: "0.5", decimals: 2, min: 0, max: 30, group: "Prescription" },
+  { key: "newVertex", label: "New Vertex", suffix: "mm", step: "0.5", decimals: 2, min: 0, max: 30, group: "Prescription" },
+  { key: "pantoscopicTilt", label: "Panto Tilt", suffix: "°", step: "0.5", decimals: 2, min: -30, max: 30, group: "Prescription" },
+  { key: "wrapAngle", label: "Wrap", suffix: "°", step: "0.5", decimals: 2, min: -30, max: 30, group: "Prescription" },
   { key: "orderedSphere", label: "Ord Sphere", suffix: "D", step: "0.01", decimals: 2, group: "Prescription" },
   { key: "orderedCylinder", label: "Ord Cylinder", suffix: "D", step: "0.01", decimals: 2, group: "Prescription" },
   { key: "orderedAxis", label: "Ord Axis", suffix: "°", step: "1", decimals: 0, group: "Prescription" },
@@ -213,29 +183,29 @@ const numericFields: Array<{
   { key: "orderedPrismVertical", label: "Ord V Prism", suffix: "Δ", step: "0.01", decimals: 2, group: "Prescription" },
   { key: "measuredPrismHorizontal", label: "Meas H Prism", suffix: "Δ", step: "0.01", decimals: 2, group: "Prescription" },
   { key: "measuredPrismVertical", label: "Meas V Prism", suffix: "Δ", step: "0.01", decimals: 2, group: "Prescription" },
-  { key: "baseCurve", label: "Base Curve", suffix: "D", step: "0.25", decimals: 2, group: "Lens" },
-  { key: "lensIndex", label: "Lens Index", step: "0.01", decimals: 2, group: "Lens" },
-  { key: "centerThickness", label: "CT", suffix: "mm", step: "0.1", decimals: 2, group: "Lens" },
-  { key: "edgeThickness", label: "ET", suffix: "mm", step: "0.1", decimals: 2, group: "Lens" },
-  { key: "measuredCurve", label: "Measured Curve", suffix: "D", step: "0.01", decimals: 2, group: "Lens" },
-  { key: "lensClockIndex", label: "Clock Index", step: "0.01", decimals: 2, group: "Lens" },
-  { key: "actualIndex", label: "Actual Index", step: "0.01", decimals: 2, group: "Lens" },
-  { key: "aSize", label: "A", suffix: "mm", step: "0.5", decimals: 2, group: "Frame" },
-  { key: "bSize", label: "B", suffix: "mm", step: "0.5", decimals: 2, group: "Frame" },
-  { key: "dbl", label: "DBL", suffix: "mm", step: "0.5", decimals: 2, group: "Frame" },
-  { key: "effectiveDiameter", label: "Trace ED", suffix: "mm", step: "0.5", decimals: 2, group: "Frame" },
-  { key: "readingDepth", label: "Read Depth", suffix: "mm", step: "0.5", decimals: 2, group: "Frame" },
-  { key: "prismAmount", label: "Prism Amt", suffix: "Δ", step: "0.25", decimals: 2, group: "Frame" },
-  { key: "prismDirection", label: "Prism Dir", suffix: "°", step: "1", decimals: 0, group: "Frame" },
-  { key: "safetyMargin", label: "Safety Margin", suffix: "mm", step: "0.5", decimals: 2, group: "Frame" },
+  { key: "baseCurve", label: "Front Base Curve", suffix: "D", step: "0.25", decimals: 2, min: 0.25, max: 20, group: "Lens" },
+  { key: "lensIndex", label: "Lens Index", step: "0.001", decimals: 3, min: 1.49, max: 1.9, group: "Lens" },
+  { key: "centerThickness", label: "Minimum CT", suffix: "mm", step: "0.1", decimals: 2, min: 0.5, max: 20, group: "Lens" },
+  { key: "edgeThickness", label: "Minimum ET", suffix: "mm", step: "0.1", decimals: 2, min: 0.5, max: 20, group: "Lens" },
+  { key: "measuredCurve", label: "Measured Curve", suffix: "D", step: "0.01", decimals: 2, min: -20, max: 20, group: "Lens" },
+  { key: "lensClockIndex", label: "Clock Index", step: "0.001", decimals: 3, min: 1.4, max: 1.7, group: "Lens" },
+  { key: "actualIndex", label: "Actual Index", step: "0.001", decimals: 3, min: 1.49, max: 1.9, group: "Lens" },
+  { key: "aSize", label: "A", suffix: "mm", step: "0.5", decimals: 2, min: 30, max: 75, group: "Frame" },
+  { key: "bSize", label: "B", suffix: "mm", step: "0.5", decimals: 2, min: 20, max: 65, group: "Frame" },
+  { key: "dbl", label: "DBL", suffix: "mm", step: "0.5", decimals: 2, min: 5, max: 30, group: "Frame" },
+  { key: "effectiveDiameter", label: "ED Override (optional)", suffix: "mm", step: "0.5", decimals: 2, min: 30, max: 100, optional: true, group: "Frame" },
+  { key: "readingDepth", label: "Reading Drop", suffix: "mm", step: "0.5", decimals: 2, min: 0, max: 30, group: "Frame" },
+  { key: "prismAmount", label: "Prism Amount", suffix: "Δ", step: "0.25", decimals: 2, min: 0, max: 20, group: "Frame" },
+  { key: "prismDirection", label: "Prism Direction", suffix: "°", step: "1", decimals: 0, min: 0, max: 360, group: "Frame" },
+  { key: "safetyMargin", label: "Safety Margin", suffix: "mm", step: "0.5", decimals: 2, min: 0, max: 10, group: "Frame" },
 ];
 
 const formulaTiles = [
-  { label: "Thickness", formula: "ET = CT + (r² × |F|) / 2000(n − 1)" },
+  { label: "Thickness", formula: "ET = CT − sfront − sback" },
   { label: "Prentice", formula: "Δ = cF" },
-  { label: "Vertex", formula: "F′ = F / (1 − dF)" },
+  { label: "Vertex", formula: "F₂ = F₁ / (1 − (Δv/n)F₁)" },
   { label: "Equivalent", formula: "SE = S + C / 2" },
-  { label: "Power Cross", formula: "F90 = S + C" },
+  { label: "Power Cross", formula: "Faxis+90 = S + C" },
   { label: "Clock", formula: "Mc × ((na − 1) / (nc − 1))" },
   { label: "Sagitta", formula: "s = r − √(r² − h²)" },
   { label: "Prism Vector", formula: "R = √(H² + V²)" },
@@ -245,8 +215,9 @@ const references: ReferenceCard[] = [
   { title: "Prentice Rule", formula: "Δ = cF", note: "Prism from decentration in centimeters and power in diopters." },
   { title: "Equivalent Sphere", formula: "SE = S + C / 2", note: "Quick average power for lens form and tolerance decisions." },
   { title: "Transposition", formula: "S′ = S + C", note: "Convert plus and minus cylinder notation without changing power." },
-  { title: "Martin Rule", formula: "BC ≈ SE + 6.00", note: "Practical base curve starting point, then round to quarter diopters." },
-  { title: "Vertex Compensation", formula: "F′ = F / (1 − dF)", note: "Use when fitting distance changes materially with higher powers." },
+  { title: "Vogel’s Rule — Plus / Plano", formula: "BC = SE + 6.00 D", note: "SE = sphere + cylinder / 2. Use when SE is zero or plus; round the final suggestion to 0.25 D." },
+  { title: "Vogel’s Rule — Minus", formula: "BC = SE / 2 + 6.00 D", note: "SE = sphere + cylinder / 2. Use when SE is minus; round only the final suggestion to 0.25 D." },
+  { title: "Vertex Compensation", formula: "F₂ = F₁ / (1 − (Δv/n)F₁)", note: "F₁ = original signed power (D); F₂ = compensated signed power (D); Δv = original minus new vertex in meters (positive means closer); n = intervening-medium index (1.000 for air). Moving a plus lens farther reduces ordered plus; moving a minus lens farther increases minus magnitude. Transform both principal meridians." },
   { title: "Lens Clock", formula: "Mc × ((na − 1) / (nc − 1))", note: "Converts measured curve to actual index." },
   { title: "Sagitta", formula: "s = r − √(r² − h²)", note: "Curve depth from radius and half chord." },
   { title: "Power Vector", formula: "M, J0, J45", note: "Useful for crossed cylinder math and prescription comparison." },
@@ -266,11 +237,8 @@ function signed(value: number, digits = 2) {
 }
 
 function inputValue(value: number, decimals = 2) {
-  return Number.isFinite(value) ? value.toFixed(decimals) : "";
-}
-
-function roundToQuarter(value: number) {
-  return Math.round(value * 4) / 4;
+  void decimals;
+  return Number.isFinite(value) && value !== 0 ? String(value) : value === 0 ? "0" : "";
 }
 
 function normalizeAxis(axis: number) {
@@ -283,66 +251,9 @@ function materialLabel(name: string, index: number) {
   return name.match(/^\d/) ? `${name} Index` : `${name} · ${index.toFixed(2)}`;
 }
 
-function totalPd(data: OpticalData) {
-  return data.pdRight + data.pdLeft;
-}
-
-function framePd(data: OpticalData) {
-  return data.aSize + data.dbl;
-}
-
-function monocularGc(data: OpticalData) {
-  return framePd(data) / 2;
-}
-
-function monocularDecentrationValues(data: OpticalData) {
-  const gc = monocularGc(data);
-  return {
-    right: gc - data.pdRight,
-    left: gc - data.pdLeft,
-  };
-}
-
 function decentrationDirection(value: number) {
   if (Math.abs(value) < 0.005) return "Centered";
   return value > 0 ? "In" : "Out";
-}
-
-function horizontalPower(data: OpticalData) {
-  return data.sphere + data.cylinder * Math.sin(radians(data.axis)) ** 2;
-}
-
-function estimatedEd(data: OpticalData) {
-  if (data.frameShape === "Round") return Math.max(data.aSize, data.bSize);
-  if (data.frameShape === "Geometric") return Math.sqrt(data.aSize ** 2 + data.bSize ** 2) * 1.05;
-  return Math.sqrt(data.aSize ** 2 + data.bSize ** 2);
-}
-
-function engineeringEd(data: OpticalData) {
-  return Number.isFinite(data.effectiveDiameter) && data.effectiveDiameter > 0
-    ? data.effectiveDiameter
-    : estimatedEd(data);
-}
-
-function binocularDecentration(data: OpticalData) {
-  return (framePd(data) - totalPd(data)) / 2;
-}
-
-function horizontalRadius(data: OpticalData) {
-  return engineeringEd(data) / 2 + Math.abs(binocularDecentration(data));
-}
-
-function thicknessIncrease(data: OpticalData, index = data.lensIndex) {
-  const power = Math.abs(horizontalPower(data));
-  return (horizontalRadius(data) ** 2 * power) / (2000 * Math.max(index - 1, 0.01));
-}
-
-function edgeEstimate(data: OpticalData, index = data.lensIndex) {
-  return data.centerThickness + thicknessIncrease(data, index);
-}
-
-function equivalentSphere(data: OpticalData) {
-  return data.sphere + data.cylinder / 2;
 }
 
 function transposedRx(data: OpticalData) {
@@ -371,35 +282,12 @@ function vectorToRx(m: number, j0: number, j45: number) {
   };
 }
 
-function tiltCompensation(data: OpticalData) {
-  const tilt = radians(data.pantoscopicTilt);
-  const powerShift = (Math.sin(tilt) ** 2 * data.sphere) / Math.max(data.lensIndex, 1);
-  const cylinderShift = Math.abs(data.sphere) * Math.tan(tilt) ** 2;
+function obliquePowerEffects(power: number, angleDegrees: number, index: number) {
+  const tilt = radians(angleDegrees);
   return {
-    sphere: data.sphere + powerShift,
-    cylinder: data.cylinder - cylinderShift,
-    axis: normalizeAxis(data.axis),
-    powerShift,
-    cylinderShift,
+    powerError: (power * Math.sin(tilt) ** 2) / (2 * index),
+    inducedCylinder: power * Math.tan(tilt) ** 2,
   };
-}
-
-function wrapCompensation(data: OpticalData) {
-  const wrap = radians(data.wrapAngle);
-  const axisShift = Math.sin(wrap) * 8;
-  const powerShift = (Math.tan(wrap) ** 2 * data.sphere) / Math.max(data.lensIndex - 1, 0.4);
-  return {
-    sphere: data.sphere + powerShift,
-    cylinder: data.cylinder - Math.abs(powerShift) / 2,
-    axis: normalizeAxis(data.axis + axisShift),
-    powerShift,
-    axisShift,
-  };
-}
-
-function vertexCompensation(data: OpticalData) {
-  const distance = (data.newVertex - data.originalVertex) / 1000;
-  return data.sphere / (1 - distance * data.sphere);
 }
 
 function prismComponents(amount: number, direction: number) {
@@ -409,24 +297,8 @@ function prismComponents(amount: number, direction: number) {
   };
 }
 
-function minimumBlank(data: OpticalData) {
-  return engineeringEd(data) + Math.abs(framePd(data) - totalPd(data)) + data.safetyMargin;
-}
-
 function lensClockConversion(data: OpticalData) {
   return data.measuredCurve * ((data.actualIndex - 1) / Math.max(data.lensClockIndex - 1, 0.01));
-}
-
-function martinBaseCurve(data: OpticalData) {
-  return roundToQuarter(equivalentSphere(data) + 6);
-}
-
-function lensWeight(data: OpticalData, specificGravity: number) {
-  const diameter = minimumBlank(data);
-  const averageThickness = (data.centerThickness + edgeEstimate(data)) / 2;
-  const area = Math.PI * (diameter / 2) ** 2;
-  const volumeMm3 = area * averageThickness;
-  return (volumeMm3 / 1000) * specificGravity;
 }
 
 function ansiSphereTolerance(power: number) {
@@ -438,15 +310,16 @@ function ansiCylinderTolerance(cylinder: number) {
   if (absCylinder <= 2) return 0.13;
   if (absCylinder <= 4.5) return 0.15;
   if (absCylinder <= 6.5) return 0.18;
-  return 0.25;
+  return absCylinder * 0.04;
 }
 
 function ansiAxisTolerance(cylinder: number) {
   const absCylinder = Math.abs(cylinder);
-  if (absCylinder < 0.25) return 0;
-  if (absCylinder < 0.5) return 7;
-  if (absCylinder < 0.75) return 5;
-  if (absCylinder < 1.5) return 3;
+  if (absCylinder < 0.12) return 0;
+  if (absCylinder <= 0.25) return 14;
+  if (absCylinder <= 0.5) return 7;
+  if (absCylinder <= 0.75) return 5;
+  if (absCylinder <= 1.5) return 3;
   return 2;
 }
 
@@ -485,11 +358,36 @@ function ansiPrismTolerance(data: OpticalData) {
 }
 
 function statusFor(data: OpticalData, required: Array<keyof OpticalData>): CalcStatus {
-  const missing = required.filter((key) => {
+  const invalidKeys = required.filter((key) => {
     const value = data[key];
-    return typeof value === "number" ? !Number.isFinite(value) : !String(value || "").trim();
+    if (typeof value !== "number") return !String(value || "").trim();
+    const field = numericFields.find((entry) => entry.key === key);
+    return !Number.isFinite(value) || (field?.min !== undefined && value < field.min) || (field?.max !== undefined && value > field.max);
   });
-  return { ready: missing.length === 0, missing: missing.map(String) };
+  if (required.includes("segHeight") && Number.isFinite(data.segHeight) && Number.isFinite(data.bSize) && data.segHeight > data.bSize) {
+    invalidKeys.push("segHeight");
+  }
+  const missing = [...new Set(invalidKeys)].map((key) => numericFields.find((field) => field.key === key)?.label ?? String(key));
+  const edField = numericFields.find((field) => field.key === "effectiveDiameter");
+  if (
+    required.includes("bSize") &&
+    data.effectiveDiameter !== 0 &&
+    (!Number.isFinite(data.effectiveDiameter) || data.effectiveDiameter < (edField?.min ?? 0) || data.effectiveDiameter > (edField?.max ?? Infinity))
+  ) {
+    missing.push("ED Override");
+  }
+  if (
+    required.includes("baseCurve") &&
+    required.includes("centerThickness") &&
+    required.includes("edgeThickness") &&
+    !Number.isFinite(thicknessEstimate(data).edge)
+  ) {
+    missing.push("Surface geometry (curve/chord combination)");
+  }
+  return {
+    ready: missing.length === 0,
+    missing: [...new Set(missing)],
+  };
 }
 
 function rxSummary(data: OpticalData) {
@@ -572,15 +470,20 @@ function MaterialComparison({ data }: { data: OpticalData }) {
       </div>
       <div className="mt-4 grid gap-2">
         {materialProperties.map((material) => {
-          const thickness = edgeEstimate(data, material.index);
-          const weight = lensWeight({ ...data, lensIndex: material.index, lensMaterial: material.name }, material.specificGravity);
+          const scenario = { ...data, lensIndex: material.index, lensMaterial: material.name };
+          const thickness = thicknessEstimate(scenario, material.index);
+          const weight = lensWeight(scenario, material.specificGravity, material.index);
+          const selected = data.lensMaterial === material.name;
           return (
             <div
               key={material.name}
-              className="grid gap-2 rounded-lg border border-white/10 bg-white/[0.055] px-4 py-3 sm:grid-cols-[92px_minmax(0,1fr)] xl:grid-cols-[82px_minmax(0,1fr)_70px_64px]"
+              aria-current={selected ? "true" : undefined}
+              className={`grid gap-2 rounded-lg border px-4 py-3 sm:grid-cols-[92px_minmax(0,1fr)] xl:grid-cols-[82px_minmax(0,1fr)_70px_64px] ${
+                selected ? "border-[#d4c09a] bg-[#d4c09a]/15" : "border-white/10 bg-white/[0.055]"
+              }`}
             >
-              <span className="font-semibold">{material.name}</span>
-              <span className="text-white/70">{fmt(thickness)} mm · Abbe {material.abbe}</span>
+              <span className="font-semibold">{material.name}{selected ? " · Selected" : ""}</span>
+              <span className="text-white/70">CT {fmt(thickness.center)} / ET {fmt(thickness.edge)} mm · Abbe {material.abbe}</span>
               <span className="text-white/70 xl:text-right">{fmt(material.specificGravity)} SG</span>
               <span className="font-semibold text-[#d4c09a] xl:text-right">{fmt(weight)} g</span>
             </div>
@@ -609,6 +512,7 @@ function SetupAccordion({
       <button
         type="button"
         onClick={onToggle}
+        aria-expanded={open}
         className="flex w-full flex-col gap-3 p-5 text-left transition hover:bg-[#fbf8f3] sm:flex-row sm:items-center sm:justify-between md:p-6"
       >
         <span>
@@ -647,6 +551,15 @@ function ResultModal({
   onPrint: () => void;
   onShare: () => void;
 }) {
+  useEffect(() => {
+    if (!open) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [open, onClose]);
+
   if (!open) {
     return null;
   }
@@ -654,18 +567,18 @@ function ResultModal({
   return (
     <div className="fixed inset-0 z-[1200] flex items-center justify-center bg-black/55 px-4 py-6 backdrop-blur-sm">
       <button type="button" aria-label="Close results" className="absolute inset-0" onClick={onClose} />
-      <div className="relative z-10 flex max-h-[90vh] w-full max-w-6xl flex-col overflow-hidden rounded-[32px] border border-[#d8c6a8] bg-[#f5f1eb] shadow-[0_28px_90px_rgba(0,0,0,0.34)]">
+      <div role="dialog" aria-modal="true" aria-labelledby="result-modal-title" className="relative z-10 flex max-h-[90vh] w-full max-w-6xl flex-col overflow-hidden rounded-[32px] border border-[#d8c6a8] bg-[#f5f1eb] shadow-[0_28px_90px_rgba(0,0,0,0.34)]">
         <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#eadfce] bg-white/72 px-5 py-5 md:px-6">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">{category}</p>
-            <h2 className="mt-2 text-3xl font-semibold tracking-tight text-[#172a28]">{title}</h2>
+            <h2 id="result-modal-title" className="mt-2 text-3xl font-semibold tracking-tight text-[#172a28]">{title}</h2>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <button onClick={onCopy} className={artisanControlClass({ tone: "secondary", size: "sm" })}><Copy className="h-4 w-4" />Copy</button>
             <button onClick={onPrint} className={artisanControlClass({ tone: "secondary", size: "sm" })}><Printer className="h-4 w-4" />Print</button>
             <button onClick={onShare} className={artisanControlClass({ tone: "secondary", size: "sm" })}><Share2 className="h-4 w-4" />Share</button>
             <button onClick={onPrint} className={artisanControlClass({ tone: "primary", size: "sm" })}><Download className="h-4 w-4" />PDF</button>
-            <button onClick={onClose} className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[#d8c6a8] bg-[#fbf8f3] text-[#172a28] transition hover:bg-[#d4c09a]"><X className="h-4 w-4" /></button>
+            <button autoFocus onClick={onClose} aria-label="Close results" className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[#d8c6a8] bg-[#fbf8f3] text-[#172a28] transition hover:bg-[#d4c09a]"><X className="h-4 w-4" /></button>
           </div>
         </div>
         <div className="overflow-y-auto px-5 py-5 md:px-6 md:py-6">
@@ -677,6 +590,9 @@ function ResultModal({
           <div className={ready ? "" : "mt-5"}>
             <ResultRows results={results} onCopy={(value) => void navigator.clipboard?.writeText(value)} />
           </div>
+          <p className="mt-5 rounded-2xl border border-[#d8c6a8] bg-white/70 p-4 text-sm leading-6 text-[#625b53]">
+            {engineeringDisclaimer}
+          </p>
         </div>
       </div>
     </div>
@@ -746,14 +662,18 @@ const calculators: CalculatorDefinition[] = [
     title: "Lens Thickness",
     description: "Calculates estimated edge thickness.",
     icon: Ruler,
-    required: ["sphere", "cylinder", "axis", "pdRight", "pdLeft", "aSize", "bSize", "dbl", "lensIndex", "centerThickness"],
-    result: (data) => [
-      ["Horizontal Power", `${signed(horizontalPower(data))} D`],
-      ["ED Used", `${fmt(engineeringEd(data))} mm`],
-      ["Decentration", `${fmt(binocularDecentration(data))} mm`],
-      ["Thickness Increase", `${fmt(thicknessIncrease(data))} mm`],
-      ["Estimated ET", `${fmt(edgeEstimate(data))} mm`],
-    ],
+    required: ["sphere", "cylinder", "axis", "pdRight", "pdLeft", "segHeight", "aSize", "bSize", "dbl", "lensIndex", "baseCurve", "centerThickness", "edgeThickness"],
+    result: (data) => {
+      const estimate = thicknessEstimate(data);
+      return [
+        ["Design Meridian", `${signed(estimate.totalPower)} D`],
+        ["Front / Back Surface", `${signed(estimate.frontPower)} / ${signed(estimate.backPower)} D`],
+        ["ED Used", `${fmt(engineeringEd(data))} mm`],
+        ["Vertical Decentration", `${signed(verticalDecentration(data))} mm`],
+        ["Estimated CT", `${fmt(estimate.center)} mm`],
+        ["Estimated ET", `${fmt(estimate.edge)} mm`],
+      ];
+    },
   },
   {
     id: "blank-size",
@@ -761,9 +681,9 @@ const calculators: CalculatorDefinition[] = [
     title: "Blank Size",
     description: "Calculates recommended blank size.",
     icon: Box,
-    required: ["effectiveDiameter", "aSize", "dbl", "pdRight", "pdLeft"],
+    required: ["aSize", "bSize", "dbl", "pdRight", "pdLeft", "segHeight"],
     result: (data) => {
-      const minimum = engineeringEd(data) + Math.abs(framePd(data) - totalPd(data));
+      const minimum = minimumBlank({ ...data, safetyMargin: 0 });
       return [
         ["Frame PD", `${fmt(framePd(data))} mm`],
         ["Patient PD", `${fmt(totalPd(data))} mm`],
@@ -782,7 +702,7 @@ const calculators: CalculatorDefinition[] = [
     result: (data) => [
       ["Frame Shape", data.frameShape],
       ["Estimated ED", `${fmt(estimatedEd(data))} mm`],
-      ["Trace ED", `${fmt(data.effectiveDiameter)} mm`],
+      ["ED Override", data.effectiveDiameter > 0 ? `${fmt(data.effectiveDiameter)} mm` : "Automatic"],
       ["Formula", data.frameShape === "Round" ? "max(A, B)" : data.frameShape === "Geometric" ? "sqrt(A² + B²) × 1.05" : "sqrt(A² + B²)"],
     ],
   },
@@ -792,7 +712,7 @@ const calculators: CalculatorDefinition[] = [
     title: "Minimum Blank",
     description: "Calculates minimum blank.",
     icon: Target,
-    required: ["effectiveDiameter", "aSize", "dbl", "pdRight", "pdLeft", "safetyMargin"],
+    required: ["aSize", "bSize", "dbl", "pdRight", "pdLeft", "segHeight", "safetyMargin"],
     result: (data) => [
       ["ED", `${fmt(engineeringEd(data))} mm`],
       ["Frame PD", `${fmt(framePd(data))} mm`],
@@ -807,15 +727,15 @@ const calculators: CalculatorDefinition[] = [
     title: "Surface Curve",
     description: "Converts curve and sagitta.",
     icon: Layers,
-    required: ["lensIndex", "baseCurve", "aSize"],
+    required: ["lensIndex", "baseCurve", "aSize", "bSize"],
     result: (data) => {
-      const radiusMeters = (data.lensIndex - 1) / Math.max(data.baseCurve, 0.01);
-      const radiusMm = radiusMeters * 1000;
-      const halfChord = data.aSize / 2;
-      const sagitta = radiusMm - Math.sqrt(Math.max(radiusMm ** 2 - halfChord ** 2, 0));
+      const radiusMm = surfaceRadiusMm(data.baseCurve, data.lensIndex);
+      const halfChord = engineeringEd(data) / 2;
+      const sagitta = surfaceSagMm(data.baseCurve, data.lensIndex, halfChord);
       return [
         ["Radius", `${fmt(radiusMm)} mm`],
         ["Surface Power", `${fmt(data.baseCurve)} D`],
+        ["Semi-chord", `${fmt(halfChord)} mm`],
         ["Sagitta", `${fmt(sagitta)} mm`],
       ];
     },
@@ -838,14 +758,19 @@ const calculators: CalculatorDefinition[] = [
     id: "base-curve",
     category: "Lens Design",
     title: "Base Curve",
-    description: "Calculates Martin Rule curve.",
+    description: "Suggests a Vogel’s Rule base curve.",
     icon: Aperture,
     required: ["sphere", "cylinder"],
-    result: (data) => [
-      ["Equivalent Sphere", `${signed(equivalentSphere(data))} D`],
-      ["Martin Rule", `${signed(equivalentSphere(data) + 6)} D`],
-      ["Rounded Curve", `${fmt(martinBaseCurve(data))} D`],
-    ],
+    result: (data) => {
+      const vogel = vogelBaseCurve(data);
+      return [
+        ["Equivalent Sphere", `${signed(equivalentSphere(data))} D`],
+        ["Prescription Type", vogel.prescriptionType],
+        ["Applicable Formula", vogel.formula],
+        ["Unrounded Result", `${signed(vogel.unrounded)} D`],
+        ["Suggested Base Curve", `${fmt(vogel.suggested)} D (0.25 D increment)`],
+      ];
+    },
   },
   {
     id: "lens-weight",
@@ -853,16 +778,19 @@ const calculators: CalculatorDefinition[] = [
     title: "Lens Weight",
     description: "Estimates finished lens weight.",
     icon: Activity,
-    required: ["effectiveDiameter", "aSize", "dbl", "pdRight", "pdLeft", "centerThickness", "edgeThickness"],
+    required: ["sphere", "cylinder", "aSize", "bSize", "dbl", "pdRight", "pdLeft", "segHeight", "baseCurve", "centerThickness", "edgeThickness", "lensIndex"],
     result: (data) => {
       const material =
         materialProperties.find((entry) => entry.name === data.lensMaterial || fmt(entry.index) === fmt(data.lensIndex)) ??
         materialProperties[3];
+      const estimate = thicknessEstimate(data);
+      const volume = estimatedLensVolumeCm3(data);
       const weight = lensWeight(data, material.specificGravity);
       return [
         ["Material", material.name],
-        ["Blank Diameter", `${fmt(minimumBlank(data))} mm`],
-        ["Avg Thickness", `${fmt((data.centerThickness + edgeEstimate(data)) / 2)} mm`],
+        ["Estimated CT / ET", `${fmt(estimate.center)} / ${fmt(estimate.edge)} mm`],
+        ["Estimated Volume", `${fmt(volume)} cm³`],
+        ["Density", `${fmt(material.specificGravity)} g/cm³`],
         ["Estimated Weight", `${fmt(weight)} g`],
       ];
     },
@@ -873,13 +801,13 @@ const calculators: CalculatorDefinition[] = [
     title: "Material Comparison",
     description: "Compares thickness and weight.",
     icon: BookOpen,
-    required: ["effectiveDiameter", "aSize", "dbl", "pdRight", "pdLeft", "centerThickness", "edgeThickness"],
+    required: ["sphere", "cylinder", "aSize", "bSize", "dbl", "pdRight", "pdLeft", "segHeight", "baseCurve", "centerThickness", "edgeThickness"],
     result: (data) =>
       materialProperties.flatMap((material) => {
         const scenario = { ...data, lensIndex: material.index, lensMaterial: material.name };
         return [
-          [`${material.name} Thickness`, `${fmt(edgeEstimate(scenario, material.index))} mm`],
-          [`${material.name} Weight`, `${fmt(lensWeight(scenario, material.specificGravity))} g`],
+          [`${material.name} Estimated ET`, `${fmt(thicknessEstimate(scenario, material.index).edge)} mm`],
+          [`${material.name} Estimated Weight`, `${fmt(lensWeight(scenario, material.specificGravity, material.index))} g`],
         ] as Array<[string, string]>;
       }),
   },
@@ -891,12 +819,14 @@ const calculators: CalculatorDefinition[] = [
     icon: Target,
     required: ["sphere", "aSize", "dbl", "pdRight", "pdLeft"],
     result: (data) => {
-      const prism = Math.abs(binocularDecentration(data) / 10) * Math.abs(data.sphere);
+      const mono = monocularDecentrationValues(data);
+      const power = horizontalPower(data);
       return [
-        ["Decentration", `${fmt(binocularDecentration(data))} mm`],
-        ["Power Used", `${signed(data.sphere)} D`],
-        ["Induced Prism", `${fmt(prism)}Δ`],
-        ["Direction", binocularDecentration(data) >= 0 ? "Inward decentration" : "Outward decentration"],
+        ["Horizontal Meridian Power", `${signed(power)} D`],
+        ["Right Decentration", `${signed(mono.right)} mm`],
+        ["Right Induced Prism", `${fmt(Math.abs(mono.right / 10 * power))}Δ`],
+        ["Left Decentration", `${signed(mono.left)} mm`],
+        ["Left Induced Prism", `${fmt(Math.abs(mono.left / 10 * power))}Δ`],
       ];
     },
   },
@@ -904,16 +834,19 @@ const calculators: CalculatorDefinition[] = [
     id: "vertical-imbalance",
     category: "Prism & Binocular Vision",
     title: "Vertical Imbalance",
-    description: "Calculates reading imbalance.",
+    description: "Estimates near vertical prism for the entered eye.",
     icon: Workflow,
-    required: ["add", "readingDepth", "prismVertical"],
+    required: ["sphere", "cylinder", "axis", "readingDepth", "prismVertical"],
     result: (data) => {
-      const nearImbalance = Math.abs(data.prismVertical) + Math.abs((data.readingDepth / 10) * data.add);
+      const power = verticalPower(data);
+      const induced = (data.readingDepth / 10) * power;
+      const net = data.prismVertical + induced;
       return [
-        ["Existing Vertical Prism", `${fmt(data.prismVertical)}Δ`],
-        ["Reading Contribution", `${fmt((data.readingDepth / 10) * data.add)}Δ`],
-        ["Net Imbalance", `${fmt(nearImbalance)}Δ`],
-        ["Recommendation", nearImbalance >= 1.5 ? "Review slab-off" : "Within typical range"],
+        ["Vertical Meridian Power", `${signed(power)} D`],
+        ["Reading Drop", `${fmt(data.readingDepth)} mm`],
+        ["Induced Near Prism", `${signed(induced)}Δ`],
+        ["Entered-eye Net", `${signed(net)}Δ`],
+        ["Binocular Imbalance", "Fellow-eye Rx and geometry required"],
       ];
     },
   },
@@ -974,15 +907,15 @@ const calculators: CalculatorDefinition[] = [
     id: "slab-off",
     category: "Prism & Binocular Vision",
     title: "Slab-Off",
-    description: "Flags slab-off need.",
+    description: "Screens entered-eye near prism; requires fellow-eye comparison.",
     icon: Clipboard,
-    required: ["add", "readingDepth", "prismVertical"],
+    required: ["sphere", "cylinder", "axis", "readingDepth", "prismVertical"],
     result: (data) => {
-      const imbalance = Math.abs(data.prismVertical) + Math.abs((data.readingDepth / 10) * data.add);
+      const enteredEyeNearPrism = data.prismVertical + (data.readingDepth / 10) * verticalPower(data);
       return [
-        ["Vertical Imbalance", `${fmt(imbalance)}Δ`],
-        ["Threshold", "1.50Δ"],
-        ["Recommendation", imbalance >= 1.5 ? "Consider slab-off" : "Usually not indicated"],
+        ["Entered-eye Near Prism", `${signed(enteredEyeNearPrism)}Δ`],
+        ["Binocular Imbalance", "Not calculated from a single-eye Rx"],
+        ["Recommendation", "Compare the fellow eye before a slab-off decision"],
       ];
     },
   },
@@ -997,6 +930,8 @@ const calculators: CalculatorDefinition[] = [
       const mono = monocularDecentrationValues(data);
       return [
         ["Frame PD", `${fmt(framePd(data))} mm`],
+        ["Total Horizontal Decentration", `${signed(totalHorizontalDecentration(data))} mm`],
+        ["Average per Lens", `${signed(averageHorizontalDecentration(data))} mm`],
         ["Right Decentration", `${fmt(Math.abs(mono.right))} mm`],
         ["Left Decentration", `${fmt(Math.abs(mono.left))} mm`],
         ["Direction", `${decentrationDirection(mono.right)} / ${decentrationDirection(mono.left)}`],
@@ -1037,16 +972,17 @@ const calculators: CalculatorDefinition[] = [
     id: "wrap",
     category: "Frame Geometry",
     title: "Wrap",
-    description: "Calculates wrap compensation.",
+    description: "Screens oblique power effects from face-form tilt.",
     icon: Aperture,
     required: ["sphere", "cylinder", "axis", "wrapAngle", "lensIndex"],
     result: (data) => {
-      const adjusted = wrapCompensation(data);
+      const effects = obliquePowerEffects(equivalentSphere(data), data.wrapAngle, data.lensIndex);
       return [
-        ["Comp Sphere", `${signed(adjusted.sphere)} D`],
-        ["Comp Cylinder", `${signed(adjusted.cylinder)} D`],
-        ["Comp Axis", `${fmt(adjusted.axis, 0)}°`],
-        ["Axis Shift", `${signed(adjusted.axisShift)}°`],
+        ["Spherical Equivalent", `${signed(equivalentSphere(data))} D`],
+        ["Estimated Power Error", `${signed(effects.powerError)} D`],
+        ["Estimated Induced Cylinder", `${signed(effects.inducedCylinder)} D @ 90°`],
+        ["Approximation", "ΔFs ≈ F sin²θ / (2n); Fc ≈ F tan²θ"],
+        ["Use", "Screening only; use manufacturer position-of-wear compensation"],
       ];
     },
   },
@@ -1054,16 +990,17 @@ const calculators: CalculatorDefinition[] = [
     id: "pantoscopic-tilt",
     category: "Frame Geometry",
     title: "Pantoscopic Tilt",
-    description: "Calculates tilt compensation.",
+    description: "Screens oblique power effects from pantoscopic tilt.",
     icon: Compass,
     required: ["sphere", "cylinder", "axis", "pantoscopicTilt", "lensIndex"],
     result: (data) => {
-      const adjusted = tiltCompensation(data);
+      const effects = obliquePowerEffects(equivalentSphere(data), data.pantoscopicTilt, data.lensIndex);
       return [
-        ["Comp Sphere", `${signed(adjusted.sphere)} D`],
-        ["Comp Cylinder", `${signed(adjusted.cylinder)} D`],
-        ["Comp Axis", `${fmt(adjusted.axis, 0)}°`],
-        ["Sphere Shift", `${signed(adjusted.powerShift)} D`],
+        ["Spherical Equivalent", `${signed(equivalentSphere(data))} D`],
+        ["Estimated Power Error", `${signed(effects.powerError)} D`],
+        ["Estimated Induced Cylinder", `${signed(effects.inducedCylinder)} D @ 180°`],
+        ["Approximation", "ΔFs ≈ F sin²θ / (2n); Fc ≈ F tan²θ"],
+        ["Use", "Screening only; use manufacturer position-of-wear compensation"],
       ];
     },
   },
@@ -1073,14 +1010,17 @@ const calculators: CalculatorDefinition[] = [
     title: "Vertex Distance",
     description: "Calculates vertex compensation.",
     icon: Eye,
-    required: ["sphere", "originalVertex", "newVertex"],
+    required: ["sphere", "cylinder", "axis", "originalVertex", "newVertex"],
     result: (data) => {
       const compensated = vertexCompensation(data);
       return [
-        ["Original Power", `${signed(data.sphere)} D`],
+        ["Original Rx", `${signed(data.sphere)} ${signed(data.cylinder)} × ${fmt(data.axis, 0)}`],
         ["Original Vertex", `${fmt(data.originalVertex)} mm`],
         ["New Vertex", `${fmt(data.newVertex)} mm`],
-        ["Comp Power", `${signed(compensated)} D`],
+        ["Δv / n", `${signed(compensated.reducedDistanceMeters, 4)} m (n = ${fmt(compensated.mediumIndex, 3)})`],
+        ["Compensated Rx", `${signed(compensated.sphere)} ${signed(compensated.cylinder)} × ${fmt(compensated.axis, 0)}`],
+        ["Formula", "F₂ = F₁ / (1 − (Δv/n)F₁)"],
+        ["Variables", "F₁ original D; F₂ compensated D; Δv original − new in m; n = 1.000 air"],
       ];
     },
   },
@@ -1088,7 +1028,7 @@ const calculators: CalculatorDefinition[] = [
     id: "ansi-rx",
     category: "Quality Control",
     title: "ANSI Rx Tolerance",
-    description: "Checks measured Rx.",
+    description: "Screens measured Rx against common ANSI Z80.1 limits; verify the current standard.",
     icon: CheckCircle2,
     required: ["orderedSphere", "orderedCylinder", "orderedAxis", "measuredSphere", "measuredCylinder", "measuredAxis"],
     result: (data) => {
@@ -1106,7 +1046,7 @@ const calculators: CalculatorDefinition[] = [
     id: "ansi-prism",
     category: "Quality Control",
     title: "ANSI Prism Tolerance",
-    description: "Checks prism tolerance.",
+    description: "Screens prism deltas against common ANSI Z80.1 limits; verify the current standard.",
     icon: FileText,
     required: ["orderedPrismHorizontal", "orderedPrismVertical", "measuredPrismHorizontal", "measuredPrismVertical"],
     result: (data) => {
@@ -1215,7 +1155,8 @@ export default function OpticalEngineeringPage() {
   const needsMaterialPresets = activeFieldKeys.has("lensIndex") || activeFieldKeys.has("actualIndex");
 
   const updateNumber = (key: keyof OpticalData, value: string) => {
-    setData((current) => ({ ...current, [key]: value === "" ? Number.NaN : Number(value) }));
+    const field = numericFields.find((entry) => entry.key === key);
+    setData((current) => ({ ...current, [key]: value === "" ? (field?.optional ? 0 : Number.NaN) : Number(value) }));
   };
 
   const selectMaterial = (name: string, index: number) => {
@@ -1296,26 +1237,42 @@ export default function OpticalEngineeringPage() {
   const numericInputs = (group: GroupName) => (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
       {numericFields
-        .filter((field) => field.group === group && activeFieldKeys.has(field.key))
-        .map((field) => (
-          <label key={field.key} className="grid gap-1">
-            <span className="text-xs font-semibold text-[#625b53]">{field.label}</span>
-            <span className="grid min-w-[150px] grid-cols-[minmax(76px,1fr)_56px] overflow-hidden rounded-lg border border-[#eadfce] bg-[#fbf8f3] focus-within:border-[#c9b28b] focus-within:ring-2 focus-within:ring-[#d4c09a]/35">
-              <input
-                type="number"
-                step={field.step}
-                value={inputValue(data[field.key] as number, field.decimals ?? 2)}
-                onChange={(event) => updateNumber(field.key, event.target.value)}
-                className="min-h-12 min-w-0 bg-transparent px-4 text-base font-semibold text-[#172a28] outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-              />
-              {field.suffix ? (
-                <span className="grid place-items-center border-l border-[#eadfce] px-2 text-sm font-semibold text-[#8a7654]">
-                  {field.suffix}
-                </span>
-              ) : null}
-            </span>
-          </label>
-        ))}
+        .filter((field) => field.group === group && (activeFieldKeys.has(field.key) || (group === "Frame" && ["aSize", "bSize", "dbl", "effectiveDiameter"].includes(field.key))))
+        .map((field) => {
+          const value = data[field.key] as number;
+          const outOfRange = !Number.isFinite(value) || (field.min !== undefined && value < field.min) || (field.max !== undefined && value > field.max);
+          const invalid = (field.optional ? value !== 0 && outOfRange : outOfRange) || (field.key === "segHeight" && value > data.bSize);
+          const inputId = `optical-${String(field.key)}`;
+          const errorId = `${inputId}-error`;
+          return (
+            <label key={field.key} htmlFor={inputId} className="grid gap-1">
+              <span className="text-xs font-semibold text-[#625b53]">{field.label}</span>
+              <span className={`grid min-w-0 grid-cols-[minmax(76px,1fr)_56px] overflow-hidden rounded-lg border bg-[#fbf8f3] focus-within:ring-2 ${invalid ? "border-[#b7502c] focus-within:ring-[#b7502c]/25" : "border-[#eadfce] focus-within:border-[#c9b28b] focus-within:ring-[#d4c09a]/35"}`}>
+                <input
+                  id={inputId}
+                  name={String(field.key)}
+                  type="number"
+                  step={field.step}
+                  min={field.min}
+                  max={field.max}
+                  required={!field.optional}
+                  inputMode="decimal"
+                  aria-invalid={invalid}
+                  aria-describedby={invalid ? errorId : undefined}
+                  value={field.optional && value === 0 ? "" : inputValue(value, field.decimals ?? 2)}
+                  onChange={(event) => updateNumber(field.key, event.target.value)}
+                  className="min-h-12 min-w-0 bg-transparent px-4 text-base font-semibold text-[#172a28] outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                />
+                {field.suffix ? (
+                  <span className="grid place-items-center border-l border-[#eadfce] px-2 text-sm font-semibold text-[#8a7654]">
+                    {field.suffix}
+                  </span>
+                ) : null}
+              </span>
+              {invalid ? <span id={errorId} role="alert" className="text-xs font-semibold text-[#9b4a22]">Enter {field.min}–{field.max}{field.suffix ? ` ${field.suffix}` : ""}{field.key === "segHeight" ? " and no more than B." : "."}</span> : null}
+            </label>
+          );
+        })}
     </div>
   );
 
@@ -1351,7 +1308,7 @@ export default function OpticalEngineeringPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#d4c09a]">Artisan Lab Network</p>
             <h1 className="mt-5 text-4xl font-semibold tracking-tight md:text-6xl">Optical Engineering Center</h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-white/72 md:text-2xl md:leading-10">
-              Laboratory-grade optical calculators, reference formulas, and tolerance tools.
+              Optical calculation, estimation, reference, and tolerance-screening tools.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <a href="#workspace" className={artisanControlClass({ tone: "accent", size: "lg" })}>
@@ -1362,7 +1319,7 @@ export default function OpticalEngineeringPage() {
               </a>
             </div>
             <div className="mt-10 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-              {[`${calculatorCount} Calculators`, "Engineering Reference", "Real-Time Results", "Laboratory Grade"].map((stat) => (
+              {[`${calculatorCount} Calculators`, "Engineering Reference", "Real-Time Results", "Estimate Disclosures"].map((stat) => (
                 <div key={stat} className="rounded-lg border border-white/10 bg-white/[0.055] p-4 backdrop-blur">
                   <p className="text-sm font-semibold text-white">{stat}</p>
                 </div>
@@ -1417,9 +1374,14 @@ export default function OpticalEngineeringPage() {
                   <h2 className="text-3xl font-semibold tracking-tight text-[#172a28]">{activeCalculator.title}</h2>
                   <p className="mt-2 max-w-3xl text-sm font-semibold text-[#625b53]">{activeCalculator.description}</p>
                 </div>
-                <button onClick={runCalculation} className={artisanControlClass({ tone: "primary" })}>
-                  Calculate
-                </button>
+                <div className="flex flex-wrap gap-2">
+                  <button type="button" onClick={() => setData(initialData)} className={artisanControlClass({ tone: "secondary" })}>
+                    Reset defaults
+                  </button>
+                  <button type="button" onClick={runCalculation} className={artisanControlClass({ tone: "primary" })}>
+                    Calculate
+                  </button>
+                </div>
               </div>
               {!activeStatus.ready ? (
                 <div className="mt-5 rounded-2xl border border-[#e7bea5] bg-[#fff1e8] p-4 text-sm font-semibold text-[#8a3f21]">
@@ -1496,7 +1458,14 @@ export default function OpticalEngineeringPage() {
                       ) : null}
                     </div>
                   ) : null}
-                  {requiredGroups.Frame ? <div className={needsFrameShape || needsFrameType ? "mt-5" : ""}>{numericInputs("Frame")}</div> : null}
+                  {requiredGroups.Frame ? (
+                    <div className={needsFrameShape || needsFrameType ? "mt-5" : ""}>
+                      {numericInputs("Frame")}
+                      <p className="mt-4 rounded-lg border border-[#eadfce] bg-[#fbf8f3] px-4 py-3 text-sm font-semibold text-[#625b53]" aria-live="polite">
+                        Calculated ED: {fmt(estimatedEd(data))} mm{data.effectiveDiameter > 0 ? ` · Override used: ${fmt(data.effectiveDiameter)} mm` : " · Automatic"}
+                      </p>
+                    </div>
+                  ) : null}
                 </SetupAccordion>
               ) : null}
             </div>

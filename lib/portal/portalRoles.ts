@@ -1,26 +1,17 @@
 import "server-only";
 
 import type { DashboardV1AdminRow } from "@/lib/portal/adminDashboardV1";
-import { isPortalAdminEmailAddress, normalizePortalEmail } from "@/lib/portal/adminAccess";
+import {
+  BUILT_IN_PORTAL_SALES_REPS,
+  isPortalAdminEmailAddress,
+  normalizePortalEmail,
+} from "@/lib/portal/adminAccess";
 import { normalizeSalesRepCode } from "@/lib/portal/salesReps";
 
 export type PortalStaffRole =
   | { kind: "admin"; email: string; label: string }
   | { kind: "sales-rep"; email: string; label: string; repCode: string }
   | { kind: "unassigned"; email: string; label: string };
-
-const SALES_REPS = new Map([
-  [
-    "heather.branderhorst@pacificartisanlabs.com",
-    { label: "Heather Branderhorst", repCode: "HB" },
-  ],
-  [
-    "heather@pacificartisanlabs.com",
-    { label: "Heather Branderhorst", repCode: "HB" },
-  ],
-  ["jopiol@live.com", { label: "Josh Opiol", repCode: "OP" }],
-  ["jropiol@live.com", { label: "Josh Opiol", repCode: "OP" }],
-]);
 
 const BUILT_IN_ADMIN_EMAILS = new Set([
   "jimdayok@me.com",
@@ -39,7 +30,7 @@ function configuredAdminEmails() {
 export function getPortalStaffRole(email: string): PortalStaffRole {
   const normalizedEmail = normalizePortalEmail(email);
 
-  const rep = SALES_REPS.get(normalizedEmail);
+  const rep = BUILT_IN_PORTAL_SALES_REPS.get(normalizedEmail);
   if (rep) {
     return {
       kind: "sales-rep",

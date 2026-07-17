@@ -2,13 +2,29 @@ export function normalizePortalEmail(email: unknown) {
   return String(email ?? "").trim().toLowerCase();
 }
 
+export type BuiltInPortalSalesRep = {
+  label: string;
+  repCode: string;
+};
+
+export const BUILT_IN_PORTAL_SALES_REPS = new Map<
+  string,
+  BuiltInPortalSalesRep
+>([
+  [
+    "heather.branderhorst@pacificartisanlabs.com",
+    { label: "Heather Branderhorst", repCode: "HB" },
+  ],
+  [
+    "heather@pacificartisanlabs.com",
+    { label: "Heather Branderhorst", repCode: "HB" },
+  ],
+  ["jropiol@live.com", { label: "Josh Opiol", repCode: "OP" }],
+]);
+
 const BUILT_IN_ADMIN_EMAILS = new Set([
   "jimdayok@me.com",
   "jim.day@artisanlabnetwork.com",
-  "heather@pacificartisanlabs.com",
-  "heather.branderhorst@pacificartisanlabs.com",
-  "jopiol@live.com",
-  "jropiol@live.com",
 ]);
 
 const DEFAULT_ADMIN_EMAIL_DOMAINS = [
@@ -21,6 +37,11 @@ const DEFAULT_ADMIN_EMAIL_DOMAINS = [
 export function isPortalAdminEmailAddress(email: string) {
   const normalizedEmail = normalizePortalEmail(email);
   if (!normalizedEmail) return false;
+
+  // Explicit sales-rep assignments always win over domain and environment
+  // admin allowlists. This prevents a rep at an employee domain from being
+  // elevated to unrestricted administrator access elsewhere in the portal.
+  if (BUILT_IN_PORTAL_SALES_REPS.has(normalizedEmail)) return false;
 
   const configuredDomains = new Set(
     (
@@ -45,5 +66,14 @@ export function isPortalAdminEmailAddress(email: string) {
       normalizedEmail.endsWith(`@${domain}`)
     ) ||
     configuredEmails.has(normalizedEmail)
+  );
+}
+
+export function isPortalStaffEmailAddress(email: string) {
+  const normalizedEmail = normalizePortalEmail(email);
+
+  return (
+    BUILT_IN_PORTAL_SALES_REPS.has(normalizedEmail) ||
+    isPortalAdminEmailAddress(normalizedEmail)
   );
 }

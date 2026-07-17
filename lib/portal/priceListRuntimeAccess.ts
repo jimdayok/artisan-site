@@ -1,4 +1,5 @@
 import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
+import { isPortalAdminEmailAddress } from "@/lib/portal/adminAccess";
 import { normalizeAssignedPriceListCodes } from "@/lib/portal/assignedPriceLists";
 import { getPortalCustomerTypeInfo } from "@/lib/portal/customerTypes";
 import { portalDashboardV1AccessIndex } from "@/lib/portal/dashboardV1AccessIndex";
@@ -84,39 +85,6 @@ function normalizeAccountNumber(value: unknown) {
     .replace(/^0+(?=\d)/, "");
 }
 
-function isPortalAdminEmail(email: string) {
-  const normalizedEmail = normalizeEmail(email);
-  if (!normalizedEmail) return false;
-
-  const configuredDomains = new Set(
-    (
-      process.env.PORTAL_ADMIN_EMAIL_DOMAINS ||
-      process.env.PORTAL_ADMIN_EMAIL_DOMAIN ||
-      [
-        "artisanlabnetwork.com",
-        "pacificartisanlabs.com",
-        "pikeartisanlabs.com",
-        "peakartisanlabs.com",
-      ].join(",")
-    )
-      .split(",")
-      .map((domain) => domain.trim().replace(/^@/, "").toLowerCase())
-      .filter(Boolean)
-  );
-  const configuredEmails = new Set(
-    (process.env.PORTAL_ADMIN_EMAILS ?? "")
-      .split(",")
-      .map(normalizeEmail)
-      .filter(Boolean)
-  );
-
-  return (
-    [...configuredDomains].some((domain) =>
-      normalizedEmail.endsWith(`@${domain}`)
-    ) || configuredEmails.has(normalizedEmail)
-  );
-}
-
 function accessAccounts() {
   return portalDashboardV1AccessIndex.accountsIndex as AccountIndexRow[];
 }
@@ -193,7 +161,7 @@ export async function getAuthorizedRuntimePriceListFromHeaders(
     return { status: "unauthenticated", authenticatedEmail: "", priceList };
   }
 
-  if (priceList && isPortalAdminEmail(authenticatedEmail)) {
+  if (priceList && isPortalAdminEmailAddress(authenticatedEmail)) {
     const previewAccountNumber = options?.previewAccountNumber?.trim();
     const previewAccount = previewAccountNumber
       ? findAccountByIdentifier(previewAccountNumber)

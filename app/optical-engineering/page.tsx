@@ -41,6 +41,7 @@ import {
   materialProperties,
   minimumBlank,
   monocularDecentrationValues,
+  scenarioForMaterial,
   surfaceRadiusMm,
   surfaceSagMm,
   thicknessEstimate,
@@ -147,7 +148,7 @@ const categoryDescriptions: Record<CalculatorCategory, string> = {
 };
 
 const engineeringDisclaimer =
-  "Thickness and weight results are estimates, not guaranteed production specifications. The model uses thin-lens surface powers, boxing dimensions, an elliptical finished-lens area, entered minimum center and edge thicknesses, and typical material properties. Final results can vary with lens design, blank availability, surfacing system, traced frame shape, bevel placement, safety minimums, manufacturer requirements, prism, coatings, and laboratory processing. Verify every order against current manufacturer, laboratory, safety, and applicable standards requirements.";
+  "Thickness and weight results are estimates, not guaranteed production specifications. The model uses thin-lens surface powers, boxing dimensions, an elliptical finished-lens area, entered minimum center and edge thicknesses, and typical material properties. Tokai 1.70 and 1.76 presets use the AS thickness-chart constraints of 1.0 mm minimum center thickness and 0.7 mm minimum edge thickness. Final results can vary with lens design, blank availability, surfacing system, traced frame shape, bevel placement, safety minimums, manufacturer requirements, prism, coatings, and laboratory processing. Verify every order against current manufacturer, laboratory, safety, and applicable standards requirements.";
 
 const numericFields: Array<{
   key: keyof OpticalData;
@@ -470,7 +471,7 @@ function MaterialComparison({ data }: { data: OpticalData }) {
       </div>
       <div className="mt-4 grid gap-2">
         {materialProperties.map((material) => {
-          const scenario = { ...data, lensIndex: material.index, lensMaterial: material.name };
+          const scenario = scenarioForMaterial(data, material);
           const thickness = thicknessEstimate(scenario, material.index);
           const weight = lensWeight(scenario, material.specificGravity, material.index);
           const selected = data.lensMaterial === material.name;
@@ -483,7 +484,10 @@ function MaterialComparison({ data }: { data: OpticalData }) {
               }`}
             >
               <span className="font-semibold">{material.name}{selected ? " · Selected" : ""}</span>
-              <span className="text-white/70">CT {fmt(thickness.center)} / ET {fmt(thickness.edge)} mm · Abbe {material.abbe}</span>
+              <span className="text-white/70">
+                CT {fmt(thickness.center)} / ET {fmt(thickness.edge)} mm · Abbe {material.abbe}
+                {material.documentedMinimums ? " · Tokai chart basis" : ""}
+              </span>
               <span className="text-white/70 xl:text-right">{fmt(material.specificGravity)} SG</span>
               <span className="font-semibold text-[#d4c09a] xl:text-right">{fmt(weight)} g</span>
             </div>
@@ -804,7 +808,7 @@ const calculators: CalculatorDefinition[] = [
     required: ["sphere", "cylinder", "aSize", "bSize", "dbl", "pdRight", "pdLeft", "segHeight", "baseCurve", "centerThickness", "edgeThickness"],
     result: (data) =>
       materialProperties.flatMap((material) => {
-        const scenario = { ...data, lensIndex: material.index, lensMaterial: material.name };
+        const scenario = scenarioForMaterial(data, material);
         return [
           [`${material.name} Estimated ET`, `${fmt(thicknessEstimate(scenario, material.index).edge)} mm`],
           [`${material.name} Estimated Weight`, `${fmt(lensWeight(scenario, material.specificGravity, material.index))} g`],
@@ -1134,7 +1138,7 @@ export default function OpticalEngineeringPage() {
   const [data, setData] = useState(initialData);
   const [activeCalculatorId, setActiveCalculatorId] = useState("lens-thickness");
   const [openPrescription, setOpenPrescription] = useState(true);
-  const [openLens, setOpenLens] = useState(false);
+  const [openLens, setOpenLens] = useState(true);
   const [openFrame, setOpenFrame] = useState(false);
   const [resultsOpen, setResultsOpen] = useState(false);
 
@@ -1152,15 +1156,17 @@ export default function OpticalEngineeringPage() {
   };
   const needsFrameShape = activeFieldKeys.has("frameShape");
   const needsFrameType = activeFieldKeys.has("frameType");
-  const needsMaterialPresets = activeFieldKeys.has("lensIndex") || activeFieldKeys.has("actualIndex");
 
   const updateNumber = (key: keyof OpticalData, value: string) => {
     const field = numericFields.find((entry) => entry.key === key);
     setData((current) => ({ ...current, [key]: value === "" ? (field?.optional ? 0 : Number.NaN) : Number(value) }));
   };
 
-  const selectMaterial = (name: string, index: number) => {
-    setData((current) => ({ ...current, lensMaterial: name, lensIndex: index, actualIndex: index }));
+  const selectMaterial = (material: (typeof materialProperties)[number]) => {
+    setData((current) => ({
+      ...scenarioForMaterial(current, material),
+      actualIndex: material.index,
+    }));
   };
 
   const copyText = async (text: string) => {
@@ -1212,7 +1218,7 @@ export default function OpticalEngineeringPage() {
 
     const keys = new Set(calculator.required);
     setOpenPrescription(numericFields.some((field) => field.group === "Prescription" && keys.has(field.key)));
-    setOpenLens(numericFields.some((field) => field.group === "Lens" && keys.has(field.key)));
+    setOpenLens(true);
     setOpenFrame(
       numericFields.some((field) => field.group === "Frame" && keys.has(field.key)) || keys.has("frameShape") || keys.has("frameType"),
     );
@@ -1229,7 +1235,7 @@ export default function OpticalEngineeringPage() {
     }
 
     setOpenPrescription(requiredGroups.Prescription);
-    setOpenLens(requiredGroups.Lens);
+    setOpenLens(true);
     setOpenFrame(requiredGroups.Frame || needsFrameShape || needsFrameType);
     document.getElementById("calculator-setup")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
@@ -1400,30 +1406,30 @@ export default function OpticalEngineeringPage() {
               </SetupAccordion>
             ) : null}
             <div className="grid gap-5 lg:grid-cols-2">
-              {requiredGroups.Lens ? (
-                <SetupAccordion title="Lens" summary={lensSummary(data)} open={openLens} onToggle={() => setOpenLens((value) => !value)}>
-                  {needsMaterialPresets ? (
-                    <div className="mb-5 grid gap-2 sm:grid-cols-2">
-                      {materialProperties.map((material) => {
-                        const selected = data.lensMaterial === material.name;
-                        return (
-                          <button
-                            key={material.name}
-                            type="button"
-                            onClick={() => selectMaterial(material.name, material.index)}
-                            className={`rounded-lg border p-3 text-left text-sm font-semibold transition hover:-translate-y-0.5 ${
-                              selected ? "border-[#172a28] bg-[#172a28] text-white" : "border-[#eadfce] bg-[#fbf8f3] text-[#172a28]"
-                            }`}
-                          >
-                            {materialLabel(material.name, material.index)}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  ) : null}
-                  {numericInputs("Lens")}
-                </SetupAccordion>
-              ) : null}
+              <SetupAccordion title="Lens" summary={lensSummary(data)} open={openLens} onToggle={() => setOpenLens((value) => !value)}>
+                <div className={requiredGroups.Lens ? "mb-5 grid gap-2 sm:grid-cols-2" : "grid gap-2 sm:grid-cols-2"}>
+                  {materialProperties.map((material) => {
+                    const selected = data.lensMaterial === material.name;
+                    return (
+                      <button
+                        key={material.name}
+                        type="button"
+                        onClick={() => selectMaterial(material)}
+                        className={`rounded-lg border p-3 text-left text-sm font-semibold transition hover:-translate-y-0.5 ${
+                          selected ? "border-[#172a28] bg-[#172a28] text-white" : "border-[#eadfce] bg-[#fbf8f3] text-[#172a28]"
+                        }`}
+                      >
+                        {materialLabel(material.name, material.index)}
+                      </button>
+                    );
+                  })}
+                </div>
+                {requiredGroups.Lens ? numericInputs("Lens") : (
+                  <p className="mt-4 rounded-lg border border-[#eadfce] bg-[#fbf8f3] px-4 py-3 text-sm leading-6 text-[#625b53]">
+                    The selected lens stays with the scenario. This calculator does not use lens material in its formula.
+                  </p>
+                )}
+              </SetupAccordion>
               {requiredGroups.Frame || needsFrameShape || needsFrameType ? (
                 <SetupAccordion title="Frame" summary={frameSummary(data)} open={openFrame} onToggle={() => setOpenFrame((value) => !value)}>
                   {needsFrameShape || needsFrameType ? (

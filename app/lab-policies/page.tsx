@@ -265,7 +265,7 @@ const policySections: PolicySection[] = [
       "Diamond Defence (DDE): 2 years, up to 2 warranty remakes.",
     ],
     doesNotQualify: [
-      "Chemiclips do not include a scratch warranty.",
+      "Chem Clips do not include a scratch warranty.",
       "Coverage outside the stated time and usage limits may need review before credit is confirmed.",
     ],
     nextSteps: [
@@ -273,7 +273,7 @@ const policySections: PolicySection[] = [
       "Submit the warranty request with the order details and reason.",
       "Contact customer service if the coating type is unclear.",
     ],
-    keywords: ["scratch", "coating", "factory scratch", "diamond defence", "diamond defense", "chemiclips"],
+    keywords: ["scratch", "coating", "factory scratch", "diamond defence", "diamond defense", "chem clips"],
   },
   {
     id: "vsp-unity",
@@ -451,27 +451,27 @@ const policySections: PolicySection[] = [
     keywords: ["manufacturer", "vendor", "credit", "returns", "neurolens", "refund"],
   },
   {
-    id: "chemiclips-retrofit",
+    id: "chem-clips-retrofit",
     navLabel: "Specialty",
     icon: "star",
-    title: "Chemiclips and Retrofit Magnets",
-    summary: "Chemiclips and retrofit magnet work has specific scratch warranty and charge rules.",
+    title: "Chem Clips and Retrofit Magnets",
+    summary: "Chem Clips and retrofit magnet work has specific scratch warranty and charge rules.",
     whatThisMeans:
       "Clip and retrofit work can involve specialty handling, so expectations should be confirmed before the order is submitted.",
     qualifies: [
       "Retrofit magnets are charged at $40 when applicable.",
-      "Chemiclips can be processed under the applicable Chemistrie workflow.",
+      "Chem Clips can be processed under the applicable Chemistrie workflow.",
     ],
     doesNotQualify: [
-      "Chemiclips do not include a scratch warranty.",
-      "There are no multiple-pair discounts available with Chemistrie clips.",
+      "Chem Clips do not include a scratch warranty.",
+      "There are no multiple-pair discounts available with Chem Clips.",
     ],
     nextSteps: [
       "Confirm whether retrofit magnets are needed before quoting.",
-      "Set expectations that Chemiclips do not carry scratch warranty coverage.",
-      "Contact customer service for questions about Chemistrie clip work or retrofit requirements.",
+      "Set expectations that Chem Clips do not carry scratch warranty coverage.",
+      "Contact customer service for questions about Chem Clips or retrofit requirements.",
     ],
-    keywords: ["chemistrie", "chemiclips", "retrofit magnets", "scratch warranty", "$40"],
+    keywords: ["chemistrie", "chem clips", "retrofit magnets", "scratch warranty", "$40"],
   },
 ];
 

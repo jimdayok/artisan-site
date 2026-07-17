@@ -1064,7 +1064,7 @@ async function buildPriceListPdf({
         bullets: [
           "Additional pairs ordered within 30 days of the original invoice date are eligible for a 50% discount on the lesser-priced pair.",
           "Each qualifying pair must include premium AR or polarization.",
-          "Neurolens, Chemiclips, and some specialty work may be excluded or follow separate rules.",
+          "Neurolens, Chem Clips, and some specialty work may be excluded or follow separate rules.",
         ],
       },
       {

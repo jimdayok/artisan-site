@@ -99,7 +99,7 @@ const policySections: PolicySection[] = [
     body: [
       "Additional pairs purchased within 30 days of the original pair are eligible for a 50% discount on the lesser priced invoice. There are no limits to the number of additional lens pairs eligible for the multiple pair discount program.",
       "Each pair must include one of the following: AR Treatment or Polarization.",
-      "Neurolens, Chemiclips, and some specialty work may follow separate rules or be excluded.",
+      "Neurolens, Chem Clips, and some specialty work may follow separate rules or be excluded.",
     ],
   },
   {

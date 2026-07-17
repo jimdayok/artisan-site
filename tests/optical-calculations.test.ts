@@ -5,8 +5,10 @@ import {
   estimatedEd,
   framePd,
   lensWeight,
+  materialProperties,
   minimumBlank,
   monocularDecentrationValues,
+  scenarioForMaterial,
   thicknessEstimate,
   totalHorizontalDecentration,
   vertexCompensatePower,
@@ -134,4 +136,35 @@ test("representative edge cases remain finite and never yield negative thickness
     assert.ok(estimate.edge >= data.edgeThickness);
     assert.ok(Number.isFinite(weight) && weight > 0);
   }
+});
+
+test("Tokai 1.70 and 1.76 presets use documented optical properties and thickness constraints", () => {
+  const tokai170 = materialProperties.find((material) => material.name === "1.70");
+  const tokai176 = materialProperties.find((material) => material.name === "1.76");
+
+  assert.ok(tokai170);
+  assert.equal(tokai170.abbe, 36);
+  assert.equal(tokai170.specificGravity, 1.41);
+  assert.deepEqual(tokai170.documentedMinimums, {
+    centerThickness: 1,
+    edgeThickness: 0.7,
+    source: "Tokai 1.70 AS thickness chart",
+  });
+
+  assert.ok(tokai176);
+  assert.equal(tokai176.abbe, 30);
+  assert.equal(tokai176.specificGravity, 1.49);
+  assert.deepEqual(tokai176.documentedMinimums, {
+    centerThickness: 1,
+    edgeThickness: 0.7,
+    source: "Tokai 1.76 AS thickness chart",
+  });
+
+  const tokaiScenario = scenarioForMaterial(
+    scenario({ centerThickness: 2, edgeThickness: 1.5 }),
+    tokai176
+  );
+  assert.equal(tokaiScenario.lensIndex, 1.76);
+  assert.equal(tokaiScenario.centerThickness, 1);
+  assert.equal(tokaiScenario.edgeThickness, 0.7);
 });

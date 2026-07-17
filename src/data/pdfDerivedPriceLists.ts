@@ -676,7 +676,7 @@ export const pdfDerivedPriceLists = {
         "$69.00",
         "",
         "",
-        "Chemistire Clip demonstration kits available for purchase"
+        "Chem Clips demonstration kits available for purchase"
       ],
       [
         "PAL",
@@ -1710,7 +1710,7 @@ export const pdfDerivedPriceLists = {
         "$77.00",
         "",
         "",
-        "Chemistire Clip demonstration kits available for purchase"
+        "Chem Clips demonstration kits available for purchase"
       ],
       [
         "PAL",
@@ -2460,8 +2460,8 @@ export const pdfDerivedPriceLists = {
         "Neochromes ★",
         "$50.00",
         "",
-        "Chemistire Clip demonstration kits available for purchase by clicking here or visiting our website.",
-        "Chemistire Clip demonstration kits available for purchase by clicking here or visiting our website."
+        "Chem Clips demonstration kits available for purchase by clicking here or visiting our website.",
+        "Chem Clips demonstration kits available for purchase by clicking here or visiting our website."
       ],
       [
         "",
@@ -3019,7 +3019,7 @@ export const pdfDerivedPriceLists = {
         "",
         "",
         "",
-        "Chemistire Clip demonstration kits available for purchase by clicking here or visiting our website."
+        "Chem Clips demonstration kits available for purchase by clicking here or visiting our website."
       ],
       [
         "maximize pricing advantages while also encouraging the use of our ultra premium proprietary coatings and",
@@ -3656,8 +3656,8 @@ export const pdfDerivedPriceLists = {
         "$52.00",
         "",
         "",
-        "Chemistire Clip demonstration kits available for purchase by clicking here or visiting our website.",
-        "Chemistire Clip demonstration kits available for purchase by clicking here or visiting our website."
+        "Chem Clips demonstration kits available for purchase by clicking here or visiting our website.",
+        "Chem Clips demonstration kits available for purchase by clicking here or visiting our website."
       ],
       [
         "",

@@ -44,14 +44,63 @@ export type OpticalData = {
   measuredPrismVertical: number;
 };
 
-export const materialProperties = [
+export type MaterialProperty = {
+  name: string;
+  index: number;
+  abbe: number;
+  specificGravity: number;
+  documentedMinimums?: {
+    centerThickness: number;
+    edgeThickness: number;
+    source: string;
+  };
+};
+
+export const materialProperties: readonly MaterialProperty[] = [
   { name: "Plastic", index: 1.498, abbe: 58, specificGravity: 1.32 },
   { name: "Trivex", index: 1.53, abbe: 43, specificGravity: 1.11 },
   { name: "Poly", index: 1.586, abbe: 30, specificGravity: 1.2 },
   { name: "1.60", index: 1.6, abbe: 42, specificGravity: 1.3 },
   { name: "1.67", index: 1.67, abbe: 32, specificGravity: 1.36 },
+  {
+    name: "1.70",
+    index: 1.7,
+    abbe: 36,
+    specificGravity: 1.41,
+    documentedMinimums: {
+      centerThickness: 1,
+      edgeThickness: 0.7,
+      source: "Tokai 1.70 AS thickness chart",
+    },
+  },
   { name: "1.74", index: 1.74, abbe: 32, specificGravity: 1.47 },
-] as const;
+  {
+    name: "1.76",
+    index: 1.76,
+    abbe: 30,
+    specificGravity: 1.49,
+    documentedMinimums: {
+      centerThickness: 1,
+      edgeThickness: 0.7,
+      source: "Tokai 1.76 AS thickness chart",
+    },
+  },
+];
+
+export function scenarioForMaterial(
+  data: OpticalData,
+  material: MaterialProperty
+): OpticalData {
+  return {
+    ...data,
+    lensIndex: material.index,
+    lensMaterial: material.name,
+    centerThickness:
+      material.documentedMinimums?.centerThickness ?? data.centerThickness,
+    edgeThickness:
+      material.documentedMinimums?.edgeThickness ?? data.edgeThickness,
+  };
+}
 
 export function radians(value: number) {
   return (value * Math.PI) / 180;

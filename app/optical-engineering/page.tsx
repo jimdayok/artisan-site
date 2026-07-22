@@ -1553,6 +1553,12 @@ export default function OpticalEngineeringPage() {
         </div>
       </section>
 
+      <aside className="border-t border-[#e7ddd0] bg-[#fbf8f3] px-6 py-5 text-center md:px-10">
+        <p className="mx-auto max-w-3xl text-xs leading-6 text-[#625b53]">
+          Special thanks to Harry Chilinguerian for his contributions and expert guidance.
+        </p>
+      </aside>
+
       <Footer signUpHref={SIGNUP_URL} />
     </main>
   );

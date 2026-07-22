@@ -71,3 +71,6 @@ tmp/pdfs/
 private-source/pricing/generated/
 private-source/pricing/raw-price-files/
 xml_price_data/
+
+# Local duplicate portal exports; keep only the canonical portal_export.json tracked.
+/private-site/portal/portal_export *

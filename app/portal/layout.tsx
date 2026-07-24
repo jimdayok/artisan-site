@@ -1,8 +1,11 @@
 import { headers } from "next/headers";
 import AdminUtilityNav from "@/app/portal/AdminUtilityNav";
-import { isPortalAdminEmail } from "@/lib/portal/admin";
 import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
 import { recordPortalAccess } from "@/lib/portal/accessLog";
+import {
+  canAccessPortalAdmin,
+  getPortalStaffRole,
+} from "@/lib/portal/portalRoles";
 
 export default async function PortalLayout({
   children,
@@ -11,9 +14,9 @@ export default async function PortalLayout({
 }) {
   const requestHeaders = await headers();
   const authenticatedEmail = getPortalAuthenticatedEmailFromHeaders(requestHeaders);
-  const isAdmin = Boolean(
-    authenticatedEmail && isPortalAdminEmail(authenticatedEmail)
-  );
+  const staffRole = getPortalStaffRole(authenticatedEmail);
+  const hasStaffAccess =
+    Boolean(authenticatedEmail) && canAccessPortalAdmin(staffRole);
   if (authenticatedEmail && process.env.NODE_ENV !== "development") {
     await recordPortalAccess({
       timestamp: new Date().toISOString(),
@@ -30,7 +33,9 @@ export default async function PortalLayout({
 
   return (
     <>
-      {isAdmin ? <AdminUtilityNav /> : null}
+      {hasStaffAccess ? (
+        <AdminUtilityNav roleKind={staffRole.kind} />
+      ) : null}
       {children}
     </>
   );

@@ -7,30 +7,41 @@ import { artisanControlClass } from "@/app/components/controlStyles";
 const links = [
   { href: "/", label: "Main Website" },
   { href: "/portal/admin", label: "Admin Dashboard" },
-  { href: "/portal/admin/price-lists", label: "Price Lists" },
-  { href: "/portal/admin/users", label: "User Invites" },
-  { href: "/portal/admin/access-log", label: "Access Log" },
-  { href: "/portal/admin/rewards", label: "Rewards" },
-  { href: "/portal", label: "Customer Portal" },
+  { href: "/portal/admin/price-lists", label: "Price Lists", adminOnly: true },
+  { href: "/portal/admin/users", label: "User Invites", adminOnly: true },
+  { href: "/portal/admin/access-log", label: "Access Log", adminOnly: true },
+  { href: "/portal/admin/rewards", label: "Rewards", adminOnly: true },
+  { href: "/portal", label: "Customer Portal", adminOnly: true },
   { href: "/portal/employee-resources", label: "Employee Resources" },
 ] as const;
 
-export default function AdminUtilityNav() {
+export default function AdminUtilityNav({
+  roleKind,
+}: {
+  roleKind: "admin" | "sales-rep" | "unassigned";
+}) {
   const pathname = usePathname();
   const isAdminRoute = pathname.startsWith("/portal/admin");
   const isCustomerMode = pathname === "/portal";
   const showReturnLabel = !isAdminRoute || isCustomerMode;
+  const isSalesRep = roleKind === "sales-rep";
 
   return (
     <aside className="sticky top-0 z-[60] border-b border-[#d8c49b] bg-[#172a28]/96 px-3 py-2 text-white shadow-[0_12px_35px_rgba(23,42,40,0.18)] backdrop-blur sm:px-5">
       <nav
-        aria-label="Admin utility navigation"
+        aria-label="Staff utility navigation"
         className="mobile-scroll-row mx-auto flex max-w-7xl items-center gap-2 overflow-x-auto"
       >
-        {links.map((link) => {
+        {links.filter((link) => !("adminOnly" in link) || !link.adminOnly || roleKind === "admin").map((link) => {
           const label =
-            link.href === "/portal/admin" && showReturnLabel
-              ? "Return to Admin Dashboard"
+            link.href === "/portal/admin"
+              ? isSalesRep
+                ? showReturnLabel
+                  ? "Return to Sales Dashboard"
+                  : "Sales Dashboard"
+                : showReturnLabel
+                  ? "Return to Admin Dashboard"
+                  : link.label
               : link.label;
           const active =
             link.href === "/"

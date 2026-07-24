@@ -5,9 +5,12 @@ import {
   Building2,
   CircleDollarSign,
   ClipboardCopy,
+  Download,
+  FileText,
   Package,
   Search,
   ShieldAlert,
+  ShieldCheck,
   Target,
   UserRound,
   Users,
@@ -31,6 +34,10 @@ import {
   filterRowsForPortalRole,
   type PortalStaffRole,
 } from "@/lib/portal/portalRoles";
+import {
+  visiblePriceLists,
+  type PortalPriceList,
+} from "@/lib/portal/priceLists";
 
 type DashboardQuery = {
   q?: string;
@@ -274,6 +281,118 @@ function ModeToggle({
         {comparisonConfidenceNote(mode)}
       </p>
     </div>
+  );
+}
+
+function priceListDownloadHref(priceList: PortalPriceList) {
+  if (priceList.generated) {
+    return `/portal/price-list/export?code=${encodeURIComponent(priceList.code)}&priceMode=edged`;
+  }
+  if (priceList.r2Key) {
+    return `/api/portal/download?code=${encodeURIComponent(priceList.code)}`;
+  }
+  return "";
+}
+
+function SalesRepResourceCenter({
+  priceListCodes,
+}: {
+  priceListCodes: string[];
+}) {
+  const assignedPriceLists = visiblePriceLists
+    .filter((priceList) => priceListCodes.includes(priceList.code))
+    .sort((a, b) => a.code.localeCompare(b.code));
+
+  return (
+    <section
+      id="sales-resources"
+      className="mt-6 scroll-mt-24 rounded-md border border-[#c9af79] bg-[#fffaf1]/94 p-5 shadow-[0_18px_55px_rgba(23,42,40,0.1)] sm:p-6"
+    >
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b7650]">
+            Sales Rep Resources
+          </p>
+          <h2 className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-[#172a28]">
+            Price lists and employee tools
+          </h2>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-[#706759]">
+            Open or download the price lists assigned to your visible accounts,
+            then use the employee center for internal documents, sales tools,
+            contacts, and training resources.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-3">
+          <Link href="/portal/employee-resources" className={adminButtonClass}>
+            <ShieldCheck className="h-4 w-4" />
+            Employee Resources
+          </Link>
+          <Link href="/provider-resources" className={adminButtonClass}>
+            <FileText className="h-4 w-4" />
+            Product Resources
+          </Link>
+        </div>
+      </div>
+
+      {assignedPriceLists.length > 0 ? (
+        <div className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+          {assignedPriceLists.map((priceList) => {
+            const downloadHref = priceListDownloadHref(priceList);
+            return (
+              <article
+                key={priceList.code}
+                className="rounded-md border border-[#dfd2bf] bg-white p-4"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8b7650]">
+                      Price List {priceList.code}
+                    </p>
+                    <h3 className="mt-2 text-base font-semibold text-[#172a28]">
+                      {priceList.label}
+                    </h3>
+                  </div>
+                  {priceList.package ? (
+                    <span className="rounded-full border border-[#d8c49b] bg-[#f8f1e6] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#706759]">
+                      Package
+                    </span>
+                  ) : null}
+                </div>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <Link
+                    href={
+                      priceList.onlineUrl ??
+                      `/portal/price-list/${priceList.code.toLowerCase()}`
+                    }
+                    className="inline-flex min-h-9 items-center rounded-full border border-[#d8c49b] px-3 text-xs font-semibold text-[#172a28] transition hover:bg-[#f4ebe0]"
+                  >
+                    Open Online
+                  </Link>
+                  {downloadHref ? (
+                    <a
+                      href={downloadHref}
+                      className="inline-flex min-h-9 items-center gap-2 rounded-full bg-[#172a28] px-3 text-xs font-semibold text-white transition hover:bg-[#27433f]"
+                    >
+                      <Download className="h-3.5 w-3.5" />
+                      Download PDF
+                    </a>
+                  ) : (
+                    <span className="inline-flex min-h-9 items-center rounded-full border border-dashed border-[#d8c49b] px-3 text-xs font-semibold text-[#8b7650]">
+                      PDF unavailable
+                    </span>
+                  )}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="mt-6 rounded-md border border-[#d8a15e] bg-[#fff7e8] p-4 text-sm text-[#706759]">
+          No price lists are attached to the accounts currently visible to this
+          sales-rep login.
+        </div>
+      )}
+    </section>
   );
 }
 
@@ -827,6 +946,10 @@ export default function AdminLandingDashboard({
       adminEmail={authenticatedEmail}
       eyebrow="ALN Sales Intervention"
     >
+      {role.kind === "sales-rep" ? (
+        <SalesRepResourceCenter priceListCodes={options.priceLists} />
+      ) : null}
+
       <AccountCommandStrip
         mode={mode}
         query={query}

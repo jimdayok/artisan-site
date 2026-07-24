@@ -5,11 +5,15 @@ import {
   S3ServiceException,
 } from "@aws-sdk/client-s3";
 import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
-import { isPortalAdminEmail } from "@/lib/portal/admin";
 import {
   getAuthorizedPortalCustomer,
   getAuthorizedPortalCustomers,
 } from "@/lib/portal/portalAuthorization";
+import { getDashboardV1AdminRows } from "@/lib/portal/adminDashboardV1";
+import {
+  filterRowsForPortalRole,
+  getPortalStaffRole,
+} from "@/lib/portal/portalRoles";
 import { normalizeAccountNumber } from "@/lib/portal/normalizeAccounts";
 import { getPriceListByCode } from "@/lib/portal/priceLists";
 import { checkRateLimit } from "@/lib/portal/rateLimit";
@@ -256,9 +260,22 @@ export async function GET(request: NextRequest) {
         ? customers[0]
         : undefined;
 
-    const isAdmin = isPortalAdminEmail(authenticatedEmail);
+    const staffRole = getPortalStaffRole(authenticatedEmail);
+    const staffPriceListCodes =
+      staffRole.kind === "admin"
+        ? null
+        : staffRole.kind === "sales-rep"
+          ? new Set(
+              filterRowsForPortalRole(
+                staffRole,
+                getDashboardV1AdminRows()
+              ).flatMap((row) => row.priceListCodes)
+            )
+          : new Set<string>();
+    const hasStaffAccess =
+      staffRole.kind === "admin" || staffRole.kind === "sales-rep";
 
-    if (!customer && !isAdmin) {
+    if (!customer && !hasStaffAccess) {
       logDownloadDiagnostic("Unknown portal customer or missing account selection", diagnostics, {
         requestedAccountNumber: requestedAccountNumber
           ? normalizeAccountNumber(requestedAccountNumber)
@@ -304,7 +321,14 @@ export async function GET(request: NextRequest) {
       code.trim().toUpperCase()
     );
 
-    if (!isAdmin && !assignedPriceListCodes.includes(priceList.code)) {
+    const hasStaffPriceListAccess =
+      staffRole.kind === "admin" ||
+      Boolean(staffPriceListCodes?.has(priceList.code));
+
+    if (
+      !hasStaffPriceListAccess &&
+      !assignedPriceListCodes.includes(priceList.code)
+    ) {
       logDownloadDiagnostic("Unauthorized price list", diagnostics, {
         accountNumber: customer?.accountNumber ?? "",
       });

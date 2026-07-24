@@ -1,8 +1,13 @@
 import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
-import { isPortalAdminEmailAddress } from "@/lib/portal/adminAccess";
+import { getDashboardV1AdminRows } from "@/lib/portal/adminDashboardV1";
 import { normalizeAssignedPriceListCodes } from "@/lib/portal/assignedPriceLists";
 import { getPortalCustomerTypeInfo } from "@/lib/portal/customerTypes";
 import { portalDashboardV1AccessIndex } from "@/lib/portal/dashboardV1AccessIndex";
+import {
+  canAccessAdminAccount,
+  filterRowsForPortalRole,
+  getPortalStaffRole,
+} from "@/lib/portal/portalRoles";
 import {
   canonicalPriceListCode,
   getPriceListByCode,
@@ -149,6 +154,19 @@ function customersForEmail(email: string) {
   return [...customers.values()];
 }
 
+function staffAccessiblePriceListCodes(
+  staffRole: ReturnType<typeof getPortalStaffRole>
+) {
+  if (staffRole.kind === "admin") return [...visiblePriceListCodes];
+  if (staffRole.kind !== "sales-rep") return [];
+
+  return normalizeAssignedPriceListCodes(
+    filterRowsForPortalRole(staffRole, getDashboardV1AdminRows()).flatMap(
+      (row) => row.priceListCodes
+    )
+  ).filter((code) => visiblePriceListCodes.includes(code));
+}
+
 export async function getAuthorizedRuntimePriceListFromHeaders(
   headerList: Headers,
   code: string,
@@ -161,13 +179,32 @@ export async function getAuthorizedRuntimePriceListFromHeaders(
     return { status: "unauthenticated", authenticatedEmail: "", priceList };
   }
 
-  if (priceList && isPortalAdminEmailAddress(authenticatedEmail)) {
+  const staffRole = getPortalStaffRole(authenticatedEmail);
+  const staffPriceListCodes = staffAccessiblePriceListCodes(staffRole);
+
+  if (priceList && staffPriceListCodes.includes(priceList.code)) {
     const previewAccountNumber = options?.previewAccountNumber?.trim();
     const previewAccount = previewAccountNumber
       ? findAccountByIdentifier(previewAccountNumber)
       : undefined;
 
     if (previewAccount) {
+      const previewRoleRow = getDashboardV1AdminRows().find(
+        (row) =>
+          normalizeAccountNumber(row.acctId) ===
+            normalizeAccountNumber(previewAccountNumber) ||
+          row.accountNumbers
+            .split(",")
+            .map(normalizeAccountNumber)
+            .includes(normalizeAccountNumber(previewAccountNumber))
+      );
+      if (
+        staffRole.kind === "sales-rep" &&
+        (!previewRoleRow || !canAccessAdminAccount(staffRole, previewRoleRow))
+      ) {
+        return { status: "forbidden", authenticatedEmail, priceList };
+      }
+
       const previewCustomer = customerFromAccount(previewAccount, authenticatedEmail);
       if (!previewCustomer) {
         return { status: "forbidden", authenticatedEmail, priceList };
@@ -188,16 +225,16 @@ export async function getAuthorizedRuntimePriceListFromHeaders(
       };
     }
 
-    const adminAccessiblePriceLists = [...visiblePriceListCodes];
     return {
       status: "authorized",
       authenticatedEmail,
       customer: {
-        accountNumber: "ADMIN",
-        practiceName: "Portal Administrator",
+        accountNumber: staffRole.kind === "admin" ? "ADMIN" : "SALES",
+        practiceName:
+          staffRole.kind === "admin" ? "Portal Administrator" : staffRole.label,
         emails: [authenticatedEmail],
-        priceLists: adminAccessiblePriceLists,
-        allowedPriceLists: adminAccessiblePriceLists,
+        priceLists: staffPriceListCodes,
+        allowedPriceLists: staffPriceListCodes,
         portalSections: ALL_PORTAL_SECTIONS,
       },
       priceList,

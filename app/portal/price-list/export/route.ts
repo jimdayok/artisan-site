@@ -55,6 +55,7 @@ const PHOTO_COLUMN_X = MARGIN + 424;
 const POLAR_COLUMN_X = MARGIN + 484;
 const TABLE_ROW_HEIGHT = 19;
 const TABLE_HEADER_HEIGHT = 20;
+const BRAND_ONLY_PROGRESSIVE_PDF_CODES = new Set(["A6", "G6", "P6"]);
 
 type LabShowcase = {
   name: string;
@@ -172,7 +173,25 @@ async function embedImageFromPublic(
 
 function priceText(value: number | string) {
   if (typeof value === "number") return `$${value.toFixed(2)}`;
-  return cleanText(value);
+
+  const text = cleanText(value).replace(/\${2,}/g, "$");
+  if (/^[+-]?\d+(?:\.\d+)?$/.test(text)) {
+    const numericValue = Number(text);
+    if (Number.isFinite(numericValue)) {
+      const sign = numericValue < 0 ? "-" : numericValue > 0 && text.startsWith("+") ? "+" : "";
+      return `${sign}$${Math.abs(numericValue).toFixed(2)}`;
+    }
+  }
+
+  return text.replace(
+    /([+-]?)\$\s*([+-]?)(\d+(?:\.\d+)?)/g,
+    (_match, leadingSign: string, innerSign: string, amount: string) => {
+      const numericValue = Number(amount);
+      if (!Number.isFinite(numericValue)) return _match;
+      const sign = leadingSign || innerSign;
+      return `${sign}$${numericValue.toFixed(2)}`;
+    }
+  );
 }
 
 function lowestRow(
@@ -225,6 +244,18 @@ function summarizeDesigns(priceList: GeneratedPriceListData, mode: PriceMode) {
         comparePriceDisplayBrand(a.brand, b.brand) ||
         compareText(a.designStyle, b.designStyle)
     );
+}
+
+type DesignSummary = ReturnType<typeof summarizeDesigns>[number];
+
+function summaryPriceForSort(summary: DesignSummary, mode: PriceMode) {
+  return Math.max(
+    0,
+    ...[summary.clear, summary.photochromic, summary.polarized]
+      .filter((row): row is PriceListPricingRow => Boolean(row))
+      .map((row) => rowPrice(row, mode))
+      .filter(Number.isFinite)
+  );
 }
 
 function fitText(font: PDFFont, value: string, maxWidth: number, size: number) {
@@ -304,6 +335,8 @@ async function buildPriceListPdf({
   const customerDisplayName = isAdminCustomer(customerName)
     ? ADMIN_CUSTOMER_NAME
     : customerName;
+  const usesBrandOnlyProgressiveLayout =
+    BRAND_ONLY_PROGRESSIVE_PDF_CODES.has(priceList.code);
 
   const addPage = (continuation = false) => {
     page = document.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
@@ -1070,7 +1103,7 @@ async function buildPriceListPdf({
       {
         title: "Shipping, cancellations, and specialty work",
         bullets: [
-          "Next Day Air: $4 per job. 2-Day Shipping: $16 per box. Ground Delivery: $8 per box. Mail to Patient: $8.",
+          "Next Day Air: $4.00 per job. 2-Day Shipping: $16.00 per box. Ground Delivery: $8.00 per box. Mail to Patient: $8.00.",
           "Inbound shipping is complimentary.",
           "Orders cancelled after production begins are billed as an uncut. Orders cancelled before production begins are not billed.",
           "Specialty, outsourced, manufacturer, VSP, Unity, and vendor-directed jobs may follow separate pricing, lead times, return rules, or warranty requirements.",
@@ -1129,6 +1162,42 @@ async function buildPriceListPdf({
   for (const [category, categoryRows] of [...categoryGroups.entries()].sort(
     ([a], [b]) => comparePriceDisplayCategory(a, b)
   )) {
+    if (
+      category === "Progressive Designs" &&
+      usesBrandOnlyProgressiveLayout
+    ) {
+      ensureSpace(34 + TABLE_HEADER_HEIGHT + TABLE_ROW_HEIGHT + 12);
+      sectionTitle(category, `${categoryRows.length} designs`);
+
+      const brandGroups = new Map<string, typeof summaries>();
+      for (const row of categoryRows) {
+        brandGroups.set(row.brand, [...(brandGroups.get(row.brand) ?? []), row]);
+      }
+
+      drawTableHeader(true);
+      for (const [brand, brandRows] of [...brandGroups.entries()].sort(
+        ([a], [b]) => comparePriceDisplayBrand(a, b)
+      )) {
+        const orderedBrandRows = [...brandRows].sort(
+          (a, b) =>
+            compareProgressiveTier(
+              a.progressiveTier ?? "Good",
+              b.progressiveTier ?? "Good"
+            ) ||
+            summaryPriceForSort(b, mode) - summaryPriceForSort(a, mode) ||
+            compareText(a.designStyle, b.designStyle)
+        );
+        drawBrandRows({
+          category,
+          tier: "All",
+          brand,
+          rows: orderedBrandRows,
+        });
+      }
+      y -= 8;
+      continue;
+    }
+
     const tierGroups = new Map<ProgressiveTier | "All", typeof summaries>();
     for (const row of categoryRows) {
       const tier = row.progressiveTier ?? "All";

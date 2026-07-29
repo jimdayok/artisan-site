@@ -1,12 +1,14 @@
 import { existsSync, readFileSync } from "node:fs";
-import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { writeJsonAtomic } from "../lib/pricing/atomicJson.mjs";
 import { parsePriceList } from "../lib/pricing/parsePriceList.mjs";
 import { getPricingLookupData, normalizeLookupKey } from "../lib/pricing/lookupData.mjs";
+import { PricingProgress } from "../lib/pricing/progress.mjs";
 
 const root = process.cwd();
 const priceListSourceDir = path.join(root, "private-source", "price-lists");
 const outputDir = path.join(root, "private-source", "pricing", "generated");
+const progress = new PricingProgress({ prefix: "pricing:generate" });
 
 function resolveSourceFile(candidates) {
   for (const candidate of candidates) {
@@ -368,24 +370,24 @@ const configs = [
   },
 ];
 
-await mkdir(outputDir, { recursive: true });
-
 for (const config of configs) {
   const mappedArCoatings = applyArLookup(config.arCoatings, arLookupMaps.byName);
   const dviRows = loadDviRowsByCode(config.code);
-  const parsed = await parsePriceList({
-    code: config.code,
-    rawPath: config.rawPath,
-    productLookupRows,
-    materialLookupRows,
-    productLookupSourcePath,
-    materialLookupSourcePath,
-    colorLookupPath,
-    arCoatings: mappedArCoatings,
-    arLookupByCode: arLookupMaps.byCode,
-    dviRows,
-    addOnSections: config.addOnSections,
-  });
+  const parsed = await progress.run(`build ${config.code} pricing rows`, () =>
+    parsePriceList({
+      code: config.code,
+      rawPath: config.rawPath,
+      productLookupRows,
+      materialLookupRows,
+      productLookupSourcePath,
+      materialLookupSourcePath,
+      colorLookupPath,
+      arCoatings: mappedArCoatings,
+      arLookupByCode: arLookupMaps.byCode,
+      dviRows,
+      addOnSections: config.addOnSections,
+    })
+  );
 
   const dviDerivedAr = new Map();
   let unresolvedArCount = 0;
@@ -435,9 +437,9 @@ for (const config of configs) {
   }
 
   const outputName = `${config.code.toLowerCase()}-pricing.json`;
-  await writeFile(
-    path.join(outputDir, outputName),
-    `${JSON.stringify(parsed, null, 2)}\n`
+  await progress.run(
+    `write generated file ${config.code}`,
+    () => writeJsonAtomic(path.join(outputDir, outputName), parsed)
   );
 
   console.log(`Wrote ${parsed.rows.length} ${config.code} pricing rows to private-source/pricing/generated/${outputName}`);

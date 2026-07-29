@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-06-29T21:17:31.100Z",
+  "generatedAt": "2026-07-29T13:39:42.718Z",
   "sourceFiles": {
     "styleRows": "private-source/pricing/generated/*-pricing.json",
     "lookupWorkbook": "private-source/price-lists/Lookup.xlsx"
   },
-  "lookupKeyCount": 555,
-  "priceListCountScanned": 63,
+  "lookupKeyCount": 557,
+  "priceListCountScanned": 26,
   "unmappedProductCount": 0,
   "unmappedProducts": []
 }

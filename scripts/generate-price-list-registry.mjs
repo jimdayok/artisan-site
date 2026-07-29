@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
-import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
+import { writeJsonAtomic } from "../lib/pricing/atomicJson.mjs";
 
 const root = process.cwd();
 const generatedDir = path.join(root, "private-source", "pricing", "generated");
@@ -141,11 +142,8 @@ async function main() {
     visibleEntries: entries.filter((entry) => !hiddenCodes.has(entry.code)),
   };
 
-  const serializedReport = `${JSON.stringify(report, null, 2)}\n`;
-  await mkdir(generatedDir, { recursive: true });
-  await mkdir(path.dirname(runtimeOutputPath), { recursive: true });
-  await writeFile(reportOutputPath, serializedReport, "utf8");
-  await writeFile(runtimeOutputPath, serializedReport, "utf8");
+  await writeJsonAtomic(reportOutputPath, report);
+  await writeJsonAtomic(runtimeOutputPath, report);
 
   console.log(`[pricing:registry] detected ${report.visibleDetectedCodes.length} visible price lists`);
   console.log(`[pricing:registry] generated ${report.visibleGeneratedCodes.length} visible normalized files`);

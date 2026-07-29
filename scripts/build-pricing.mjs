@@ -5,26 +5,57 @@ import {
   loadPricingLookupData,
   writePricingLookupSnapshot,
 } from "../lib/pricing/lookupData.mjs";
+import { parsePositiveInteger, PricingProgress } from "../lib/pricing/progress.mjs";
 
 const rootDir = process.cwd();
+const profile = process.argv.includes("--profile");
+const stepTimeoutMs = parsePositiveInteger(
+  process.env.PRICING_BUILD_STEP_TIMEOUT_MS,
+  45 * 60_000
+);
+const progress = new PricingProgress({ prefix: "build:pricing", profile });
 
 const steps = [
-  "pricing:generate-dvi",
-  "pricing:generate",
-  "pricing:normalize",
-  "pricing:registry",
-  "pricing:validate-ar",
+  ["pricing:generate-dvi", "DVI pricing generation"],
+  ["pricing:generate", "standard pricing generation"],
+  ["pricing:normalize", "normalization and gzip compression"],
+  ["pricing:registry", "registry generation"],
+  ["pricing:validate-ar", "AR validation"],
 ];
 
 function runStep(step) {
   return new Promise((resolve, reject) => {
-    const child = spawn("npm", ["run", step], {
+    const childArgs = ["run", step];
+    if (profile && step === "pricing:generate-dvi") childArgs.push("--", "--profile");
+    const child = spawn("npm", childArgs, {
       stdio: "inherit",
       env: process.env,
+      cwd: rootDir,
     });
+    let settled = false;
+    const timeout = setTimeout(() => {
+      if (settled) return;
+      settled = true;
+      child.kill("SIGTERM");
+      const forceKill = setTimeout(() => child.kill("SIGKILL"), 5_000);
+      forceKill.unref();
+      reject(
+        new Error(
+          `Step ${step} exceeded ${stepTimeoutMs}ms and was terminated to prevent an indefinite build`
+        )
+      );
+    }, stepTimeoutMs);
+    timeout.unref();
 
-    child.on("error", reject);
+    child.on("error", (error) => {
+      settled = true;
+      clearTimeout(timeout);
+      reject(error);
+    });
     child.on("exit", (code, signal) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeout);
       if (signal) {
         reject(new Error(`Step ${step} terminated with signal ${signal}`));
         return;
@@ -56,15 +87,21 @@ function validateGeneratedArtifacts() {
 }
 
 async function main() {
-  const lookupData = await loadPricingLookupData({ rootDir, log: true });
-  await writePricingLookupSnapshot(lookupData, { rootDir });
+  const lookupData = await progress.run("load Lookup.xlsx", () =>
+    loadPricingLookupData({ rootDir, log: true })
+  );
+  await progress.run("write lookup snapshot", () =>
+    writePricingLookupSnapshot(lookupData, { rootDir })
+  );
 
-  for (const step of steps) {
-    console.log(`[build:pricing] running ${step}`);
-    await runStep(step);
+  for (const [step, stage] of steps) {
+    await progress.run(stage, () => runStep(step));
   }
 
-  validateGeneratedArtifacts();
+  await progress.run("validate generated artifact paths", () =>
+    validateGeneratedArtifacts()
+  );
+  progress.printProfile();
   console.log("Pricing build completed successfully.");
 }
 

@@ -1,7 +1,8 @@
 import { existsSync } from "node:fs";
 import { createReadStream } from "node:fs";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { writeJsonAtomic } from "../lib/pricing/atomicJson.mjs";
 import readline from "node:readline";
 import { getPricingLookupData, normalizeLookupKey } from "../lib/pricing/lookupData.mjs";
 
@@ -157,11 +158,8 @@ async function main() {
     unmappedProducts,
   };
 
-  const serialized = `${JSON.stringify(report, null, 2)}\n`;
-  await mkdir(generatedDir, { recursive: true });
-  await mkdir(path.dirname(runtimeOutputPath), { recursive: true });
-  await writeFile(reportOutputPath, serialized, "utf8");
-  await writeFile(runtimeOutputPath, serialized, "utf8");
+  await writeJsonAtomic(reportOutputPath, report);
+  await writeJsonAtomic(runtimeOutputPath, report);
 
   console.log(`[pricing:style-mapping] unmapped products: ${report.unmappedProductCount}`);
   console.log(`[pricing:style-mapping] report: ${reportOutputPath}`);

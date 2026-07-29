@@ -1,12 +1,18 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { gunzipSync, gzipSync } from "node:zlib";
+import { promisify } from "node:util";
+import { gunzipSync, gzip } from "node:zlib";
 import {
   getPricingLookupData,
   normalizeLookupKey as normalizeWorkbookLookupKey,
   stripSdPrefix,
 } from "../lib/pricing/lookupData.mjs";
+import { writeBufferAtomic, writeJsonAtomic } from "../lib/pricing/atomicJson.mjs";
+import { PricingProgress } from "../lib/pricing/progress.mjs";
+
+const gzipAsync = promisify(gzip);
+const progress = new PricingProgress({ prefix: "pricing:normalize" });
 
 const root = process.cwd();
 const generatedDir = path.join(root, "private-source", "pricing", "generated");
@@ -827,14 +833,13 @@ async function readTargetCodes() {
 }
 
 async function writeJson(filePath, value, { pretty = true } = {}) {
-  const suffix = "\n";
-  const payload = pretty ? JSON.stringify(value, null, 2) : JSON.stringify(value);
-  await writeFile(filePath, `${payload}${suffix}`, "utf8");
+  await writeJsonAtomic(filePath, value, { pretty });
 }
 
 async function writeGzipJson(filePath, value) {
   const payload = `${JSON.stringify(value)}\n`;
-  await writeFile(filePath, gzipSync(Buffer.from(payload, "utf8")));
+  const compressed = await gzipAsync(Buffer.from(payload, "utf8"));
+  await writeBufferAtomic(filePath, compressed);
 }
 
 async function main() {
@@ -857,8 +862,9 @@ async function main() {
   const artisanPortfolioRuleReport = [];
   const designTypeValidationReport = [];
   for (const code of targetCodes) {
-    console.log(`[pricing:normalize] normalizing ${code}`);
-    const source = await loadSourcePayloadForCode(code);
+    const source = await progress.run(`load source ${code}`, () =>
+      loadSourcePayloadForCode(code)
+    );
     let payload;
 
     if (source.kind === "standard" && source.payload) {
@@ -900,38 +906,72 @@ async function main() {
       };
     }
 
-    const normalizedRowsResult = normalizeRows(payload.rows ?? [], lookupMap, code);
-    const arCoatings = normalizeArCoatings(
-      normalizedRowsResult.rows,
-      payload.scheduleCatalog?.coating ?? [],
-      arLookupMap
-    );
-    const materialAddOns = materialAddOnsFromSections(code, payload.addOnSections ?? [], normalizedRowsResult.rows);
-    const addOnSections = addInferredMaterialSection(payload.addOnSections ?? [], materialAddOns);
-    const normalizedPayload = {
-      ...payload,
-      code,
-      canonicalCode: code,
-      sourceCodesMerged: [...new Set((payload.rows ?? []).map((row) => String(row.code || "").toUpperCase()))].sort(),
-      rows: normalizedRowsResult.rows,
+    const {
+      normalizedRowsResult,
       arCoatings,
       materialAddOns,
-      addOnSections,
-      report: sanitizeReport(payload.report),
-    };
+      normalizedPayload,
+    } = await progress.run(`build normalized payload ${code}`, () => {
+      const normalizedRowsResult = normalizeRows(payload.rows ?? [], lookupMap, code);
+      const arCoatings = normalizeArCoatings(
+        normalizedRowsResult.rows,
+        payload.scheduleCatalog?.coating ?? [],
+        arLookupMap
+      );
+      const materialAddOns = materialAddOnsFromSections(
+        code,
+        payload.addOnSections ?? [],
+        normalizedRowsResult.rows
+      );
+      const addOnSections = addInferredMaterialSection(
+        payload.addOnSections ?? [],
+        materialAddOns
+      );
+      return {
+        normalizedRowsResult,
+        arCoatings,
+        materialAddOns,
+        normalizedPayload: {
+          ...payload,
+          code,
+          canonicalCode: code,
+          sourceCodesMerged: [
+            ...new Set(
+              (payload.rows ?? []).map((row) =>
+                String(row.code || "").toUpperCase()
+              )
+            ),
+          ].sort(),
+          rows: normalizedRowsResult.rows,
+          arCoatings,
+          materialAddOns,
+          addOnSections,
+          report: sanitizeReport(payload.report),
+        },
+      };
+    });
 
     for (const correction of normalizedRowsResult.designTypeDiagnostics ?? []) {
       designTypeValidationReport.push(correction);
     }
 
-    console.log(
-      `[pricing:normalize] writing normalized payload for ${code} (${normalizedRowsResult.rows.length} rows)`
+    await progress.run(`write normalized JSON ${code}`, () =>
+      writeJson(path.join(normalizedDir, `${code}.json`), normalizedPayload, {
+        pretty: false,
+      })
     );
-    await writeJson(path.join(normalizedDir, `${code}.json`), normalizedPayload, {
-      pretty: false,
-    });
-    await writeGzipJson(path.join(packagedNormalizedDir, `${code}.json.gz`), normalizedPayload);
-    await writeGzipJson(path.join(publicPackagedNormalizedDir, `${code}.json.gz`), normalizedPayload);
+    await progress.run(`gzip packaged JSON ${code}`, () =>
+      writeGzipJson(
+        path.join(packagedNormalizedDir, `${code}.json.gz`),
+        normalizedPayload
+      )
+    );
+    await progress.run(`gzip public JSON ${code}`, () =>
+      writeGzipJson(
+        path.join(publicPackagedNormalizedDir, `${code}.json.gz`),
+        normalizedPayload
+      )
+    );
 
     payload = null;
 

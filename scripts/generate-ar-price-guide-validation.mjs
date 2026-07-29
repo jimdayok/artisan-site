@@ -1,5 +1,6 @@
-import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
+import { writeJsonAtomic } from "../lib/pricing/atomicJson.mjs";
 
 const root = process.cwd();
 const generatedDir = path.join(root, "private-source", "pricing", "generated");
@@ -94,7 +95,6 @@ function summarizePriceList(data, fileName) {
 }
 
 async function main() {
-  await mkdir(diagnosticsDir, { recursive: true });
   const files = (await readdir(generatedDir)).filter(isCustomerFacingPricingFile).sort();
   const byPriceList = [];
   for (const fileName of files) {
@@ -122,7 +122,7 @@ async function main() {
   };
 
   const payload = { summary, byPriceList };
-  await writeFile(outputPath, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
+  await writeJsonAtomic(outputPath, payload);
   console.log(`[ar-validation] wrote ${outputPath}`);
 }
 

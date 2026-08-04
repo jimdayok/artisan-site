@@ -28,6 +28,18 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      {
+        source: "/portal",
+        has: [{ type: "host", value: "preview.artisanlabnetwork.com" }],
+        destination: "https://www.artisanslabs.com/portal",
+        permanent: false,
+      },
+      {
+        source: "/portal/:path*",
+        has: [{ type: "host", value: "preview.artisanlabnetwork.com" }],
+        destination: "https://www.artisanslabs.com/portal/:path*",
+        permanent: false,
+      },
       { source: "/ourcraft", destination: "/artisan-model", permanent: true },
       { source: "/our-craft-1", destination: "/artisan-model", permanent: true },
       { source: "/artisanlabnetwork-about", destination: "/about", permanent: true },

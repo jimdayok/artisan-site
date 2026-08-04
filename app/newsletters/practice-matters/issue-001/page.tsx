@@ -57,7 +57,7 @@ const articles: NewsletterNavArticle[] = [
     id: "tokai-update",
     label: "Tokai Update",
     title: "Tokai",
-    dek: "Current availability details and supported options while Tokai 1.76 is unavailable.",
+    dek: "Current Tokai high-index availability, supply-chain constraints, and supported material options.",
     icon: "/tokai-logo.png",
     iconAlt: "Tokai",
     number: "05",
@@ -303,7 +303,7 @@ export default function PracticeMattersIssue001Page() {
               id="tokai-update"
               number="05"
               label="Product Availability Update"
-              title="Tokai 1.76 Temporarily Postponed"
+              title="Tokai High-Index Material Availability"
               icon="/tokai-logo.png"
               iconAlt="Tokai"
               tone="warm"
@@ -323,7 +323,10 @@ export default function PracticeMattersIssue001Page() {
                 During this time, Artisan Lab Network is not accepting Tokai 1.76 orders.
               </p>
               <p>
-                We understand the importance of Tokai 1.76 for high Rx patients and apologize for the disruption. Our team will continue to help practices identify the best available options while this material is unavailable.
+                Tokai 1.70 has also been suspended and is no longer available. Tokai 1.74 has become challenging to source because of supply-chain issues, with resolution expected by September 2026.
+              </p>
+              <p>
+                Tokai brands are available in 1.60 high index and are now also available in 1.67 high index. Our team will continue to help practices identify the best available option for each prescription and frame.
               </p>
               <h3 className="font-[family-name:Georgia,serif] text-2xl text-[#142033]">How to handle the conversation</h3>
               <p>
@@ -334,10 +337,8 @@ export default function PracticeMattersIssue001Page() {
                   Current supported options include:
                 </p>
                 <ul className="mt-4 grid gap-3 text-base leading-7">
-                  <li className="border-l-2 border-[#c4a05d] bg-white/62 px-4 py-3">1.74 alternatives across multiple lens designs</li>
-                  <li className="border-l-2 border-[#c4a05d] bg-white/62 px-4 py-3">Tokai 1.70</li>
-                  <li className="border-l-2 border-[#c4a05d] bg-white/62 px-4 py-3">Tokai 1.67</li>
-                  <li className="border-l-2 border-[#c4a05d] bg-white/62 px-4 py-3">Tokai 1.60</li>
+                  <li className="border-l-2 border-[#c4a05d] bg-white/62 px-4 py-3">Tokai brands in 1.67 high index</li>
+                  <li className="border-l-2 border-[#c4a05d] bg-white/62 px-4 py-3">Tokai brands in 1.60 high index</li>
                   <li className="border-l-2 border-[#c4a05d] bg-white/62 px-4 py-3">Tokai photochromic options in 1.67 and 1.60</li>
                 </ul>
               </div>

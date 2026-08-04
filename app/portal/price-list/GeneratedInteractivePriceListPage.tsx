@@ -6,6 +6,7 @@ import { isPortalAdminEmail } from "@/lib/portal/admin";
 import { loadRuntimePackagedPriceListByCode } from "@/lib/pricing/loadRuntimePackagedPriceList";
 import { isVisiblePriceListCode, priceListDisplayName } from "@/lib/pricing/priceListCodes";
 import { customerFacingPriceList } from "@/lib/pricing/customerPriceList";
+import { getPortalDashboardV1ByAccount } from "@/lib/portal/dashboardV1";
 import { headers } from "next/headers";
 import { forbidden } from "next/navigation";
 import { OnlinePriceListShell } from "./OnlinePriceListShell";
@@ -98,6 +99,12 @@ export default async function GeneratedInteractivePriceListPage({
     .filter((value, index, values) => Boolean(value) && values.indexOf(value) === index)
     .filter(isVisiblePriceListCode)
     .sort((a, b) => a.localeCompare(b));
+  const dashboardState = getPortalDashboardV1ByAccount(access.customer.accountNumber);
+  const accountNumberCount =
+    dashboardState.account?.all_account_numbers
+      .split(",")
+      .map((value) => value.trim())
+      .filter(Boolean).length ?? 0;
 
   return (
       <OnlinePriceListShell
@@ -111,6 +118,7 @@ export default async function GeneratedInteractivePriceListPage({
         priceList={customerPriceList}
         comparisonPriceList={comparisonPriceList}
         previewAccountNumber={previewAccountNumber}
+        showAccountDrillDownNotice={accountNumberCount > 1}
       />
     </OnlinePriceListShell>
   );

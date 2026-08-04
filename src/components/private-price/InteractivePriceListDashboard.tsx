@@ -738,10 +738,12 @@ export default function InteractivePriceListDashboard({
   priceList,
   comparisonPriceList,
   previewAccountNumber,
+  showAccountDrillDownNotice = false,
 }: {
   priceList: GeneratedPriceListData;
   comparisonPriceList?: GeneratedPriceListData | null;
   previewAccountNumber?: string;
+  showAccountDrillDownNotice?: boolean;
 }) {
   const listCode = String(priceList.code ?? "").trim().toUpperCase();
   const isPackageList = isPackagePriceListCode(listCode);
@@ -962,6 +964,11 @@ export default function InteractivePriceListDashboard({
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[#122033] md:text-3xl">
               Price Quote Builder
             </h2>
+            {showAccountDrillDownNotice ? (
+              <p className="mt-3 rounded-[2px] border border-[#cfb88d] bg-[#fff8e8] px-4 py-3 text-sm font-semibold text-[#6f5422]">
+                Coming Soon: Drill Down by Account
+              </p>
+            ) : null}
             {programMeta.packageMark || programMeta.titleLogoSrc ? (
               <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
                 {programMeta.packageMark ? (
@@ -2339,16 +2346,16 @@ function SafetyPackageTierSection() {
 
 function ChemClipSection() {
   const items = [
-    ["ChemClip Solid Sunlens", 85],
+    ["ChemClip Solid Sunlens", 85.5],
     ["ChemClip Drive", 117],
-    ["ChemClip Solid Sunlens with Backside AR", 88],
-    ["ChemClip Gradient Sunlens with Backside AR", 90],
-    ["ChemClip Mirror Sunlens", 92],
-    ["ChemClip Color", 117],
-    ["ChemClip Readers Blue", 95],
-    ["ChemClip Therapeutic", 130],
+    ["ChemClip Solid Sunlens with Backside AR", 88.5],
+    ["ChemClip Gradient Sunlens with Backside AR", 90.5],
+    ["ChemClip Mirror Sunlens", 92.5],
+    ["ChemClip Color", 119],
+    ["ChemClip Readers Blue", 97],
+    ["ChemClip Therapeutic", 132],
     ["ChemClip Avulux", 335],
-    ["Swarovski Crystal add on", 20],
+    ["Swarovski Crystal add on", 20.5],
   ] as const;
 
   return (

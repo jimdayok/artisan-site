@@ -154,7 +154,7 @@ export function TrendsPerformanceCharts({
 }) {
   return (
     <div className="grid gap-5 xl:grid-cols-3">
-      <Panel eyebrow="Purchases" title="Monthly Purchase Trend" legend={[{ label: "Completed months and current month-to-date actuals", color: "#1f8a70" }]}>
+      <Panel eyebrow="Purchases" title="Monthly Purchase Trend" legend={[{ label: "Completed months and current-month business-day projection", color: "#1f8a70" }]}>
         <ResponsiveContainer width="100%" height="100%" debounce={50}>
           <AreaChart data={trends} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
             <defs>
@@ -172,7 +172,7 @@ export function TrendsPerformanceCharts({
         </ResponsiveContainer>
       </Panel>
 
-      <Panel eyebrow="Orders" title="Monthly Order Trend" legend={[{ label: "Completed months and current month-to-date actuals", color: "#2f5f9c" }]}>
+      <Panel eyebrow="Orders" title="Monthly Order Trend" legend={[{ label: "Completed months and current-month business-day projection", color: "#2f5f9c" }]}>
         <ResponsiveContainer width="100%" height="100%" debounce={50}>
           <AreaChart data={trends} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
             <defs>
@@ -304,7 +304,7 @@ export function ServiceExcellenceCharts({
           <BarChart data={quality} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
             <CartesianGrid stroke="#eadfce" vertical={false} />
             <XAxis dataKey="label" tick={{ fill: "#746b5f", fontSize: 12 }} tickLine={false} axisLine={false} />
-            <YAxis tick={{ fill: "#746b5f", fontSize: 12 }} tickLine={false} axisLine={false} />
+            <YAxis tick={{ fill: "#746b5f", fontSize: 12 }} tickLine={false} axisLine={false} tickFormatter={(value) => `${numberFormatter.format(Number(value))}%`} />
             <Tooltip formatter={(value) => [`${Number(value).toFixed(1)}%`, ""]} contentStyle={tooltipStyle()} />
             <Bar dataKey="warranty" stackId="quality" fill="#c9a24f" radius={[4, 4, 0, 0]} />
             <Bar dataKey="officeRedo" stackId="quality" fill="#c96856" radius={[4, 4, 0, 0]} />
@@ -388,7 +388,7 @@ export function BenchmarkingChart({ data }: { data: BenchmarkPoint[] }) {
           <YAxis tick={{ fill: "#746b5f", fontSize: 12 }} tickLine={false} axisLine={false} />
           <Tooltip contentStyle={tooltipStyle()} />
           <Bar dataKey="practice" name="Your Practice" fill="#1f8a70" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="average" name="Anonymous Practice Median" fill="#c9a24f" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="average" name="Average Practice at Lab" fill="#c9a24f" radius={[4, 4, 0, 0]} />
           <Bar dataKey="top" name="Top 25%" fill="#2f5f9c" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>

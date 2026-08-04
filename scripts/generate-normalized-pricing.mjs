@@ -47,6 +47,13 @@ const materialAddOnsByCode = {
   A6: [],
 };
 
+// These designs exist in the authoritative DVI price artifact but are absent
+// from the legacy flat workbook export. Keep their names and prices sourced
+// from DVI and Lookup.xlsx instead of hand-maintaining customer prices.
+const dviSupplementStylesByCode = new Map([
+  ["P6", new Set(["SEQUEL MEETING", "SEQUEL COMPUTER"])],
+]);
+
 const taxonomyBrandMap = new Map([
   ["ARTISAN", "Artisan"],
   ["IOT", "IOT"],
@@ -798,6 +805,43 @@ function dviRowsToGeneratedPayload(
   };
 }
 
+async function addDviSupplements(
+  code,
+  payload,
+  lookupMap,
+  arLookupMap,
+  materialLookupMap
+) {
+  const supplementalStyles = dviSupplementStylesByCode.get(code);
+  const dviPath = getDviSourcePath(code);
+  if (!supplementalStyles?.size || !existsSync(dviPath)) return payload;
+
+  const dviPayload = await readJson(dviPath);
+  const rows = (dviPayload.rows ?? []).filter((row) =>
+    supplementalStyles.has(normalizeKey(row.productStyleCode))
+  );
+  if (!rows.length) return payload;
+
+  const supplement = dviRowsToGeneratedPayload(
+    code,
+    rows,
+    lookupMap,
+    arLookupMap,
+    materialLookupMap,
+    dviPayload.scheduleCatalog ?? {}
+  );
+  const existingStyles = new Set(
+    (payload.rows ?? []).map((row) => normalizeKey(row.designStyle))
+  );
+  const missingRows = supplement.rows.filter(
+    (row) => !existingStyles.has(normalizeKey(row.designStyle))
+  );
+
+  return missingRows.length
+    ? { ...payload, rows: [...(payload.rows ?? []), ...missingRows] }
+    : payload;
+}
+
 async function readTargetCodes() {
   const targetCodes = new Set();
 
@@ -904,6 +948,18 @@ async function main() {
           assumptions: [`No standard or DVI source file found for ${code}.`],
         },
       };
+    }
+
+    if (source.kind === "standard") {
+      payload = await progress.run(`add DVI supplements ${code}`, () =>
+        addDviSupplements(
+          code,
+          payload,
+          lookupMap,
+          arLookupMap,
+          materialLookupMap
+        )
+      );
     }
 
     const {

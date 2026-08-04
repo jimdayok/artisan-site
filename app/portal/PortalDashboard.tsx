@@ -73,7 +73,6 @@ import {
   type PortalDashboardV1State,
 } from "@/lib/portal/dashboardV1";
 import {
-  PracticePerformanceScoreChart,
   ServiceExcellenceCharts,
   MonthlyUsageCharts,
   TrendsPerformanceCharts,
@@ -82,10 +81,6 @@ import {
   type QualityPoint,
   type TrendPoint,
 } from "./PracticeIntelligenceCharts";
-import {
-  calculateCustomerPracticePerformanceScore,
-  type PracticePerformanceScoreFactors,
-} from "@/lib/portal/performanceScore";
 
 const PORTAL_ACCESS_LOGIN_URL = portalAccessLoginUrl();
 const PORTAL_ACCESS_LOGOUT_URL = "/portal/logout";
@@ -778,7 +773,7 @@ const portalSectionCards: PortalSectionCard[] = [
   {
     section: "performance",
     title: "Performance Review",
-    body: "Review your practice trends, practice-controlled remake signals, and anonymous peer benchmarks without exposing lab-wide performance.",
+    body: "Review your practice trends, practice-controlled remake signals, and average-practice benchmarks without exposing lab-wide totals.",
     href: "/portal/performance",
     cta: "Open Performance",
   },
@@ -1116,12 +1111,10 @@ type PracticeIntelligenceModel = {
   programMix: MixPoint[];
   brandUsage: MonthlyUsagePoint[];
   materialUsage: MonthlyUsagePoint[];
+  highIndexDataPending: boolean;
   specialtyUsage: MonthlyUsagePoint[];
   turnaround: MonthlyUsagePoint[];
   quality: QualityPoint[];
-  score: number;
-  scoreFactors: Omit<PracticePerformanceScoreFactors, "previousMonthLabRemakes">;
-  scoreLabel: "Excellent" | "Good" | "Needs Attention";
   reportMonths: {
     prior: string;
     previous: string;
@@ -1135,6 +1128,11 @@ type PracticeIntelligenceModel = {
   cmJobs: number;
   priorJpd: number | null;
   currentJpd: number | null;
+  projectedMonthJobs: number | null;
+  projectedMonthSales: number | null;
+  businessDaysElapsed: number;
+  businessDaysInMonth: number;
+  currentMonthDataAvailable: boolean;
   previousJpd: number | null;
   vspShare: number;
   privatePayShare: number;
@@ -1287,10 +1285,24 @@ function buildTargetInvitations(programs: string[]): PracticeIntelligenceModel["
   });
 }
 
-function statusForScore(score: number): PracticeIntelligenceModel["scoreLabel"] {
-  if (score >= 82) return "Excellent";
-  if (score >= 66) return "Good";
-  return "Needs Attention";
+function businessDayProgress(anchor?: string) {
+  const parsed = anchor ? new Date(`${anchor.slice(0, 10)}T12:00:00`) : new Date();
+  const date = Number.isNaN(parsed.getTime()) ? new Date() : parsed;
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDate();
+  let elapsed = 0;
+  let total = 0;
+
+  for (let current = 1; current <= new Date(year, month + 1, 0).getDate(); current += 1) {
+    const weekday = new Date(year, month, current).getDay();
+    if (weekday !== 0 && weekday !== 6) {
+      total += 1;
+      if (current <= day) elapsed += 1;
+    }
+  }
+
+  return { elapsed, total };
 }
 
 function buildPracticeIntelligenceModel({
@@ -1311,15 +1323,25 @@ function buildPracticeIntelligenceModel({
   const pmJobs = asNumber(jobs?.pm ?? account?.pmJobs);
   const ppmJobs = asNumber(jobs?.ppm ?? account?.ppmJobs);
   const mix = dashboard?.vsp_private_pay_mix;
-  const vspJobs = asNumber(mix?.vsp_jobs?.cm ?? account?.cmVspJobs);
-  const vspShare = pctValue(mix?.vsp_share ?? account?.cmVspSow ?? (cmJobs ? vspJobs / cmJobs : 0));
+  const vspJobs = asNumber(mix?.vsp_jobs?.pm ?? account?.pmVspJobs);
+  const vspShare = pctValue(account?.pmVspSow ?? (pmJobs ? vspJobs / pmJobs : 0));
   const privatePayShare = Math.max(0, 100 - vspShare);
+  const reportAnchor =
+    dashboard?.data_refresh_date || account?.lastShippedDateGlobal || "";
+  const businessDays = businessDayProgress(reportAnchor);
+  const currentMonthDataAvailable = cmJobs > 0 || cmSales > 0;
   const currentJpd =
     account && Number.isFinite(Number(account.cmJpd)) && Number(account.cmJpd) > 0
       ? Number(account.cmJpd)
       : cmJobs > 0
-        ? cmJobs / 22
+        ? cmJobs / Math.max(1, businessDays.elapsed)
         : null;
+  const projectedMonthJobs =
+    currentJpd === null ? null : currentJpd * businessDays.total;
+  const projectedMonthSales =
+    cmSales > 0 && businessDays.elapsed > 0
+      ? (cmSales / businessDays.elapsed) * businessDays.total
+      : null;
   const previousJpd =
     account && Number.isFinite(Number(account.pmJpd)) && Number(account.pmJpd) > 0
       ? Number(account.pmJpd)
@@ -1335,8 +1357,7 @@ function buildPracticeIntelligenceModel({
   const programFlags = dashboard?.program_usage?.flags;
   const quality = dashboard?.quality_metrics;
   const supplemental = dashboard?.supplemental_intelligence;
-  const reportAnchor =
-    dashboard?.data_refresh_date || account?.lastShippedDateGlobal || "";
+  const peerBenchmarks = getPortalPeerBenchmarks(dashboard?.account_id || account?.accountNumber);
   const reportMonths = {
     prior: relativeMonthLabel(2, reportAnchor),
     previous: relativeMonthLabel(1, reportAnchor),
@@ -1350,37 +1371,27 @@ function buildPracticeIntelligenceModel({
   const officeRedoPpm = pctValue(quality?.office_redo_pct?.ppm);
   const nonAdaptCm = pctValue(quality?.non_adapt_pct?.cm);
   const nonAdaptPm = pctValue(quality?.non_adapt_pct?.pm);
-  const turnaroundPm = asNumber(supplemental?.turnaround?.average_days?.pm);
-  const orderTrendPercent =
-    previousJpd !== null && priorJpd !== null && priorJpd > 0
-      ? (previousJpd / priorJpd) * 100
-      : 0;
-  const performanceScore = calculateCustomerPracticePerformanceScore({
-    previousMonthTurnaround: turnaroundPm,
-    previousMonthOrderTrend: orderTrendPercent,
-    previousMonthOfficeRemakes: officeRedoPm,
-  });
-  const score = performanceScore.score;
   const trends = [
     { label: reportMonths.prior, sales: ppmSales, jobs: ppmJobs },
     { label: reportMonths.previous, sales: pmSales, jobs: pmJobs },
-    { label: `${reportMonths.current} MTD`, sales: cmSales, jobs: cmJobs },
+    ...(projectedMonthJobs !== null || projectedMonthSales !== null ? [{
+      label: `${reportMonths.current} projected`,
+      sales: projectedMonthSales ?? 0,
+      jobs: projectedMonthJobs ?? 0,
+    }] : []),
   ];
   const orderRateTrends = [
     { label: reportMonths.prior, sales: 0, jobs: priorJpd ?? 0 },
     { label: reportMonths.previous, sales: 0, jobs: previousJpd ?? 0 },
-    { label: `${reportMonths.current} MTD`, sales: 0, jobs: currentJpd ?? 0 },
+    ...(currentJpd === null ? [] : [{ label: `${reportMonths.current} MTD`, sales: 0, jobs: currentJpd }]),
   ];
   const programMix = [
-    { label: "Modern Frame", value: isActiveUsage(account?.modernFrmUsage) || programFlags?.modern_frame ? 82 : 18, color: "#1f8a70" },
-    { label: "ChemClip", value: isActiveUsage(account?.chemClipUsage) || programFlags?.chemclip ? 68 : 14, color: "#2f5f9c" },
-    { label: "Tokai", value: isActiveUsage(account?.tokaiUsage) || programFlags?.tokai ? 70 : 12, color: "#c9a24f" },
-    { label: "SpecCheck", value: isActiveUsage(account?.specCheckUsage) || programFlags?.speccheck ? 64 : 10, color: "#c96856" },
-  ];
+    { label: "Modern Frame", active: Boolean(isActiveUsage(account?.modernFrmUsage) || programFlags?.modern_frame), color: "#1f8a70" },
+    { label: "ChemClip", active: Boolean(isActiveUsage(account?.chemClipUsage) || programFlags?.chemclip), color: "#2f5f9c" },
+    { label: "Tokai", active: Boolean(isActiveUsage(account?.tokaiUsage) || programFlags?.tokai), color: "#c9a24f" },
+    { label: "SpecCheck", active: Boolean(isActiveUsage(account?.specCheckUsage) || programFlags?.speccheck), color: "#c96856" },
+  ].filter((item) => item.active).map((item) => ({ ...item, value: 100 }));
   const opportunities: PracticeIntelligenceModel["opportunities"] = [];
-  if (cmJobs < pmJobs) {
-    // Current month is directional only; PM vs PPM JPD below is the primary volume-health signal.
-  }
   if (previousJpd !== null && priorJpd !== null && previousJpd < priorJpd) {
     const decline = ((previousJpd - priorJpd) / priorJpd) * 100;
     opportunities.push({
@@ -1408,6 +1419,25 @@ function buildPracticeIntelligenceModel({
       current: `${reportMonths.previous} ${officeRedoPm.toFixed(1)}% vs ${reportMonths.prior} ${officeRedoPpm.toFixed(1)}%`,
       why: "Office remake increases usually point to measurement, progressive fitting, or frame-selection issues.",
       action: "Review measurements, progressive fitting, and frame selection with the team.",
+    });
+  }
+  const previousMonthMultiplePairs = asNumber(
+    supplemental?.specialty_usage?.multiple_pair_jobs?.pm
+  );
+  const previousMonthMultiplePairPct = pmJobs > 0
+    ? (previousMonthMultiplePairs / pmJobs) * 100
+    : 0;
+  const multiplePairBenchmarkPct = Math.max(
+    6,
+    peerBenchmarks.averageMultiplePairPct ?? 0
+  );
+  if (pmJobs > 0 && previousMonthMultiplePairPct < multiplePairBenchmarkPct) {
+    opportunities.push({
+      title: "Multiple-pair opportunity",
+      priority: "yellow",
+      current: `${previousMonthMultiplePairPct.toFixed(1)}% vs ${multiplePairBenchmarkPct.toFixed(1)}% average practice at lab`,
+      why: "Multiple-pair usage is below the lab's average-account benchmark, with a minimum benchmark of 6%.",
+      action: "Review second-pair recommendations and the Artisan Multiple Pair Program with the team.",
     });
   }
   opportunities.push(
@@ -1466,6 +1496,13 @@ function buildPracticeIntelligenceModel({
     monthlySharePoint("1.67", supplemental?.material_usage?.hi_index_167_jobs, { ppm: ppmJobs, pm: pmJobs, cm: cmJobs }),
     monthlySharePoint("1.74", supplemental?.material_usage?.hi_index_174_jobs, { ppm: ppmJobs, pm: pmJobs, cm: cmJobs }),
   ];
+  const highIndexDataPending =
+    pmJobs > 0 &&
+    [
+      supplemental?.material_usage?.hi_index_160_jobs?.pm,
+      supplemental?.material_usage?.hi_index_167_jobs?.pm,
+      supplemental?.material_usage?.hi_index_174_jobs?.pm,
+    ].every((value) => !Number(value));
   const specialtyUsage = [
     monthlySharePoint("Photochromic", supplemental?.specialty_usage?.photochromic_jobs, { ppm: ppmJobs, pm: pmJobs, cm: cmJobs }),
     monthlySharePoint("Polarized", supplemental?.specialty_usage?.polarized_jobs, { ppm: ppmJobs, pm: pmJobs, cm: cmJobs }),
@@ -1578,6 +1615,7 @@ function buildPracticeIntelligenceModel({
     programMix,
     brandUsage,
     materialUsage,
+    highIndexDataPending,
     specialtyUsage,
     turnaround,
     quality: [
@@ -1585,14 +1623,6 @@ function buildPracticeIntelligenceModel({
       { label: reportMonths.previous, warranty: warrantyPm, officeRedo: officeRedoPm, labRedo: 0, nonAdapt: nonAdaptPm },
       { label: `${reportMonths.current} MTD`, warranty: warrantyCm, officeRedo: officeRedoCm, labRedo: 0, nonAdapt: nonAdaptCm },
     ],
-    score,
-    scoreFactors: {
-      previousMonthTurnaround: performanceScore.factors.previousMonthTurnaround,
-      previousMonthOrderTrend: performanceScore.factors.previousMonthOrderTrend,
-      previousMonthOfficeRemakes:
-        performanceScore.factors.previousMonthOfficeRemakes,
-    },
-    scoreLabel: statusForScore(score),
     reportMonths,
     ppmSales,
     pmSales,
@@ -1602,6 +1632,11 @@ function buildPracticeIntelligenceModel({
     cmJobs,
     priorJpd,
     currentJpd,
+    projectedMonthJobs,
+    projectedMonthSales,
+    businessDaysElapsed: businessDays.elapsed,
+    businessDaysInMonth: businessDays.total,
+    currentMonthDataAvailable,
     previousJpd,
     vspShare,
     privatePayShare,
@@ -1614,7 +1649,7 @@ function buildPracticeIntelligenceModel({
       previousJpd !== null && priorJpd !== null
         ? getPercentChange(previousJpd, priorJpd)
         : null,
-    peerBenchmarks: getPortalPeerBenchmarks(dashboard?.account_id || account?.accountNumber),
+    peerBenchmarks,
     opportunities,
     programs,
     rewards,
@@ -1742,8 +1777,8 @@ function PracticeIntelligenceHero({
           <IntelligenceMetric
             icon={CircleDollarSign}
             label={`${intelligence.reportMonths.current} Purchases MTD`}
-            value={formatMoney(intelligence.cmSales)}
-            detail="Actual month-to-date purchases."
+            value={intelligence.currentMonthDataAvailable ? formatMoney(intelligence.cmSales) : "Pending source refresh"}
+            detail={intelligence.projectedMonthSales === null ? "Current-month purchase data has not arrived from the source report." : `Projected month: ${formatMoney(intelligence.projectedMonthSales)}`}
           />
           <IntelligenceMetric
             icon={Package}
@@ -1758,23 +1793,21 @@ function PracticeIntelligenceHero({
             trend={intelligence.jobsTrend}
             detail={intelligence.priorJpd === null ? `${intelligence.reportMonths.prior} OPD pending` : `${intelligence.reportMonths.prior} ${intelligence.priorJpd.toFixed(1)} OPD`}
           />
-          {intelligence.currentJpd !== null ? (
-            <IntelligenceMetric
-              icon={Activity}
-              label={`${intelligence.reportMonths.current} Orders MTD`}
-              value={formatCount(intelligence.cmJobs)}
-              detail={`${intelligence.currentJpd.toFixed(1)} actual orders per day MTD`}
-            />
-          ) : null}
+          <IntelligenceMetric
+            icon={Activity}
+            label={`${intelligence.reportMonths.current} Orders MTD`}
+            value={intelligence.currentMonthDataAvailable ? formatCount(intelligence.cmJobs) : "Pending source refresh"}
+            detail={intelligence.projectedMonthJobs === null ? "Current-month order data has not arrived from the source report." : `${intelligence.currentJpd?.toFixed(1)} orders/day · ${formatCount(intelligence.projectedMonthJobs)} projected`}
+          />
           <IntelligenceMetric
             icon={Target}
             label="VSP / Private Pay"
             value={`${Math.round(intelligence.vspShare)}%`}
-            detail={`${Math.round(intelligence.privatePayShare)}% private pay mix`}
+            detail={`${Math.round(intelligence.privatePayShare)}% private pay · Average practice at lab ${intelligence.peerBenchmarks.averageVspPct}% VSP`}
           />
           <IntelligenceMetric
             icon={Layers}
-            label="Assigned Price Lists"
+            label={normalizeAssignedPriceListCodes(dashboardAccount?.used_price_lists ?? []).length === 1 ? "Assigned Price List" : "Assigned Price Lists"}
             value={
               normalizeAssignedPriceListCodes(
                 dashboardAccount?.used_price_lists ?? []
@@ -1788,57 +1821,16 @@ function PracticeIntelligenceHero({
   );
 }
 
-function PracticePerformanceScoreSection({ intelligence }: { intelligence: PracticeIntelligenceModel }) {
-  const factorRows = [
-    ["Previous Month Turnaround", intelligence.scoreFactors.previousMonthTurnaround],
-    ["Previous Month Order Trend", intelligence.scoreFactors.previousMonthOrderTrend],
-    ["Previous Month Office Remakes", intelligence.scoreFactors.previousMonthOfficeRemakes],
-  ] as const;
-
-  return (
-    <section className="grid gap-6 rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3 xl:grid-cols-[0.85fr_1.15fr]">
-      <div>
-        <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#7a6b49]">
-          Practice Performance Score Preview
-        </p>
-        <p className="mt-3 rounded-md border border-[#d9c8a6] bg-white/75 px-3 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#59635f]">
-          Previous-month turnaround, order trend, and practice-controlled remake scoring
-        </p>
-        <div className="mt-5">
-          <PracticePerformanceScoreChart score={intelligence.score} />
-        </div>
-        <div className="mt-4 text-center">
-          <p className="text-2xl font-semibold text-[#142724]">{intelligence.scoreLabel}</p>
-          <p className="mt-1 text-sm font-semibold text-[#1f8a70]">
-            Based on {intelligence.reportMonths.previous} results
-          </p>
-        </div>
-      </div>
-      <div className="grid content-center gap-3">
-        {factorRows.map(([label, value]) => (
-          <div key={label} className="grid gap-2 rounded-md border border-[#eadfce] bg-white/70 p-3 sm:grid-cols-[11rem_1fr_3rem] sm:items-center">
-            <p className="text-sm font-semibold text-[#142724]">{label}</p>
-            <div className="h-2 overflow-hidden rounded-full bg-[#e7ddcc]">
-              <div className="h-full rounded-full bg-[#1f8a70]" style={{ width: `${value === 0 ? 0 : Math.max(8, Math.min(100, value))}%` }} />
-            </div>
-            <p className="text-sm font-semibold text-[#59635f] sm:text-right">
-              {value === 0 ? "Pending" : Math.round(value)}
-            </p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 function TierProgressTracker({
   pmJobs,
   cmJobs,
   reportMonths,
+  currentMonthDataAvailable,
 }: {
   pmJobs: number;
   cmJobs: number;
   reportMonths: PracticeIntelligenceModel["reportMonths"];
+  currentMonthDataAvailable: boolean;
 }) {
   const tierLabel = monthlyTierLabel(pmJobs);
   const progress = Math.min(100, Math.max(0, pmJobs));
@@ -1859,7 +1851,9 @@ function TierProgressTracker({
         </div>
         <div className="grid gap-1 text-sm font-semibold text-[#59635f] md:text-right">
           <p>{formatCount(pmJobs)} orders in {reportMonths.previous} · {progress.toFixed(0)}% toward Tier 4</p>
-          <p>{reportMonths.current} MTD: {formatCount(cmJobs)} actual orders</p>
+          <p>
+            {reportMonths.current} MTD: {currentMonthDataAvailable ? `${formatCount(cmJobs)} actual orders` : "Pending source refresh"}
+          </p>
         </div>
       </div>
       <div className="mt-5 h-4 overflow-hidden rounded-full bg-[#e7ddcc]">
@@ -1895,12 +1889,14 @@ function DailyTrendSummary({ intelligence }: { intelligence: PracticeIntelligenc
         <div>
           <p className="text-sm font-semibold text-[#59635f]">{intelligence.reportMonths.current} MTD</p>
           <p className="mt-1 text-sm leading-6 text-[#6d746f]">
-            {current === null ? "Pending" : `${current.toFixed(1)} actual orders per day across ${formatCount(intelligence.cmJobs)} month-to-date orders.`}
+            {current === null ? "Pending source refresh" : `${current.toFixed(1)} orders per business day across ${formatCount(intelligence.cmJobs)} month-to-date orders.`}
           </p>
         </div>
       </div>
       <p className="mt-4 rounded-md border border-[#d9c8a6] bg-white/70 px-4 py-3 text-xs font-semibold leading-5 text-[#59635f]">
-        {intelligence.reportMonths.current} values are actual month-to-date purchases and orders. No projected totals are shown.
+        {intelligence.projectedMonthJobs === null
+          ? `${intelligence.reportMonths.current} current-month data is pending from the source report; zero is not being treated as a confirmed result.`
+          : `${intelligence.reportMonths.current} is trending toward ${formatCount(intelligence.projectedMonthJobs)} orders based on ${intelligence.currentJpd?.toFixed(1)} orders per business day, ${intelligence.businessDaysElapsed} business days elapsed, and ${intelligence.businessDaysInMonth} business days in the month.`}
       </p>
     </section>
   );
@@ -1924,7 +1920,7 @@ function OpportunitiesCenter({ opportunities }: { opportunities: PracticeIntelli
         </div>
         <span className="inline-flex w-fit items-center gap-2 rounded-md border border-[#d9c8a6] bg-white/75 px-3 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#59635f]">
           <Sparkles className="h-4 w-4 text-[#c9a24f]" />
-          AI-ready framework
+          AI-Assisted Insights
         </span>
       </div>
       <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
@@ -2071,7 +2067,7 @@ function RemakePerformanceCenter({
       </p>
       <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Quality and remake signals</h2>
       <p className="mt-3 max-w-3xl text-sm leading-6 text-[#6d746f]">
-        Compare practice-controlled remake signals over time and against an anonymous practice median. No lab-wide remake or business-volume data is included.
+        Compare practice-controlled remake signals over time and against the average practice at the lab. No lab-wide totals or individual-practice data is included.
       </p>
       <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {metrics.map((metric) => {
@@ -2113,7 +2109,7 @@ function RemakePerformanceCenter({
               </p>
               {metric.peer !== null ? (
                 <p className="mt-2 rounded-full bg-[#f4eee4] px-3 py-1.5 text-xs font-semibold text-[#59635f]">
-                  Anonymous practice median: {metric.peer.toFixed(1)}%
+                  Average Practice at Lab: {metric.peer.toFixed(1)}%
                 </p>
               ) : null}
             </article>
@@ -2142,17 +2138,17 @@ function TurnaroundBenchmarkCenter({
       <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#7a6b49]">
         Turnaround Performance
       </p>
-      <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Your turnaround vs anonymous practice median</h2>
+      <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Your turnaround vs average practice at lab</h2>
       <p className="mt-3 max-w-3xl text-sm leading-6 text-[#6d746f]">
-        Turnaround Time = Average business days in lab production. Does not include shipping time. Does not include frame wait time.
+        Turnaround time is measured from when the frame is received, if applicable, until the order is marked shipped. It does not include time waiting for frames or outbound shipping time to the customer.
       </p>
       <div className="mt-6 grid gap-4 md:grid-cols-3">
         <DashboardV1Card label={`Your ${reportMonths.previous} Avg Turnaround`} value={pmCustomer ? `${pmCustomer.toFixed(1)} days` : "Pending"} />
-        <DashboardV1Card label="Anonymous Practice Median" value={peerMedian ? `${peerMedian.toFixed(1)} days` : "Pending"} />
+        <DashboardV1Card label="Average Practice at Lab" value={peerMedian ? `${peerMedian.toFixed(1)} days` : "Pending"} />
         <DashboardV1Card
           label="Difference"
           value={pmCustomer && peerMedian ? `${difference >= 0 ? "+" : ""}${difference.toFixed(1)} days` : "Pending"}
-          detail={difference > 0 ? "Longer than the anonymous practice median" : difference < 0 ? "Faster than the anonymous practice median" : "Aligned with the anonymous practice median"}
+          detail={difference > 0 ? "Longer than the average practice at lab" : difference < 0 ? "Faster than the average practice at lab" : "Aligned with the average practice at lab"}
         />
       </div>
     </section>
@@ -2182,15 +2178,19 @@ function DataAvailabilityCard({
 function ProductBrandIntelligenceSection({
   brandUsage,
   materialUsage,
+  highIndexDataPending,
   specialtyUsage,
   programMix,
   reportMonths,
+  peerBenchmarks,
 }: {
   brandUsage: MonthlyUsagePoint[];
   materialUsage: MonthlyUsagePoint[];
+  highIndexDataPending: boolean;
   specialtyUsage: MonthlyUsagePoint[];
   programMix: MixPoint[];
   reportMonths: PracticeIntelligenceModel["reportMonths"];
+  peerBenchmarks: PortalPeerBenchmarks;
 }) {
   return (
     <section className="rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3">
@@ -2208,12 +2208,32 @@ function ProductBrandIntelligenceSection({
           <DataAvailabilityCard title="Brand Usage" label="Data Unavailable" detail="Brand count fields are unavailable for this account." />
         )}
         {hasUsageData(materialUsage) ? (
-          <MonthlyUsageCharts eyebrow="Material Usage" title="Material Share of Monthly Orders" data={materialUsage} valueType="percent" monthLabels={reportMonths} />
+          <div>
+            <MonthlyUsageCharts eyebrow="Material Usage" title="Material Share of Monthly Orders" data={materialUsage} valueType="percent" monthLabels={reportMonths} />
+            {highIndexDataPending ? (
+              <p className="mt-3 rounded-md border border-[#d9c8a6] bg-[#fff8e8] px-3 py-2 text-xs font-semibold leading-5 text-[#6f5422]">
+                High-index usage exists in the source report, but its 1.60, 1.67, and 1.74 breakdown is pending correction in the portal export. Zero is not being treated as no usage.
+              </p>
+            ) : null}
+          </div>
         ) : (
           <DataAvailabilityCard title="Material Usage" label="Data Unavailable" detail="Material count fields are unavailable for this account." />
         )}
         {hasUsageData(specialtyUsage) ? (
-          <MonthlyUsageCharts eyebrow="Specialty Usage" title="Specialty Share of Monthly Orders" data={specialtyUsage} valueType="percent" monthLabels={reportMonths} />
+          <div>
+            <MonthlyUsageCharts eyebrow="Specialty Usage" title="Specialty Share of Monthly Orders" data={specialtyUsage} valueType="percent" monthLabels={reportMonths} />
+            <div className="mt-3 grid gap-2 sm:grid-cols-3">
+              {[
+                ["Photochromic", peerBenchmarks.averagePhotochromicPct],
+                ["Polarized", peerBenchmarks.averagePolarizedPct],
+                ["Multiple Pair", Math.max(6, peerBenchmarks.averageMultiplePairPct ?? 0)],
+              ].map(([label, value]) => (
+                <p key={String(label)} className="rounded-md border border-[#eadfce] bg-white/78 px-3 py-2 text-xs font-semibold text-[#59635f]">
+                  {label} Lab Average: {typeof value === "number" ? `${value.toFixed(1)}%` : "Pending"}
+                </p>
+              ))}
+            </div>
+          </div>
         ) : (
           <DataAvailabilityCard title="Specialty Usage" label="Data Unavailable" detail="Specialty product count fields are unavailable for this account." />
         )}
@@ -2222,19 +2242,19 @@ function ProductBrandIntelligenceSection({
             Status Signals
           </span>
           <h3 className="mt-4 text-xl font-semibold text-[#142724]">Program Mix</h3>
-          <div className="mt-4 grid gap-3">
+          {programMix.length > 0 ? <div className="mt-4 grid gap-3">
             {programMix.map((item) => (
               <div key={item.label}>
                 <div className="flex items-center justify-between gap-3 text-sm">
                   <span className="font-semibold text-[#142724]">{item.label}</span>
-                  <span className="text-[#6d746f]">{item.value >= 50 ? "Active" : "Not Recorded"}</span>
+                  <span className="text-[#6d746f]">Active</span>
                 </div>
                 <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#e7ddcc]">
                   <div className="h-full rounded-full" style={{ width: `${Math.max(10, item.value)}%`, backgroundColor: item.color }} />
                 </div>
               </div>
             ))}
-          </div>
+          </div> : <p className="mt-4 text-sm text-[#6d746f]">No active status signals.</p>}
         </div>
       </div>
     </section>
@@ -2256,16 +2276,13 @@ function BenchmarkingSection({ benchmarks }: { benchmarks: PortalPeerBenchmarks 
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#7a6b49]">
             Benchmarking
           </p>
-          <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Anonymous practice comparisons</h2>
+          <h2 className="mt-2 text-3xl font-semibold text-[#142724]">Average practice at lab comparisons</h2>
         </div>
-        <span className="inline-flex w-fit rounded-md border border-[#d9c8a6] bg-white/75 px-3 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#59635f]">
-          {benchmarks.cohortSize} active practices
-        </span>
       </div>
       <div className="mt-6 grid gap-4 md:grid-cols-3">
         <DataAvailabilityCard title="Growth Position" label={position} detail="Relative completed-month growth position. Peer direction, totals, and individual practices remain private." />
-        <DataAvailabilityCard title="Office Remake Median" label={benchmarks.medianOfficeRedoPct === null ? "Pending" : `${benchmarks.medianOfficeRedoPct.toFixed(1)}%`} detail="Anonymous completed-month practice median." />
-        <DataAvailabilityCard title="Turnaround Median" label={benchmarks.medianTurnaroundDays === null ? "Pending" : `${benchmarks.medianTurnaroundDays.toFixed(1)} days`} detail="Anonymous completed-month practice median without lab-wide operational disclosure." />
+        <DataAvailabilityCard title="Office Remake Average" label={benchmarks.medianOfficeRedoPct === null ? "Pending" : `${benchmarks.medianOfficeRedoPct.toFixed(1)}%`} detail="Completed-month average-practice benchmark." />
+        <DataAvailabilityCard title="Turnaround Average" label={benchmarks.medianTurnaroundDays === null ? "Pending" : `${benchmarks.medianTurnaroundDays.toFixed(1)} days`} detail="Completed-month average-practice benchmark without lab-wide totals." />
       </div>
     </section>
   );
@@ -2463,7 +2480,6 @@ function PracticeIntelligenceCenter({
         intelligence={intelligence}
         adminPreviewAccountName={adminPreviewAccountName}
       />
-      <PracticePerformanceScoreSection intelligence={intelligence} />
       <section id="trends" className="scroll-mt-24 lg:col-span-3">
         <TrendsPerformanceCharts trends={intelligence.trends} vspMix={intelligence.vspMix} />
         <DailyTrendSummary intelligence={intelligence} />
@@ -2472,6 +2488,7 @@ function PracticeIntelligenceCenter({
         pmJobs={intelligence.pmJobs}
         cmJobs={intelligence.cmJobs}
         reportMonths={intelligence.reportMonths}
+        currentMonthDataAvailable={intelligence.currentMonthDataAvailable}
       />
       <div id="opportunities" className="scroll-mt-24 lg:col-span-3">
         <OpportunitiesCenter opportunities={intelligence.opportunities} />
@@ -2479,9 +2496,11 @@ function PracticeIntelligenceCenter({
       <ProductBrandIntelligenceSection
         brandUsage={intelligence.brandUsage}
         materialUsage={intelligence.materialUsage}
+        highIndexDataPending={intelligence.highIndexDataPending}
         specialtyUsage={intelligence.specialtyUsage}
         programMix={intelligence.programMix}
         reportMonths={intelligence.reportMonths}
+        peerBenchmarks={intelligence.peerBenchmarks}
       />
       <section className="lg:col-span-3">
         <ServiceExcellenceCharts

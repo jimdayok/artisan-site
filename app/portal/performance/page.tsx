@@ -194,13 +194,13 @@ export default async function PortalPerformancePage() {
               </div>
             </section>
             <section className="mt-10 border border-[#d8c49b] bg-[#fffaf1]/72 p-6 shadow-[0_18px_55px_rgba(23,42,40,0.08)] sm:p-8">
-              <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[#8b7650]">Anonymous Practice Benchmarks</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[#8b7650]">Average Practice at Lab Benchmarks</p>
               <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em] text-[#172a28]">Understand your position without exposing another practice or lab</h2>
-              <p className="mt-3 max-w-3xl text-sm leading-6 text-[#706759]">Benchmarks use medians and percentile bands across {benchmarks.cohortSize} active practices. No lab-wide sales, lab-redo, or individual-practice data is shown.</p>
+              <p className="mt-3 max-w-3xl text-sm leading-6 text-[#706759]">Benchmarks compare the signed-in practice with average-practice percentages and timing. No practice count, lab-wide totals, or individual-practice data is shown.</p>
               <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <StatCard label="Office Remake Median" value={benchmarks.medianOfficeRedoPct === null ? "Pending" : `${benchmarks.medianOfficeRedoPct.toFixed(1)}%`} detail="Anonymous completed-month practice median." />
-                <StatCard label="Warranty Median" value={benchmarks.medianWarrantyPct === null ? "Pending" : `${benchmarks.medianWarrantyPct.toFixed(1)}%`} detail="Anonymous completed-month practice median." />
-                <StatCard label="Non-Adapt Median" value={benchmarks.medianNonAdaptPct === null ? "Pending" : `${benchmarks.medianNonAdaptPct.toFixed(1)}%`} detail="Anonymous completed-month practice median." />
+                <StatCard label="Office Remake Average" value={benchmarks.medianOfficeRedoPct === null ? "Pending" : `${benchmarks.medianOfficeRedoPct.toFixed(1)}%`} detail="Completed-month average practice at lab." />
+                <StatCard label="Warranty Average" value={benchmarks.medianWarrantyPct === null ? "Pending" : `${benchmarks.medianWarrantyPct.toFixed(1)}%`} detail="Completed-month average practice at lab." />
+                <StatCard label="Non-Adapt Average" value={benchmarks.medianNonAdaptPct === null ? "Pending" : `${benchmarks.medianNonAdaptPct.toFixed(1)}%`} detail="Completed-month average practice at lab." />
                 <StatCard
                   label="Growth Position"
                   value={benchmarks.growthPercentile === null ? "Pending" : `${benchmarks.growthPercentile}th percentile`}

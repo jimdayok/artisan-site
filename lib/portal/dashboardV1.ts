@@ -188,6 +188,10 @@ export type PortalPeerBenchmarks = {
   medianNonAdaptPct: number | null;
   medianTurnaroundDays: number | null;
   growthPercentile: number | null;
+  averageVspPct: number;
+  averagePhotochromicPct: number | null;
+  averagePolarizedPct: number | null;
+  averageMultiplePairPct: number | null;
 };
 
 type DashboardV1IndexRow = {
@@ -308,20 +312,27 @@ export function getPortalDashboardV1ByAccount(accountNumber?: string): PortalDas
   };
 }
 
-function median(values: number[]) {
-  const sorted = values.filter(Number.isFinite).sort((a, b) => a - b);
-  if (!sorted.length) return null;
-  const middle = Math.floor(sorted.length / 2);
-  return sorted.length % 2
-    ? sorted[middle]
-    : (sorted[middle - 1] + sorted[middle]) / 2;
+function average(values: number[]) {
+  const valid = values.filter(Number.isFinite);
+  if (!valid.length) return null;
+  return valid.reduce((total, value) => total + value, 0) / valid.length;
+}
+
+function previousMonthShare(
+  account: PortalDashboardV1Account,
+  count: number | undefined
+) {
+  const jobs = account.purchase_summary.jobs.pm;
+  return jobs > 0 ? ((count ?? 0) / jobs) * 100 : Number.NaN;
 }
 
 export function getPortalPeerBenchmarks(accountNumber?: string): PortalPeerBenchmarks {
   const resolvedAccountId = resolveAccountId(accountNumber ?? "");
-  const accounts = Object.values(portalDashboardV1Bundle.accountsById as Record<string, PortalDashboardV1Account>)
-    .filter((account) => account.account_id !== resolvedAccountId)
+  const labAccounts = Object.values(portalDashboardV1Bundle.accountsById as Record<string, PortalDashboardV1Account>)
     .filter((account) => account.purchase_summary.jobs.pm > 0);
+  const accounts = labAccounts.filter(
+    (account) => account.account_id !== resolvedAccountId
+  );
   const currentAccount = resolvedAccountId
     ? (portalDashboardV1Bundle.accountsById as Record<string, PortalDashboardV1Account>)[resolvedAccountId]
     : undefined;
@@ -347,21 +358,48 @@ export function getPortalPeerBenchmarks(accountNumber?: string): PortalPeerBench
 
   return {
     cohortSize: accounts.length,
-    medianWarrantyPct: median(
+    medianWarrantyPct: average(
       accounts.map((account) => (account.quality_metrics?.warranty_pct.pm ?? Number.NaN) * 100)
     ),
-    medianOfficeRedoPct: median(
+    medianOfficeRedoPct: average(
       accounts.map((account) => (account.quality_metrics?.office_redo_pct.pm ?? Number.NaN) * 100)
     ),
-    medianNonAdaptPct: median(
+    medianNonAdaptPct: average(
       accounts.map((account) => (account.quality_metrics?.non_adapt_pct.pm ?? Number.NaN) * 100)
     ),
-    medianTurnaroundDays: median(
+    medianTurnaroundDays: average(
       accounts.map(
         (account) =>
           account.supplemental_intelligence?.turnaround?.average_days?.pm ?? Number.NaN
       )
     ),
     growthPercentile,
+    // The customer-facing VSP benchmark is the established average-account
+    // benchmark supplied by the lab, not a disclosure of lab totals.
+    averageVspPct: 34,
+    averagePhotochromicPct: average(
+      labAccounts.map((account) =>
+        previousMonthShare(
+          account,
+          account.supplemental_intelligence?.specialty_usage?.photochromic_jobs?.pm
+        )
+      )
+    ),
+    averagePolarizedPct: average(
+      labAccounts.map((account) =>
+        previousMonthShare(
+          account,
+          account.supplemental_intelligence?.specialty_usage?.polarized_jobs?.pm
+        )
+      )
+    ),
+    averageMultiplePairPct: average(
+      labAccounts.map((account) =>
+        previousMonthShare(
+          account,
+          account.supplemental_intelligence?.specialty_usage?.multiple_pair_jobs?.pm
+        )
+      )
+    ),
   };
 }

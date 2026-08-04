@@ -1423,18 +1423,22 @@ async function generateDashboard() {
   mkdirSync(releaseDir, { recursive: true });
 
   const accountsIndex = [];
-  const refreshDateCandidates = new Set();
   let accountsWithoutUsers = 0;
   const labTurnaroundAverages = buildLabTurnaroundAverages(classifiedAccounts);
+  const latestRefreshDate = classifiedAccounts
+    .map((account) => account.data_refresh_date)
+    .filter(Boolean)
+    .sort()
+    .slice(-1)[0] ?? "";
 
   for (const account of classifiedAccounts) {
-    refreshDateCandidates.add(account.data_refresh_date);
     const usersForAccount = userAccess.accountToUsersMap.get(account.account_id) ?? [];
     if (usersForAccount.length === 0) accountsWithoutUsers += 1;
     const labAverageDays = labTurnaroundAverages.get(toText(account.lab_name) || "Unknown");
 
     const accountOutput = {
       ...account,
+      data_refresh_date: account.data_refresh_date || latestRefreshDate,
       supplemental_intelligence: {
         ...(account.supplemental_intelligence ?? {}),
         turnaround: {
@@ -1457,7 +1461,7 @@ async function generateDashboard() {
       state: account.state,
       division: account.division,
       latest_date_shipped: account.latest_ship_date,
-      data_refresh_date: account.data_refresh_date,
+      data_refresh_date: account.data_refresh_date || latestRefreshDate,
       customer_type: account.division || "",
       sales_rep: account.sales_rep || "",
       cm_sales: Number(account.purchase_summary?.sales?.cm ?? 0),
@@ -1473,8 +1477,6 @@ async function generateDashboard() {
   }
 
   accountsIndex.sort((a, b) => a.account_id.localeCompare(b.account_id));
-  const latestRefreshDate = [...refreshDateCandidates].filter(Boolean).sort().slice(-1)[0] ?? "";
-
   writeJson(path.join(releaseDir, "users_to_accounts.json"), userAccess.usersToAccounts);
   writeJson(path.join(releaseDir, "accounts_index.json"), accountsIndex);
 

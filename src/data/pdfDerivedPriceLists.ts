@@ -3914,8 +3914,39 @@ export const pdfDerivedPriceLists = {
 
 export function getPdfDerivedPriceList(code: string) {
   const normalizedCode = code.trim().toUpperCase();
-
-  return pdfDerivedPriceLists[
+  const priceList = pdfDerivedPriceLists[
     normalizedCode as keyof typeof pdfDerivedPriceLists
   ];
+  if (!priceList) return undefined;
+
+  const chemClipPrices = new Map<string, string>([
+    ["ChemClip Solid Sunlens", "$85.50"],
+    ["ChemClip Drive", "$117.00"],
+    ["ChemClip Solid Sunlens with Backside AR", "$88.50"],
+    ["ChemClip Gradient Sunlens with Backside AR", "$90.50"],
+    ["ChemClip Mirror Sunlens", "$92.50"],
+    ["ChemClip Color", "$119.00"],
+    ["ChemClip Readers Blue", "$97.00"],
+    ["ChemClip Therapeutic", "$132.00"],
+    ["ChemClip Avulux", "$335.00"],
+    ["Swarovski Crystal add on", "$20.50"],
+  ]);
+
+  return {
+    ...priceList,
+    rows: priceList.rows.map((sourceRow) => {
+      const row = sourceRow.map((cell) =>
+        cell === "ChemClip Therapuetic" ? "ChemClip Therapeutic" : cell
+      );
+      row.forEach((cell, index) => {
+        const price = chemClipPrices.get(cell);
+        if (!price) return;
+        const priceIndex = row.findIndex(
+          (candidate, candidateIndex) => candidateIndex > index && /^\$[\d,.]+$/.test(candidate)
+        );
+        if (priceIndex > index) row[priceIndex] = price;
+      });
+      return row;
+    }),
+  } satisfies PdfDerivedPriceList;
 }

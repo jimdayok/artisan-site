@@ -109,15 +109,16 @@ export const packageFinishing: PackageItem[] = [
 ];
 
 export const packageChemClip: PackageItem[] = [
-  pkg("pkg-chemclip-solid", "ChemClip by Chemistrie", "Add-On", "ChemClip Solid Sunlens", 85),
-  pkg("pkg-chemclip-solid-backside", "ChemClip by Chemistrie", "Add-On", "ChemClip Solid Sunlens with Backside AR", 88),
-  pkg("pkg-chemclip-gradient-backside", "ChemClip by Chemistrie", "Add-On", "ChemClip Gradient Sunlens with Backside AR", 90),
-  pkg("pkg-chemclip-mirror", "ChemClip by Chemistrie", "Add-On", "ChemClip Mirror Sunlens", 92),
-  pkg("pkg-chemclip-color", "ChemClip by Chemistrie", "Add-On", "ChemClip Color", 117),
-  pkg("pkg-chemclip-readers-blue", "ChemClip by Chemistrie", "Add-On", "ChemClip Readers Blue", 95),
-  pkg("pkg-chemclip-therapeutic", "ChemClip by Chemistrie", "Add-On", "ChemClip Therapeutic", 130),
+  pkg("pkg-chemclip-solid", "ChemClip by Chemistrie", "Add-On", "ChemClip Solid Sunlens", 85.5),
+  pkg("pkg-chemclip-drive", "ChemClip by Chemistrie", "Add-On", "ChemClip Drive", 117),
+  pkg("pkg-chemclip-solid-backside", "ChemClip by Chemistrie", "Add-On", "ChemClip Solid Sunlens with Backside AR", 88.5),
+  pkg("pkg-chemclip-gradient-backside", "ChemClip by Chemistrie", "Add-On", "ChemClip Gradient Sunlens with Backside AR", 90.5),
+  pkg("pkg-chemclip-mirror", "ChemClip by Chemistrie", "Add-On", "ChemClip Mirror Sunlens", 92.5),
+  pkg("pkg-chemclip-color", "ChemClip by Chemistrie", "Add-On", "ChemClip Color", 119),
+  pkg("pkg-chemclip-readers-blue", "ChemClip by Chemistrie", "Add-On", "ChemClip Readers Blue", 97),
+  pkg("pkg-chemclip-therapeutic", "ChemClip by Chemistrie", "Add-On", "ChemClip Therapeutic", 132),
   pkg("pkg-chemclip-avulux", "ChemClip by Chemistrie", "Add-On", "ChemClip Avulux", 335),
-  pkg("pkg-chemclip-swarovski", "ChemClip by Chemistrie", "Add-On", "Swarovski Crystal add on", 20),
+  pkg("pkg-chemclip-swarovski", "ChemClip by Chemistrie", "Add-On", "Swarovski Crystal add on", 20.5),
 ];
 
 export const packageShipping: PackageItem[] = [

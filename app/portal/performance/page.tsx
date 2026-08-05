@@ -6,7 +6,11 @@ import {
   type MonthlyPerformanceRecord,
 } from "@/lib/portal/performance";
 import PriceListAccessMessage from "../price-list/PriceListAccessMessage";
-import { getPortalPeerBenchmarks } from "@/lib/portal/dashboardV1";
+import {
+  getPortalDashboardV1ByAccount,
+  getPortalPeerBenchmarks,
+} from "@/lib/portal/dashboardV1";
+import { shouldShowAccountDrillDown } from "@/lib/portal/accountScope";
 
 export const dynamic = "force-dynamic";
 
@@ -132,6 +136,13 @@ export default async function PortalPerformancePage() {
   const completedRecord = records.at(-2);
   const priorRecord = records.at(-3);
   const benchmarks = getPortalPeerBenchmarks(access.customer.accountNumber);
+  const dashboardState = getPortalDashboardV1ByAccount(
+    access.customer.accountNumber
+  );
+  const showAccountDrillDown = shouldShowAccountDrillDown({
+    acctId: dashboardState.account?.account_id,
+    allAccountNumbers: dashboardState.account?.all_account_numbers,
+  });
   const completedGrowth =
     completedRecord && priorRecord && priorRecord.lensPairs > 0
       ? ((completedRecord.lensPairs - priorRecord.lensPairs) / priorRecord.lensPairs) * 100
@@ -158,6 +169,12 @@ export default async function PortalPerformancePage() {
             visible only to assigned portal users.
           </p>
         </div>
+
+        {showAccountDrillDown ? (
+          <p className="mt-8 rounded-2xl border border-[#cfb88d] bg-[#fff8e8] px-4 py-3 text-sm font-semibold text-[#6f5422]">
+            Coming Soon: Drill Down by Account
+          </p>
+        ) : null}
 
         {latestRecord ? (
           <>

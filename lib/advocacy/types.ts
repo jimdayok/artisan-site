@@ -51,8 +51,6 @@ export type StateProtection = {
   region: "West" | "Midwest" | "South" | "Northeast";
   labChoiceProtection: boolean;
   nonCoveredServicesProtection: boolean;
-  antiSteeringProtection: boolean;
-  anyWillingProviderProtection: boolean;
   summary: string;
   relevantStatutes: string[];
   currentBills: string[];

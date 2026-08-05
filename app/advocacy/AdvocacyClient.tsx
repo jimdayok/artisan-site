@@ -28,6 +28,45 @@ import type { AdvocacyTone, CivicLookupRequest, Legislator, LetterProfile, State
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
 
+const managedVisionCareStories = [
+  {
+    source: "American Optometric Association",
+    date: "July 29, 2025",
+    dateTime: "2025-07-29",
+    title: "Enough is enough",
+    summary:
+      "The AOA examines doctors' concerns about health and vision plans and summarizes federal investigations, legislation, coalition work, and direct support for practices.",
+    href: "https://www.aoa.org/news/advocacy/federal-advocacy/enough-is-enough",
+  },
+  {
+    source: "American Optometric Association",
+    date: "July 17, 2025",
+    dateTime: "2025-07-17",
+    title: "AOA advocacy efforts return more than $7.5 million to members",
+    summary:
+      "The AOA reports on plan-related claim denials, takebacks, administrative decisions, and exclusions resolved through direct intervention over a two-year period.",
+    href: "https://www.aoa.org/news/advocacy/federal-advocacy/aoa-advocacy-efforts-return-more-than-75-million-to-members",
+  },
+  {
+    source: "Eyecare Business",
+    date: "March 6, 2025",
+    dateTime: "2025-03-06",
+    title: "TVC Report Shows Satisfaction with Managed Vision Care Plans on the Rise",
+    summary:
+      "Coverage of The Vision Council's 2025 research highlights consumer satisfaction, benefit understanding, and why many eyecare providers participate in managed vision care.",
+    href: "https://www.eyecarebusiness.com/news/2025/tvc-report-shows-satisfaction-with-managed-vision-care-plans-on-the-rise/",
+  },
+  {
+    source: "Review of Optometric Business",
+    date: "May 8, 2024",
+    dateTime: "2024-05-08",
+    title: "3 Steps We Took in Our Practice to Sharply Reduce Reliance on Managed Vision Care Plans",
+    summary:
+      "Kyle D. Klute, OD, presents a practice perspective on the patient-flow value of managed vision care and a deliberate approach to strengthening medical eyecare.",
+    href: "https://reviewob.com/3-steps-we-took-in-our-practice-to-sharply-reduce-reliance-on-managed-vision-care-plans/",
+  },
+] as const;
+
 const whyCards = [
   {
     title: "Doctor Choice",
@@ -94,7 +133,7 @@ function generateLetter(profile: LetterProfile) {
   const openingByTone: Record<AdvocacyTone, string> = {
     professional: `I am writing to ask for your support for laboratory choice protections and Vision Benefit Manager reform. I am ${fullName} with ${practice} in ${location}.`,
     personal: `I am asking you to protect the doctor-patient relationship by supporting laboratory choice. My name is ${fullName}, and ${practice} serves patients in ${location}.`,
-    legislative: `Please support legislation that protects laboratory choice, increases transparency, and limits anti-competitive steering by Vision Benefit Managers. I am ${fullName} with ${practice} in ${location}.`,
+    legislative: `Please support legislation that protects laboratory choice, increases transparency, and strengthens accountability for Vision Benefit Managers. I am ${fullName} with ${practice} in ${location}.`,
     "patient-centered": `Patients benefit when their doctor can choose the laboratory, products, and service model that best meets their needs. I am ${fullName} with ${practice} in ${location}.`,
   };
 
@@ -109,11 +148,11 @@ function generateLetter(profile: LetterProfile) {
 
 I have been in practice for ${years} and serve ${patients}. As ${independentPractice}, we need the ability to select the laboratory that best supports patient care, turnaround time, product availability, and service quality.
 
-Vision Benefit Managers and vision plans should not dictate where doctors send work or steer patients away from choices that may better serve their needs. Laboratory competition helps maintain innovation, accountability, local jobs, and better outcomes for patients.
+Vision Benefit Managers and vision plans should not dictate where doctors send work or restrict choices that may better serve patient needs. Laboratory competition helps maintain innovation, accountability, local jobs, and better outcomes for patients.
 
 ${independentLab}
 
-I support legislation that protects laboratory choice, prevents unfair steering, preserves access to non-covered services, and ensures independent doctors can make decisions based on patient needs rather than plan pressure.
+I support legislation that protects laboratory choice, preserves access to non-covered services, and ensures independent doctors can make decisions based on patient needs rather than plan pressure.
 
 ${closeByTone[profile.tone]}
 
@@ -370,6 +409,21 @@ export default function AdvocacyClient() {
           </div>
         </div>
       </section>
+
+      <section className="border-t border-[#e7ddd0] bg-[#fbf8f3] px-6 py-16 md:px-10 md:py-20">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeading
+            eyebrow="Managed Vision Care Reading"
+            title="Reporting and practice perspectives worth reading."
+            body="Explore current AOA advocacy reporting alongside independent coverage of managed vision care research and practice strategy. These external articles represent their publishers' reporting and viewpoints."
+          />
+          <div className="mt-10 grid gap-4 md:grid-cols-2">
+            {managedVisionCareStories.map((story) => (
+              <ArticleCard key={story.href} story={story} />
+            ))}
+          </div>
+        </div>
+      </section>
       <Footer signUpHref={SIGNUP_URL} />
     </main>
   );
@@ -496,7 +550,7 @@ function StateMap({ selectedState, onSelect }: { selectedState: StateProtection;
     <div className="mt-8 rounded-[32px] border border-[#d8c6a8] bg-white/86 p-5 shadow-[0_18px_48px_rgba(24,18,13,0.07)]">
       <div className="grid grid-cols-5 gap-2 sm:grid-cols-8 lg:grid-cols-10">
         {stateProtections.map((state) => {
-          const score = [state.labChoiceProtection, state.nonCoveredServicesProtection, state.antiSteeringProtection, state.anyWillingProviderProtection].filter(Boolean).length;
+          const score = [state.labChoiceProtection, state.nonCoveredServicesProtection].filter(Boolean).length;
           return (
             <button
               key={state.code}
@@ -508,7 +562,7 @@ function StateMap({ selectedState, onSelect }: { selectedState: StateProtection;
               aria-label={`View ${state.name} advocacy details`}
               className={classNames(
                 "aspect-square rounded-2xl border text-sm font-bold transition hover:-translate-y-0.5",
-                selectedState.code === state.code ? "border-[#172a28] bg-[#172a28] text-white shadow-lg" : score >= 3 ? "border-[#9f8454] bg-[#ead7ad] text-[#172a28]" : score >= 1 ? "border-[#d8c6a8] bg-[#fbf8f3] text-[#172a28]" : "border-[#eadfce] bg-white text-[#8a7654]"
+                selectedState.code === state.code ? "border-[#172a28] bg-[#172a28] text-white shadow-lg" : score === 2 ? "border-[#9f8454] bg-[#ead7ad] text-[#172a28]" : score === 1 ? "border-[#d8c6a8] bg-[#fbf8f3] text-[#172a28]" : "border-[#eadfce] bg-white text-[#8a7654]"
               )}
             >
               {state.code}
@@ -529,8 +583,6 @@ function StateDetail({ state }: { state: StateProtection }) {
   const protectionRows = [
     ["Lab Choice Protection", state.labChoiceProtection],
     ["Non-Covered Services Protection", state.nonCoveredServicesProtection],
-    ["Anti-Steering Protection", state.antiSteeringProtection],
-    ["Any Willing Provider Protection", state.anyWillingProviderProtection],
   ] as const;
 
   return (
@@ -570,5 +622,29 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
       <summary className="cursor-pointer list-none text-lg font-semibold text-[#172a28]"><span className="inline-flex items-center gap-3"><Scale className="h-5 w-5 text-[#8a7654]" />{question}</span></summary>
       <p className="mt-4 text-sm leading-7 text-[#625b53]">{answer}</p>
     </details>
+  );
+}
+
+function ArticleCard({ story }: { story: (typeof managedVisionCareStories)[number] }) {
+  return (
+    <article className="flex h-full flex-col rounded-[28px] border border-[#d8c6a8] bg-white/86 p-6 shadow-[0_18px_48px_rgba(24,18,13,0.07)]">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-bold uppercase tracking-[0.16em] text-[#8a7654]">
+        <span>{story.source}</span>
+        <span aria-hidden="true">·</span>
+        <time dateTime={story.dateTime}>{story.date}</time>
+      </div>
+      <h3 className="mt-4 text-2xl font-semibold leading-tight tracking-tight text-[#172a28]">
+        {story.title}
+      </h3>
+      <p className="mt-4 flex-1 text-sm leading-7 text-[#625b53]">{story.summary}</p>
+      <a
+        href={story.href}
+        target="_blank"
+        rel="noreferrer"
+        className="mt-6 inline-flex w-fit items-center gap-2 text-sm font-semibold text-[#8a7654] transition hover:text-[#172a28]"
+      >
+        Read the article <ExternalLink className="h-4 w-4" />
+      </a>
+    </article>
   );
 }

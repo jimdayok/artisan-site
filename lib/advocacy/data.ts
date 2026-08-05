@@ -6,7 +6,7 @@ export const legislationTracker: AdvocacyBill[] = [
     jurisdiction: "Federal",
     status: "Monitoring",
     lastAction: "Framework prepared for stakeholder education and bill tracking.",
-    summary: "Supports transparency, anti-steering protections, and doctor freedom to choose laboratories that best serve patients.",
+    summary: "Supports transparency and doctor freedom to choose laboratories that best serve patients.",
     officialLink: "https://www.congress.gov/",
   },
   {
@@ -34,8 +34,6 @@ const stateNames: Array<[string, string, StateProtection["region"]]> = [
 
 const protectedLabChoice = new Set(["AL", "CT", "FL", "GA", "IL", "KS", "ME", "MS", "NJ", "OR", "TX"]);
 const protectedNonCovered = new Set(["AR", "GA", "KY", "LA", "MO", "OK", "TX", "VA"]);
-const protectedSteering = new Set(["AR", "KY", "LA", "MO", "OK", "TX"]);
-const protectedAnyWilling = new Set(["AR", "KY", "LA", "MS", "MO", "OK", "TX", "WV"]);
 
 export const stateProtections: StateProtection[] = stateNames.map(([code, name, region]) => ({
   code,
@@ -43,8 +41,6 @@ export const stateProtections: StateProtection[] = stateNames.map(([code, name, 
   region,
   labChoiceProtection: protectedLabChoice.has(code),
   nonCoveredServicesProtection: protectedNonCovered.has(code),
-  antiSteeringProtection: protectedSteering.has(code),
-  anyWillingProviderProtection: protectedAnyWilling.has(code),
   summary: protectedLabChoice.has(code)
     ? `${name} has tracked laboratory choice protection relevant to independent doctor and patient access.`
     : `${name} is monitored for opportunities to advance laboratory choice and VBM reform.` ,

@@ -1,4 +1,4 @@
-import type { AdvocacyBill, AdvocacyStory, StateProtection } from "./types";
+import type { AdvocacyBill, StateProtection } from "./types";
 
 export const legislationTracker: AdvocacyBill[] = [
   {
@@ -52,28 +52,3 @@ export const stateProtections: StateProtection[] = stateNames.map(([code, name, 
   currentBills: code === "TX" ? ["Monitor state vision plan reform proposals"] : ["No active bill loaded"],
   advocacyOpportunities: ["Educate legislators", "Recruit doctor stories", "Support state association outreach"],
 }));
-
-export const advocacyStories: AdvocacyStory[] = [
-  {
-    practiceName: "Independent Optometric Practice",
-    state: "ND",
-    story: "Laboratory choice helps our practice solve patient needs with the products, service, and turnaround time our community depends on.",
-  },
-  {
-    practiceName: "Community Eye Care Clinic",
-    state: "TX",
-    story: "When doctors can choose the right lab, patients benefit from better communication, better options, and better accountability.",
-  },
-  {
-    practiceName: "Family Vision Center",
-    state: "MO",
-    story: "Independent labs are partners in patient care. Preserving that relationship keeps competition and service alive.",
-  },
-];
-
-export const advocacyMetrics = {
-  doctorsParticipating: 184,
-  lettersGenerated: 437,
-  statesRepresented: 29,
-  legislatorsContacted: 612,
-};

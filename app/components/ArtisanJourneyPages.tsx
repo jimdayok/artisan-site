@@ -153,27 +153,6 @@ const missionCards = [
   },
 ];
 
-const testimonials = [
-  {
-    eyebrow: "Practice Voice",
-    quote:
-      "A great lab partner helps the whole practice feel more confident with patients.",
-    image: "/images/office-meeting-room-2025-1.jpg",
-  },
-  {
-    eyebrow: "Lab Voice",
-    quote:
-      "The relationship still matters. Local teams see the practice behind every order.",
-    image: "/images/team-at-lab-2025-1.jpg",
-  },
-  {
-    eyebrow: "Partner Voice",
-    quote:
-      "Independent practices need partners who help them compete without giving up control.",
-    image: "/images/conference-panel-speakers-2025-1.jpg",
-  },
-];
-
 const fadeUp = {
   initial: { opacity: 0, y: 24 },
   whileInView: { opacity: 1, y: 0 },
@@ -773,47 +752,6 @@ function NetworkMap() {
   );
 }
 
-function TestimonialsSection() {
-  return (
-    <section className="bg-white px-6 py-16 text-[#142724] md:px-10 md:py-24">
-      <div className="mx-auto max-w-7xl">
-        <SectionIntro
-          eyebrow="Testimonials"
-          title="The right lab relationship shows up in daily practice life."
-          body="This section is ready for real customer video or written testimonials as they are approved."
-        />
-        <div className="mt-10 grid gap-5 md:grid-cols-3">
-          {testimonials.map((story) => (
-            <motion.article
-              key={story.eyebrow}
-              {...fadeUp}
-              className="overflow-hidden rounded-md border border-[#d8c49b] bg-[#fffaf6]"
-            >
-              <div className="relative h-52">
-                <Image
-                  src={story.image}
-                  alt=""
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 33vw"
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-5">
-                <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#8a6f43]">
-                  {story.eyebrow}
-                </p>
-                <blockquote className="mt-4 text-lg font-semibold leading-8">
-                  &quot;{story.quote}&quot;
-                </blockquote>
-              </div>
-            </motion.article>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function TimelineSection() {
   return (
     <section className="bg-[#f5f1eb] px-6 py-16 text-[#142724] md:px-10 md:py-24">
@@ -993,7 +931,6 @@ function JourneyPage({ journey }: { journey: Journey }) {
           <WhySwitchSection />
           <ArtisanDifferenceSection />
           <LabsSection />
-          <TestimonialsSection />
           <ConversionCta
             title="Become a Customer"
             body="Discover what a true independent laboratory partnership can do for your practice."

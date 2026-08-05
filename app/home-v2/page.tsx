@@ -196,27 +196,6 @@ const programs = [
   },
 ];
 
-const stories = [
-  {
-    eyebrow: "Practice Spotlight",
-    quote: "The right lab partner gives a practice room to stay personal, stay nimble, and stay independent.",
-    attribution: "Independent practice partner",
-    image: "/images/office-meeting-room-2025-1.jpg",
-  },
-  {
-    eyebrow: "Lab Spotlight",
-    quote: "Local lab teams understand the rhythm of the practices they serve. That relationship still matters.",
-    attribution: "Artisan lab team",
-    image: "/images/team-at-lab-2025-1.jpg",
-  },
-  {
-    eyebrow: "Partner Spotlight",
-    quote: "Programs work best when they help doctors make better decisions without giving up control.",
-    attribution: "Industry partner",
-    image: "/images/conference-panel-speakers-2025-1.jpg",
-  },
-];
-
 const quickAccess = [
   { label: "Portal", href: "/portal" },
   { label: "Provider Resources", href: "/provider-resources" },
@@ -807,50 +786,6 @@ function ProgramsSection() {
   );
 }
 
-function StoriesSection() {
-  return (
-    <section className="bg-[#f5f1eb] px-6 py-16 text-[#142724] md:px-10 md:py-24">
-      <div className="mx-auto max-w-7xl">
-        <SectionIntro
-          eyebrow="Success Stories"
-          title="The story is strongest when practices, labs, and partners all have a voice."
-          body="Video testimonials can plug into this section later. For now, the structure is ready for practice, lab, and partner spotlights."
-        />
-        <div className="mt-10 grid gap-5 lg:grid-cols-3">
-          {stories.map((story) => (
-            <motion.article
-              key={story.eyebrow}
-              {...fadeUp}
-              className="overflow-hidden rounded-md border border-[#d8c49b] bg-white shadow-[0_22px_70px_rgba(20,39,36,0.1)]"
-            >
-              <div className="relative h-60">
-                <Image
-                  src={story.image}
-                  alt=""
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 33vw"
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-6">
-                <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#8a6f43]">
-                  {story.eyebrow}
-                </p>
-                <blockquote className="mt-5 text-xl font-semibold leading-8">
-                  &quot;{story.quote}&quot;
-                </blockquote>
-                <p className="mt-5 text-sm font-semibold text-[#5f6965]">
-                  {story.attribution}
-                </p>
-              </div>
-            </motion.article>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function FutureSection() {
   return (
     <section className="overflow-hidden bg-white px-6 py-16 text-[#142724] md:px-10 md:py-24">
@@ -988,7 +923,6 @@ export default function HomeV2Page() {
         <WhySection />
         <ComparisonSection />
         <ProgramsSection />
-        <StoriesSection />
         <FutureSection />
         <FinalCtaSection onContactClick={() => setContactOpen(true)} />
         <ExistingCustomerSection />

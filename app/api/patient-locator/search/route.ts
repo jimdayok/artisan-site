@@ -150,8 +150,7 @@ export async function POST(request: NextRequest) {
   if (!apiKey) {
     return NextResponse.json(
       {
-        error:
-          "Server-side Google Maps key is not configured. Add GOOGLE_MAPS_SERVER_API_KEY in Vercel to enable distance sorting.",
+        error: "Distance sorting is temporarily unavailable. Please try again later.",
         practices: approvedPatientPractices.map((practice) => ({
           ...practice,
           googleMapsUrl: directionsUrl(practice),

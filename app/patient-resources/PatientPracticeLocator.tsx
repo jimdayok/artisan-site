@@ -599,7 +599,7 @@ export default function PatientPracticeLocator() {
                   }}
                   className="h-4 w-4 accent-[#15342f]"
                 />
-                Tokai
+                Tokai Provider
               </label>
               <label className="inline-flex min-h-11 cursor-pointer items-center gap-3 rounded-full border border-[#e1cfac] bg-[#fffaf2] px-4 text-sm font-semibold text-[#15342f]">
                 <input

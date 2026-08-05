@@ -32,7 +32,7 @@ export default function AnimatedWordPanel({
       <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-current/0 via-current/0 to-transparent" />
       <div className="absolute inset-0 flex items-center">
         <span
-          className={`aln-contained-word font-alfons-script whitespace-nowrap text-[clamp(5.5rem,12vw,12rem)] leading-none ${
+          className={`aln-contained-word font-alfons-brush whitespace-nowrap text-[clamp(5.5rem,12vw,12rem)] leading-none ${
             isDark ? "text-white/16" : "text-[#b98a56]/18"
           }`}
         >

@@ -272,6 +272,7 @@ const brandLibraries: BrandLibrary[] = [
       resource("tokai", "Tokai", "Lens Designs", "PDF", "Tokai Reset Guide", "Tokai Reset resource for patient conversations and dispensing support.", fileHref("tokai-reset-guide.pdf"), ["Reset", "patient conversation"]),
       resource("tokai", "Tokai", "Lens Designs", "PDF", "Tokai Largo Guide", "Tokai Largo guide for product positioning and office-lens selection.", fileHref("tokai-largo-guide.pdf"), ["material", "high Rx", "office", "office lens", "occupational"]),
       resource("tokai", "Tokai", "Materials", "PDF", "Tokai Tint Guide", "Tint reference for Tokai lens options and patient preferences.", fileHref("tokai-tint-guide.pdf"), ["tint", "sun"]),
+      resource("tokai", "Tokai", "AR Coatings", "Guide", "Tokai AR Coatings", "Official Tokai coating reference for USC, SPS, NRC, and other treatment options.", "https://www.tokaiopt.com/en/product/category/coating/", ["AR", "anti-reflective", "USC", "SPS", "NRC", "coating"]),
       resource("tokai", "Tokai", "Videos", "Training", "Tokai Product Training", "Tokai product training for design selection and dispensing support.", "https://youtu.be/9P7VEmI0ZwY", ["video", "training"], { newest: true }),
       tokaiDisplayResource(
         "Lutina Photochromic Display",
@@ -329,6 +330,7 @@ const brandLibraries: BrandLibrary[] = [
       resource("hoya", "HOYA", "Lens Designs", "PDF", "HOYA Product Guide", "Portfolio guide for HOYA lens options and patient recommendations.", fileHref("hoya-product-guide.pdf"), ["progressive", "portfolio"], { popular: true }),
       resource("hoya", "HOYA", "Lens Designs", "PDF", "HOYA iD LifeStyle 4", "Product guide for HOYA iD LifeStyle 4 positioning and selection.", fileHref("id-lifestyle-4-sales-aid_final_pn8159387.pdf"), ["iD LifeStyle", "progressive"]),
       resource("hoya", "HOYA", "Layout Charts", "PDF", "HOYA Centration Charts", "Fitting and centration charts for HOYA lens dispensing.", fileHref("hoya-centration-charts.pdf"), ["layout chart", "fitting"], { staffPick: true }),
+      resource("hoya", "HOYA", "AR Coatings", "Guide", "HOYA AR Coatings", "Official HOYA reference for Super HiVision AR treatments and coating options.", "https://www.hoyavision.com/en-us/vision-products/anti-reflective-coatings/", ["AR", "anti-reflective", "Super HiVision", "Meiryo", "coating"]),
     ],
   },
   {
@@ -341,6 +343,7 @@ const brandLibraries: BrandLibrary[] = [
     logo: "/shamir-logo.png",
     resources: [
       resource("shamir", "Shamir", "Technical Bulletins", "PDF", "Driver Intelligence Technical Guide", "Technical guide for Shamir Driver Intelligence recommendations.", fileHref("Shamir-Driver-Intelligence-Technical-Sheet.pdf"), ["driving", "technical", "progressive"]),
+      resource("shamir", "Shamir", "AR Coatings", "PDF", "Shamir Glacier PLUS", "Official Shamir reference for Glacier PLUS premium anti-reflective coating.", "https://www.shamirlens.com/media/k2/attachments/SHA-GUI-REF-100517_trimmed_1.pdf", ["AR", "anti-reflective", "Glacier", "coating"]),
     ],
   },
   {
@@ -494,6 +497,8 @@ const marketingResources = [
   ["Recall campaigns", "Patient recall messaging tied to product and service goals."],
   ["Email templates", "Campaign language for education, reactivation, and promotions."],
   ["Office promotions", "Multiple-pair and specialty product campaign planning."],
+  ["Dispensing mats", "Point-of-purchase counter materials that support product conversations."],
+  ["Point-of-purchase displays", "In-office displays for featured products and patient education."],
 ];
 
 const labContacts = [
@@ -597,6 +602,7 @@ function matchesFilter(resource: Resource, filter: string) {
   if (filter === "PDF" || filter === "Video" || filter === "Training") return resource.type === filter;
   if (filter === "Layout Charts") return resource.category === "Layout Charts";
   if (filter === "Troubleshooting") return resource.category === "Troubleshooting";
+  if (filter === "AR") return resource.category === "AR Coatings";
   const haystack = normalize([resource.title, resource.description, resource.category, resource.type, ...resource.tags].join(" "));
   return haystack.includes(normalize(filter));
 }
@@ -1332,24 +1338,30 @@ export default function ProviderResourcesPage({
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <SectionHeading
               kicker="Marketing Resources"
-              title="Make practices realize there is more here than PDFs."
-              body="This section now presents marketing support as a real resource library that can grow into downloadable assets."
+              title="Support better patient conversations at every touchpoint."
+              body="Marketing support will include digital campaigns, patient education, dispensing mats, and point-of-purchase displays."
             />
-            <a
-              href="mailto:sales@artisanlabnetwork.com?subject=Marketing%20Resource%20Request"
-              className="inline-flex h-11 items-center justify-center gap-2 rounded bg-[#111827] px-4 text-sm font-semibold text-white transition hover:bg-[#0f766e]"
+            <span
+              className="inline-flex h-11 cursor-default items-center justify-center gap-2 rounded bg-[#111827] px-4 text-sm font-semibold text-white opacity-70"
             >
-              Request marketing support <ArrowRight className="h-4 w-4" />
-            </a>
+              Marketing support <ArrowRight className="h-4 w-4" />
+            </span>
           </div>
-          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {marketingResources.map(([title, body]) => (
-              <article key={title} className="rounded-lg border border-[#d7ded9] bg-[#f7f8f5] p-4">
-                <Sparkles className="h-5 w-5 text-[#0f766e]" />
-                <h3 className="mt-4 text-lg font-semibold">{title}</h3>
-                <p className="mt-2 text-sm leading-6 text-[#4b5563]">{body}</p>
-              </article>
-            ))}
+          <div className="relative mt-8 overflow-hidden rounded-xl">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" aria-hidden="true">
+              {marketingResources.map(([title, body]) => (
+                <article key={title} className="rounded-lg border border-[#d7ded9] bg-[#f7f8f5] p-4">
+                  <Sparkles className="h-5 w-5 text-[#0f766e]" />
+                  <h3 className="mt-4 text-lg font-semibold">{title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-[#4b5563]">{body}</p>
+                </article>
+              ))}
+            </div>
+            <div className="absolute inset-0 grid place-items-center bg-white/72 backdrop-blur-[3px]">
+              <span className="rounded-full border border-[#0f766e]/25 bg-white px-8 py-4 text-sm font-bold uppercase tracking-[0.28em] text-[#0f766e] shadow-[0_18px_50px_rgba(15,118,110,0.16)]">
+                Coming Soon
+              </span>
+            </div>
           </div>
         </div>
       </section>

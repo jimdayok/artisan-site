@@ -215,7 +215,7 @@ export default function Header({
         { label: "Patient Resources", href: "/patient-resources" },
         { label: "Optical Engineering Center", href: "/optical-engineering" },
         { label: "Freedom of Choice", href: "/advocacy" },
-        { label: "Lab Ownership & Partnership", href: "/artisan-model" },
+        { label: "Doctor Owned Labs", href: "/artisan-model" },
         { label: "Customer Portal", href: CUSTOMER_PORTAL_URL, dividerBefore: true },
       ],
     }),

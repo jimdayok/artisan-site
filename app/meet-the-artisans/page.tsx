@@ -16,6 +16,7 @@ type TeamMember = {
   description?: string;
   image?: string;
   contactHref?: string;
+  territory?: string;
 };
 
 type LabKey = "pacific" | "peak" | "pike";
@@ -41,6 +42,7 @@ const salesTeam: TeamMember[] = [
     description:
       "Helping independent practices find the right lab path with clear support and practical answers.",
     contactHref: "mailto:sales@artisanlabnetwork.com?subject=Message%20for%20Josh",
+    territory: "IA, IL, MN, WI, TN",
   },
   {
     name: "Heather Branderhorst",
@@ -49,6 +51,16 @@ const salesTeam: TeamMember[] = [
     description:
       "Supporting customers with product knowledge, service focus, and a real passion for independent eye care.",
     contactHref: "mailto:sales@artisanlabnetwork.com?subject=Message%20for%20Heather",
+    territory: "OR, WA",
+  },
+  {
+    name: "Nicole Curtis",
+    role: "Account Manager",
+    image: "/images/nicole-headshot.jpg",
+    description:
+      "Supporting independent practices with responsive service, product guidance, and practical account support.",
+    contactHref: "mailto:sales@artisanlabnetwork.com?subject=Message%20for%20Nicole",
+    territory: "UT, ID",
   },
 ];
 
@@ -259,6 +271,11 @@ function SalesTeamCard({ member }: { member: TeamMember }) {
             {member.description}
           </p>
         ) : null}
+        {member.territory ? (
+          <p className="mt-3 text-xs font-bold uppercase tracking-[0.16em] text-white/56">
+            Territory: {member.territory}
+          </p>
+        ) : null}
         {member.contactHref ? (
           <a
             href={member.contactHref}
@@ -428,7 +445,7 @@ export default function MeetTheArtisansPage() {
             title="Your Artisan Sales Team"
             copy="Clear conversations, practical support, and a human way into the right lab relationship."
           />
-          <div className="mt-12 grid gap-6 md:grid-cols-2">
+          <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {salesTeam.map((member) => (
               <SalesTeamCard key={member.name} member={member} />
             ))}

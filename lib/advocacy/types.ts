@@ -58,11 +58,3 @@ export type StateProtection = {
   currentBills: string[];
   advocacyOpportunities: string[];
 };
-
-export type AdvocacyStory = {
-  practiceName: string;
-  state: string;
-  story: string;
-  doctorPhoto?: string;
-  videoLink?: string;
-};

@@ -371,7 +371,7 @@ export async function POST(request: Request) {
 
   if (!apiKey) {
     return NextResponse.json(
-      { error: "GOOGLE_CIVIC_API_KEY is not configured. Add it in Vercel project environment variables to enable live legislator lookup." },
+      { error: "Legislator lookup is temporarily unavailable. Please try again later." },
       { status: 503 }
     );
   }
@@ -420,7 +420,7 @@ export async function POST(request: Request) {
       legislators,
       normalizedInput: address,
       warning:
-        "Google Civic representatives lookup is currently unavailable from the public API. Showing district-resolved federal officials and state district lookup links.",
+        "Google Civic representatives lookup is currently unavailable. Showing district-resolved federal officials and state district lookup links.",
     });
   }
 

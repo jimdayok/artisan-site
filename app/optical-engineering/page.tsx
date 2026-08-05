@@ -148,7 +148,7 @@ const categoryDescriptions: Record<CalculatorCategory, string> = {
 };
 
 const engineeringDisclaimer =
-  "Thickness and weight results are estimates, not guaranteed production specifications. The model uses thin-lens surface powers, boxing dimensions, an elliptical finished-lens area, entered minimum center and edge thicknesses, and typical material properties. Tokai 1.70 and 1.76 presets use the AS thickness-chart constraints of 1.0 mm minimum center thickness and 0.7 mm minimum edge thickness. Final results can vary with lens design, blank availability, surfacing system, traced frame shape, bevel placement, safety minimums, manufacturer requirements, prism, coatings, and laboratory processing. Verify every order against current manufacturer, laboratory, safety, and applicable standards requirements.";
+  "Calculations are provided for education and exploration only. Final production calculations are determined during manufacturing by the laboratory management system using proprietary and confidential mathematical algorithms developed by the LMS provider and/or lens designers. Results may differ from the traditional optical formulas shown below. A variance between these estimates and the manufactured product does not, by itself, constitute a production error.";
 
 const numericFields: Array<{
   key: keyof OpticalData;

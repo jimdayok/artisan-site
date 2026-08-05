@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { trackWithConsent as track } from "@/app/components/CookieConsentProvider";
 import {
   ArrowRight,
@@ -14,18 +14,16 @@ import {
   Landmark,
   Loader2,
   MailOpen,
-  MapPin,
   Phone,
   RefreshCcw,
   Scale,
   Search,
   ShieldCheck,
-  Sparkles,
   Users,
 } from "lucide-react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { advocacyMetrics, advocacyStories, legislationTracker, stateProtections } from "../../lib/advocacy/data";
+import { legislationTracker, stateProtections } from "../../lib/advocacy/data";
 import type { AdvocacyTone, CivicLookupRequest, Legislator, LetterProfile, StateProtection } from "../../lib/advocacy/types";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
@@ -235,6 +233,13 @@ export default function AdvocacyClient() {
               return <FeatureCard key={card.title} icon={<Icon className="h-6 w-6" />} title={card.title} body={card.body} />;
             })}
           </div>
+          <div className="mt-8 rounded-[28px] border border-[#d8c6a8] bg-white/86 p-6 shadow-[0_18px_48px_rgba(24,18,13,0.07)]">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#8a7654]">Our Position</p>
+            <h3 className="mt-3 text-2xl font-semibold tracking-tight text-[#172a28]">Collaboration and choice can coexist.</h3>
+            <p className="mt-4 max-w-5xl text-sm leading-7 text-[#625b53]">
+              Artisan Lab Network supports constructive, good-faith relationships with managed vision care partners, including VSP. Our advocacy is focused solely on preserving each independent practice&apos;s freedom to decide what best serves its patients and its business. We do not endorse or criticize any managed care organization; we support collaboration, transparency, and choice.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -244,7 +249,7 @@ export default function AdvocacyClient() {
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">Find My Legislators</p>
               <h2 className="mt-4 max-w-3xl text-4xl font-semibold leading-[1.04] tracking-tight text-[#172a28] md:text-5xl">Identify the officials who need to hear from you.</h2>
-              <p className="mt-5 max-w-2xl text-base leading-8 text-[#625b53]">Enter your practice or home address to find federal and state officials using the Google Civic Information API.</p>
+              <p className="mt-5 max-w-2xl text-base leading-8 text-[#625b53]">Enter your home address to identify federal and state officials.</p>
             </div>
             <form onSubmit={runLookup} className="mt-8 grid min-w-0 gap-4 rounded-[28px] border border-[#d8c6a8] bg-white/86 p-5 shadow-[0_18px_48px_rgba(24,18,13,0.07)]">
               <TextInput label="Address" value={lookup.address} onChange={(value) => setLookup((current) => ({ ...current, address: value }))} required />
@@ -261,7 +266,7 @@ export default function AdvocacyClient() {
           </div>
           <div className="grid gap-5">
             <LegislatorGroup title="US Senators & House Representative" legislators={groupedLegislators.federal} letter={letter} empty="Run a lookup to display federal officials." />
-            <LegislatorGroup title="State Officials" legislators={groupedLegislators.state} letter={letter} empty="State senator and representative results appear when available from the Civic API." />
+            <LegislatorGroup title="State Officials" legislators={groupedLegislators.state} letter={letter} empty="State senator and representative results appear when available." />
           </div>
         </div>
       </section>
@@ -334,7 +339,7 @@ export default function AdvocacyClient() {
 
       <section className="px-6 py-16 md:px-10 md:py-20">
         <div className="mx-auto max-w-7xl">
-          <SectionHeading eyebrow="Current Legislation Tracker" title="Federal and state reform activity, ready to expand." body="This section uses a reusable data structure so new bills can be added without redesigning the page." />
+          <SectionHeading eyebrow="Current Legislation Tracker" title="Federal and state reform activity." body="Track federal and state activity related to laboratory choice and vision benefit management." />
           <div className="mt-8 grid gap-4 lg:grid-cols-2">
             {legislationTracker.map((bill) => <BillCard key={`${bill.jurisdiction}-${bill.billNumber}`} bill={bill} />)}
           </div>
@@ -348,22 +353,6 @@ export default function AdvocacyClient() {
             <StateMap selectedState={selectedState} onSelect={setSelectedState} />
           </div>
           <StateDetail state={selectedState} />
-        </div>
-      </section>
-
-      <section className="px-6 py-16 md:px-10 md:py-20">
-        <div className="mx-auto max-w-7xl">
-          <SectionHeading eyebrow="Success Metrics" title="Measure the movement as it grows." body="Counters are wired as live-ready front-end components and can later connect to CRM, petition, email, or member portal data." />
-          <MetricGrid />
-        </div>
-      </section>
-
-      <section className="bg-[#101820] px-6 py-16 text-white md:px-10 md:py-20">
-        <div className="mx-auto max-w-7xl">
-          <SectionHeading dark eyebrow="Stories & Testimonials" title="Real practice stories make the issue human." body="CMS-ready fields support practice name, state, story, doctor photo, and optional video links." />
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {advocacyStories.map((story) => <StoryCard key={`${story.practiceName}-${story.state}`} story={story} />)}
-          </div>
         </div>
       </section>
 
@@ -572,63 +561,6 @@ function DetailList({ title, items }: { title: string; items: string[] }) {
         {items.map((item) => <li key={item} className="flex gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#8a7654]" />{item}</li>)}
       </ul>
     </div>
-  );
-}
-
-function MetricGrid() {
-  const metrics = [
-    ["Doctors Participating", advocacyMetrics.doctorsParticipating, Users],
-    ["Letters Generated", advocacyMetrics.lettersGenerated, FileText],
-    ["States Represented", advocacyMetrics.statesRepresented, MapPin],
-    ["Legislators Contacted", advocacyMetrics.legislatorsContacted, Landmark],
-  ] as const;
-  return (
-    <div className="mt-8 grid gap-4 md:grid-cols-4">
-      {metrics.map(([label, value, Icon]) => <MetricCard key={label} label={label} value={value} icon={<Icon className="h-5 w-5" />} />)}
-    </div>
-  );
-}
-
-function MetricCard({ label, value, icon }: { label: string; value: number; icon: React.ReactNode }) {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const [display, setDisplay] = useState(0);
-
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-    const observer = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting) return;
-      const start = performance.now();
-      const duration = 900;
-      const animate = (time: number) => {
-        const progress = Math.min(1, (time - start) / duration);
-        setDisplay(Math.round(value * progress));
-        if (progress < 1) requestAnimationFrame(animate);
-      };
-      requestAnimationFrame(animate);
-      observer.disconnect();
-    }, { threshold: 0.35 });
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [value]);
-
-  return (
-    <div ref={ref} className="rounded-[28px] border border-[#d8c6a8] bg-white/86 p-5 shadow-[0_18px_48px_rgba(24,18,13,0.07)]">
-      <span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#172a28] text-[#d4c09a]">{icon}</span>
-      <p className="mt-5 text-5xl font-semibold tracking-tight">{display.toLocaleString()}</p>
-      <p className="mt-2 text-xs font-bold uppercase tracking-[0.18em] text-[#8a7654]">{label}</p>
-    </div>
-  );
-}
-
-function StoryCard({ story }: { story: (typeof advocacyStories)[number] }) {
-  return (
-    <article className="rounded-[28px] border border-white/10 bg-white/[0.055] p-6">
-      <div className="grid h-14 w-14 place-items-center rounded-full bg-[#d4c09a] text-[#172a28]"><Sparkles className="h-6 w-6" /></div>
-      <p className="mt-6 text-base leading-8 text-white/76">“{story.story}”</p>
-      <p className="mt-5 font-semibold text-white">{story.practiceName}</p>
-      <p className="mt-1 text-xs font-bold uppercase tracking-[0.18em] text-[#d4c09a]">{story.state}</p>
-    </article>
   );
 }
 

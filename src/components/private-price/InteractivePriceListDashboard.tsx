@@ -87,6 +87,31 @@ function normalizeKey(value: string) {
     .trim();
 }
 
+function normalizeArFamily(value: string) {
+  const key = String(value || "").trim().toLowerCase();
+  if (key.includes("artisan")) return "Artisan";
+  if (key.includes("tech")) return "TechShield";
+  if (key.includes("tokai")) return "Tokai";
+  if (key.includes("crizal")) return "Crizal";
+  if (key.includes("hoya")) return "Hoya";
+  if (key.includes("shamir")) return "Shamir";
+  if (key.includes("neurolens")) return "Neurolens";
+  return "";
+}
+
+function coatingDisplayFamily(coating: PriceListArCoating) {
+  const identity = `${coating.brandFamily} ${coating.name}`;
+  return /\bunity\b|tech\s*shield/i.test(identity)
+    ? "TechShield / Unity"
+    : normalizeArFamily(coating.brandFamily);
+}
+
+function arTurnaroundNote(family: string) {
+  return family === "Artisan" || family === "TechShield / Unity"
+    ? "Produced on-site for the fastest turnaround time."
+    : "Produced off-site; additional turnaround time applies.";
+}
+
 function isCoppertoneRow(row: PriceListPricingRow) {
   const source = [
     row.colorBrand,
@@ -1225,6 +1250,11 @@ export default function InteractivePriceListDashboard({
                                   </td>
                                   <td className="border-b border-r border-[#eadfce] px-3 py-2 font-semibold text-[#122033]">
                                     {inlineMarker(normalizeDisplayName(row.designStyle), row.recommended, row.outsourced)}
+                                    {row.outsourced ? (
+                                      <span className="mt-1 block text-[10px] font-bold uppercase tracking-[0.08em] text-[#8a4f28]">
+                                        Outsourced - additional turnaround time
+                                      </span>
+                                    ) : null}
                                   </td>
                                   <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
                                     {startingPriceLabel(row.clearFrom, priceMode)}
@@ -1868,19 +1898,8 @@ function ArCoatingsSection({
     []
   );
   const protectionCodes = useMemo(() => new Set(["DDE"]), []);
-  const normalizeArFamily = (value: string) => {
-    const key = String(value || "").trim().toLowerCase();
-    if (key.includes("artisan")) return "Artisan";
-    if (key.includes("tech")) return "TechShield";
-    if (key.includes("tokai")) return "Tokai";
-    if (key.includes("crizal")) return "Crizal";
-    if (key.includes("hoya")) return "Hoya";
-    if (key.includes("shamir")) return "Shamir";
-    if (key.includes("neurolens")) return "Neurolens";
-    return "";
-  };
   const isAllowedArFamily = (family: string) =>
-    ["Artisan", "TechShield", "Tokai", "Crizal", "Hoya", "Shamir", "Neurolens"].includes(family);
+    ["Artisan", "TechShield / Unity", "Tokai", "Crizal", "Hoya", "Shamir", "Neurolens"].includes(family);
   const groupedCoatings = useMemo(() => {
     const grouped = new Map<string, PriceListArCoating[]>();
     for (const coating of coatings) {
@@ -1888,7 +1907,7 @@ function ArCoatingsSection({
       const code = String(coating.code || "").trim().toUpperCase();
       if (mirrorCodes.has(code)) continue;
       if (protectionCodes.has(code)) continue;
-      const family = normalizeArFamily(coating.brandFamily);
+      const family = coatingDisplayFamily(coating);
       if (!isAllowedArFamily(family)) continue;
       const current = grouped.get(family) ?? [];
       current.push({
@@ -1901,7 +1920,7 @@ function ArCoatingsSection({
     const orderedFamilies =
       String(listCode).toUpperCase() === "NL"
         ? ["Neurolens"]
-        : ["Artisan", "TechShield", "Tokai", "Crizal", "Hoya", "Shamir"];
+        : ["Artisan", "TechShield / Unity", "Tokai", "Crizal", "Hoya", "Shamir"];
     return orderedFamilies
       .map((family) => {
         const items = grouped.get(family) ?? [];
@@ -1974,7 +1993,7 @@ function ArCoatingsSection({
     return [...map.values()].sort((a, b) => compareText(a.name, b.name));
   }, [coatings, mirrorCodes]);
   const preferredFamilies = new Set(
-    String(listCode).toUpperCase() === "NL" ? ["Neurolens"] : ["Artisan"]
+    String(listCode).toUpperCase() === "NL" ? ["Neurolens"] : ["Artisan", "TechShield / Unity"]
   );
   const primaryGroups = groupedCoatings.filter((group) => preferredFamilies.has(group.family));
   const otherGroups = groupedCoatings.filter((group) => !preferredFamilies.has(group.family));
@@ -1999,6 +2018,9 @@ function ArCoatingsSection({
             <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-[#8a7654]">
               {group.family}
             </h3>
+            <p className="mt-1 text-xs font-semibold leading-5 text-[#625b53]">
+              {arTurnaroundNote(group.family)}
+            </p>
             <div className="mt-2 grid gap-3 rounded-[2px] border border-[#eadfce] bg-white/72 p-3 md:grid-cols-2 xl:grid-cols-3">
               {group.items.map((coating) => (
                 <article
@@ -2038,6 +2060,9 @@ function ArCoatingsSection({
                     <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-[#8a7654]">
                       {group.family}
                     </h3>
+                    <p className="mt-1 text-xs font-semibold leading-5 text-[#625b53]">
+                      {arTurnaroundNote(group.family)}
+                    </p>
                     <div className="mt-2 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
                       {group.items.map((coating) => (
                         <article
@@ -2050,11 +2075,6 @@ function ArCoatingsSection({
                             </h4>
                             <p className="text-lg font-bold text-[#122033]">{currency(coating.price)}</p>
                           </div>
-                          {["Tokai", "Crizal", "Hoya", "Shamir"].includes(group.family) ? (
-                            <p className="mt-3 text-xs leading-5 text-[#625b53]">
-                              Additional processing time may be required. This coating is outsourced.
-                            </p>
-                          ) : null}
                         </article>
                       ))}
                     </div>
@@ -2380,7 +2400,9 @@ function ChemClipSection() {
 function ReferenceKey({ rows }: { rows: PriceListPricingRow[] }) {
   const entries: Array<[string, string]> = [];
   if (rows.some((row) => row.recommended)) entries.push(["★", "Preferred Product"]);
-  if (rows.some((row) => row.outsourced)) entries.push(["➜", "Outsourced Product"]);
+  if (rows.some((row) => row.outsourced)) {
+    entries.push(["➜", "Outsourced product - additional turnaround time applies"]);
+  }
   if (!entries.length) return null;
 
   return (

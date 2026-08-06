@@ -613,15 +613,12 @@ function PriceListCard({
         <p className="mt-4 text-2xl font-semibold tracking-[-0.025em] text-[#172a28]">
           {priceList.label}
         </p>
-        <p className="mt-2 break-all text-sm text-[#706759]">{priceList.fileName}</p>
+        <p className="mt-2 text-sm leading-6 text-[#706759]">
+          Interactive private pricing for assigned portal accounts.
+        </p>
         {!priceList.configured ? (
           <p className="mt-2 text-sm font-semibold text-[#172a28]">
             Assigned from account data. Contact portal support for download format.
-          </p>
-        ) : null}
-        {priceList.configured && !priceList.r2Key ? (
-          <p className="mt-2 text-sm font-semibold text-[#172a28]">
-            Interactive pricing available in portal.
           </p>
         ) : null}
       </div>

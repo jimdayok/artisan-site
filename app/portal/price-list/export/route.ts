@@ -231,6 +231,7 @@ function summarizeDesigns(priceList: GeneratedPriceListData, mode: PriceMode) {
           : undefined,
       brand: rows[0].brand,
       designStyle: rows[0].designStyle,
+      outsourced: rows.some((row) => row.outsourced),
       clear: lowestRow(rows, "Clear", mode),
       photochromic: lowestRow(rows, "Photochromic", mode),
       polarized: lowestRow(rows, "Polarized", mode),
@@ -635,17 +636,6 @@ async function buildPriceListPdf({
       font: bold,
       color: NAVY,
     });
-    page.drawText(
-      "Each lab logo is paired with direct support details here so the pricing pages stay clean and easy to scan.",
-      {
-        x: MARGIN,
-        y: statementTop - 35,
-        size: 8.5,
-        font: regular,
-        color: MUTED,
-      }
-    );
-
     page.drawRectangle({
       x: MARGIN,
       y: panelBottom,
@@ -796,17 +786,21 @@ async function buildPriceListPdf({
           color: RULE,
           thickness: 0.6,
         });
-        const values: Array<[string, number, number, PDFFont, typeof TEXT]> = [
-          [row.designStyle, DESIGN_TEXT_X, 248, regular, TEXT],
+        const designLabel = row.outsourced
+          ? `${row.designStyle} - OUTSOURCED`
+          : row.designStyle;
+        const values: Array<[string, number, number, PDFFont, typeof TEXT, number?]> = [
+          [designLabel, DESIGN_TEXT_X, 248, row.outsourced ? bold : regular, row.outsourced ? MUTED : TEXT, row.outsourced ? 6.5 : 7.2],
           [money(row.clear, mode), CLEAR_COLUMN_X, 52, bold, NAVY],
           [money(row.photochromic, mode), PHOTO_COLUMN_X, 52, bold, NAVY],
           [money(row.polarized, mode), POLAR_COLUMN_X, 50, bold, NAVY],
         ];
-        values.forEach(([value, x, width, font, color]) => {
-          page.drawText(fitText(font, value, width, 7.2), {
+        values.forEach(([value, x, width, font, color, requestedSize]) => {
+          const size = requestedSize ?? 7.2;
+          page.drawText(fitText(font, value, width, size), {
             x,
             y: y - 10,
-            size: 7.2,
+            size,
             font,
             color,
           });
@@ -890,11 +884,17 @@ async function buildPriceListPdf({
   };
 
   const drawBoxedItemGroups = (
-    groups: Array<{ title: string; logoBrand?: string; items: Array<{ name: string; price: string }> }>
+    groups: Array<{
+      title: string;
+      note?: string;
+      logoBrand?: string;
+      items: Array<{ name: string; price: string }>;
+    }>
   ) => {
     for (const group of groups) {
       const rowHeight = 17;
-      const boxHeight = 30 + group.items.length * rowHeight;
+      const headerHeight = group.note ? 42 : 30;
+      const boxHeight = headerHeight + group.items.length * rowHeight;
       ensureSpace(boxHeight + 8);
       page.drawRectangle({
         x: MARGIN,
@@ -912,7 +912,16 @@ async function buildPriceListPdf({
         font: bold,
         color: NAVY,
       });
-      y -= 28;
+      if (group.note) {
+        page.drawText(fitText(regular, group.note, CONTENT_WIDTH - 20, 7.2), {
+          x: MARGIN + 10,
+          y: y - 25,
+          size: 7.2,
+          font: regular,
+          color: MUTED,
+        });
+      }
+      y -= group.note ? 40 : 28;
       group.items.forEach((item, index) => {
         if (index % 2 === 0) {
           page.drawRectangle({
@@ -1056,6 +1065,7 @@ async function buildPriceListPdf({
   const drawPolicyPage = () => {
     addPage(true);
     sectionTitle("Artisan Policies");
+    y -= 10;
     const policies = [
       {
         title: "AR and scratch warranties",
@@ -1236,33 +1246,42 @@ async function buildPriceListPdf({
 
   if (priceList.arCoatings.length) {
     ensureSpace(100);
-    sectionTitle(
-      "Anti-Reflective Coatings",
-      priceList.code === "NL"
-        ? "Neurolens AR treatments"
-        : "Artisan coatings first; additional options follow"
-    );
+    sectionTitle("Anti-Reflective Coatings");
+    const coatingBrand = (coating: PriceListArCoating) => {
+      const identity = `${coating.brandFamily} ${coating.name}`;
+      return /\bunity\b|tech\s*shield/i.test(identity)
+        ? "TechShield / Unity"
+        : cleanCoatingBrand(coating.brandFamily);
+    };
+    const coatingRank = (brand: string) => {
+      const order = ["Artisan", "TechShield / Unity", "Neurolens", "Tokai", "Crizal", "Hoya", "Shamir"];
+      const index = order.findIndex((value) => value.toLowerCase() === brand.toLowerCase());
+      return index === -1 ? 99 : index;
+    };
+    const coatingTurnaroundNote = (brand: string) =>
+      /^(Artisan|TechShield \/ Unity)$/i.test(brand)
+        ? "Produced on-site for the fastest turnaround time."
+        : "Produced off-site; additional turnaround time applies.";
     const coatings = [...priceList.arCoatings]
       .filter((coating) => !coating.unresolved && !/^UV Coating$/i.test(coating.name))
       .sort((a, b) => {
-        const aBrand = cleanCoatingBrand(a.brandFamily);
-        const bBrand = cleanCoatingBrand(b.brandFamily);
-        const aArtisan = /^Artisan$/i.test(aBrand) ? 0 : 1;
-        const bArtisan = /^Artisan$/i.test(bBrand) ? 0 : 1;
+        const aBrand = coatingBrand(a);
+        const bBrand = coatingBrand(b);
         return (
-          aArtisan - bArtisan ||
+          coatingRank(aBrand) - coatingRank(bBrand) ||
           compareText(aBrand, bBrand) ||
           compareText(cleanCoatingName(a), cleanCoatingName(b))
         );
       });
     const coatingGroups = new Map<string, PriceListArCoating[]>();
     for (const coating of coatings) {
-      const brand = cleanCoatingBrand(coating.brandFamily);
+      const brand = coatingBrand(coating);
       coatingGroups.set(brand, [...(coatingGroups.get(brand) ?? []), coating]);
     }
     drawBoxedItemGroups(
       [...coatingGroups.entries()].map(([brand, entries]) => ({
         title: brand,
+        note: coatingTurnaroundNote(brand),
         logoBrand: coatingGroupLogo(brand),
         items: entries.map((coating) => ({
           name: cleanCoatingName(coating),

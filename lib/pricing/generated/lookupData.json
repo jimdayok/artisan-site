@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T13:36:32.381Z",
+  "generatedAt": "2026-08-06T18:49:17.929Z",
   "sourceFiles": {
     "products": "/Users/jimday/Documents/GitHub/artisan-site/private-source/price-lists/Lookup.xlsx",
     "materials": "/Users/jimday/Documents/GitHub/artisan-site/private-source/portal/lookup_docs/Lookup_Mat.xlsx",
@@ -12,7 +12,7 @@
       "sheets": [
         {
           "name": "Export",
-          "rowCount": 563,
+          "rowCount": 566,
           "headers": [
             "lenstyle",
             "styleconsollidated",
@@ -2134,7 +2134,7 @@
         },
         {
           "lenstyle": "ESSENTL STDY I16",
-          "styleconsollidated": "Endless Steady",
+          "styleconsollidated": "Essential Steady",
           "Type Revised": "Progressive",
           "lensbrand": "IOT",
           "sourceSheet": "Export"
@@ -2148,28 +2148,28 @@
         },
         {
           "lenstyle": "ENDLESS PLUS 050",
-          "styleconsollidated": "Endlesss Plus",
+          "styleconsollidated": "Endless Plus",
           "Type Revised": "Anti-Fatigue",
           "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
         {
           "lenstyle": "ENDLESS PLUS *",
-          "styleconsollidated": "Endlesss Plus",
+          "styleconsollidated": "Endless Plus",
           "Type Revised": "Anti-Fatigue",
           "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
         {
           "lenstyle": "ENDLESS PLUS 075",
-          "styleconsollidated": "Endlesss Plus",
+          "styleconsollidated": "Endless Plus",
           "Type Revised": "Anti-Fatigue",
           "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
         {
           "lenstyle": "ENDLESS PLUS 100",
-          "styleconsollidated": "Endlesss Plus",
+          "styleconsollidated": "Endless Plus",
           "Type Revised": "Anti-Fatigue",
           "lensbrand": "IOT",
           "sourceSheet": "Export"
@@ -2239,35 +2239,35 @@
         },
         {
           "lenstyle": "EVERYDAY B",
-          "styleconsollidated": "Everday B",
+          "styleconsollidated": "Everyday",
           "Type Revised": "Multifocal",
           "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
         {
           "lenstyle": "EVERYDAY B 1.74",
-          "styleconsollidated": "Everday B",
+          "styleconsollidated": "Everyday",
           "Type Revised": "Multifocal",
           "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
         {
           "lenstyle": "EVERYDAY B 14",
-          "styleconsollidated": "Everday B",
+          "styleconsollidated": "Everyday",
           "Type Revised": "Multifocal",
           "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
         {
           "lenstyle": "EVERYDAY B 16",
-          "styleconsollidated": "Everday B",
+          "styleconsollidated": "Everyday",
           "Type Revised": "Multifocal",
           "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
         {
           "lenstyle": "EVERYDAY B 18",
-          "styleconsollidated": "Everday B",
+          "styleconsollidated": "Everyday",
           "Type Revised": "Multifocal",
           "lensbrand": "IOT",
           "sourceSheet": "Export"
@@ -3929,6 +3929,27 @@
           "styleconsollidated": "Largo WS",
           "Type Revised": "Occupational",
           "lensbrand": "Tokai",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "CAMBER PURE",
+          "styleconsollidated": "Camber Pure",
+          "Type Revised": "Progressive",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "EVERYDAY",
+          "styleconsollidated": "Everyday",
+          "Type Revised": "Multifocal",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDMS3",
+          "styleconsollidated": "iD MyStyle 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
           "sourceSheet": "Export"
         }
       ]

@@ -51,7 +51,7 @@ const materialAddOnsByCode = {
 // from the legacy flat workbook export. Keep their names and prices sourced
 // from DVI and Lookup.xlsx instead of hand-maintaining customer prices.
 const dviSupplementStylesByCode = new Map([
-  ["P6", new Set(["SEQUEL MEETING", "SEQUEL COMPUTER"])],
+  ["P6", new Set(["SEQUEL MEETING", "SEQUEL COMPUTER", "ENDLESS"])],
 ]);
 
 const taxonomyBrandMap = new Map([

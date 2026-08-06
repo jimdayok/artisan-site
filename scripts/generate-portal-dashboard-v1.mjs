@@ -1389,6 +1389,27 @@ function copyDir(source, destination) {
   cpSync(source, destination, { recursive: true });
 }
 
+function publishStagedDirectory(source, destination) {
+  mkdirSync(path.dirname(destination), { recursive: true });
+  try {
+    renameSync(source, destination);
+    return;
+  } catch (error) {
+    if (error?.code !== "EXDEV") throw error;
+  }
+
+  const incomingDestination = `${destination}.incoming.${process.pid}.${Date.now()}`;
+  rmSync(incomingDestination, { recursive: true, force: true });
+  try {
+    cpSync(source, incomingDestination, { recursive: true });
+    renameSync(incomingDestination, destination);
+    rmSync(source, { recursive: true, force: true });
+  } catch (error) {
+    rmSync(incomingDestination, { recursive: true, force: true });
+    throw error;
+  }
+}
+
 function acquireGenerationLock() {
   try {
     mkdirSync(generationLockDir);
@@ -1637,7 +1658,7 @@ async function generateDashboard() {
   mkdirSync(outputBaseDir, { recursive: true });
   mkdirSync(releasesDir, { recursive: true });
   copyDir(stagedReleaseDir, stagedCurrentDir);
-  renameSync(stagedReleaseDir, releaseDir);
+  publishStagedDirectory(stagedReleaseDir, releaseDir);
   console.log(`[portal-dashboard-v1] release published: ${path.relative(root, releaseDir)}`);
   const stagedValidationErrorsDir = path.join(activeTemporaryOutputRoot, "validation-errors");
   if (existsSync(stagedValidationErrorsDir)) {
@@ -1649,7 +1670,7 @@ async function generateDashboard() {
       renameSync(validationErrorsDir, previousValidationErrorsDir);
     }
     try {
-      renameSync(stagedValidationErrorsDir, validationErrorsDir);
+      publishStagedDirectory(stagedValidationErrorsDir, validationErrorsDir);
     } catch (error) {
       if (existsSync(previousValidationErrorsDir) && !existsSync(validationErrorsDir)) {
         renameSync(previousValidationErrorsDir, validationErrorsDir);
@@ -1665,7 +1686,7 @@ async function generateDashboard() {
   );
   if (existsSync(currentDir)) renameSync(currentDir, previousCurrentDir);
   try {
-    renameSync(stagedCurrentDir, currentDir);
+    publishStagedDirectory(stagedCurrentDir, currentDir);
   } catch (error) {
     if (existsSync(previousCurrentDir) && !existsSync(currentDir)) {
       renameSync(previousCurrentDir, currentDir);

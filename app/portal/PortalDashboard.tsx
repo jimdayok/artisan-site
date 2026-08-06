@@ -885,8 +885,10 @@ function PortalResourceCard({ card }: { card: PortalSectionCard }) {
 
 function PortalLocationSelector({
   account,
+  baseHref: providedBaseHref,
 }: {
   account?: PortalDashboardV1Account;
+  baseHref?: string;
 }) {
   const locations = [
     ...new Map(
@@ -900,7 +902,8 @@ function PortalLocationSelector({
   if (!account || locations.length <= 1) return null;
 
   const selectedAccountNumber = account.selected_location?.account_number ?? "";
-  const baseHref = `/portal?account=${encodeURIComponent(account.account_id)}`;
+  const baseHref =
+    providedBaseHref ?? `/portal?account=${encodeURIComponent(account.account_id)}`;
   const selectedLabel = account.selected_location
     ? locationMenuLabel(account.selected_location)
     : `${account.business_name} — All ${locations.length} Locations`;
@@ -2779,6 +2782,10 @@ export function PortalDashboardContent({
     : [];
   const shouldShowDashboardWarnings =
     isAdmin && Boolean(dashboardState) && (!showDashboardV1 || Boolean(dashboardState?.stale));
+  const locationSelectorBaseHref =
+    adminPreviewAccountName && adminPreviewAccountNumber
+      ? `/portal/admin/preview/${encodeURIComponent(adminPreviewAccountNumber)}?returnTo=${encodeURIComponent(adminReturnTo)}`
+      : undefined;
 
   return (
     <PortalShell
@@ -2795,7 +2802,10 @@ export function PortalDashboardContent({
       }
       footer={<PortalFooter />}
     >
-      <PortalLocationSelector account={dashboardState?.account} />
+      <PortalLocationSelector
+        account={dashboardState?.account}
+        baseHref={locationSelectorBaseHref}
+      />
 
       {adminPreviewAccountName ? (
         <div className="sticky top-4 z-20 mb-8 border border-[#b89a61] bg-[#172a28]/96 px-5 py-4 text-white shadow-[0_18px_55px_rgba(23,42,40,0.22)] backdrop-blur sm:px-6">

@@ -53,7 +53,7 @@ export default async function PortalAdminPreviewPage({
   searchParams,
 }: {
   params: Promise<{ accountNumber: string }>;
-  searchParams?: Promise<{ returnTo?: string }>;
+  searchParams?: Promise<{ returnTo?: string; location?: string }>;
 }) {
   const authenticatedEmail = getPortalAuthenticatedEmailFromHeaders(
     await headers()
@@ -82,7 +82,10 @@ export default async function PortalAdminPreviewPage({
 
   const workbookProfile = getPortalWorkbookProfileByAccountNumber(legacyAccountNumber);
   const customer = getPreviewCustomerByAccountNumber(legacyAccountNumber);
-  const dashboardState = getPortalDashboardV1ByAccount(effectiveAccountId);
+  const dashboardState = getPortalDashboardV1ByAccount(
+    effectiveAccountId,
+    query.location
+  );
   const accountName =
     dashboardState.account?.business_name ||
     workbookProfile?.account?.accountName ||

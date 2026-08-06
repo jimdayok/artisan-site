@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { headers } from "next/headers";
-import { Activity, ArrowDownRight, ArrowUpRight, CircleDollarSign, Mail, Package, ShieldAlert, Users } from "lucide-react";
+import { Activity, ArrowDownRight, ArrowUpRight, Building2, CircleDollarSign, Mail, Package, ShieldAlert, Users } from "lucide-react";
 import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
 import { getDashboardV1AdminRows, resolveDashboardV1AcctId, type DashboardV1AdminRow } from "@/lib/portal/adminDashboardV1";
 import { parseComparisonMode } from "@/lib/portal/portalComparisons";
@@ -238,11 +238,12 @@ export default async function AdminAccountAnalysisPage({
         </div>
       </section>
 
-      <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <MetricCard icon={CircleDollarSign} label="PM Sales / Day" value={moneyOrUnavailable(row.pmSalesPerDay)} detail={`PPM ${moneyOrUnavailable(row.ppmSalesPerDay)} · CM pace ${moneyOrUnavailable(row.cmSalesPerDay)}`} />
         <MetricCard icon={Package} label="PM Jobs / Day" value={row.pmJpd === null ? "Unavailable" : `${row.pmJpd.toFixed(1)}/day`} detail={`PPM ${row.ppmJpd === null ? "Unavailable" : `${row.ppmJpd.toFixed(1)}/day`} · CM pace ${row.cmJpd === null ? "Unavailable" : `${row.cmJpd.toFixed(1)}/day`}`} />
         <MetricCard icon={Activity} label="PM JPD Trend" value={row.pmJpd === null ? "Unavailable" : row.pmJpd.toFixed(1)} detail={row.ppmJpd === null ? "JPD data unavailable" : `PPM ${row.ppmJpd.toFixed(1)}`} />
         <MetricCard icon={Users} label="Authorized Users" value={count(row.authorizedUsers)} detail={row.authorizedUserEmails.join(", ") || "No customer email available"} />
+        <MetricCard icon={Building2} label="Store Locations" value={count(row.locationCount)} detail={row.locationCount === 1 ? "single practice account" : "location-level comparison available in customer preview"} />
       </section>
 
       {rewardRows.length ? (
@@ -284,6 +285,7 @@ export default async function AdminAccountAnalysisPage({
           <div className="mt-5 grid gap-3 text-sm text-[#706759]">
             <p><span className="font-semibold text-[#172a28]">Acct ID:</span> {row.acctId}</p>
             <p><span className="font-semibold text-[#172a28]">Account Numbers:</span> {row.accountNumbers || "Unavailable"}</p>
+            <p><span className="font-semibold text-[#172a28]">Store Locations:</span> {count(row.locationCount)}</p>
             <p><span className="font-semibold text-[#172a28]">Customer Type:</span> {typeLabel(row.customerType)}</p>
             <p><span className="font-semibold text-[#172a28]">Sales Rep:</span> {row.salesRep || "Unavailable"}</p>
             <p><span className="font-semibold text-[#172a28]">Primary Lab:</span> {row.lab || "Unavailable"}</p>

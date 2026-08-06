@@ -76,6 +76,7 @@ import {
 } from "@/lib/portal/dashboardV1";
 import {
   ServiceExcellenceCharts,
+  MultiLocationPerformanceSnapshot,
   MonthlyUsageCharts,
   TrendsPerformanceCharts,
   type MixPoint,
@@ -1884,6 +1885,9 @@ function PracticeIntelligenceHero({
   ) || "Tier insight pending";
   const lastShipment = account?.lastShippedDate || dashboardAccount?.latest_ship_date || "";
   const dataFreshness = dashboardAccount?.data_refresh_date || "";
+  const locationCount = new Set(
+    (dashboardAccount?.locations ?? []).map((location) => location.account_number)
+  ).size || 1;
 
   return (
     <section id="overview" className="relative isolate scroll-mt-24 overflow-hidden rounded-md bg-[#13211f] p-5 text-white shadow-[0_34px_100px_rgba(19,33,31,0.28)] sm:p-7 lg:col-span-3">
@@ -1909,6 +1913,10 @@ function PracticeIntelligenceHero({
             <span className="inline-flex items-center gap-2 rounded-md border border-white/16 bg-white/10 px-3 py-2">
               <Users className="h-4 w-4 text-[#f2d88f]" />
               {dashboardAccount?.all_account_numbers || accountNumber || "Account pending"}
+            </span>
+            <span className="inline-flex items-center gap-2 rounded-md border border-[#f2d88f]/35 bg-[#f2d88f]/10 px-3 py-2 font-semibold text-[#fff8e8]">
+              <Building2 className="h-4 w-4 text-[#f2d88f]" />
+              {locationCount} Store {locationCount === 1 ? "Location" : "Locations"}
             </span>
           </div>
           <div className="mt-5 grid gap-2 text-sm text-white/68">
@@ -2573,9 +2581,10 @@ function ResourceCenter({
   );
 }
 
-function PortalSectionNav() {
+function PortalSectionNav({ hasMultipleLocations = false }: { hasMultipleLocations?: boolean }) {
   const links = [
     ["Overview", "#overview"],
+    ...(hasMultipleLocations ? ([["Locations", "#location-performance"]] as const) : []),
     ["Trends", "#trends"],
     ["Opportunities", "#opportunities"],
     ["Programs", "#programs"],
@@ -2630,9 +2639,15 @@ function PracticeIntelligenceCenter({
     dashboard: dashboardAccount,
     hasModernPackageWarning: Boolean(account && hasModernPackageSavingsWarning(account)),
   });
+  const locations = [
+    ...new Map(
+      (dashboardAccount?.locations ?? []).map((location) => [location.account_number, location])
+    ).values(),
+  ];
+  const showLocationSnapshot = locations.length > 1 && !dashboardAccount?.selected_location;
   return (
     <>
-      <PortalSectionNav />
+      <PortalSectionNav hasMultipleLocations={showLocationSnapshot} />
       <PracticeIntelligenceHero
         practiceName={practiceName}
         accountNumber={accountNumber}
@@ -2643,6 +2658,21 @@ function PracticeIntelligenceCenter({
         intelligence={intelligence}
         adminPreviewAccountName={adminPreviewAccountName}
       />
+      {showLocationSnapshot ? (
+        <MultiLocationPerformanceSnapshot
+          locations={locations.map((location) => ({
+            accountNumber: location.account_number,
+            accountName: location.account_name,
+            address: location.address,
+            purchases: location.purchase_summary.sales,
+            jobs: location.purchase_summary.jobs,
+          }))}
+          totals={{
+            purchases: dashboardAccount!.purchase_summary.sales,
+            jobs: dashboardAccount!.purchase_summary.jobs,
+          }}
+        />
+      ) : null}
       <section id="trends" className="scroll-mt-24 lg:col-span-3">
         <TrendsPerformanceCharts trends={intelligence.trends} vspMix={intelligence.vspMix} />
         <DailyTrendSummary intelligence={intelligence} />

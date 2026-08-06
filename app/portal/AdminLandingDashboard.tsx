@@ -536,7 +536,7 @@ function AccountResultList({
                       {row.businessName}
                     </Link>
                     <p className="mt-1 text-sm text-[#706759]">
-                      {row.acctId} · {row.accountNumbers} · {row.lab || "Lab unavailable"} · Rep {repDisplay(row)}
+                      {row.acctId} · {row.locationCount} store {row.locationCount === 1 ? "location" : "locations"} · {row.accountNumbers} · {row.lab || "Lab unavailable"} · Rep {repDisplay(row)}
                     </p>
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-4 lg:min-w-[520px]">
@@ -585,7 +585,7 @@ function WatchlistCard({ item, mode }: { item: ComparedRow; mode: ComparisonMode
           </Link>
           <p className="mt-1 text-sm text-[#706759]">
             {row.acctId} · {row.lab || "Lab unavailable"} ·{" "}
-            {customerTypeLabel(row.customerType)}
+            {customerTypeLabel(row.customerType)} · {row.locationCount} store {row.locationCount === 1 ? "location" : "locations"}
           </p>
         </div>
         <div className="rounded-md border border-[#d47763]/55 bg-[#fff1ed] px-5 py-3 lg:text-right">

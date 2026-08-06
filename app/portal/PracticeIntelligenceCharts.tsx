@@ -52,6 +52,19 @@ export type BenchmarkPoint = {
   top: number;
 };
 
+export type LocationPerformancePoint = {
+  accountNumber: string;
+  accountName: string;
+  address: string;
+  purchases: { ppm: number; pm: number; cm: number };
+  jobs: { ppm: number; pm: number; cm: number };
+};
+
+export type LocationPerformanceTotals = {
+  purchases: { ppm: number; pm: number; cm: number };
+  jobs: { ppm: number; pm: number; cm: number };
+};
+
 const moneyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
@@ -61,6 +74,18 @@ const moneyFormatter = new Intl.NumberFormat("en-US", {
 const numberFormatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 1,
 });
+
+const locationColors = [
+  "#1f8a70",
+  "#2f5f9c",
+  "#c7833f",
+  "#8a5da8",
+  "#c05268",
+  "#477f8d",
+  "#829b4b",
+  "#a76b4f",
+  "#5266a6",
+];
 
 function tooltipStyle() {
   return {
@@ -109,6 +134,165 @@ function ChartKey({ items }: { items: Array<{ label: string; color: string }> })
         </span>
       ))}
     </div>
+  );
+}
+
+function cityState(address: string) {
+  const match = address.match(/,\s*([^,]+),\s*([A-Z]{2})(?:\s+\d{5}(?:-\d{4})?)?\s*$/i);
+  return match ? `${match[1].trim()}, ${match[2].toUpperCase()}` : "Location";
+}
+
+function locationLabel(location: LocationPerformancePoint) {
+  return `${location.accountName} — ${location.accountNumber} — ${cityState(location.address)}`;
+}
+
+function valuesReconcile(
+  locations: LocationPerformancePoint[],
+  totals: LocationPerformanceTotals
+) {
+  return (["purchases", "jobs"] as const).every((metric) =>
+    (["ppm", "pm", "cm"] as const).every((period) => {
+      const locationTotal = locations.reduce(
+        (sum, location) => sum + Number(location[metric][period] || 0),
+        0
+      );
+      return Math.abs(locationTotal - Number(totals[metric][period] || 0)) <= 0.02;
+    })
+  );
+}
+
+function LocationComparisonChart({
+  title,
+  metric,
+  locations,
+}: {
+  title: string;
+  metric: "purchases" | "jobs";
+  locations: LocationPerformancePoint[];
+}) {
+  const data = (["ppm", "pm", "cm"] as const).map((period) => ({
+    period: period.toUpperCase(),
+    ...Object.fromEntries(
+      locations.map((location) => [location.accountNumber, location[metric][period]])
+    ),
+  }));
+  const minimumWidth = Math.max(300, locations.length * 76);
+
+  return (
+    <article className="min-w-0 rounded-2xl border border-white/12 bg-white/[0.075] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] sm:p-5">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#d8c49b]">
+            PPM · PM · CM
+          </p>
+          <h3 className="mt-1 text-xl font-semibold text-white">{title}</h3>
+        </div>
+        <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold text-white/72">
+          {locations.length} locations
+        </span>
+      </div>
+      <div className="mt-5 overflow-x-auto pb-2">
+        <div className="h-72" style={{ minWidth: minimumWidth }}>
+          <ResponsiveContainer width="100%" height="100%" debounce={50}>
+            <BarChart data={data} margin={{ top: 12, right: 12, left: 4, bottom: 0 }}>
+              <CartesianGrid stroke="rgba(255,255,255,0.11)" vertical={false} />
+              <XAxis dataKey="period" tick={{ fill: "#f6efe2", fontSize: 12, fontWeight: 700 }} tickLine={false} axisLine={false} />
+              <YAxis
+                tick={{ fill: "rgba(255,255,255,0.62)", fontSize: 11 }}
+                tickLine={false}
+                axisLine={false}
+                tickFormatter={metric === "purchases" ? (value) => `$${Math.round(Number(value) / 1000)}k` : undefined}
+              />
+              <Tooltip
+                formatter={(value, name) => [
+                  metric === "purchases"
+                    ? moneyFormatter.format(Number(value))
+                    : numberFormatter.format(Number(value)),
+                  locations.find((location) => location.accountNumber === String(name))
+                    ? locationLabel(locations.find((location) => location.accountNumber === String(name))!)
+                    : String(name),
+                ]}
+                contentStyle={tooltipStyle()}
+              />
+              {locations.map((location, index) => (
+                <Bar
+                  key={location.accountNumber}
+                  dataKey={location.accountNumber}
+                  fill={locationColors[index % locationColors.length]}
+                  radius={[5, 5, 0, 0]}
+                  maxBarSize={38}
+                />
+              ))}
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+export function MultiLocationPerformanceSnapshot({
+  locations,
+  totals,
+}: {
+  locations: LocationPerformancePoint[];
+  totals: LocationPerformanceTotals;
+}) {
+  if (locations.length <= 1) return null;
+
+  const legend = locations.map((location, index) => ({
+    label: locationLabel(location),
+    color: locationColors[index % locationColors.length],
+  }));
+  const reconciled = valuesReconcile(locations, totals);
+
+  return (
+    <section
+      id="location-performance"
+      className="relative isolate min-w-0 w-[calc(100vw-2.5rem)] max-w-[calc(100vw-2.5rem)] scroll-mt-24 overflow-hidden rounded-[1.8rem] border border-[#315f60]/35 bg-[#13211f] p-5 text-white shadow-[0_30px_90px_rgba(19,33,31,0.24)] sm:w-full sm:max-w-full sm:p-7 lg:col-span-3"
+    >
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_right,rgba(47,95,156,0.35),transparent_34%),linear-gradient(135deg,#13211f_0%,#173f43_62%,#244c4e_100%)]" />
+      <div className="min-w-0 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div className="min-w-0">
+          <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#d8c49b]">
+            Location Performance Snapshot
+          </p>
+          <h2 className="mt-2 max-w-full break-words text-3xl font-semibold tracking-[-0.04em] text-white sm:max-w-3xl sm:text-4xl">
+            See how every practice contributes to the group.
+          </h2>
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-white/68">
+            Each color represents one location across prior-prior month, prior month, and current month-to-date.
+          </p>
+        </div>
+        <span className="w-fit rounded-full border border-[#d8c49b]/45 bg-[#d8c49b]/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.15em] text-[#ead9b7]">
+          Group view · {locations.length} stores
+        </span>
+      </div>
+
+      {reconciled ? (
+        <>
+          <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 rounded-2xl border border-white/10 bg-black/10 p-4">
+            {legend.map((item) => (
+              <span key={item.label} className="inline-flex min-w-0 w-full items-center gap-2 break-words text-xs font-semibold text-white/78 sm:w-auto">
+                <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: item.color }} />
+                {item.label}
+              </span>
+            ))}
+          </div>
+          <div className="mt-5 grid gap-5 xl:grid-cols-2">
+            <LocationComparisonChart title="Purchases by Location" metric="purchases" locations={locations} />
+            <LocationComparisonChart title="Jobs by Location" metric="jobs" locations={locations} />
+          </div>
+        </>
+      ) : (
+        <div className="mt-6 rounded-2xl border border-[#d8c49b]/35 bg-white/[0.08] p-5">
+          <p className="font-semibold text-white">Location comparison is updating.</p>
+          <p className="mt-2 text-sm leading-6 text-white/68">
+            The consolidated group totals are available, but the location-level detail is not complete enough to compare accurately yet.
+          </p>
+        </div>
+      )}
+    </section>
   );
 }
 

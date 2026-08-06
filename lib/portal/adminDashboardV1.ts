@@ -108,6 +108,7 @@ export type DashboardV1AdminRow = {
   };
   programs: DashboardV1ProgramFlags;
   authorizedUsers: number;
+  locationCount: number;
   authorizedUserEmails: string[];
   authorizedUserDetails: DashboardV1AuthorizedUser[];
   priceListCodes: string[];
@@ -354,6 +355,8 @@ export function getDashboardV1AdminRows() {
           account.authorized_user_count ??
           0
       ),
+      locationCount:
+        new Set((detail?.locations ?? []).map((location) => location.account_number)).size || 1,
       authorizedUserEmails:
         detail?.authorized_users_summary?.primary_emails?.filter(Boolean) ?? [],
       authorizedUserDetails:

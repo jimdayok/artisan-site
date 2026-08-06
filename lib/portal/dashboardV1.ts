@@ -178,12 +178,15 @@ export type PortalDashboardV1Account = {
   selected_location?: PortalDashboardV1Location;
 };
 
-export interface PortalDashboardV1Location extends PortalDashboardV1Account {
+export type PortalDashboardV1Location = Omit<
+  PortalDashboardV1Account,
+  "authorized_users_summary" | "authorized_users" | "locations" | "selected_location"
+> & {
   group_account_id: string;
   account_number: string;
   account_name: string;
   location_key: string;
-}
+};
 
 export type PortalDashboardV1State = {
   status: "ok" | "missing-account" | "missing-snapshot";

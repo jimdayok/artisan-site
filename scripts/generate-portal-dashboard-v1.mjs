@@ -1,4 +1,5 @@
-import { existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync, cpSync, renameSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync, cpSync, renameSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import ExcelJS from "exceljs";
 import JSZip from "jszip";
@@ -10,6 +11,7 @@ const portalExportDir = path.join(root, "private-site", "portal");
 const defaultAccountInputCandidates = [
   path.join(portalExportDir, "portal_export.json"),
 ];
+const defaultLocationInputPath = path.join(portalExportDir, "portal_locations.json");
 const defaultUserInputCandidates = [
   path.join(portalDir, "user_data.xlsx"),
   path.join(portalDir, "User_Data.xlsx"),
@@ -20,9 +22,9 @@ const defaultSupplementalAccountInputCandidates = [];
 const outputBaseDir = path.join(portalDir, "dashboard-v1");
 const releasesDir = path.join(outputBaseDir, "releases");
 const currentDir = path.join(outputBaseDir, "current");
-const tempCurrentDir = path.join(outputBaseDir, "current.tmp");
 const generationLockDir = path.join(outputBaseDir, ".generation.lock");
 const validationErrorsDir = path.join(outputBaseDir, "validation-errors");
+let activeTemporaryOutputRoot = "";
 
 const REQUIRED_ACCOUNT_COLUMNS = [
   "Acct ID",
@@ -326,6 +328,12 @@ const POWER_BI_ACCOUNT_FIELDS = {
   "Data Refresh Date": "[data_refresh_date]",
 };
 
+const POWER_BI_LOCATION_FIELDS = {
+  ...POWER_BI_ACCOUNT_FIELDS,
+  "Account Number": "Intel[Account Number]",
+  "Account Name": "Intel[Account Name]",
+};
+
 const USER_HEADER_ALIASES = {
   "Person - Name": ["Person - Name"],
   "Person - Organization": ["Person - Organization"],
@@ -480,6 +488,31 @@ async function readRows(inputFile, sheetName, aliasMap) {
   } catch {
     return readRowsFromXlsxZip(inputFile, sheetName, aliasMap);
   }
+}
+
+function readPowerBiJsonRows(inputFile, fieldMap) {
+  if (!existsSync(inputFile)) return [];
+  const parsed = JSON.parse(readFileSync(inputFile, "utf8"));
+  if (!Array.isArray(parsed)) {
+    throw new Error(`Expected an array in ${path.relative(root, inputFile)}.`);
+  }
+  return parsed
+    .filter((row) => row && typeof row === "object" && !Array.isArray(row))
+    .map((row) =>
+      Object.fromEntries(
+        Object.entries(fieldMap).map(([canonical, source]) => {
+          const sourceKeys = Array.isArray(source) ? source : [source];
+          return [
+            canonical,
+            sourceKeys.map((key) => row[key]).find((value) => toText(value)) ?? "",
+          ];
+        })
+      )
+    );
+}
+
+function normalizeLocationAccountNumber(value) {
+  return toText(value).toUpperCase().replace(/\.0$/, "").replace(/^0+(?=\d)/, "");
 }
 
 function asArray(value) {
@@ -665,9 +698,12 @@ function toCsvLine(values) {
 }
 
 function writeCsvReport(fileName, headers, rows) {
-  mkdirSync(validationErrorsDir, { recursive: true });
+  const reportDir = activeTemporaryOutputRoot
+    ? path.join(activeTemporaryOutputRoot, "validation-errors")
+    : validationErrorsDir;
+  mkdirSync(reportDir, { recursive: true });
   const csv = [toCsvLine(headers), ...rows.map((row) => toCsvLine(headers.map((h) => row[h] ?? "")))].join("\n");
-  writeFileSync(path.join(validationErrorsDir, fileName), `${csv}\n`);
+  writeFileSync(path.join(reportDir, fileName), `${csv}\n`);
 }
 
 function validateAccountRows(rows, allowDuplicateAcctId, ignoreEmptySummaryRows) {
@@ -1372,8 +1408,13 @@ function acquireGenerationLock() {
 
 async function generateDashboard() {
   const args = parseArgs();
+  activeTemporaryOutputRoot = mkdtempSync(
+    path.join(tmpdir(), "artisan-dashboard-v1-")
+  );
+  console.log(`[portal-dashboard-v1] staging outside cloud storage: ${activeTemporaryOutputRoot}`);
   const accountInputPath = resolveInputPath(args.accountInput, defaultAccountInputCandidates, "account");
   const userInputPath = resolveInputPath(args.userInput, defaultUserInputCandidates, "user");
+  console.log(`[portal-dashboard-v1] reading accounts: ${path.relative(root, accountInputPath)}`);
   const userSourceManifestPath =
     path.basename(userInputPath).toLowerCase() === "user_data.xlsx"
       ? "private-source/portal/user_data.xlsx"
@@ -1389,7 +1430,9 @@ async function generateDashboard() {
     accountSourceRows.push(...rows.map((row) => ({ row, sourceFile })));
   }
   const accountRows = accountSourceRows.map((entry) => entry.row);
+  console.log(`[portal-dashboard-v1] reading users: ${path.relative(root, userInputPath)}`);
   const userRows = await readRows(userInputPath, args.userSheet, USER_HEADER_ALIASES);
+  console.log(`[portal-dashboard-v1] inputs loaded: ${accountRows.length} account rows, ${userRows.length} user rows`);
 
   const accountValidation = validateAccountRows(accountRows, args.allowDuplicateAcctId, args.ignoreEmptySummaryRows);
   const validRowsByReference = new Set(accountValidation.cleanedRows);
@@ -1414,13 +1457,72 @@ async function generateDashboard() {
 
   const classifiedAccounts = normalizedAccountRows.map(classifyAccount);
   const accountIds = new Set(classifiedAccounts.map((account) => account.account_id));
+  const locationRows = readPowerBiJsonRows(
+    defaultLocationInputPath,
+    POWER_BI_LOCATION_FIELDS
+  );
+  console.log(`[portal-dashboard-v1] location rows loaded: ${locationRows.length}`);
+  const locationsByKey = new Map();
+  for (const row of locationRows) {
+    const groupAccountId = normalizeAcctId(row["Acct ID"]);
+    const accountNumber = normalizeLocationAccountNumber(row["Account Number"]);
+    if (!groupAccountId || !accountNumber || !accountIds.has(groupAccountId)) continue;
+    const location = {
+      ...classifyAccount(row),
+      group_account_id: groupAccountId,
+      account_number: accountNumber,
+      account_name: toText(row["Account Name"]) || toText(row["Last Business Name"]),
+      location_key: `${groupAccountId}|${accountNumber}`,
+    };
+    const existingLocation = locationsByKey.get(location.location_key);
+    const locationScore = [
+      location.account_name,
+      location.address,
+      location.phone,
+      location.lab_name,
+      location.division,
+    ].filter((value) => toText(value)).length;
+    const existingScore = existingLocation
+      ? [
+          existingLocation.account_name,
+          existingLocation.address,
+          existingLocation.phone,
+          existingLocation.lab_name,
+          existingLocation.division,
+        ].filter((value) => toText(value)).length
+      : -1;
+    if (
+      !existingLocation ||
+      locationScore > existingScore ||
+      (locationScore === existingScore &&
+        location.account_name.localeCompare(existingLocation.account_name) < 0)
+    ) {
+      locationsByKey.set(location.location_key, location);
+    }
+  }
+  const locationsByAccount = new Map();
+  for (const location of locationsByKey.values()) {
+    locationsByAccount.set(location.group_account_id, [
+      ...(locationsByAccount.get(location.group_account_id) ?? []),
+      location,
+    ]);
+  }
+  for (const locations of locationsByAccount.values()) {
+    locations.sort((a, b) =>
+      a.account_name.localeCompare(b.account_name) ||
+      a.account_number.localeCompare(b.account_number)
+    );
+  }
   const userAccess = hasUserColumns(userRows)
     ? buildUserAccess(userRows, accountIds, args.allowInvalidUserAccountLinks)
     : buildUserAccessFromExistingSnapshot(accountIds);
+  console.log(`[portal-dashboard-v1] authorization mappings prepared: ${userAccess.usersToAccounts.length}`);
 
   const releaseId = new Date().toISOString().replace(/[:.]/g, "-");
   const releaseDir = path.join(releasesDir, releaseId);
-  mkdirSync(releaseDir, { recursive: true });
+  const stagedReleaseDir = path.join(activeTemporaryOutputRoot, releaseId);
+  const stagedCurrentDir = path.join(activeTemporaryOutputRoot, "current");
+  mkdirSync(stagedReleaseDir, { recursive: true });
 
   const accountsIndex = [];
   let accountsWithoutUsers = 0;
@@ -1431,13 +1533,14 @@ async function generateDashboard() {
     .sort()
     .slice(-1)[0] ?? "";
 
-  for (const account of classifiedAccounts) {
+  for (const [accountIndex, account] of classifiedAccounts.entries()) {
     const usersForAccount = userAccess.accountToUsersMap.get(account.account_id) ?? [];
     if (usersForAccount.length === 0) accountsWithoutUsers += 1;
     const labAverageDays = labTurnaroundAverages.get(toText(account.lab_name) || "Unknown");
 
     const accountOutput = {
       ...account,
+      locations: locationsByAccount.get(account.account_id) ?? [],
       data_refresh_date: account.data_refresh_date || latestRefreshDate,
       supplemental_intelligence: {
         ...(account.supplemental_intelligence ?? {}),
@@ -1470,25 +1573,35 @@ async function generateDashboard() {
       pm_jpd: Number(account.performance_rates?.jobs_per_day?.pm ?? 0) || null,
       cm_jpd: Number(account.performance_rates?.jobs_per_day?.cm ?? 0) || null,
       authorized_user_count: accountOutput.authorized_users_summary.authorized_user_count,
+      location_count: accountOutput.locations.length,
       price_lists: account.used_price_lists ?? [],
     });
 
-    writeJson(path.join(releaseDir, "accounts", `${safeFileName(account.account_id)}.json`), accountOutput);
+    writeJson(path.join(stagedReleaseDir, "accounts", `${safeFileName(account.account_id)}.json`), accountOutput);
+    if ((accountIndex + 1) % 50 === 0 || accountIndex + 1 === classifiedAccounts.length) {
+      console.log(`[portal-dashboard-v1] staged ${accountIndex + 1}/${classifiedAccounts.length} accounts`);
+    }
   }
 
   accountsIndex.sort((a, b) => a.account_id.localeCompare(b.account_id));
-  writeJson(path.join(releaseDir, "users_to_accounts.json"), userAccess.usersToAccounts);
-  writeJson(path.join(releaseDir, "accounts_index.json"), accountsIndex);
+  writeJson(path.join(stagedReleaseDir, "users_to_accounts.json"), userAccess.usersToAccounts);
+  writeJson(path.join(stagedReleaseDir, "accounts_index.json"), accountsIndex);
 
   const manifest = {
     snapshot_id: releaseId,
     source_account_file: path.relative(root, accountInputPath),
     source_account_files: accountSourcePaths.map((sourceFile) => path.relative(root, sourceFile)),
+    source_location_file: path.relative(root, defaultLocationInputPath),
     source_user_file: userSourceManifestPath,
     generated_at: new Date().toISOString(),
     row_count_input_accounts: accountValidation.rowCount,
     row_count_effective_accounts: accountValidation.effectiveRowCount,
     row_count_output_accounts: accountsIndex.length,
+    row_count_input_locations: locationRows.length,
+    row_count_output_locations: [...locationsByAccount.values()].reduce(
+      (total, locations) => total + locations.length,
+      0
+    ),
     row_count_input_users: userAccess.userRowsCount,
     row_count_users_with_account_id: userAccess.userRowsWithAccount,
     unique_user_emails: userAccess.uniqueUserEmails,
@@ -1507,6 +1620,7 @@ async function generateDashboard() {
     field_precedence_documentation: [
       "Acct ID is the master key for all account intelligence records.",
       "Customer performance and account intelligence fields come from private-site/portal/portal_export.json.",
+      "Location performance fields come from private-site/portal/portal_locations.json and are attached to their authorized group by Acct ID.",
       "Duplicate Acct ID rows are merged using the latest and most complete Power BI record while additive account metrics are combined.",
       "Portal authorization and user-to-account access continue to come from private-source/portal/user_data.xlsx.",
       "Revenue fields are preserved only at account level: PPM Sales, PM Sales, and CM Sales.",
@@ -1517,17 +1631,41 @@ async function generateDashboard() {
     required_user_columns: REQUIRED_USER_COLUMNS,
     acct_id_pattern: ACCT_ID_PATTERN.source,
   };
-  writeJson(path.join(releaseDir, "latest_snapshot_manifest.json"), manifest);
+  writeJson(path.join(stagedReleaseDir, "latest_snapshot_manifest.json"), manifest);
+  console.log("[portal-dashboard-v1] snapshot files staged; publishing atomically");
 
   mkdirSync(outputBaseDir, { recursive: true });
-  copyDir(releaseDir, tempCurrentDir);
+  mkdirSync(releasesDir, { recursive: true });
+  copyDir(stagedReleaseDir, stagedCurrentDir);
+  renameSync(stagedReleaseDir, releaseDir);
+  console.log(`[portal-dashboard-v1] release published: ${path.relative(root, releaseDir)}`);
+  const stagedValidationErrorsDir = path.join(activeTemporaryOutputRoot, "validation-errors");
+  if (existsSync(stagedValidationErrorsDir)) {
+    const previousValidationErrorsDir = path.join(
+      outputBaseDir,
+      `validation-errors.prev.${process.pid}.${Date.now()}`
+    );
+    if (existsSync(validationErrorsDir)) {
+      renameSync(validationErrorsDir, previousValidationErrorsDir);
+    }
+    try {
+      renameSync(stagedValidationErrorsDir, validationErrorsDir);
+    } catch (error) {
+      if (existsSync(previousValidationErrorsDir) && !existsSync(validationErrorsDir)) {
+        renameSync(previousValidationErrorsDir, validationErrorsDir);
+      }
+      throw error;
+    }
+    rmSync(previousValidationErrorsDir, { recursive: true, force: true });
+    console.log("[portal-dashboard-v1] validation reports published");
+  }
   const previousCurrentDir = path.join(
     outputBaseDir,
     `current.prev.${process.pid}.${Date.now()}`
   );
   if (existsSync(currentDir)) renameSync(currentDir, previousCurrentDir);
   try {
-    renameSync(tempCurrentDir, currentDir);
+    renameSync(stagedCurrentDir, currentDir);
   } catch (error) {
     if (existsSync(previousCurrentDir) && !existsSync(currentDir)) {
       renameSync(previousCurrentDir, currentDir);
@@ -1535,6 +1673,8 @@ async function generateDashboard() {
     throw error;
   }
   rmSync(previousCurrentDir, { recursive: true, force: true });
+  rmSync(activeTemporaryOutputRoot, { recursive: true, force: true });
+  activeTemporaryOutputRoot = "";
 
   console.log(`[portal-dashboard-v1] source accounts: ${path.relative(root, accountInputPath)}`);
   console.log(`[portal-dashboard-v1] source users: ${path.relative(root, userInputPath)}`);
@@ -1558,6 +1698,10 @@ async function main() {
   try {
     await generateDashboard();
   } finally {
+    if (activeTemporaryOutputRoot) {
+      rmSync(activeTemporaryOutputRoot, { recursive: true, force: true });
+      activeTemporaryOutputRoot = "";
+    }
     rmSync(generationLockDir, { recursive: true, force: true });
   }
 }

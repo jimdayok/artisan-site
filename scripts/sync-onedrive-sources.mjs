@@ -24,6 +24,13 @@ const sourceManifest = [
     type: "json",
   },
   {
+    label: "Portal location export",
+    source: path.join(onedriveRoot, "portal_locations.json"),
+    destination: path.join(root, "private-site", "portal", "portal_locations.json"),
+    required: true,
+    type: "json",
+  },
+  {
     label: "Pricing lookup workbook",
     source: path.join(referenceFilesRoot, "Lookup.xlsx"),
     destination: path.join(

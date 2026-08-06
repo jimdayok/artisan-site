@@ -7,11 +7,15 @@ set -euo pipefail
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:${PATH:-}"
 
 SOURCE="${PORTAL_EXPORT_SOURCE:-/Users/jimday/Library/CloudStorage/OneDrive-pacificartisanlabs.com/Report Data/MASTER/portal_export.json}"
+LOCATION_SOURCE="${PORTAL_LOCATIONS_SOURCE:-/Users/jimday/Library/CloudStorage/OneDrive-pacificartisanlabs.com/Report Data/MASTER/portal_locations.json}"
 REPO="${PORTAL_REPO:-/Users/jimday/Documents/GitHub/artisan-site}"
 DEST_REL="private-site/portal/portal_export.json"
+LOCATION_DEST_REL="private-site/portal/portal_locations.json"
 BUNDLE_REL="lib/portal/generated/dashboardV1Bundle.json"
 DEST="$REPO/$DEST_REL"
+LOCATION_DEST="$REPO/$LOCATION_DEST_REL"
 TEMP_DEST=""
+TEMP_LOCATION_DEST=""
 TEMP_INDEX=""
 LOCK_DIR="/tmp/artisan-portal-sync.lock"
 SOURCE_STABLE_ATTEMPTS="${PORTAL_SOURCE_STABLE_ATTEMPTS:-3}"
@@ -101,6 +105,9 @@ cleanup() {
   if [ -n "$TEMP_DEST" ] && [ -f "$TEMP_DEST" ]; then
     rm -f "$TEMP_DEST"
   fi
+  if [ -n "$TEMP_LOCATION_DEST" ] && [ -f "$TEMP_LOCATION_DEST" ]; then
+    rm -f "$TEMP_LOCATION_DEST"
+  fi
   if [ -n "$TEMP_INDEX" ] && [ -f "$TEMP_INDEX" ]; then
     rm -f "$TEMP_INDEX"
   fi
@@ -116,6 +123,7 @@ if ! mkdir "$LOCK_DIR" 2>/dev/null; then
 fi
 
 wait_for_stable_source "$SOURCE"
+wait_for_stable_source "$LOCATION_SOURCE"
 
 if [ "$(git -C "$REPO" branch --show-current)" != "main" ]; then
   log "Portal refresh must run from the main branch."
@@ -130,6 +138,14 @@ mv "$TEMP_DEST" "$DEST"
 TEMP_DEST=""
 log "Copied portal export into repo."
 
+mkdir -p "$(dirname "$LOCATION_DEST")"
+TEMP_LOCATION_DEST="$(mktemp "${LOCATION_DEST}.tmp.XXXXXX")"
+cp "$LOCATION_SOURCE" "$TEMP_LOCATION_DEST"
+node -e 'JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8"))' "$TEMP_LOCATION_DEST"
+mv "$TEMP_LOCATION_DEST" "$LOCATION_DEST"
+TEMP_LOCATION_DEST=""
+log "Copied portal location export into repo."
+
 cd "$REPO"
 retry_command "$COMMAND_RETRY_ATTEMPTS" npm run portal:generate-dashboard-v1:launch-safe
 retry_command "$COMMAND_RETRY_ATTEMPTS" npm run portal:bundle-dashboard-v1
@@ -139,20 +155,23 @@ rm -f "$TEMP_INDEX"
 log "Preparing isolated Git index."
 GIT_INDEX_FILE="$TEMP_INDEX" git read-tree HEAD
 log "Staging portal refresh."
-GIT_INDEX_FILE="$TEMP_INDEX" git add -- "$DEST_REL" "$BUNDLE_REL"
+GIT_INDEX_FILE="$TEMP_INDEX" git add -- "$DEST_REL" "$LOCATION_DEST_REL" "$BUNDLE_REL"
 
 if GIT_INDEX_FILE="$TEMP_INDEX" git diff --cached --quiet; then
   log "No portal changes detected. Skipping commit and push."
   exit 0
 fi
 
-log "Committing portal refresh."
-GIT_INDEX_FILE="$TEMP_INDEX" git commit -m "Daily portal data refresh"
+log "Committing portal refresh from isolated index."
+PORTAL_PARENT_COMMIT="$(git rev-parse HEAD)"
+PORTAL_TREE="$(GIT_INDEX_FILE="$TEMP_INDEX" git write-tree)"
+PORTAL_COMMIT="$(git commit-tree "$PORTAL_TREE" -p "$PORTAL_PARENT_COMMIT" -m "Daily portal data refresh")"
+git update-ref refs/heads/main "$PORTAL_COMMIT" "$PORTAL_PARENT_COMMIT"
 
 # Keep the normal index aligned with the new commit without disturbing
 # unrelated staged files.
 log "Aligning the working index."
-git add -- "$DEST_REL" "$BUNDLE_REL"
+git add -- "$DEST_REL" "$LOCATION_DEST_REL" "$BUNDLE_REL"
 log "Pushing portal refresh."
 retry_command "$PUSH_RETRY_ATTEMPTS" git push origin main
 log "Portal sync complete."

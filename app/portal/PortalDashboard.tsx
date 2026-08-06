@@ -5,6 +5,8 @@ import {
   Activity,
   BadgeCheck,
   BookOpen,
+  Building2,
+  ChevronDown,
   CircleDollarSign,
   ExternalLink,
   Home,
@@ -190,6 +192,39 @@ function formatAddressLines(value?: string) {
     .split(/,\s*|\n/)
     .map((line) => line.trim())
     .filter(Boolean);
+}
+
+function cityStateFromAddress(address?: string, fallbackState?: string) {
+  const parts = (address ?? "")
+    .replace(/\n/g, ",")
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+  const stateTail = parts.at(-1)?.match(/^([A-Z]{2})(?:\s+\d{5}(?:-\d{4})?)?$/i);
+
+  if (stateTail && parts.length > 1) {
+    return `${parts.at(-2)}, ${stateTail[1].toUpperCase()}`;
+  }
+
+  const combinedTail = (address ?? "").match(
+    /(?:,|\n)\s*([^,\n]+?)\s*,?\s+([A-Z]{2})(?:\s+\d{5}(?:-\d{4})?)?\s*$/i
+  );
+  if (combinedTail) {
+    return `${combinedTail[1].trim()}, ${combinedTail[2].toUpperCase()}`;
+  }
+
+  return (fallbackState ?? "").trim().toUpperCase();
+}
+
+function locationMenuLabel(location: PortalDashboardV1Account["selected_location"]) {
+  if (!location) return "";
+  return [
+    location.account_name || "Practice Location",
+    location.account_number,
+    cityStateFromAddress(location.address, location.state),
+  ]
+    .filter(Boolean)
+    .join(" — ");
 }
 
 function PortalShell({
@@ -845,6 +880,131 @@ function PortalResourceCard({ card }: { card: PortalSectionCard }) {
         {card.cta}
       </span>
     </Link>
+  );
+}
+
+function PortalLocationSelector({
+  account,
+}: {
+  account?: PortalDashboardV1Account;
+}) {
+  const locations = [
+    ...new Map(
+      (account?.locations ?? []).map((location) => [location.account_number, location])
+    ).values(),
+  ].sort(
+    (a, b) =>
+      a.account_name.localeCompare(b.account_name) ||
+      a.account_number.localeCompare(b.account_number)
+  );
+  if (!account || locations.length <= 1) return null;
+
+  const selectedAccountNumber = account.selected_location?.account_number ?? "";
+  const baseHref = `/portal?account=${encodeURIComponent(account.account_id)}`;
+  const selectedLabel = account.selected_location
+    ? locationMenuLabel(account.selected_location)
+    : `${account.business_name} — All ${locations.length} Locations`;
+
+  return (
+    <section className="relative z-30 mb-8 rounded-[1.8rem] border border-[#315f60]/30 bg-[linear-gradient(135deg,#183331_0%,#244c4e_58%,#315f60_100%)] p-5 text-white shadow-[0_24px_70px_rgba(23,42,40,0.22)] sm:p-6 lg:p-7">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[1.8rem]">
+        <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full border border-white/10" />
+        <div className="absolute -right-5 -top-10 h-40 w-40 rounded-full bg-[#d8c49b]/10 blur-2xl" />
+      </div>
+      <div className="relative grid gap-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(24rem,1.2fr)] lg:items-center">
+        <div>
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-[#ead9b7] shadow-inner">
+              <Building2 className="h-5 w-5" aria-hidden="true" />
+            </span>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[#d8c49b]">
+                Performance Scope
+              </p>
+              <p className="mt-1 text-xl font-semibold tracking-[-0.02em] text-white">
+                Group and practice intelligence
+              </p>
+            </div>
+          </div>
+          <p className="mt-4 max-w-xl text-sm leading-6 text-white/72">
+            {selectedAccountNumber
+              ? "You are viewing production for one practice. Return to All Locations for the consolidated group view."
+              : `You are viewing consolidated production across ${locations.length} practices. Select a location for practice-level performance.`}
+          </p>
+        </div>
+
+        <details className="group relative" aria-label="Choose performance scope">
+          <summary className="flex min-h-[5.25rem] cursor-pointer list-none items-center justify-between gap-4 rounded-2xl border border-white/18 bg-white/[0.09] px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_16px_35px_rgba(10,29,28,0.2)] backdrop-blur transition hover:border-[#d8c49b]/70 hover:bg-white/[0.13] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d8c49b] [&::-webkit-details-marker]:hidden">
+            <span className="flex min-w-0 items-center gap-3">
+              <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#d8c49b] text-[#172a28]">
+                {selectedAccountNumber ? (
+                  <MapPin className="h-5 w-5" aria-hidden="true" />
+                ) : (
+                  <Layers className="h-5 w-5" aria-hidden="true" />
+                )}
+              </span>
+              <span className="min-w-0">
+                <span className="block text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-[#d8c49b]">
+                  {selectedAccountNumber ? "Practice view" : "Group view"}
+                </span>
+                <span className="mt-1 block text-sm font-semibold leading-5 text-white sm:text-base">
+                  {selectedLabel}
+                </span>
+              </span>
+            </span>
+            <ChevronDown className="h-5 w-5 shrink-0 text-[#d8c49b] transition duration-200 group-open:rotate-180" aria-hidden="true" />
+          </summary>
+
+          <div className="absolute left-0 right-0 z-50 mt-3 max-h-[min(28rem,62vh)] overflow-y-auto rounded-2xl border border-[#d8c49b] bg-[#fffaf1] p-2 text-[#172a28] shadow-[0_28px_80px_rgba(9,27,26,0.32)]">
+            <p className="px-3 pb-2 pt-1 text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-[#8b7650]">
+              Choose reporting level
+            </p>
+            <Link
+              href={baseHref}
+              aria-current={!selectedAccountNumber ? "page" : undefined}
+              className={`flex items-center gap-3 rounded-xl border px-3 py-3 transition ${
+                !selectedAccountNumber
+                  ? "border-[#315f60] bg-[#e2ece9] shadow-sm"
+                  : "border-transparent hover:border-[#d8c49b] hover:bg-white"
+              }`}
+            >
+              <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#172a28] text-white">
+                <Layers className="h-4 w-4" aria-hidden="true" />
+              </span>
+              <span>
+                <span className="block text-sm font-semibold">All Locations</span>
+                <span className="mt-0.5 block text-xs text-[#706759]">
+                  Consolidated production across {locations.length} practices
+                </span>
+              </span>
+            </Link>
+            <div className="my-2 h-px bg-[#e1d4bc]" />
+            {locations.map((location) => {
+              const isSelected = location.account_number === selectedAccountNumber;
+              return (
+                <Link
+                  key={location.location_key}
+                  href={`${baseHref}&location=${encodeURIComponent(location.account_number)}`}
+                  aria-current={isSelected ? "page" : undefined}
+                  className={`flex items-center gap-3 rounded-xl border px-3 py-3 transition ${
+                    isSelected
+                      ? "border-[#315f60] bg-[#e2ece9] shadow-sm"
+                      : "border-transparent hover:border-[#d8c49b] hover:bg-white"
+                  }`}
+                >
+                  <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#d8c49b] bg-white text-[#315f60]">
+                    <MapPin className="h-4 w-4" aria-hidden="true" />
+                  </span>
+                  <span className="min-w-0 text-sm font-semibold leading-5">
+                    {locationMenuLabel(location)}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        </details>
+      </div>
+    </section>
   );
 }
 
@@ -1732,7 +1892,7 @@ function PracticeIntelligenceHero({
             Practice Intelligence Center
           </p>
           <h1 className="mt-4 max-w-4xl break-words text-4xl font-semibold leading-tight text-white sm:text-5xl">
-            {dashboardAccount?.business_name || practiceName}
+            {practiceName}
           </h1>
           <div className="mt-5 flex flex-wrap gap-2 text-sm">
             <span className="inline-flex items-center gap-2 rounded-md border border-white/16 bg-white/10 px-3 py-2">
@@ -2586,12 +2746,14 @@ export function PortalDashboardContent({
   });
   const account = workbookProfile?.account;
   const practiceName =
+    dashboardState?.account?.selected_location?.account_name ||
     dashboardState?.account?.business_name ||
     account?.accountName ||
     workbookProfile?.person.organization ||
     customer?.practiceName ||
     "Customer";
   const accountNumber =
+    dashboardState?.account?.selected_location?.account_number ||
     dashboardState?.account?.account_id ||
     account?.accountNumber ||
     workbookProfile?.person.accountNumber ||
@@ -2633,6 +2795,8 @@ export function PortalDashboardContent({
       }
       footer={<PortalFooter />}
     >
+      <PortalLocationSelector account={dashboardState?.account} />
+
       {adminPreviewAccountName ? (
         <div className="sticky top-4 z-20 mb-8 border border-[#b89a61] bg-[#172a28]/96 px-5 py-4 text-white shadow-[0_18px_55px_rgba(23,42,40,0.22)] backdrop-blur sm:px-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -2753,9 +2917,11 @@ export function PortalDashboardContent({
 export default async function PortalDashboard({
   headerList,
   selectedAccountNumber,
+  selectedLocationNumber,
 }: {
   headerList: Headers;
   selectedAccountNumber?: string;
+  selectedLocationNumber?: string;
 }) {
   const authenticatedEmail = getPortalAuthenticatedEmailFromHeaders(headerList);
   const isLocalhostDevelopment = isLocalhostDevelopmentRequest(headerList);
@@ -2810,7 +2976,10 @@ export default async function PortalDashboard({
     matchedProfile?.person.accountNumber ||
     matchedCustomer?.accountNumber ||
     "";
-  const dashboardState = getPortalDashboardV1ByAccount(resolvedAccountNumber);
+  const dashboardState = getPortalDashboardV1ByAccount(
+    resolvedAccountNumber,
+    selectedLocationNumber
+  );
   const selectableAccountCount = new Set([
     ...customers.map((customer) => normalizeAccountNumber(customer.accountNumber)),
     ...profiles.map((profile) =>

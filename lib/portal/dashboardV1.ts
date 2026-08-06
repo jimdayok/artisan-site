@@ -7,11 +7,14 @@ export type PortalDashboardV1Manifest = {
   snapshot_id: string;
   source_account_file: string;
   source_account_files?: string[];
+  source_location_file?: string;
   source_user_file: string;
   generated_at: string;
   row_count_input_accounts: number;
   row_count_effective_accounts: number;
   row_count_output_accounts: number;
+  row_count_input_locations?: number;
+  row_count_output_locations?: number;
   row_count_input_users: number;
   row_count_users_with_account_id: number;
   unique_user_emails: number;
@@ -171,7 +174,16 @@ export type PortalDashboardV1Account = {
     organization: string;
     targeted_programs?: string;
   }>;
+  locations?: PortalDashboardV1Location[];
+  selected_location?: PortalDashboardV1Location;
 };
+
+export interface PortalDashboardV1Location extends PortalDashboardV1Account {
+  group_account_id: string;
+  account_number: string;
+  account_name: string;
+  location_key: string;
+}
 
 export type PortalDashboardV1State = {
   status: "ok" | "missing-account" | "missing-snapshot";
@@ -269,7 +281,10 @@ function isStale(manifest?: PortalDashboardV1Manifest) {
   return { stale: false as const, staleReason: "" };
 }
 
-export function getPortalDashboardV1ByAccount(accountNumber?: string): PortalDashboardV1State {
+export function getPortalDashboardV1ByAccount(
+  accountNumber?: string,
+  locationAccountNumber?: string
+): PortalDashboardV1State {
   const manifest = getManifest();
   const staleState = isStale(manifest);
 
@@ -303,9 +318,32 @@ export function getPortalDashboardV1ByAccount(accountNumber?: string): PortalDas
     };
   }
 
+  const requestedLocation = normalizeAccountNumber(locationAccountNumber ?? "");
+  const selectedLocation = requestedLocation
+    ? account.locations?.find(
+        (location) =>
+          normalizeAccountNumber(location.account_number) === requestedLocation
+      )
+    : undefined;
+  const accountForView = selectedLocation
+    ? {
+        ...account,
+        ...selectedLocation,
+        account_id: account.account_id,
+        pipedrive_id: account.pipedrive_id,
+        business_name: account.business_name,
+        all_account_numbers: account.all_account_numbers,
+        used_price_lists: account.used_price_lists,
+        authorized_users_summary: account.authorized_users_summary,
+        authorized_users: account.authorized_users,
+        locations: account.locations,
+        selected_location: selectedLocation,
+      }
+    : account;
+
   return {
     status: "ok",
-    account,
+    account: accountForView,
     manifest,
     stale: staleState.stale,
     staleReason: staleState.staleReason,

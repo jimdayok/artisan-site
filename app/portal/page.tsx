@@ -25,6 +25,7 @@ export default async function PortalPage({
     activity?: string;
     trend?: string;
     opportunity?: string;
+    location?: string;
   }>;
 }) {
   const headerList = await headers();
@@ -51,6 +52,7 @@ export default async function PortalPage({
     <PortalDashboard
       headerList={headerList}
       selectedAccountNumber={query.account}
+      selectedLocationNumber={query.location}
     />
   );
 }

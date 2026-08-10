@@ -89,7 +89,6 @@ Best-in-class provider portals from companies like EssilorPRO, ZEISS, HOYA, Neur
 | Varilux Comfort | PDF | Working | `/files/varilux-comfort.pdf` | Valid PDF |
 | Unity V3 Sales Guide | PDF | Working | `/files/unity-v3-sales-guide.pdf` | Valid PDF |
 | Unity V3 Whitepaper | PDF | Working | `/files/unity-v3-whitepaper.pdf` | Valid PDF |
-| Unity Rewards Flyer | PDF | Working | `/files/unity-rewards-flyer.pdf` | Valid PDF |
 | Unity Rewards PECAA | PDF | Working | `/files/unity-rewards-pecaa.pdf` | Valid PDF |
 | Artisan CDS Bifocal | PDF | Working | `/files/ArtisanDesigns/cds_bifocal.pdf` | Valid PDF |
 | Artisan PS Ultra Short | PDF | Working | `/files/ArtisanDesigns/ps_ultra_short.pdf` | Valid PDF |

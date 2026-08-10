@@ -6,10 +6,10 @@ export default function CookiePreferencesButton({ className = "" }: { className?
   return (
     <button
       type="button"
-      className={`cky-banner-element ${className}`}
+      className={className}
       onClick={openCookiePreferences}
     >
-      Cookie Preferences
+      Privacy Preferences
     </button>
   );
 }

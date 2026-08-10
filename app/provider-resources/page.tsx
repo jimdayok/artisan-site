@@ -357,7 +357,6 @@ const brandLibraries: BrandLibrary[] = [
     resources: [
       resource("unity", "Unity / VSP", "Lens Designs", "PDF", "Unity V3 Sales Guide", "Sales guide for Unity V3 lens positioning and plan conversations.", fileHref("unity-v3-sales-guide.pdf"), ["VSP", "Unity V3", "progressive"], { popular: true }),
       resource("unity", "Unity / VSP", "Technical Bulletins", "PDF", "Unity V3 White Paper", "Technical white paper for Unity V3 performance and product context.", fileHref("5688bc8-2e3-c061-3d27-251215283ac_Unity_V3_Whitepaper.pdf"), ["white paper"]),
-      resource("unity", "Unity / VSP", "Programs", "PDF", "Unity Rewards Flyer", "Standard Unity Rewards program flyer and payout overview.", fileHref("unity-rewards-flyer.pdf"), ["Unity Rewards", "VSP"], { popular: true }),
       resource("unity", "Unity / VSP", "Programs", "PDF", "PECAA Max Unity Rewards Flyer", "PECAA Max Unity Rewards flyer and program overview.", fileHref("unity-rewards-pecaa.pdf"), ["Unity Rewards", "PECAA"]),
       resource("unity", "Unity / VSP", "AR Coatings", "PDF", "TechShield AR Coatings Guide", "Treatment guide for TechShield AR recommendations.", fileHref("TechShield_AR_Coatings_Sales_Sheet_2023.pdf"), ["TechShield", "AR"], { staffPick: true }),
       resource("unity", "Unity / VSP", "FAQs", "PDF", "TechShield FAQ", "FAQ for the Unity performance coatings retirement and TechShield transition.", fileHref("unity-performance-coatings_retirement_faqs.pdf"), ["TechShield", "FAQ"]),
@@ -1204,10 +1203,10 @@ export default function ProviderResourcesPage({
             <article className="rounded-lg border border-[#9ccfbd] bg-[#e8f5f1] p-5">
               <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#0f766e]">Unity Rewards</p>
-                  <h3 className="mt-2 text-xl font-semibold">Keep Unity Rewards close to VSP setup.</h3>
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#0f766e]">PECAA Max Unity Rewards</p>
+                  <h3 className="mt-2 text-xl font-semibold">Keep the PECAA Max flyer close to VSP setup.</h3>
                   <p className="mt-2 max-w-2xl text-sm leading-6 text-[#374151]">
-                    Unity Rewards materials live in the Unity / VSP brand library so teams can connect VSP routing, plan-aligned products, and rewards program questions in one workflow.
+                    The PECAA Max Unity Rewards flyer lives in the Unity / VSP brand library alongside plan-aligned products and VSP setup guidance.
                   </p>
                 </div>
                 <div className="flex shrink-0 flex-wrap gap-2">
@@ -1218,10 +1217,10 @@ export default function ProviderResourcesPage({
                     View Unity resources
                   </a>
                   <a
-                    href={fileHref("unity-rewards-flyer.pdf")}
+                    href={fileHref("unity-rewards-pecaa.pdf")}
                     className="inline-flex h-11 items-center rounded bg-[#0f766e] px-4 text-sm font-semibold text-white transition hover:bg-[#115e59]"
                   >
-                    Open Rewards flyer
+                    Open PECAA Max flyer
                   </a>
                 </div>
               </div>

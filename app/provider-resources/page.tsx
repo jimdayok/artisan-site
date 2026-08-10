@@ -390,7 +390,7 @@ const brandLibraries: BrandLibrary[] = [
     accent: "#be123c",
     logo: "/chemistrie-logo.png",
     resources: [
-      resource("chemistrie", "Chemistrie", "Ordering", "PDF", "ChemClip Order Form", "Order form used to accompany ChemClip orders for accurate clip production.", fileHref("chemcliporderform.pdf"), ["ChemClip", "order form"], { popular: true }),
+      resource("chemistrie", "Chemistrie", "Ordering", "PDF", "ChemClip Order Form", "Order form used to accompany ChemClip orders for accurate clip production.", fileHref("chemistrieclip.pdf"), ["ChemClip", "order form"], { popular: true }),
       resource("chemistrie", "Chemistrie", "Programs", "Tool", "Request ChemClip Demo Kit", "Request a demo kit to support staff training and patient conversations.", "https://form.typeform.com/to/XlZhJX5K", ["demo kit", "training"]),
       resource("chemistrie", "Chemistrie", "Videos", "Training", "Chemistrie Product Training", "Product training for clip options and add-on support.", "https://youtu.be/Rown4Yp9U4c", ["video", "training"]),
     ],

@@ -77,7 +77,6 @@ Audited June 5, 2026 against the rendered `/provider-resources` page and the fil
 | Unity V3 White Paper | `/files/5688bc8-2e3-c061-3d27-251215283ac_Unity_V3_Whitepaper.pdf` | Working | Same | File exists and returns 200. |
 | TechShield AR Coatings Guide | `/files/TechShield_AR_Coatings_Sales_Sheet_2023.pdf` | Working | Same | Filename casing matches and returns 200. |
 | TechShield FAQ | `/files/unity-performance-coatings_retirement_faqs.pdf` | Working | Same | File exists and returns 200. |
-| Unity Rewards Flyer | `/files/unity-rewards-flyer.pdf` | Working | Same | File exists and returns 200. |
 | PECAA Max Unity Rewards Flyer | `/files/unity-rewards-pecaa.pdf` | Working | Same | File exists and returns 200. |
 | Unity V3 Training | `https://youtu.be/cLhLfThS7Gs` | External | Same | Live external destination returns 200. |
 | Neurolens Clinical Study | `/files/Neurolenses-proven-to-reduce-headache-symptoms.pdf` | Working | Same | Filename casing matches and returns 200. |

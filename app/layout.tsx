@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import CookieConsentProvider from "./components/CookieConsentProvider";
-import CookieYesScript from "./components/CookieYesScript";
 import PreviewPreferenceCookie from "./components/PreviewPreferenceCookie";
 import TrainingHubReturnButton from "./components/TrainingHubReturnButton";
 import "./globals.css";
@@ -74,7 +73,6 @@ export default function RootLayout({
     <html lang="en" className={nunito.variable}>
       <body className="min-h-screen antialiased">
         <CookieConsentProvider>
-          <CookieYesScript />
           <PreviewPreferenceCookie />
           {children}
           <TrainingHubReturnButton />

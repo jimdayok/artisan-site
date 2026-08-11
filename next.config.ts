@@ -26,6 +26,15 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  async rewrites() {
+    return [
+      {
+        source: "/api/c15t/:path*",
+        destination:
+          "https://d2d-consent-service.vercel.app/api/c15t/:path*",
+      },
+    ];
+  },
   async redirects() {
     return [
       {

@@ -21,6 +21,9 @@ test("self-hosted c15t replaces CookieYes and preserves feature gating", async (
   assert.match(provider, /has\("functionality"\)/);
   assert.match(provider, /has\("measurement"\)/);
   assert.match(provider, /primaryButton=\{\["reject", "accept"\]\}/);
+  assert.match(provider, /function PrivacyShieldIcon\(\)/);
+  assert.match(provider, /icon: <PrivacyShieldIcon \/>/);
+  assert.doesNotMatch(provider, /icon: "settings"/);
   assert.match(config, /d2d-consent-service\.vercel\.app\/api\/c15t/);
   assert.doesNotMatch(layout, /CookieYesScript/);
   assert.doesNotMatch(provider, /cookieyes|cky-/i);

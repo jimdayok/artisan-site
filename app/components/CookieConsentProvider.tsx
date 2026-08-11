@@ -24,6 +24,15 @@ const CookieConsentContext = createContext<CookieConsentContextValue>({
   openPreferences: () => undefined,
 });
 
+function PrivacyShieldIcon() {
+  return (
+    <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="20" height="20">
+      <path fill="#142724" d="M12 2.75 19.5 6v5.3c0 4.45-2.94 8.23-7.5 10.1-4.56-1.87-7.5-5.65-7.5-10.1V6L12 2.75Z" />
+      <path fill="none" stroke="#c9b28b" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.35" d="m8.4 12.2 2.25 2.25 4.95-5" />
+    </svg>
+  );
+}
+
 let measurementConsentGranted = false;
 let openPreferencesDialog: () => void = () => undefined;
 
@@ -154,7 +163,7 @@ export default function CookieConsentProvider({ children }: { children: React.Re
         hideBranding
         legalLinks={["privacyPolicy", "cookiePolicy", "termsOfService"]}
         showTrigger={{
-          icon: "settings",
+          icon: <PrivacyShieldIcon />,
           ariaLabel: "Open privacy preferences",
           showWhen: "after-consent",
           size: "sm",

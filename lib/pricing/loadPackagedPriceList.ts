@@ -6,12 +6,6 @@ import type { GeneratedPriceListData } from "@/lib/pricing/types";
 
 const gunzipAsync = promisify(gunzip);
 const PRICE_LIST_CODE_PATTERN = /^[A-Z0-9]+$/;
-const STATIC_PACKAGED_PRICING_PATH = "/pricing/generated/normalized";
-
-type PackagedPriceListLoadOptions = {
-  requestOrigin?: string;
-};
-
 function packagedPriceListPath(code: string) {
   return path.join(
     process.cwd(),
@@ -38,27 +32,8 @@ async function loadLocalPackagedPriceList(filePath: string) {
   return parseCompressedPriceList(compressed);
 }
 
-async function loadStaticPackagedPriceList(code: string, requestOrigin?: string) {
-  if (!requestOrigin) return null;
-
-  const response = await fetch(
-    new URL(`${STATIC_PACKAGED_PRICING_PATH}/${code}.json.gz`, requestOrigin),
-    { cache: "no-store" }
-  );
-
-  if (response.status === 404) return null;
-  if (!response.ok) {
-    throw new Error(
-      `Unable to load packaged pricing asset ${code}.json.gz (${response.status} ${response.statusText}).`
-    );
-  }
-
-  return parseCompressedPriceList(new Uint8Array(await response.arrayBuffer()));
-}
-
 export async function loadPackagedPriceListByCode(
-  code: string,
-  options?: PackagedPriceListLoadOptions
+  code: string
 ): Promise<GeneratedPriceListData | null> {
   const normalizedCode = code.trim().toUpperCase();
   if (!PRICE_LIST_CODE_PATTERN.test(normalizedCode)) return null;
@@ -69,9 +44,7 @@ export async function loadPackagedPriceListByCode(
     return await loadLocalPackagedPriceList(filePath);
   } catch (error) {
     const code = (error as NodeJS.ErrnoException).code;
-    if (code === "ENOENT") {
-      return loadStaticPackagedPriceList(normalizedCode, options?.requestOrigin);
-    }
+    if (code === "ENOENT") return null;
     throw error;
   }
 }

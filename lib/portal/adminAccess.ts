@@ -15,24 +15,42 @@ export const BUILT_IN_PORTAL_SALES_REPS = new Map<
     "heather.branderhorst@pacificartisanlabs.com",
     { label: "Heather Branderhorst", repCode: "HB" },
   ],
-  [
-    "heather@pacificartisanlabs.com",
-    { label: "Heather Branderhorst", repCode: "HB" },
-  ],
+  ["nicole@artisanlabnetwork.com", { label: "Nicole", repCode: "NC" }],
   ["jropiol@live.com", { label: "Josh Opiol", repCode: "OP" }],
 ]);
 
-const BUILT_IN_ADMIN_EMAILS = new Set([
-  "jimdayok@me.com",
+export const BUILT_IN_PORTAL_ADMIN_EMAILS = new Set([
+  "brandon.butler@artisanlabnetwork.com",
+  "chasity@peakartisanlabs.com",
+  "cbrant@pacificartisanlabs.com",
+  "derek@pacificartisanlabs.com",
+  "jjones@pikeartisanlabs.com",
+  "jeff@pacificartisanlabs.com",
+  "jenn@peakartisanlabs.com",
+  "jenf@peakartisanlabs.com",
+  "jessd@pikeartisanlabs.com",
+  "jcurry@pacificartisanlabs.com",
   "jim.day@artisanlabnetwork.com",
+  "johnc@peakartisanlabs.com",
+  "jhinckley@pacificartisanlabs.com",
+  "larry@pacificartisanlabs.com",
+  "leanne@pacificartisanlabs.com",
+  "mmedina@peakartisanlabs.com",
+  "mercedes@pacificartisanlabs.com",
+  "noah@pacificartisanlabs.com",
+  "noelle@pacificartisanlabs.com",
+  "pacificartisanlabslms@pacificartisanlabs.com",
+  "peakartisanlabslms@peakartisanlabs.com",
+  "pikeartisanlabslms@pikeartisanlabs.com",
+  "poaadmin@pacificartisanlabs.com",
+  "rahlson@artisanlabnetwork.com",
+  "rick@pacificartisanlabs.com",
+  "sarah@pacificartisanlabs.com",
+  "sreed@pikeartisanlabs.com",
+  "sdowdell@pikeartisanlabs.com",
+  "switmer@artisanlabnetwork.com",
+  "tech1@pacificartisanlabs.com",
 ]);
-
-const DEFAULT_ADMIN_EMAIL_DOMAINS = [
-  "artisanlabnetwork.com",
-  "pacificartisanlabs.com",
-  "pikeartisanlabs.com",
-  "peakartisanlabs.com",
-];
 
 export function isPortalAdminEmailAddress(email: string) {
   const normalizedEmail = normalizePortalEmail(email);
@@ -43,16 +61,6 @@ export function isPortalAdminEmailAddress(email: string) {
   // elevated to unrestricted administrator access elsewhere in the portal.
   if (BUILT_IN_PORTAL_SALES_REPS.has(normalizedEmail)) return false;
 
-  const configuredDomains = new Set(
-    (
-      process.env.PORTAL_ADMIN_EMAIL_DOMAINS ||
-      process.env.PORTAL_ADMIN_EMAIL_DOMAIN ||
-      DEFAULT_ADMIN_EMAIL_DOMAINS.join(",")
-    )
-      .split(",")
-      .map((domain) => domain.trim().replace(/^@/, "").toLowerCase())
-      .filter(Boolean)
-  );
   const configuredEmails = new Set(
     (process.env.PORTAL_ADMIN_EMAILS ?? "")
       .split(",")
@@ -61,10 +69,7 @@ export function isPortalAdminEmailAddress(email: string) {
   );
 
   return (
-    BUILT_IN_ADMIN_EMAILS.has(normalizedEmail) ||
-    [...configuredDomains].some((domain) =>
-      normalizedEmail.endsWith(`@${domain}`)
-    ) ||
+    BUILT_IN_PORTAL_ADMIN_EMAILS.has(normalizedEmail) ||
     configuredEmails.has(normalizedEmail)
   );
 }

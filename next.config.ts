@@ -17,10 +17,12 @@ const nextConfig: NextConfig = {
     "/portal/*": [
       "private-source/portal/user_data.xlsx",
       "private-source/portal/User_Data.xlsx",
+      "lib/pricing/generated/normalized/*.json.gz",
     ],
     "/api/portal/*": [
       "private-source/portal/user_data.xlsx",
       "private-source/portal/User_Data.xlsx",
+      "lib/pricing/generated/normalized/*.json.gz",
     ],
   },
   images: {

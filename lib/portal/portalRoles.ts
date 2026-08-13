@@ -13,20 +13,6 @@ export type PortalStaffRole =
   | { kind: "sales-rep"; email: string; label: string; repCode: string }
   | { kind: "unassigned"; email: string; label: string };
 
-const BUILT_IN_ADMIN_EMAILS = new Set([
-  "jimdayok@me.com",
-  "jim.day@artisanlabnetwork.com",
-]);
-
-function configuredAdminEmails() {
-  return new Set(
-    (process.env.PORTAL_ADMIN_EMAILS ?? "")
-      .split(",")
-      .map(normalizePortalEmail)
-      .filter(Boolean)
-  );
-}
-
 export function getPortalStaffRole(email: string): PortalStaffRole {
   const normalizedEmail = normalizePortalEmail(email);
 
@@ -40,11 +26,7 @@ export function getPortalStaffRole(email: string): PortalStaffRole {
     };
   }
 
-  if (
-    BUILT_IN_ADMIN_EMAILS.has(normalizedEmail) ||
-    configuredAdminEmails().has(normalizedEmail) ||
-    isPortalAdminEmailAddress(normalizedEmail)
-  ) {
+  if (isPortalAdminEmailAddress(normalizedEmail)) {
     return { kind: "admin", email: normalizedEmail, label: "Administrator" };
   }
 

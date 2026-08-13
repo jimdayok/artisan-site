@@ -25,13 +25,6 @@ const packagedNormalizedDir = path.join(
   "generated",
   "normalized"
 );
-const publicPackagedNormalizedDir = path.join(
-  root,
-  "public",
-  "pricing",
-  "generated",
-  "normalized"
-);
 const dashboardIndexPath = path.join(
   root,
   "private-source",
@@ -890,7 +883,6 @@ async function main() {
   await mkdir(normalizedDir, { recursive: true });
   await mkdir(diagnosticsDir, { recursive: true });
   await mkdir(packagedNormalizedDir, { recursive: true });
-  await mkdir(publicPackagedNormalizedDir, { recursive: true });
   const lookupData = await getPricingLookupData({ rootDir: root });
   const lookupMap = await readLookupBrandAndName(lookupData);
   const arLookupMap = await readLookupArMap(lookupData);
@@ -1022,13 +1014,6 @@ async function main() {
         normalizedPayload
       )
     );
-    await progress.run(`gzip public JSON ${code}`, () =>
-      writeGzipJson(
-        path.join(publicPackagedNormalizedDir, `${code}.json.gz`),
-        normalizedPayload
-      )
-    );
-
     payload = null;
 
     validation.push({

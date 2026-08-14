@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import type { ReactNode } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -270,6 +271,12 @@ export default function PatientResources() {
               thickness, weight, and improve how your glasses look and
               feel--especially for stronger prescriptions.
             </p>
+            <Link
+              href="/patient-resources/lens-thickness"
+              className="mt-7 inline-flex min-h-12 items-center justify-center rounded-lg bg-[#d4c09a] px-5 text-sm font-bold text-[#172a28] transition hover:bg-[#e5d4b5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            >
+              Compare Lens Thickness
+            </Link>
           </div>
 
           <div className="rounded-[32px] border border-white/10 bg-white/[0.06] p-6 shadow-[0_28px_90px_rgba(0,0,0,0.28)]">

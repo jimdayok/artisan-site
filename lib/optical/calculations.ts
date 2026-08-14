@@ -1,4 +1,4 @@
-export type FrameShape = "Round" | "Rectangle" | "Geometric";
+export type FrameShape = "Round" | "Oval" | "Rectangle" | "Square" | "Aviator" | "Cat Eye" | "Geometric";
 
 export type OpticalData = {
   sphere: number;
@@ -152,9 +152,60 @@ export function equivalentSphere(data: OpticalData) {
 }
 
 export function estimatedEd(data: OpticalData) {
-  if (data.frameShape === "Round") return Math.max(data.aSize, data.bSize);
+  if (data.frameShape === "Round" || data.frameShape === "Oval") return Math.max(data.aSize, data.bSize);
   const boxingDiagonal = Math.hypot(data.aSize, data.bSize);
-  return data.frameShape === "Geometric" ? boxingDiagonal * 1.05 : boxingDiagonal;
+  if (data.frameShape === "Geometric" || data.frameShape === "Aviator") return boxingDiagonal * 1.05;
+  if (data.frameShape === "Cat Eye") return boxingDiagonal * 1.02;
+  return boxingDiagonal;
+}
+
+export function powerAtMeridian(data: OpticalData, meridianDegrees: number) {
+  const meridianRadians = radians(meridianDegrees - data.axis);
+  return data.sphere + data.cylinder * Math.sin(meridianRadians) ** 2;
+}
+
+export function frameShapeContainsNormalized(frameShape: FrameShape, x: number, y: number) {
+  const normalizedX = Math.abs(x);
+  const normalizedY = Math.abs(y);
+  if (frameShape === "Rectangle") return normalizedX ** 6 + normalizedY ** 6 <= 1;
+  if (frameShape === "Square") return normalizedX ** 10 + normalizedY ** 10 <= 1;
+  if (frameShape === "Geometric") return normalizedX ** 3 + normalizedY ** 3 <= 1;
+  if (frameShape === "Aviator") {
+    const adjustedX = normalizedX / (y < 0 ? 1 : 0.86);
+    const adjustedY = (y + 0.08) / 1.08;
+    return adjustedX ** 2 + Math.abs(adjustedY) ** 2 <= 1;
+  }
+  if (frameShape === "Cat Eye") {
+    const adjustedY = y - 0.18 * normalizedX;
+    return normalizedX ** 2.5 + Math.abs(adjustedY) ** 2.5 <= 1;
+  }
+  return normalizedX ** (frameShape === "Round" ? 2.35 : 2) + normalizedY ** (frameShape === "Round" ? 2.35 : 2) <= 1;
+}
+
+export function frameContainsPoint(data: OpticalData, x: number, y: number) {
+  const halfA = Math.max(data.aSize / 2, 0.001);
+  const halfB = Math.max(data.bSize / 2, 0.001);
+  return frameShapeContainsNormalized(data.frameShape, x / halfA, y / halfB);
+}
+
+export function frameBoundaryDistance(
+  data: OpticalData,
+  origin: { x: number; y: number },
+  angleDegrees: number,
+) {
+  const angle = radians(angleDegrees);
+  const dx = Math.cos(angle);
+  const dy = Math.sin(angle);
+  let low = 0;
+  let high = Math.max(data.aSize, data.bSize, engineeringEd(data)) * 2;
+
+  for (let iteration = 0; iteration < 42; iteration += 1) {
+    const middle = (low + high) / 2;
+    if (frameContainsPoint(data, origin.x + dx * middle, origin.y + dy * middle)) low = middle;
+    else high = middle;
+  }
+
+  return low;
 }
 
 /** An entered trace ED overrides the boxing estimate; blank/NaN/zero means automatic. */
@@ -199,25 +250,75 @@ export function surfaceSagMm(surfacePower: number, refractiveIndex: number, semi
   return Math.sign(surfacePower) * magnitude;
 }
 
+export function opticalCenterForSide(data: OpticalData, side: "right" | "left" = "right") {
+  const monocular = monocularDecentrationValues(data);
+  return {
+    x: side === "right" ? monocular.right : -monocular.left,
+    y: verticalDecentration(data),
+  };
+}
+
+export function finishedSurfaceSampleAtAngle(
+  data: OpticalData,
+  opticalCenter: { x: number; y: number },
+  angleDegrees: number,
+) {
+  const angle = radians(angleDegrees);
+  const radius = frameBoundaryDistance(data, opticalCenter, angleDegrees);
+  const meridianPower = powerAtMeridian(data, angleDegrees);
+  const frontPower = data.baseCurve;
+  const backPower = meridianPower - frontPower;
+  const frontSag = surfaceSagMm(frontPower, data.lensIndex, radius);
+  const backSag = surfaceSagMm(backPower, data.lensIndex, radius);
+  return {
+    angleDegrees,
+    x: opticalCenter.x + radius * Math.cos(angle),
+    y: opticalCenter.y + radius * Math.sin(angle),
+    radius,
+    meridianPower,
+    frontPower,
+    backPower,
+    frontSag,
+    backSag,
+    edgeMinusCenter: -frontSag - backSag,
+  };
+}
+
+export function finishedSurfaceSamples(data: OpticalData, sampleCount = 180, side: "right" | "left" = "right") {
+  const opticalCenter = opticalCenterForSide(data, side);
+  return {
+    opticalCenter,
+    samples: Array.from({ length: Math.max(72, sampleCount) }, (_, index) =>
+      finishedSurfaceSampleAtAngle(data, opticalCenter, (index / Math.max(72, sampleCount)) * 360),
+    ),
+  };
+}
+
 export function designMeridianPower(data: OpticalData) {
   const powers = [data.sphere, data.sphere + data.cylinder];
   return powers.reduce((selected, power) => (Math.abs(power) > Math.abs(selected) ? power : selected), powers[0]);
 }
 
 export function thicknessEstimate(data: OpticalData, refractiveIndex = data.lensIndex) {
-  const semiChord = minimumBlank(data) / 2;
-  const totalPower = designMeridianPower(data);
-  const frontPower = data.baseCurve;
-  const backPower = totalPower - frontPower;
-  const frontSag = surfaceSagMm(frontPower, refractiveIndex, semiChord);
-  const backSag = surfaceSagMm(backPower, refractiveIndex, semiChord);
-  const edgeMinusCenter = -frontSag - backSag;
-  if (![frontSag, backSag, edgeMinusCenter].every(Number.isFinite)) {
-    return { totalPower, frontPower, backPower, semiChord, frontSag, backSag, center: Number.NaN, edge: Number.NaN, edgeMinusCenter };
+  const scenario = refractiveIndex === data.lensIndex ? data : { ...data, lensIndex: refractiveIndex };
+  const { samples } = finishedSurfaceSamples(scenario);
+  if (samples.some((sample) => !Number.isFinite(sample.edgeMinusCenter))) {
+    return { totalPower: Number.NaN, frontPower: data.baseCurve, backPower: Number.NaN, semiChord: Number.NaN, frontSag: Number.NaN, backSag: Number.NaN, center: Number.NaN, edge: Number.NaN, edgeMinusCenter: Number.NaN };
   }
-  const center = Math.max(data.centerThickness, data.edgeThickness - edgeMinusCenter);
-  const edge = center + edgeMinusCenter;
-  return { totalPower, frontPower, backPower, semiChord, frontSag, backSag, center, edge, edgeMinusCenter };
+  const minimumOffset = Math.min(...samples.map((sample) => sample.edgeMinusCenter));
+  const center = Math.max(data.centerThickness, data.edgeThickness - minimumOffset);
+  const maximum = samples.reduce((selected, sample) => sample.edgeMinusCenter > selected.edgeMinusCenter ? sample : selected);
+  return {
+    totalPower: maximum.meridianPower,
+    frontPower: maximum.frontPower,
+    backPower: maximum.backPower,
+    semiChord: maximum.radius,
+    frontSag: maximum.frontSag,
+    backSag: maximum.backSag,
+    center,
+    edge: center + maximum.edgeMinusCenter,
+    edgeMinusCenter: maximum.edgeMinusCenter,
+  };
 }
 
 export function estimatedLensVolumeCm3(data: OpticalData, refractiveIndex = data.lensIndex) {

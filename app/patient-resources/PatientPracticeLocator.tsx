@@ -630,7 +630,12 @@ export default function PatientPracticeLocator() {
         </p>
 
         <div className="mt-8 grid gap-6 lg:grid-cols-[0.92fr_1.08fr]">
-          <div className="order-1 max-h-[760px] space-y-4 overflow-y-auto pr-1 lg:order-1" aria-live="polite">
+          <div
+            className="practice-results-scroll order-1 max-h-[760px] space-y-4 overflow-y-scroll overscroll-contain pr-3 lg:order-1"
+            style={{ maxHeight: 760, overflowY: "scroll", overscrollBehavior: "contain", paddingRight: 12, scrollbarGutter: "stable", scrollbarColor: "#b48a52 #efe4d3" }}
+            aria-live="polite"
+            aria-label="Scrollable practice results"
+          >
             {!results.length ? (
               <div className="rounded-[28px] border border-[#d7bd8f]/70 bg-white/80 p-8 text-center shadow-[0_18px_45px_rgba(73,48,28,0.08)]">
                 <MapPin className="mx-auto h-9 w-9 text-[#b48a52]" />
@@ -673,7 +678,7 @@ export default function PatientPracticeLocator() {
                 </div>
               ) : mapError ? (
                 <div className="flex min-h-[420px] items-center justify-center rounded-[26px] bg-[#fffaf2] p-8 text-center text-lg font-semibold text-[#6f665b]">
-                  Map temporarily unavailable. Practice results are still shown below.
+                  Map temporarily unavailable. Practice results remain available in the scrollable list beside the map.
                 </div>
               ) : (
                 <div ref={mapRef} className="min-h-[420px] rounded-[26px] bg-[#d8ded8]" aria-label="Map of approved independent eye care practices" />

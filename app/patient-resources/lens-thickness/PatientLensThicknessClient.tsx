@@ -57,7 +57,9 @@ function powerLabel(value: number) {
 }
 
 function prescriptionLabel(prescription: Prescription) {
-  return `Sphere ${powerLabel(prescription.sphere)} · Cylinder ${powerLabel(prescription.cylinder)} · Axis ${prescription.axis.toFixed(0)}°`;
+  return Math.abs(prescription.cylinder) < 0.0001
+    ? `Sphere ${powerLabel(prescription.sphere)} · No cylinder (axis not required)`
+    : `Sphere ${powerLabel(prescription.sphere)} · Cylinder ${powerLabel(prescription.cylinder)} · Axis ${prescription.axis.toFixed(0)}°`;
 }
 
 function decentrationLabel(value: number) {
@@ -162,7 +164,13 @@ export default function PatientLensThicknessClient() {
 
   const updatePrescription = (key: keyof Prescription, value: string) => {
     setPrescriptionInputs((current) => ({ ...current, [key]: value }));
-    if (!value.trim()) return;
+    if (!value.trim()) {
+      if (key !== "sphere") {
+        setSelectedPresetId(null);
+        setPrescription((current) => ({ ...current, [key]: key === "cylinder" ? 0 : 180 }));
+      }
+      return;
+    }
     const numericValue = Number(value);
     setSelectedPresetId(null);
     if (Number.isFinite(numericValue)) setPrescription((current) => ({ ...current, [key]: numericValue }));
@@ -171,8 +179,19 @@ export default function PatientLensThicknessClient() {
   const formatPrescriptionInput = (key: keyof Prescription) => {
     setPrescriptionInputs((current) => ({
       ...current,
-      [key]: key === "axis" ? prescription[key].toFixed(0) : prescription[key].toFixed(2),
+      [key]: key !== "sphere" && !current[key].trim()
+        ? ""
+        : key === "axis" ? prescription[key].toFixed(0) : prescription[key].toFixed(2),
     }));
+  };
+
+  const stepPrescriptionPower = (key: "sphere" | "cylinder", direction: -1 | 1) => {
+    const currentValue = prescription[key];
+    const nextValue = Math.min(key === "sphere" ? 20 : 10, Math.max(key === "sphere" ? -20 : -10, Math.round((currentValue + direction * 0.25) * 4) / 4));
+    setSelectedPresetId(null);
+    setPrescription((current) => ({ ...current, [key]: nextValue }));
+    setPrescriptionInputs((current) => ({ ...current, [key]: nextValue.toFixed(2) }));
+    trackWithConsent("lens_custom_prescription_used");
   };
 
   const selectPdMode = (mode: PdMode) => {
@@ -268,10 +287,12 @@ export default function PatientLensThicknessClient() {
                     ["cylinder", "Cylinder", -10, 10, 0.25, "D"],
                     ["axis", "Axis", 1, 180, 1, "°"],
                   ] as const).map(([key, label, min, max, step, suffix]) => (
-                    <label key={key} className="grid gap-1 text-sm font-semibold text-[#625b53]">
-                      {label}
+                    <div key={key} className="grid gap-1 text-sm font-semibold text-[#625b53]">
+                      <label htmlFor={`patient-rx-${key}`}>{label}{key === "cylinder" || key === "axis" ? " (optional)" : ""}</label>
                       <span className="flex min-h-12 overflow-hidden rounded-lg border border-[#d8c6a8] bg-white focus-within:ring-2 focus-within:ring-[#8a7654]/30">
+                        {key !== "axis" ? <button type="button" onClick={() => stepPrescriptionPower(key, -1)} aria-label={`Decrease ${label} by 0.25 D`} className="grid w-10 shrink-0 place-items-center border-r border-[#d8c6a8] text-lg text-[#625b53] hover:bg-[#fbf8f3]">−</button> : null}
                         <input
+                          id={`patient-rx-${key}`}
                           type={key === "axis" ? "number" : "text"}
                           inputMode="decimal"
                           value={prescriptionInputs[key]}
@@ -283,9 +304,10 @@ export default function PatientLensThicknessClient() {
                           onBlur={() => formatPrescriptionInput(key)}
                           className="min-w-0 flex-1 bg-transparent px-3 text-base text-[#172a28] outline-none"
                         />
+                        {key !== "axis" ? <button type="button" onClick={() => stepPrescriptionPower(key, 1)} aria-label={`Increase ${label} by 0.25 D`} className="grid w-10 shrink-0 place-items-center border-l border-[#d8c6a8] text-lg text-[#625b53] hover:bg-[#fbf8f3]">+</button> : null}
                         <span className="flex w-14 items-center justify-center border-l border-[#d8c6a8] text-sm leading-none text-[#8a7654]">{suffix}</span>
                       </span>
-                    </label>
+                    </div>
                   ))}
                   <p className="text-xs leading-5 text-[#7b7064] sm:col-span-2 lg:col-span-4">Prescription values stay in this browser and are not submitted or saved.</p>
                 </div>

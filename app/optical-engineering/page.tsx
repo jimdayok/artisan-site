@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
+import Image from "next/image";
 import {
   Activity,
   Aperture,
@@ -29,6 +30,9 @@ import {
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { artisanControlClass } from "../components/controlStyles";
+import LensComparison from "@/components/lens-visualizer/LensComparison";
+import BetaThicknessNotice from "@/components/lens-visualizer/BetaThicknessNotice";
+import { defaultOpticalData } from "@/lib/optical/scenarios";
 import {
   averageHorizontalDecentration,
   engineeringEd,
@@ -87,49 +91,7 @@ type ReferenceCard = {
 
 type GroupName = "Prescription" | "Lens" | "Frame";
 
-const initialData: OpticalData = {
-  sphere: -2.5,
-  cylinder: -1,
-  axis: 180,
-  add: 2,
-  prismHorizontal: 1,
-  prismVertical: 0.5,
-  pdRight: 31,
-  pdLeft: 31,
-  segHeight: 22,
-  originalVertex: 12,
-  newVertex: 14,
-  pantoscopicTilt: 8,
-  wrapAngle: 6,
-  baseCurve: 4,
-  lensIndex: 1.6,
-  lensMaterial: "1.60",
-  centerThickness: 2,
-  edgeThickness: 1.5,
-  aSize: 52,
-  bSize: 38,
-  dbl: 18,
-  effectiveDiameter: 0,
-  frameShape: "Rectangle",
-  frameType: "Full Rim",
-  readingDepth: 10,
-  prismAmount: 3,
-  prismDirection: 45,
-  safetyMargin: 2,
-  measuredCurve: 4,
-  lensClockIndex: 1.53,
-  actualIndex: 1.6,
-  orderedSphere: -2.5,
-  orderedCylinder: -1,
-  orderedAxis: 180,
-  measuredSphere: -2.37,
-  measuredCylinder: -1.12,
-  measuredAxis: 179,
-  orderedPrismHorizontal: 0.5,
-  orderedPrismVertical: 0.33,
-  measuredPrismHorizontal: 0.42,
-  measuredPrismVertical: 0.28,
-};
+const initialData: OpticalData = defaultOpticalData;
 
 const categoryOrder: CalculatorCategory[] = [
   "Prescription",
@@ -249,7 +211,9 @@ function normalizeAxis(axis: number) {
 }
 
 function materialLabel(name: string, index: number) {
-  return name.match(/^\d/) ? `${name} Index` : `${name} · ${index.toFixed(2)}`;
+  if (name === "1.76") return "Tokai 1.76";
+  if (name.match(/^1\.(60|67|70|74)$/)) return `Hi-Index ${name}`;
+  return `${name} · ${index.toFixed(2)}`;
 }
 
 function decentrationDirection(value: number) {
@@ -479,11 +443,11 @@ function MaterialComparison({ data }: { data: OpticalData }) {
             <div
               key={material.name}
               aria-current={selected ? "true" : undefined}
-              className={`grid gap-2 rounded-lg border px-4 py-3 sm:grid-cols-[92px_minmax(0,1fr)] xl:grid-cols-[82px_minmax(0,1fr)_70px_64px] ${
+              className={`grid gap-2 rounded-lg border px-4 py-3 sm:grid-cols-[150px_minmax(0,1fr)] xl:grid-cols-[150px_minmax(0,1fr)_70px_64px] ${
                 selected ? "border-[#d4c09a] bg-[#d4c09a]/15" : "border-white/10 bg-white/[0.055]"
               }`}
             >
-              <span className="font-semibold">{material.name}{selected ? " · Selected" : ""}</span>
+              <span className="flex items-center gap-2 font-semibold">{material.name === "1.76" ? <Image src="/tokai-logo.png" alt="" width={24} height={24} className="h-6 w-6 object-contain" /> : null}{materialLabel(material.name, material.index)}{selected ? " · Selected" : ""}</span>
               <span className="text-white/70">
                 CT {fmt(thickness.center)} / ET {fmt(thickness.edge)} mm · Abbe {material.abbe}
                 {material.documentedMinimums ? " · Tokai chart basis" : ""}
@@ -707,7 +671,7 @@ const calculators: CalculatorDefinition[] = [
       ["Frame Shape", data.frameShape],
       ["Estimated ED", `${fmt(estimatedEd(data))} mm`],
       ["ED Override", data.effectiveDiameter > 0 ? `${fmt(data.effectiveDiameter)} mm` : "Automatic"],
-      ["Formula", data.frameShape === "Round" ? "max(A, B)" : data.frameShape === "Geometric" ? "sqrt(A² + B²) × 1.05" : "sqrt(A² + B²)"],
+      ["Formula", data.frameShape === "Round" || data.frameShape === "Oval" ? "max(A, B)" : data.frameShape === "Geometric" || data.frameShape === "Aviator" ? "sqrt(A² + B²) × 1.05" : data.frameShape === "Cat Eye" ? "sqrt(A² + B²) × 1.02" : "sqrt(A² + B²)"],
     ],
   },
   {
@@ -1073,7 +1037,7 @@ function CategoryGrid({
   onSelect,
 }: {
   calculators: CalculatorDefinition[];
-  activeCalculatorId: string;
+  activeCalculatorId: string | null;
   data: OpticalData;
   onSelect: (id: string) => void;
 }) {
@@ -1136,7 +1100,10 @@ function CategoryGrid({
 
 export default function OpticalEngineeringPage() {
   const [data, setData] = useState(initialData);
-  const [activeCalculatorId, setActiveCalculatorId] = useState("lens-thickness");
+  const [activeCalculatorId, setActiveCalculatorId] = useState("transposition");
+  const [calculatorSelected, setCalculatorSelected] = useState(false);
+  const [hasCalculated, setHasCalculated] = useState(false);
+  const [thicknessNoticeKey, setThicknessNoticeKey] = useState(0);
   const [openPrescription, setOpenPrescription] = useState(true);
   const [openLens, setOpenLens] = useState(true);
   const [openFrame, setOpenFrame] = useState(false);
@@ -1211,7 +1178,10 @@ export default function OpticalEngineeringPage() {
   const openCalculator = (id: string) => {
     const calculator = calculators.find((entry) => entry.id === id);
     setActiveCalculatorId(id);
+    setCalculatorSelected(true);
+    setHasCalculated(false);
     setResultsOpen(false);
+    if (id === "lens-thickness") setThicknessNoticeKey((value) => value + 1);
     if (!calculator) {
       return;
     }
@@ -1230,6 +1200,7 @@ export default function OpticalEngineeringPage() {
 
   const runCalculation = () => {
     if (activeStatus.ready) {
+      setHasCalculated(true);
       setResultsOpen(true);
       return;
     }
@@ -1241,7 +1212,7 @@ export default function OpticalEngineeringPage() {
   };
 
   const numericInputs = (group: GroupName) => (
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+    <div className="grid min-w-0 gap-4 sm:grid-cols-2">
       {numericFields
         .filter((field) => field.group === group && (activeFieldKeys.has(field.key) || (group === "Frame" && ["aSize", "bSize", "dbl", "effectiveDiameter"].includes(field.key))))
         .map((field) => {
@@ -1253,7 +1224,7 @@ export default function OpticalEngineeringPage() {
           return (
             <label key={field.key} htmlFor={inputId} className="grid gap-1">
               <span className="text-xs font-semibold text-[#625b53]">{field.label}</span>
-              <span className={`grid min-w-0 grid-cols-[minmax(76px,1fr)_56px] overflow-hidden rounded-lg border bg-[#fbf8f3] focus-within:ring-2 ${invalid ? "border-[#b7502c] focus-within:ring-[#b7502c]/25" : "border-[#eadfce] focus-within:border-[#c9b28b] focus-within:ring-[#d4c09a]/35"}`}>
+              <span style={{ gridTemplateColumns: field.suffix ? "minmax(0, 1fr) 56px" : "minmax(0, 1fr)", minHeight: 52 }} className={`grid min-h-[52px] w-full min-w-0 items-stretch overflow-hidden rounded-lg border bg-[#fbf8f3] focus-within:ring-2 ${invalid ? "border-[#b7502c] focus-within:ring-[#b7502c]/25" : "border-[#eadfce] focus-within:border-[#c9b28b] focus-within:ring-[#d4c09a]/35"}`}>
                 <input
                   id={inputId}
                   name={String(field.key)}
@@ -1267,10 +1238,11 @@ export default function OpticalEngineeringPage() {
                   aria-describedby={invalid ? errorId : undefined}
                   value={field.optional && value === 0 ? "" : inputValue(value, field.decimals ?? 2)}
                   onChange={(event) => updateNumber(field.key, event.target.value)}
-                  className="min-h-12 min-w-0 bg-transparent px-4 text-base font-semibold text-[#172a28] outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                  style={{ height: 52 }}
+                  className="h-[52px] min-w-0 bg-transparent px-4 text-base font-semibold leading-none text-[#172a28] outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 />
                 {field.suffix ? (
-                  <span className="grid place-items-center border-l border-[#eadfce] px-2 text-sm font-semibold text-[#8a7654]">
+                  <span aria-hidden="true" style={{ height: 52, alignSelf: "stretch", lineHeight: 1 }} className="grid h-[52px] place-items-center self-stretch border-l border-[#eadfce] px-2 text-center text-sm font-semibold leading-none text-[#8a7654]">
                     {field.suffix}
                   </span>
                 ) : null}
@@ -1284,6 +1256,7 @@ export default function OpticalEngineeringPage() {
 
   return (
     <main className="min-h-screen bg-[#f5f1eb] text-[#172a28]">
+      {calculatorSelected && activeCalculatorId === "lens-thickness" ? <BetaThicknessNotice key={thicknessNoticeKey} /> : null}
       <Header />
       <style>{`
         .print-report { display: none; }
@@ -1363,15 +1336,16 @@ export default function OpticalEngineeringPage() {
           </div>
           <CategoryGrid
             calculators={groupedCalculators}
-            activeCalculatorId={activeCalculatorId}
+            activeCalculatorId={calculatorSelected ? activeCalculatorId : null}
             data={data}
             onSelect={openCalculator}
           />
         </div>
       </section>
 
+      {calculatorSelected ? (
       <section id="calculator-setup" className="px-6 pb-12 md:px-10">
-        <div className="mx-auto grid max-w-7xl gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(320px,380px)]">
+        <div className={`mx-auto grid max-w-7xl gap-5 ${hasCalculated ? "xl:grid-cols-[minmax(0,1fr)_minmax(320px,380px)]" : "grid-cols-1"}`}>
           <div className="grid gap-5">
             <div className="rounded-lg border border-[#d8c6a8] bg-white/86 p-6 shadow-[0_18px_48px_rgba(24,18,13,0.07)]">
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">{activeCalculator.category}</p>
@@ -1381,7 +1355,7 @@ export default function OpticalEngineeringPage() {
                   <p className="mt-2 max-w-3xl text-sm font-semibold text-[#625b53]">{activeCalculator.description}</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  <button type="button" onClick={() => setData(initialData)} className={artisanControlClass({ tone: "secondary" })}>
+                  <button type="button" onClick={() => { setData(initialData); setHasCalculated(false); setResultsOpen(false); }} className={artisanControlClass({ tone: "secondary" })}>
                     Reset defaults
                   </button>
                   <button type="button" onClick={runCalculation} className={artisanControlClass({ tone: "primary" })}>
@@ -1419,7 +1393,7 @@ export default function OpticalEngineeringPage() {
                           selected ? "border-[#172a28] bg-[#172a28] text-white" : "border-[#eadfce] bg-[#fbf8f3] text-[#172a28]"
                         }`}
                       >
-                        {materialLabel(material.name, material.index)}
+                        <span className="flex items-center gap-2">{material.name === "1.76" ? <Image src="/tokai-logo.png" alt="" width={26} height={26} className="h-6 w-6 object-contain" /> : null}{materialLabel(material.name, material.index)}</span>
                       </button>
                     );
                   })}
@@ -1442,7 +1416,7 @@ export default function OpticalEngineeringPage() {
                             onChange={(event) => setData((current) => ({ ...current, frameShape: event.target.value as FrameShape }))}
                             className="min-h-12 rounded-lg border border-[#eadfce] bg-[#fbf8f3] px-4 text-base font-semibold outline-none focus:border-[#c9b28b] focus:ring-2 focus:ring-[#d4c09a]/35"
                           >
-                            {["Round", "Rectangle", "Geometric"].map((value) => (
+                            {["Round", "Oval", "Rectangle", "Square", "Aviator", "Cat Eye", "Geometric"].map((value) => (
                               <option key={value}>{value}</option>
                             ))}
                           </select>
@@ -1476,6 +1450,7 @@ export default function OpticalEngineeringPage() {
               ) : null}
             </div>
           </div>
+          {hasCalculated ? (
           <aside className="xl:sticky xl:top-24 xl:h-fit">
             <div className="rounded-lg border border-[#d8c6a8] bg-[#172a28] p-5 text-white shadow-[0_18px_48px_rgba(24,18,13,0.12)]">
               <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#d4c09a]">Scenario</p>
@@ -1494,12 +1469,20 @@ export default function OpticalEngineeringPage() {
                 </button>
               </div>
             </div>
-            <div className="mt-5">
-              <MaterialComparison data={data} />
-            </div>
+            {activeCalculatorId === "lens-thickness" ? <div className="mt-5"><MaterialComparison data={data} /></div> : null}
           </aside>
+          ) : null}
         </div>
       </section>
+      ) : null}
+
+      {calculatorSelected && activeCalculatorId === "lens-thickness" ? (
+      <section className="px-6 pb-16 md:px-10 md:pb-20">
+        <div className="mx-auto max-w-7xl">
+          <LensComparison data={data} mode="engineering" />
+        </div>
+      </section>
+      ) : null}
 
       <section id="references" className="border-y border-[#e7ddd0] bg-[#fbf8f3] px-6 py-16 md:px-10 md:py-20">
         <div className="mx-auto max-w-7xl">

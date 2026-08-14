@@ -28,7 +28,7 @@
     "build:whitepaper": "typst compile publications/aln-strategic-white-paper/main.typ publications/aln-strategic-white-paper/output/ALN-Strategic-White-Paper.pdf",
     "typecheck": "NODE_OPTIONS='--max-old-space-size=12288' tsc --noEmit",
     "test:pricing": "node --test tests/pricing-dvi-generation.test.mjs",
-    "test:optical": "node --experimental-default-type=module --test tests/optical-calculations.test.ts"
+    "test:optical": "node --experimental-default-type=module --test tests/optical-calculations.test.ts tests/optical-geometry.test.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1046.0",
@@ -37,7 +37,9 @@
     "@nivo/core": "^0.99.0",
     "@nivo/line": "^0.99.0",
     "@nivo/pie": "^0.99.0",
+    "@react-three/fiber": "^9.7.0",
     "@studio-freight/lenis": "^1.0.42",
+    "@types/three": "^0.185.4",
     "@vercel/analytics": "^2.0.1",
     "clsx": "^2.1.1",
     "exceljs": "^4.4.0",
@@ -56,6 +58,7 @@
     "react-wrap-balancer": "^1.1.1",
     "recharts": "^3.8.1",
     "tailwind-merge": "^3.6.0",
+    "three": "^0.185.1",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

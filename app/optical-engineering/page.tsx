@@ -124,14 +124,14 @@ const numericFields: Array<{
   group: GroupName;
 }> = [
   { key: "sphere", label: "Sphere", suffix: "D", step: "0.25", decimals: 2, min: -30, max: 30, group: "Prescription" },
-  { key: "cylinder", label: "Cylinder", suffix: "D", step: "0.25", decimals: 2, min: -15, max: 15, group: "Prescription" },
-  { key: "axis", label: "Axis", suffix: "°", step: "1", decimals: 0, min: 1, max: 180, group: "Prescription" },
+  { key: "cylinder", label: "Cylinder (optional)", suffix: "D", step: "0.25", decimals: 2, min: -15, max: 15, optional: true, group: "Prescription" },
+  { key: "axis", label: "Axis (optional)", suffix: "°", step: "1", decimals: 0, min: 1, max: 180, optional: true, group: "Prescription" },
   { key: "add", label: "Add", suffix: "D", step: "0.25", decimals: 2, min: 0, max: 4, group: "Prescription" },
   { key: "prismHorizontal", label: "H Prism", suffix: "Δ", step: "0.25", decimals: 2, min: -20, max: 20, group: "Prescription" },
   { key: "prismVertical", label: "V Prism", suffix: "Δ", step: "0.25", decimals: 2, min: -20, max: 20, group: "Prescription" },
+  { key: "segHeight", label: "Fitting Height", suffix: "mm", step: "0.5", decimals: 2, min: 5, max: 55, group: "Prescription" },
   { key: "pdRight", label: "PD Right", suffix: "mm", step: "0.5", decimals: 2, min: 20, max: 45, group: "Prescription" },
   { key: "pdLeft", label: "PD Left", suffix: "mm", step: "0.5", decimals: 2, min: 20, max: 45, group: "Prescription" },
-  { key: "segHeight", label: "Fitting Height", suffix: "mm", step: "0.5", decimals: 2, min: 5, max: 55, group: "Prescription" },
   { key: "originalVertex", label: "Original Vertex", suffix: "mm", step: "0.5", decimals: 2, min: 0, max: 30, group: "Prescription" },
   { key: "newVertex", label: "New Vertex", suffix: "mm", step: "0.5", decimals: 2, min: 0, max: 30, group: "Prescription" },
   { key: "pantoscopicTilt", label: "Panto Tilt", suffix: "°", step: "0.5", decimals: 2, min: -30, max: 30, group: "Prescription" },
@@ -200,8 +200,7 @@ function signed(value: number, digits = 2) {
 }
 
 function inputValue(value: number, decimals = 2) {
-  void decimals;
-  return Number.isFinite(value) && value !== 0 ? String(value) : value === 0 ? "0" : "";
+  return Number.isFinite(value) ? value.toFixed(decimals) : "";
 }
 
 function normalizeAxis(axis: number) {
@@ -327,6 +326,7 @@ function statusFor(data: OpticalData, required: Array<keyof OpticalData>): CalcS
     const value = data[key];
     if (typeof value !== "number") return !String(value || "").trim();
     const field = numericFields.find((entry) => entry.key === key);
+    if (field?.optional && value === 0) return false;
     return !Number.isFinite(value) || (field?.min !== undefined && value < field.min) || (field?.max !== undefined && value > field.max);
   });
   if (required.includes("segHeight") && Number.isFinite(data.segHeight) && Number.isFinite(data.bSize) && data.segHeight > data.bSize) {
@@ -356,7 +356,11 @@ function statusFor(data: OpticalData, required: Array<keyof OpticalData>): CalcS
 }
 
 function rxSummary(data: OpticalData) {
-  return `${signed(data.sphere)} ${signed(data.cylinder)} × ${fmt(normalizeAxis(data.axis), 0)} · PD ${fmt(totalPd(data))}`;
+  const cylinderEntered = Number.isFinite(data.cylinder) && Math.abs(data.cylinder) > 0.0001;
+  const cylinder = cylinderEntered
+    ? `${signed(data.cylinder)} D × ${fmt(normalizeAxis(data.axis || 180), 0)}°`
+    : "Cylinder / axis not entered";
+  return `${signed(data.sphere)} D · ${cylinder} · PD ${fmt(totalPd(data))}`;
 }
 
 function lensSummary(data: OpticalData) {
@@ -1100,6 +1104,7 @@ function CategoryGrid({
 
 export default function OpticalEngineeringPage() {
   const [data, setData] = useState(initialData);
+  const [inputDrafts, setInputDrafts] = useState<Record<string, string>>({});
   const [activeCalculatorId, setActiveCalculatorId] = useState("transposition");
   const [calculatorSelected, setCalculatorSelected] = useState(false);
   const [hasCalculated, setHasCalculated] = useState(false);
@@ -1126,7 +1131,25 @@ export default function OpticalEngineeringPage() {
 
   const updateNumber = (key: keyof OpticalData, value: string) => {
     const field = numericFields.find((entry) => entry.key === key);
+    setInputDrafts((current) => ({ ...current, [String(key)]: value }));
     setData((current) => ({ ...current, [key]: value === "" ? (field?.optional ? 0 : Number.NaN) : Number(value) }));
+  };
+
+  const finishNumberEdit = (key: keyof OpticalData) => {
+    setInputDrafts((current) => {
+      const next = { ...current };
+      delete next[String(key)];
+      return next;
+    });
+  };
+
+  const stepPower = (key: "sphere" | "cylinder", direction: -1 | 1) => {
+    const field = numericFields.find((entry) => entry.key === key);
+    const currentValue = Number.isFinite(data[key]) ? data[key] : 0;
+    const stepped = Math.round((currentValue + direction * 0.25) * 4) / 4;
+    const nextValue = Math.min(field?.max ?? stepped, Math.max(field?.min ?? stepped, stepped));
+    setData((current) => ({ ...current, [key]: nextValue }));
+    finishNumberEdit(key);
   };
 
   const selectMaterial = (material: (typeof materialProperties)[number]) => {
@@ -1221,10 +1244,14 @@ export default function OpticalEngineeringPage() {
           const invalid = (field.optional ? value !== 0 && outOfRange : outOfRange) || (field.key === "segHeight" && value > data.bSize);
           const inputId = `optical-${String(field.key)}`;
           const errorId = `${inputId}-error`;
+          const isPowerStepper = field.key === "sphere" || field.key === "cylinder";
+          const displayedValue = inputDrafts[String(field.key)]
+            ?? (field.optional && value === 0 ? "" : inputValue(value, field.decimals ?? 2));
           return (
-            <label key={field.key} htmlFor={inputId} className="grid gap-1">
-              <span className="text-xs font-semibold text-[#625b53]">{field.label}</span>
-              <span style={{ gridTemplateColumns: field.suffix ? "minmax(0, 1fr) 56px" : "minmax(0, 1fr)", minHeight: 52 }} className={`grid min-h-[52px] w-full min-w-0 items-stretch overflow-hidden rounded-lg border bg-[#fbf8f3] focus-within:ring-2 ${invalid ? "border-[#b7502c] focus-within:ring-[#b7502c]/25" : "border-[#eadfce] focus-within:border-[#c9b28b] focus-within:ring-[#d4c09a]/35"}`}>
+            <div key={field.key} className="grid gap-1">
+              <label htmlFor={inputId} className="text-xs font-semibold text-[#625b53]">{field.label}</label>
+              <span style={{ gridTemplateColumns: `${isPowerStepper ? "40px " : ""}minmax(0, 1fr)${isPowerStepper ? " 40px" : ""}${field.suffix ? " 56px" : ""}`, minHeight: 52 }} className={`grid min-h-[52px] w-full min-w-0 items-stretch overflow-hidden rounded-lg border bg-[#fbf8f3] focus-within:ring-2 ${invalid ? "border-[#b7502c] focus-within:ring-[#b7502c]/25" : "border-[#eadfce] focus-within:border-[#c9b28b] focus-within:ring-[#d4c09a]/35"}`}>
+                {isPowerStepper ? <button type="button" onClick={() => stepPower(field.key as "sphere" | "cylinder", -1)} aria-label={`Decrease ${field.label} by 0.25 D`} className="grid place-items-center border-r border-[#eadfce] text-lg font-semibold text-[#625b53] hover:bg-white">−</button> : null}
                 <input
                   id={inputId}
                   name={String(field.key)}
@@ -1236,11 +1263,13 @@ export default function OpticalEngineeringPage() {
                   inputMode="decimal"
                   aria-invalid={invalid}
                   aria-describedby={invalid ? errorId : undefined}
-                  value={field.optional && value === 0 ? "" : inputValue(value, field.decimals ?? 2)}
+                  value={displayedValue}
                   onChange={(event) => updateNumber(field.key, event.target.value)}
+                  onBlur={() => finishNumberEdit(field.key)}
                   style={{ height: 52 }}
                   className="h-[52px] min-w-0 bg-transparent px-4 text-base font-semibold leading-none text-[#172a28] outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 />
+                {isPowerStepper ? <button type="button" onClick={() => stepPower(field.key as "sphere" | "cylinder", 1)} aria-label={`Increase ${field.label} by 0.25 D`} className="grid place-items-center border-l border-[#eadfce] text-lg font-semibold text-[#625b53] hover:bg-white">+</button> : null}
                 {field.suffix ? (
                   <span aria-hidden="true" style={{ height: 52, alignSelf: "stretch", lineHeight: 1 }} className="grid h-[52px] place-items-center self-stretch border-l border-[#eadfce] px-2 text-center text-sm font-semibold leading-none text-[#8a7654]">
                     {field.suffix}
@@ -1248,7 +1277,7 @@ export default function OpticalEngineeringPage() {
                 ) : null}
               </span>
               {invalid ? <span id={errorId} role="alert" className="text-xs font-semibold text-[#9b4a22]">Enter {field.min}–{field.max}{field.suffix ? ` ${field.suffix}` : ""}{field.key === "segHeight" ? " and no more than B." : "."}</span> : null}
-            </label>
+            </div>
           );
         })}
     </div>

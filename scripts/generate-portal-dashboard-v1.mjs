@@ -142,7 +142,10 @@ const ACCOUNT_HEADER_ALIASES = {
   "PM ARSQL26 Qualified Sequel PAL Jobs": ["PM ARSQL26 Qualified Sequel PAL Jobs"],
   "PPM ARSQL26 Qualified Sequel PAL Jobs": ["PPM ARSQL26 Qualified Sequel PAL Jobs"],
   "CM ARSQL26 Sequel PAL Rebate Total": ["CM ARSQL26 Sequel PAL Rebate Total"],
-  "PM ARSQL26 Sequel PAL Rebate Total": ["PM ARSQL26 Sequel PAL Rebate Total"],
+  "PM ARSQL26 Sequel PAL Rebate Total": [
+    "PM ARSQL26 Sequel PAL Reward Total",
+    "PM ARSQL26 Sequel PAL Rebate Total",
+  ],
   "PPM ARSQL26 Sequel PAL Rebate Total": ["PPM ARSQL26 Sequel PAL Rebate Total"],
   "CM ARUTY26 Qualified Jobs": ["CM ARUTY26 Qualified Jobs"],
   "PM ARUTY26 Qualified Jobs": ["PM ARUTY26 Qualified Jobs"],
@@ -323,7 +326,10 @@ const POWER_BI_ACCOUNT_FIELDS = {
   "PM ARSQL26 Qualified Sequel PAL Jobs": "[pm_arsql26_qualified_sequel_pal_jobs]",
   "CM ARSQL26 Qualified Sequel PAL Jobs": "[cm_arsql26_qualified_sequel_pal_jobs]",
   "PPM ARSQL26 Sequel PAL Rebate Total": "[ppm_arsql26_sequel_pal_rebate_total]",
-  "PM ARSQL26 Sequel PAL Rebate Total": "[pm_arsql26_sequel_pal_rebate_total]",
+  "PM ARSQL26 Sequel PAL Rebate Total": [
+    "[pm_arsql26_sequel_pal_reward_total]",
+    "[pm_arsql26_sequel_pal_rebate_total]",
+  ],
   "CM ARSQL26 Sequel PAL Rebate Total": "[cm_arsql26_sequel_pal_rebate_total]",
   "Data Refresh Date": "[data_refresh_date]",
 };
@@ -821,7 +827,13 @@ function mergeDuplicateRows(rows) {
 
   return [...grouped.values()].map((groupRows) => {
     if (groupRows.length === 1) return groupRows[0];
-    const latest = [...groupRows].sort((a, b) => toIsoDate(b["Data Refresh Date"]).localeCompare(toIsoDate(a["Data Refresh Date"])))[0];
+    const latest = [...groupRows].sort((a, b) => {
+      const refreshDateOrder = toIsoDate(b["Data Refresh Date"]).localeCompare(
+        toIsoDate(a["Data Refresh Date"])
+      );
+      if (refreshDateOrder !== 0) return refreshDateOrder;
+      return completenessScore(b) - completenessScore(a);
+    })[0];
     const merged = { ...latest };
     for (const column of CORE_ACCOUNT_METRIC_COLUMNS.concat([
       "PPM NL Jobs",
@@ -1558,13 +1570,33 @@ async function generateDashboard() {
     const usersForAccount = userAccess.accountToUsersMap.get(account.account_id) ?? [];
     if (usersForAccount.length === 0) accountsWithoutUsers += 1;
     const labAverageDays = labTurnaroundAverages.get(toText(account.lab_name) || "Unknown");
+    const accountLocations = locationsByAccount.get(account.account_id) ?? [];
+    const effectiveProgramEnrollment = Object.fromEntries(
+      ["arsql26", "arpmp26", "aruty26"].map((program) => [
+        program,
+        Boolean(
+          account.program_enrollment?.[program] ||
+            accountLocations.some((location) => location.program_enrollment?.[program])
+        ),
+      ])
+    );
 
     const accountOutput = {
       ...account,
-      locations: locationsByAccount.get(account.account_id) ?? [],
+      program_enrollment: effectiveProgramEnrollment,
+      locations: accountLocations,
       data_refresh_date: account.data_refresh_date || latestRefreshDate,
       supplemental_intelligence: {
         ...(account.supplemental_intelligence ?? {}),
+        rewards: Object.fromEntries(
+          ["arsql26", "arpmp26", "aruty26"].map((program) => [
+            program,
+            {
+              ...(account.supplemental_intelligence?.rewards?.[program] ?? {}),
+              enrolled: effectiveProgramEnrollment[program],
+            },
+          ])
+        ),
         turnaround: {
           ...(account.supplemental_intelligence?.turnaround ?? {}),
           lab_average_days: labAverageDays ?? { ppm: 0, pm: 0, cm: 0 },

@@ -10,6 +10,7 @@ import {
 } from "@c15t/react";
 import { Analytics } from "@vercel/analytics/next";
 import { track } from "@vercel/analytics";
+import { usePathname } from "next/navigation";
 import { createContext, useContext, useEffect, useMemo } from "react";
 
 type CookieConsentContextValue = {
@@ -97,6 +98,9 @@ function ConsentStateBridge({ children }: { children: React.ReactNode }) {
 }
 
 export default function CookieConsentProvider({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const suppressPrompts = pathname.startsWith("/portal-demo");
+
   return (
     <ConsentManagerProvider
       options={{
@@ -153,22 +157,26 @@ export default function CookieConsentProvider({ children }: { children: React.Re
       }}
     >
       <ConsentStateBridge>{children}</ConsentStateBridge>
-      <ConsentBanner
-        hideBranding
-        layout={[["reject", "accept"], "customize"]}
-        primaryButton={["reject", "accept"]}
-        legalLinks={["privacyPolicy", "cookiePolicy"]}
-      />
-      <ConsentDialog
-        hideBranding
-        legalLinks={["privacyPolicy", "cookiePolicy", "termsOfService"]}
-        showTrigger={{
-          icon: <PrivacyShieldIcon />,
-          ariaLabel: "Open privacy preferences",
-          showWhen: "after-consent",
-          size: "sm",
-        }}
-      />
+      {suppressPrompts ? null : (
+        <>
+          <ConsentBanner
+            hideBranding
+            layout={[["reject", "accept"], "customize"]}
+            primaryButton={["reject", "accept"]}
+            legalLinks={["privacyPolicy", "cookiePolicy"]}
+          />
+          <ConsentDialog
+            hideBranding
+            legalLinks={["privacyPolicy", "cookiePolicy", "termsOfService"]}
+            showTrigger={{
+              icon: <PrivacyShieldIcon />,
+              ariaLabel: "Open privacy preferences",
+              showWhen: "after-consent",
+              size: "sm",
+            }}
+          />
+        </>
+      )}
     </ConsentManagerProvider>
   );
 }

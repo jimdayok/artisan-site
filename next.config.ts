@@ -29,13 +29,27 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   async rewrites() {
-    return [
-      {
-        source: "/api/c15t/:path*",
-        destination:
-          "https://d2d-consent-service.vercel.app/api/c15t/:path*",
-      },
-    ];
+    return {
+      beforeFiles: [
+        {
+          source: "/",
+          has: [{ type: "host", value: "demo.artisanlabnetwork.com" }],
+          destination: "/portal-demo",
+        },
+        {
+          source: "/robots.txt",
+          has: [{ type: "host", value: "demo.artisanlabnetwork.com" }],
+          destination: "/portal-demo/robots.txt",
+        },
+      ],
+      afterFiles: [
+        {
+          source: "/api/c15t/:path*",
+          destination:
+            "https://d2d-consent-service.vercel.app/api/c15t/:path*",
+        },
+      ],
+    };
   },
   async redirects() {
     return [
@@ -80,6 +94,16 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/:path*",
+        has: [{ type: "host", value: "demo.artisanlabnetwork.com" }],
+        headers: [
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow, noarchive, nosnippet, noimageindex",
+          },
+        ],
+      },
+      {
+        source: "/:path*",
         headers: [
           { key: "X-Frame-Options", value: "DENY" },
           { key: "X-Content-Type-Options", value: "nosniff" },
@@ -87,6 +111,19 @@ const nextConfig: NextConfig = {
           {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=()",
+          },
+        ],
+      },
+      {
+        source: "/portal-demo/:path*",
+        headers: [
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow, noarchive, nosnippet, noimageindex",
+          },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=300, s-maxage=300",
           },
         ],
       },

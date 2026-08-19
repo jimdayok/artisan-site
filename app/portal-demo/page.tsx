@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
-import PortalDemo from "./PortalDemo";
+import { PortalDashboardContent } from "@/app/portal/PortalDashboard";
+import PortalDemoPricingGuard from "./PortalDemoPricingGuard";
+import {
+  demoCustomer,
+  demoDashboardState,
+  demoPeerBenchmarks,
+  demoWorkbookProfile,
+} from "./demoData";
 
 export const metadata: Metadata = {
   title: "Customer Portal Demo | Artisan Lab Network",
@@ -15,5 +22,17 @@ export const metadata: Metadata = {
 };
 
 export default function PortalDemoPage() {
-  return <PortalDemo />;
+  return (
+    <>
+      <PortalDashboardContent
+        authenticatedEmail="alex.morgan@example.com"
+        customer={demoCustomer}
+        workbookProfile={demoWorkbookProfile}
+        dashboardState={demoDashboardState}
+        experience="demo"
+        peerBenchmarks={demoPeerBenchmarks}
+      />
+      <PortalDemoPricingGuard />
+    </>
+  );
 }

@@ -84,6 +84,9 @@ import {
   type QualityPoint,
   type TrendPoint,
 } from "./PracticeIntelligenceCharts";
+import PortalGuidedTour from "./PortalGuidedTour";
+
+type PortalExperience = "customer" | "demo";
 
 const PORTAL_ACCESS_LOGIN_URL = portalAccessLoginUrl();
 const PORTAL_ACCESS_LOGOUT_URL = "/portal/logout";
@@ -283,6 +286,7 @@ function PortalHeader({
   isEmployee,
   showNewPartnerOnboarding,
   onboardingHref,
+  experience = "customer",
 }: {
   practiceName: string;
   hasMultipleAccounts?: boolean;
@@ -290,9 +294,11 @@ function PortalHeader({
   isEmployee?: boolean;
   showNewPartnerOnboarding?: boolean;
   onboardingHref?: string;
+  experience?: PortalExperience;
 }) {
+  const isDemo = experience === "demo";
   return (
-    <header className="mb-7 border border-[#d8c49b] bg-[#fffaf1]/88 px-4 py-3 shadow-[0_18px_55px_rgba(23,42,40,0.09)] backdrop-blur sm:px-5">
+    <header data-portal-tour="navigation" className={`mb-7 border border-[#d8c49b] bg-[#fffaf1]/88 px-4 py-3 shadow-[0_18px_55px_rgba(23,42,40,0.09)] backdrop-blur sm:px-5 ${isDemo ? "mt-9" : ""}`}>
       <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
         <div className="flex min-w-0 items-center gap-4">
           <Link
@@ -321,7 +327,7 @@ function PortalHeader({
 
         <nav className="flex flex-wrap items-center gap-2 text-sm font-semibold text-[#172a28]">
           <Link
-            href="/portal"
+            href={isDemo ? "#overview" : "/portal"}
             className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#d8c49b] bg-white/55 px-4 transition hover:bg-white"
           >
             <Home className="h-4 w-4" />
@@ -375,11 +381,11 @@ function PortalHeader({
             </span>
           ) : null}
           <a
-            href={PORTAL_ACCESS_LOGOUT_URL}
+            href={isDemo ? "#overview" : PORTAL_ACCESS_LOGOUT_URL}
             className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#172a28]/20 bg-transparent px-4 transition hover:bg-[#172a28] hover:text-white"
           >
             <LogOut className="h-4 w-4" />
-            Sign Out
+            {isDemo ? "Sign Out (Demo)" : "Sign Out"}
           </a>
         </nav>
       </div>
@@ -387,7 +393,8 @@ function PortalHeader({
   );
 }
 
-function PortalFooter() {
+function PortalFooter({ experience = "customer" }: { experience?: PortalExperience }) {
+  const isDemo = experience === "demo";
   const links = [
     { label: "Provider Resources", href: "/provider-resources" },
     { label: "Newsletter", href: "/newsletter" },
@@ -421,7 +428,7 @@ function PortalFooter() {
             link.href.startsWith("mailto:") ? (
               <a
                 key={link.label}
-                href={link.href}
+                href={isDemo ? "#support" : link.href}
                 className="transition hover:text-[#172a28]"
               >
                 {link.label}
@@ -578,10 +585,13 @@ function LocalTestLoginPanel({ emails }: { emails: string[] }) {
 function PriceListCard({
   priceList,
   accountNumber,
+  experience = "customer",
 }: {
   priceList: PortalPriceList & { configured: boolean };
   accountNumber?: string;
+  experience?: PortalExperience;
 }) {
+  const isDemo = experience === "demo";
   const downloadParams = new URLSearchParams({ code: priceList.code });
   const exportParams = new URLSearchParams({
     code: priceList.code,
@@ -625,11 +635,12 @@ function PriceListCard({
       <div className="mt-6 flex flex-col gap-3">
         {priceList.configured && priceList.onlineUrl ? (
           <Link
-            href={
+            href={isDemo ? "#price-sheets" :
               accountNumber
                 ? `${priceList.onlineUrl}?account=${encodeURIComponent(accountNumber)}`
                 : priceList.onlineUrl
             }
+            data-demo-pricing={isDemo ? "online" : undefined}
             className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[#172a28] px-5 py-2 text-sm font-semibold text-white transition hover:bg-[#27433f]"
           >
             View {priceList.code} Online Pricing
@@ -637,7 +648,8 @@ function PriceListCard({
         ) : null}
         {canDownload ? (
           <a
-            href={downloadHref}
+            href={isDemo ? "#price-sheets" : downloadHref}
+            data-demo-pricing={isDemo ? "download" : undefined}
             className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#d8c49b] bg-[#fffaf1] px-5 py-2 text-sm font-semibold text-[#172a28] transition hover:bg-white"
           >
             Download PDF
@@ -861,10 +873,12 @@ function isPortalOnboardingVisible({
   ]);
 }
 
-function PortalResourceCard({ card }: { card: PortalSectionCard }) {
+function PortalResourceCard({ card, experience = "customer" }: { card: PortalSectionCard; experience?: PortalExperience }) {
+  const isDemoPricing = experience === "demo" && ["pricing", "packages", "calculator", "catalog", "exports"].includes(card.section);
   return (
     <Link
-      href={card.href}
+      href={isDemoPricing ? "#price-sheets" : card.href}
+      data-demo-pricing={isDemoPricing ? card.section : undefined}
       className="group block border border-[#d8c49b] bg-white/60 p-5 transition hover:-translate-y-0.5 hover:border-[#172a28] hover:bg-white"
     >
       <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8b7650]">
@@ -1062,7 +1076,7 @@ function AccountProfileSection({
     customerTypeLabel || dashboardAccount?.division || account?.division || "";
 
   return (
-    <section id="account-details" className="scroll-mt-24 border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9">
+    <section id="account-details" data-portal-tour="account-support" className="scroll-mt-24 border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9">
       <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
         Account Details
       </p>
@@ -1145,7 +1159,7 @@ function UserContactSection({
   const hasAssignedUsers = assignedUsers.length > 0;
 
   return (
-    <section id="support" className="scroll-mt-24 border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9">
+    <section id="support" data-portal-tour="account-support" className="scroll-mt-24 border border-[#d8c49b] bg-[#fffaf1]/86 p-6 shadow-[0_24px_90px_rgba(23,42,40,0.13)] backdrop-blur sm:p-9">
       <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8b7650]">
         Portal User
       </p>
@@ -1470,10 +1484,12 @@ function buildPracticeIntelligenceModel({
   account,
   dashboard,
   hasModernPackageWarning,
+  peerBenchmarksOverride,
 }: {
   account?: PortalWorkbookAccount;
   dashboard?: PortalDashboardV1Account;
   hasModernPackageWarning: boolean;
+  peerBenchmarksOverride?: PortalPeerBenchmarks;
 }): PracticeIntelligenceModel {
   const jobs = dashboard?.purchase_summary?.jobs;
   const sales = dashboard?.purchase_summary?.sales;
@@ -1518,7 +1534,7 @@ function buildPracticeIntelligenceModel({
   const programFlags = dashboard?.program_usage?.flags;
   const quality = dashboard?.quality_metrics;
   const supplemental = dashboard?.supplemental_intelligence;
-  const peerBenchmarks = getPortalPeerBenchmarks(dashboard?.account_id || account?.accountNumber);
+  const peerBenchmarks = peerBenchmarksOverride ?? getPortalPeerBenchmarks(dashboard?.account_id || account?.accountNumber);
   const reportMonths = {
     prior: relativeMonthLabel(2, reportAnchor),
     previous: relativeMonthLabel(1, reportAnchor),
@@ -1636,7 +1652,9 @@ function buildPracticeIntelligenceModel({
     {
       title: "Improve Frame Package Usage",
       priority: hasModernPackageWarning ? "yellow" : "green",
-      current: isActiveUsage(account?.modernPkgUsage) ? account?.modernPkgUsage || "Active" : "No current usage recorded",
+      current: isActiveUsage(account?.modernPkgUsage || dashboard?.program_usage.modern_package_usage)
+        ? account?.modernPkgUsage || dashboard?.program_usage.modern_package_usage || "Active"
+        : "No current usage recorded",
       why: "Frame package participation can simplify quoting and strengthen program value for complete-pair purchases.",
       action: "Review Artisan Frame Systems M5 for everyday packages and Artisan Safety Systems Y5 for safety package opportunities.",
     }
@@ -1732,35 +1750,35 @@ function buildPracticeIntelligenceModel({
     {
       title: "Modern Frame",
       status: isActiveUsage(account?.modernFrmUsage) || programFlags?.modern_frame ? "Active" : "Not Recorded",
-      value: account?.modernFrmUsage || "No usage recorded",
+      value: account?.modernFrmUsage || dashboard?.program_usage.modern_frame_usage || "No usage recorded",
       detail: "Frame system participation and growth signal.",
       href: "/provider-resources#modern-frame-system",
     },
     {
       title: "Modern Package",
       status: isActiveUsage(account?.modernPkgUsage) || programFlags?.modern_package ? "Active" : "Not Recorded",
-      value: account?.modernPkgUsage || "No usage recorded",
+      value: account?.modernPkgUsage || dashboard?.program_usage.modern_package_usage || "No usage recorded",
       detail: "Package system participation and complete-pair usage signal.",
       href: "/provider-resources#modern-package-system",
     },
     {
       title: "ChemClip",
       status: isActiveUsage(account?.chemClipUsage) || programFlags?.chemclip ? "Active" : "Not Recorded",
-      value: account?.chemClipUsage || "No usage recorded",
+      value: account?.chemClipUsage || dashboard?.program_usage.chemclip_usage || "No usage recorded",
       detail: "Specialty clip usage signal.",
       href: "/provider-resources#specialty-systems",
     },
     {
       title: "SpecCheck",
       status: isActiveUsage(account?.specCheckUsage) || programFlags?.speccheck ? "Active" : "Not Recorded",
-      value: account?.specCheckUsage || "No usage recorded",
+      value: account?.specCheckUsage || dashboard?.program_usage.speccheck_usage || "No usage recorded",
       detail: "SpecCheck usage signal.",
       href: "/provider-resources#speccheck",
     },
     {
       title: "Tokai",
       status: isActiveUsage(account?.tokaiUsage) || programFlags?.tokai ? "Active" : "Not Recorded",
-      value: account?.tokaiUsage || "Recommended for specialty growth",
+      value: account?.tokaiUsage || dashboard?.program_usage.tokai_usage || "Recommended for specialty growth",
       detail: "Premium high-index and outsourced specialty design path.",
       href: "/provider-resources#tokai",
     },
@@ -1887,7 +1905,7 @@ function PracticeIntelligenceHero({
   ).size || 1;
 
   return (
-    <section id="overview" className="relative isolate scroll-mt-24 overflow-hidden rounded-md bg-[#13211f] p-5 text-white shadow-[0_34px_100px_rgba(19,33,31,0.28)] sm:p-7 lg:col-span-3">
+    <section id="overview" data-portal-tour="overview" className="relative isolate scroll-mt-24 overflow-hidden rounded-md bg-[#13211f] p-5 text-white shadow-[0_34px_100px_rgba(19,33,31,0.28)] sm:p-7 lg:col-span-3">
       <div className="absolute inset-0 -z-10 bg-[linear-gradient(135deg,#13211f_0%,#173f43_42%,#4b5f7f_100%)]" />
       <div className="absolute inset-x-0 top-0 -z-10 h-32 bg-[linear-gradient(90deg,rgba(242,216,143,0.28),rgba(31,138,112,0.2),rgba(47,95,156,0.24))]" />
       <div className="grid gap-8 xl:grid-cols-[1.02fr_1.5fr] xl:items-end">
@@ -2078,7 +2096,7 @@ function OpportunitiesCenter({ opportunities }: { opportunities: PracticeIntelli
   } satisfies Record<PracticeIntelligenceModel["opportunities"][number]["priority"], string>;
 
   return (
-    <section className="rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3">
+    <section data-portal-tour="opportunities" className="rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3">
       <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#7a6b49]">
@@ -2361,7 +2379,7 @@ function ProductBrandIntelligenceSection({
   peerBenchmarks: PortalPeerBenchmarks;
 }) {
   return (
-    <section className="rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3">
+    <section data-portal-tour="products" className="rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3">
       <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#7a6b49]">
         Product Intelligence
       </p>
@@ -2487,7 +2505,7 @@ function CustomerEngagementCenter({ invitations }: { invitations: PracticeIntell
   ];
 
   return (
-    <section className="rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3">
+    <section data-portal-tour="engagement" className="rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3">
       <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#7a6b49]">
         Help Us Improve Your Experience
       </p>
@@ -2537,14 +2555,16 @@ function ResourceCenter({
   availablePortalSections,
   accountNumber,
   isLocalhostDevelopment,
+  experience = "customer",
 }: {
   availablePriceLists: Array<PortalPriceList & { configured: boolean }>;
   availablePortalSections: PortalSectionCard[];
   accountNumber: string;
   isLocalhostDevelopment?: boolean;
+  experience?: PortalExperience;
 }) {
   return (
-    <section id="price-sheets" className="scroll-mt-24 rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3">
+    <section id="price-sheets" data-portal-tour="resources" className="scroll-mt-24 rounded-md border border-[#d9c8a6] bg-[#fffdf8]/88 p-5 shadow-[0_24px_70px_rgba(20,39,36,0.09)] sm:p-7 lg:col-span-3">
       <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#7a6b49]">
         Resource Center
       </p>
@@ -2555,7 +2575,7 @@ function ResourceCenter({
           {availablePriceLists.length > 0 ? (
             <div className="mt-4 grid gap-4 md:grid-cols-2">
               {availablePriceLists.map((priceList) => (
-                <PriceListCard key={priceList.code} priceList={priceList} accountNumber={accountNumber} />
+                <PriceListCard key={priceList.code} priceList={priceList} accountNumber={accountNumber} experience={experience} />
               ))}
             </div>
           ) : (
@@ -2568,7 +2588,7 @@ function ResourceCenter({
           <h3 className="text-lg font-semibold text-[#142724]">Portal Tools</h3>
           <div className="mt-4 grid gap-3">
             {availablePortalSections.map((card) => (
-              <PortalResourceCard key={card.title} card={card} />
+              <PortalResourceCard key={card.title} card={card} experience={experience} />
             ))}
           </div>
         </div>
@@ -2619,6 +2639,8 @@ function PracticeIntelligenceCenter({
   availablePriceLists,
   availablePortalSections,
   isLocalhostDevelopment,
+  experience = "customer",
+  peerBenchmarks,
 }: {
   practiceName: string;
   accountNumber: string;
@@ -2630,11 +2652,14 @@ function PracticeIntelligenceCenter({
   availablePriceLists: Array<PortalPriceList & { configured: boolean }>;
   availablePortalSections: PortalSectionCard[];
   isLocalhostDevelopment?: boolean;
+  experience?: PortalExperience;
+  peerBenchmarks?: PortalPeerBenchmarks;
 }) {
   const intelligence = buildPracticeIntelligenceModel({
     account,
     dashboard: dashboardAccount,
     hasModernPackageWarning: Boolean(account && hasModernPackageSavingsWarning(account)),
+    peerBenchmarksOverride: peerBenchmarks,
   });
   const locations = [
     ...new Map(
@@ -2670,7 +2695,7 @@ function PracticeIntelligenceCenter({
           }}
         />
       ) : null}
-      <section id="trends" className="scroll-mt-24 lg:col-span-3">
+      <section id="trends" data-portal-tour="trends" className="scroll-mt-24 lg:col-span-3">
         <TrendsPerformanceCharts trends={intelligence.trends} vspMix={intelligence.vspMix} />
         <DailyTrendSummary intelligence={intelligence} />
       </section>
@@ -2692,7 +2717,7 @@ function PracticeIntelligenceCenter({
         reportMonths={intelligence.reportMonths}
         peerBenchmarks={intelligence.peerBenchmarks}
       />
-      <section className="lg:col-span-3">
+      <section data-portal-tour="service" className="lg:col-span-3">
         <ServiceExcellenceCharts
           quality={intelligence.quality}
           orderVolume={intelligence.orderRateTrends}
@@ -2701,9 +2726,11 @@ function PracticeIntelligenceCenter({
       </section>
       <TurnaroundBenchmarkCenter turnaround={intelligence.turnaround} reportMonths={intelligence.reportMonths} peerBenchmarks={intelligence.peerBenchmarks} />
       <RemakePerformanceCenter quality={intelligence.quality} reportMonths={intelligence.reportMonths} peerBenchmarks={intelligence.peerBenchmarks} />
-      <RewardsCenter rewards={intelligence.rewards} />
-      <div id="programs" className="scroll-mt-24 lg:col-span-3">
-        <ProgramParticipationCenter programs={intelligence.programs} />
+      <div data-portal-tour="rewards-programs" className="contents">
+        <RewardsCenter rewards={intelligence.rewards} />
+        <div id="programs" className="scroll-mt-24 lg:col-span-3">
+          <ProgramParticipationCenter programs={intelligence.programs} />
+        </div>
       </div>
       <CustomerEngagementCenter invitations={intelligence.targetInvitations} />
       <BenchmarkingSection benchmarks={intelligence.peerBenchmarks} />
@@ -2712,6 +2739,7 @@ function PracticeIntelligenceCenter({
         availablePortalSections={availablePortalSections}
         accountNumber={accountNumber}
         isLocalhostDevelopment={isLocalhostDevelopment}
+        experience={experience}
       />
     </>
   );
@@ -2728,6 +2756,8 @@ export function PortalDashboardContent({
   adminReturnTo = "/portal/admin",
   isLocalhostDevelopment,
   selectableAccountCount = 1,
+  experience = "customer",
+  peerBenchmarks,
 }: {
   authenticatedEmail: string;
   customer?: PortalCustomer;
@@ -2739,6 +2769,8 @@ export function PortalDashboardContent({
   adminReturnTo?: string;
   isLocalhostDevelopment?: boolean;
   selectableAccountCount?: number;
+  experience?: PortalExperience;
+  peerBenchmarks?: PortalPeerBenchmarks;
 }) {
   if (!customer && !workbookProfile && dashboardState?.status !== "ok") {
     return (
@@ -2794,7 +2826,7 @@ export function PortalDashboardContent({
     customerTypeInfo?.label || customer?.customerTypeLabel || "";
   const showDashboardV1 = dashboardState?.status === "ok";
   const isAdmin = isPortalAdminEmail(authenticatedEmail);
-  const showNewPartnerOnboarding = isPortalOnboardingVisible({
+  const showNewPartnerOnboarding = experience === "demo" || isPortalOnboardingVisible({
     customer,
     workbookProfile,
     dashboardState,
@@ -2825,9 +2857,10 @@ export function PortalDashboardContent({
           isEmployee={isAdmin && !adminPreviewAccountName}
           showNewPartnerOnboarding={showNewPartnerOnboarding}
           onboardingHref={onboardingHref}
+          experience={experience}
         />
       }
-      footer={<PortalFooter />}
+      footer={<PortalFooter experience={experience} />}
     >
       <PortalLocationSelector
         account={dashboardState?.account}
@@ -2927,6 +2960,8 @@ export function PortalDashboardContent({
           availablePriceLists={availablePriceLists}
           availablePortalSections={availablePortalSections}
           isLocalhostDevelopment={isLocalhostDevelopment}
+          experience={experience}
+          peerBenchmarks={peerBenchmarks}
         />
 
         <AccountProfileSection
@@ -2947,6 +2982,7 @@ export function PortalDashboardContent({
           accountNumber={accountNumber}
         />
       </div>
+      <PortalGuidedTour demo={experience === "demo"} />
     </PortalShell>
   );
 }

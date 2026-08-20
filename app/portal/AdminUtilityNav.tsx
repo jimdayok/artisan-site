@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { artisanControlClass } from "@/app/components/controlStyles";
 
 export default function AdminUtilityNav({
@@ -10,15 +10,23 @@ export default function AdminUtilityNav({
   roleKind: "admin" | "sales-rep" | "unassigned";
 }) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const isAdminRoute = pathname.startsWith("/portal/admin");
   const isCustomerMode = pathname === "/portal";
   const showReturnLabel = !isAdminRoute || isCustomerMode;
   const isSalesRep = roleKind === "sales-rep";
+  const previewRepCode = searchParams.get("repView")?.trim().toUpperCase() ?? "";
+  const isRepPreview = roleKind === "admin" && pathname === "/portal/admin" && Boolean(previewRepCode);
+  const useRepNavigation = isSalesRep || isRepPreview;
+  const dashboardHref = isRepPreview
+    ? `/portal/admin?repView=${encodeURIComponent(previewRepCode)}`
+    : "/portal/admin";
+  const customersHref = `${dashboardHref}#customers`;
   const links = [
     { href: "/", label: "Main Website" },
     {
-      href: "/portal/admin",
-      label: isSalesRep
+      href: dashboardHref,
+      label: useRepNavigation
         ? showReturnLabel
           ? "Return to Dashboard"
           : "Dashboard"
@@ -26,10 +34,10 @@ export default function AdminUtilityNav({
           ? "Return to Admin Dashboard"
           : "Admin Dashboard",
     },
-    ...(isSalesRep
+    ...(useRepNavigation
       ? [
-          { href: "/portal/admin#customers", label: "Customers" },
-          { href: "/portal/admin#customers", label: "Customer Portal" },
+          { href: customersHref, label: "Customers" },
+          { href: customersHref, label: "Customer Portal" },
           { href: "/portal/price-lists", label: "Price Lists" },
         ]
       : [
@@ -52,7 +60,7 @@ export default function AdminUtilityNav({
           const active =
             link.href === "/"
               ? pathname === "/"
-              : link.href === "/portal/admin"
+              : link.href === dashboardHref
               ? pathname === "/portal/admin"
               : link.href === "/portal"
                 ? isCustomerMode

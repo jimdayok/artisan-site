@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T13:39:40.713Z",
+  "generatedAt": "2026-08-20T01:40:21.035Z",
   "detectedCodes": [
     "94",
     "A5",
@@ -158,6 +158,7 @@
     "S5",
     "TK",
     "V6",
+    "V7",
     "VD",
     "XQ",
     "Y5"
@@ -165,6 +166,7 @@
   "assignedMissingGenerated": [
     "H3",
     "P4",
+    "V7",
     "VD"
   ],
   "generatedUnassigned": [
@@ -232,7 +234,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:06.199Z"
+      "generatedAt": "2026-08-20T01:38:48.195Z"
     },
     {
       "code": "A5",
@@ -244,25 +246,25 @@
       "invalidOrUnknown": false,
       "generationStatus": "generated",
       "assignmentStatus": "assigned",
-      "assignedAccountCount": 5,
-      "visibleCustomerCount": 3,
+      "assignedAccountCount": 4,
+      "visibleCustomerCount": 2,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:09.449Z"
+      "generatedAt": "2026-08-20T01:38:52.054Z"
     },
     {
       "code": "A6",
       "label": "ARTISAN PMP PRICING 2026 Rev 071726",
       "detected": true,
       "generated": true,
-      "rowCount": 7698,
+      "rowCount": 7854,
       "package": false,
       "invalidOrUnknown": false,
       "generationStatus": "generated",
       "assignmentStatus": "assigned",
-      "assignedAccountCount": 26,
-      "visibleCustomerCount": 19,
+      "assignedAccountCount": 28,
+      "visibleCustomerCount": 20,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:13.137Z"
+      "generatedAt": "2026-08-20T01:38:54.772Z"
     },
     {
       "code": "AR",
@@ -277,7 +279,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:14.275Z"
+      "generatedAt": "2026-08-20T01:38:55.881Z"
     },
     {
       "code": "B3",
@@ -292,22 +294,22 @@
       "assignedAccountCount": 3,
       "visibleCustomerCount": 3,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:14.449Z"
+      "generatedAt": "2026-08-20T01:38:56.092Z"
     },
     {
       "code": "B5",
       "label": "ARTISAN LENS SYSTEM 2025 REV 022726",
       "detected": true,
       "generated": true,
-      "rowCount": 415,
+      "rowCount": 445,
       "package": true,
       "invalidOrUnknown": false,
       "generationStatus": "generated",
       "assignmentStatus": "assigned",
-      "assignedAccountCount": 56,
-      "visibleCustomerCount": 48,
+      "assignedAccountCount": 62,
+      "visibleCustomerCount": 50,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:14.562Z"
+      "generatedAt": "2026-08-20T01:38:56.201Z"
     },
     {
       "code": "BO",
@@ -322,7 +324,7 @@
       "assignedAccountCount": 1,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:14.611Z"
+      "generatedAt": "2026-08-20T01:38:56.260Z"
     },
     {
       "code": "C3",
@@ -337,7 +339,7 @@
       "assignedAccountCount": 3,
       "visibleCustomerCount": 3,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:14.633Z"
+      "generatedAt": "2026-08-20T01:38:56.283Z"
     },
     {
       "code": "CB",
@@ -352,7 +354,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:14.899Z"
+      "generatedAt": "2026-08-20T01:38:56.730Z"
     },
     {
       "code": "CC",
@@ -367,7 +369,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:15.555Z"
+      "generatedAt": "2026-08-20T01:38:57.394Z"
     },
     {
       "code": "CD",
@@ -382,7 +384,7 @@
       "assignedAccountCount": 1,
       "visibleCustomerCount": 1,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:15.829Z"
+      "generatedAt": "2026-08-20T01:38:57.570Z"
     },
     {
       "code": "E4",
@@ -397,7 +399,7 @@
       "assignedAccountCount": 1,
       "visibleCustomerCount": 1,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:15.851Z"
+      "generatedAt": "2026-08-20T01:38:57.597Z"
     },
     {
       "code": "E5",
@@ -412,7 +414,7 @@
       "assignedAccountCount": 3,
       "visibleCustomerCount": 3,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:16.137Z"
+      "generatedAt": "2026-08-20T01:38:57.896Z"
     },
     {
       "code": "E6",
@@ -424,10 +426,10 @@
       "invalidOrUnknown": false,
       "generationStatus": "generated",
       "assignmentStatus": "assigned",
-      "assignedAccountCount": 1,
+      "assignedAccountCount": 2,
       "visibleCustomerCount": 1,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:16.698Z"
+      "generatedAt": "2026-08-20T01:38:58.376Z"
     },
     {
       "code": "E7",
@@ -442,7 +444,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:16.997Z"
+      "generatedAt": "2026-08-20T01:38:58.591Z"
     },
     {
       "code": "E8",
@@ -457,7 +459,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:17.053Z"
+      "generatedAt": "2026-08-20T01:38:58.629Z"
     },
     {
       "code": "G5",
@@ -469,25 +471,25 @@
       "invalidOrUnknown": false,
       "generationStatus": "generated",
       "assignmentStatus": "assigned",
-      "assignedAccountCount": 43,
-      "visibleCustomerCount": 43,
+      "assignedAccountCount": 41,
+      "visibleCustomerCount": 40,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:19.873Z"
+      "generatedAt": "2026-08-20T01:39:02.529Z"
     },
     {
       "code": "G6",
       "label": "ARTISAN GENERAL PRICING 2026 Rev 071726",
       "detected": true,
       "generated": true,
-      "rowCount": 7655,
+      "rowCount": 7811,
       "package": false,
       "invalidOrUnknown": false,
       "generationStatus": "generated",
       "assignmentStatus": "assigned",
-      "assignedAccountCount": 198,
-      "visibleCustomerCount": 178,
+      "assignedAccountCount": 204,
+      "visibleCustomerCount": 182,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:23.461Z"
+      "generatedAt": "2026-08-20T01:39:05.358Z"
     },
     {
       "code": "H3",
@@ -517,7 +519,7 @@
       "assignedAccountCount": 2,
       "visibleCustomerCount": 2,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:24.409Z"
+      "generatedAt": "2026-08-20T01:39:06.166Z"
     },
     {
       "code": "J2",
@@ -532,7 +534,7 @@
       "assignedAccountCount": 2,
       "visibleCustomerCount": 2,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:25.173Z"
+      "generatedAt": "2026-08-20T01:39:07.218Z"
     },
     {
       "code": "L2",
@@ -547,7 +549,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:26.133Z"
+      "generatedAt": "2026-08-20T01:39:07.871Z"
     },
     {
       "code": "LT",
@@ -562,7 +564,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:26.168Z"
+      "generatedAt": "2026-08-20T01:39:07.885Z"
     },
     {
       "code": "M2",
@@ -577,7 +579,7 @@
       "assignedAccountCount": 1,
       "visibleCustomerCount": 1,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:26.176Z"
+      "generatedAt": "2026-08-20T01:39:07.892Z"
     },
     {
       "code": "M3",
@@ -592,7 +594,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:26.235Z"
+      "generatedAt": "2026-08-20T01:39:07.978Z"
     },
     {
       "code": "M5",
@@ -607,7 +609,7 @@
       "assignedAccountCount": 18,
       "visibleCustomerCount": 16,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:26.329Z"
+      "generatedAt": "2026-08-20T01:39:08.095Z"
     },
     {
       "code": "NB",
@@ -622,7 +624,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:27.951Z"
+      "generatedAt": "2026-08-20T01:39:10.591Z"
     },
     {
       "code": "NK",
@@ -637,7 +639,7 @@
       "assignedAccountCount": 1,
       "visibleCustomerCount": 1,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:29.646Z"
+      "generatedAt": "2026-08-20T01:39:11.708Z"
     },
     {
       "code": "NL",
@@ -649,10 +651,10 @@
       "invalidOrUnknown": false,
       "generationStatus": "generated",
       "assignmentStatus": "assigned",
-      "assignedAccountCount": 205,
+      "assignedAccountCount": 206,
       "visibleCustomerCount": 190,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:29.699Z"
+      "generatedAt": "2026-08-20T01:39:11.762Z"
     },
     {
       "code": "NO",
@@ -667,7 +669,7 @@
       "assignedAccountCount": 3,
       "visibleCustomerCount": 3,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:32.004Z"
+      "generatedAt": "2026-08-20T01:39:14.409Z"
     },
     {
       "code": "OF",
@@ -682,7 +684,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:34.771Z"
+      "generatedAt": "2026-08-20T01:39:16.122Z"
     },
     {
       "code": "P4",
@@ -712,14 +714,14 @@
       "assignedAccountCount": 4,
       "visibleCustomerCount": 3,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:37.776Z"
+      "generatedAt": "2026-08-20T01:39:19.794Z"
     },
     {
       "code": "P6",
       "label": "ARTISAN Partner PRICING 2026 Rev 071726",
       "detected": true,
       "generated": true,
-      "rowCount": 7699,
+      "rowCount": 8346,
       "package": false,
       "invalidOrUnknown": false,
       "generationStatus": "generated",
@@ -727,7 +729,7 @@
       "assignedAccountCount": 29,
       "visibleCustomerCount": 25,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:41.833Z"
+      "generatedAt": "2026-08-20T01:39:23.852Z"
     },
     {
       "code": "S5",
@@ -742,7 +744,7 @@
       "assignedAccountCount": 14,
       "visibleCustomerCount": 11,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:42.868Z"
+      "generatedAt": "2026-08-20T01:39:24.761Z"
     },
     {
       "code": "T5",
@@ -757,7 +759,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:47.422Z"
+      "generatedAt": "2026-08-20T01:39:28.634Z"
     },
     {
       "code": "T6",
@@ -772,7 +774,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:55.924Z"
+      "generatedAt": "2026-08-20T01:39:36.390Z"
     },
     {
       "code": "TB",
@@ -787,7 +789,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:00.196Z"
+      "generatedAt": "2026-08-20T01:39:39.041Z"
     },
     {
       "code": "TK",
@@ -802,7 +804,7 @@
       "assignedAccountCount": 1,
       "visibleCustomerCount": 1,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:00.204Z"
+      "generatedAt": "2026-08-20T01:39:39.047Z"
     },
     {
       "code": "TT",
@@ -817,7 +819,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:00.216Z"
+      "generatedAt": "2026-08-20T01:39:39.065Z"
     },
     {
       "code": "TX",
@@ -832,7 +834,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:00.327Z"
+      "generatedAt": "2026-08-20T01:39:39.196Z"
     },
     {
       "code": "TZ",
@@ -847,7 +849,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:00.483Z"
+      "generatedAt": "2026-08-20T01:39:39.328Z"
     },
     {
       "code": "V6",
@@ -862,7 +864,22 @@
       "assignedAccountCount": 7,
       "visibleCustomerCount": 7,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:00.582Z"
+      "generatedAt": "2026-08-20T01:39:39.426Z"
+    },
+    {
+      "code": "V7",
+      "label": "V7 Price List",
+      "detected": false,
+      "generated": false,
+      "rowCount": 0,
+      "package": false,
+      "invalidOrUnknown": false,
+      "generationStatus": "missing",
+      "assignmentStatus": "assigned",
+      "assignedAccountCount": 7,
+      "visibleCustomerCount": 7,
+      "source": "assignment",
+      "generatedAt": null
     },
     {
       "code": "VD",
@@ -877,7 +894,7 @@
       "assignedAccountCount": 19,
       "visibleCustomerCount": 18,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:00.694Z"
+      "generatedAt": "2026-08-20T01:39:39.489Z"
     },
     {
       "code": "VO",
@@ -892,7 +909,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:00.762Z"
+      "generatedAt": "2026-08-20T01:39:39.572Z"
     },
     {
       "code": "VS",
@@ -907,7 +924,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:00.862Z"
+      "generatedAt": "2026-08-20T01:39:39.680Z"
     },
     {
       "code": "VV",
@@ -922,7 +939,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:00.988Z"
+      "generatedAt": "2026-08-20T01:39:39.797Z"
     },
     {
       "code": "VX",
@@ -937,7 +954,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:01.116Z"
+      "generatedAt": "2026-08-20T01:39:39.914Z"
     },
     {
       "code": "X3",
@@ -952,7 +969,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:01.169Z"
+      "generatedAt": "2026-08-20T01:39:39.951Z"
     },
     {
       "code": "X4",
@@ -967,7 +984,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:01.190Z"
+      "generatedAt": "2026-08-20T01:39:39.976Z"
     },
     {
       "code": "X6",
@@ -982,7 +999,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:01.279Z"
+      "generatedAt": "2026-08-20T01:39:40.058Z"
     },
     {
       "code": "XC",
@@ -997,7 +1014,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:03.464Z"
+      "generatedAt": "2026-08-20T01:39:42.631Z"
     },
     {
       "code": "XD",
@@ -1012,7 +1029,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:05.500Z"
+      "generatedAt": "2026-08-20T01:39:43.961Z"
     },
     {
       "code": "XE",
@@ -1027,7 +1044,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:05.772Z"
+      "generatedAt": "2026-08-20T01:39:44.243Z"
     },
     {
       "code": "XH",
@@ -1042,7 +1059,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:06.124Z"
+      "generatedAt": "2026-08-20T01:39:44.574Z"
     },
     {
       "code": "XJ",
@@ -1057,7 +1074,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:06.577Z"
+      "generatedAt": "2026-08-20T01:39:45.063Z"
     },
     {
       "code": "XL",
@@ -1072,7 +1089,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:09.323Z"
+      "generatedAt": "2026-08-20T01:39:48.490Z"
     },
     {
       "code": "XO",
@@ -1087,7 +1104,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:14.158Z"
+      "generatedAt": "2026-08-20T01:39:52.802Z"
     },
     {
       "code": "XQ",
@@ -1099,10 +1116,10 @@
       "invalidOrUnknown": false,
       "generationStatus": "generated",
       "assignmentStatus": "assigned",
-      "assignedAccountCount": 4,
-      "visibleCustomerCount": 4,
+      "assignedAccountCount": 6,
+      "visibleCustomerCount": 5,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:16.629Z"
+      "generatedAt": "2026-08-20T01:39:54.291Z"
     },
     {
       "code": "XT",
@@ -1117,7 +1134,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:18.823Z"
+      "generatedAt": "2026-08-20T01:39:56.712Z"
     },
     {
       "code": "XV",
@@ -1132,7 +1149,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:21.532Z"
+      "generatedAt": "2026-08-20T01:39:58.303Z"
     },
     {
       "code": "XX",
@@ -1147,7 +1164,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:24.795Z"
+      "generatedAt": "2026-08-20T01:40:02.171Z"
     },
     {
       "code": "XZ",
@@ -1162,7 +1179,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:28.830Z"
+      "generatedAt": "2026-08-20T01:40:04.859Z"
     },
     {
       "code": "Y5",
@@ -1177,7 +1194,7 @@
       "assignedAccountCount": 31,
       "visibleCustomerCount": 29,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:28.884Z"
+      "generatedAt": "2026-08-20T01:40:04.905Z"
     },
     {
       "code": "Z",
@@ -1192,7 +1209,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:28.911Z"
+      "generatedAt": "2026-08-20T01:40:04.921Z"
     },
     {
       "code": "Z1",
@@ -1207,7 +1224,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:28.964Z"
+      "generatedAt": "2026-08-20T01:40:04.985Z"
     }
   ],
   "visibleDetectedCodes": [
@@ -1296,30 +1313,30 @@
       "label": "ARTISAN PMP PRICING 2026 Rev 071726",
       "detected": true,
       "generated": true,
-      "rowCount": 7698,
+      "rowCount": 7854,
       "package": false,
       "invalidOrUnknown": false,
       "generationStatus": "generated",
       "assignmentStatus": "assigned",
-      "assignedAccountCount": 26,
-      "visibleCustomerCount": 19,
+      "assignedAccountCount": 28,
+      "visibleCustomerCount": 20,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:13.137Z"
+      "generatedAt": "2026-08-20T01:38:54.772Z"
     },
     {
       "code": "B5",
       "label": "ARTISAN LENS SYSTEM 2025 REV 022726",
       "detected": true,
       "generated": true,
-      "rowCount": 415,
+      "rowCount": 445,
       "package": true,
       "invalidOrUnknown": false,
       "generationStatus": "generated",
       "assignmentStatus": "assigned",
-      "assignedAccountCount": 56,
-      "visibleCustomerCount": 48,
+      "assignedAccountCount": 62,
+      "visibleCustomerCount": 50,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:14.562Z"
+      "generatedAt": "2026-08-20T01:38:56.201Z"
     },
     {
       "code": "C3",
@@ -1334,7 +1351,7 @@
       "assignedAccountCount": 3,
       "visibleCustomerCount": 3,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:14.633Z"
+      "generatedAt": "2026-08-20T01:38:56.283Z"
     },
     {
       "code": "CB",
@@ -1349,7 +1366,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:14.899Z"
+      "generatedAt": "2026-08-20T01:38:56.730Z"
     },
     {
       "code": "CD",
@@ -1364,7 +1381,7 @@
       "assignedAccountCount": 1,
       "visibleCustomerCount": 1,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:15.829Z"
+      "generatedAt": "2026-08-20T01:38:57.570Z"
     },
     {
       "code": "E4",
@@ -1379,7 +1396,7 @@
       "assignedAccountCount": 1,
       "visibleCustomerCount": 1,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:15.851Z"
+      "generatedAt": "2026-08-20T01:38:57.597Z"
     },
     {
       "code": "E5",
@@ -1394,7 +1411,7 @@
       "assignedAccountCount": 3,
       "visibleCustomerCount": 3,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:16.137Z"
+      "generatedAt": "2026-08-20T01:38:57.896Z"
     },
     {
       "code": "E6",
@@ -1406,10 +1423,10 @@
       "invalidOrUnknown": false,
       "generationStatus": "generated",
       "assignmentStatus": "assigned",
-      "assignedAccountCount": 1,
+      "assignedAccountCount": 2,
       "visibleCustomerCount": 1,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:16.698Z"
+      "generatedAt": "2026-08-20T01:38:58.376Z"
     },
     {
       "code": "E7",
@@ -1424,7 +1441,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:16.997Z"
+      "generatedAt": "2026-08-20T01:38:58.591Z"
     },
     {
       "code": "E8",
@@ -1439,22 +1456,22 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:17.053Z"
+      "generatedAt": "2026-08-20T01:38:58.629Z"
     },
     {
       "code": "G6",
       "label": "ARTISAN GENERAL PRICING 2026 Rev 071726",
       "detected": true,
       "generated": true,
-      "rowCount": 7655,
+      "rowCount": 7811,
       "package": false,
       "invalidOrUnknown": false,
       "generationStatus": "generated",
       "assignmentStatus": "assigned",
-      "assignedAccountCount": 198,
-      "visibleCustomerCount": 178,
+      "assignedAccountCount": 204,
+      "visibleCustomerCount": 182,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:23.461Z"
+      "generatedAt": "2026-08-20T01:39:05.358Z"
     },
     {
       "code": "J1",
@@ -1469,7 +1486,7 @@
       "assignedAccountCount": 2,
       "visibleCustomerCount": 2,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:24.409Z"
+      "generatedAt": "2026-08-20T01:39:06.166Z"
     },
     {
       "code": "J2",
@@ -1484,7 +1501,7 @@
       "assignedAccountCount": 2,
       "visibleCustomerCount": 2,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:25.173Z"
+      "generatedAt": "2026-08-20T01:39:07.218Z"
     },
     {
       "code": "M2",
@@ -1499,7 +1516,7 @@
       "assignedAccountCount": 1,
       "visibleCustomerCount": 1,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:26.176Z"
+      "generatedAt": "2026-08-20T01:39:07.892Z"
     },
     {
       "code": "M3",
@@ -1514,7 +1531,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:26.235Z"
+      "generatedAt": "2026-08-20T01:39:07.978Z"
     },
     {
       "code": "M5",
@@ -1529,7 +1546,7 @@
       "assignedAccountCount": 18,
       "visibleCustomerCount": 16,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:26.329Z"
+      "generatedAt": "2026-08-20T01:39:08.095Z"
     },
     {
       "code": "NB",
@@ -1544,7 +1561,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:27.951Z"
+      "generatedAt": "2026-08-20T01:39:10.591Z"
     },
     {
       "code": "NK",
@@ -1559,7 +1576,7 @@
       "assignedAccountCount": 1,
       "visibleCustomerCount": 1,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:29.646Z"
+      "generatedAt": "2026-08-20T01:39:11.708Z"
     },
     {
       "code": "NL",
@@ -1571,17 +1588,17 @@
       "invalidOrUnknown": false,
       "generationStatus": "generated",
       "assignmentStatus": "assigned",
-      "assignedAccountCount": 205,
+      "assignedAccountCount": 206,
       "visibleCustomerCount": 190,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:29.699Z"
+      "generatedAt": "2026-08-20T01:39:11.762Z"
     },
     {
       "code": "P6",
       "label": "ARTISAN Partner PRICING 2026 Rev 071726",
       "detected": true,
       "generated": true,
-      "rowCount": 7699,
+      "rowCount": 8346,
       "package": false,
       "invalidOrUnknown": false,
       "generationStatus": "generated",
@@ -1589,7 +1606,7 @@
       "assignedAccountCount": 29,
       "visibleCustomerCount": 25,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:41.833Z"
+      "generatedAt": "2026-08-20T01:39:23.852Z"
     },
     {
       "code": "S5",
@@ -1604,7 +1621,7 @@
       "assignedAccountCount": 14,
       "visibleCustomerCount": 11,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:38:42.868Z"
+      "generatedAt": "2026-08-20T01:39:24.761Z"
     },
     {
       "code": "TK",
@@ -1619,7 +1636,7 @@
       "assignedAccountCount": 1,
       "visibleCustomerCount": 1,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:00.204Z"
+      "generatedAt": "2026-08-20T01:39:39.047Z"
     },
     {
       "code": "VD",
@@ -1634,7 +1651,7 @@
       "assignedAccountCount": 19,
       "visibleCustomerCount": 18,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:00.694Z"
+      "generatedAt": "2026-08-20T01:39:39.489Z"
     },
     {
       "code": "VX",
@@ -1649,7 +1666,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:01.116Z"
+      "generatedAt": "2026-08-20T01:39:39.914Z"
     },
     {
       "code": "XC",
@@ -1664,7 +1681,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:03.464Z"
+      "generatedAt": "2026-08-20T01:39:42.631Z"
     },
     {
       "code": "XH",
@@ -1679,7 +1696,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:06.124Z"
+      "generatedAt": "2026-08-20T01:39:44.574Z"
     },
     {
       "code": "Y5",
@@ -1694,7 +1711,7 @@
       "assignedAccountCount": 31,
       "visibleCustomerCount": 29,
       "source": "price.xml",
-      "generatedAt": "2026-07-29T13:39:28.884Z"
+      "generatedAt": "2026-08-20T01:40:04.905Z"
     }
   ]
 }

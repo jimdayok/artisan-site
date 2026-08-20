@@ -59,6 +59,7 @@ export const pacificLabConfig = {
     icon: "leaf",
     image: `${pacificBase}/5e3ae8d-8c5-0df-6675-02843c0d66_Pacific_Artisan_Labs_Artisan_Quality.jpg`,
     imageAlt: "Pacific Artisan Labs optical quality detail",
+    panArtwork: true,
     body: [
       "Pacific carries the warm, independent spirit that shaped Artisan Lab Network from the beginning. The work is thoughtful, detailed, and rooted in the belief that practices deserve a lab relationship with real people behind it.",
       "From Portland, the team supports independent eye care with premium lens choices, consistent communication, and a craft mindset that respects every prescription and every patient experience.",
@@ -366,6 +367,7 @@ export const pikeLabConfig = {
     icon: "route",
     image: `${pikeBase}/1788cb0-b45c-0bb-6282-150e4b471e7_Artisan_Quality_PIKE.jpg`,
     imageAlt: "Pike Artisan Labs quality and production imagery",
+    panArtwork: true,
     body: [
       "Pike brings a practical, high-output mindset to the Artisan Lab Network. The energy is fast and precise, but never flashy for its own sake.",
       "From Indianapolis, Pike supports independent practices with production discipline, reliable service, and a steady focus on getting quality orders where they need to go.",

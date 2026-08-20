@@ -1,4 +1,5 @@
 import P6PriceListPage from "../P6PriceListPage";
+import ValueSystemPriceListPage from "../ValueSystemPriceListPage";
 import GeneratedInteractivePriceListPage from "../GeneratedInteractivePriceListPage";
 import { canonicalPriceListCode, getPriceListByCode, type PriceListCode } from "@/lib/portal/priceLists";
 import { isVisiblePriceListCode } from "@/lib/pricing/priceListCodes";
@@ -27,6 +28,10 @@ export default async function PortalPriceListCodePage({
 
   if (normalizedCode === "P6") {
     return <P6PriceListPage previewAccountNumber={query.account} />;
+  }
+
+  if (normalizedCode === "VD") {
+    return <ValueSystemPriceListPage previewAccountNumber={query.account} />;
   }
 
   return <GeneratedInteractivePriceListPage code={normalizedCode} previewAccountNumber={query.account} />;

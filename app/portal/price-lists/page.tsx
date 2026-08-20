@@ -10,6 +10,7 @@ import {
 } from "@/lib/portal/portalRoles";
 import { visiblePriceLists } from "@/lib/portal/priceLists";
 import { AdminAccessRequired } from "@/app/portal/admin/AdminShell";
+import ValueSystemRequirements from "@/app/portal/price-list/ValueSystemRequirements";
 
 export const dynamic = "force-dynamic";
 
@@ -60,6 +61,7 @@ export default async function EmployeePriceListsPage() {
                 </div>
                 <h2 className="mt-4 text-xl font-semibold text-[#172a28]">{priceList.label}</h2>
                 <p className="mt-2 text-sm text-[#706759]">{priceList.package ? "Package price list" : "Standard price list"}</p>
+                {priceList.code === "VD" ? <div className="mt-4"><ValueSystemRequirements compact /></div> : null}
                 {!priceList.generated && !priceList.r2Key ? <p className="mt-3 rounded-md border border-[#d8a15e] bg-[#fff7e8] p-3 text-xs leading-5 text-[#805519]">This assigned list does not have a generated or stored document yet.</p> : null}
                 <div className="mt-5 flex flex-wrap gap-2">
                   <Link href={onlineHref} className="inline-flex min-h-10 items-center gap-2 rounded-full bg-[#172a28] px-4 text-xs font-semibold text-white"><FileText className="h-4 w-4" /> Open online</Link>

@@ -84,6 +84,7 @@ export type LabLandingConfig = {
     image: string;
     imageAlt: string;
     icon: IconName;
+    panArtwork?: boolean;
   };
   difference: {
     eyebrow: string;
@@ -499,7 +500,13 @@ function Identity({ config }: { config: LabLandingConfig }) {
         <PremiumReveal className="relative">
           <div className="absolute -left-4 -top-4 hidden h-36 w-36 rounded-full border md:block" style={{ borderColor: config.accentSoft }} />
           <div className="premium-image-hover relative aspect-[4/5] overflow-hidden rounded-[2rem] shadow-[0_26px_70px_rgba(30,22,14,0.14)]">
-            <Image src={config.intro.image} alt={config.intro.imageAlt} fill sizes="(max-width: 1024px) 100vw, 46vw" className="object-cover" />
+            <Image
+              src={config.intro.image}
+              alt={config.intro.imageAlt}
+              fill
+              sizes="(max-width: 1024px) 100vw, 46vw"
+              className={`object-cover ${config.intro.panArtwork ? "aln-artisan-quality-pan" : ""}`}
+            />
           </div>
         </PremiumReveal>
         <PremiumReveal>

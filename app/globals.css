@@ -304,10 +304,31 @@ body {
   }
 }
 
+.aln-artisan-quality-pan {
+  object-position: 0% 50%;
+  animation: aln-artisan-quality-pan 5s ease-in-out infinite alternate;
+  will-change: object-position;
+}
+
+@keyframes aln-artisan-quality-pan {
+  from {
+    object-position: 0% 50%;
+  }
+
+  to {
+    object-position: 100% 50%;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .aln-contained-word {
     animation: none;
     transform: translateX(-12%);
+  }
+
+  .aln-artisan-quality-pan {
+    animation: none;
+    object-position: 50% 50%;
   }
 }
 

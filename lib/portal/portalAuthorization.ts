@@ -7,8 +7,10 @@ import type {
 } from "@/lib/portal/customers";
 import { getPortalCustomerTypeInfo } from "@/lib/portal/customerTypes";
 import { portalDashboardV1AccessIndex } from "@/lib/portal/dashboardV1AccessIndex";
+import { getDashboardV1AdminRows } from "@/lib/portal/adminDashboardV1";
 import {
   canAccessPortalAdmin,
+  filterRowsForPortalRole,
   getPortalStaffRole,
 } from "@/lib/portal/portalRoles";
 import {
@@ -115,8 +117,27 @@ export async function getAuthorizedPortalCustomers(email: string) {
   const hasStaffPortalAccess = canAccessPortalAdmin(portalRole);
 
   if (hasStaffPortalAccess) {
-    const accounts = adminAccountsFromIndex();
+    const accounts =
+      portalRole.kind === "admin"
+        ? adminAccountsFromIndex()
+        : filterRowsForPortalRole(portalRole, getDashboardV1AdminRows())
+            .map((row) =>
+              adminAccountsFromIndex().find(
+                (account) => account.acctId === row.acctId.trim().toUpperCase()
+              )
+            )
+            .filter((account): account is PortalUserAccount => Boolean(account));
     if (accounts.length === 0) {
+      if (portalRole.kind === "sales-rep") {
+        logPortalAuth({
+          email,
+          userFound: true,
+          role: portalRole.kind,
+          accountCount: 0,
+          authorizationDecision: "sales-rep-fail-closed-no-assignment",
+        });
+        return [];
+      }
       const workbookAccounts = await getAllowedAccountsForEmail(email);
       logPortalAuth({
         email,
@@ -190,11 +211,24 @@ export async function getAuthorizedPortalCustomer(
 
 export async function getPortalAuthorization(email: string) {
   const portalRole = getPortalStaffRole(email);
-  if (canAccessPortalAdmin(portalRole)) {
+  if (portalRole.kind === "admin") {
     return {
       role: "admin" as const,
       email,
       accounts: await getAllowedAccountsForEmail(email),
+    };
+  }
+  if (portalRole.kind === "sales-rep") {
+    const customers = await getAuthorizedPortalCustomers(email);
+    return {
+      role: "sales-rep" as const,
+      email,
+      accounts: customers.map((customer) => ({
+        acctId: customer.accountNumber,
+        accountNumbers: [],
+        organizationAccountNumber: "",
+        organizationName: customer.practiceName,
+      })),
     };
   }
 

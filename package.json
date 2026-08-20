@@ -16,6 +16,7 @@
     "portal:generate-dashboard-v1:launch": "node scripts/generate-portal-dashboard-v1.mjs --ignore-empty-summary-rows --allow-duplicate-acct-id --allow-invalid-user-account-links",
     "portal:generate-dashboard-v1:launch-safe": "node scripts/generate-portal-dashboard-v1.mjs --ignore-empty-summary-rows --allow-duplicate-acct-id --allow-invalid-user-account-links",
     "portal:bundle-dashboard-v1": "node scripts/bundle-portal-dashboard-v1.mjs",
+    "portal:generate-net-sales-history": "node scripts/generate-portal-net-sales-history.mjs",
     "locator:generate": "node scripts/generate-patient-locator-data.mjs",
     "build:pricing": "node scripts/build-pricing.mjs",
     "pricing:generate": "node scripts/generate-price-list-data.mjs",
@@ -28,7 +29,8 @@
     "build:whitepaper": "typst compile publications/aln-strategic-white-paper/main.typ publications/aln-strategic-white-paper/output/ALN-Strategic-White-Paper.pdf",
     "typecheck": "NODE_OPTIONS='--max-old-space-size=12288' tsc --noEmit",
     "test:pricing": "node --test tests/pricing-dvi-generation.test.mjs",
-    "test:optical": "node --experimental-default-type=module --test tests/optical-calculations.test.ts tests/optical-geometry.test.ts"
+    "test:optical": "node --experimental-default-type=module --test tests/optical-calculations.test.ts tests/optical-geometry.test.ts",
+    "test:portal": "node --experimental-strip-types --test tests/account-scope.test.ts tests/portal-role-policy.test.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1046.0",

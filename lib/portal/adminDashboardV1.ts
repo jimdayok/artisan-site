@@ -18,6 +18,12 @@ export type DashboardV1AdminManifest = {
   data_refresh_date: string;
   row_count_output_accounts: number;
   users_with_invalid_account_ids: number;
+  data_dictionary?: Array<{
+    source_file: string;
+    row_count: number;
+    fields: string[];
+  }>;
+  field_precedence_documentation?: string[];
 };
 
 export type DashboardV1AdminAccount = {
@@ -26,6 +32,7 @@ export type DashboardV1AdminAccount = {
   all_account_numbers: string;
   customer_type?: string;
   sales_rep?: string;
+  territory?: string;
   lab?: string;
   state?: string;
   latest_date_shipped?: string;
@@ -68,6 +75,7 @@ export type DashboardV1AdminRow = {
   customerType: string;
   salesRepCode: string;
   salesRep: string;
+  territory: string;
   lab: string;
   state: string;
   address: string;
@@ -287,6 +295,7 @@ export function getDashboardV1AdminRows() {
       customerType: parseCustomerType(account.customer_type || ""),
       salesRepCode,
       salesRep: salesRepLabel(salesRepCode),
+      territory: detail?.territory || account.territory || "",
       lab: detail?.lab_name || account.lab || "—",
       state: detail?.state || account.state || "",
       address: detail?.address || "",

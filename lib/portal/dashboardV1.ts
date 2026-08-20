@@ -102,6 +102,7 @@ export type PortalDashboardV1Account = {
   phone: string;
   state: string;
   sales_rep?: string;
+  territory?: string;
   used_price_lists?: string[];
   data_refresh_date: string;
   tier_status: {

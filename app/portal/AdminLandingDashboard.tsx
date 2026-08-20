@@ -933,6 +933,13 @@ export default function AdminLandingDashboard({
     if (b === "Unassigned") return -1;
     return a.localeCompare(b);
   });
+  const employeeRepPreviewOptions = [
+    ...new Map(
+      allRows
+        .filter((row) => row.salesRepCode && row.salesRep)
+        .map((row) => [row.salesRepCode, row.salesRep] as const)
+    ).entries(),
+  ].sort((a, b) => a[1].localeCompare(b[1]));
   const options = {
     divisions: [...new Set(roleRows.map((row) => row.customerType).filter(Boolean))].sort(),
     labs: [...new Set(roleRows.map((row) => row.lab).filter((value) => value && value !== "—"))].sort(),
@@ -946,6 +953,36 @@ export default function AdminLandingDashboard({
       adminEmail={authenticatedEmail}
       eyebrow="ALN Sales Intervention"
     >
+      {role.kind === "admin" ? (
+        <section className="mt-6 rounded-md border border-[#c9af79] bg-[#fffaf1]/94 p-5 shadow-[0_18px_55px_rgba(23,42,40,0.1)] sm:p-6">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b7650]">
+                Role-specific dashboard
+              </p>
+              <h2 className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-[#172a28]">
+                Preview the exact rep experience
+              </h2>
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-[#706759]">
+                Rep previews use the same server-side account scope as that employee login.
+                Return to All Reps to use the organization admin workspace.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {employeeRepPreviewOptions.map(([code, label]) => (
+                <Link
+                  key={code}
+                  href={`/portal/admin?repView=${encodeURIComponent(code)}`}
+                  className={adminButtonClass}
+                >
+                  View {label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       {role.kind === "sales-rep" ? (
         <SalesRepResourceCenter priceListCodes={options.priceLists} />
       ) : null}

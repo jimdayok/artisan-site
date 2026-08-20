@@ -1,6 +1,11 @@
 import { headers } from "next/headers";
 import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
 import AdminLandingDashboard from "@/app/portal/AdminLandingDashboard";
+import EmployeeDashboard from "@/app/portal/EmployeeDashboard";
+import {
+  buildEmployeeDashboard,
+  employeeRepOptions,
+} from "@/lib/portal/employeeDashboard";
 import {
   getDefaultComparisonMode,
   parseComparisonMode,
@@ -31,6 +36,7 @@ export default async function PortalAdminPage({
     minimumBaselineJpd?: string;
     minimumJpdLost?: string;
     email?: string;
+    repView?: string;
   }>;
 }) {
   const authenticatedEmail = getPortalAuthenticatedEmailFromHeaders(
@@ -45,6 +51,19 @@ export default async function PortalAdminPage({
   const query = await searchParams;
   const mode =
     parseComparisonMode(query.view) ?? getDefaultComparisonMode();
+  const employeeDashboard =
+    role.kind === "sales-rep" || (role.kind === "admin" && query.repView)
+      ? buildEmployeeDashboard(role, query.repView)
+      : undefined;
+
+  if (employeeDashboard) {
+    return (
+      <EmployeeDashboard
+        model={employeeDashboard}
+        repOptions={employeeRepOptions()}
+      />
+    );
+  }
 
   return (
     <AdminLandingDashboard

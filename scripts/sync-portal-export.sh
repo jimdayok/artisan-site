@@ -12,6 +12,7 @@ REPO="${PORTAL_REPO:-/Users/jimday/Documents/GitHub/artisan-site}"
 DEST_REL="private-site/portal/portal_export.json"
 LOCATION_DEST_REL="private-site/portal/portal_locations.json"
 BUNDLE_REL="lib/portal/generated/dashboardV1Bundle.json"
+NET_SALES_HISTORY_REL="private-site/portal/rep_net_sales_history.json"
 DEST="$REPO/$DEST_REL"
 LOCATION_DEST="$REPO/$LOCATION_DEST_REL"
 TEMP_DEST=""
@@ -149,13 +150,14 @@ log "Copied portal location export into repo."
 cd "$REPO"
 retry_command "$COMMAND_RETRY_ATTEMPTS" npm run portal:generate-dashboard-v1:launch-safe
 retry_command "$COMMAND_RETRY_ATTEMPTS" npm run portal:bundle-dashboard-v1
+retry_command "$COMMAND_RETRY_ATTEMPTS" npm run portal:generate-net-sales-history
 
 TEMP_INDEX="$(mktemp "/tmp/artisan-portal-index.XXXXXX")"
 rm -f "$TEMP_INDEX"
 log "Preparing isolated Git index."
 GIT_INDEX_FILE="$TEMP_INDEX" git read-tree HEAD
 log "Staging portal refresh."
-GIT_INDEX_FILE="$TEMP_INDEX" git add -- "$DEST_REL" "$LOCATION_DEST_REL" "$BUNDLE_REL"
+GIT_INDEX_FILE="$TEMP_INDEX" git add -- "$DEST_REL" "$LOCATION_DEST_REL" "$BUNDLE_REL" "$NET_SALES_HISTORY_REL"
 
 if GIT_INDEX_FILE="$TEMP_INDEX" git diff --cached --quiet; then
   log "No portal changes detected. Skipping commit and push."
@@ -171,7 +173,7 @@ git update-ref refs/heads/main "$PORTAL_COMMIT" "$PORTAL_PARENT_COMMIT"
 # Keep the normal index aligned with the new commit without disturbing
 # unrelated staged files.
 log "Aligning the working index."
-git add -- "$DEST_REL" "$LOCATION_DEST_REL" "$BUNDLE_REL"
+git add -- "$DEST_REL" "$LOCATION_DEST_REL" "$BUNDLE_REL" "$NET_SALES_HISTORY_REL"
 log "Pushing portal refresh."
 retry_command "$PUSH_RETRY_ATTEMPTS" git push origin main
 log "Portal sync complete."

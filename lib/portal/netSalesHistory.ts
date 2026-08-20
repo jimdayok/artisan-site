@@ -2,6 +2,7 @@ import "server-only";
 
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
+import packagedNetSalesHistory from "@/lib/portal/generated/repNetSalesHistory.json";
 import { scopeAccountNetSalesRows } from "@/lib/portal/netSalesHistoryPolicy";
 
 export const POWER_BI_PRODUCTION_SOURCE = {
@@ -61,7 +62,7 @@ export type NetSalesHistoryState =
       sourcePath?: string;
     };
 
-const DEFAULT_HISTORY_PATH = "private-site/portal/rep_net_sales_history.json";
+const DEFAULT_HISTORY_PATH = "lib/portal/generated/repNetSalesHistory.json";
 
 function text(value: unknown) {
   return String(value ?? "").trim();
@@ -161,7 +162,7 @@ function validateRows(value: unknown) {
 export function loadNetSalesHistory(): NetSalesHistoryState {
   const source = resolveHistoryPath();
 
-  if (!existsSync(source.absolutePath)) {
+  if (source.configured && !existsSync(source.absolutePath)) {
     return {
       status: source.configured ? "error" : "not-configured",
       message: source.configured
@@ -172,7 +173,9 @@ export function loadNetSalesHistory(): NetSalesHistoryState {
   }
 
   try {
-    const parsed = JSON.parse(readFileSync(source.absolutePath, "utf8")) as NetSalesHistoryFile;
+    const parsed = source.configured
+      ? (JSON.parse(readFileSync(source.absolutePath, "utf8")) as NetSalesHistoryFile)
+      : (packagedNetSalesHistory as NetSalesHistoryFile);
     const manifest = validateManifest(parsed.manifest);
     const rows = validateRows(parsed.rows);
 

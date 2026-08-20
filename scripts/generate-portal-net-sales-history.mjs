@@ -4,7 +4,7 @@ import path from "node:path";
 const repo = process.cwd();
 const sourcePath = path.join(repo, "private-site/portal/portal_export.json");
 const bundlePath = path.join(repo, "lib/portal/generated/dashboardV1Bundle.json");
-const outputPath = path.join(repo, "private-site/portal/rep_net_sales_history.json");
+const outputPath = path.join(repo, "lib/portal/generated/repNetSalesHistory.json");
 const monthCount = 27;
 
 function readJson(filePath) {

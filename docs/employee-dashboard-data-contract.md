@@ -48,7 +48,7 @@ The production Power Automate query filters monthly history with `Date[Date]` an
 
 ## Synchronized Net Sales history
 
-`scripts/generate-portal-net-sales-history.mjs` converts the existing Power Automate account export into `private-site/portal/rep_net_sales_history.json`. `PORTAL_REP_NET_SALES_HISTORY_PATH` remains available only as an explicit deployment override. The generated file has this shape:
+`scripts/generate-portal-net-sales-history.mjs` converts the existing Power Automate account export into the server-only packaged artifact `lib/portal/generated/repNetSalesHistory.json`. The application imports that generated artifact directly so Vercel includes the verified history in its server bundle; it is not a second semantic model. `PORTAL_REP_NET_SALES_HISTORY_PATH` remains available only as an explicit deployment override. The generated file has this shape:
 
 ```json
 {

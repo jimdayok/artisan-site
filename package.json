@@ -30,7 +30,7 @@
     "typecheck": "NODE_OPTIONS='--max-old-space-size=12288' tsc --noEmit",
     "test:pricing": "node --test tests/pricing-dvi-generation.test.mjs",
     "test:optical": "node --experimental-default-type=module --test tests/optical-calculations.test.ts tests/optical-geometry.test.ts",
-    "test:portal": "node --experimental-strip-types --test tests/account-scope.test.ts tests/portal-role-policy.test.ts"
+    "test:portal": "node --experimental-strip-types --test tests/account-scope.test.ts tests/net-sales-history-packaging.test.ts tests/portal-role-policy.test.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1046.0",

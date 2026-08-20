@@ -1,6 +1,6 @@
 import "server-only";
 
-import { canonicalPriceListCode } from "@/lib/portal/priceLists";
+import { normalizeAssignedPriceListCodes } from "@/lib/portal/assignedPriceLists";
 import { portalDashboardV1Bundle } from "@/lib/portal/dashboardV1Bundle";
 import {
   normalizeSalesRepCode,
@@ -254,13 +254,11 @@ export function getDashboardV1AdminRows() {
     const quality = detail?.quality_metrics;
     const supplemental = detail?.supplemental_intelligence;
     const programFlags = detail?.program_usage?.flags;
-    const priceListCodes = [
-      ...new Set(
-        (detail?.used_price_lists ?? account.price_lists ?? [])
-          .map((entry) => canonicalPriceListCode(String(entry || "")))
-          .filter(Boolean)
-      ),
-    ].sort((a, b) => a.localeCompare(b));
+    const priceListCodes = normalizeAssignedPriceListCodes(
+      (detail?.used_price_lists ?? account.price_lists ?? []).map((entry) =>
+        String(entry || "")
+      )
+    );
     const ppmJobs = Number(jobs?.ppm ?? 0);
     const pmJobs = Number(jobs?.pm ?? 0);
     const cmJobs = Number(jobs?.cm ?? account.cm_jobs ?? 0);

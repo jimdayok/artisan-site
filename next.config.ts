@@ -58,6 +58,7 @@ const nextConfig: NextConfig = {
       { source: "/contactus", destination: "/new-lab-partner", permanent: true },
       { source: "/practice-resources", destination: "/provider-resources", permanent: true },
       { source: "/pacificartisanlabs", destination: "/pacific-artisan-labs", permanent: true },
+      { source: "/labs/pacific-artisan-labs", destination: "/pacific-artisan-labs", permanent: true },
       { source: "/pikeartisanlabs", destination: "/pike-artisan-labs", permanent: true },
       { source: "/practicematters", destination: "/newsletters/practice-matters", permanent: true },
       { source: "/pressreleases", destination: "/about#press-releases", permanent: true },
@@ -78,6 +79,16 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "preview.artisanlabnetwork.com" }],
+        headers: [
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow, noarchive, nosnippet",
+          },
+        ],
+      },
       {
         source: "/:path*",
         headers: [

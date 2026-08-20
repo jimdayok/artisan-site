@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { PUBLIC_SITE_URL } from "@/lib/siteMetadata";
 
 const publicRoutes = [
   "",
@@ -34,12 +35,10 @@ const publicRoutes = [
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://www.artisanslabs.com";
-
   return publicRoutes
     .filter((route) => !route.startsWith("/private"))
     .map((route) => ({
-      url: `${baseUrl}${route}`,
+      url: `${PUBLIC_SITE_URL}${route}`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: route === "" ? 1 : 0.6,

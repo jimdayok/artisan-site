@@ -16,6 +16,7 @@ import {
   Users,
 } from "lucide-react";
 import { AdminCopyButton } from "@/app/portal/admin/AdminCopyButton";
+import AdminRepReview from "@/app/portal/AdminRepReview";
 import { AdminShell, adminButtonClass } from "@/app/portal/admin/AdminShell";
 import {
   getDashboardV1AdminRows,
@@ -38,6 +39,7 @@ import {
   visiblePriceLists,
   type PortalPriceList,
 } from "@/lib/portal/priceLists";
+import { buildAdminRepReview } from "@/lib/portal/adminRepReview";
 
 type DashboardQuery = {
   q?: string;
@@ -940,6 +942,7 @@ export default function AdminLandingDashboard({
         .map((row) => [row.salesRepCode, row.salesRep] as const)
     ).entries(),
   ].sort((a, b) => a[1].localeCompare(b[1]));
+  const adminRepReview = role.kind === "admin" ? buildAdminRepReview(role) : null;
   const options = {
     divisions: [...new Set(roleRows.map((row) => row.customerType).filter(Boolean))].sort(),
     labs: [...new Set(roleRows.map((row) => row.lab).filter((value) => value && value !== "—"))].sort(),
@@ -986,6 +989,8 @@ export default function AdminLandingDashboard({
       {role.kind === "sales-rep" ? (
         <SalesRepResourceCenter priceListCodes={options.priceLists} />
       ) : null}
+
+      {adminRepReview ? <AdminRepReview model={adminRepReview} /> : null}
 
       <AccountCommandStrip
         mode={mode}

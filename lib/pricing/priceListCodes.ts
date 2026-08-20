@@ -1,6 +1,6 @@
 import hiddenPriceListCodeList from "@/config/hidden-price-list-codes.json";
 
-export const PACKAGE_PRICE_LIST_CODES = ["B5", "M5", "Y5", "S5", "C3", "TK", "VX"] as const;
+export const PACKAGE_PRICE_LIST_CODES = ["B5", "M5", "Y5", "S5", "C3", "TK", "VD", "VX"] as const;
 
 export const PRICE_LIST_DISPLAY_NAMES: Record<string, string> = {
   E5: "Special Partner Pricing",
@@ -21,6 +21,7 @@ export const PRICE_LIST_DISPLAY_NAMES: Record<string, string> = {
   NK: "Nike Lens Systems",
   TK: "Tokai Lens Systems",
   VX: "Varilux Lens Systems",
+  VD: "2025 Artisan Value System Pricing",
 };
 
 const packagePriceListCodes = new Set<string>(PACKAGE_PRICE_LIST_CODES);

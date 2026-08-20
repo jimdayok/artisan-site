@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import CookieConsentProvider from "./components/CookieConsentProvider";
 import PreviewPreferenceCookie from "./components/PreviewPreferenceCookie";
 import TrainingHubReturnButton from "./components/TrainingHubReturnButton";
+import { PUBLIC_SITE_URL } from "@/lib/siteMetadata";
 import "./globals.css";
 
 const nunito = localFont({
@@ -17,7 +18,7 @@ const nunito = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.artisanslabs.com"),
+  metadataBase: new URL(PUBLIC_SITE_URL),
   applicationName: "Artisan Lab Network",
   title: {
     default: "Artisan Lab Network",
@@ -34,7 +35,7 @@ export const metadata: Metadata = {
     title: "Artisan Lab Network",
     description:
       "Independent optical lab partnership, provider resources, programs, and lab access for eye care practices.",
-    url: "https://www.artisanslabs.com",
+    url: PUBLIC_SITE_URL,
     images: [
       {
         url: "/aln-icon.png",

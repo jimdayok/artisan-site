@@ -8,11 +8,11 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import EmbeddedTypeform from "../components/analytics/EmbeddedTypeform";
 
 const PROGRAM_CODE = "AQU2630";
 const TRIAL_URL =
   "https://form.typeform.com/to/WCU5ReWQ?program=AQU2630&source=acquios";
-const CONTACT_FORM_URL = "https://form.typeform.com/to/m0lQ9zjD";
 const HERO_VIDEO_SRC = new URL("../../backgroundvid1.mp4", import.meta.url).toString();
 
 const offerPoints = ["30% back", "90 day trial", "New customers only", "No long term commitment"];
@@ -210,11 +210,12 @@ function ContactModal({ open, onClose }: { open: boolean; onClose: () => void })
                 x
               </button>
             </div>
-            <iframe
-              src={CONTACT_FORM_URL}
+            <EmbeddedTypeform
+              formId="m0lQ9zjD"
+              formName="general_contact"
+              leadType="sales_inquiry"
               className="min-h-0 flex-1 bg-[#f5f1eb]"
               title="Contact Artisan Lab Network"
-              allow="camera; microphone; autoplay; encrypted-media;"
             />
           </motion.div>
         </motion.div>

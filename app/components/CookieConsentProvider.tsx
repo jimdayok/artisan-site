@@ -11,6 +11,7 @@ import {
 import { Analytics } from "@vercel/analytics/next";
 import { track } from "@vercel/analytics";
 import { createContext, useContext, useEffect, useMemo } from "react";
+import AnalyticsProvider from "./analytics/AnalyticsProvider";
 
 type CookieConsentContextValue = {
   functional: boolean;
@@ -91,6 +92,7 @@ function ConsentStateBridge({ children }: { children: React.ReactNode }) {
   return (
     <CookieConsentContext.Provider value={value}>
       {children}
+      <AnalyticsProvider measurementConsent={analytics} />
       {analytics ? <Analytics /> : null}
     </CookieConsentContext.Provider>
   );

@@ -10,9 +10,9 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import EmbeddedTypeform from "../components/analytics/EmbeddedTypeform";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
-const CONTACT_FORM_URL = "https://form.typeform.com/to/m0lQ9zjD";
 const CAMBER_PURE_HREF = "/provider-resources#iot";
 const PROFESSIONAL_SERVICES_HREF = "/provider-resources/professional-resources";
 const OPTICAL_ENGINEERING_HREF = "/optical-engineering";
@@ -257,11 +257,12 @@ function ContactModal({
                 x
               </button>
             </div>
-            <iframe
-              src={CONTACT_FORM_URL}
+            <EmbeddedTypeform
+              formId="m0lQ9zjD"
+              formName="general_contact"
+              leadType="sales_inquiry"
               className="min-h-0 flex-1 bg-[#f5f1eb]"
               title="Contact Artisan Lab Network"
-              allow="camera; microphone; autoplay; encrypted-media;"
             />
           </motion.div>
         </motion.div>

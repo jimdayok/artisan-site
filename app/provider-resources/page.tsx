@@ -27,6 +27,8 @@ import {
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { artisanControlClass, artisanSegmentClass, artisanSegmentGroupClass } from "../components/controlStyles";
+import { sanitizeDestinationUrl, sanitizeSearchTerm } from "@/lib/analytics/context";
+import { trackEvent } from "@/lib/analytics/events";
 
 type ResourceType =
   | "PDF"
@@ -694,12 +696,35 @@ function ResourceLink({ resource, dense = false }: { resource: Resource; dense?:
   const className =
     "group relative block h-full rounded-lg border border-[#d7ded9] bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-[#0f766e] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0f766e]";
 
+  const trackResourceOpen = () => {
+    const destinationUrl = sanitizeDestinationUrl(resource.href, window.location.origin);
+    trackEvent("resource_view", {
+      resource_name: resource.title,
+      resource_type: resource.type,
+      brand: resource.brandLabel,
+      product: resource.title,
+      destination_url: destinationUrl,
+    });
+
+    if (resource.type === "PDF") {
+      const fileName = decodeURIComponent(resource.href.split("/").pop() ?? resource.title);
+      trackEvent("resource_download", {
+        file_name: fileName,
+        file_extension: fileName.split(".").pop()?.toLowerCase() ?? "pdf",
+        resource_name: resource.title,
+        brand: resource.brandLabel,
+        product: resource.title,
+        source_page: window.location.pathname,
+      });
+    }
+  };
+
   return external(resource.href) ? (
-    <a href={resource.href} className={className} target={resource.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer">
+    <a href={resource.href} className={className} target={resource.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer" data-analytics-handled="resource" onClick={trackResourceOpen}>
       {body}
     </a>
   ) : (
-    <Link href={resource.href} className={className}>
+    <Link href={resource.href} className={className} data-analytics-handled="resource" onClick={trackResourceOpen}>
       {body}
     </Link>
   );
@@ -742,6 +767,7 @@ export default function ProviderResourcesPage({
   const [sectionNavDismissed, setSectionNavDismissed] = useState(false);
   const [activeSectionHref, setActiveSectionHref] = useState(sectionNavItems[0][1]);
   const mobileSectionNavRef = useRef<HTMLDivElement>(null);
+  const lastSearchSignature = useRef("");
   const deferredQuery = useDeferredValue(query);
 
   useEffect(() => {
@@ -805,16 +831,38 @@ export default function ProviderResourcesPage({
     () => searchResources(selectedBrand.resources, deferredQuery, activeFilter),
     [selectedBrand, deferredQuery, activeFilter]
   );
-  const globalResults = useMemo(
-    () => searchResources(allResources, deferredQuery, activeFilter).slice(0, 12),
+  const allGlobalResults = useMemo(
+    () => searchResources(allResources, deferredQuery, activeFilter),
     [deferredQuery, activeFilter]
   );
+  const globalResults = allGlobalResults.slice(0, 12);
   const groupedResources = categoryOrder
     .map((category) => ({
       category,
       resources: visibleBrandResources.filter((item) => item.category === category),
     }))
     .filter((group) => group.resources.length > 0);
+
+  useEffect(() => {
+    const normalized = query.trim();
+    if (normalized.length < 2) return;
+
+    const timer = window.setTimeout(() => {
+      const safeTerm = sanitizeSearchTerm(normalized);
+      const signature = safeTerm ?? "redacted";
+      if (lastSearchSignature.current === signature) return;
+      lastSearchSignature.current = signature;
+      trackEvent("resource_search", {
+        ...(safeTerm ? { search_term: safeTerm } : {}),
+        search_term_length: normalized.length,
+        search_result_count: allGlobalResults.length,
+        resource_category: activeFilter,
+        brand_filter: "all",
+      });
+    }, 750);
+
+    return () => window.clearTimeout(timer);
+  }, [activeFilter, allGlobalResults.length, query]);
 
   return (
     <main className="min-h-screen bg-[#f7f8f5] text-[#111827]">
@@ -865,6 +913,27 @@ export default function ProviderResourcesPage({
                     <a
                       key={`hero-result-${item.brand}-${item.title}`}
                       href={item.href}
+                      data-analytics-handled="resource"
+                      onClick={() => {
+                        trackEvent("resource_view", {
+                          resource_name: item.title,
+                          resource_type: item.type,
+                          brand: item.brandLabel,
+                          product: item.title,
+                          destination_url: sanitizeDestinationUrl(item.href, window.location.origin),
+                        });
+                        if (item.type === "PDF") {
+                          const fileName = decodeURIComponent(item.href.split("/").pop() ?? item.title);
+                          trackEvent("resource_download", {
+                            file_name: fileName,
+                            file_extension: fileName.split(".").pop()?.toLowerCase() ?? "pdf",
+                            resource_name: item.title,
+                            brand: item.brandLabel,
+                            product: item.title,
+                            source_page: window.location.pathname,
+                          });
+                        }
+                      }}
                       className="grid gap-1 px-4 py-3 text-left transition hover:bg-white/8"
                     >
                       <span className="flex items-center gap-2 text-sm font-semibold text-white">
@@ -1067,7 +1136,13 @@ export default function ProviderResourcesPage({
                     {index > 0 ? <span aria-hidden="true" className="px-1 text-[#c8bda9]">|</span> : null}
                     <button
                       type="button"
-                      onClick={() => setActiveFilter(filter)}
+                      onClick={() => {
+                        setActiveFilter(filter);
+                        trackEvent("resource_filter", {
+                          resource_type: filter,
+                          brand: activeBrand,
+                        });
+                      }}
                       className={artisanSegmentClass(activeFilter === filter)}
                     >
                       {filter}
@@ -1109,7 +1184,13 @@ export default function ProviderResourcesPage({
                         key={brand.id}
                         id={brand.id}
                         type="button"
-                        onClick={() => setActiveBrand(brand.id)}
+                        onClick={() => {
+                          setActiveBrand(brand.id);
+                          trackEvent("resource_filter", {
+                            brand: brand.label,
+                            resource_type: activeFilter,
+                          });
+                        }}
                         className={`flex min-h-11 w-full items-center justify-between rounded-full border px-4 py-2.5 text-left text-sm font-semibold transition ${
                           activeBrand === brand.id
                             ? "border-[#d8c49b] bg-[#d8c49b] text-[#172a28]"

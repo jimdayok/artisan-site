@@ -293,7 +293,16 @@ The resulting reports combine query, landing page, impressions, clicks, CTR, and
 
 ## Existing Kajabi site implementation
 
-The repository contains the new/preview Next.js site only. The legacy `www.artisanlabnetwork.com` site is Kajabi and must be updated in its site-wide Custom Code area after first checking that Kajabi does not already load GA4/GTM. Remove or consolidate any direct `gtag.js`, Universal Analytics, or second GTM container before adding the shared container.
+The repository contains the new/preview Next.js site only. The legacy `www.artisanlabnetwork.com` site is Kajabi. On August 21, 2026, its built-in direct GA4 integration was disabled and the shared GTM implementation was installed in the site-wide Header Page Scripts field.
+
+The authenticated audit on August 21, 2026 found:
+
+- Kajabi's built-in **Google Analytics** integration had directly loaded `G-SBTEQQE2LS`; it is now disabled to prevent duplicate collection.
+- The site-wide **Header Page Scripts** field now contains the canonical snippet below.
+- No cookie-consent manager or analytics preference control was present on the legacy public site.
+- The canonical production snippet for this site is [`docs/kajabi-analytics-snippet.html`](./kajabi-analytics-snippet.html). It uses the shared GTM container, labels traffic `site_version=existing`, denies all advertising consent, respects Global Privacy Control, sanitizes URLs, and instruments the comparable legacy CTAs/resources/content.
+
+The linked file is the deployment source of truth. The shorter example below explains the integration pattern; do not paste it over the canonical deployed snippet.
 
 Use the same GTM ID and GA4 property as the new site. Set `site_version` to `existing`. In the Kajabi consent callback, call the loader below with `true` only when Analytics/Measurement consent is granted, and with `false` when it is rejected or revoked.
 
@@ -432,12 +441,16 @@ Use the same GTM ID and GA4 property as the new site. Set `site_version` to `exi
 
   function consent(value) {
     w.dataLayer = w.dataLayer || [];
-    w.dataLayer.push(["consent", "update", {
+    pushGoogleTagCommand("consent", "update", {
       analytics_storage: value ? "granted" : "denied",
       ad_storage: "denied",
       ad_user_data: "denied",
       ad_personalization: "denied"
-    }]);
+    });
+  }
+
+  function pushGoogleTagCommand() {
+    w.dataLayer.push(arguments);
   }
 
   w.alnAnalyticsConsent = function (granted) {
@@ -451,13 +464,13 @@ Use the same GTM ID and GA4 property as the new site. Set `site_version` to `exi
       return;
     }
     loaded = true;
-    w.dataLayer.push(["consent", "default", {
+    pushGoogleTagCommand("consent", "default", {
       analytics_storage: "denied",
       ad_storage: "denied",
       ad_user_data: "denied",
       ad_personalization: "denied",
       wait_for_update: 500
-    }]);
+    });
     consent(true);
     w.dataLayer.push({
       event: "analytics_context",
@@ -468,6 +481,10 @@ Use the same GTM ID and GA4 property as the new site. Set `site_version` to `exi
       page_path: w.location.pathname,
       page_title: d.title,
       analytics_schema_version: "1.0"
+    });
+    w.dataLayer.push({
+      "gtm.start": new Date().getTime(),
+      event: "gtm.js"
     });
     var script = d.createElement("script");
     script.async = true;
@@ -487,7 +504,7 @@ Use the same GTM ID and GA4 property as the new site. Set `site_version` to `exi
 </script>
 ```
 
-Do not call `alnAnalyticsConsent(true)` automatically. Wire it to the legacy site's actual consent decision. The legacy site still needs the same CTA/event pushes for clicks/forms; copy the exact event names and parameters from this matrix. Typeform submissions must use the official Typeform `onSubmit` callback or an approved successful completion integration—never a form-open event.
+The deployed legacy snippet preserves the site's current analytics behavior by granting measurement storage when Global Privacy Control is not enabled; advertising storage remains denied. This is an operational default, not a legal conclusion. If Artisan adopts a consent-management platform, remove the automatic measurement start and wire `alnAnalyticsConsent(true|false)` to the visitor's actual choice. Typeform submissions still require the official Typeform `onSubmit` callback, webhook, or an approved successful-completion integration—never a form-open event.
 
 If the legacy site already has a GTM container, consolidate its tags into the shared container rather than nesting or loading two containers. Validate the legacy site with Tag Assistant before publishing.
 
@@ -549,7 +566,7 @@ npm run lint
 npm run build
 ```
 
-The automated suite verifies lab mapping, PII-safe URL/search handling, attribution, private-route exclusion, consent gating, one GTM component, absence of direct GA4 loading, and successful-submit Typeform wiring.
+The automated suite verifies lab mapping, PII-safe URL/search handling, attribution, private-route exclusion, consent gating, gtag-compatible Consent Mode commands, one GTM component, the Kajabi GTM bootstrap order, absence of direct GA4 loading, and successful-submit Typeform wiring.
 
 ### GTM Preview and browser
 
@@ -602,7 +619,7 @@ This preserves direct existing-versus-preview comparison before cutover and clea
 ## Known manual boundaries
 
 - Google IDs, GTM tags/triggers, key-event settings, custom definitions, Search Console linking, retention, filters, and permissions require authenticated Google access.
-- The Kajabi site is not in this repository, so its source and current tags must be audited before inserting the shared consent-gated snippet.
+- The Kajabi site is configured outside this repository. Keep its deployed Header Page Scripts synchronized with `docs/kajabi-analytics-snippet.html` and revalidate after any Kajabi theme change.
 - External Typeform and HubSpot completion events require their own admin/webhook/return-page configuration. Current events accurately represent starts/clicks, not completed accounts or booked meetings.
 - Pipedrive custom-field creation/mapping requires Pipedrive and Typeform integration access.
 - Consent/banner language and retention policy remain business/legal decisions; the code implements the current site's basic consent behavior and avoids advertising storage.

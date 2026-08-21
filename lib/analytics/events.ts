@@ -51,7 +51,21 @@ const EVENT_PARAMETER_KEYS = [
 
 function dataLayer() {
   window.dataLayer = window.dataLayer ?? [];
-  return window.dataLayer as Array<DataLayerEvent | unknown[]>;
+  return window.dataLayer as Array<DataLayerEvent | IArguments>;
+}
+
+function pushGoogleTagCommand(
+  command: "consent",
+  action: "default" | "update",
+  settings: Record<string, string | number>,
+) {
+  // Google Consent Mode commands must be pushed as an Arguments object, as
+  // produced by gtag(). A plain array looks similar in DevTools but is ignored.
+  void command;
+  void action;
+  void settings;
+  // eslint-disable-next-line prefer-rest-params
+  dataLayer().push(arguments);
 }
 
 function compact(
@@ -66,7 +80,7 @@ export function setGoogleMeasurementConsent(granted: boolean) {
   measurementConsentGranted = granted;
   if (typeof window === "undefined" || !shouldLoadAnalytics()) return;
 
-  dataLayer().push([
+  pushGoogleTagCommand(
     "consent",
     "update",
     {
@@ -75,12 +89,12 @@ export function setGoogleMeasurementConsent(granted: boolean) {
       ad_user_data: "denied",
       ad_personalization: "denied",
     },
-  ]);
+  );
 }
 
 export function initializeGoogleConsentMode() {
   if (typeof window === "undefined" || !shouldLoadAnalytics()) return;
-  dataLayer().push([
+  pushGoogleTagCommand(
     "consent",
     "default",
     {
@@ -90,7 +104,7 @@ export function initializeGoogleConsentMode() {
       ad_personalization: "denied",
       wait_for_update: 500,
     },
-  ]);
+  );
   setGoogleMeasurementConsent(true);
 }
 

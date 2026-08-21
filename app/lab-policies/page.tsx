@@ -6,9 +6,9 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import RingsAccent from "../components/RingsAccent";
 import SiteIcon from "../components/SiteIcon";
+import EmbeddedTypeform from "../components/analytics/EmbeddedTypeform";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
-const CONTACT_FORM_URL = "https://form.typeform.com/to/m0lQ9zjD";
 const CUSTOMER_SERVICE_MAILTO =
   "mailto:customerservice@artisanlabnetwork.com?subject=Lab%20Policy%20Question";
 
@@ -650,11 +650,12 @@ function ContactModal({ open, onClose }: { open: boolean; onClose: () => void })
                 x
               </button>
             </div>
-            <iframe
-              src={CONTACT_FORM_URL}
+            <EmbeddedTypeform
+              formId="m0lQ9zjD"
+              formName="customer_service_contact"
+              leadType="customer_service"
               className="min-h-0 flex-1 bg-[#f5f1eb]"
               title="Contact Artisan Lab Network"
-              allow="camera; microphone; autoplay; encrypted-media;"
             />
           </motion.div>
         </motion.div>

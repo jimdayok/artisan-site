@@ -21,9 +21,9 @@ import {
 } from "lucide-react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import EmbeddedTypeform from "../components/analytics/EmbeddedTypeform";
 
 const ACCOUNT_APPLICATION_URL = "https://form.typeform.com/to/quuPCSff";
-const CONTACT_FORM_URL = "https://form.typeform.com/to/m0lQ9zjD";
 
 const montageImages = [
   {
@@ -260,8 +260,9 @@ function ContactModal({
                 x
               </button>
             </div>
-            <iframe
-              src={CONTACT_FORM_URL}
+            <EmbeddedTypeform
+              formId="m0lQ9zjD"
+              formName="general_contact"
               className="min-h-0 flex-1 bg-[#f5f1eb]"
               title="Contact Artisan Lab Network"
             />

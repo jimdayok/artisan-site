@@ -30,17 +30,20 @@
     "typecheck": "NODE_OPTIONS='--max-old-space-size=12288' tsc --noEmit",
     "test:pricing": "node --test tests/pricing-dvi-generation.test.mjs",
     "test:optical": "node --experimental-default-type=module --test tests/optical-calculations.test.ts tests/optical-geometry.test.ts",
-    "test:portal": "node --experimental-strip-types --test tests/account-scope.test.ts tests/admin-rep-review.test.ts tests/net-sales-history-packaging.test.ts tests/portal-role-policy.test.ts tests/value-system-price-list.test.ts"
+    "test:portal": "node --experimental-strip-types --test tests/account-scope.test.ts tests/admin-rep-review.test.ts tests/net-sales-history-packaging.test.ts tests/portal-role-policy.test.ts tests/value-system-price-list.test.ts",
+    "test:analytics": "node --experimental-strip-types --test tests/analytics.test.ts && node --test tests/consent-manager.test.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1046.0",
     "@c15t/react": "^2.2.0",
+    "@next/third-parties": "^16.3.0",
     "@nivo/bar": "^0.99.0",
     "@nivo/core": "^0.99.0",
     "@nivo/line": "^0.99.0",
     "@nivo/pie": "^0.99.0",
     "@react-three/fiber": "^9.7.0",
     "@studio-freight/lenis": "^1.0.42",
+    "@typeform/embed-react": "^5.0.0",
     "@types/three": "^0.185.4",
     "@vercel/analytics": "^2.0.1",
     "clsx": "^2.1.1",

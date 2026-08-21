@@ -19,9 +19,9 @@ import {
 } from "lucide-react";
 import Header from "./Header";
 import Footer from "./Footer";
+import EmbeddedTypeform from "./analytics/EmbeddedTypeform";
 
 const ACCOUNT_APPLICATION_URL = "https://form.typeform.com/to/quuPCSff";
-const CONTACT_FORM_URL = "https://form.typeform.com/to/m0lQ9zjD";
 
 type Journey = "gateway" | "switch" | "welcome";
 
@@ -209,8 +209,9 @@ function ContactModal({
                 x
               </button>
             </div>
-            <iframe
-              src={CONTACT_FORM_URL}
+            <EmbeddedTypeform
+              formId="m0lQ9zjD"
+              formName="general_contact"
               className="min-h-0 flex-1 bg-[#f5f1eb]"
               title="Contact Artisan Lab Network"
             />

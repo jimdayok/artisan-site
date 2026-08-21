@@ -25,7 +25,7 @@ const sections = [
   },
   {
     title: "Analytics Cookies",
-    body: "Analytics consent allows privacy-conscious site measurement through Vercel Analytics so we can understand website usage and improve content. Analytics does not load until this category is accepted.",
+    body: "Analytics consent allows privacy-conscious site measurement through Google Tag Manager, Google Analytics 4, and Vercel Analytics so we can understand website usage and improve content. These analytics services do not load until this category is accepted.",
   },
   {
     title: "Advertising Cookies",

@@ -6,9 +6,9 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import EmbeddedTypeform from "../components/analytics/EmbeddedTypeform";
 
 const SIGNUP_URL = "https://form.typeform.com/to/quuPCSff";
-const CONTACT_FORM_URL = "https://form.typeform.com/to/m0lQ9zjD";
 
 type TeamMember = {
   name: string;
@@ -191,9 +191,11 @@ function ContactModal({
             <h2 id="contact-modal-title" className="sr-only">
               Contact Artisan Lab Network
             </h2>
-            <iframe
+            <EmbeddedTypeform
+              formId="m0lQ9zjD"
+              formName="sales_contact"
+              leadType="sales_inquiry"
               title="Contact Artisan Lab Network"
-              src={CONTACT_FORM_URL}
               className="h-full w-full"
             />
           </motion.div>

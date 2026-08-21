@@ -28,7 +28,7 @@ const sections = [
   },
   {
     title: "Cookies and Analytics",
-    body: "Our self-hosted privacy manager records your choices. Necessary security, Cloudflare Access, login, and session storage remains active. Google Maps and browser location features require Functionality consent, while site analytics requires Measurement consent. See the Cookie Policy for details and preference controls.",
+    body: "Our self-hosted privacy manager records your choices. Necessary security, Cloudflare Access, login, and session storage remains active. Google Maps and browser location features require Functionality consent, while Google Tag Manager, Google Analytics 4, and Vercel Analytics require Measurement consent. See the Cookie Policy for details and preference controls.",
   },
   {
     title: "Data Security",

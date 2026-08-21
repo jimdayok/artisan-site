@@ -130,3 +130,11 @@ test("delegated CTA tracking covers both links and meeting buttons", async () =>
   assert.match(provider, /trackMeaningfulButton/);
   assert.match(provider, /trackEvent\("schedule_meeting"/);
 });
+
+test("business events clear retained GTM parameters before dispatch", async () => {
+  const events = await read("lib/analytics/events.ts");
+
+  assert.match(events, /EVENT_PARAMETER_KEYS/);
+  assert.match(events, /EVENT_PARAMETER_KEYS\.map\(\(key\) => \[key, null\]\)/);
+  assert.match(events, /dataLayer\(\)\.push\(event\)/);
+});

@@ -14,6 +14,41 @@ import type {
 
 let measurementConsentGranted = false;
 
+const EVENT_PARAMETER_KEYS = [
+  "site_version",
+  "lab_name",
+  "page_location",
+  "page_path",
+  "page_title",
+  "traffic_context",
+  "lead_type",
+  "form_name",
+  "destination_url",
+  "source_page",
+  "partner_type",
+  "meeting_type",
+  "phone_number",
+  "email_address",
+  "search_term",
+  "search_term_length",
+  "search_result_count",
+  "resource_category",
+  "brand_filter",
+  "brand",
+  "resource_type",
+  "product_category",
+  "resource_name",
+  "product",
+  "file_name",
+  "file_extension",
+  "content_title",
+  "content_category",
+  "author",
+  "publish_date",
+  "destination_domain",
+  "link_text",
+] as const;
+
 function dataLayer() {
   window.dataLayer = window.dataLayer ?? [];
   return window.dataLayer as Array<DataLayerEvent | unknown[]>;
@@ -97,6 +132,12 @@ export function trackEvent<Name extends AnalyticsEventName>(
       ("page_title" in parameters ? String(parameters.page_title) : "Artisan Lab Network"),
   }) as DataLayerEvent;
 
+  // GTM data-layer variables retain their last value until explicitly cleared.
+  // Reset event parameters before each business event so unrelated values cannot
+  // leak into a later hit (for example, phone_number on resource_view).
+  dataLayer().push(
+    Object.fromEntries(EVENT_PARAMETER_KEYS.map((key) => [key, null])) as DataLayerEvent,
+  );
   dataLayer().push(event);
   return true;
 }

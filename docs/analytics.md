@@ -35,15 +35,15 @@ GTM and GA4 are suppressed in local development. To inspect local `dataLayer` be
 Configure these in Vercel for the Preview and Production environments:
 
 ```text
-NEXT_PUBLIC_GTM_ID=GTM-XXXXXXX
-NEXT_PUBLIC_GA4_MEASUREMENT_ID=G-XXXXXXXXXX
+NEXT_PUBLIC_GTM_ID=GTM-PMGMJB4B
+NEXT_PUBLIC_GA4_MEASUREMENT_ID=G-SBTEQQE2LS
 NEXT_PUBLIC_SITE_VERSION=preview
 NEXT_PUBLIC_ANALYTICS_DEBUG=false
 ```
 
 For the preview deployment, use `preview`. At public cutover, change only `NEXT_PUBLIC_SITE_VERSION` to `production` and redeploy. Do not rewrite event code. The legacy Kajabi site must use `existing`.
 
-The application loads GTM only when both IDs are valid, the build is production (or explicit debug mode), and Measurement consent is granted.
+The application loads GTM only when both IDs are valid, the build is production (or explicit debug mode), and Measurement consent is granted. Before every business event, it also clears all optional event parameters in the data layer; this prevents a value from one event being retained by GTM and attached to an unrelated later event.
 
 ## Consent and privacy
 
@@ -194,20 +194,25 @@ Name them consistently, for example `DLV - site_version`.
 
 ### Google tag
 
-1. Create a **Google tag** named `Google tag - ALN GA4`.
-2. Set Tag ID to `{{DLV - ga4_measurement_id}}`.
+1. The published container uses a **Google tag** named `GA4 - Google tag`.
+2. Its Tag ID is `G-SBTEQQE2LS`.
 3. In configuration settings, set `send_page_view` to `false` because the application emits the initial and SPA pageviews.
-4. Set `page_location` to `{{DLV - page_location}}`, `page_title` to `{{DLV - page_title}}`, and `page_path` to `{{DLV - page_path}}`.
-5. Require built-in `analytics_storage` consent. Do not add advertising tags.
-6. Trigger on the custom event `analytics_context` (or Initialization after confirming the data-layer context is available). Do not use the ordinary All Pages pageview trigger.
+4. Require built-in `analytics_storage` consent. Do not add advertising tags.
+5. Trigger on **Initialization - All Pages**. The site itself remains responsible for its initial and SPA route-change `page_view` events.
 
 ### GA4 event tags
 
-Create a GA4 Event tag for each event row above, or a controlled shared tag pattern. Use the exact event name and only the parameters listed for that event plus the common parameters. Trigger each tag with a Custom Event trigger of the same exact name. This explicit approach is preferred over a broad `.*` trigger because it prevents accidental application events from being sent to GA4.
+The published container uses one controlled native GA4 Event tag named `GA4 - Business event`. Its event name is `{{Event}}`, its 32 parameters map to the documented data-layer variables, and its single Custom Event trigger is restricted to this exact allowlist:
+
+```text
+^(page_view|generate_lead|open_account|partner_inquiry|schedule_meeting|click_phone|click_email|portal_login_click|resource_search|resource_filter|resource_view|resource_download|newsletter_view|outbound_click)$
+```
+
+Do not broaden this trigger to `.*`; unrelated application events must never reach GA4.
 
 For every tag:
 
-- Use `{{DLV - ga4_measurement_id}}`/the ALN Google tag.
+- Use measurement ID `G-SBTEQQE2LS`/the ALN Google tag.
 - Set common parameters: `site_version`, `lab_name`, `page_location`, `page_path`, and `page_title`.
 - Add only event-specific Data Layer Variables from the matrix.
 - Require `analytics_storage` consent.
@@ -255,7 +260,7 @@ Use native GA4 dimensions for page URL/path/title, source, medium, campaign, lan
 
 In **Admin -> Data streams -> web stream -> Enhanced measurement**, use:
 
-- Page views: **Off**. Application pageviews include SPA route changes and business context.
+- Page views: keep the Enhanced Measurement master enabled, but disable **Page changes based on browser history events**. The stream UI still reports page views as enabled for page loads; `send_page_view=false` on the Google tag prevents that automatic hit, while the application emits initial and SPA pageviews with business context.
 - Outbound clicks: **Off**. Curated `outbound_click` is more meaningful and avoids duplicates.
 - Site search: **Off**. Provider Resources uses privacy-sanitized `resource_search`.
 - File downloads: **Off**. `resource_download` includes resource/brand/product context.
@@ -290,14 +295,23 @@ The resulting reports combine query, landing page, impressions, clicks, CTR, and
 
 The repository contains the new/preview Next.js site only. The legacy `www.artisanlabnetwork.com` site is Kajabi and must be updated in its site-wide Custom Code area after first checking that Kajabi does not already load GA4/GTM. Remove or consolidate any direct `gtag.js`, Universal Analytics, or second GTM container before adding the shared container.
 
-Use the same GTM ID and GA4 property as the new site. Set `site_version` to `existing`. In the Kajabi consent callback, call the loader below with `true` only when Analytics/Measurement consent is granted, and with `false` when it is rejected or revoked. Replace both placeholders with the real shared IDs.
+Use the same GTM ID and GA4 property as the new site. Set `site_version` to `existing`. In the Kajabi consent callback, call the loader below with `true` only when Analytics/Measurement consent is granted, and with `false` when it is rejected or revoked.
 
 ```html
 <script>
 (function (w, d) {
-  var GTM_ID = "GTM-XXXXXXX";
-  var GA4_ID = "G-XXXXXXXXXX";
+  var GTM_ID = "GTM-PMGMJB4B";
+  var GA4_ID = "G-SBTEQQE2LS";
   var loaded = false;
+  var eventParameterKeys = [
+    "site_version", "lab_name", "page_location", "page_path", "page_title",
+    "traffic_context", "lead_type", "form_name", "destination_url", "source_page",
+    "partner_type", "meeting_type", "phone_number", "email_address", "search_term",
+    "search_term_length", "search_result_count", "resource_category", "brand_filter",
+    "brand", "resource_type", "product_category", "resource_name", "product",
+    "file_name", "file_extension", "content_title", "content_category", "author",
+    "publish_date", "destination_domain", "link_text"
+  ];
 
   function labName(path) {
     path = (path || "/").toLowerCase();
@@ -325,6 +339,9 @@ Use the same GTM ID and GA4 property as the new site. Set `site_version` to `exi
 
   function pushEvent(name, parameters) {
     if (!loaded) return;
+    var reset = {};
+    eventParameterKeys.forEach(function (key) { reset[key] = null; });
+    w.dataLayer.push(reset);
     w.dataLayer.push(Object.assign({
       event: name,
       site_version: "existing",

@@ -1,0 +1,286 @@
+<!-- Artisan Lab Network legacy/Kajabi analytics. Keep in sync with docs/analytics.md. -->
+<script>
+(function (w, d) {
+  "use strict";
+
+  if (w.__alnAnalyticsInstalled) return;
+  w.__alnAnalyticsInstalled = true;
+
+  var GTM_ID = "GTM-PMGMJB4B";
+  var GA4_ID = "G-SBTEQQE2LS";
+  var SITE_VERSION = "existing";
+  var loaded = false;
+  var eventParameterKeys = [
+    "site_version", "lab_name", "page_location", "page_path", "page_title",
+    "traffic_context", "lead_type", "form_name", "destination_url", "source_page",
+    "partner_type", "meeting_type", "phone_number", "email_address", "search_term",
+    "search_term_length", "search_result_count", "resource_category", "brand_filter",
+    "brand", "resource_type", "product_category", "resource_name", "product",
+    "file_name", "file_extension", "content_title", "content_category", "author",
+    "publish_date", "destination_domain", "link_text"
+  ];
+  var meaningfulDomains = /(^|\.)(typeform\.com|meetings\.hubspot\.com|outlook\.office\.com|newaccount\.artisanlabnetwork\.com|artisanslabs\.com|speccheckrx\.com|dvirx\.com|visionweb\.com|opticaltraining\.com|globalopticsinc\.com)$/i;
+  var fileExtensions = /^(pdf|doc|docx|xls|xlsx|csv|zip)$/i;
+
+  w.dataLayer = w.dataLayer || [];
+
+  function labName(path) {
+    path = (path || "/").toLowerCase();
+    if (path.indexOf("pacificartisanlabs") > -1 || path.indexOf("pacific-artisan") > -1 || path.indexOf("/pdx") === 0) return "Pacific";
+    if (path.indexOf("peak-artisan") > -1 || path.indexOf("peakartisan") > -1 || path.indexOf("/den") === 0) return "Peak";
+    if (path.indexOf("pikeartisanlabs") > -1 || path.indexOf("pike-artisan") > -1 || path.indexOf("/ind") === 0) return "Pike";
+    return "Network";
+  }
+
+  function safeUrl(value) {
+    try {
+      var source = new URL(value, w.location.href);
+      var safe = new URL(source.origin + source.pathname);
+      source.searchParams.forEach(function (entry, key) {
+        if (/^(utm_source|utm_medium|utm_campaign|utm_content|utm_term|gclid|gbraid|wbraid|msclkid)$/i.test(key)) {
+          safe.searchParams.set(key.toLowerCase(), entry.slice(0, 120));
+        }
+      });
+      return safe.toString();
+    } catch (error) {
+      return "";
+    }
+  }
+
+  function safeDestination(href) {
+    if (/^(tel:|mailto:)/i.test(href)) return href.split("?")[0];
+    try {
+      var destination = new URL(href, w.location.href);
+      return destination.origin + destination.pathname;
+    } catch (error) {
+      return "";
+    }
+  }
+
+  function trafficContext() {
+    var current = new URL(w.location.href);
+    var medium = (current.searchParams.get("utm_medium") || "").toLowerCase();
+    if (medium === "organic") return "organic";
+    if (current.searchParams.get("gclid") || current.searchParams.get("gbraid") || current.searchParams.get("wbraid") || current.searchParams.get("msclkid")) return "paid";
+    if (current.searchParams.get("utm_source") || medium) return "campaign";
+    if (/google\.|bing\.|yahoo\.|duckduckgo\./i.test(d.referrer)) return "organic";
+    return d.referrer ? "referral" : "direct";
+  }
+
+  function currentAttribution() {
+    var current = new URL(w.location.href);
+    var attribution = {
+      landing_page: safeUrl(w.location.href),
+      referrer: safeUrl(d.referrer),
+      site_version: SITE_VERSION,
+      lab_name: labName(w.location.pathname)
+    };
+    ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"].forEach(function (key) {
+      var value = current.searchParams.get(key);
+      if (value) attribution[key] = value.slice(0, 120);
+    });
+    return attribution;
+  }
+
+  function captureAttribution() {
+    try {
+      if (!w.sessionStorage.getItem("aln_attribution_v1")) {
+        w.sessionStorage.setItem("aln_attribution_v1", JSON.stringify(currentAttribution()));
+      }
+    } catch (error) {}
+  }
+
+  function storedAttribution() {
+    try {
+      return JSON.parse(w.sessionStorage.getItem("aln_attribution_v1")) || currentAttribution();
+    } catch (error) {
+      return currentAttribution();
+    }
+  }
+
+  function appendTypeformAttribution(link) {
+    try {
+      var destination = new URL(link.href, w.location.href);
+      if (!/(^|\.)typeform\.com$/i.test(destination.hostname)) return;
+      var attribution = storedAttribution();
+      ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"].forEach(function (key) {
+        if (attribution[key]) destination.searchParams.set(key, attribution[key]);
+      });
+      var hidden = new URLSearchParams(destination.hash.replace(/^#/, ""));
+      ["landing_page", "referrer", "site_version", "lab_name"].forEach(function (key) {
+        if (attribution[key]) hidden.set(key, attribution[key]);
+      });
+      destination.hash = hidden.toString();
+      link.href = destination.toString();
+    } catch (error) {}
+  }
+
+  function pushEvent(name, parameters) {
+    if (!loaded) return false;
+    var reset = {};
+    eventParameterKeys.forEach(function (key) { reset[key] = null; });
+    w.dataLayer.push(reset);
+    w.dataLayer.push(Object.assign({
+      event: name,
+      site_version: SITE_VERSION,
+      lab_name: labName(w.location.pathname),
+      page_location: safeUrl(w.location.href),
+      page_path: w.location.pathname,
+      page_title: d.title || "Artisan Lab Network"
+    }, parameters || {}));
+    return true;
+  }
+
+  function resourceContext(label, destination, extension) {
+    var combined = (label + " " + destination.pathname).toLowerCase();
+    var brands = ["Artisan", "Unity", "IOT", "Tokai", "HOYA", "Shamir", "Varilux", "Crizal", "Neurolens"];
+    var brand = "";
+    brands.some(function (candidate) {
+      if (combined.indexOf(candidate.toLowerCase()) > -1) {
+        brand = candidate;
+        return true;
+      }
+      return false;
+    });
+    return {
+      resource_name: label || decodeURIComponent(destination.pathname.split("/").pop() || "Resource"),
+      resource_type: extension ? extension.toUpperCase() : "link",
+      brand: brand,
+      product: label || "",
+      destination_url: safeDestination(destination.href)
+    };
+  }
+
+  function trackClick(event) {
+    var target = event.target;
+    var link = target && target.closest ? target.closest("a[href]") : null;
+    if (!link || link.dataset.analyticsSkip === "true") return;
+
+    var href = link.getAttribute("href") || "";
+    var label = (link.dataset.analyticsLabel || link.textContent || "").replace(/\s+/g, " ").trim().slice(0, 120);
+    var lower = label.toLowerCase();
+    var sourcePage = w.location.pathname;
+
+    if (/^tel:/i.test(href)) {
+      pushEvent("click_phone", { phone_number: href.slice(4).split("?")[0].slice(0, 40), source_page: sourcePage });
+      return;
+    }
+    if (/^mailto:/i.test(href)) {
+      pushEvent("click_email", { email_address: href.slice(7).split("?")[0].slice(0, 120), source_page: sourcePage });
+      if (/schedule|meeting/.test(lower)) {
+        pushEvent("schedule_meeting", { meeting_type: "email_request", destination_url: safeDestination(href), source_page: sourcePage });
+      }
+      return;
+    }
+
+    var destination;
+    try { destination = new URL(link.href, w.location.href); } catch (error) { return; }
+    var safe = safeDestination(destination.href);
+    var extension = (destination.pathname.split(".").pop() || "").toLowerCase();
+    var external = destination.origin !== w.location.origin;
+    var providerPage = /provider-resources|brandassets|patient-resources/i.test(sourcePage);
+    var portalDestination = /(^|\.)artisanslabs\.com$/i.test(destination.hostname) || destination.pathname.indexOf("/portal") === 0;
+
+    if (/(^|\.)typeform\.com$/i.test(destination.hostname)) appendTypeformAttribution(link);
+
+    if (portalDestination) {
+      pushEvent("portal_login_click", { destination_url: safe, source_page: sourcePage });
+    }
+    if (fileExtensions.test(extension)) {
+      var resource = resourceContext(label, destination, extension);
+      pushEvent("resource_view", resource);
+      pushEvent("resource_download", {
+        file_name: decodeURIComponent(destination.pathname.split("/").pop() || ""),
+        file_extension: extension,
+        resource_name: resource.resource_name,
+        brand: resource.brand,
+        product: resource.product,
+        source_page: sourcePage
+      });
+    } else if (providerPage && href.charAt(0) !== "#") {
+      pushEvent("resource_view", resourceContext(label, destination, ""));
+    }
+
+    if (destination.hostname === "newaccount.artisanlabnetwork.com" || /open (an? )?account|account application|start.*account|^sign up$/.test(lower)) {
+      pushEvent("open_account", { destination_url: safe, source_page: sourcePage });
+    }
+    if (/partner with us|artisan partner|ownership|equity|investor/.test(lower)) {
+      pushEvent("partner_inquiry", {
+        partner_type: /ownership|equity|investor/.test(lower) ? "ownership_interest" : "lab_partnership",
+        source_page: sourcePage
+      });
+    }
+    if (/schedule|meeting|book (a )?(call|demo)/.test(lower) || destination.hostname === "meetings.hubspot.com" || destination.hostname === "outlook.office.com") {
+      pushEvent("schedule_meeting", {
+        meeting_type: lower.indexOf("demo") > -1 ? "demo" : "general",
+        destination_url: safe,
+        source_page: sourcePage
+      });
+    }
+    if (external && (meaningfulDomains.test(destination.hostname) || providerPage)) {
+      pushEvent("outbound_click", {
+        destination_domain: destination.hostname,
+        destination_url: safe,
+        link_text: label,
+        source_page: sourcePage
+      });
+    }
+  }
+
+  function consent(value, command) {
+    w.dataLayer.push(["consent", command || "update", {
+      analytics_storage: value ? "granted" : "denied",
+      ad_storage: "denied",
+      ad_user_data: "denied",
+      ad_personalization: "denied",
+      wait_for_update: command === "default" ? 500 : undefined
+    }]);
+  }
+
+  function startMeasurement() {
+    if (loaded) {
+      consent(true);
+      return;
+    }
+    loaded = true;
+    consent(true);
+    captureAttribution();
+    w.dataLayer.push({
+      event: "analytics_context",
+      ga4_measurement_id: GA4_ID,
+      site_version: SITE_VERSION,
+      lab_name: labName(w.location.pathname),
+      page_location: safeUrl(w.location.href),
+      page_path: w.location.pathname,
+      page_title: d.title,
+      analytics_schema_version: "1.0"
+    });
+    var script = d.createElement("script");
+    script.async = true;
+    script.src = "https://www.googletagmanager.com/gtm.js?id=" + encodeURIComponent(GTM_ID);
+    d.head.appendChild(script);
+    pushEvent("page_view", {});
+    d.addEventListener("click", trackClick, true);
+
+    function contentView() {
+      if (/^\/blog\//i.test(w.location.pathname) || /practicematters/i.test(w.location.pathname)) {
+        pushEvent("newsletter_view", {
+          content_title: d.title || "Artisan Lab Network content",
+          content_category: /practicematters/i.test(w.location.pathname) ? "Practice Matters" : "Blog"
+        });
+      }
+    }
+    if (d.readyState === "loading") d.addEventListener("DOMContentLoaded", contentView, { once: true });
+    else contentView();
+  }
+
+  w.alnAnalyticsConsent = function (granted) {
+    if (granted) startMeasurement();
+    else consent(false);
+  };
+
+  var respectsGlobalPrivacyControl = w.navigator && w.navigator.globalPrivacyControl === true;
+  consent(!respectsGlobalPrivacyControl, "default");
+  if (!respectsGlobalPrivacyControl) startMeasurement();
+})(window, document);
+</script>

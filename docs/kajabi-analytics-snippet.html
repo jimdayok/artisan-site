@@ -228,13 +228,19 @@
   }
 
   function consent(value, command) {
-    w.dataLayer.push(["consent", command || "update", {
+    pushGoogleTagCommand("consent", command || "update", {
       analytics_storage: value ? "granted" : "denied",
       ad_storage: "denied",
       ad_user_data: "denied",
       ad_personalization: "denied",
       wait_for_update: command === "default" ? 500 : undefined
-    }]);
+    });
+  }
+
+  function pushGoogleTagCommand() {
+    // Consent Mode requires the Arguments object produced by gtag-style calls.
+    // A visually similar plain array is not interpreted as a consent command.
+    w.dataLayer.push(arguments);
   }
 
   function startMeasurement() {
@@ -254,6 +260,10 @@
       page_path: w.location.pathname,
       page_title: d.title,
       analytics_schema_version: "1.0"
+    });
+    w.dataLayer.push({
+      "gtm.start": new Date().getTime(),
+      event: "gtm.js"
     });
     var script = d.createElement("script");
     script.async = true;

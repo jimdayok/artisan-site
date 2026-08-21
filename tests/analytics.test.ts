@@ -138,3 +138,24 @@ test("business events clear retained GTM parameters before dispatch", async () =
   assert.match(events, /EVENT_PARAMETER_KEYS\.map\(\(key\) => \[key, null\]\)/);
   assert.match(events, /dataLayer\(\)\.push\(event\)/);
 });
+
+test("Google Consent Mode uses gtag-compatible commands", async () => {
+  const [events, kajabi] = await Promise.all([
+    read("lib/analytics/events.ts"),
+    read("docs/kajabi-analytics-snippet.html"),
+  ]);
+
+  assert.match(events, /dataLayer\(\)\.push\(arguments\)/);
+  assert.doesNotMatch(events, /push\(\[\s*["']consent["']/);
+  assert.match(kajabi, /w\.dataLayer\.push\(arguments\)/);
+  assert.doesNotMatch(kajabi, /push\(\[\s*["']consent["']/);
+});
+
+test("Kajabi bootstraps GTM before queuing page views", async () => {
+  const kajabi = await read("docs/kajabi-analytics-snippet.html");
+  const start = kajabi.indexOf('"gtm.start"');
+  const pageView = kajabi.indexOf('pushEvent("page_view"');
+
+  assert.ok(start > -1);
+  assert.ok(pageView > start);
+});

@@ -86,7 +86,7 @@ All application code must call `trackEvent()` rather than writing directly to `d
 | Event | Trigger | Parameters in addition to common page/site/lab context | GA4 role | Status |
 | --- | --- | --- | --- | --- |
 | `page_view` | Initial consented view and every Next.js route change | `page_location`, `page_path`, `page_title` | Standard engagement | Implemented |
-| `generate_lead` | Embedded Typeform `onSubmit`, or a signed Typeform webhook after a successful external form submission | `lead_type`, `form_name`, `traffic_context`, `site_version`, `lab_name` | Primary/key event | Implemented; external delivery requires the server secrets and Typeform webhooks below |
+| `generate_lead` | Embedded Typeform `onSubmit`, or a signed Typeform webhook after a successful external form submission | `lead_type`, `form_name`, `traffic_context`, `site_version`, `lab_name` | Primary/key event | Implemented and deployed for both approved Typeforms |
 | `open_account` | Intentional click on an Open Account/account-application CTA | `destination_url`, `source_page` | Primary/key event; intent, not completed account | Implemented |
 | `partner_inquiry` | Meaningful Partner With Us, Artisan Partner, ownership, equity, or investor-flow entry | `partner_type`, `source_page` | Primary/key event | Implemented |
 | `schedule_meeting` | Click on meeting/demo scheduler or clearly labeled meeting request | `meeting_type`, `destination_url`, `source_page` | Primary/key event; click/start unless scheduler completion is later connected | Implemented |
@@ -156,6 +156,8 @@ GA4_MEASUREMENT_PROTOCOL_API_SECRET=<secret created for the GA4 web stream>
 ```
 
 In Typeform, add these URL parameters to both `m0lQ9zjD` and `quuPCSff` without deleting the existing UTM/landing/referrer fields: `analytics_delivery`, `page_location`, `page_title`, `traffic_context`, `ga_client_id`, and `ga_session_id`. Add a webhook on each form pointing to `https://preview.artisanlabnetwork.com/api/analytics/typeform`, save it, edit it, set the same secret, select completed responses only, enable it, and send a test delivery. At cutover, change the webhook URL to the production hostname if the preview hostname will be retired.
+
+Deployment status (August 22, 2026): both forms have the attribution parameters published; both signed, completed-response-only webhooks are enabled; both Typeform synthetic deliveries returned HTTP 200; and the matching sensitive secrets are configured in Vercel Preview and Production. The synthetic requests lacked consented `site_version` context and therefore did not create GA4 leads.
 
 Preview embedded contact forms send `analytics_delivery=client`; their webhook is deliberately ignored to prevent duplicate `generate_lead` events. External form links send `analytics_delivery=webhook` and GA cookie identifiers only after measurement consent, allowing the server event to join the originating GA4 session. A submission without valid `site_version` context is acknowledged but not sent to GA4.
 
@@ -633,7 +635,7 @@ This preserves direct existing-versus-preview comparison before cutover and clea
 
 - Google IDs, GTM tags/triggers, key-event settings, custom definitions, Search Console linking, retention, filters, and permissions require authenticated Google access.
 - The Kajabi site is configured outside this repository. Keep its deployed Header Page Scripts synchronized with `docs/kajabi-analytics-snippet.html` and revalidate after any Kajabi theme change.
-- Typeform completion events require both server secrets and signed webhook configuration. Until those are deployed and enabled, external events accurately represent starts/clicks rather than completed forms. HubSpot completion still requires its own approved integration or return-page configuration.
+- Typeform completion delivery is deployed and enabled. At site cutover, update the webhook hostname only if `preview.artisanlabnetwork.com` will be retired. HubSpot completion still requires its own approved integration or return-page configuration.
 - Pipedrive has the five core attribution fields but is at its 100-field limit. Adding the four remaining fields and mapping them requires an approved capacity/field-cleanup decision plus a controlled middleware or Classic-integration rebuild.
 - Consent/banner language and retention policy remain business/legal decisions; the code implements the current site's basic consent behavior and avoids advertising storage.
 

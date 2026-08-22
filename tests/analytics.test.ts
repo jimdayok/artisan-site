@@ -4,6 +4,8 @@ import test from "node:test";
 import {
   appendTypeformAttribution,
   isPrivateAnalyticsPath,
+  parseGoogleAnalyticsClientId,
+  parseGoogleAnalyticsSessionId,
   resolveLabName,
   sanitizeAnalyticsUrl,
   sanitizeDestinationUrl,
@@ -90,6 +92,19 @@ test("Typeform attribution contains only non-sensitive campaign and page context
   assert.equal(hidden.has("email"), false);
 });
 
+test("GA cookie values are reduced to Measurement Protocol identifiers", () => {
+  assert.equal(parseGoogleAnalyticsClientId("GA1.1.123.456"), "123.456");
+  assert.equal(
+    parseGoogleAnalyticsSessionId("GS1.1.1700000000.1.0.0.0.0.0"),
+    "1700000000",
+  );
+  assert.equal(
+    parseGoogleAnalyticsSessionId("GS2.1.s1700000000$o2$g1$t1700000050"),
+    "1700000000",
+  );
+  assert.equal(parseGoogleAnalyticsClientId("not-a-client"), undefined);
+});
+
 test("authenticated and private routes are excluded from web analytics", () => {
   assert.equal(isPrivateAnalyticsPath("/portal"), true);
   assert.equal(isPrivateAnalyticsPath("/portal/admin/account-analysis/123"), true);
@@ -158,4 +173,12 @@ test("Kajabi bootstraps GTM before queuing page views", async () => {
 
   assert.ok(start > -1);
   assert.ok(pageView > start);
+});
+
+test("Kajabi sends consented Typeform completion context without form answers", async () => {
+  const source = await read("docs/kajabi-analytics-snippet.html");
+  assert.match(source, /hidden\.set\("analytics_delivery", "webhook"\)/);
+  assert.match(source, /hidden\.set\("ga_client_id"/);
+  assert.match(source, /hidden\.set\("ga_session_id"/);
+  assert.doesNotMatch(source, /form_response\.answers|response\.answers/);
 });

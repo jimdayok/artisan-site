@@ -2,7 +2,10 @@
 
 import { Widget } from "@typeform/embed-react";
 import { analyticsConfig } from "@/lib/analytics/config";
-import { getStoredAttribution } from "@/lib/analytics/context";
+import {
+  getGoogleAnalyticsCookieIdentifiers,
+  getStoredAttribution,
+} from "@/lib/analytics/context";
 import { currentPageContext, trackEvent } from "@/lib/analytics/events";
 import type { LeadType } from "@/lib/analytics/types";
 
@@ -20,6 +23,7 @@ export default function EmbeddedTypeform({
   title?: string;
 }) {
   const attribution = getStoredAttribution();
+  const page = currentPageContext();
   const tracking = attribution
     ? Object.fromEntries(
         Object.entries(attribution).filter(([key]) => key.startsWith("utm_")),
@@ -39,6 +43,13 @@ export default function EmbeddedTypeform({
               referrer: attribution.referrer,
               site_version: analyticsConfig.siteVersion,
               lab_name: attribution.lab_name,
+              analytics_delivery: "client",
+              page_location: page.pageLocation,
+              page_title: page.pageTitle.slice(0, 200),
+              traffic_context: page.trafficContext,
+              ...getGoogleAnalyticsCookieIdentifiers(
+                analyticsConfig.ga4MeasurementId,
+              ),
             }
           : undefined
       }

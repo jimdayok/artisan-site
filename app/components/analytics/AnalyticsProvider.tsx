@@ -7,12 +7,14 @@ import { analyticsConfig, shouldLoadAnalytics } from "@/lib/analytics/config";
 import {
   appendTypeformAttribution,
   captureAttribution,
+  getGoogleAnalyticsCookieIdentifiers,
   getStoredAttribution,
   isPrivateAnalyticsPath,
   sanitizeAnalyticsUrl,
   sanitizeDestinationUrl,
 } from "@/lib/analytics/context";
 import {
+  currentPageContext,
   initializeAnalyticsContext,
   initializeGoogleConsentMode,
   setGoogleMeasurementConsent,
@@ -164,9 +166,19 @@ function trackMeaningfulClick(anchor: HTMLAnchorElement) {
   }
 
   if (destination.hostname.endsWith("typeform.com")) {
+    const page = currentPageContext();
     anchor.href = appendTypeformAttribution(
       destination.toString(),
       getStoredAttribution(),
+      {
+        analytics_delivery: "webhook",
+        page_location: page.pageLocation,
+        page_title: page.pageTitle,
+        traffic_context: page.trafficContext,
+        ...getGoogleAnalyticsCookieIdentifiers(
+          analyticsConfig.ga4MeasurementId,
+        ),
+      },
     );
   }
 }

@@ -98,6 +98,31 @@
     }
   }
 
+  function cookieValue(name) {
+    var prefix = name + "=";
+    var entry = d.cookie.split(";").map(function (cookie) {
+      return cookie.trim();
+    }).filter(function (cookie) {
+      return cookie.indexOf(prefix) === 0;
+    })[0];
+    if (!entry) return "";
+    try { return decodeURIComponent(entry.slice(prefix.length)).slice(0, 200); }
+    catch (error) { return entry.slice(prefix.length).slice(0, 200); }
+  }
+
+  function googleAnalyticsIdentifiers() {
+    var suffix = GA4_ID.replace(/^G-/i, "").replace(/[^a-z0-9]/gi, "_");
+    var clientCookie = cookieValue("_ga");
+    var clientMatch = clientCookie.match(/(?:^|\.)(\d+\.\d+)$/);
+    var sessionCookie = suffix ? cookieValue("_ga_" + suffix) : "";
+    var sessionMatch = sessionCookie.match(/(?:^|[.$])s(\d+)(?:[.$]|$)/i) ||
+      sessionCookie.match(/^GS\d+\.\d+\.(\d+)(?:\.|$)/i);
+    return {
+      ga_client_id: clientMatch ? clientMatch[1] : "",
+      ga_session_id: sessionMatch ? sessionMatch[1] : ""
+    };
+  }
+
   function appendTypeformAttribution(link) {
     try {
       var destination = new URL(link.href, w.location.href);
@@ -110,6 +135,13 @@
       ["landing_page", "referrer", "site_version", "lab_name"].forEach(function (key) {
         if (attribution[key]) hidden.set(key, attribution[key]);
       });
+      var identifiers = googleAnalyticsIdentifiers();
+      hidden.set("analytics_delivery", "webhook");
+      hidden.set("page_location", safeUrl(w.location.href));
+      hidden.set("page_title", (d.title || "Artisan Lab Network").slice(0, 200));
+      hidden.set("traffic_context", trafficContext());
+      if (identifiers.ga_client_id) hidden.set("ga_client_id", identifiers.ga_client_id);
+      if (identifiers.ga_session_id) hidden.set("ga_session_id", identifiers.ga_session_id);
       destination.hash = hidden.toString();
       link.href = destination.toString();
     } catch (error) {}

@@ -24,6 +24,15 @@ export type AttributionContext = Partial<
   lab_name: LabName;
 };
 
+export type TypeformCompletionContext = {
+  analytics_delivery: "client" | "webhook";
+  page_location: string;
+  page_title: string;
+  traffic_context: string;
+  ga_client_id?: string;
+  ga_session_id?: string;
+};
+
 export function resolveLabName(pathname: string): LabName {
   const normalized = pathname.toLowerCase();
   if (
@@ -179,9 +188,54 @@ export function getStoredAttribution() {
   }
 }
 
+function browserCookie(name: string) {
+  if (typeof document === "undefined") return undefined;
+  const prefix = `${name}=`;
+  const entry = document.cookie
+    .split(";")
+    .map((cookie) => cookie.trim())
+    .find((cookie) => cookie.startsWith(prefix));
+  if (!entry) return undefined;
+  try {
+    return decodeURIComponent(entry.slice(prefix.length)).slice(0, 200);
+  } catch {
+    return entry.slice(prefix.length).slice(0, 200);
+  }
+}
+
+export function parseGoogleAnalyticsClientId(cookieValue: string | undefined) {
+  if (!cookieValue) return undefined;
+  const match = cookieValue.match(/(?:^|\.)(\d+\.\d+)$/);
+  return match?.[1];
+}
+
+export function parseGoogleAnalyticsSessionId(cookieValue: string | undefined) {
+  if (!cookieValue) return undefined;
+  const currentFormat = cookieValue.match(/(?:^|[.$])s(\d+)(?:[.$]|$)/i);
+  if (currentFormat?.[1]) return currentFormat[1];
+  const legacyFormat = cookieValue.match(/^GS\d+\.\d+\.(\d+)(?:\.|$)/i);
+  return legacyFormat?.[1];
+}
+
+export function getGoogleAnalyticsCookieIdentifiers(measurementId: string) {
+  const streamSuffix = measurementId
+    .replace(/^G-/i, "")
+    .replace(/[^a-z0-9]/gi, "_");
+  const gaClientId = parseGoogleAnalyticsClientId(browserCookie("_ga"));
+  const gaSessionId = streamSuffix
+    ? parseGoogleAnalyticsSessionId(browserCookie(`_ga_${streamSuffix}`))
+    : undefined;
+
+  return {
+    ...(gaClientId ? { ga_client_id: gaClientId } : {}),
+    ...(gaSessionId ? { ga_session_id: gaSessionId } : {}),
+  };
+}
+
 export function appendTypeformAttribution(
   href: string,
   attribution: AttributionContext | undefined,
+  completion?: TypeformCompletionContext,
 ) {
   if (!attribution) return href;
   try {
@@ -198,6 +252,11 @@ export function appendTypeformAttribution(
     hidden.set("referrer", attribution.referrer);
     hidden.set("site_version", attribution.site_version);
     hidden.set("lab_name", attribution.lab_name);
+    if (completion) {
+      for (const [key, value] of Object.entries(completion)) {
+        if (value) hidden.set(key, value.slice(0, 500));
+      }
+    }
     url.hash = hidden.toString();
     return url.toString();
   } catch {

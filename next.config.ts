@@ -91,6 +91,26 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/:path*",
+        has: [{ type: "host", value: "artisanslabs.com" }],
+        headers: [
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow, noarchive, nosnippet",
+          },
+        ],
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.artisanslabs.com" }],
+        headers: [
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow, noarchive, nosnippet",
+          },
+        ],
+      },
+      {
+        source: "/:path*",
         headers: [
           { key: "X-Frame-Options", value: "DENY" },
           { key: "X-Content-Type-Options", value: "nosniff" },

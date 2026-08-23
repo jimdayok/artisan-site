@@ -26,6 +26,7 @@ function payload() {
     event_type: "form_response",
     form_response: {
       form_id: "quuPCSff",
+      token: "tf-submission-123",
       submitted_at: submittedAt,
       hidden: {
         utm_source: "google",
@@ -50,7 +51,9 @@ function payload() {
 test("extracts only the approved attribution values and sanitizes URLs", () => {
   const attribution = extractPipedriveAttribution(payload());
   assert.deepEqual(attribution, {
+    formId: "quuPCSff",
     respondentEmail: "private@example.com",
+    submissionId: "tf-submission-123",
     submittedAt,
     utm_source: "google",
     utm_medium: "organic",
@@ -84,10 +87,16 @@ test("is inactive until both private server settings are configured", async () =
 
 test("updates the closest matching deal without creating a person or deal", async () => {
   const calls: Array<{ url: string; method: string; body?: string }> = [];
+  const authentications: boolean[] = [];
   const fakeFetch = async (input: URL | RequestInfo, init?: RequestInit) => {
     const url = String(input);
+    const safeUrl = new URL(url);
+    authentications.push(
+      safeUrl.searchParams.get("api_token") === "private-test-token",
+    );
+    safeUrl.searchParams.delete("api_token");
     calls.push({
-      url,
+      url: safeUrl.toString(),
       method: init?.method ?? "GET",
       body: typeof init?.body === "string" ? init.body : undefined,
     });
@@ -107,7 +116,7 @@ test("updates the closest matching deal without creating a person or deal", asyn
           custom_fields: { [fieldCodes.utm_source]: "" },
         },
       ];
-    } else if (url.endsWith("/deals/456")) {
+    } else if (new URL(url).pathname.endsWith("/deals/456")) {
       data = { id: 456 };
     } else {
       throw new Error(`Unexpected request: ${url}`);
@@ -128,9 +137,120 @@ test("updates the closest matching deal without creating a person or deal", asyn
 
   assert.deepEqual(result, { status: "updated", updatedFieldCount: 9 });
   assert.equal(calls.at(-1)?.method, "PATCH");
+  assert.ok(authentications.every(Boolean));
   assert.ok(calls.every((call) => call.method === "GET" || call.method === "PATCH"));
   assert.doesNotMatch(JSON.stringify(calls.at(-1)), /private@example|Never send/);
   assert.doesNotMatch(JSON.stringify(calls), /private-test-token/);
+});
+
+test("creates one neutral Pipedrive lead when Typeform created only a contact", async () => {
+  const calls: Array<{ url: string; method: string; body?: string }> = [];
+  const fakeFetch = async (input: URL | RequestInfo, init?: RequestInit) => {
+    const requestUrl = new URL(String(input));
+    const safeUrl = new URL(requestUrl);
+    safeUrl.searchParams.delete("api_token");
+    calls.push({
+      url: safeUrl.toString(),
+      method: init?.method ?? "GET",
+      body: typeof init?.body === "string" ? init.body : undefined,
+    });
+    let data: unknown;
+    if (requestUrl.pathname.endsWith("/dealFields")) {
+      data = fieldNames.map((name) => ({
+        field_name: name,
+        field_code: fieldCodes[name],
+      }));
+    } else if (requestUrl.pathname.endsWith("/persons/search")) {
+      data = { items: [{ item: { id: 123 } }] };
+    } else if (requestUrl.pathname.endsWith("/api/v2/deals")) {
+      data = [];
+    } else if (
+      requestUrl.pathname.endsWith("/api/v1/leads") &&
+      (init?.method ?? "GET") === "GET"
+    ) {
+      data = [];
+    } else if (
+      requestUrl.pathname.endsWith("/api/v1/leads") &&
+      init?.method === "POST"
+    ) {
+      data = { id: "lead-uuid-123" };
+    } else {
+      throw new Error(`Unexpected request: ${safeUrl}`);
+    }
+    return new Response(JSON.stringify({ success: true, data }), {
+      status: init?.method === "POST" ? 201 : 200,
+    });
+  };
+
+  const result = await syncPipedriveAttribution(payload(), {
+    apiToken: "private-test-token",
+    companyDomain: "artisanlabnetwork",
+    fetchImpl: fakeFetch as typeof fetch,
+    now: Date.parse("2026-08-23T12:01:00.000Z"),
+    retryDelaysMs: [0],
+  });
+
+  assert.deepEqual(result, { status: "created", updatedFieldCount: 9 });
+  const createCall = calls.at(-1);
+  assert.equal(createCall?.method, "POST");
+  assert.match(createCall?.url ?? "", /\/api\/v1\/leads$/);
+  const createBody = JSON.parse(createCall?.body ?? "{}") as Record<
+    string,
+    unknown
+  >;
+  assert.equal(createBody.title, "Website inquiry - Peak");
+  assert.equal(createBody.person_id, 123);
+  assert.equal(createBody.origin_id, "typeform:tf-submission-123");
+  assert.equal(createBody[fieldCodes.site_version], "preview");
+  assert.equal(createBody[fieldCodes.lab_name], "Peak");
+  assert.doesNotMatch(JSON.stringify(calls), /private@example|Never send/);
+  assert.ok(
+    calls.every(
+      (call) =>
+        call.method === "GET" ||
+        (call.method === "POST" && call.url.endsWith("/api/v1/leads")),
+    ),
+  );
+});
+
+test("reuses the Typeform-origin lead on a later webhook redelivery", async () => {
+  const methods: string[] = [];
+  const fakeFetch = async (input: URL | RequestInfo, init?: RequestInit) => {
+    const url = new URL(String(input));
+    const method = init?.method ?? "GET";
+    methods.push(`${method} ${url.pathname}`);
+    const data = url.pathname.endsWith("/dealFields")
+      ? fieldNames.map((name) => ({
+          field_name: name,
+          field_code: fieldCodes[name],
+        }))
+      : url.pathname.endsWith("/persons/search")
+        ? { items: [{ item: { id: 123 } }] }
+        : url.pathname.endsWith("/api/v2/deals")
+          ? []
+          : url.pathname.endsWith("/api/v1/leads")
+            ? [
+                {
+                  id: "existing-lead-uuid",
+                  add_time: "2026-08-23T15:00:00.000Z",
+                  origin_id: "typeform:tf-submission-123",
+                },
+              ]
+            : { id: "existing-lead-uuid" };
+    return new Response(JSON.stringify({ success: true, data }), { status: 200 });
+  };
+
+  const result = await syncPipedriveAttribution(payload(), {
+    apiToken: "private-test-token",
+    companyDomain: "artisanlabnetwork",
+    fetchImpl: fakeFetch as typeof fetch,
+    now: Date.parse("2026-08-23T16:00:00.000Z"),
+    retryDelaysMs: [0],
+  });
+
+  assert.deepEqual(result, { status: "updated", updatedFieldCount: 9 });
+  assert.equal(methods.at(-1), "PATCH /api/v1/leads/existing-lead-uuid");
+  assert.equal(methods.some((entry) => entry === "POST /api/v1/leads"), false);
 });
 
 test("preserves populated first-touch fields", async () => {

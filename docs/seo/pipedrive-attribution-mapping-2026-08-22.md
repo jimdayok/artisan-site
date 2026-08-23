@@ -36,11 +36,11 @@ The website already supplies the attribution values to the approved Typeforms, a
 For each successful Typeform response:
 
 1. Read only the nine allowlisted hidden/URL parameters.
-2. Allow the existing Pipedrive Classic connection to create the person and deal.
-3. Find the matching person by email and the closest newly created deal, then write non-empty attribution values to the nine matching Lead/Deal fields.
+2. Allow the existing Pipedrive Classic connection to create the person and organization.
+3. Find the matching person by email. Update the closest matching lead/deal if present; otherwise create one neutral record in the Pipedrive Leads Inbox with the nine attribution fields.
 4. Do not overwrite an existing first-touch field with an empty or later-session value.
 5. Preserve the original form delivery even if attribution is absent or malformed.
-6. Do not create a second person or deal solely to add attribution.
+6. Do not create a second person, organization, or pipeline deal solely to add attribution. Use the Typeform response token as the Lead origin identifier so retries can reuse the same Lead.
 7. Record integration errors outside GA4 without respondent answers or credentials.
 
 ## Verification Cases
@@ -62,7 +62,8 @@ Reloaded verification on August 23, 2026 confirmed:
 - Typeform `m0lQ9zjD` has its Pipedrive Classic connection enabled.
 - Typeform `quuPCSff` has its Pipedrive Classic connection enabled.
 - On both forms, the only integration-management action is **Delete integration**. There is no edit or field-mapping control.
+- A controlled submission created one Person and one Organization, but no Lead or Deal.
 
-The existing Typeform Classic connections must not be deleted or reconnected merely to expose field mapping. The safe middleware path is now implemented in `lib/integrations/pipedrive-attribution.server.ts`: it resolves the nine Pipedrive field codes, searches for the submitted email's person, waits briefly for the Classic-created deal, and fills only blank first-touch fields. It never creates a person or deal. It stores no form answers or message content, cleans the landing-page URL, reduces the referrer to its origin, and does not log or return the respondent email.
+The existing Typeform Classic connections must not be deleted or reconnected merely to expose field mapping. The safe middleware path is implemented in `lib/integrations/pipedrive-attribution.server.ts`: it resolves the nine Pipedrive field codes, searches for the submitted email's person, briefly checks for an existing lead/deal, then creates one neutral Leads Inbox record only when neither exists. It never creates a person, organization, or pipeline deal. It stores no form answers or message content, cleans the landing-page URL, reduces the referrer to its origin, and does not log or return the respondent email.
 
-Activation requires the private server settings `PIPEDRIVE_COMPANY_DOMAIN=artisanlabnetwork` and `PIPEDRIVE_API_TOKEN` in Vercel Preview and Production, followed by deployment and one controlled end-to-end submission. If either setting is absent, the mapper is disabled. If the mapper fails, existing form delivery and the GA4 lead event remain independent and continue normally.
+Activation requires the private server settings `PIPEDRIVE_COMPANY_DOMAIN=artisanlabnetwork` and `PIPEDRIVE_API_TOKEN` in Vercel Preview and Production. If either setting is absent, the mapper is disabled. If the mapper fails, existing form delivery and the GA4 lead event remain independent and continue normally.

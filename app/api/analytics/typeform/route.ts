@@ -38,9 +38,11 @@ export async function POST(request: Request) {
     return Response.json({ received: false }, { status: 400 });
   }
 
-  // This is update-only: it never creates a Pipedrive person or deal. If the
-  // optional server credentials are absent or Pipedrive is unavailable, the
-  // existing Typeform delivery and GA4 lead event continue unchanged.
+  // Typeform Classic remains responsible for the contact and organization.
+  // This sync updates a matching lead/deal or creates one neutral Leads Inbox
+  // record when neither exists. It never creates a person, organization, or
+  // pipeline deal. Pipedrive failure cannot block the existing Typeform or GA4
+  // delivery paths.
   const pipedriveAttribution = syncPipedriveAttribution(parsed);
 
   const { event, reason } = buildTypeformLeadEvent(parsed, webhookSecret);

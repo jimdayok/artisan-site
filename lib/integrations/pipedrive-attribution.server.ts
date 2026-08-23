@@ -243,6 +243,7 @@ function pipedriveRequestStage(
 ): PipedriveErrorStage {
   if (path.startsWith("/api/v2/dealFields")) return "deal_fields";
   if (path.startsWith("/api/v2/persons/search")) return "person_search";
+  if (path.startsWith("/api/v2/persons/")) return "person_search";
   if (path.startsWith("/api/v2/deals/") && method === "PATCH") {
     return "deal_update";
   }
@@ -273,6 +274,40 @@ function personIds(value: unknown) {
       return numericId(recordValue(record?.item)?.id ?? record?.id);
     })
     .filter((id): id is number => Boolean(id));
+}
+
+async function closestSubmittedPersonId(
+  fetchImpl: typeof fetch,
+  baseUrl: string,
+  apiToken: string,
+  ids: readonly number[],
+  submittedAt: number,
+) {
+  const candidates = await Promise.all(
+    ids.slice(0, 10).map(async (id) => {
+      const person = recordValue(
+        await pipedriveRequest(
+          fetchImpl,
+          baseUrl,
+          apiToken,
+          `/api/v2/persons/${id}`,
+        ),
+      );
+      return { id, addTime: Date.parse(safeString(person?.add_time, 50)) };
+    }),
+  );
+  return candidates
+    .filter(
+      (candidate) =>
+        Number.isFinite(candidate.addTime) &&
+        candidate.addTime >= submittedAt - DEAL_WINDOW_BEFORE_MS &&
+        candidate.addTime <= submittedAt + DEAL_WINDOW_AFTER_MS,
+    )
+    .sort(
+      (left, right) =>
+        Math.abs(left.addTime - submittedAt) -
+          Math.abs(right.addTime - submittedAt) || left.id - right.id,
+    )[0]?.id;
 }
 
 function fieldCodes(value: unknown) {
@@ -390,6 +425,7 @@ export async function syncPipedriveAttribution(
     let deal: DealCandidate | undefined;
     let lead: LeadCandidate | undefined;
     let matchedPersonId: number | undefined;
+    let matchingPersonIds: number[] = [];
     const originId = `typeform:${attribution.submissionId}`;
 
     // Typeform's Pipedrive Classic integration and this signed webhook run
@@ -412,7 +448,7 @@ export async function syncPipedriveAttribution(
           `/api/v2/persons/search?${search}`,
         ),
       );
-      matchedPersonId = people[0] ?? matchedPersonId;
+      matchingPersonIds = people;
       const allDeals: DealCandidate[] = [];
       for (const personId of people.slice(0, 10)) {
         const query = new URLSearchParams({
@@ -479,6 +515,16 @@ export async function syncPipedriveAttribution(
               Math.abs(right.addTime - submittedAt),
           )[0];
       if (lead) break;
+    }
+
+    if (!deal && !lead && matchingPersonIds.length > 0) {
+      matchedPersonId = await closestSubmittedPersonId(
+        fetchImpl,
+        baseUrl,
+        apiToken,
+        matchingPersonIds,
+        submittedAt,
+      );
     }
 
     if (!deal && !lead && !matchedPersonId) return { status: "not_found" };

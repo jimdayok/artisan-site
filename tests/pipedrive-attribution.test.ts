@@ -191,7 +191,11 @@ test("creates one neutral Pipedrive lead when Typeform created only a contact", 
         field_code: fieldCodes[name],
       }));
     } else if (requestUrl.pathname.endsWith("/persons/search")) {
-      data = { items: [{ item: { id: 123 } }] };
+      data = { items: [{ item: { id: 999 } }, { item: { id: 123 } }] };
+    } else if (requestUrl.pathname.endsWith("/persons/999")) {
+      data = { id: 999, add_time: "2026-08-07T12:00:00Z" };
+    } else if (requestUrl.pathname.endsWith("/persons/123")) {
+      data = { id: 123, add_time: "2026-08-23T12:00:02Z" };
     } else if (requestUrl.pathname.endsWith("/api/v2/deals")) {
       data = [];
     } else if (

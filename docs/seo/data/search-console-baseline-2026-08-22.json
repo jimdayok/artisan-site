@@ -1,0 +1,34 @@
+{
+  "source": "Google Search Console Performance",
+  "property": "sc-domain:artisanlabnetwork.com",
+  "searchType": "Web",
+  "period": {
+    "start": "2026-05-21",
+    "end": "2026-08-20",
+    "label": "Last 3 months"
+  },
+  "accessedAt": "2026-08-22",
+  "overall": {
+    "clicks": 742,
+    "impressions": 15577,
+    "ctr": 0.048,
+    "averagePosition": 10.6
+  },
+  "brandQueries": [
+    { "brand": "Artisan", "query": "artisan lab network", "clicks": 51, "impressions": 80, "ctr": 0.638, "averagePosition": 2.3 },
+    { "brand": "Pacific", "query": "pacific artisan labs", "clicks": 158, "impressions": 455, "ctr": 0.347, "averagePosition": 3.0 },
+    { "brand": "Peak", "query": "peak artisan labs", "clicks": 43, "impressions": 240, "ctr": 0.179, "averagePosition": 1.5 },
+    { "brand": "Pike", "query": "pike artisan labs", "clicks": 17, "impressions": 71, "ctr": 0.239, "averagePosition": 2.9 }
+  ],
+  "landingPages": [
+    { "brand": "Artisan", "url": "https://www.artisanlabnetwork.com/", "clicks": 165, "impressions": 7901, "ctr": 0.021, "averagePosition": 12.2 },
+    { "brand": "Pacific", "url": "https://www.artisanlabnetwork.com/pacificartisanlabs", "clicks": 254, "impressions": 2505, "ctr": 0.101, "averagePosition": 5.4 },
+    { "brand": "Peak", "url": "https://www.artisanlabnetwork.com/peak-artisan-labs", "clicks": 62, "impressions": 1804, "ctr": 0.034, "averagePosition": 5.7 },
+    { "brand": "Pike", "url": "https://www.artisanlabnetwork.com/pikeartisanlabs", "clicks": 50, "impressions": 1334, "ctr": 0.037, "averagePosition": 5.8 }
+  ],
+  "notes": [
+    "Brand-query rows are exact named queries, not full branded-query clusters.",
+    "Landing-page rows contain traffic from all queries and therefore use a different grain than brand-query rows.",
+    "The period ends two days before the access date because Search Console data is delayed."
+  ]
+}

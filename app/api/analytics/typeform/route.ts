@@ -2,6 +2,7 @@ import {
   buildTypeformLeadEvent,
   verifyTypeformSignature,
 } from "@/lib/analytics/typeform-webhook.server";
+import { syncPipedriveAttribution } from "@/lib/integrations/pipedrive-attribution.server";
 
 const MAX_WEBHOOK_BYTES = 1_000_000;
 
@@ -37,24 +38,42 @@ export async function POST(request: Request) {
     return Response.json({ received: false }, { status: 400 });
   }
 
+  // This is update-only: it never creates a Pipedrive person or deal. If the
+  // optional server credentials are absent or Pipedrive is unavailable, the
+  // existing Typeform delivery and GA4 lead event continue unchanged.
+  const pipedriveAttribution = syncPipedriveAttribution(parsed);
+
   const { event, reason } = buildTypeformLeadEvent(parsed, webhookSecret);
   if (!event) {
-    return Response.json({ received: true, tracked: false, reason });
+    const pipedrive = await pipedriveAttribution;
+    return Response.json({
+      received: true,
+      tracked: false,
+      reason,
+      pipedrive_attribution: pipedrive.status,
+    });
   }
 
   const endpoint = new URL("https://www.google-analytics.com/mp/collect");
   endpoint.searchParams.set("measurement_id", measurementId);
   endpoint.searchParams.set("api_secret", apiSecret);
-  const response = await fetch(endpoint, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(event),
-    cache: "no-store",
-  });
+  const [response, pipedrive] = await Promise.all([
+    fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(event),
+      cache: "no-store",
+    }),
+    pipedriveAttribution,
+  ]);
 
   if (!response.ok) {
     return Response.json({ received: false }, { status: 502 });
   }
 
-  return Response.json({ received: true, tracked: true });
+  return Response.json({
+    received: true,
+    tracked: true,
+    pipedrive_attribution: pipedrive.status,
+  });
 }

@@ -161,6 +161,13 @@ test("updates the closest matching deal without creating a person or deal", asyn
   assert.deepEqual(result, { status: "updated", updatedFieldCount: 9 });
   assert.equal(calls.at(-1)?.method, "PATCH");
   assert.ok(authentications.every(Boolean));
+  const dealSearchUrl = calls.find((call) => call.url.includes("/api/v2/deals?"));
+  assert.equal(
+    new URL(dealSearchUrl?.url ?? "https://invalid.example").searchParams.get(
+      "updated_since",
+    ),
+    "2026-08-23T11:58:00Z",
+  );
   assert.ok(calls.every((call) => call.method === "GET" || call.method === "PATCH"));
   assert.doesNotMatch(JSON.stringify(calls.at(-1)), /private@example|Never send/);
   assert.doesNotMatch(JSON.stringify(calls), /private-test-token/);

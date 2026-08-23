@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  extractPipedriveContact,
   extractPipedriveAttribution,
   syncPipedriveAttribution,
 } from "../lib/integrations/pipedrive-attribution.server.ts";
@@ -73,6 +74,81 @@ test("omits campaign values that resemble personal information", () => {
   input.form_response.hidden.utm_term = "private@example.com";
   const attribution = extractPipedriveAttribution(input);
   assert.equal(attribution?.utm_term, undefined);
+});
+
+test("extracts only approved business contact fields from the contact form", () => {
+  const input = payload();
+  input.form_response.form_id = "m0lQ9zjD";
+  Object.assign(input.form_response, {
+    definition: {
+      fields: [
+        { id: "contact", ref: "contact-ref", title: "Contact Information" },
+        { id: "message", ref: "message-ref", title: "Your Message" },
+      ],
+    },
+    answers: [
+      {
+        field: { id: "contact", ref: "contact-ref" },
+        type: "contact_info",
+        contact_info: {
+          first_name: "Jane",
+          last_name: "Smith",
+          phone_number: "(317) 555-0100",
+          email: "jane@example.com",
+          company: "Example Eye Care",
+        },
+      },
+      {
+        field: { id: "message", ref: "message-ref" },
+        type: "text",
+        text: "Private inquiry text must stay in Typeform",
+      },
+    ],
+  });
+
+  assert.deepEqual(extractPipedriveContact(input), {
+    email: "jane@example.com",
+    name: "Jane Smith",
+    phone: "(317) 555-0100",
+    company: "Example Eye Care",
+  });
+  assert.doesNotMatch(
+    JSON.stringify(extractPipedriveContact(input)),
+    /Private inquiry text/,
+  );
+});
+
+test("extracts the account contact but excludes credit-application answers", () => {
+  const input = payload();
+  Object.assign(input.form_response, {
+    definition: {
+      fields: [
+        { id: "name", title: "Your Name" },
+        { id: "business", title: "Your Business Name" },
+        { id: "phone", title: "Practice Phone Number" },
+        { id: "email", title: "Your Email Address" },
+        { id: "ssn", title: "Guarantor's Social Security Number" },
+        { id: "bank", title: "Bank Reference(s)" },
+      ],
+    },
+    answers: [
+      { field: { id: "name" }, type: "text", text: "Jamie Owner" },
+      { field: { id: "business" }, type: "text", text: "Clear View LLC" },
+      { field: { id: "phone" }, type: "phone_number", phone_number: "317-555-0101" },
+      { field: { id: "email" }, type: "email", email: "jamie@example.com" },
+      { field: { id: "ssn" }, type: "text", text: "111-22-3333" },
+      { field: { id: "bank" }, type: "text", text: "Private Bank Account" },
+    ],
+  });
+
+  const contact = extractPipedriveContact(input);
+  assert.deepEqual(contact, {
+    email: "jamie@example.com",
+    name: "Jamie Owner",
+    phone: "317-555-0101",
+    company: "Clear View LLC",
+  });
+  assert.doesNotMatch(JSON.stringify(contact), /111-22-3333|Private Bank/);
 });
 
 test("is inactive until both private server settings are configured", async () => {
@@ -245,6 +321,148 @@ test("creates one neutral Pipedrive lead when Typeform created only a contact", 
         (call.method === "POST" && call.url.endsWith("/api/v1/leads")),
     ),
   );
+});
+
+test("upsert mode reuses the established exact-email contact", async () => {
+  const calls: Array<{ path: string; method: string }> = [];
+  const fakeFetch = async (input: URL | RequestInfo, init?: RequestInit) => {
+    const url = new URL(String(input));
+    const method = init?.method ?? "GET";
+    calls.push({ path: url.pathname, method });
+    let data: unknown;
+    if (url.pathname.endsWith("/dealFields")) {
+      data = fieldNames.map((name) => ({
+        field_name: name,
+        field_code: fieldCodes[name],
+      }));
+    } else if (url.pathname.endsWith("/persons/search")) {
+      data = { items: [{ item: { id: 999 } }, { item: { id: 123 } }] };
+    } else if (url.pathname.endsWith("/api/v2/deals")) {
+      data = [];
+    } else if (url.pathname.endsWith("/api/v1/leads") && method === "GET") {
+      data = [];
+    } else if (url.pathname.endsWith("/persons/999")) {
+      data = {
+        id: 999,
+        add_time: "2026-08-23T12:00:02Z",
+        open_deals_count: 0,
+        activities_count: 0,
+      };
+    } else if (url.pathname.endsWith("/persons/123")) {
+      data = {
+        id: 123,
+        add_time: "2025-01-01T12:00:00Z",
+        open_deals_count: 1,
+        activities_count: 2,
+      };
+    } else if (url.pathname.endsWith("/api/v1/leads") && method === "POST") {
+      data = { id: "new-lead" };
+    } else {
+      throw new Error(`Unexpected request: ${url.pathname}`);
+    }
+    return new Response(JSON.stringify({ success: true, data }), {
+      status: method === "POST" ? 201 : 200,
+    });
+  };
+
+  const result = await syncPipedriveAttribution(payload(), {
+    apiToken: "private-test-token",
+    companyDomain: "artisanlabnetwork",
+    contactMode: "upsert",
+    fetchImpl: fakeFetch as typeof fetch,
+    retryDelaysMs: [0],
+  });
+
+  assert.deepEqual(result, { status: "created", updatedFieldCount: 9 });
+  assert.equal(
+    calls.some(
+      (call) => call.path === "/api/v2/persons" && call.method === "POST",
+    ),
+    false,
+  );
+  assert.equal(
+    calls.some(
+      (call) => call.path === "/api/v2/organizations" && call.method === "POST",
+    ),
+    false,
+  );
+});
+
+test("upsert mode creates one organization, person, and lead for a new email", async () => {
+  const input = payload();
+  Object.assign(input.form_response, {
+    definition: {
+      fields: [
+        { id: "name", title: "Your Name" },
+        { id: "business", title: "Your Business Name" },
+        { id: "phone", title: "Practice Phone Number" },
+        { id: "email", title: "Your Email Address" },
+        { id: "ssn", title: "Guarantor's Social Security Number" },
+      ],
+    },
+    answers: [
+      { field: { id: "name" }, type: "text", text: "Jamie Owner" },
+      { field: { id: "business" }, type: "text", text: "Clear View LLC" },
+      { field: { id: "phone" }, type: "phone_number", phone_number: "317-555-0101" },
+      { field: { id: "email" }, type: "email", email: "jamie@example.com" },
+      { field: { id: "ssn" }, type: "text", text: "111-22-3333" },
+    ],
+  });
+  const calls: Array<{ path: string; method: string; body?: string }> = [];
+  const fakeFetch = async (request: URL | RequestInfo, init?: RequestInit) => {
+    const url = new URL(String(request));
+    const method = init?.method ?? "GET";
+    calls.push({
+      path: url.pathname,
+      method,
+      body: typeof init?.body === "string" ? init.body : undefined,
+    });
+    let data: unknown;
+    if (url.pathname.endsWith("/dealFields")) {
+      data = fieldNames.map((name) => ({
+        field_name: name,
+        field_code: fieldCodes[name],
+      }));
+    } else if (url.pathname.endsWith("/persons/search")) {
+      data = { items: [] };
+    } else if (
+      url.pathname.endsWith("/organizations/search") &&
+      method === "GET"
+    ) {
+      data = { items: [] };
+    } else if (url.pathname.endsWith("/organizations") && method === "POST") {
+      data = { id: 700 };
+    } else if (url.pathname.endsWith("/persons") && method === "POST") {
+      data = { id: 800 };
+    } else if (url.pathname.endsWith("/leads") && method === "POST") {
+      data = { id: "new-lead" };
+    } else {
+      throw new Error(`Unexpected request: ${url.pathname}`);
+    }
+    return new Response(JSON.stringify({ success: true, data }), {
+      status: method === "POST" ? 201 : 200,
+    });
+  };
+
+  const result = await syncPipedriveAttribution(input, {
+    apiToken: "private-test-token",
+    companyDomain: "artisanlabnetwork",
+    contactMode: "upsert",
+    fetchImpl: fakeFetch as typeof fetch,
+    retryDelaysMs: [0],
+  });
+
+  assert.deepEqual(result, { status: "created", updatedFieldCount: 9 });
+  assert.deepEqual(
+    calls.filter((call) => call.method === "POST").map((call) => call.path),
+    ["/api/v2/organizations", "/api/v2/persons", "/api/v1/leads"],
+  );
+  const personBody = JSON.parse(
+    calls.find((call) => call.path === "/api/v2/persons")?.body ?? "{}",
+  ) as Record<string, unknown>;
+  assert.equal(personBody.name, "Jamie Owner");
+  assert.equal(personBody.org_id, 700);
+  assert.doesNotMatch(JSON.stringify(calls), /111-22-3333/);
 });
 
 test("reuses the Typeform-origin lead on a later webhook redelivery", async () => {

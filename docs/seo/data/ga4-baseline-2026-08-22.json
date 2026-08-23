@@ -1,0 +1,31 @@
+{
+  "source": "Google Analytics 4 Home",
+  "propertyId": "396956220",
+  "propertyName": "Artisan Lab Network",
+  "accessedAt": "2026-08-22",
+  "period": "Last 7 days unless stated otherwise",
+  "trafficAcquisition": [
+    { "channel": "Direct", "sessions": 240 },
+    { "channel": "Organic Search", "sessions": 67 },
+    { "channel": "Referral", "sessions": 13 },
+    { "channel": "Organic Social", "sessions": 6 },
+    { "channel": "AI Assistant", "sessions": 2 },
+    { "channel": "Unassigned", "sessions": 1 }
+  ],
+  "pageViews": [
+    { "brand": "Artisan", "pageTitle": "Artisan Lab Network", "views": 243 },
+    { "brand": "Pacific", "pageTitle": "Pacific Artisan Labs", "views": 76 },
+    { "brand": "Peak", "pageTitle": "Peak Artisan Labs", "views": 37 },
+    { "brand": "Pike", "pageTitle": "Pike Artisan Labs", "views": 36 }
+  ],
+  "today": {
+    "activeUsers": 26,
+    "eventCount": 113,
+    "keyEvents": 0
+  },
+  "notes": [
+    "The page-title table and channel table use GA4 Home card defaults and are directional baseline observations.",
+    "The new measurement system went live during this period; conversion and site_version reporting require a full post-launch accrual window.",
+    "Percentages shown beside GA4 Home rows are comparison changes, not traffic shares, and are intentionally omitted."
+  ]
+}

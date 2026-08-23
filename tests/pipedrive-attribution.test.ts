@@ -85,6 +85,29 @@ test("is inactive until both private server settings are configured", async () =
   );
 });
 
+test("reports only a safe stage and status for Pipedrive request failures", async () => {
+  const result = await syncPipedriveAttribution(payload(), {
+    apiToken: "private-test-token",
+    companyDomain: "artisanlabnetwork",
+    fetchImpl: (async () =>
+      new Response(
+        JSON.stringify({
+          success: false,
+          error: "Sensitive provider detail must not be returned",
+        }),
+        { status: 401 },
+      )) as typeof fetch,
+    retryDelaysMs: [0],
+  });
+
+  assert.deepEqual(result, {
+    status: "api_error",
+    errorStage: "deal_fields",
+    httpStatus: 401,
+  });
+  assert.doesNotMatch(JSON.stringify(result), /Sensitive|private-test-token/);
+});
+
 test("updates the closest matching deal without creating a person or deal", async () => {
   const calls: Array<{ url: string; method: string; body?: string }> = [];
   const authentications: boolean[] = [];

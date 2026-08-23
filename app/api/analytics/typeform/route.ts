@@ -38,11 +38,10 @@ export async function POST(request: Request) {
     return Response.json({ received: false }, { status: 400 });
   }
 
-  // Typeform Classic remains responsible for the contact and organization.
-  // This sync updates a matching lead/deal or creates one neutral Leads Inbox
-  // record when neither exists. It never creates a person, organization, or
-  // pipeline deal. Pipedrive failure cannot block the existing Typeform or GA4
-  // delivery paths.
+  // The signed sync reuses an exact-email person or creates the minimum contact
+  // records needed for a new email, then updates or creates a neutral Leads
+  // Inbox record. Sensitive application answers remain in Typeform. Pipedrive
+  // failure cannot block the Typeform response or GA4 delivery paths.
   const pipedriveAttribution = syncPipedriveAttribution(parsed);
 
   const { event, reason } = buildTypeformLeadEvent(parsed, webhookSecret);

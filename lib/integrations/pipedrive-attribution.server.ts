@@ -345,6 +345,11 @@ function wait(milliseconds: number) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
+function pipedriveTimestamp(milliseconds: number) {
+  // Pipedrive documents RFC3339 timestamps but rejects fractional seconds.
+  return new Date(milliseconds).toISOString().replace(/\.\d{3}Z$/, "Z");
+}
+
 export async function syncPipedriveAttribution(
   payload: unknown,
   options: PipedriveSyncOptions = {},
@@ -377,7 +382,9 @@ export async function syncPipedriveAttribution(
     }
 
     const submittedAt = Date.parse(attribution.submittedAt);
-    const earliest = new Date(submittedAt - DEAL_WINDOW_BEFORE_MS).toISOString();
+    const earliest = pipedriveTimestamp(
+      submittedAt - DEAL_WINDOW_BEFORE_MS,
+    );
     const requestedFields = Array.from(codes.values()).join(",");
     const retryDelaysMs = options.retryDelaysMs ?? [0, 750, 1500, 3000];
     let deal: DealCandidate | undefined;

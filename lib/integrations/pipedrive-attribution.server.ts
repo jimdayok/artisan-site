@@ -53,6 +53,16 @@ export type PipedriveAttributionResult = {
     | "configuration_error"
     | "api_error";
   updatedFieldCount?: number;
+  errorStage?:
+    | "deal_fields"
+    | "person_search"
+    | "deal_search"
+    | "lead_search"
+    | "deal_update"
+    | "lead_update"
+    | "lead_create"
+    | "unknown";
+  httpStatus?: number;
 };
 
 type PipedriveSyncOptions = {
@@ -196,10 +206,53 @@ async function pipedriveRequest(
     },
     cache: "no-store",
   });
-  if (!response.ok) throw new Error("Pipedrive request failed");
+  if (!response.ok) {
+    throw new PipedriveRequestError(
+      pipedriveRequestStage(path, init?.method),
+      response.status,
+    );
+  }
   const body = (await response.json()) as { success?: unknown; data?: unknown };
-  if (body.success === false) throw new Error("Pipedrive request failed");
+  if (body.success === false) {
+    throw new PipedriveRequestError(
+      pipedriveRequestStage(path, init?.method),
+      response.status,
+    );
+  }
   return body.data;
+}
+
+type PipedriveErrorStage = NonNullable<
+  PipedriveAttributionResult["errorStage"]
+>;
+
+class PipedriveRequestError extends Error {
+  readonly stage: PipedriveErrorStage;
+  readonly httpStatus: number;
+
+  constructor(stage: PipedriveErrorStage, httpStatus: number) {
+    super("Pipedrive request failed");
+    this.stage = stage;
+    this.httpStatus = httpStatus;
+  }
+}
+
+function pipedriveRequestStage(
+  path: string,
+  method = "GET",
+): PipedriveErrorStage {
+  if (path.startsWith("/api/v2/dealFields")) return "deal_fields";
+  if (path.startsWith("/api/v2/persons/search")) return "person_search";
+  if (path.startsWith("/api/v2/deals/") && method === "PATCH") {
+    return "deal_update";
+  }
+  if (path.startsWith("/api/v2/deals")) return "deal_search";
+  if (path.startsWith("/api/v1/leads/") && method === "PATCH") {
+    return "lead_update";
+  }
+  if (path === "/api/v1/leads" && method === "POST") return "lead_create";
+  if (path.startsWith("/api/v1/leads")) return "lead_search";
+  return "unknown";
 }
 
 function listData(value: unknown) {
@@ -478,7 +531,14 @@ export async function syncPipedriveAttribution(
       }),
     });
     return { status: "created", updatedFieldCount };
-  } catch {
+  } catch (error) {
+    if (error instanceof PipedriveRequestError) {
+      return {
+        status: "api_error",
+        errorStage: error.stage,
+        httpStatus: error.httpStatus,
+      };
+    }
     return { status: "api_error" };
   }
 }

@@ -53,6 +53,12 @@ export async function POST(request: Request) {
       tracked: false,
       reason,
       pipedrive_attribution: pipedrive.status,
+      ...(pipedrive.errorStage
+        ? {
+            pipedrive_error_stage: pipedrive.errorStage,
+            pipedrive_http_status: pipedrive.httpStatus,
+          }
+        : {}),
     });
   }
 
@@ -77,5 +83,11 @@ export async function POST(request: Request) {
     received: true,
     tracked: true,
     pipedrive_attribution: pipedrive.status,
+    ...(pipedrive.errorStage
+      ? {
+          pipedrive_error_stage: pipedrive.errorStage,
+          pipedrive_http_status: pipedrive.httpStatus,
+        }
+      : {}),
   });
 }

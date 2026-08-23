@@ -27,7 +27,7 @@ Both sites use the same event names and parameters. `site_version` distinguishes
 - `lib/analytics/events.ts`: the only application API that writes business events to `dataLayer`.
 - `app/components/analytics/AnalyticsProvider.tsx`: consent-gated GTM loader, SPA pageviews, newsletter views, and delegated meaningful-link tracking.
 - `app/components/analytics/EmbeddedTypeform.tsx`: successful-submit tracking and privacy-safe attribution for embedded Typeforms.
-- `lib/integrations/pipedrive-attribution.server.ts`: optional, server-only, update-only Pipedrive attribution for the deal created by Typeform Classic.
+- `lib/integrations/pipedrive-attribution.server.ts`: server-only Pipedrive attribution that updates a matching lead/deal or creates one neutral Leads Inbox record after Typeform Classic creates the contact.
 
 GTM and GA4 are suppressed in local development. To inspect local `dataLayer` behavior intentionally, provide valid test IDs and set `NEXT_PUBLIC_ANALYTICS_DEBUG=true`. Never use the production GA4 stream for local debugging.
 
@@ -147,7 +147,7 @@ Map those fields through the existing Typeform/Pipedrive connection, or map them
 
 Pipedrive now has all nine Lead/Deal text fields: `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, `utm_term`, `landing_page`, `referrer`, `site_version`, and `lab_name`. Reloaded UI verification on August 23, 2026 showed 96/100 custom fields in use. Both approved Typeforms still have their Pipedrive Classic integrations enabled, but each integration's only available management action is **Delete integration**; it exposes no edit or field-mapping control. Preserve those live integrations.
 
-The signed Typeform webhook now includes an optional server-only Pipedrive attribution step. It finds the person by the submitted email address, finds the closest deal created by the existing Typeform Classic integration, and fills only blank first-touch attribution fields. It never creates a person or deal and never sends the email address, form answers, or message to GA4. The landing page is stored without its query string, and the referrer is stored as origin only. If Pipedrive is unavailable or not configured, the original Typeform delivery and GA4 lead event continue unchanged.
+The signed Typeform webhook includes a server-only Pipedrive attribution step. It finds the person created by the existing Typeform Classic integration, updates a matching lead/deal when one exists, or creates one neutral record in Pipedrive's Leads Inbox when Typeform created only the person and organization. It never creates a person, organization, or pipeline deal and never sends the email address, form answers, or message to GA4. New leads use the Typeform response token as a stable origin identifier so webhook retries do not intentionally create duplicates. The landing page is stored without its query string, and the referrer is stored as origin only. If Pipedrive is unavailable or not configured, the original Typeform delivery and GA4 lead event continue unchanged.
 
 External Typeform completions are accepted at `/api/analytics/typeform`. The endpoint validates Typeform's HMAC signature, reads only allowlisted hidden attribution fields, ignores all answers and respondent PII, and forwards a successful `generate_lead` event through GA4 Measurement Protocol. `quuPCSff` is recorded as `lead_type=new_account`; the earlier `open_account` event remains intent/start activity and is not mislabeled as a completed application.
 
@@ -160,7 +160,7 @@ PIPEDRIVE_COMPANY_DOMAIN=artisanlabnetwork
 PIPEDRIVE_API_TOKEN=<private token for jim.day@artisanlabnetwork.com>
 ```
 
-`PIPEDRIVE_API_TOKEN` is private and must be entered directly into Vercel; never paste it into source code, analytics, documentation, a URL, or chat. Until both Pipedrive settings are configured, the attribution step reports `disabled` and makes no Pipedrive request.
+`PIPEDRIVE_API_TOKEN` is private and must be entered directly into Vercel; never paste it into source code, analytics, documentation, logs, or chat. The server adds it only to the private outgoing Pipedrive request as required by Pipedrive's personal-token authentication. Until both Pipedrive settings are configured, the attribution step reports `disabled` and makes no Pipedrive request.
 
 In Typeform, add these URL parameters to both `m0lQ9zjD` and `quuPCSff` without deleting the existing UTM/landing/referrer fields: `analytics_delivery`, `page_location`, `page_title`, `traffic_context`, `ga_client_id`, and `ga_session_id`. Add a webhook on each form pointing to `https://preview.artisanlabnetwork.com/api/analytics/typeform`, save it, edit it, set the same secret, select completed responses only, enable it, and send a test delivery. At cutover, change the webhook URL to the production hostname if the preview hostname will be retired.
 
@@ -643,7 +643,7 @@ This preserves direct existing-versus-preview comparison before cutover and clea
 - Google IDs, GTM tags/triggers, key-event settings, custom definitions, Search Console linking, retention, filters, and permissions require authenticated Google access.
 - The Kajabi site is configured outside this repository. Keep its deployed Header Page Scripts synchronized with `docs/kajabi-analytics-snippet.html` and revalidate after any Kajabi theme change.
 - Typeform completion delivery is deployed and enabled. At site cutover, update the webhook hostname only if `preview.artisanlabnetwork.com` will be retired. HubSpot completion still requires its own approved integration or return-page configuration.
-- Pipedrive has all nine attribution fields and 4 remaining custom-field slots. The two Pipedrive Classic integrations remain enabled and must remain in place. The update-only middleware is implemented but stays inactive until the private Pipedrive token and company domain are configured in Vercel, deployed, and verified with one controlled form submission.
+- Pipedrive has all nine attribution fields and 4 remaining custom-field slots. The two Pipedrive Classic integrations remain enabled and must remain in place. A controlled submission on August 23, 2026 confirmed that Typeform Classic creates the person and organization but not a lead or deal. The middleware therefore creates one neutral Leads Inbox record after the contact appears, while preserving any future matching lead/deal and filling only blank first-touch fields.
 - Consent/banner language and retention policy remain business/legal decisions; the code implements the current site's basic consent behavior and avoids advertising storage.
 
 ## Primary references

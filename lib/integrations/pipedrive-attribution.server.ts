@@ -28,6 +28,7 @@ type TypeformPayload = {
   event_type?: unknown;
   form_response?: {
     form_id?: unknown;
+    token?: unknown;
     submitted_at?: unknown;
     hidden?: unknown;
     answers?: unknown;
@@ -35,7 +36,9 @@ type TypeformPayload = {
 };
 
 export type PipedriveAttribution = Partial<Record<FieldName, string>> & {
+  formId: string;
   respondentEmail: string;
+  submissionId: string;
   submittedAt: string;
 };
 
@@ -43,6 +46,7 @@ export type PipedriveAttributionResult = {
   status:
     | "disabled"
     | "skipped"
+    | "created"
     | "updated"
     | "unchanged"
     | "not_found"
@@ -125,8 +129,15 @@ export function extractPipedriveAttribution(
   if (!ALLOWED_FORM_IDS.has(formId)) return undefined;
 
   const respondentEmail = answerEmail(response?.answers);
+  const submissionId = safeString(response?.token, 128);
   const submittedAt = safeString(response?.submitted_at, 40);
-  if (!respondentEmail || !Number.isFinite(Date.parse(submittedAt))) return undefined;
+  if (
+    !respondentEmail ||
+    !/^[a-z0-9_-]{8,128}$/i.test(submissionId) ||
+    !Number.isFinite(Date.parse(submittedAt))
+  ) {
+    return undefined;
+  }
 
   const hidden = hiddenFields(response?.hidden);
   const siteVersion = ALLOWED_SITE_VERSIONS.has(hidden.site_version)
@@ -138,7 +149,9 @@ export function extractPipedriveAttribution(
     ? hidden.lab_name
     : "Network";
   const attribution: PipedriveAttribution = {
+    formId,
     respondentEmail,
+    submissionId,
     submittedAt,
     site_version: siteVersion,
     lab_name: labName,
@@ -170,12 +183,15 @@ async function pipedriveRequest(
   path: string,
   init?: RequestInit,
 ) {
-  const response = await fetchImpl(`${baseUrl}${path}`, {
+  const url = new URL(path, baseUrl);
+  // Pipedrive personal API tokens are authenticated with the api_token query
+  // parameter. Never log or return this URL because it contains the token.
+  url.searchParams.set("api_token", apiToken);
+  const response = await fetchImpl(url, {
     ...init,
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      "x-api-token": apiToken,
       ...init?.headers,
     },
     cache: "no-store",
@@ -225,6 +241,13 @@ type DealCandidate = {
   customFields: Record<string, unknown>;
 };
 
+type LeadCandidate = {
+  id: string;
+  addTime: number;
+  originId: string;
+  customFields: Record<string, unknown>;
+};
+
 function dealCandidates(value: unknown) {
   const candidates: DealCandidate[] = [];
   for (const entry of listData(value)) {
@@ -236,6 +259,26 @@ function dealCandidates(value: unknown) {
       id,
       addTime,
       customFields: recordValue(deal?.custom_fields) ?? {},
+    });
+  }
+  return candidates;
+}
+
+function leadCandidates(value: unknown) {
+  const candidates: LeadCandidate[] = [];
+  for (const entry of listData(value)) {
+    const lead = recordValue(entry);
+    const id = safeString(lead?.id, 80);
+    const addTime = Date.parse(safeString(lead?.add_time, 50));
+    if (!id || !Number.isFinite(addTime)) continue;
+    const customFields = Object.fromEntries(
+      Object.entries(lead ?? {}).filter(([key]) => /^[a-f0-9]{40}$/i.test(key)),
+    );
+    candidates.push({
+      id,
+      addTime,
+      originId: safeString(lead?.origin_id, 255),
+      customFields,
     });
   }
   return candidates;
@@ -285,10 +328,14 @@ export async function syncPipedriveAttribution(
     const requestedFields = Array.from(codes.values()).join(",");
     const retryDelaysMs = options.retryDelaysMs ?? [0, 750, 1500, 3000];
     let deal: DealCandidate | undefined;
+    let lead: LeadCandidate | undefined;
+    let matchedPersonId: number | undefined;
+    const originId = `typeform:${attribution.submissionId}`;
 
     // Typeform's Pipedrive Classic integration and this signed webhook run
-    // independently. Brief bounded retries allow the Classic-created deal to
-    // appear without ever creating a duplicate ourselves.
+    // independently. Brief bounded retries allow the Classic-created contact,
+    // and any separately configured lead/deal, to appear before we create a
+    // neutral Leads Inbox record ourselves.
     for (const retryDelay of retryDelaysMs) {
       if (retryDelay > 0) await wait(retryDelay);
       const search = new URLSearchParams({
@@ -305,6 +352,7 @@ export async function syncPipedriveAttribution(
           `/api/v2/persons/search?${search}`,
         ),
       );
+      matchedPersonId = people[0] ?? matchedPersonId;
       const allDeals: DealCandidate[] = [];
       for (const personId of people.slice(0, 10)) {
         const query = new URLSearchParams({
@@ -341,30 +389,95 @@ export async function syncPipedriveAttribution(
             right.id - left.id,
         )[0];
       if (deal) break;
+
+      const allLeads: LeadCandidate[] = [];
+      for (const personId of people.slice(0, 10)) {
+        const query = new URLSearchParams({
+          person_id: String(personId),
+          sort: "add_time DESC",
+          limit: "100",
+        });
+        const leads = await pipedriveRequest(
+          fetchImpl,
+          baseUrl,
+          apiToken,
+          `/api/v1/leads?${query}`,
+        );
+        allLeads.push(...leadCandidates(leads));
+      }
+      lead =
+        allLeads.find((candidate) => candidate.originId === originId) ??
+        allLeads
+          .filter(
+            (candidate) =>
+              candidate.addTime >= submittedAt - DEAL_WINDOW_BEFORE_MS &&
+              candidate.addTime <= submittedAt + DEAL_WINDOW_AFTER_MS,
+          )
+          .sort(
+            (left, right) =>
+              Math.abs(left.addTime - submittedAt) -
+              Math.abs(right.addTime - submittedAt),
+          )[0];
+      if (lead) break;
     }
-    if (!deal) return { status: "not_found" };
+
+    if (!deal && !lead && !matchedPersonId) return { status: "not_found" };
 
     const updates: Record<string, string> = {};
     for (const fieldName of FIELD_NAMES) {
       const value = attribution[fieldName];
       const code = codes.get(fieldName);
-      if (value && code && isEmptyField(deal.customFields[code])) {
+      const existingValue = code
+        ? (deal?.customFields[code] ?? lead?.customFields[code])
+        : undefined;
+      if (value && code && isEmptyField(existingValue)) {
         updates[code] = value;
       }
     }
-    if (Object.keys(updates).length === 0) return { status: "unchanged" };
+    const updatedFieldCount = Object.keys(updates).length;
+    if ((deal || lead) && updatedFieldCount === 0) {
+      return { status: "unchanged" };
+    }
 
-    await pipedriveRequest(
-      fetchImpl,
-      baseUrl,
-      apiToken,
-      `/api/v2/deals/${deal.id}`,
-      {
-        method: "PATCH",
-        body: JSON.stringify({ custom_fields: updates }),
-      },
-    );
-    return { status: "updated", updatedFieldCount: Object.keys(updates).length };
+    if (deal) {
+      await pipedriveRequest(
+        fetchImpl,
+        baseUrl,
+        apiToken,
+        `/api/v2/deals/${deal.id}`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({ custom_fields: updates }),
+        },
+      );
+      return { status: "updated", updatedFieldCount };
+    }
+
+    if (lead) {
+      await pipedriveRequest(
+        fetchImpl,
+        baseUrl,
+        apiToken,
+        `/api/v1/leads/${lead.id}`,
+        {
+          method: "PATCH",
+          body: JSON.stringify(updates),
+        },
+      );
+      return { status: "updated", updatedFieldCount };
+    }
+
+    await pipedriveRequest(fetchImpl, baseUrl, apiToken, "/api/v1/leads", {
+      method: "POST",
+      body: JSON.stringify({
+        title: `Website inquiry - ${attribution.lab_name}`,
+        person_id: matchedPersonId,
+        origin_id: originId,
+        was_seen: false,
+        ...updates,
+      }),
+    });
+    return { status: "created", updatedFieldCount };
   } catch {
     return { status: "api_error" };
   }

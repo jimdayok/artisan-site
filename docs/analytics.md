@@ -160,16 +160,16 @@ TYPEFORM_ANALYTICS_WEBHOOK_SECRET=<one random secret shared only with Typeform>
 GA4_MEASUREMENT_PROTOCOL_API_SECRET=<secret created for the GA4 web stream>
 PIPEDRIVE_COMPANY_DOMAIN=artisanlabnetwork
 PIPEDRIVE_API_TOKEN=<private token for jim.day@artisanlabnetwork.com>
-PIPEDRIVE_TYPEFORM_CONTACT_MODE=classic
+PIPEDRIVE_TYPEFORM_CONTACT_MODE=upsert
 ```
 
 `PIPEDRIVE_API_TOKEN` is private and must be entered directly into Vercel; never paste it into source code, analytics, documentation, logs, or chat. The server adds it only to the private outgoing Pipedrive request as required by Pipedrive's personal-token authentication. Until both Pipedrive settings are configured, the attribution step reports `disabled` and makes no Pipedrive request.
 
-`PIPEDRIVE_TYPEFORM_CONTACT_MODE` is a cutover control. Keep `classic` while either Typeform Classic connection is enabled. After the replacement has been deployed and verified, set it to `upsert`, redeploy, and remove the Classic connections from both approved forms. Never leave Classic enabled after `upsert` is active because Classic would continue creating duplicate contacts independently.
+`PIPEDRIVE_TYPEFORM_CONTACT_MODE` is a cutover control. The current value is `upsert`. Use `classic` only during rollback if the original Typeform Classic connections are deliberately restored. Never leave Classic enabled while `upsert` is active because Classic would continue creating duplicate contacts independently.
 
 In Typeform, add these URL parameters to both `m0lQ9zjD` and `quuPCSff` without deleting the existing UTM/landing/referrer fields: `analytics_delivery`, `page_location`, `page_title`, `traffic_context`, `ga_client_id`, and `ga_session_id`. Add a webhook on each form pointing to `https://preview.artisanlabnetwork.com/api/analytics/typeform`, save it, edit it, set the same secret, select completed responses only, enable it, and send a test delivery. At cutover, change the webhook URL to the production hostname if the preview hostname will be retired.
 
-Deployment status (August 22, 2026): both forms have the attribution parameters published; both signed, completed-response-only webhooks are enabled; both Typeform synthetic deliveries returned HTTP 200; and the matching sensitive secrets are configured in Vercel Preview and Production. The synthetic requests lacked consented `site_version` context and therefore did not create GA4 leads.
+Deployment status (August 23, 2026): both forms have the attribution parameters published; both signed, completed-response-only webhooks are enabled; both Typeform synthetic deliveries returned HTTP 200; and the matching sensitive secrets are configured in Vercel Preview and Production. The exact-email contact-reuse deployment is live on all Artisan aliases, `PIPEDRIVE_TYPEFORM_CONTACT_MODE=upsert` is active for Production and Preview, and Pipedrive Classic is removed from both approved forms. The synthetic requests lacked consented `site_version` context and therefore did not create GA4 leads.
 
 Preview embedded contact forms send `analytics_delivery=client`; their webhook is deliberately ignored to prevent duplicate `generate_lead` events. External form links send `analytics_delivery=webhook` and GA cookie identifiers only after measurement consent, allowing the server event to join the originating GA4 session. A submission without valid `site_version` context is acknowledged but not sent to GA4.
 
@@ -648,7 +648,7 @@ This preserves direct existing-versus-preview comparison before cutover and clea
 - Google IDs, GTM tags/triggers, key-event settings, custom definitions, Search Console linking, retention, filters, and permissions require authenticated Google access.
 - The Kajabi site is configured outside this repository. Keep its deployed Header Page Scripts synchronized with `docs/kajabi-analytics-snippet.html` and revalidate after any Kajabi theme change.
 - Typeform completion delivery is deployed and enabled. At site cutover, update the webhook hostname only if `preview.artisanlabnetwork.com` will be retired. HubSpot completion still requires its own approved integration or return-page configuration.
-- Pipedrive has all nine attribution fields and 4 remaining custom-field slots. A controlled submission on August 23, 2026 confirmed that Typeform Classic creates the person and organization but not a lead or deal. It also confirmed that repeated deliveries can create duplicate people and organizations. The replacement middleware can reuse the established exact-email person, create contact records only when no exact match exists, preserve matching lead/deal records, and fill only blank first-touch fields. Historical duplicates require a separate reviewed cleanup; they are not auto-merged because shared business email addresses can legitimately belong to more than one person.
+- Pipedrive has all nine attribution fields and 4 remaining custom-field slots. A controlled submission on August 23, 2026 confirmed that Typeform Classic creates the person and organization but not a lead or deal. It also confirmed that repeated deliveries can create duplicate people and organizations. Pipedrive Classic is now removed from both approved forms, and the replacement middleware is live in `upsert` mode. A read-only audit found 36 exact-email groups containing 88 people among 1,176 people scanned. Historical duplicates require a separate reviewed cleanup; they are not auto-merged because shared business email addresses can legitimately belong to more than one person.
 - Consent/banner language and retention policy remain business/legal decisions; the code implements the current site's basic consent behavior and avoids advertising storage.
 
 ## Primary references

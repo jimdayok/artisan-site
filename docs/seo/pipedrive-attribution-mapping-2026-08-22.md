@@ -59,11 +59,11 @@ For each successful Typeform response:
 Reloaded verification on August 23, 2026 confirmed:
 
 - Pipedrive has all nine required Lead/Deal text fields and reports 96/100 custom fields in use.
-- Typeform `m0lQ9zjD` has its Pipedrive Classic connection enabled.
-- Typeform `quuPCSff` has its Pipedrive Classic connection enabled.
-- On both forms, the only integration-management action is **Delete integration**. There is no edit or field-mapping control.
+- Typeform `m0lQ9zjD` has its signed completed-response webhook enabled and Pipedrive Classic removed.
+- Typeform `quuPCSff` has its signed completed-response webhook enabled and Pipedrive Classic removed.
+- On both forms, Pipedrive Classic now shows **Connect**, confirming the duplicate-producing integration is inactive.
 - A controlled submission created one Person and one Organization, but no Lead or Deal.
 
 The original Typeform Classic connections were preserved until a complete replacement was available. Live testing showed that Classic can create another person and organization for the same email. The safe replacement is implemented in `lib/integrations/pipedrive-attribution.server.ts`: in `upsert` mode it searches by exact email, reuses the established person, creates a person and exact-name organization only when no match exists, checks for an existing lead/deal, and then creates one neutral Leads Inbox record only when neither exists. It never creates a pipeline deal. It sends only name, business email, business phone, and company to Pipedrive; sensitive credit answers and free text stay in Typeform. It cleans the landing-page URL, reduces the referrer to its origin, and does not log or return the respondent email.
 
-Activation requires the private server settings `PIPEDRIVE_COMPANY_DOMAIN=artisanlabnetwork` and `PIPEDRIVE_API_TOKEN` in Vercel Preview and Production. The cutover setting is `PIPEDRIVE_TYPEFORM_CONTACT_MODE=upsert`; it must be activated only when the two Pipedrive Classic connections are removed. If either credential is absent, the mapper is disabled. If the mapper fails, the Typeform response and the GA4 lead event remain independent and continue normally.
+Activation requires the private server settings `PIPEDRIVE_COMPANY_DOMAIN=artisanlabnetwork` and `PIPEDRIVE_API_TOKEN` in Vercel Preview and Production. The live cutover setting is `PIPEDRIVE_TYPEFORM_CONTACT_MODE=upsert`, and both Pipedrive Classic connections are removed. If either credential is absent, the mapper is disabled. If the mapper fails, the Typeform response and the GA4 lead event remain independent and continue normally.

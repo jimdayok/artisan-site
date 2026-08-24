@@ -2,11 +2,14 @@ import "server-only";
 
 import { existsSync } from "node:fs";
 import path from "node:path";
-import ExcelJS from "exceljs";
 import {
   isPortalAdminEmailAddress,
   normalizePortalEmail,
 } from "@/lib/portal/adminAccess";
+import {
+  readPortalUserWorkbookRows,
+  type PortalUserWorkbookRow,
+} from "@/lib/portal/portalUserWorkbook";
 
 const DEBUG_PORTAL_DATA = ["1", "true", "yes", "on"].includes(
   String(process.env.DEBUG_PORTAL_DATA ?? "").toLowerCase()
@@ -67,6 +70,10 @@ function textValue(value: unknown) {
     return String((value as { text?: unknown }).text ?? "").trim();
   }
   return String(value).trim();
+}
+
+function valueAt(row: PortalUserWorkbookRow, header: string) {
+  return textValue(row[header]);
 }
 
 function parseAccountNumbers(value: unknown) {
@@ -150,30 +157,16 @@ async function readPortalUserAccess(): Promise<PortalUserAccessData> {
     );
   }
 
-  const workbook = new ExcelJS.Workbook();
-  await workbook.xlsx.readFile(diagnostics.resolvedPath);
-  const worksheet = workbook.getWorksheet(PERSON_LIST_SHEET);
-  if (!worksheet) {
-    throw new Error(`Portal user workbook is missing sheet "${PERSON_LIST_SHEET}".`);
-  }
-
-  const headers = new Map<string, number>();
-  worksheet.getRow(1).eachCell((cell, columnNumber) => {
-    const header = textValue(cell.value);
-    if (header) headers.set(header, columnNumber);
-  });
-
-  const valueAt = (row: ExcelJS.Row, header: string) => {
-    const columnNumber = headers.get(header);
-    return columnNumber ? textValue(row.getCell(columnNumber).value) : "";
-  };
+  const rows = readPortalUserWorkbookRows(
+    diagnostics.resolvedPath,
+    PERSON_LIST_SHEET
+  );
 
   const usersByEmail = new Map<string, PortalUserAccess>();
   const accountsByCanonicalId = new Map<string, PortalUserAccount>();
   const accountAliasToCanonicalId = new Map<string, string>();
 
-  for (let rowNumber = 2; rowNumber <= worksheet.rowCount; rowNumber += 1) {
-    const row = worksheet.getRow(rowNumber);
+  for (const row of rows) {
     const emails = [...new Set(
       EMAIL_COLUMNS.flatMap((column) => parseEmails(valueAt(row, column)))
     )];

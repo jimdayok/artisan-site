@@ -17,6 +17,14 @@ export type DirectoryLab = {
   leadership: DirectoryContact[];
 };
 
+export type DirectoryResourceContact = {
+  name: string;
+  contactName: string;
+  email: string;
+  phone: string;
+  catalogueUrl: string;
+};
+
 export const executiveDirectory: DirectoryContact[] = [
   {
     name: "Brandon Butler",
@@ -41,6 +49,41 @@ export const executiveDirectory: DirectoryContact[] = [
     title: "Director of Customer Service",
     email: "switmer@artisanlabnetwork.com",
     phone: "360-773-7523",
+  },
+];
+
+export const otherResourceDirectory: DirectoryResourceContact[] = [
+  {
+    name: "SafeVision by Hoya",
+    contactName: "Gloria Greene",
+    email: "Gloria.Greene@hoya.com",
+    phone: "844-402-8897 X 88112",
+    catalogueUrl:
+      "https://safevision.com/wp-content/uploads/2023/08/2023-SafeVision-Frame-ONLY-Guide-Sept-Update.pdf",
+  },
+  {
+    name: "Wiley-X",
+    contactName: "Andy Rump",
+    email: "arump@wileyx.com",
+    phone: "440-225-3561",
+    catalogueUrl:
+      "https://cdn.brandfolder.io/DKQFPABZ/at/8kb569rzx9t579rb2j5q5884/WX023_2025_Catalog_Interior_LR_1.pdf",
+  },
+  {
+    name: "OnGuard by Hilco",
+    contactName: "Shane Gillies",
+    email: "Shane.Gillies@hilcovision.com",
+    phone: "614-907-1139",
+    catalogueUrl:
+      "https://cf.hilco.online/id/200930?dl=1&tr=https%3A%2F%2Fwww.hilcovision.com%2Flogin",
+  },
+  {
+    name: "ArmourRx",
+    contactName: "Jim Burke",
+    email: "jim.burke@armourxsafety.com",
+    phone: "716-364-3168",
+    catalogueUrl:
+      "https://armourxsafety.com/wp-content/uploads/2022/12/Armourx-Catalogue-2023-E.pdf",
   },
 ];
 
@@ -99,4 +142,3 @@ export const labDirectory: DirectoryLab[] = [
     ],
   },
 ];
-

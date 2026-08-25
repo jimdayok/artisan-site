@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { BadgeCheck, BookOpen, Building2, Crown, Download, ExternalLink, FilePlus, FolderOpen, GraduationCap, Mail, Megaphone, Phone, Search, ShieldCheck, Sparkles, Users2, Wrench, type LucideIcon } from "lucide-react";
-import { executiveDirectory, labDirectory } from "@/lib/portal/contactDirectory";
+import { executiveDirectory, labDirectory, otherResourceDirectory } from "@/lib/portal/contactDirectory";
 import type { EmployeeResource, EmployeeResourceCategory } from "@/lib/portal/employeeResources";
 
 function normalize(value: string) {
@@ -26,7 +26,10 @@ function statusLabel(resource: EmployeeResource) {
 }
 
 function phoneHref(value: string) {
-  return `tel:${value.replace(/[^+\d]/g, "")}`;
+  const [phone, extension] = value.split(/\s*(?:x|ext\.?|extension)\s*/i);
+  const normalizedPhone = phone.replace(/[^+\d]/g, "");
+  const normalizedExtension = extension?.replace(/\D/g, "");
+  return normalizedExtension ? `tel:${normalizedPhone};ext=${normalizedExtension}` : `tel:${normalizedPhone}`;
 }
 
 function StatPill({ value, label }: { value: string; label: string }) {
@@ -52,16 +55,16 @@ function DirectoryAction({ href, label, icon: Icon }: { href: string; label: str
 
 function ExecutiveCard({ name, title, email, phone }: { name: string; title?: string; email: string; phone?: string }) {
   return (
-    <article className="rounded-[1.6rem] border border-[#e8dbc7] bg-[linear-gradient(180deg,#fffdf9_0%,#f7f0e6_100%)] p-5 shadow-[0_22px_44px_rgba(21,38,35,0.08)]">
+    <article className="min-w-0 rounded-[1.6rem] border border-[#e8dbc7] bg-[linear-gradient(180deg,#fffdf9_0%,#f7f0e6_100%)] p-5 shadow-[0_22px_44px_rgba(21,38,35,0.08)]">
       <div className="inline-flex rounded-full border border-[#dec9a5] bg-[#fff6e7] p-2 text-[#8f6f3c]">
         <Crown className="h-4 w-4" />
       </div>
       <h3 className="mt-4 text-xl font-semibold tracking-[-0.03em] text-[#132624]">{name}</h3>
       {title ? <p className="mt-1 text-sm font-medium text-[#6c655b]">{title}</p> : null}
       <div className="mt-4 grid gap-2 text-sm">
-        <a href={`mailto:${email}`} className="inline-flex items-center gap-2 text-[#17302d] transition hover:text-[#1f8a70]">
-          <Mail className="h-4 w-4 text-[#8f6f3c]" />
-          {email}
+        <a href={`mailto:${email}`} className="inline-flex min-w-0 items-start gap-2 text-[#17302d] transition hover:text-[#1f8a70]">
+          <Mail className="mt-0.5 h-4 w-4 shrink-0 text-[#8f6f3c]" />
+          <span className="min-w-0 break-all">{email}</span>
         </a>
         {phone ? (
           <a href={phoneHref(phone)} className="inline-flex items-center gap-2 text-[#17302d] transition hover:text-[#1f8a70]">
@@ -77,6 +80,7 @@ function ExecutiveCard({ name, title, email, phone }: { name: string; title?: st
 function ContactDirectorySection() {
   const totalContacts =
     executiveDirectory.length +
+    otherResourceDirectory.length +
     labDirectory.reduce((count, lab) => count + lab.customerServiceTeam.length + lab.leadership.length, 0);
 
   return (
@@ -99,6 +103,7 @@ function ContactDirectorySection() {
             <div className="mt-6 flex flex-wrap gap-3">
               <DirectoryAction href="#directory-executive" label="Executive Team" icon={Crown} />
               <DirectoryAction href="#directory-labs" label="Lab Support" icon={Building2} />
+              <DirectoryAction href="#other-resources" label="Other Resources" icon={BookOpen} />
               <DirectoryAction href="#company" label="Company Resources" icon={BadgeCheck} />
             </div>
           </div>
@@ -122,9 +127,9 @@ function ContactDirectorySection() {
                   <Phone className="h-4 w-4 text-[#f2d88f]" />
                   {lab.customerServicePhone}
                 </a>
-                <a href={`mailto:${lab.customerServiceEmail}`} className="inline-flex items-center gap-2 transition hover:text-white">
-                  <Mail className="h-4 w-4 text-[#f2d88f]" />
-                  {lab.customerServiceEmail}
+                <a href={`mailto:${lab.customerServiceEmail}`} className="inline-flex min-w-0 items-start gap-2 transition hover:text-white">
+                  <Mail className="mt-0.5 h-4 w-4 shrink-0 text-[#f2d88f]" />
+                  <span className="min-w-0 break-all">{lab.customerServiceEmail}</span>
                 </a>
               </div>
             </article>
@@ -170,9 +175,9 @@ function ContactDirectorySection() {
                   <Phone className="h-4 w-4 text-[#8d6b3a]" />
                   {lab.customerServicePhone}
                 </a>
-                <a href={`mailto:${lab.customerServiceEmail}`} className="inline-flex items-center gap-2 text-[#17302d] transition hover:text-[#1f8a70]">
-                  <Mail className="h-4 w-4 text-[#8d6b3a]" />
-                  {lab.customerServiceEmail}
+                <a href={`mailto:${lab.customerServiceEmail}`} className="inline-flex min-w-0 items-start gap-2 text-[#17302d] transition hover:text-[#1f8a70]">
+                  <Mail className="mt-0.5 h-4 w-4 shrink-0 text-[#8d6b3a]" />
+                  <span className="min-w-0 break-all">{lab.customerServiceEmail}</span>
                 </a>
               </div>
 
@@ -180,17 +185,13 @@ function ContactDirectorySection() {
                 <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#8d6b3a]">Customer Service Team</p>
                 <div className="mt-3 grid gap-3">
                   {lab.customerServiceTeam.map((contact) => (
-                    <div key={contact.email} className="rounded-2xl border border-[#e6dac8] bg-white/72 p-4">
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="text-sm font-semibold text-[#132624]">{contact.name}</p>
-                          {contact.extension ? <p className="mt-1 text-xs uppercase tracking-[0.12em] text-[#7a6b49]">Ext. {contact.extension}</p> : null}
-                        </div>
-                        <a href={`mailto:${contact.email}`} className="text-xs font-semibold text-[#1f8a70] transition hover:text-[#17302d]">
-                          Email
-                        </a>
-                      </div>
-                      <p className="mt-3 break-all text-sm text-[#57605b]">{contact.email}</p>
+                    <div key={contact.email} className="min-w-0 rounded-2xl border border-[#e6dac8] bg-white/72 p-4">
+                      <p className="text-sm font-semibold text-[#132624]">{contact.name}</p>
+                      {contact.extension ? <p className="mt-1 text-xs uppercase tracking-[0.12em] text-[#7a6b49]">Ext. {contact.extension}</p> : null}
+                      <a href={`mailto:${contact.email}`} className="mt-3 inline-flex min-w-0 items-start gap-2 text-sm text-[#17302d] transition hover:text-[#1f8a70]">
+                        <Mail className="mt-0.5 h-4 w-4 shrink-0 text-[#8d6b3a]" />
+                        <span className="min-w-0 break-all">{contact.email}</span>
+                      </a>
                     </div>
                   ))}
                 </div>
@@ -204,9 +205,9 @@ function ContactDirectorySection() {
                       <p className="text-sm font-semibold text-[#132624]">{contact.name}</p>
                       {contact.title ? <p className="mt-1 text-sm text-[#57605b]">{contact.title}</p> : null}
                       <div className="mt-3 grid gap-2 text-sm">
-                        <a href={`mailto:${contact.email}`} className="inline-flex items-center gap-2 text-[#17302d] transition hover:text-[#1f8a70]">
-                          <Mail className="h-4 w-4 text-[#8d6b3a]" />
-                          {contact.email}
+                        <a href={`mailto:${contact.email}`} className="inline-flex min-w-0 items-start gap-2 text-[#17302d] transition hover:text-[#1f8a70]">
+                          <Mail className="mt-0.5 h-4 w-4 shrink-0 text-[#8d6b3a]" />
+                          <span className="min-w-0 break-all">{contact.email}</span>
                         </a>
                         {contact.phone ? (
                           <a href={phoneHref(contact.phone)} className="inline-flex items-center gap-2 text-[#17302d] transition hover:text-[#1f8a70]">
@@ -223,6 +224,47 @@ function ContactDirectorySection() {
             </section>
           ))}
         </div>
+
+        <section id="other-resources" className="grid gap-5 rounded-[1.6rem] border border-white/12 bg-white/8 p-5 backdrop-blur-sm sm:p-6">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.22em] text-[#f2d88f]">
+                <BookOpen className="h-4 w-4" />
+                Other Resources
+              </p>
+              <h3 className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-white">Safety eyewear contacts and catalogues</h3>
+            </div>
+            <p className="text-sm text-white/66">Email, call, or open a catalogue directly.</p>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {otherResourceDirectory.map((resource) => (
+              <article key={resource.email} className="min-w-0 rounded-[1.6rem] border border-[#e8dbc7] bg-[linear-gradient(180deg,#fffdf9_0%,#f7f0e6_100%)] p-5 text-[#132624] shadow-[0_22px_44px_rgba(13,26,24,0.12)]">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#8d6b3a]">Safety Eyewear</p>
+                <h4 className="mt-2 text-xl font-semibold tracking-[-0.03em]">{resource.name}</h4>
+                <p className="mt-1 text-sm font-medium text-[#6c655b]">{resource.contactName}</p>
+                <div className="mt-4 grid gap-2 text-sm">
+                  <a href={`mailto:${resource.email}`} className="inline-flex min-w-0 items-start gap-2 text-[#17302d] transition hover:text-[#1f8a70]">
+                    <Mail className="mt-0.5 h-4 w-4 shrink-0 text-[#8d6b3a]" />
+                    <span className="min-w-0 break-all">{resource.email}</span>
+                  </a>
+                  <a href={phoneHref(resource.phone)} className="inline-flex items-start gap-2 text-[#17302d] transition hover:text-[#1f8a70]">
+                    <Phone className="mt-0.5 h-4 w-4 shrink-0 text-[#8d6b3a]" />
+                    <span>{resource.phone}</span>
+                  </a>
+                </div>
+                <a
+                  href={resource.catalogueUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-5 inline-flex min-h-10 items-center gap-2 rounded-full bg-[#172a28] px-4 text-sm font-semibold text-white transition hover:bg-[#27433f]"
+                >
+                  Open Catalogue <ExternalLink className="h-4 w-4" />
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
       </div>
     </section>
   );

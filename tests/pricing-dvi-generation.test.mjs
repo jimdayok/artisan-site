@@ -10,6 +10,10 @@ import {
   getXmlPriceFile,
   parseDownloadedXmlPriceFile,
 } from "../lib/r2/getXmlPriceFile.mjs";
+import {
+  isDviAuthoritativePriceList,
+  nonDviLensAddOnSections,
+} from "../lib/pricing/sourceAuthority.mjs";
 
 const testConfig = {
   accountId: "test-account",
@@ -153,5 +157,37 @@ test("missing R2 object fails with bucket and key", async () => {
       timeoutMs: 1_000,
     }),
     /R2 object not found: test-bucket\/xml_price_data\/missing\.xml/
+  );
+});
+
+test("customer price documents use matching DVI Style price-list rows as the authority", () => {
+  for (const code of [
+    "A6",
+    "B5",
+    "E5",
+    "E6",
+    "G6",
+    "J1",
+    "J2",
+    "P6",
+    "S5",
+    "VD",
+    "VX",
+  ]) {
+    assert.equal(isDviAuthoritativePriceList(code.toLowerCase()), true, code);
+  }
+  assert.equal(isDviAuthoritativePriceList("A5"), false);
+});
+
+test("legacy duplicated lens adjustments are not carried into DVI-authoritative lists", () => {
+  assert.deepEqual(
+    nonDviLensAddOnSections([
+      { title: "Add for Material", items: [{ name: "Plastic", price: "-$8" }] },
+      { title: "Blue Light Filter Options", items: [{ name: "Blue", price: "$8" }] },
+      { title: "Photochromic Options", items: [{ name: "Photo", price: "$46" }] },
+      { title: "Polarized Options", items: [{ name: "Polar", price: "$61" }] },
+      { title: "Shipping", items: [{ name: "Ground", price: "$8" }] },
+    ]),
+    [{ title: "Shipping", items: [{ name: "Ground", price: "$8" }] }]
   );
 });

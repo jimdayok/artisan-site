@@ -20,6 +20,11 @@ import {
   type ProgressiveTier,
 } from "@/lib/pricing/displayTaxonomy";
 import GeneratedPriceListExportButton from "./GeneratedPriceListExportButton";
+import {
+  lowestPolycarbonateRow,
+  priceForMode,
+  usesPolycarbonatePriceBasis,
+} from "@/lib/pricing/polycarbonatePriceBasis";
 
 type PriceMode = "edged" | "uncut";
 type ViewBy = "designType" | "brand";
@@ -127,8 +132,7 @@ function isCoppertoneRow(row: PriceListPricingRow) {
 }
 
 function priceFor(row: PriceListPricingRow | undefined, mode: PriceMode) {
-  if (!row) return Number.POSITIVE_INFINITY;
-  return mode === "edged" ? row.edgedPrice : row.uncutPrice;
+  return priceForMode(row, mode);
 }
 
 function startingPriceLabel(row: PriceListPricingRow | undefined, mode: PriceMode) {
@@ -555,6 +559,7 @@ function uniqueValues<T>(rows: T[], getter: (row: T) => string) {
 }
 
 function groupDesignRows(rows: PriceListPricingRow[], mode: PriceMode) {
+  const polycarbonateBasis = usesPolycarbonatePriceBasis(rows[0]?.code ?? "");
   const groups = new Map<string, DesignRow>();
 
   for (const row of rows) {
@@ -583,9 +588,15 @@ function groupDesignRows(rows: PriceListPricingRow[], mode: PriceMode) {
 
   return [...groups.values()].map((group) => ({
     ...group,
-    clearFrom: minRow(group.rows, "Clear", mode),
-    photoFrom: minRow(group.rows, "Photochromic", mode),
-    polarizedFrom: minRow(group.rows, "Polarized", mode),
+    clearFrom: polycarbonateBasis
+      ? lowestPolycarbonateRow(group.rows, "Clear", mode)
+      : minRow(group.rows, "Clear", mode),
+    photoFrom: polycarbonateBasis
+      ? lowestPolycarbonateRow(group.rows, "Photochromic", mode)
+      : minRow(group.rows, "Photochromic", mode),
+    polarizedFrom: polycarbonateBasis
+      ? lowestPolycarbonateRow(group.rows, "Polarized", mode)
+      : minRow(group.rows, "Polarized", mode),
   }));
 }
 
@@ -771,6 +782,7 @@ export default function InteractivePriceListDashboard({
   showAccountDrillDownNotice?: boolean;
 }) {
   const listCode = String(priceList.code ?? "").trim().toUpperCase();
+  const polycarbonateBasis = usesPolycarbonatePriceBasis(listCode);
   const isPackageList = isPackagePriceListCode(listCode);
   const programTitle = resolveProgramTitle(listCode || "PRICING");
   const programMeta = resolveProgramMeta(listCode || "PRICING");
@@ -810,7 +822,11 @@ export default function InteractivePriceListDashboard({
   );
 
   const designRows = useMemo(() => {
-    const grouped = sortDesignRows(groupDesignRows(baseFilteredRows, priceMode), sort, priceMode);
+    const grouped = sortDesignRows(
+      groupDesignRows(baseFilteredRows, priceMode),
+      sort,
+      priceMode
+    );
     return grouped.filter((row) => {
       if (materialAvailable !== "All" && !row.rows.some((entry) => materialDisplay(entry.material) === materialAvailable)) return false;
       if (colorBrand !== "All" && !row.rows.some((entry) => entry.colorBrand === colorBrand)) return false;
@@ -949,9 +965,32 @@ export default function InteractivePriceListDashboard({
     { key: "designType", label: "Design Type" },
     { key: "brand", label: "Brand" },
     { key: "designStyle", label: "Design Style" },
-    { key: "clear", label: isPackageList ? "Package Price" : "Clear" },
-    { key: "photochromic", label: isPackageList ? "Photo Upgrade" : "Photochromic" },
-    { key: "polarized", label: isPackageList ? "Polar Upgrade" : "Polarized" },
+    {
+      key: "clear",
+      label: polycarbonateBasis
+        ? isPackageList
+          ? "Poly Package"
+          : "Poly Clear"
+        : isPackageList
+          ? "Package Price"
+          : "Clear",
+    },
+    {
+      key: "photochromic",
+      label: polycarbonateBasis
+        ? "Poly Photo"
+        : isPackageList
+          ? "Photo Upgrade"
+          : "Photochromic",
+    },
+    {
+      key: "polarized",
+      label: polycarbonateBasis
+        ? "Poly Polarized"
+        : isPackageList
+          ? "Polar Upgrade"
+          : "Polarized",
+    },
     { label: "Actions" },
   ];
 
@@ -1013,8 +1052,9 @@ export default function InteractivePriceListDashboard({
               </div>
             ) : null}
             <p className="mt-3 max-w-3xl text-sm leading-6 text-[#4d5664]">
-              Start with design, then open each row to build price by material and
-              clear/photochromic/polarized options.
+              {polycarbonateBasis
+                ? `Every price marked + is the lowest available polycarbonate${isPackageList ? " package" : ""} price. Open a row to compare Plastic, Trivex, high-index, photochromic, and polarized choices that may cost more or less.`
+                : "Start with design, then open each row to build price by material and clear/photochromic/polarized options."}
             </p>
             <div className="mt-3 flex flex-wrap items-center gap-2">
               <span

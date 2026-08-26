@@ -108,6 +108,7 @@
     "TX",
     "TZ",
     "V6",
+    "VD",
     "VO",
     "VS",
     "VV",
@@ -166,8 +167,7 @@
   "assignedMissingGenerated": [
     "H3",
     "P4",
-    "V7",
-    "VD"
+    "V7"
   ],
   "generatedUnassigned": [
     "94",
@@ -885,16 +885,16 @@
       "code": "VD",
       "label": "Artisan Value System 2025 - Denver",
       "detected": true,
-      "generated": false,
-      "rowCount": 0,
+      "generated": true,
+      "rowCount": 79,
       "package": true,
       "invalidOrUnknown": false,
-      "generationStatus": "missing",
+      "generationStatus": "generated",
       "assignmentStatus": "assigned",
       "assignedAccountCount": 19,
       "visibleCustomerCount": 18,
       "source": "price.xml",
-      "generatedAt": "2026-08-20T01:39:39.489Z"
+      "generatedAt": "2026-08-26T21:23:41.634Z"
     },
     {
       "code": "VO",
@@ -1279,14 +1279,13 @@
     "P6",
     "S5",
     "TK",
+    "VD",
     "VX",
     "XC",
     "XH",
     "Y5"
   ],
-  "visibleAssignedMissingGenerated": [
-    "VD"
-  ],
+  "visibleAssignedMissingGenerated": [],
   "visibleGeneratedUnassigned": [
     "CB",
     "E7",
@@ -1642,16 +1641,16 @@
       "code": "VD",
       "label": "Artisan Value System 2025 - Denver",
       "detected": true,
-      "generated": false,
-      "rowCount": 0,
+      "generated": true,
+      "rowCount": 79,
       "package": true,
       "invalidOrUnknown": false,
-      "generationStatus": "missing",
+      "generationStatus": "generated",
       "assignmentStatus": "assigned",
       "assignedAccountCount": 19,
       "visibleCustomerCount": 18,
       "source": "price.xml",
-      "generatedAt": "2026-08-20T01:39:39.489Z"
+      "generatedAt": "2026-08-26T21:23:41.634Z"
     },
     {
       "code": "VX",

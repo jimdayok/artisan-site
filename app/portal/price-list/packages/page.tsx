@@ -8,6 +8,7 @@ import PackageQuoteBuilder from "../../../../src/components/private-price/Packag
 import PricingCard from "../../../../src/components/private-price/PricingCard";
 import PricingHeader from "../../../../src/components/private-price/PricingHeader";
 import {
+  CHEMISTRIE_CLIPS_SECTION_TITLE,
   packageBlueFilters,
   packageChemClip,
   packageCoatings,
@@ -30,7 +31,7 @@ const groups = [
   ["Photochromic options", packagePhotochromics],
   ["Polarized options", packageFinishing.filter((item) => item.category === "Polarized Options")],
   ["Provisics mirror coatings", packageFinishing.filter((item) => item.category === "Provisics Mirror Coatings")],
-  ["ChemClip", packageChemClip],
+  [CHEMISTRIE_CLIPS_SECTION_TITLE, packageChemClip],
   ["Edging", packageFinishing.filter((item) => item.category !== "Polarized Options" && item.category !== "Provisics Mirror Coatings")],
   ["Shipping", packageShipping],
 ] as const;

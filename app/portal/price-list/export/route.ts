@@ -22,6 +22,11 @@ import {
 } from "@/lib/pricing/displayTaxonomy";
 import { loadRuntimePackagedPriceListByCode } from "@/lib/pricing/loadRuntimePackagedPriceList";
 import {
+  CHEMISTRIE_CLIPS_SECTION_NOTE,
+  CHEMISTRIE_CLIPS_SECTION_TITLE,
+  chemistrieClipItems,
+} from "@/lib/pricing/chemistrieClips";
+import {
   priceForMode,
   selectSummaryPrice,
   usesPolycarbonatePriceBasis,
@@ -1363,6 +1368,19 @@ async function buildPriceListPdf({
       0
     );
   }
+
+  y -= 8;
+  sectionTitle(CHEMISTRIE_CLIPS_SECTION_TITLE);
+  drawBoxedItemGroups([
+    {
+      title: "ChemClip by Chemistrie",
+      note: CHEMISTRIE_CLIPS_SECTION_NOTE,
+      items: chemistrieClipItems.map((item) => ({
+        name: item.name,
+        price: `$${item.price.toFixed(2)}`,
+      })),
+    },
+  ]);
 
   drawPolicyPage();
   drawLabShowcasePage();

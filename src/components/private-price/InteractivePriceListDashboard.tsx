@@ -25,6 +25,11 @@ import {
   selectSummaryPrice,
   usesPolycarbonatePriceBasis,
 } from "@/lib/pricing/polycarbonatePriceBasis";
+import {
+  CHEMISTRIE_CLIPS_SECTION_NOTE,
+  CHEMISTRIE_CLIPS_SECTION_TITLE,
+  chemistrieClipItems,
+} from "@/lib/pricing/chemistrieClips";
 
 type PriceMode = "edged" | "uncut";
 type ViewBy = "designType" | "brand";
@@ -2430,34 +2435,21 @@ function SafetyPackageTierSection() {
 }
 
 function ChemClipSection() {
-  const items = [
-    ["ChemClip Solid Sunlens", 85.5],
-    ["ChemClip Drive", 117],
-    ["ChemClip Solid Sunlens with Backside AR", 88.5],
-    ["ChemClip Gradient Sunlens with Backside AR", 90.5],
-    ["ChemClip Mirror Sunlens", 92.5],
-    ["ChemClip Color", 119],
-    ["ChemClip Readers Blue", 97],
-    ["ChemClip Therapeutic", 132],
-    ["ChemClip Avulux", 335],
-    ["Swarovski Crystal add on", 20.5],
-  ] as const;
-
   return (
     <section className="rounded-[2px] border border-[#dfd2bf] bg-[#fbf8f3]/94 p-4 shadow-[0_22px_60px_rgba(18,32,51,0.08)] md:p-6">
-      <SectionHeading title="ChemClip by Chemistrie" eyebrow="PDF Source Pricing" />
+      <SectionHeading title={CHEMISTRIE_CLIPS_SECTION_TITLE} eyebrow="Add-On Pricing" />
       <div className="mt-4 flex items-center gap-3">
         <Image src="/chemistrie-logo.png" alt="Chemistrie logo" width={160} height={40} className="h-8 w-auto object-contain" />
       </div>
       <div className="mt-4 grid gap-2 md:grid-cols-2">
-        {items.map(([name, value]) => (
-          <div key={name} className="flex items-center justify-between rounded-[2px] border border-[#eadfce] bg-white/82 px-3 py-2">
-            <span className="font-semibold text-[#122033]">{name}</span>
-            <span className="font-bold text-[#122033]">{currency(value)}</span>
+        {chemistrieClipItems.map((item) => (
+          <div key={item.id} className="flex items-center justify-between rounded-[2px] border border-[#eadfce] bg-white/82 px-3 py-2">
+            <span className="font-semibold text-[#122033]">{item.name}</span>
+            <span className="font-bold text-[#122033]">{currency(item.price)}</span>
           </div>
         ))}
       </div>
-      <p className="mt-3 text-xs text-[#625b53]">ChemClip demonstration kits are available for purchase.</p>
+      <p className="mt-3 text-xs text-[#625b53]">{CHEMISTRIE_CLIPS_SECTION_NOTE}</p>
     </section>
   );
 }

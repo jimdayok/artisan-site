@@ -1,5 +1,12 @@
 import type { EdgeMode, PriceItem } from "./privatePriceList";
 import { adjustmentLabel, edgeAdjustment, money } from "./privatePriceList";
+import {
+  CHEMISTRIE_CLIPS_SECTION_NOTE,
+  CHEMISTRIE_CLIPS_SECTION_TITLE,
+  chemistrieClipItems,
+} from "../../lib/pricing/chemistrieClips";
+
+export { CHEMISTRIE_CLIPS_SECTION_NOTE, CHEMISTRIE_CLIPS_SECTION_TITLE };
 
 export type PackageItem = PriceItem;
 
@@ -108,18 +115,9 @@ export const packageFinishing: PackageItem[] = [
   pkg("pkg-match-mirror", "Provisics Mirror Coatings", "Add-On", "Match Mirror", 0, { outsourced: true, notes: "N/A in source." }),
 ];
 
-export const packageChemClip: PackageItem[] = [
-  pkg("pkg-chemclip-solid", "ChemClip by Chemistrie", "Add-On", "ChemClip Solid Sunlens", 85.5),
-  pkg("pkg-chemclip-drive", "ChemClip by Chemistrie", "Add-On", "ChemClip Drive", 117),
-  pkg("pkg-chemclip-solid-backside", "ChemClip by Chemistrie", "Add-On", "ChemClip Solid Sunlens with Backside AR", 88.5),
-  pkg("pkg-chemclip-gradient-backside", "ChemClip by Chemistrie", "Add-On", "ChemClip Gradient Sunlens with Backside AR", 90.5),
-  pkg("pkg-chemclip-mirror", "ChemClip by Chemistrie", "Add-On", "ChemClip Mirror Sunlens", 92.5),
-  pkg("pkg-chemclip-color", "ChemClip by Chemistrie", "Add-On", "ChemClip Color", 119),
-  pkg("pkg-chemclip-readers-blue", "ChemClip by Chemistrie", "Add-On", "ChemClip Readers Blue", 97),
-  pkg("pkg-chemclip-therapeutic", "ChemClip by Chemistrie", "Add-On", "ChemClip Therapeutic", 132),
-  pkg("pkg-chemclip-avulux", "ChemClip by Chemistrie", "Add-On", "ChemClip Avulux", 335),
-  pkg("pkg-chemclip-swarovski", "ChemClip by Chemistrie", "Add-On", "Swarovski Crystal add on", 20.5),
-];
+export const packageChemClip: PackageItem[] = chemistrieClipItems.map((item) =>
+  pkg(`pkg-${item.id}`, "ChemClip by Chemistrie", "Add-On", item.name, item.price)
+);
 
 export const packageShipping: PackageItem[] = [
   pkg("pkg-ship-next-day", "Shipping", "Service", "Next Day Air", 4),

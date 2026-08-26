@@ -7,6 +7,10 @@ import {
   usesPolycarbonatePriceBasis,
 } from "../lib/pricing/polycarbonatePriceBasis.ts";
 import type { PriceListPricingRow } from "../lib/pricing/types.ts";
+import {
+  CHEMISTRIE_CLIPS_SECTION_TITLE,
+  chemistrieClipItems,
+} from "../lib/pricing/chemistrieClips.ts";
 
 function row(
   material: string,
@@ -45,6 +49,25 @@ test("summary pricing ignores cheaper plastic and selects polycarbonate", () => 
   const selected = lowestPolycarbonateRow(rows, "Clear", "edged");
   assert.equal(selected?.material, "Polycarbonate");
   assert.equal(priceForMode(selected, "edged"), 44);
+});
+
+test("every price list uses the complete Chemistrie Clips add-on catalog", () => {
+  assert.equal(CHEMISTRIE_CLIPS_SECTION_TITLE, "Chemistrie Clips");
+  assert.deepEqual(
+    chemistrieClipItems.map(({ name, price }) => [name, price]),
+    [
+      ["ChemClip Solid Sunlens", 85.5],
+      ["ChemClip Drive", 117],
+      ["ChemClip Solid Sunlens with Backside AR", 88.5],
+      ["ChemClip Gradient Sunlens with Backside AR", 90.5],
+      ["ChemClip Mirror Sunlens", 92.5],
+      ["ChemClip Color", 119],
+      ["ChemClip Readers Blue", 97],
+      ["ChemClip Therapeutic", 132],
+      ["ChemClip Avulux", 335],
+      ["Swarovski Crystal add on", 20.5],
+    ]
+  );
 });
 
 test("polycarbonate selection respects edged and uncut modes", () => {

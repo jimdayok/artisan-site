@@ -21,8 +21,8 @@ import {
 } from "@/lib/pricing/displayTaxonomy";
 import GeneratedPriceListExportButton from "./GeneratedPriceListExportButton";
 import {
-  lowestPolycarbonateRow,
   priceForMode,
+  selectSummaryPrice,
   usesPolycarbonatePriceBasis,
 } from "@/lib/pricing/polycarbonatePriceBasis";
 
@@ -50,6 +50,9 @@ type DesignRow = {
   clearFrom?: PriceListPricingRow;
   photoFrom?: PriceListPricingRow;
   polarizedFrom?: PriceListPricingRow;
+  clearBasis?: string;
+  photoBasis?: string;
+  polarizedBasis?: string;
   recommended: boolean;
   outsourced: boolean;
 };
@@ -145,6 +148,27 @@ function exactPriceLabel(row: PriceListPricingRow | undefined, mode: PriceMode) 
   if (!row) return "—";
   if (priceFor(row, mode) <= 0) return "Not Available";
   return currency(priceFor(row, mode));
+}
+
+function SummaryPriceCell({
+  row,
+  basis,
+  mode,
+}: {
+  row: PriceListPricingRow | undefined;
+  basis: string | undefined;
+  mode: PriceMode;
+}) {
+  return (
+    <>
+      <span className="block">{startingPriceLabel(row, mode)}</span>
+      {row && basis ? (
+        <span className="mt-0.5 block text-[9px] font-bold uppercase leading-3 tracking-[0.06em] text-[#7b6240]">
+          {basis}
+        </span>
+      ) : null}
+    </>
+  );
 }
 
 function addOnPriceToNumber(value: number | string) {
@@ -586,18 +610,27 @@ function groupDesignRows(rows: PriceListPricingRow[], mode: PriceMode) {
     groups.set(key, current);
   }
 
-  return [...groups.values()].map((group) => ({
-    ...group,
-    clearFrom: polycarbonateBasis
-      ? lowestPolycarbonateRow(group.rows, "Clear", mode)
-      : minRow(group.rows, "Clear", mode),
-    photoFrom: polycarbonateBasis
-      ? lowestPolycarbonateRow(group.rows, "Photochromic", mode)
-      : minRow(group.rows, "Photochromic", mode),
-    polarizedFrom: polycarbonateBasis
-      ? lowestPolycarbonateRow(group.rows, "Polarized", mode)
-      : minRow(group.rows, "Polarized", mode),
-  }));
+  return [...groups.values()].map((group) => {
+    const clear = polycarbonateBasis
+      ? selectSummaryPrice(group.rows, "Clear", mode)
+      : { row: minRow(group.rows, "Clear", mode) };
+    const photochromic = polycarbonateBasis
+      ? selectSummaryPrice(group.rows, "Photochromic", mode)
+      : { row: minRow(group.rows, "Photochromic", mode) };
+    const polarized = polycarbonateBasis
+      ? selectSummaryPrice(group.rows, "Polarized", mode)
+      : { row: minRow(group.rows, "Polarized", mode) };
+
+    return {
+      ...group,
+      clearFrom: clear.row,
+      photoFrom: photochromic.row,
+      polarizedFrom: polarized.row,
+      clearBasis: clear.basisLabel,
+      photoBasis: photochromic.basisLabel,
+      polarizedBasis: polarized.basisLabel,
+    };
+  });
 }
 
 function sortDesignRows(
@@ -967,27 +1000,19 @@ export default function InteractivePriceListDashboard({
     { key: "designStyle", label: "Design Style" },
     {
       key: "clear",
-      label: polycarbonateBasis
-        ? isPackageList
-          ? "Poly Package"
-          : "Poly Clear"
-        : isPackageList
+      label: isPackageList
           ? "Package Price"
           : "Clear",
     },
     {
       key: "photochromic",
-      label: polycarbonateBasis
-        ? "Poly Photo"
-        : isPackageList
+      label: isPackageList
           ? "Photo Upgrade"
           : "Photochromic",
     },
     {
       key: "polarized",
-      label: polycarbonateBasis
-        ? "Poly Polarized"
-        : isPackageList
+      label: isPackageList
           ? "Polar Upgrade"
           : "Polarized",
     },
@@ -1053,7 +1078,7 @@ export default function InteractivePriceListDashboard({
             ) : null}
             <p className="mt-3 max-w-3xl text-sm leading-6 text-[#4d5664]">
               {polycarbonateBasis
-                ? `Every price marked + is the lowest available polycarbonate${isPackageList ? " package" : ""} price. Open a row to compare Plastic, Trivex, high-index, photochromic, and polarized choices that may cost more or less.`
+                ? `Every price marked + shows its material basis directly below it. Most prices use polycarbonate${isPackageList ? " package" : ""} pricing. TOKAI products show the 1.60-index price and are only available in 1.60 index and above. Designs without polycarbonate use an available material price and are labeled; plastic-only designs say Plastic only. Open a row to compare choices that may cost more or less.`
                 : "Start with design, then open each row to build price by material and clear/photochromic/polarized options."}
             </p>
             <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -1297,13 +1322,13 @@ export default function InteractivePriceListDashboard({
                                     ) : null}
                                   </td>
                                   <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
-                                    {startingPriceLabel(row.clearFrom, priceMode)}
+                                    <SummaryPriceCell row={row.clearFrom} basis={row.clearBasis} mode={priceMode} />
                                   </td>
                                   <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
-                                    {startingPriceLabel(row.photoFrom, priceMode)}
+                                    <SummaryPriceCell row={row.photoFrom} basis={row.photoBasis} mode={priceMode} />
                                   </td>
                                   <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
-                                    {startingPriceLabel(row.polarizedFrom, priceMode)}
+                                    <SummaryPriceCell row={row.polarizedFrom} basis={row.polarizedBasis} mode={priceMode} />
                                   </td>
                                   <td className="border-b border-[#eadfce] px-2 py-2">
                                     <button

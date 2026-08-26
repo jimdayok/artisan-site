@@ -22,8 +22,8 @@ import {
 } from "@/lib/pricing/displayTaxonomy";
 import { loadRuntimePackagedPriceListByCode } from "@/lib/pricing/loadRuntimePackagedPriceList";
 import {
-  lowestPolycarbonateRow,
   priceForMode,
+  selectSummaryPrice,
   usesPolycarbonatePriceBasis,
 } from "@/lib/pricing/polycarbonatePriceBasis";
 import type { PortalPriceList } from "@/lib/portal/priceLists";
@@ -50,7 +50,7 @@ const TEXT = rgb(47 / 255, 55 / 255, 68 / 255);
 const MUTED = rgb(102 / 255, 92 / 255, 78 / 255);
 const SOFT_FILL = rgb(252 / 255, 250 / 255, 246 / 255);
 const PRICE_BASIS_NOTE =
-  "Every price marked + is the lowest available POLYCARBONATE price. Plastic, Trivex, high-index, color, AR, finishing, and shipping choices may add to or deduct from that price.";
+  "PRICE BASIS APPEARS BELOW EACH + PRICE: POLYCARBONATE, 1.60 INDEX+ ONLY, PLASTIC ONLY, OR ANOTHER AVAILABLE MATERIAL.";
 const STANDARD_PRICE_NOTE =
   "Design prices are starting prices. Materials, colors, AR, finishing, and shipping may add to or deduct from the displayed price unless noted.";
 const ADMIN_CUSTOMER_NAME = "Artisan Customer Pricing";
@@ -60,7 +60,7 @@ const DESIGN_TEXT_X = DESIGN_COLUMN_X + 8;
 const CLEAR_COLUMN_X = MARGIN + 364;
 const PHOTO_COLUMN_X = MARGIN + 424;
 const POLAR_COLUMN_X = MARGIN + 484;
-const TABLE_ROW_HEIGHT = 19;
+const TABLE_ROW_HEIGHT = 27;
 const TABLE_HEADER_HEIGHT = 20;
 const BRAND_ONLY_PROGRESSIVE_PDF_CODES = new Set(["A6", "G6", "P6"]);
 
@@ -219,26 +219,35 @@ function summarizeDesigns(priceList: GeneratedPriceListData, mode: PriceMode) {
   }
 
   return [...groups.values()]
-    .map((rows) => ({
-      designType: rows[0].designType,
-      displayCategory: priceDisplayCategory(rows[0]),
-      progressiveTier:
-        priceDisplayCategory(rows[0]) === "Progressive Designs"
-          ? progressiveTierFor(rows[0])
-          : undefined,
-      brand: rows[0].brand,
-      designStyle: rows[0].designStyle,
-      outsourced: rows.some((row) => row.outsourced),
-      clear: polycarbonateBasis
-        ? lowestPolycarbonateRow(rows, "Clear", mode)
-        : lowestRow(rows, "Clear", mode),
-      photochromic: polycarbonateBasis
-        ? lowestPolycarbonateRow(rows, "Photochromic", mode)
-        : lowestRow(rows, "Photochromic", mode),
-      polarized: polycarbonateBasis
-        ? lowestPolycarbonateRow(rows, "Polarized", mode)
-        : lowestRow(rows, "Polarized", mode),
-    }))
+    .map((rows) => {
+      const clear = polycarbonateBasis
+        ? selectSummaryPrice(rows, "Clear", mode)
+        : { row: lowestRow(rows, "Clear", mode) };
+      const photochromic = polycarbonateBasis
+        ? selectSummaryPrice(rows, "Photochromic", mode)
+        : { row: lowestRow(rows, "Photochromic", mode) };
+      const polarized = polycarbonateBasis
+        ? selectSummaryPrice(rows, "Polarized", mode)
+        : { row: lowestRow(rows, "Polarized", mode) };
+
+      return {
+        designType: rows[0].designType,
+        displayCategory: priceDisplayCategory(rows[0]),
+        progressiveTier:
+          priceDisplayCategory(rows[0]) === "Progressive Designs"
+            ? progressiveTierFor(rows[0])
+            : undefined,
+        brand: rows[0].brand,
+        designStyle: rows[0].designStyle,
+        outsourced: rows.some((row) => row.outsourced),
+        clear: clear.row,
+        clearBasis: clear.basisShortLabel,
+        photochromic: photochromic.row,
+        photochromicBasis: photochromic.basisShortLabel,
+        polarized: polarized.row,
+        polarizedBasis: polarized.basisShortLabel,
+      };
+    })
     .sort(
       (a, b) =>
         comparePriceDisplayCategory(a.displayCategory, b.displayCategory) ||
@@ -460,16 +469,9 @@ async function buildPriceListPdf({
     const headers = [
       ...(showBrand ? ([["Brand", MARGIN + 6]] as const) : []),
       ["Design", showBrand ? DESIGN_TEXT_X : MARGIN + 6],
-      [
-        polycarbonateBasis
-          ? packagePricing
-            ? "Poly Package"
-            : "Poly Clear"
-          : "Clear",
-        CLEAR_COLUMN_X,
-      ],
-      [polycarbonateBasis ? "Poly Photo" : "Photo", PHOTO_COLUMN_X],
-      [polycarbonateBasis ? "Poly Polar" : "Polar", POLAR_COLUMN_X],
+      [packagePricing ? "Package" : "Clear", CLEAR_COLUMN_X],
+      ["Photo", PHOTO_COLUMN_X],
+      ["Polar", POLAR_COLUMN_X],
     ] as const;
     for (const [label, x] of headers) {
       page.drawText(label, {
@@ -539,7 +541,7 @@ async function buildPriceListPdf({
     const summaryLines = wrapText(
       regular,
       polycarbonateBasis
-        ? `Every + price below is a polycarbonate${packagePricing ? " package" : ""} starting price. Material and treatment choices are itemized separately.`
+        ? `The material basis is printed below every + price. Most prices use polycarbonate${packagePricing ? " package" : ""} pricing. TOKAI products use the 1.60 price and are only available in 1.60 index and above. Plastic-only designs are marked Plastic only.`
         : "Customer-ready pricing organized by design family, coatings, add-ons, and policy notes.",
       introTextWidth,
       8
@@ -815,19 +817,39 @@ async function buildPriceListPdf({
           : row.designStyle;
         const values: Array<[string, number, number, PDFFont, typeof TEXT, number?]> = [
           [designLabel, DESIGN_TEXT_X, 248, row.outsourced ? bold : regular, row.outsourced ? MUTED : TEXT, row.outsourced ? 6.5 : 7.2],
-          [money(row.clear, mode), CLEAR_COLUMN_X, 52, bold, NAVY],
-          [money(row.photochromic, mode), PHOTO_COLUMN_X, 52, bold, NAVY],
-          [money(row.polarized, mode), POLAR_COLUMN_X, 50, bold, NAVY],
         ];
         values.forEach(([value, x, width, font, color, requestedSize]) => {
           const size = requestedSize ?? 7.2;
           page.drawText(fitText(font, value, width, size), {
             x,
-            y: y - 10,
+            y: y - 13,
             size,
             font,
             color,
           });
+        });
+        const priceValues = [
+          [money(row.clear, mode), row.clearBasis, CLEAR_COLUMN_X, 52],
+          [money(row.photochromic, mode), row.photochromicBasis, PHOTO_COLUMN_X, 52],
+          [money(row.polarized, mode), row.polarizedBasis, POLAR_COLUMN_X, 50],
+        ] as const;
+        priceValues.forEach(([value, basis, x, width]) => {
+          page.drawText(fitText(bold, value, width, 7.2), {
+            x,
+            y: y - 9,
+            size: 7.2,
+            font: bold,
+            color: NAVY,
+          });
+          if (value !== "-" && basis) {
+            page.drawText(fitText(bold, basis.toUpperCase(), width, 4.8), {
+              x,
+              y: y - 19,
+              size: 4.8,
+              font: bold,
+              color: MUTED,
+            });
+          }
         });
         page.drawLine({
           start: { x: DESIGN_COLUMN_X, y: rowTop - TABLE_ROW_HEIGHT },
@@ -1204,7 +1226,7 @@ async function buildPriceListPdf({
       sectionTitle(
         category,
         polycarbonateBasis
-          ? `${categoryRows.length} designs | Polycarbonate pricing`
+          ? `${categoryRows.length} designs | Material basis shown per price`
           : `${categoryRows.length} designs`
       );
 
@@ -1257,7 +1279,7 @@ async function buildPriceListPdf({
     sectionTitle(
       category,
       polycarbonateBasis
-        ? `${categoryRows.length} designs | Polycarbonate pricing`
+        ? `${categoryRows.length} designs | Material basis shown per price`
         : `${categoryRows.length} designs`
     );
 

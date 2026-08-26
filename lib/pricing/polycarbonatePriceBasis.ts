@@ -3,6 +3,12 @@ import type { PriceListPricingRow } from "@/lib/pricing/types";
 export type PriceMode = "edged" | "uncut";
 export type PriceMaterialGroup = "Clear" | "Photochromic" | "Polarized";
 
+export type SummaryPriceSelection = {
+  row?: PriceListPricingRow;
+  basisLabel?: string;
+  basisShortLabel?: string;
+};
+
 const POLYCARBONATE_BASIS_PRICE_LIST_CODES = new Set([
   "A6",
   "B5",
@@ -33,17 +39,103 @@ export function isPolycarbonatePricingRow(row: PriceListPricingRow) {
   return row.material.trim().toUpperCase() === "POLYCARBONATE";
 }
 
-export function lowestPolycarbonateRow(
+function lowestPositiveRow(
   rows: PriceListPricingRow[],
   materialGroup: PriceMaterialGroup,
-  mode: PriceMode
+  mode: PriceMode,
+  predicate: (row: PriceListPricingRow) => boolean = () => true
 ) {
   return rows
     .filter(
       (row) =>
         row.materialColor === materialGroup &&
-        isPolycarbonatePricingRow(row) &&
+        predicate(row) &&
         priceForMode(row, mode) > 0
     )
     .sort((a, b) => priceForMode(a, mode) - priceForMode(b, mode))[0];
+}
+
+export function lowestPolycarbonateRow(
+  rows: PriceListPricingRow[],
+  materialGroup: PriceMaterialGroup,
+  mode: PriceMode
+) {
+  return lowestPositiveRow(rows, materialGroup, mode, isPolycarbonatePricingRow);
+}
+
+function isTokaiProduct(rows: PriceListPricingRow[]) {
+  return rows.some((row) => {
+    const source = [row.brand, row.designStyle, ...row.rawProductNames].join(" ");
+    return /\bTOKAI\b/i.test(source);
+  });
+}
+
+function isOneSixtyRow(row: PriceListPricingRow) {
+  return /\b1\.60\b/.test(row.material);
+}
+
+function isPlasticSummaryRow(row: PriceListPricingRow) {
+  if (row.material.trim().toUpperCase() === "PLASTIC") return true;
+
+  // The source system identifies Executive Bifocal as H56 / Mid Index 1.56,
+  // while the customer-facing material availability is plastic only.
+  return (
+    row.designStyle.trim().toUpperCase() === "EXECUTIVE BIFOCAL" &&
+    (row.materialRaw.trim().toUpperCase() === "H56" ||
+      row.material.trim().toUpperCase() === "MID INDEX 1.56")
+  );
+}
+
+function summaryMaterialLabel(row: PriceListPricingRow) {
+  if (isPlasticSummaryRow(row)) return "Plastic";
+  return row.material.trim() || "Available material";
+}
+
+export function selectSummaryPrice(
+  rows: PriceListPricingRow[],
+  materialGroup: PriceMaterialGroup,
+  mode: PriceMode
+): SummaryPriceSelection {
+  if (!usesPolycarbonatePriceBasis(rows[0]?.code ?? "")) {
+    return { row: lowestPositiveRow(rows, materialGroup, mode) };
+  }
+
+  if (isTokaiProduct(rows)) {
+    return {
+      row: lowestPositiveRow(rows, materialGroup, mode, isOneSixtyRow),
+      basisLabel: "Only available in 1.60 index and above",
+      basisShortLabel: "1.60 index+ only",
+    };
+  }
+
+  const polycarbonate = lowestPolycarbonateRow(rows, materialGroup, mode);
+  if (polycarbonate) {
+    return {
+      row: polycarbonate,
+      basisLabel: "Polycarbonate",
+      basisShortLabel: "Polycarbonate",
+    };
+  }
+
+  const categoryRows = rows.filter(
+    (row) => row.materialColor === materialGroup && priceForMode(row, mode) > 0
+  );
+  const plastic = lowestPositiveRow(
+    rows,
+    materialGroup,
+    mode,
+    isPlasticSummaryRow
+  );
+  const selected = plastic ?? lowestPositiveRow(rows, materialGroup, mode);
+  if (!selected) return {};
+
+  const materialLabel = summaryMaterialLabel(selected);
+  const availableMaterials = new Set(categoryRows.map(summaryMaterialLabel));
+  const only = availableMaterials.size === 1;
+
+  return {
+    row: selected,
+    basisLabel: `${materialLabel}${only ? " only" : ""}`,
+    basisShortLabel: `${materialLabel}${only ? " only" : ""}`,
+  };
 }

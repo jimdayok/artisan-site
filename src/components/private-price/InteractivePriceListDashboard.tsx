@@ -1083,7 +1083,7 @@ export default function InteractivePriceListDashboard({
             ) : null}
             <p className="mt-3 max-w-3xl text-sm leading-6 text-[#4d5664]">
               {polycarbonateBasis
-                ? `Every price marked + shows its material basis directly below it. Most prices use polycarbonate${isPackageList ? " package" : ""} pricing. TOKAI products show the 1.60-index price and are only available in 1.60 index and above. Designs without polycarbonate use an available material price and are labeled; plastic-only designs say Plastic only. Open a row to compare choices that may cost more or less.`
+                ? `Every price marked + shows its material basis directly below it. Most prices use polycarbonate${isPackageList ? " package" : ""} pricing. TOKAI products show the Hi Index 1.60 price. Designs without polycarbonate use an available material price and are labeled; plastic-only designs say Plastic only. Open a row to compare choices that may cost more or less.`
                 : "Start with design, then open each row to build price by material and clear/photochromic/polarized options."}
             </p>
             <div className="mt-3 flex flex-wrap items-center gap-2">

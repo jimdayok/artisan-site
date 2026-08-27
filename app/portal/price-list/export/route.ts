@@ -55,7 +55,7 @@ const TEXT = rgb(47 / 255, 55 / 255, 68 / 255);
 const MUTED = rgb(102 / 255, 92 / 255, 78 / 255);
 const SOFT_FILL = rgb(252 / 255, 250 / 255, 246 / 255);
 const PRICE_BASIS_NOTE =
-  "PRICE BASIS APPEARS BELOW EACH + PRICE: POLYCARBONATE, 1.60 INDEX+ ONLY, PLASTIC ONLY, OR ANOTHER AVAILABLE MATERIAL.";
+  "Price basis appears below each + price: Polycarbonate, Hi Index 1.60, Plastic only, or another available material.";
 const STANDARD_PRICE_NOTE =
   "Design prices are starting prices. Materials, colors, AR, finishing, and shipping may add to or deduct from the displayed price unless noted.";
 const ADMIN_CUSTOMER_NAME = "Artisan Customer Pricing";
@@ -546,7 +546,7 @@ async function buildPriceListPdf({
     const summaryLines = wrapText(
       regular,
       polycarbonateBasis
-        ? `The material basis is printed below every + price. Most prices use polycarbonate${packagePricing ? " package" : ""} pricing. TOKAI products use the 1.60 price and are only available in 1.60 index and above. Plastic-only designs are marked Plastic only.`
+        ? `The material basis is printed below every + price. Most prices use polycarbonate${packagePricing ? " package" : ""} pricing. TOKAI products use the Hi Index 1.60 price. Plastic-only designs are marked Plastic only.`
         : "Customer-ready pricing organized by design family, coatings, add-ons, and policy notes.",
       introTextWidth,
       8
@@ -847,7 +847,7 @@ async function buildPriceListPdf({
             color: NAVY,
           });
           if (value !== "-" && basis) {
-            page.drawText(fitText(bold, basis.toUpperCase(), width, 4.8), {
+            page.drawText(fitText(bold, basis, width, 4.8), {
               x,
               y: y - 19,
               size: 4.8,
@@ -1396,8 +1396,8 @@ async function buildPriceListPdf({
       fitText(
         bold,
         isAdminCustomer(customerName)
-          ? `CONFIDENTIAL - ${ADMIN_CUSTOMER_NAME}`
-          : `CONFIDENTIAL - Prepared for ${customerDisplayName}`,
+          ? `Confidential - ${ADMIN_CUSTOMER_NAME}`
+          : `Confidential - Prepared for ${customerDisplayName}`,
         CONTENT_WIDTH - 95,
         7.5
       ),

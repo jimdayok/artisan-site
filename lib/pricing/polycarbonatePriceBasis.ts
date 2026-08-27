@@ -103,8 +103,8 @@ export function selectSummaryPrice(
   if (isTokaiProduct(rows)) {
     return {
       row: lowestPositiveRow(rows, materialGroup, mode, isOneSixtyRow),
-      basisLabel: "Only available in 1.60 index and above",
-      basisShortLabel: "1.60 index+ only",
+      basisLabel: "Hi Index 1.60",
+      basisShortLabel: "Hi Index 1.60",
     };
   }
 

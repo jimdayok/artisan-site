@@ -79,7 +79,7 @@ test("polycarbonate selection respects edged and uncut modes", () => {
   assert.equal(lowestPolycarbonateRow(rows, "Clear", "uncut")?.uncutPrice, 36);
 });
 
-test("TOKAI summaries select 1.60 and carry the availability note", () => {
+test("TOKAI summaries select and label Hi Index 1.60", () => {
   const rows = [
     row("Plastic", "Clear", 89, 81, { brand: "Tokai", designStyle: "Bi-AS" }),
     row("Hi-Index 1.60", "Clear", 119, 111, {
@@ -96,8 +96,8 @@ test("TOKAI summaries select 1.60 and carry the availability note", () => {
   const selected = selectSummaryPrice(rows, "Clear", "edged");
   assert.equal(selected.row?.material, "Hi-Index 1.60");
   assert.equal(selected.row?.edgedPrice, 119);
-  assert.equal(selected.basisLabel, "Only available in 1.60 index and above");
-  assert.equal(selected.basisShortLabel, "1.60 index+ only");
+  assert.equal(selected.basisLabel, "Hi Index 1.60");
+  assert.equal(selected.basisShortLabel, "Hi Index 1.60");
 });
 
 test("Executive Bifocal H56 is presented as its plastic-only price", () => {

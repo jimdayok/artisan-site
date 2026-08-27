@@ -1622,7 +1622,7 @@ function buildPracticeIntelligenceModel({
     opportunities.push({
       title: vspShare < 25 ? "VSP availability reminder" : "VSP education opportunity",
       priority: vspShare < 25 ? "green" : "yellow",
-      current: `${Math.round(vspShare)}% VSP mix`,
+      current: `${vspShare.toFixed(1)}% VSP mix`,
       why:
         vspShare < 25
           ? "VSP is available through our labs when the practice wants to route eligible VSP work through Artisan."
@@ -2001,8 +2001,8 @@ function PracticeIntelligenceHero({
           <IntelligenceMetric
             icon={Target}
             label="VSP / Private Pay"
-            value={`${Math.round(intelligence.vspShare)}%`}
-            detail={`${Math.round(intelligence.privatePayShare)}% private pay · Average practice at lab ${intelligence.peerBenchmarks.averageVspPct}% VSP`}
+            value={`${intelligence.vspShare.toFixed(1)}%`}
+            detail={`${intelligence.privatePayShare.toFixed(1)}% private pay · Average practice at lab ${intelligence.peerBenchmarks.averageVspPct}% VSP`}
           />
           <IntelligenceMetric
             icon={Layers}

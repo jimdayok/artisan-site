@@ -420,13 +420,13 @@ export function TrendsPerformanceCharts({
                 <Cell key={entry.label} fill={entry.color} />
               ))}
             </Pie>
-            <Tooltip formatter={(value, name) => [`${Math.round(Number(value))}%`, name]} contentStyle={tooltipStyle()} />
+            <Tooltip formatter={(value, name) => [`${Number(value).toFixed(1)}%`, name]} contentStyle={tooltipStyle()} />
             </PieChart>
           </ResponsiveContainer>
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
             <div className="text-center">
               <p className="text-4xl font-semibold text-[#142724]">
-                {Math.round(vspMix[0]?.value ?? 0)}%
+                {(vspMix[0]?.value ?? 0).toFixed(1)}%
               </p>
               <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#7a6b49]">
                 VSP

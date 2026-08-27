@@ -52,6 +52,12 @@ export type PortalDashboardV1SupplementalIntelligence = {
     neurolens_jobs?: PortalDashboardV1MonthlyNumber;
     sequel_jobs?: PortalDashboardV1MonthlyNumber;
     iot_artisan_jobs?: PortalDashboardV1MonthlyNumber;
+    unity_jobs?: PortalDashboardV1MonthlyNumber;
+  };
+  ar_coating_mix?: {
+    available?: boolean;
+    preferred_ar_jobs?: PortalDashboardV1MonthlyNumber;
+    non_preferred_ar_jobs?: PortalDashboardV1MonthlyNumber;
   };
   material_usage?: {
     plastic_jobs?: PortalDashboardV1MonthlyNumber;

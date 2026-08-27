@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   Area,
   AreaChart,
@@ -188,7 +189,9 @@ function LocationComparisonChart({
           <h3 className="mt-1 text-xl font-semibold text-white">{title}</h3>
         </div>
         <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold text-white/72">
-          {locations.length} locations
+          {locations.length === 1 && locations[0]?.accountNumber === "GROUP"
+            ? "All locations combined"
+            : `${locations.length} locations`}
         </span>
       </div>
       <div className="mt-5 overflow-x-auto pb-2">
@@ -238,6 +241,8 @@ export function MultiLocationPerformanceSnapshot({
   locations: LocationPerformancePoint[];
   totals: LocationPerformanceTotals;
 }) {
+  const [view, setView] = useState<"group" | "locations">("group");
+
   if (locations.length <= 1) return null;
 
   const legend = locations.map((location, index) => ({
@@ -245,6 +250,14 @@ export function MultiLocationPerformanceSnapshot({
     color: locationColors[index % locationColors.length],
   }));
   const reconciled = valuesReconcile(locations, totals);
+  const groupSeries: LocationPerformancePoint[] = [{
+    accountNumber: "GROUP",
+    accountName: "Entire Group",
+    address: "All locations combined",
+    purchases: totals.purchases,
+    jobs: totals.jobs,
+  }];
+  const chartLocations = view === "group" ? groupSeries : locations;
 
   return (
     <section
@@ -264,24 +277,48 @@ export function MultiLocationPerformanceSnapshot({
             Each color represents one location across prior-prior month, prior month, and current month-to-date.
           </p>
         </div>
-        <span className="w-fit rounded-full border border-[#d8c49b]/45 bg-[#d8c49b]/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.15em] text-[#ead9b7]">
-          Group view · {locations.length} stores
-        </span>
+        <div className="flex w-fit rounded-full border border-[#d8c49b]/45 bg-black/15 p-1" aria-label="Choose group or location chart view">
+          {(["group", "locations"] as const).map((option) => (
+            <button
+              key={option}
+              type="button"
+              onClick={() => setView(option)}
+              aria-pressed={view === option}
+              className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] transition ${
+                view === option
+                  ? "bg-[#d8c49b] text-[#13211f]"
+                  : "text-[#ead9b7] hover:bg-white/10"
+              }`}
+            >
+              {option === "group" ? "Entire Group" : "By Location"}
+            </button>
+          ))}
+        </div>
       </div>
 
       {reconciled ? (
         <>
-          <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 rounded-2xl border border-white/10 bg-black/10 p-4">
+          <div className="mt-5 grid gap-3 rounded-2xl border border-white/10 bg-black/10 p-4 sm:grid-cols-3">
+            {(["ppm", "pm", "cm"] as const).map((period) => (
+              <div key={period}>
+                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#d8c49b]">{period.toUpperCase()} group total</p>
+                <p className="mt-1 text-sm font-semibold text-white">
+                  {moneyFormatter.format(totals.purchases[period])} · {numberFormatter.format(totals.jobs[period])} jobs
+                </p>
+              </div>
+            ))}
+          </div>
+          {view === "locations" ? <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 rounded-2xl border border-white/10 bg-black/10 p-4">
             {legend.map((item) => (
               <span key={item.label} className="inline-flex min-w-0 w-full items-center gap-2 break-words text-xs font-semibold text-white/78 sm:w-auto">
                 <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: item.color }} />
                 {item.label}
               </span>
             ))}
-          </div>
+          </div> : null}
           <div className="mt-5 grid gap-5 xl:grid-cols-2">
-            <LocationComparisonChart title="Purchases by Location" metric="purchases" locations={locations} />
-            <LocationComparisonChart title="Jobs by Location" metric="jobs" locations={locations} />
+            <LocationComparisonChart title={view === "group" ? "Entire Group Purchases" : "Purchases by Location"} metric="purchases" locations={chartLocations} />
+            <LocationComparisonChart title={view === "group" ? "Entire Group Jobs" : "Jobs by Location"} metric="jobs" locations={chartLocations} />
           </div>
         </>
       ) : (
@@ -374,7 +411,7 @@ export function TrendsPerformanceCharts({
         </ResponsiveContainer>
       </Panel>
 
-      <Panel eyebrow="Mix" title="VSP Mix Trend" legend={vspMix.map((item) => ({ label: item.label, color: item.color }))}>
+      <Panel eyebrow="Previous Month Mix" title="VSP vs Non-VSP Orders" legend={vspMix.map((item) => ({ label: item.label, color: item.color }))}>
         <div className="relative h-full">
           <ResponsiveContainer width="100%" height="100%" debounce={50}>
             <PieChart>

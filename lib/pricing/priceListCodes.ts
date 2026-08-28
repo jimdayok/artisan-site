@@ -1,6 +1,8 @@
 import hiddenPriceListCodeList from "@/config/hidden-price-list-codes.json";
 
 export const PACKAGE_PRICE_LIST_CODES = ["B5", "M5", "Y5", "S5", "C3", "TK", "VD", "VX"] as const;
+export const ADGA_PREFERRED_PRICE_LIST_CODE = "J2";
+export const ADGA_SOURCE_PRICE_LIST_CODES = ["J1", "J2", "A6"] as const;
 
 export const PRICE_LIST_DISPLAY_NAMES: Record<string, string> = {
   E5: "Special Partner Pricing",
@@ -31,6 +33,11 @@ const hiddenPriceListCodes = new Set<string>(
 
 export function normalizePriceListCode(code: string) {
   return String(code ?? "").trim().toUpperCase();
+}
+
+export function isAdgaPriceListCode(code: string) {
+  const normalized = normalizePriceListCode(code);
+  return normalized === "J1" || normalized === "J2";
 }
 
 export function priceListDisplayName(code: string, fallback?: string) {

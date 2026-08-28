@@ -11,7 +11,12 @@ import { getAuthorizedRuntimePriceListFromHeaders } from "@/lib/portal/priceList
 import { canonicalPriceListCode } from "@/lib/portal/priceLists";
 import { checkRateLimit } from "@/lib/portal/rateLimit";
 import { customerFacingPriceList } from "@/lib/pricing/customerPriceList";
-import { isVisiblePriceListCode } from "@/lib/pricing/priceListCodes";
+import { buildAdgaPreferredPriceList } from "@/lib/pricing/adgaPriceList";
+import {
+  ADGA_SOURCE_PRICE_LIST_CODES,
+  isAdgaPriceListCode,
+  isVisiblePriceListCode,
+} from "@/lib/pricing/priceListCodes";
 import {
   comparePriceDisplayBrand,
   comparePriceDisplayCategory,
@@ -65,8 +70,6 @@ const PORTAL_URL = "https://www.artisanslabs.com/portal";
 const PROVIDER_RESOURCES_URL =
   "https://www.artisanslabs.com/provider-resources";
 const BRAND_COLUMN_WIDTH_WITH_TRANSITIONS = 106;
-const DESIGN_COLUMN_X = MARGIN + BRAND_COLUMN_WIDTH_WITH_TRANSITIONS;
-const DESIGN_TEXT_X = MARGIN + BRAND_COLUMN_WIDTH_WITH_TRANSITIONS + 8;
 const CLEAR_COLUMN_X = MARGIN + 312;
 const PHOTO_COLUMN_X = MARGIN + 368;
 const TRANSITIONS_COLUMN_X = MARGIN + 424;
@@ -74,6 +77,11 @@ const POLAR_COLUMN_X = MARGIN + 486;
 const TABLE_ROW_HEIGHT = 27;
 const TABLE_HEADER_HEIGHT = 20;
 const BRAND_ONLY_PROGRESSIVE_PDF_CODES = new Set(["A6", "G6", "P6"]);
+
+function adgaGuideRank(code?: string) {
+  const index = ADGA_SOURCE_PRICE_LIST_CODES.findIndex((guide) => guide === code);
+  return index === -1 ? 99 : index;
+}
 
 type LabShowcase = {
   name: string;
@@ -235,7 +243,7 @@ function summarizeDesigns(priceList: GeneratedPriceListData, mode: PriceMode) {
       .join(" ")
       .toUpperCase();
     if (source.includes("COPPERTONE")) continue;
-    const key = `${row.designType}|${row.brand}|${row.designStyle}`;
+    const key = `${row.priceGuideCode ?? ""}|${row.designType}|${row.brand}|${row.designStyle}`;
     groups.set(key, [...(groups.get(key) ?? []), row]);
   }
 
@@ -263,6 +271,7 @@ function summarizeDesigns(priceList: GeneratedPriceListData, mode: PriceMode) {
             : undefined,
         brand: rows[0].brand,
         designStyle: rows[0].designStyle,
+        priceGuideCode: rows[0].priceGuideCode,
         outsourced: rows.some((row) => row.outsourced),
         phasingOut: rows.some((row) =>
           row.serviceNotes.some((note) => /phasing out/i.test(note))
@@ -279,6 +288,7 @@ function summarizeDesigns(priceList: GeneratedPriceListData, mode: PriceMode) {
     })
     .sort(
       (a, b) =>
+        adgaGuideRank(a.priceGuideCode) - adgaGuideRank(b.priceGuideCode) ||
         comparePriceDisplayCategory(a.displayCategory, b.displayCategory) ||
         (a.progressiveTier && b.progressiveTier
           ? compareProgressiveTier(a.progressiveTier, b.progressiveTier)
@@ -368,6 +378,15 @@ async function buildPriceListPdf({
   const document = await PDFDocument.create();
   const regular = await document.embedFont(StandardFonts.Helvetica);
   const bold = await document.embedFont(StandardFonts.HelveticaBold);
+  const isAdgaList = isAdgaPriceListCode(priceList.code);
+  const brandColumnWidth = isAdgaList ? 90 : BRAND_COLUMN_WIDTH_WITH_TRANSITIONS;
+  const designColumnX = MARGIN + brandColumnWidth;
+  const designTextX = designColumnX + 8;
+  const guideColumnX = MARGIN + 250;
+  const clearColumnX = isAdgaList ? MARGIN + 298 : CLEAR_COLUMN_X;
+  const photoColumnX = isAdgaList ? MARGIN + 354 : PHOTO_COLUMN_X;
+  const transitionsColumnX = isAdgaList ? MARGIN + 410 : TRANSITIONS_COLUMN_X;
+  const polarColumnX = isAdgaList ? MARGIN + 476 : POLAR_COLUMN_X;
   const logoResponse = await fetch(new URL("/aln-white-logo.png", requestOrigin), {
     cache: "force-cache",
   });
@@ -555,11 +574,12 @@ async function buildPriceListPdf({
     });
     const headers = [
       ...(showBrand ? ([["Brand", MARGIN + 6]] as const) : []),
-      ["Design", showBrand ? DESIGN_TEXT_X : MARGIN + 6],
-      [packagePricing ? "Package" : "Clear", CLEAR_COLUMN_X],
-      ["Photo", PHOTO_COLUMN_X],
-      ["Trans/Xtra", TRANSITIONS_COLUMN_X],
-      ["Polar", POLAR_COLUMN_X],
+      ["Design", showBrand ? designTextX : MARGIN + 6],
+      ...(isAdgaList ? ([["Guide", guideColumnX]] as const) : []),
+      [packagePricing ? "Package" : "Clear", clearColumnX],
+      ["Photo", photoColumnX],
+      ["Trans/Xtra", transitionsColumnX],
+      ["Polar", polarColumnX],
     ] as const;
     for (const [label, x] of headers) {
       page.drawText(label, {
@@ -596,14 +616,14 @@ async function buildPriceListPdf({
     page.drawRectangle({
       x: MARGIN,
       y: topY - height,
-      width: BRAND_COLUMN_WIDTH_WITH_TRANSITIONS,
+      width: brandColumnWidth,
       height,
       color: SOFT_FILL,
       borderColor: RULE,
       borderWidth: 0.6,
     });
     const textX = MARGIN + 8;
-    const textWidth = BRAND_COLUMN_WIDTH_WITH_TRANSITIONS - 16;
+    const textWidth = brandColumnWidth - 16;
     const textY = topY - height / 2 - 3;
     page.drawText(fitText(bold, brand, textWidth, 7.2), {
       x: textX,
@@ -910,12 +930,12 @@ async function buildPriceListPdf({
 
   let designStripeIndex = 0;
   const drawBrandRows = ({
-    category,
+    sectionLabel,
     tier,
     brand,
     rows,
   }: {
-    category: PriceDisplayCategory;
+    sectionLabel: string;
     tier: ProgressiveTier | "All";
     brand: string;
     rows: ReturnType<typeof summarizeDesigns>;
@@ -924,7 +944,7 @@ async function buildPriceListPdf({
     while (rowIndex < rows.length) {
       if (y - 25 < 58) {
         addPage(true);
-        sectionTitle(category, "continued");
+        sectionTitle(sectionLabel, "continued");
         if (tier !== "All") drawTierHeader(tier);
         drawTableHeader(true);
       }
@@ -937,15 +957,15 @@ async function buildPriceListPdf({
         const rowTop = y + 2;
         const zebraFill = designStripeIndex % 2 === 1 ? CREAM : rgb(1, 1, 1);
         page.drawRectangle({
-          x: DESIGN_COLUMN_X,
+          x: designColumnX,
           y: rowTop - TABLE_ROW_HEIGHT,
-          width: CONTENT_WIDTH - BRAND_COLUMN_WIDTH_WITH_TRANSITIONS,
+          width: CONTENT_WIDTH - brandColumnWidth,
           height: TABLE_ROW_HEIGHT,
           color: zebraFill,
         });
         page.drawLine({
-          start: { x: DESIGN_COLUMN_X, y: rowTop - TABLE_ROW_HEIGHT },
-          end: { x: DESIGN_COLUMN_X, y: rowTop },
+          start: { x: designColumnX, y: rowTop - TABLE_ROW_HEIGHT },
+          end: { x: designColumnX, y: rowTop },
           color: RULE,
           thickness: 0.6,
         });
@@ -955,7 +975,10 @@ async function buildPriceListPdf({
         ].filter(Boolean).join("; ");
         const designLabel = `${row.designStyle}${statusLabel ? ` [${statusLabel}]` : ""}`;
         const values: Array<[string, number, number, PDFFont, typeof TEXT, number?]> = [
-          [designLabel, DESIGN_TEXT_X, 194, row.outsourced || row.phasingOut ? bold : regular, row.outsourced ? MUTED : TEXT, row.outsourced || row.phasingOut ? 6.2 : 7.2],
+          [designLabel, designTextX, isAdgaList ? 152 : 194, row.outsourced || row.phasingOut ? bold : regular, row.outsourced ? MUTED : TEXT, row.outsourced || row.phasingOut ? 6.2 : 7.2],
+          ...(isAdgaList
+            ? ([[row.priceGuideCode ?? "A6", guideColumnX, 34, bold, NAVY, 7.2]] as Array<[string, number, number, PDFFont, typeof TEXT, number?]>)
+            : []),
         ];
         values.forEach(([value, x, width, font, color, requestedSize]) => {
           const size = requestedSize ?? 7.2;
@@ -968,10 +991,10 @@ async function buildPriceListPdf({
           });
         });
         const priceValues = [
-          [money(row.clear, mode), row.clearBasis, CLEAR_COLUMN_X, 52],
-          [money(row.photochromic, mode), row.photochromicBasis, PHOTO_COLUMN_X, 52],
-          [money(row.transitions, mode), row.transitionsBasis, TRANSITIONS_COLUMN_X, 58],
-          [money(row.polarized, mode), row.polarizedBasis, POLAR_COLUMN_X, 50],
+          [money(row.clear, mode), row.clearBasis, clearColumnX, 52],
+          [money(row.photochromic, mode), row.photochromicBasis, photoColumnX, 52],
+          [money(row.transitions, mode), row.transitionsBasis, transitionsColumnX, 58],
+          [money(row.polarized, mode), row.polarizedBasis, polarColumnX, 50],
         ] as const;
         priceValues.forEach(([value, basis, x, width]) => {
           page.drawText(fitText(bold, value, width, 7.2), {
@@ -992,7 +1015,7 @@ async function buildPriceListPdf({
           }
         });
         page.drawLine({
-          start: { x: DESIGN_COLUMN_X, y: rowTop - TABLE_ROW_HEIGHT },
+          start: { x: designColumnX, y: rowTop - TABLE_ROW_HEIGHT },
           end: { x: PAGE_WIDTH - MARGIN, y: rowTop - TABLE_ROW_HEIGHT },
           color: RULE,
           thickness: 0.45,
@@ -1432,16 +1455,39 @@ async function buildPriceListPdf({
     ]);
   }
 
-  for (const [category, categoryRows] of [...categoryGroups.entries()].sort(
-    ([a], [b]) => comparePriceDisplayCategory(a, b)
-  )) {
+  const orderedSections = isAdgaList
+    ? ADGA_SOURCE_PRICE_LIST_CODES.flatMap((guide) => {
+        const guideCategories = new Map<PriceDisplayCategory, typeof summaries>();
+        for (const summary of summaries.filter((row) => row.priceGuideCode === guide)) {
+          guideCategories.set(summary.displayCategory, [
+            ...(guideCategories.get(summary.displayCategory) ?? []),
+            summary,
+          ]);
+        }
+        return [...guideCategories.entries()]
+          .sort(([a], [b]) => comparePriceDisplayCategory(a, b))
+          .map(([category, rows]) => ({
+            category,
+            categoryRows: rows,
+            sectionLabel: `${guide} Price Guide - ${category}`,
+          }));
+      })
+    : [...categoryGroups.entries()]
+        .sort(([a], [b]) => comparePriceDisplayCategory(a, b))
+        .map(([category, rows]) => ({
+          category,
+          categoryRows: rows,
+          sectionLabel: category,
+        }));
+
+  for (const { category, categoryRows, sectionLabel } of orderedSections) {
     if (
       category === "Progressive Designs" &&
       usesBrandOnlyProgressiveLayout
     ) {
       ensureSpace(34 + TABLE_HEADER_HEIGHT + TABLE_ROW_HEIGHT + 12);
       sectionTitle(
-        category,
+        sectionLabel,
         polycarbonateBasis
           ? "Material basis shown per price"
           : undefined
@@ -1466,7 +1512,7 @@ async function buildPriceListPdf({
             compareDesignStyle(a.designStyle, b.designStyle)
         );
         drawBrandRows({
-          category,
+          sectionLabel,
           tier: "All",
           brand,
           rows: orderedBrandRows,
@@ -1494,7 +1540,7 @@ async function buildPriceListPdf({
       12;
     ensureSpace(openingHeight);
     sectionTitle(
-      category,
+      sectionLabel,
       polycarbonateBasis
         ? "Material basis shown per price"
         : undefined
@@ -1511,7 +1557,7 @@ async function buildPriceListPdf({
       for (const [brand, brandRows] of [...brandGroups.entries()].sort(
         ([a], [b]) => comparePriceDisplayBrand(a, b)
       )) {
-        drawBrandRows({ category, tier, brand, rows: brandRows });
+        drawBrandRows({ sectionLabel, tier, brand, rows: brandRows });
       }
     }
     y -= 8;
@@ -1713,18 +1759,32 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const generated = await loadRuntimePackagedPriceListByCode(
-    code,
-    request.nextUrl.origin
-  );
-  if (!generated) {
+  const generatedPriceLists = isAdgaPriceListCode(code)
+    ? await Promise.all(
+        ADGA_SOURCE_PRICE_LIST_CODES.map((sourceCode) =>
+          loadRuntimePackagedPriceListByCode(sourceCode, request.nextUrl.origin)
+        )
+      )
+    : [
+        await loadRuntimePackagedPriceListByCode(
+          code,
+          request.nextUrl.origin
+        ),
+      ];
+  if (generatedPriceLists.some((priceList) => !priceList)) {
     return new NextResponse("Pricing data is not available for this list.", {
       status: 404,
       headers: { "Cache-Control": "private, no-store" },
     });
   }
 
-  const priceList = customerFacingPriceList(generated);
+  const priceList = isAdgaPriceListCode(code)
+    ? buildAdgaPreferredPriceList({
+        j1: generatedPriceLists[0]!,
+        j2: generatedPriceLists[1]!,
+        a6: generatedPriceLists[2]!,
+      })
+    : customerFacingPriceList(generatedPriceLists[0]!);
   const customerName =
     access.customer.practiceName?.trim() ||
     `Account ${access.customer.accountNumber}`;

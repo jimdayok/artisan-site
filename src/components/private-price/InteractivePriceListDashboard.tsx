@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { isPackagePriceListCode } from "@/lib/pricing/priceListCodes";
+import { isAdgaPriceListCode, isPackagePriceListCode } from "@/lib/pricing/priceListCodes";
 import Link from "next/link";
 import { Fragment, useMemo, useState } from "react";
 import type {
@@ -33,12 +33,13 @@ import {
 } from "@/lib/pricing/chemistrieClips";
 
 type PriceMode = "edged" | "uncut";
-type ViewBy = "designType" | "brand";
+type ViewBy = "designType" | "brand" | "priceGuide";
 type MaterialGroup = "Clear" | "Photochromic" | "Transitions" | "Polarized";
 type SortKey =
   | "brand"
   | "designType"
   | "designStyle"
+  | "priceGuideCode"
   | "clear"
   | "photochromic"
   | "transitions"
@@ -53,6 +54,7 @@ type DesignRow = {
   progressiveTier?: ProgressiveTier;
   brand: string;
   designStyle: string;
+  priceGuideCode?: "J1" | "J2" | "A6";
   rows: PriceListPricingRow[];
   clearFrom?: PriceListPricingRow;
   photoFrom?: PriceListPricingRow;
@@ -199,6 +201,7 @@ const titleByCode: Record<string, string> = {
   P6: "Artisan Equity Partner Pricing",
   G6: "Artisan General Pricing",
   A6: "Artisan PMP Partner Pricing",
+  J2: "ADG&A Preferred Pricing",
   B5: "Artisan Lens System Pricing",
   S5: "Shamir Lens System Pricing",
   M5: "Artisan Frame System Pricing",
@@ -238,6 +241,13 @@ const metaByCode: Record<string, ProgramMeta> = {
     multiplePairEligible: true,
     packageNotes: [],
     ruleNotes: ["Products not listed are not available."],
+  },
+  J2: {
+    multiplePairEligible: true,
+    packageNotes: [],
+    ruleNotes: [
+      "J1 pricing is shown first, followed by J2 pricing. Designs missing from both ADG&A guides use A6 pricing and are labeled A6.",
+    ],
   },
   B5: {
     multiplePairEligible: true,
@@ -594,6 +604,7 @@ function rowMatchesSearch(row: PriceListPricingRow, query: string) {
     row.designType,
     row.brand,
     row.designStyle,
+    row.priceGuideCode ?? "",
     row.material,
     row.materialColor,
     row.colorBrand,
@@ -614,7 +625,7 @@ function groupDesignRows(rows: PriceListPricingRow[], mode: PriceMode) {
   const groups = new Map<string, DesignRow>();
 
   for (const row of rows) {
-    const key = `${row.designType}|${row.brand}|${row.designStyle}`;
+    const key = `${row.priceGuideCode ?? ""}|${row.designType}|${row.brand}|${row.designStyle}`;
     const current =
       groups.get(key) ||
       ({
@@ -627,6 +638,7 @@ function groupDesignRows(rows: PriceListPricingRow[], mode: PriceMode) {
             : undefined,
         brand: row.brand,
         designStyle: row.designStyle,
+        priceGuideCode: row.priceGuideCode,
         rows: [],
         recommended: false,
         outsourced: false,
@@ -849,11 +861,12 @@ export default function InteractivePriceListDashboard({
   showAccountDrillDownNotice?: boolean;
 }) {
   const listCode = String(priceList.code ?? "").trim().toUpperCase();
+  const isAdgaList = isAdgaPriceListCode(listCode);
   const polycarbonateBasis = usesPolycarbonatePriceBasis(listCode);
   const isPackageList = isPackagePriceListCode(listCode);
   const programTitle = resolveProgramTitle(listCode || "PRICING");
   const programMeta = resolveProgramMeta(listCode || "PRICING");
-  const [viewBy, setViewBy] = useState<ViewBy>("designType");
+  const [viewBy, setViewBy] = useState<ViewBy>(isAdgaList ? "priceGuide" : "designType");
   const [designType, setDesignType] = useState("All");
   const [brand, setBrand] = useState("All");
   const [designStyle, setDesignStyle] = useState("All");
@@ -960,6 +973,39 @@ export default function InteractivePriceListDashboard({
   }, [customerRows, baseFilteredRows, brand, designType, designStyle, queryText]);
 
   const groupedSections = useMemo(() => {
+    if (viewBy === "priceGuide") {
+      const map = new Map<string, Map<string, DesignRow[]>>();
+      for (const row of designRows) {
+        const guide = row.priceGuideCode ?? "A6";
+        const nested = `${row.displayCategory}|${row.progressiveTier ?? ""}|${row.brand}`;
+        if (!map.has(guide)) map.set(guide, new Map());
+        const nestedMap = map.get(guide)!;
+        nestedMap.set(nested, [...(nestedMap.get(nested) ?? []), row]);
+      }
+
+      const guideRank = new Map([["J1", 0], ["J2", 1], ["A6", 2]]);
+      return [...map.entries()]
+        .sort(([a], [b]) => (guideRank.get(a) ?? 99) - (guideRank.get(b) ?? 99))
+        .map(([guide, nested]) => ({
+          section: `${guide} Price Guide`,
+          nestedGroups: [...nested.entries()]
+            .map(([key, rows]) => {
+              const [category, tier, brand] = key.split("|");
+              return {
+                label: `${category} · ${brand}`,
+                tier: (tier || undefined) as ProgressiveTier | undefined,
+                category: category as PriceDisplayCategory,
+                rows,
+              };
+            })
+            .sort((a, b) =>
+              comparePriceDisplayCategory(a.category, b.category) ||
+              (a.tier && b.tier ? compareProgressiveTier(a.tier, b.tier) : 0) ||
+              compareBrandDisplayOrder(a.label, b.label)
+            ),
+        }));
+    }
+
     const map = new Map<string, Map<string, DesignRow[]>>();
     for (const row of designRows) {
       const top = viewBy === "designType" ? row.displayCategory : row.brand;
@@ -1032,6 +1078,9 @@ export default function InteractivePriceListDashboard({
     { key: "designType", label: "Design Type" },
     { key: "brand", label: "Brand" },
     { key: "designStyle", label: "Design Style" },
+    ...(isAdgaList
+      ? ([{ key: "priceGuideCode", label: "Price Guide" }] as const)
+      : []),
     {
       key: "clear",
       label: isPackageList
@@ -1227,6 +1276,7 @@ export default function InteractivePriceListDashboard({
             >
               <option value="designType">Design Type</option>
               <option value="brand">Brand</option>
+              {isAdgaList ? <option value="priceGuide">Price Guide</option> : null}
             </select>
           </label>
         </div>
@@ -1293,7 +1343,7 @@ export default function InteractivePriceListDashboard({
                     ) : null}
                   <div className="rounded-[2px] border border-[#eadfce] bg-white/82">
                     <div className="border-b border-[#f0e6d8] px-3 py-2">
-                      {viewBy === "designType" ? (
+                      {viewBy !== "brand" ? (
                         <BrandGroupHeader label={nested.label} />
                       ) : (
                         <h4 className="text-sm font-bold uppercase tracking-[0.16em] text-[#8a7654]">
@@ -1304,14 +1354,30 @@ export default function InteractivePriceListDashboard({
                     <div className="mobile-scroll-row overflow-x-auto md:overflow-visible">
                       <table className="w-full min-w-[760px] table-fixed border-separate border-spacing-0 text-left text-sm md:min-w-0">
                         <colgroup>
-                          <col className="w-[14%]" />
-                          <col className="w-[13%]" />
-                          <col className="w-[24%]" />
-                          <col className="w-[10%]" />
-                          <col className="w-[10%]" />
-                          <col className="w-[10%]" />
-                          <col className="w-[10%]" />
-                          <col className="w-[9%]" />
+                          {isAdgaList ? (
+                            <>
+                              <col className="w-[12%]" />
+                              <col className="w-[12%]" />
+                              <col className="w-[20%]" />
+                              <col className="w-[7%]" />
+                              <col className="w-[10%]" />
+                              <col className="w-[10%]" />
+                              <col className="w-[10%]" />
+                              <col className="w-[10%]" />
+                              <col className="w-[9%]" />
+                            </>
+                          ) : (
+                            <>
+                              <col className="w-[14%]" />
+                              <col className="w-[13%]" />
+                              <col className="w-[24%]" />
+                              <col className="w-[10%]" />
+                              <col className="w-[10%]" />
+                              <col className="w-[10%]" />
+                              <col className="w-[10%]" />
+                              <col className="w-[9%]" />
+                            </>
+                          )}
                         </colgroup>
                         <thead>
                           <tr className="bg-[#122033] text-white">
@@ -1365,6 +1431,11 @@ export default function InteractivePriceListDashboard({
                                       </span>
                                     ) : null}
                                   </td>
+                                  {isAdgaList ? (
+                                    <td className="border-b border-r border-[#eadfce] px-3 py-2 text-center font-black text-[#7a5a18]">
+                                      {row.priceGuideCode}
+                                    </td>
+                                  ) : null}
                                   <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
                                     <SummaryPriceCell row={row.clearFrom} basis={row.clearBasis} mode={priceMode} />
                                   </td>
@@ -1389,7 +1460,7 @@ export default function InteractivePriceListDashboard({
                                 </tr>
                                 {expanded ? (
                                   <tr className="bg-[#f9f2e8]">
-                                    <td colSpan={8} className="border-b border-[#eadfce] px-3 py-3">
+                                    <td colSpan={isAdgaList ? 9 : 8} className="border-b border-[#eadfce] px-3 py-3">
                                       <ExpandedDesignBuilder
                                         designRow={row}
                                         priceMode={priceMode}

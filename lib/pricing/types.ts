@@ -22,6 +22,7 @@ export type PriceListPricingRow = {
   serviceNotes: string[];
   duplicateSourceRows: number;
   coatingScheduleRef?: string;
+  priceGuideCode?: "J1" | "J2" | "A6";
   coatingOptions?: Array<{
     code: string;
     name: string;

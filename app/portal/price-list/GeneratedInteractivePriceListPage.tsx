@@ -4,8 +4,14 @@ import { getAuthorizedRuntimePriceListFromHeaders } from "@/lib/portal/priceList
 import { canonicalPriceListCode } from "@/lib/portal/priceLists";
 import { isPortalAdminEmail } from "@/lib/portal/admin";
 import { loadRuntimePackagedPriceListByCode } from "@/lib/pricing/loadRuntimePackagedPriceList";
-import { isVisiblePriceListCode, priceListDisplayName } from "@/lib/pricing/priceListCodes";
+import {
+  ADGA_SOURCE_PRICE_LIST_CODES,
+  isAdgaPriceListCode,
+  isVisiblePriceListCode,
+  priceListDisplayName,
+} from "@/lib/pricing/priceListCodes";
 import { customerFacingPriceList } from "@/lib/pricing/customerPriceList";
+import { buildAdgaPreferredPriceList } from "@/lib/pricing/adgaPriceList";
 import { getPortalDashboardV1ByAccount } from "@/lib/portal/dashboardV1";
 import { headers } from "next/headers";
 import { forbidden } from "next/navigation";
@@ -77,11 +83,19 @@ export default async function GeneratedInteractivePriceListPage({
     );
   }
 
-  const generatedPriceList = await loadRuntimePackagedPriceListByCode(
-    normalizedCode,
-    requestOrigin
-  );
-  if (!generatedPriceList) {
+  const generatedPriceLists = isAdgaPriceListCode(normalizedCode)
+    ? await Promise.all(
+        ADGA_SOURCE_PRICE_LIST_CODES.map((sourceCode) =>
+          loadRuntimePackagedPriceListByCode(sourceCode, requestOrigin)
+        )
+      )
+    : [
+        await loadRuntimePackagedPriceListByCode(
+          normalizedCode,
+          requestOrigin
+        ),
+      ];
+  if (generatedPriceLists.some((priceList) => !priceList)) {
     const message = isPortalAdminEmail(access.authenticatedEmail)
       ? `${normalizedCode} is assigned or registered, but no generated pricing rows are available. Check the price-list validation report.`
       : "Pricing for this assigned list is temporarily unavailable. Please contact Artisan Lab Network support.";
@@ -89,7 +103,13 @@ export default async function GeneratedInteractivePriceListPage({
       <PriceListAccessMessage message={message} />
     );
   }
-  const customerPriceList = customerFacingPriceList(generatedPriceList);
+  const customerPriceList = isAdgaPriceListCode(normalizedCode)
+    ? buildAdgaPreferredPriceList({
+        j1: generatedPriceLists[0]!,
+        j2: generatedPriceLists[1]!,
+        a6: generatedPriceLists[2]!,
+      })
+    : customerFacingPriceList(generatedPriceLists[0]!);
   const comparisonPriceList =
     normalizedCode === "B5"
       ? await loadRuntimePackagedPriceListByCode("G6", requestOrigin)

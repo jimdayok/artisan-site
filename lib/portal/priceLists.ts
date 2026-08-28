@@ -1,6 +1,8 @@
 import registryJson from "@/lib/portal/generated/priceListRegistry.json";
 import {
+  ADGA_PREFERRED_PRICE_LIST_CODE,
   filterVisiblePriceListCodes,
+  isAdgaPriceListCode,
   isVisiblePriceListCode,
   normalizePriceListCode,
   priceListDisplayName,
@@ -65,22 +67,27 @@ const pdfByCode: Record<
 };
 
 export function canonicalPriceListCode(code: string) {
-  return normalizePriceListCode(code);
+  const normalized = normalizePriceListCode(code);
+  return isAdgaPriceListCode(normalized)
+    ? ADGA_PREFERRED_PRICE_LIST_CODE
+    : normalized;
 }
 
 export const priceLists: PortalPriceList[] = (
   registryJson.entries as RegistryEntry[]
-).map((entry) => {
-  const pdf = pdfByCode[entry.code];
-  return {
-    ...entry,
-    label: priceListDisplayName(entry.code, entry.label || `${entry.code} Price List`),
-    fileName: pdf?.fileName ?? `Interactive ${entry.code} pricing`,
-    r2Key: pdf?.r2Key ?? null,
-    onlineUrl: `/portal/price-list/${entry.code.toLowerCase()}`,
-    configured: entry.generated,
-  };
-});
+)
+  .filter((entry) => entry.code !== "J1")
+  .map((entry) => {
+    const pdf = pdfByCode[entry.code];
+    return {
+      ...entry,
+      label: priceListDisplayName(entry.code, entry.label || `${entry.code} Price List`),
+      fileName: pdf?.fileName ?? `Interactive ${entry.code} pricing`,
+      r2Key: pdf?.r2Key ?? null,
+      onlineUrl: `/portal/price-list/${entry.code.toLowerCase()}`,
+      configured: entry.generated,
+    };
+  });
 
 export const visiblePriceLists = priceLists.filter((entry) =>
   isVisiblePriceListCode(entry.code)

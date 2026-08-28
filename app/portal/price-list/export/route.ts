@@ -1036,7 +1036,7 @@ async function buildPriceListPdf({
           label: string,
           width: number,
           color: typeof GOLD,
-          withExternalIcon = false
+          icon: "stopwatch" | "hand"
         ) => {
           const badgeY = y - 23;
           page.drawRectangle({
@@ -1048,47 +1048,82 @@ async function buildPriceListPdf({
             borderColor: color,
             borderWidth: 0.65,
           });
-          if (withExternalIcon) {
-            const iconX = statusX + 4;
-            const iconY = badgeY + 2.2;
-            page.drawRectangle({
+          const iconX = statusX + 7;
+          const iconY = badgeY + 4.2;
+          if (icon === "stopwatch") {
+            page.drawEllipse({
               x: iconX,
               y: iconY,
-              width: 4,
-              height: 4,
+              xScale: 2.55,
+              yScale: 2.55,
               borderColor: color,
-              borderWidth: 0.55,
+              borderWidth: 0.65,
             });
             page.drawLine({
-              start: { x: iconX + 2, y: iconY + 2 },
-              end: { x: iconX + 6.5, y: iconY + 6.5 },
+              start: { x: iconX - 1.15, y: iconY + 3.5 },
+              end: { x: iconX + 1.15, y: iconY + 3.5 },
               color,
-              thickness: 0.7,
+              thickness: 0.65,
             });
             page.drawLine({
-              start: { x: iconX + 3.5, y: iconY + 6.5 },
-              end: { x: iconX + 6.5, y: iconY + 6.5 },
+              start: { x: iconX, y: iconY + 2.55 },
+              end: { x: iconX, y: iconY + 3.5 },
               color,
-              thickness: 0.7,
+              thickness: 0.65,
             });
             page.drawLine({
-              start: { x: iconX + 6.5, y: iconY + 3.5 },
-              end: { x: iconX + 6.5, y: iconY + 6.5 },
+              start: { x: iconX, y: iconY },
+              end: { x: iconX + 1.35, y: iconY + 1.35 },
               color,
-              thickness: 0.7,
+              thickness: 0.65,
+            });
+          } else {
+            const fingerX = [iconX - 1.7, iconX - 0.55, iconX + 0.6, iconX + 1.75];
+            const fingerTop = [iconY + 2.35, iconY + 3.05, iconY + 2.75, iconY + 1.9];
+            fingerX.forEach((finger, index) => {
+              page.drawLine({
+                start: { x: finger, y: iconY - 0.2 },
+                end: { x: finger, y: fingerTop[index] },
+                color,
+                thickness: 0.65,
+              });
+            });
+            page.drawLine({
+              start: { x: iconX - 1.7, y: iconY - 0.2 },
+              end: { x: iconX - 2.9, y: iconY + 0.95 },
+              color,
+              thickness: 0.65,
+            });
+            page.drawLine({
+              start: { x: iconX - 2.9, y: iconY + 0.95 },
+              end: { x: iconX - 3.45, y: iconY + 0.35 },
+              color,
+              thickness: 0.65,
+            });
+            page.drawLine({
+              start: { x: iconX - 1.7, y: iconY - 0.2 },
+              end: { x: iconX - 0.75, y: iconY - 2.25 },
+              color,
+              thickness: 0.65,
+            });
+            page.drawLine({
+              start: { x: iconX - 0.75, y: iconY - 2.25 },
+              end: { x: iconX + 1.65, y: iconY - 1.8 },
+              color,
+              thickness: 0.65,
             });
           }
           page.drawText(label, {
-            x: statusX + (withExternalIcon ? 14 : 5),
+            x: statusX + 14,
             y: badgeY + 2.1,
             size: 4.8,
-            font: bold,
+            font: regular,
             color,
           });
           statusX += width + 4;
         };
-        if (row.outsourced) drawStatusBadge("Outsourced", 48, MUTED, true);
-        if (row.phasingOut) drawStatusBadge("Phasing out", 42, GOLD);
+        if (row.outsourced) drawStatusBadge("Outsourced", 48, MUTED, "stopwatch");
+        if (row.phasingOut) drawStatusBadge("Phasing out", 47, GOLD, "hand");
         const priceValues = [
           [money(row.clear, mode), row.clearBasis, clearColumnX, 52],
           [money(row.photochromic, mode), row.photochromicBasis, photoColumnX, 52],

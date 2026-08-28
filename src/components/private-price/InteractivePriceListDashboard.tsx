@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { isAdgaPriceListCode, isPackagePriceListCode } from "@/lib/pricing/priceListCodes";
 import Link from "next/link";
+import { Hand, Timer } from "lucide-react";
 import { Fragment, useMemo, useState } from "react";
 import type {
   GeneratedPriceListData,
@@ -748,9 +749,10 @@ function inlineMarker(label: string, recommended: boolean, outsourced: boolean) 
       {outsourced ? (
         <span
           title="Produced by a specialty partner; additional turnaround time applies"
-          className="rounded-full border border-[#b67a52] bg-[#fff7ef] px-2 py-0.5 text-[10px] font-bold tracking-wide text-[#7b4b2a]"
+          className="inline-flex items-center gap-1 rounded-full border border-[#b67a52] bg-[#fff7ef] px-2 py-0.5 text-[10px] font-normal tracking-wide text-[#7b4b2a]"
         >
-          ↗ Outsourced
+          <Timer aria-hidden="true" className="h-3 w-3 shrink-0 stroke-[1.7]" />
+          Outsourced
         </span>
       ) : null}
     </span>
@@ -1458,13 +1460,15 @@ export default function InteractivePriceListDashboard({
                                   <td className="border-b border-r border-[#eadfce] px-3 py-2 font-semibold text-[#122033]">
                                     {inlineMarker(normalizeDisplayName(row.designStyle), row.recommended, row.outsourced)}
                                     {row.outsourced ? (
-                                      <span className="mt-1 block text-[10px] font-bold uppercase tracking-[0.08em] text-[#8a4f28]">
+                                      <span className="mt-1 flex items-center gap-1 text-[10px] font-normal text-[#8a4f28]">
+                                        <Timer aria-hidden="true" className="h-3 w-3 shrink-0 stroke-[1.7]" />
                                         Outsourced - additional turnaround time
                                       </span>
                                     ) : null}
                                     {row.rows.some((entry) => entry.serviceNotes.some((note) => /phasing out/i.test(note))) ? (
-                                      <span className="mt-1 block text-[10px] font-bold uppercase tracking-[0.08em] text-[#7a5a18]">
-                                        ◷ Phasing out
+                                      <span className="mt-1 flex items-center gap-1 text-[10px] font-normal text-[#7a5a18]">
+                                        <Hand aria-hidden="true" className="h-3 w-3 shrink-0 -rotate-12 stroke-[1.7]" />
+                                        Phasing out
                                       </span>
                                     ) : null}
                                   </td>
@@ -2617,13 +2621,24 @@ function ChemClipSection() {
 }
 
 function ReferenceKey({ rows }: { rows: PriceListPricingRow[] }) {
-  const entries: Array<[string, string]> = [];
-  if (rows.some((row) => row.recommended)) entries.push(["★", "Preferred Product"]);
+  const entries: Array<{
+    id: "preferred" | "outsourced" | "phasing";
+    description: string;
+  }> = [];
+  if (rows.some((row) => row.recommended)) {
+    entries.push({ id: "preferred", description: "Preferred Product" });
+  }
   if (rows.some((row) => row.outsourced)) {
-    entries.push(["↗", "Outsourced product - additional turnaround time applies"]);
+    entries.push({
+      id: "outsourced",
+      description: "Outsourced product - additional turnaround time applies",
+    });
   }
   if (rows.some((row) => row.serviceNotes.some((note) => /phasing out/i.test(note)))) {
-    entries.push(["◷", "Phasing out - contact your lab for current availability"]);
+    entries.push({
+      id: "phasing",
+      description: "Phasing out - contact your lab for current availability",
+    });
   }
   if (!entries.length) return null;
 
@@ -2631,10 +2646,18 @@ function ReferenceKey({ rows }: { rows: PriceListPricingRow[] }) {
     <section className="rounded-[2px] border border-[#dfd2bf] bg-white/75 p-4 text-sm shadow-[0_12px_34px_rgba(18,32,51,0.05)] md:p-5">
       <h2 className="text-sm font-bold uppercase tracking-[0.18em] text-[#8a7654]">Reference Key</h2>
       <div className="mt-3 grid gap-2 md:grid-cols-2 xl:grid-cols-4">
-        {entries.map(([label, description]) => (
-          <div key={label} className="flex gap-2">
-            <span className="font-bold text-[#122033]">{label}</span>
-            <span className="text-[#4d5664]">{description}</span>
+        {entries.map((entry) => (
+          <div key={entry.id} className="flex items-start gap-2">
+            <span className="mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center text-[#122033]">
+              {entry.id === "preferred" ? (
+                "★"
+              ) : entry.id === "outsourced" ? (
+                <Timer aria-hidden="true" className="h-4 w-4 stroke-[1.7]" />
+              ) : (
+                <Hand aria-hidden="true" className="h-4 w-4 -rotate-12 stroke-[1.7]" />
+              )}
+            </span>
+            <span className="font-normal text-[#4d5664]">{entry.description}</span>
           </div>
         ))}
       </div>

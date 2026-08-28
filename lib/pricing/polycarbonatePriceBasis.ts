@@ -1,7 +1,11 @@
 import type { PriceListPricingRow } from "@/lib/pricing/types";
 
 export type PriceMode = "edged" | "uncut";
-export type PriceMaterialGroup = "Clear" | "Photochromic" | "Polarized";
+export type PriceMaterialGroup =
+  | "Clear"
+  | "Photochromic"
+  | "Transitions"
+  | "Polarized";
 
 export type SummaryPriceSelection = {
   row?: PriceListPricingRow;
@@ -48,11 +52,43 @@ function lowestPositiveRow(
   return rows
     .filter(
       (row) =>
-        row.materialColor === materialGroup &&
+        rowMatchesMaterialGroup(row, materialGroup) &&
         predicate(row) &&
         priceForMode(row, mode) > 0
     )
     .sort((a, b) => priceForMode(a, mode) - priceForMode(b, mode))[0];
+}
+
+const TRANSITIONS_COLOR_CODES = new Set([
+  "TGY",
+  "TBN",
+  "TGN",
+  "X2G",
+  "X2B",
+]);
+
+export function isTransitionsPricingRow(row: PriceListPricingRow) {
+  const materialCode = row.materialRaw.trim().toUpperCase();
+  return (
+    row.materialColor === "Photochromic" &&
+    (materialCode.startsWith("T") ||
+      row.colorRaw.some((code) => TRANSITIONS_COLOR_CODES.has(code.trim().toUpperCase())))
+  );
+}
+
+export function rowMatchesMaterialGroup(
+  row: PriceListPricingRow,
+  materialGroup: PriceMaterialGroup
+) {
+  if (materialGroup === "Transitions") return isTransitionsPricingRow(row);
+  if (materialGroup === "Photochromic") {
+    return (
+      row.materialColor === "Photochromic" &&
+      row.materialRaw.trim().toUpperCase().startsWith("S") &&
+      !isTransitionsPricingRow(row)
+    );
+  }
+  return row.materialColor === materialGroup;
 }
 
 export function lowestPolycarbonateRow(
@@ -118,7 +154,7 @@ export function selectSummaryPrice(
   }
 
   const categoryRows = rows.filter(
-    (row) => row.materialColor === materialGroup && priceForMode(row, mode) > 0
+    (row) => rowMatchesMaterialGroup(row, materialGroup) && priceForMode(row, mode) > 0
   );
   const plastic = lowestPositiveRow(
     rows,

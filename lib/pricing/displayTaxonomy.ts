@@ -2,7 +2,6 @@ import type { PriceListPricingRow } from "./types";
 
 export const priceDisplayCategories = [
   "SV",
-  "Digital SV",
   "Enhanced SV",
   "Multifocals",
   "Occupational Designs",
@@ -70,7 +69,7 @@ export function priceDisplayCategory(
     type.includes("SINGLE VISION") ||
     style.includes(" SV")
   ) {
-    return brand === "STANDARD DESIGNS" ? "SV" : "Digital SV";
+    return "SV";
   }
 
   return "SV";

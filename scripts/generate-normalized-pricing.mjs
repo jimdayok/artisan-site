@@ -159,6 +159,25 @@ function isBronzeOrBsRow(row) {
   return false;
 }
 
+function isHiddenCustomerPriceRow(row) {
+  const source = [
+    row.brand,
+    row.designStyle,
+    ...(row.rawProductNames ?? []),
+    ...(row.sourceCodes ?? []),
+  ]
+    .join(" ")
+    .replace(/[™®*]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return (
+    /\bSUN INT(?:L)?(?: SV)?\b/i.test(source) ||
+    /\bVX XR TRACK TE\b/i.test(source) ||
+    /\bEYEZEN KIDS\b/i.test(source)
+  );
+}
+
 function getStandardSourcePath(code) {
   return path.join(generatedDir, `${code.toLowerCase()}-pricing.json`);
 }
@@ -502,7 +521,10 @@ function materialAddOnsFromSections(code, addOnSections, rows = []) {
   );
   if (!section?.items?.length) {
     const derived = deriveMaterialAddOnsFromRows(rows);
-    return derived.length > 0 ? derived : fallback;
+    return augmentTokaiHighIndexAddOns(
+      derived.length > 0 ? derived : fallback,
+      rows
+    );
   }
 
   const parsed = section.items
@@ -513,9 +535,77 @@ function materialAddOnsFromSections(code, addOnSections, rows = []) {
     }))
     .filter((entry) => entry.material && Number.isFinite(entry.addOn));
 
-  if (parsed.length > 0) return parsed;
+  if (parsed.length > 0) return augmentTokaiHighIndexAddOns(parsed, rows);
   const derived = deriveMaterialAddOnsFromRows(rows);
-  return derived.length > 0 ? derived : fallback;
+  return augmentTokaiHighIndexAddOns(
+    derived.length > 0 ? derived : fallback,
+    rows
+  );
+}
+
+function augmentTokaiHighIndexAddOns(materialAddOns, rows) {
+  const result = new Map(
+    (materialAddOns ?? []).map((entry) => [normalizeKey(entry.material), entry])
+  );
+  const oneSixty = result.get("HI-INDEX 1.60");
+  if (!oneSixty || !Number.isFinite(Number(oneSixty.addOn))) {
+    return [...result.values()];
+  }
+
+  const tokaiAsPrice = (materialCode) =>
+    (rows ?? [])
+      .filter((row) => {
+        const identity = `${row.brand} ${row.designStyle}`;
+        return (
+          /\bTOKAI\b/i.test(identity) &&
+          /\b(?:BI-?AS|AS)\b/i.test(identity) &&
+          normalizeKey(row.materialRaw || row.lensMatCode) === materialCode &&
+          row.materialColor === "Clear" &&
+          (row.colorRaw ?? []).some((color) => normalizeKey(color) === "CLR")
+        );
+      })
+      .map((row) => Number(row.edgedPrice))
+      .filter(Number.isFinite)
+      .sort((a, b) => a - b)[0];
+
+  const h60 = tokaiAsPrice("H60");
+  if (!Number.isFinite(h60)) return [...result.values()];
+  const basePrice = h60 - Number(oneSixty.addOn);
+  for (const [materialCode, material] of [
+    ["H70", "Hi-Index 1.70"],
+    ["H76", "Hi-Index 1.76"],
+  ]) {
+    const price = tokaiAsPrice(materialCode);
+    if (Number.isFinite(price)) {
+      result.set(normalizeKey(material), {
+        material,
+        addOn: Number((price - basePrice).toFixed(2)),
+      });
+    }
+  }
+
+  const order = materialDeltaTargets.map((entry) => normalizeKey(entry.material));
+  return [...result.values()].sort(
+    (a, b) => order.indexOf(normalizeKey(a.material)) - order.indexOf(normalizeKey(b.material))
+  );
+}
+
+function synchronizeMaterialAddOnSection(addOnSections, materialAddOns) {
+  const sections = [...(addOnSections ?? [])];
+  const index = sections.findIndex((entry) =>
+    /add for material/i.test(String(entry.title || ""))
+  );
+  const materialSection = {
+    title: "Add for Material",
+    items: materialAddOns.map((entry) => ({
+      name: entry.material,
+      price: formatAddOnPrice(entry.addOn),
+      recommended: normalizeKey(entry.material) === "HI-INDEX 1.76",
+    })),
+  };
+  if (index === -1) return [materialSection, ...sections];
+  sections[index] = materialSection;
+  return sections;
 }
 
 function normalizeRows(rows, lookupMap, priceListCode) {
@@ -530,6 +620,10 @@ function normalizeRows(rows, lookupMap, priceListCode) {
     const styleName = String(row.designStyle || "").trim();
     if (isBronzeOrBsRow(row) || hiddenStylePattern.test(styleName)) {
       bsRemoved += 1;
+      continue;
+    }
+    if (isHiddenCustomerPriceRow(row)) {
+      hiddenCategoryRemoved += 1;
       continue;
     }
     if (hiddenBrandSet.has(normalizeKey(row.brand))) {
@@ -1088,8 +1182,8 @@ async function main() {
         payload.addOnSections ?? [],
         normalizedRowsResult.rows
       );
-      const addOnSections = addInferredMaterialSection(
-        payload.addOnSections ?? [],
+      const addOnSections = synchronizeMaterialAddOnSection(
+        addInferredMaterialSection(payload.addOnSections ?? [], materialAddOns),
         materialAddOns
       );
       return {

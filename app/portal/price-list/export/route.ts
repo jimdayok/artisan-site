@@ -6,6 +6,7 @@ import {
   type PDFFont,
   type PDFPage,
 } from "pdf-lib";
+import QRCode from "qrcode";
 import { getAuthorizedRuntimePriceListFromHeaders } from "@/lib/portal/priceListRuntimeAccess";
 import { canonicalPriceListCode } from "@/lib/portal/priceLists";
 import { checkRateLimit } from "@/lib/portal/rateLimit";
@@ -28,6 +29,7 @@ import {
 } from "@/lib/pricing/chemistrieClips";
 import {
   priceForMode,
+  rowMatchesMaterialGroup,
   selectSummaryPrice,
   usesPolycarbonatePriceBasis,
 } from "@/lib/pricing/polycarbonatePriceBasis";
@@ -59,12 +61,16 @@ const PRICE_BASIS_NOTE =
 const STANDARD_PRICE_NOTE =
   "Design prices are starting prices. Materials, colors, AR, finishing, and shipping may add to or deduct from the displayed price unless noted.";
 const ADMIN_CUSTOMER_NAME = "Artisan Customer Pricing";
-const BRAND_COLUMN_WIDTH = 120;
-const DESIGN_COLUMN_X = MARGIN + BRAND_COLUMN_WIDTH;
-const DESIGN_TEXT_X = DESIGN_COLUMN_X + 8;
-const CLEAR_COLUMN_X = MARGIN + 364;
-const PHOTO_COLUMN_X = MARGIN + 424;
-const POLAR_COLUMN_X = MARGIN + 484;
+const PORTAL_URL = "https://www.artisanslabs.com/portal";
+const PROVIDER_RESOURCES_URL =
+  "https://www.artisanslabs.com/provider-resources";
+const BRAND_COLUMN_WIDTH_WITH_TRANSITIONS = 106;
+const DESIGN_COLUMN_X = MARGIN + BRAND_COLUMN_WIDTH_WITH_TRANSITIONS;
+const DESIGN_TEXT_X = MARGIN + BRAND_COLUMN_WIDTH_WITH_TRANSITIONS + 8;
+const CLEAR_COLUMN_X = MARGIN + 312;
+const PHOTO_COLUMN_X = MARGIN + 368;
+const TRANSITIONS_COLUMN_X = MARGIN + 424;
+const POLAR_COLUMN_X = MARGIN + 486;
 const TABLE_ROW_HEIGHT = 27;
 const TABLE_HEADER_HEIGHT = 20;
 const BRAND_ONLY_PROGRESSIVE_PDF_CODES = new Set(["A6", "G6", "P6"]);
@@ -116,6 +122,16 @@ function cleanText(value: unknown) {
 
 function compareText(a: string, b: string) {
   return a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
+}
+
+function compareDesignStyle(a: string, b: string) {
+  const rank = (value: string) => {
+    const normalized = cleanText(value).toUpperCase();
+    if (normalized === "SV") return 0;
+    if (normalized === "ASPHERIC SV") return 1;
+    return 2;
+  };
+  return rank(a) - rank(b) || compareText(a, b);
 }
 
 function titleCasePriceListName(value: string) {
@@ -231,6 +247,9 @@ function summarizeDesigns(priceList: GeneratedPriceListData, mode: PriceMode) {
       const photochromic = polycarbonateBasis
         ? selectSummaryPrice(rows, "Photochromic", mode)
         : { row: lowestRow(rows, "Photochromic", mode) };
+      const transitions = polycarbonateBasis
+        ? selectSummaryPrice(rows, "Transitions", mode)
+        : { row: lowestRow(rows, "Transitions", mode) };
       const polarized = polycarbonateBasis
         ? selectSummaryPrice(rows, "Polarized", mode)
         : { row: lowestRow(rows, "Polarized", mode) };
@@ -245,10 +264,15 @@ function summarizeDesigns(priceList: GeneratedPriceListData, mode: PriceMode) {
         brand: rows[0].brand,
         designStyle: rows[0].designStyle,
         outsourced: rows.some((row) => row.outsourced),
+        phasingOut: rows.some((row) =>
+          row.serviceNotes.some((note) => /phasing out/i.test(note))
+        ),
         clear: clear.row,
         clearBasis: clear.basisShortLabel,
         photochromic: photochromic.row,
         photochromicBasis: photochromic.basisShortLabel,
+        transitions: transitions.row,
+        transitionsBasis: transitions.basisShortLabel,
         polarized: polarized.row,
         polarizedBasis: polarized.basisShortLabel,
       };
@@ -260,7 +284,7 @@ function summarizeDesigns(priceList: GeneratedPriceListData, mode: PriceMode) {
           ? compareProgressiveTier(a.progressiveTier, b.progressiveTier)
           : 0) ||
         comparePriceDisplayBrand(a.brand, b.brand) ||
-        compareText(a.designStyle, b.designStyle)
+        compareDesignStyle(a.designStyle, b.designStyle)
     );
 }
 
@@ -270,7 +294,13 @@ function lowestRow(
   mode: PriceMode
 ) {
   return rows
-    .filter((row) => row.materialColor === materialColor && rowPrice(row, mode) > 0)
+    .filter(
+      (row) =>
+        rowMatchesMaterialGroup(
+          row,
+          materialColor as "Clear" | "Photochromic" | "Transitions" | "Polarized"
+        ) && rowPrice(row, mode) > 0
+    )
     .sort((a, b) => rowPrice(a, mode) - rowPrice(b, mode))[0];
 }
 
@@ -279,7 +309,12 @@ type DesignSummary = ReturnType<typeof summarizeDesigns>[number];
 function summaryPriceForSort(summary: DesignSummary, mode: PriceMode) {
   return Math.max(
     0,
-    ...[summary.clear, summary.photochromic, summary.polarized]
+    ...[
+      summary.clear,
+      summary.photochromic,
+      summary.transitions,
+      summary.polarized,
+    ]
       .filter((row): row is PriceListPricingRow => Boolean(row))
       .map((row) => rowPrice(row, mode))
       .filter(Number.isFinite)
@@ -348,6 +383,53 @@ async function buildPriceListPdf({
       ...lab,
       image: await embedImageFromPublic(document, requestOrigin, lab.imagePath),
     }))
+  );
+  const preferredArtisanAr = await Promise.all(
+    [
+      {
+        code: "AEM",
+        name: "Artisan Emerald",
+        imagePath: "ar/emerald.png",
+        description: "Premium everyday clarity and cosmetics.",
+      },
+      {
+        code: "AAR",
+        name: "Artisan Armour",
+        imagePath: "ar/armour.png",
+        description: "Ultra-premium durability for demanding wear.",
+      },
+      {
+        code: "NYT",
+        name: "Artisan Nytopia",
+        imagePath: "ar/nytopia.png",
+        description: "Refined optics for nighttime performance.",
+      },
+      {
+        code: "AAZ",
+        name: "Artisan Azure",
+        imagePath: "ar/azure.png",
+        description: "Blue-light focused optics with a refined hue.",
+      },
+    ].map(async (item) => ({
+      ...item,
+      image: await embedImageFromPublic(document, requestOrigin, item.imagePath),
+    }))
+  );
+  const chemistrieLogo = await embedImageFromPublic(
+    document,
+    requestOrigin,
+    "chemistrie-logo.png"
+  );
+  const qrImages = await Promise.all(
+    [PORTAL_URL, PROVIDER_RESOURCES_URL].map(async (url) => {
+      const dataUrl = await QRCode.toDataURL(url, {
+        errorCorrectionLevel: "M",
+        margin: 1,
+        width: 240,
+        color: { dark: "#122033", light: "#FFFFFF" },
+      });
+      return document.embedPng(Buffer.from(dataUrl.split(",")[1], "base64"));
+    })
   );
   const pages: PDFPage[] = [];
   let page!: PDFPage;
@@ -443,7 +525,7 @@ async function buildPriceListPdf({
       borderColor: RULE,
       borderWidth: 0.8,
     });
-    page.drawText(cleanText(title).toUpperCase(), {
+    page.drawText(cleanText(title), {
       x: MARGIN + 10,
       y: y - 13,
       size: 10,
@@ -476,6 +558,7 @@ async function buildPriceListPdf({
       ["Design", showBrand ? DESIGN_TEXT_X : MARGIN + 6],
       [packagePricing ? "Package" : "Clear", CLEAR_COLUMN_X],
       ["Photo", PHOTO_COLUMN_X],
+      ["Trans/Xtra", TRANSITIONS_COLUMN_X],
       ["Polar", POLAR_COLUMN_X],
     ] as const;
     for (const [label, x] of headers) {
@@ -513,14 +596,14 @@ async function buildPriceListPdf({
     page.drawRectangle({
       x: MARGIN,
       y: topY - height,
-      width: BRAND_COLUMN_WIDTH,
+      width: BRAND_COLUMN_WIDTH_WITH_TRANSITIONS,
       height,
       color: SOFT_FILL,
       borderColor: RULE,
       borderWidth: 0.6,
     });
     const textX = MARGIN + 8;
-    const textWidth = BRAND_COLUMN_WIDTH - 16;
+    const textWidth = BRAND_COLUMN_WIDTH_WITH_TRANSITIONS - 16;
     const textY = topY - height / 2 - 3;
     page.drawText(fitText(bold, brand, textWidth, 7.2), {
       x: textX,
@@ -546,7 +629,7 @@ async function buildPriceListPdf({
     const summaryLines = wrapText(
       regular,
       polycarbonateBasis
-        ? `The material basis is printed below every + price. Most prices use polycarbonate${packagePricing ? " package" : ""} pricing. TOKAI products use the Hi Index 1.60 price. Plastic-only designs are marked Plastic only.`
+        ? `The material basis is printed below every + price. Most prices use polycarbonate${packagePricing ? " package" : ""} pricing. Tokai prices use Hi Index 1.60; Tokai products are outsourced and 1.76 Hi Index is also available. Photo shows S-material products; Trans/Xtra shows Transitions and Xtra Active products.`
         : "Customer-ready pricing organized by design family, coatings, add-ons, and policy notes.",
       introTextWidth,
       8
@@ -647,8 +730,8 @@ async function buildPriceListPdf({
   const drawLabShowcasePage = () => {
     addPage(true);
     const statementTop = PAGE_HEIGHT - 170;
-    const panelBottom = 88;
-    const panelHeight = 458;
+    const panelBottom = 226;
+    const panelHeight = 320;
     const panelTop = panelBottom + panelHeight;
     const gap = 16;
     const columnWidth = (CONTENT_WIDTH - gap * 2) / 3;
@@ -676,9 +759,9 @@ async function buildPriceListPdf({
       borderColor: RULE,
       borderWidth: 0.9,
     });
-    const cardTop = panelTop - 24;
-    const cardHeight = 392;
-    const logoPanelHeight = 118;
+    const cardTop = panelTop - 16;
+    const cardHeight = 280;
+    const logoPanelHeight = 82;
     labShowcases.forEach((lab, index) => {
       const x = MARGIN + index * (columnWidth + gap);
       page.drawRectangle({
@@ -716,66 +799,116 @@ async function buildPriceListPdf({
         width: imageBounds.width,
         height: imageBounds.height,
       });
-      page.drawText(fitText(bold, lab.name, columnWidth - 20, 10.4), {
+      page.drawText(fitText(bold, lab.name, columnWidth - 20, 9.4), {
         x: x + 10,
-        y: cardTop - 154,
-        size: 10.4,
+        y: cardTop - 116,
+        size: 9.4,
         font: bold,
         color: NAVY,
       });
       page.drawText("Customer Support", {
         x: x + 10,
-        y: cardTop - 171,
+        y: cardTop - 132,
         size: 6.9,
         font: bold,
         color: lab.accent,
       });
       page.drawRectangle({
         x: x + 10,
-        y: cardTop - 306,
+        y: cardTop - 257,
         width: columnWidth - 20,
-        height: 112,
+        height: 108,
         color: SOFT_FILL,
         borderColor: RULE,
         borderWidth: 0.7,
       });
       page.drawText("Phone", {
         x: x + 18,
-        y: cardTop - 215,
+        y: cardTop - 167,
         size: 6.8,
         font: bold,
         color: MUTED,
       });
       page.drawText(lab.phone, {
         x: x + 18,
-        y: cardTop - 234,
+        y: cardTop - 185,
         size: 10.2,
         font: bold,
         color: NAVY,
       });
       page.drawLine({
-        start: { x: x + 18, y: cardTop - 247 },
-        end: { x: x + columnWidth - 18, y: cardTop - 247 },
+        start: { x: x + 18, y: cardTop - 197 },
+        end: { x: x + columnWidth - 18, y: cardTop - 197 },
         color: RULE,
         thickness: 0.8,
       });
       page.drawText("Email", {
         x: x + 18,
-        y: cardTop - 267,
+        y: cardTop - 216,
         size: 6.8,
         font: bold,
         color: MUTED,
       });
       page.drawText(fitText(regular, lab.email, columnWidth - 36, 7.2), {
         x: x + 18,
-        y: cardTop - 286,
+        y: cardTop - 236,
         size: 7.2,
         font: regular,
         color: TEXT,
       });
     });
+
+    page.drawText("Quick access", {
+      x: MARGIN,
+      y: 196,
+      size: 9,
+      font: bold,
+      color: NAVY,
+    });
+    [
+      { image: qrImages[0], label: "Customer Portal", x: MARGIN },
+      { image: qrImages[1], label: "Provider Resources", x: MARGIN + 84 },
+    ].forEach((item) => {
+      page.drawImage(item.image, {
+        x: item.x,
+        y: 112,
+        width: 68,
+        height: 68,
+      });
+      page.drawText(fitText(bold, item.label, 74, 6.6), {
+        x: item.x,
+        y: 102,
+        size: 6.6,
+        font: bold,
+        color: NAVY,
+      });
+    });
+
+    const legalLines = wrapText(
+      regular,
+      "Prices and product availability are subject to change without notice. Errors and omissions may be corrected. Final charges are determined by the active lab billing system and confirmed order details. Product and brand names are trademarks or registered trademarks of their respective owners. This confidential guide is for authorized provider use only and may not be redistributed.",
+      336,
+      6.8
+    );
+    page.drawText("Pricing and trademark notice", {
+      x: MARGIN + 180,
+      y: 196,
+      size: 9,
+      font: bold,
+      color: NAVY,
+    });
+    legalLines.forEach((line, index) => {
+      page.drawText(line, {
+        x: MARGIN + 180,
+        y: 180 - index * 9,
+        size: 6.8,
+        font: regular,
+        color: MUTED,
+      });
+    });
   };
 
+  let designStripeIndex = 0;
   const drawBrandRows = ({
     category,
     tier,
@@ -800,14 +933,13 @@ async function buildPriceListPdf({
       const groupTop = y + 2;
       const groupHeight = chunk.length * TABLE_ROW_HEIGHT;
       drawBrandCell(brand, groupTop, groupHeight);
-      chunk.forEach((row, chunkIndex) => {
-        const absoluteIndex = rowIndex + chunkIndex;
+      chunk.forEach((row) => {
         const rowTop = y + 2;
-        const zebraFill = absoluteIndex % 2 === 1 ? CREAM : rgb(1, 1, 1);
+        const zebraFill = designStripeIndex % 2 === 1 ? CREAM : rgb(1, 1, 1);
         page.drawRectangle({
           x: DESIGN_COLUMN_X,
           y: rowTop - TABLE_ROW_HEIGHT,
-          width: CONTENT_WIDTH - BRAND_COLUMN_WIDTH,
+          width: CONTENT_WIDTH - BRAND_COLUMN_WIDTH_WITH_TRANSITIONS,
           height: TABLE_ROW_HEIGHT,
           color: zebraFill,
         });
@@ -817,11 +949,13 @@ async function buildPriceListPdf({
           color: RULE,
           thickness: 0.6,
         });
-        const designLabel = row.outsourced
-          ? `${row.designStyle} - OUTSOURCED`
-          : row.designStyle;
+        const statusLabel = [
+          row.outsourced ? "* outsourced" : "",
+          row.phasingOut ? "! phasing out" : "",
+        ].filter(Boolean).join("; ");
+        const designLabel = `${row.designStyle}${statusLabel ? ` [${statusLabel}]` : ""}`;
         const values: Array<[string, number, number, PDFFont, typeof TEXT, number?]> = [
-          [designLabel, DESIGN_TEXT_X, 248, row.outsourced ? bold : regular, row.outsourced ? MUTED : TEXT, row.outsourced ? 6.5 : 7.2],
+          [designLabel, DESIGN_TEXT_X, 194, row.outsourced || row.phasingOut ? bold : regular, row.outsourced ? MUTED : TEXT, row.outsourced || row.phasingOut ? 6.2 : 7.2],
         ];
         values.forEach(([value, x, width, font, color, requestedSize]) => {
           const size = requestedSize ?? 7.2;
@@ -836,6 +970,7 @@ async function buildPriceListPdf({
         const priceValues = [
           [money(row.clear, mode), row.clearBasis, CLEAR_COLUMN_X, 52],
           [money(row.photochromic, mode), row.photochromicBasis, PHOTO_COLUMN_X, 52],
+          [money(row.transitions, mode), row.transitionsBasis, TRANSITIONS_COLUMN_X, 58],
           [money(row.polarized, mode), row.polarizedBasis, POLAR_COLUMN_X, 50],
         ] as const;
         priceValues.forEach(([value, basis, x, width]) => {
@@ -863,6 +998,7 @@ async function buildPriceListPdf({
           thickness: 0.45,
         });
         y -= TABLE_ROW_HEIGHT;
+        designStripeIndex += 1;
       });
       rowIndex += chunk.length;
     }
@@ -1050,25 +1186,101 @@ async function buildPriceListPdf({
     cleanText(brandFamily)
       .replace(/\s+AR\s+Coatings?$/i, "")
       .replace(/\s+Coatings?$/i, "")
-      .replace(/^Techshield$/i, "TechShield")
+      .replace(/^Techshield(?: by VSP)?$/i, "TechShield by VSP")
       .replace(/^Shamir$/i, "Shamir");
 
   const cleanCoatingName = (coating: PriceListArCoating) => {
     const brand = cleanCoatingBrand(coating.brandFamily);
     let name = cleanText(coating.name)
       .replace(/^Tecshield\b/i, "TechShield")
-      .replace(/^Techshield\b/i, "TechShield")
-      .replace(/^Nytopia$/i, "Nyoptia");
+      .replace(/^Techshield\b/i, "TechShield");
     if (/^Artisan$/i.test(brand) && !/^Artisan\b/i.test(name)) {
       if (/^Standard$/i.test(name)) name = "Artisan Standard";
       else name = `Artisan ${name}`;
     }
-    return name;
+    const code = cleanText(coating.code ?? "").toUpperCase();
+    return code ? `${code} - ${name}` : name;
   };
 
   const coatingGroupLogo = (brand: string) => {
     if (/^Artisan$/i.test(brand)) return "Artisan";
     return undefined;
+  };
+
+  const drawPreferredArtisanArCards = (coatings: PriceListArCoating[]) => {
+    const byCode = new Map(
+      coatings.map((coating) => [String(coating.code ?? "").toUpperCase(), coating])
+    );
+    const cards = preferredArtisanAr
+      .filter((item) => byCode.has(item.code))
+      .map((item) => ({ ...item, coating: byCode.get(item.code)! }))
+      .sort((a, b) => a.coating.price - b.coating.price);
+    if (!cards.length) return;
+
+    const gap = 8;
+    const width = (CONTENT_WIDTH - gap) / 2;
+    const height = 72;
+    const rowsNeeded = Math.ceil(cards.length / 2);
+    ensureSpace(rowsNeeded * (height + gap) + 28);
+    page.drawText("Artisan favorites - produced on-site", {
+      x: MARGIN,
+      y: y - 9,
+      size: 8.4,
+      font: bold,
+      color: NAVY,
+    });
+    page.drawText("Faster turnaround and consistent Artisan quality.", {
+      x: MARGIN + 177,
+      y: y - 9,
+      size: 7.2,
+      font: regular,
+      color: MUTED,
+    });
+    y -= 20;
+    cards.forEach((card, index) => {
+      const column = index % 2;
+      const row = Math.floor(index / 2);
+      const x = MARGIN + column * (width + gap);
+      const top = y - row * (height + gap);
+      page.drawRectangle({
+        x,
+        y: top - height,
+        width,
+        height,
+        color: rgb(1, 1, 1),
+        borderColor: RULE,
+        borderWidth: 0.8,
+      });
+      const imageBounds = card.image.scaleToFit(58, 20);
+      page.drawImage(card.image, {
+        x: x + 10,
+        y: top - 27,
+        width: imageBounds.width,
+        height: imageBounds.height,
+      });
+      page.drawText(`${card.code} - ${card.name}`, {
+        x: x + 10,
+        y: top - 43,
+        size: 7.8,
+        font: bold,
+        color: NAVY,
+      });
+      page.drawText(`$${card.coating.price.toFixed(2)}`, {
+        x: x + width - 52,
+        y: top - 18,
+        size: 8.2,
+        font: bold,
+        color: NAVY,
+      });
+      page.drawText(fitText(regular, card.description, width - 20, 6.5), {
+        x: x + 10,
+        y: top - 57,
+        size: 6.5,
+        font: regular,
+        color: MUTED,
+      });
+    });
+    y -= rowsNeeded * (height + gap) + 2;
   };
 
   const drawWrappedParagraph = (
@@ -1122,7 +1334,7 @@ async function buildPriceListPdf({
         title: "AR and scratch warranties",
         bullets: [
           "Artisan Standard: 1 year, 1 time.",
-          "Artisan premium AR treatments including Artisan Armour, Artisan Emerald, Artisan Azure, Artisan Nyoptia, and Diamond Sun: 2 years, 2 times.",
+          "Artisan premium AR treatments including Artisan Armour, Artisan Emerald, Artisan Azure, Artisan Nytopia, and Diamond Sun: 2 years, 2 times.",
           "TechShield, Tokai, Crizal, Shamir, and Hoya AR technologies: 2 years, 2 times.",
           "Factory scratch coat: 1 year, 1 time. Diamond Defence: 2 years, 2 times.",
           "Covered AR and scratch claims do not require lenses to be returned before the warranty is used.",
@@ -1231,8 +1443,8 @@ async function buildPriceListPdf({
       sectionTitle(
         category,
         polycarbonateBasis
-          ? `${categoryRows.length} designs | Material basis shown per price`
-          : `${categoryRows.length} designs`
+          ? "Material basis shown per price"
+          : undefined
       );
 
       const brandGroups = new Map<string, typeof summaries>();
@@ -1251,7 +1463,7 @@ async function buildPriceListPdf({
               b.progressiveTier ?? "Good"
             ) ||
             summaryPriceForSort(b, mode) - summaryPriceForSort(a, mode) ||
-            compareText(a.designStyle, b.designStyle)
+            compareDesignStyle(a.designStyle, b.designStyle)
         );
         drawBrandRows({
           category,
@@ -1284,8 +1496,8 @@ async function buildPriceListPdf({
     sectionTitle(
       category,
       polycarbonateBasis
-        ? `${categoryRows.length} designs | Material basis shown per price`
-        : `${categoryRows.length} designs`
+        ? "Material basis shown per price"
+        : undefined
     );
 
     for (const [tier, tierRows] of orderedTierGroups) {
@@ -1311,17 +1523,17 @@ async function buildPriceListPdf({
     const coatingBrand = (coating: PriceListArCoating) => {
       const identity = `${coating.brandFamily} ${coating.name}`;
       return /\bunity\b|tech\s*shield/i.test(identity)
-        ? "TechShield / Unity"
+        ? "TechShield by VSP"
         : cleanCoatingBrand(coating.brandFamily);
     };
     const coatingRank = (brand: string) => {
-      const order = ["Artisan", "TechShield / Unity", "Neurolens", "Tokai", "Crizal", "Hoya", "Shamir"];
+      const order = ["Artisan", "TechShield by VSP", "Neurolens", "Tokai", "Crizal", "Hoya", "Shamir"];
       const index = order.findIndex((value) => value.toLowerCase() === brand.toLowerCase());
       return index === -1 ? 99 : index;
     };
     const coatingTurnaroundNote = (brand: string) =>
-      /^(Artisan|TechShield \/ Unity)$/i.test(brand)
-        ? "Produced on-site for the fastest turnaround time."
+      /^(Artisan|TechShield by VSP)$/i.test(brand)
+        ? "Produced on-site for faster turnaround and consistent Artisan quality."
         : "Produced off-site; additional turnaround time applies.";
     const coatings = [...priceList.arCoatings]
       .filter((coating) => !coating.unresolved && !/^UV Coating$/i.test(coating.name))
@@ -1331,6 +1543,7 @@ async function buildPriceListPdf({
         return (
           coatingRank(aBrand) - coatingRank(bBrand) ||
           compareText(aBrand, bBrand) ||
+          a.price - b.price ||
           compareText(cleanCoatingName(a), cleanCoatingName(b))
         );
       });
@@ -1339,18 +1552,27 @@ async function buildPriceListPdf({
       const brand = coatingBrand(coating);
       coatingGroups.set(brand, [...(coatingGroups.get(brand) ?? []), coating]);
     }
+    drawPreferredArtisanArCards(coatings);
     drawBoxedItemGroups(
       [...coatingGroups.entries()].map(([brand, entries]) => ({
         title: brand,
         note: coatingTurnaroundNote(brand),
         logoBrand: coatingGroupLogo(brand),
-        items: entries.map((coating) => ({
+        items: entries
+          .filter(
+            (coating) =>
+              brand !== "Artisan" ||
+              !["AEM", "AAR", "NYT", "AAZ"].includes(
+                String(coating.code ?? "").toUpperCase()
+              )
+          )
+          .map((coating) => ({
           name: cleanCoatingName(coating),
           price: portalPriceList.package && coating.price === 0
             ? "Included"
             : `$${coating.price.toFixed(2)}`,
-        })),
-      }))
+          })),
+      })).filter((group) => group.items.length)
     );
   }
 
@@ -1371,6 +1593,15 @@ async function buildPriceListPdf({
 
   y -= 8;
   sectionTitle(CHEMISTRIE_CLIPS_SECTION_TITLE);
+  ensureSpace(30);
+  const chemistrieBounds = chemistrieLogo.scaleToFit(120, 26);
+  page.drawImage(chemistrieLogo, {
+    x: MARGIN + 10,
+    y: y - 25,
+    width: chemistrieBounds.width,
+    height: chemistrieBounds.height,
+  });
+  y -= 30;
   drawBoxedItemGroups([
     {
       title: "ChemClip by Chemistrie",

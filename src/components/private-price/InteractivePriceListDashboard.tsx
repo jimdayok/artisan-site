@@ -22,6 +22,7 @@ import {
 import GeneratedPriceListExportButton from "./GeneratedPriceListExportButton";
 import {
   priceForMode,
+  rowMatchesMaterialGroup,
   selectSummaryPrice,
   usesPolycarbonatePriceBasis,
 } from "@/lib/pricing/polycarbonatePriceBasis";
@@ -33,13 +34,14 @@ import {
 
 type PriceMode = "edged" | "uncut";
 type ViewBy = "designType" | "brand";
-type MaterialGroup = "Clear" | "Photochromic" | "Polarized";
+type MaterialGroup = "Clear" | "Photochromic" | "Transitions" | "Polarized";
 type SortKey =
   | "brand"
   | "designType"
   | "designStyle"
   | "clear"
   | "photochromic"
+  | "transitions"
   | "polarized";
 type SortDirection = "asc" | "desc";
 type AvailabilityFilter = "all" | "yes" | "no";
@@ -54,9 +56,11 @@ type DesignRow = {
   rows: PriceListPricingRow[];
   clearFrom?: PriceListPricingRow;
   photoFrom?: PriceListPricingRow;
+  transitionsFrom?: PriceListPricingRow;
   polarizedFrom?: PriceListPricingRow;
   clearBasis?: string;
   photoBasis?: string;
+  transitionsBasis?: string;
   polarizedBasis?: string;
   recommended: boolean;
   outsourced: boolean;
@@ -67,6 +71,7 @@ type MaterialOption = {
   rows: PriceListPricingRow[];
   clear?: PriceListPricingRow;
   photochromic?: PriceListPricingRow;
+  transitions?: PriceListPricingRow;
   polarized?: PriceListPricingRow;
   addOn?: number;
 };
@@ -115,14 +120,20 @@ function normalizeArFamily(value: string) {
 function coatingDisplayFamily(coating: PriceListArCoating) {
   const identity = `${coating.brandFamily} ${coating.name}`;
   return /\bunity\b|tech\s*shield/i.test(identity)
-    ? "TechShield / Unity"
+    ? "TechShield by VSP"
     : normalizeArFamily(coating.brandFamily);
 }
 
 function arTurnaroundNote(family: string) {
-  return family === "Artisan" || family === "TechShield / Unity"
-    ? "Produced on-site for the fastest turnaround time."
+  return family === "Artisan" || family === "TechShield by VSP"
+    ? "Produced on-site for faster turnaround and consistent Artisan quality."
     : "Produced off-site; additional turnaround time applies.";
+}
+
+function coatingDisplayName(coating: PriceListArCoating) {
+  const code = String(coating.code ?? "").trim().toUpperCase();
+  const name = normalizeDisplayName(coating.name);
+  return code ? `${code} · ${name}` : name;
 }
 
 function isCoppertoneRow(row: PriceListPricingRow) {
@@ -449,6 +460,16 @@ function compareDesignStyleByBusinessOrder(a: DesignRow, b: DesignRow) {
     if (aRank !== undefined && bRank === undefined) return -1;
     if (aRank === undefined && bRank !== undefined) return 1;
   }
+  if (aBrand === "STANDARD DESIGNS" && bBrand === "STANDARD DESIGNS") {
+    const rank = (value: string) => {
+      const normalized = value.trim().toUpperCase();
+      if (normalized === "SV") return 0;
+      if (normalized === "ASPHERIC SV") return 1;
+      return 2;
+    };
+    const difference = rank(a.designStyle) - rank(b.designStyle);
+    if (difference) return difference;
+  }
   return compareText(a.designStyle, b.designStyle);
 }
 
@@ -497,6 +518,7 @@ function optionGroupForRow(row: PriceListPricingRow): MaterialGroup {
 
   const normalizedFamily = normalizePhotoFamily(row.colorBrand || "Other Photo");
   if (/POLARIZED|DRIVEWEAR/i.test(normalizedFamily)) return "Polarized";
+  if (rowMatchesMaterialGroup(row, "Transitions")) return "Transitions";
 
   const source = [
     row.colorBrand,
@@ -537,7 +559,7 @@ function productCodeSummary(row: PriceListPricingRow | undefined) {
 
 function minRow(rows: PriceListPricingRow[], group: MaterialGroup, mode: PriceMode) {
   return rows
-    .filter((row) => row.materialColor === group)
+    .filter((row) => rowMatchesMaterialGroup(row, group))
     .sort((a, b) => priceFor(a, mode) - priceFor(b, mode))[0];
 }
 
@@ -622,6 +644,9 @@ function groupDesignRows(rows: PriceListPricingRow[], mode: PriceMode) {
     const photochromic = polycarbonateBasis
       ? selectSummaryPrice(group.rows, "Photochromic", mode)
       : { row: minRow(group.rows, "Photochromic", mode) };
+    const transitions = polycarbonateBasis
+      ? selectSummaryPrice(group.rows, "Transitions", mode)
+      : { row: minRow(group.rows, "Transitions", mode) };
     const polarized = polycarbonateBasis
       ? selectSummaryPrice(group.rows, "Polarized", mode)
       : { row: minRow(group.rows, "Polarized", mode) };
@@ -630,9 +655,11 @@ function groupDesignRows(rows: PriceListPricingRow[], mode: PriceMode) {
       ...group,
       clearFrom: clear.row,
       photoFrom: photochromic.row,
+      transitionsFrom: transitions.row,
       polarizedFrom: polarized.row,
       clearBasis: clear.basisLabel,
       photoBasis: photochromic.basisLabel,
+      transitionsBasis: transitions.basisLabel,
       polarizedBasis: polarized.basisLabel,
     };
   });
@@ -661,6 +688,8 @@ function sortDesignRows(
         ? priceFor(a.clearFrom, mode) - priceFor(b.clearFrom, mode)
         : sort.key === "photochromic"
           ? priceFor(a.photoFrom, mode) - priceFor(b.photoFrom, mode)
+        : sort.key === "transitions"
+          ? priceFor(a.transitionsFrom, mode) - priceFor(b.transitionsFrom, mode)
           : sort.key === "polarized"
             ? priceFor(a.polarizedFrom, mode) - priceFor(b.polarizedFrom, mode)
             : compareText(String(a[sort.key]), String(b[sort.key]));
@@ -674,7 +703,7 @@ function inlineMarker(label: string, recommended: boolean, outsourced: boolean) 
     <span className="inline-flex items-center gap-1">
       <span>{label}</span>
       {recommended ? <span className="text-[#7a5a18]">★</span> : null}
-      {outsourced ? <span className="text-[#8a4f28]">➜</span> : null}
+      {outsourced ? <span title="Outsourced product" className="rounded-full border border-[#b67a52] bg-[#fff2e8] px-1.5 py-0.5 text-[10px] font-black text-[#8a4f28]">↗</span> : null}
     </span>
   );
 }
@@ -1016,6 +1045,10 @@ export default function InteractivePriceListDashboard({
           : "Photochromic",
     },
     {
+      key: "transitions",
+      label: isPackageList ? "Trans/Xtra Upgrade" : "Trans/Xtra",
+    },
+    {
       key: "polarized",
       label: isPackageList
           ? "Polar Upgrade"
@@ -1045,7 +1078,7 @@ export default function InteractivePriceListDashboard({
           ))}
         </div>
         <p className="mt-3 text-xs leading-5 text-[#625b53]">
-          This online price guide is provided for convenience and may contain errors or omissions. Artisan Lab Network reserves the right to correct pricing errors, update product availability, and change pricing at any time without notice. Final pricing is determined by the active lab billing system and confirmed order details.
+          Prices and product availability are subject to change without notice. Artisan Lab Network may correct errors or omissions; final pricing is determined by the active lab billing system and confirmed order details. Product and brand names are trademarks or registered trademarks of their respective owners. This confidential guide is for authorized provider use only.
         </p>
       </section>
 
@@ -1083,8 +1116,8 @@ export default function InteractivePriceListDashboard({
             ) : null}
             <p className="mt-3 max-w-3xl text-sm leading-6 text-[#4d5664]">
               {polycarbonateBasis
-                ? `Every price marked + shows its material basis directly below it. Most prices use polycarbonate${isPackageList ? " package" : ""} pricing. TOKAI products show the Hi Index 1.60 price. Designs without polycarbonate use an available material price and are labeled; plastic-only designs say Plastic only. Open a row to compare choices that may cost more or less.`
-                : "Start with design, then open each row to build price by material and clear/photochromic/polarized options."}
+                ? `Every price marked + shows its material basis directly below it. Most prices use polycarbonate${isPackageList ? " package" : ""} pricing. Tokai products are outsourced; pricing shown uses Hi Index 1.60 and 1.76 Hi Index is also available. Photo uses S-material products, while Trans/Xtra shows Transitions and Xtra Active. Designs without polycarbonate use an available material price and are labeled; plastic-only designs say Plastic only.`
+                : "Start with design, then compare clear, S-material photochromic, Transitions/Xtra Active, and polarized options."}
             </p>
             <div className="mt-3 flex flex-wrap items-center gap-2">
               <span
@@ -1273,11 +1306,12 @@ export default function InteractivePriceListDashboard({
                         <colgroup>
                           <col className="w-[14%]" />
                           <col className="w-[13%]" />
-                          <col className="w-[28%]" />
-                          <col className="w-[11%]" />
-                          <col className="w-[11%]" />
-                          <col className="w-[11%]" />
-                          <col className="w-[12%]" />
+                          <col className="w-[24%]" />
+                          <col className="w-[10%]" />
+                          <col className="w-[10%]" />
+                          <col className="w-[10%]" />
+                          <col className="w-[10%]" />
+                          <col className="w-[9%]" />
                         </colgroup>
                         <thead>
                           <tr className="bg-[#122033] text-white">
@@ -1325,12 +1359,20 @@ export default function InteractivePriceListDashboard({
                                         Outsourced - additional turnaround time
                                       </span>
                                     ) : null}
+                                    {row.rows.some((entry) => entry.serviceNotes.some((note) => /phasing out/i.test(note))) ? (
+                                      <span className="mt-1 block text-[10px] font-bold uppercase tracking-[0.08em] text-[#7a5a18]">
+                                        ◷ Phasing out
+                                      </span>
+                                    ) : null}
                                   </td>
                                   <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
                                     <SummaryPriceCell row={row.clearFrom} basis={row.clearBasis} mode={priceMode} />
                                   </td>
                                   <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
                                     <SummaryPriceCell row={row.photoFrom} basis={row.photoBasis} mode={priceMode} />
+                                  </td>
+                                  <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
+                                    <SummaryPriceCell row={row.transitionsFrom} basis={row.transitionsBasis} mode={priceMode} />
                                   </td>
                                   <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
                                     <SummaryPriceCell row={row.polarizedFrom} basis={row.polarizedBasis} mode={priceMode} />
@@ -1347,7 +1389,7 @@ export default function InteractivePriceListDashboard({
                                 </tr>
                                 {expanded ? (
                                   <tr className="bg-[#f9f2e8]">
-                                    <td colSpan={7} className="border-b border-[#eadfce] px-3 py-3">
+                                    <td colSpan={8} className="border-b border-[#eadfce] px-3 py-3">
                                       <ExpandedDesignBuilder
                                         designRow={row}
                                         priceMode={priceMode}
@@ -1383,7 +1425,7 @@ export default function InteractivePriceListDashboard({
       {priceList.code === "Y5" ? <SafetyPackageTierSection /> : null}
       <ChemClipSection />
       <section className="rounded-[2px] border border-[#dfd2bf] bg-white/80 p-4 text-xs leading-5 text-[#625b53]">
-        This online price guide is provided for convenience and may contain errors or omissions. Artisan Lab Network reserves the right to correct pricing errors, update product availability, and change pricing at any time without notice. Final pricing is determined by the active lab billing system and confirmed order details.
+        Prices and product availability are subject to change without notice. Artisan Lab Network may correct errors or omissions; final pricing is determined by the active lab billing system and confirmed order details. Product and brand names are trademarks or registered trademarks of their respective owners. This confidential guide is for authorized provider use only.
       </section>
       <ReferenceKey rows={customerRows} />
     </div>
@@ -1447,6 +1489,7 @@ function ExpandedDesignBuilder({
         ...entry,
         clear: minRow(entry.rows, "Clear", priceMode),
         photochromic: minRow(entry.rows, "Photochromic", priceMode),
+        transitions: minRow(entry.rows, "Transitions", priceMode),
         polarized: minRow(entry.rows, "Polarized", priceMode),
         addOn: addOnByMaterial.get(normalizeKey(entry.material)),
       }))
@@ -1465,6 +1508,10 @@ function ExpandedDesignBuilder({
     () => buildOptionFamilies(designRow.rows, "Photochromic", priceMode),
     [designRow.rows, priceMode]
   );
+  const transitionsFamilies = useMemo(
+    () => buildOptionFamilies(designRow.rows, "Transitions", priceMode),
+    [designRow.rows, priceMode]
+  );
   const polarizedFamilies = useMemo(
     () => buildOptionFamilies(designRow.rows, "Polarized", priceMode),
     [designRow.rows, priceMode]
@@ -1478,7 +1525,7 @@ function ExpandedDesignBuilder({
   const selectedRows = useMemo(() => {
     return designRow.rows.filter((row) => {
       if (selectedMaterial && row.material !== selectedMaterial) return false;
-      if (row.materialColor !== selectedCategory) return false;
+      if (!rowMatchesMaterialGroup(row, selectedCategory)) return false;
       if (selectedColorFamily !== "All" && row.colorBrand !== selectedColorFamily) return false;
       return true;
     });
@@ -1621,6 +1668,7 @@ function ExpandedDesignBuilder({
           >
             <option value="Clear">Clear</option>
             <option value="Photochromic">Photochromic</option>
+            <option value="Transitions">Transitions / Xtra Active</option>
             <option value="Polarized">Polarized</option>
           </select>
         </label>
@@ -1713,12 +1761,17 @@ function ExpandedDesignBuilder({
                 </p>
               </div>
               <div>
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8a7654]">Trans/Xtra</p>
+                <p className="font-bold text-[#122033]">
+                  {startingPriceLabel(materialOption.transitions, builderMode)}
+                </p>
+              </div>
+              <div>
                 <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8a7654]">Polarized</p>
                 <p className="font-bold text-[#122033]">
                   {startingPriceLabel(materialOption.polarized, builderMode)}
                 </p>
               </div>
-              <div />
             </div>
           ))}
         </div>
@@ -1726,6 +1779,7 @@ function ExpandedDesignBuilder({
 
       <section className="grid gap-4 xl:grid-cols-2">
         <OptionFamilyPanel id="photo-options" title="Photochromic Options" families={photoFamilies} priceMode={builderMode} />
+        <OptionFamilyPanel id="transitions-options" title="Transitions / Xtra Active Options" families={transitionsFamilies} priceMode={builderMode} />
         <OptionFamilyPanel id="polar-options" title="Polarized Options" families={polarizedFamilies} priceMode={builderMode} />
       </section>
 
@@ -1969,7 +2023,7 @@ function ArCoatingsSection({
   );
   const protectionCodes = useMemo(() => new Set(["DDE"]), []);
   const isAllowedArFamily = (family: string) =>
-    ["Artisan", "TechShield / Unity", "Tokai", "Crizal", "Hoya", "Shamir", "Neurolens"].includes(family);
+    ["Artisan", "TechShield by VSP", "Tokai", "Crizal", "Hoya", "Shamir", "Neurolens"].includes(family);
   const groupedCoatings = useMemo(() => {
     const grouped = new Map<string, PriceListArCoating[]>();
     for (const coating of coatings) {
@@ -1990,14 +2044,14 @@ function ArCoatingsSection({
     const orderedFamilies =
       String(listCode).toUpperCase() === "NL"
         ? ["Neurolens"]
-        : ["Artisan", "TechShield / Unity", "Tokai", "Crizal", "Hoya", "Shamir"];
+        : ["Artisan", "TechShield by VSP", "Tokai", "Crizal", "Hoya", "Shamir"];
     return orderedFamilies
       .map((family) => {
         const items = grouped.get(family) ?? [];
         return {
           family,
           items: items
-            .sort((a, b) => compareText(a.name, b.name))
+            .sort((a, b) => a.price - b.price || compareText(a.name, b.name))
             .filter((item, index, all) => index === all.findIndex((other) => other.name === item.name)),
         };
       })
@@ -2063,7 +2117,7 @@ function ArCoatingsSection({
     return [...map.values()].sort((a, b) => compareText(a.name, b.name));
   }, [coatings, mirrorCodes]);
   const preferredFamilies = new Set(
-    String(listCode).toUpperCase() === "NL" ? ["Neurolens"] : ["Artisan", "TechShield / Unity"]
+    String(listCode).toUpperCase() === "NL" ? ["Neurolens"] : ["Artisan", "TechShield by VSP"]
   );
   const primaryGroups = groupedCoatings.filter((group) => preferredFamilies.has(group.family));
   const otherGroups = groupedCoatings.filter((group) => !preferredFamilies.has(group.family));
@@ -2099,7 +2153,7 @@ function ArCoatingsSection({
                 >
                   <div className="flex items-start justify-between gap-3">
                     <h4 className="text-base font-bold text-[#122033]">
-                      {inlineMarker(normalizeDisplayName(coating.name), coating.recommended, coating.outsourced)}
+                      {inlineMarker(coatingDisplayName(coating), coating.recommended, coating.outsourced)}
                     </h4>
                     <p className="text-lg font-bold text-[#122033]">{currency(coating.price)}</p>
                   </div>
@@ -2141,7 +2195,7 @@ function ArCoatingsSection({
                         >
                           <div className="flex items-start justify-between gap-3">
                             <h4 className="text-base font-bold text-[#122033]">
-                              {inlineMarker(normalizeDisplayName(coating.name), coating.recommended, coating.outsourced)}
+                              {inlineMarker(coatingDisplayName(coating), coating.recommended, coating.outsourced)}
                             </h4>
                             <p className="text-lg font-bold text-[#122033]">{currency(coating.price)}</p>
                           </div>
@@ -2168,7 +2222,7 @@ function ArCoatingsSection({
                 >
                   <div className="flex items-start justify-between gap-3">
                     <h4 className="text-base font-bold text-[#122033]">
-                      {normalizeDisplayName(item.name)}
+                      {coatingDisplayName(item)}
                     </h4>
                     <p className="text-lg font-bold text-[#122033]">{currency(item.price)}</p>
                   </div>
@@ -2191,7 +2245,7 @@ function ArCoatingsSection({
                 >
                   <div className="flex items-start justify-between gap-3">
                     <h4 className="text-base font-bold text-[#122033]">
-                      {normalizeDisplayName(item.name)}
+                      {coatingDisplayName(item)}
                     </h4>
                     <p className="text-lg font-bold text-[#122033]">{currency(item.price)}</p>
                   </div>
@@ -2458,7 +2512,10 @@ function ReferenceKey({ rows }: { rows: PriceListPricingRow[] }) {
   const entries: Array<[string, string]> = [];
   if (rows.some((row) => row.recommended)) entries.push(["★", "Preferred Product"]);
   if (rows.some((row) => row.outsourced)) {
-    entries.push(["➜", "Outsourced product - additional turnaround time applies"]);
+    entries.push(["↗", "Outsourced product - additional turnaround time applies"]);
+  }
+  if (rows.some((row) => row.serviceNotes.some((note) => /phasing out/i.test(note)))) {
+    entries.push(["◷", "Phasing out - contact your lab for current availability"]);
   }
   if (!entries.length) return null;
 

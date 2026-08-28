@@ -129,12 +129,30 @@ test("non-poly summaries prefer plastic and distinguish mixed availability", () 
 
 test("single-material fallbacks identify the only available material", () => {
   const selected = selectSummaryPrice(
-    [row("Trivex", "Photochromic", 159)],
+    [row("Trivex", "Photochromic", 159, 151, { materialRaw: "S53" })],
     "Photochromic",
     "edged"
   );
   assert.equal(selected.row?.material, "Trivex");
   assert.equal(selected.basisLabel, "Trivex only");
+});
+
+test("Photo and Trans/Xtra summaries use separate material families", () => {
+  const rows = [
+    row("Polycarbonate", "Photochromic", 93, 85, {
+      materialRaw: "SPY",
+      colorRaw: ["NCG"],
+      colorBrand: "Neochromes",
+    }),
+    row("Polycarbonate", "Photochromic", 122, 114, {
+      materialRaw: "TPY",
+      colorRaw: ["TGY", "X2G"],
+      colorBrand: "Transitions",
+    }),
+  ];
+
+  assert.equal(selectSummaryPrice(rows, "Photochromic", "edged").row?.edgedPrice, 93);
+  assert.equal(selectSummaryPrice(rows, "Transitions", "edged").row?.edgedPrice, 122);
 });
 
 test("polycarbonate summary basis covers every audited customer price list", () => {

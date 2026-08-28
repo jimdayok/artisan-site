@@ -1,18 +1,18 @@
 {
-  "generatedAt": "2026-08-20T01:37:40.332Z",
+  "generatedAt": "2026-08-28T17:12:21.674Z",
   "sourceFiles": {
-    "products": "/Users/jimday/Documents/GitHub/artisan-site/private-source/price-lists/Lookup.xlsx",
-    "materials": "/Users/jimday/Documents/GitHub/artisan-site/private-source/portal/lookup_docs/Lookup_Mat.xlsx",
-    "ar": "/Users/jimday/Documents/GitHub/artisan-site/private-source/portal/lookup_docs/Lookup_AR.xlsx"
+    "products": "/Users/jimday/Documents/Codex/2026-08-26/ther/work/artisan-pricing-release/private-source/price-lists/Lookup.xlsx",
+    "materials": "/Users/jimday/Documents/Codex/2026-08-26/ther/work/artisan-pricing-release/private-source/portal/lookup_docs/Lookup_Mat.xlsx",
+    "ar": "/Users/jimday/Documents/Codex/2026-08-26/ther/work/artisan-pricing-release/private-source/portal/lookup_docs/Lookup_AR.xlsx"
   },
   "workbooks": {
     "products": {
-      "filePath": "/Users/jimday/Documents/GitHub/artisan-site/private-source/price-lists/Lookup.xlsx",
+      "filePath": "/Users/jimday/Documents/Codex/2026-08-26/ther/work/artisan-pricing-release/private-source/price-lists/Lookup.xlsx",
       "workbookLabel": "private-source/price-lists/Lookup.xlsx",
       "sheets": [
         {
           "name": "Export",
-          "rowCount": 566,
+          "rowCount": 710,
           "headers": [
             "lenstyle",
             "styleconsollidated",
@@ -33,918 +33,8 @@
       ],
       "rows": [
         {
-          "lenstyle": "BS BALANCE",
-          "styleconsollidated": "Bronze Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "BS BALANCE 16",
-          "styleconsollidated": "Bronze Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "BS BALANCE 18",
-          "styleconsollidated": "Bronze Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "BS EVERYDAY",
-          "styleconsollidated": "Bronze Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "CD B FREE",
-          "styleconsollidated": "CD Bifocal",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "CD DIGITAL RD22",
-          "styleconsollidated": "CD Bifocal",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "CD DIGITAL RD*",
-          "styleconsollidated": "CD Bifocal",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "CD DIGITAL RD28",
-          "styleconsollidated": "CD Bifocal",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ENDLESS BIFCL RD",
-          "styleconsollidated": "CD Bifocal",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ENDLESS BIFCL WD",
-          "styleconsollidated": "CD Bifocal",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "CFB",
-          "styleconsollidated": "CFB",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "CFB 14",
-          "styleconsollidated": "CFB",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "CFB 16",
-          "styleconsollidated": "CFB",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "CFB 18",
-          "styleconsollidated": "CFB",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "CFB 20",
-          "styleconsollidated": "CFB",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "CFBPROG",
-          "styleconsollidated": "CFB",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS MOBILE",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS MOBILE 14",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS MOBILE 15",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS MOBILE 16",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS MOBILE 17",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS MOBILE 18",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS SCRIPT",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS SCRIPT 15",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS SCRIPT 16",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS SCRIPT 17",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS SILK",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS SILK 14",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS SILK 18",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS STABLE",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS STABLE 14",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS STABLE 15",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS STABLE 16",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS STABLE 17",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS STABLE 18",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS STABLE 19",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS STABLE 20",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS VISTA",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS VISTA 14",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS VISTA 16",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS VISTA 17",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DS VISTA 18",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "GS BALANCE",
-          "styleconsollidated": "Gold Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "GS BALANCE 14",
-          "styleconsollidated": "Gold Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "GS BALANCE 16",
-          "styleconsollidated": "Gold Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "GS BALANCE 18",
-          "styleconsollidated": "Gold Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "GS BALANCE 20",
-          "styleconsollidated": "Gold Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "GS MAGNIFY",
-          "styleconsollidated": "Gold Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "GS MAGNIFY 14",
-          "styleconsollidated": "Gold Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "GS MAGNIFY 16",
-          "styleconsollidated": "Gold Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "GS RANGE",
-          "styleconsollidated": "Gold Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "GS RANGE 16",
-          "styleconsollidated": "Gold Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "GS RANGE 18",
-          "styleconsollidated": "Gold Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "INMOTION SV",
-          "styleconsollidated": "InMotion SV",
-          "Type Revised": "SV",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "PS EXTRA SOFT",
-          "styleconsollidated": "Platinum Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "PS EXTRA SOFT 16",
-          "styleconsollidated": "Platinum Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "PS MOBILE",
-          "styleconsollidated": "Platinum Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "PS MOBILE 14",
-          "styleconsollidated": "Platinum Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "PS MOBILE 16",
-          "styleconsollidated": "Platinum Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "PS MOBILE 17",
-          "styleconsollidated": "Platinum Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "PS MOBILE 18",
-          "styleconsollidated": "Platinum Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "PS PLATEAU",
-          "styleconsollidated": "Platinum Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "PS PLATEAU 16",
-          "styleconsollidated": "Platinum Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "PS PLATEAU 18",
-          "styleconsollidated": "Platinum Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "PS STEADY",
-          "styleconsollidated": "Platinum Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "PS STEADY 14",
-          "styleconsollidated": "Platinum Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "PS STEADY 15",
-          "styleconsollidated": "Platinum Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "PS STEADY 16",
-          "styleconsollidated": "Platinum Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "PS STEADY 17",
-          "styleconsollidated": "Platinum Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "PS STEADY 18",
-          "styleconsollidated": "Platinum Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "PS ULTRA SHORT",
-          "styleconsollidated": "Platinum Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "PSULTRSHT",
-          "styleconsollidated": "Platinum Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SD CONCEPT 100",
-          "styleconsollidated": "Concept",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SD CONCEPT *",
-          "styleconsollidated": "Concept",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SD CONCEPT 50",
-          "styleconsollidated": "Concept",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SD CONCEPT 75",
-          "styleconsollidated": "Concept",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SD DIGITAL SV",
-          "styleconsollidated": "Digital SV",
-          "Type Revised": "Enhanced SV",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SD RADIUS",
-          "styleconsollidated": "Radius",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SD RADIUS 16",
-          "styleconsollidated": "Radius",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SD RADIUS 18",
-          "styleconsollidated": "Radius",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SD REACH *",
-          "styleconsollidated": "Reach",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SD REACH 13",
-          "styleconsollidated": "Reach",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SD REACH 20",
-          "styleconsollidated": "Reach",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SD REACH 40",
-          "styleconsollidated": "Reach",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SD REACH 60",
-          "styleconsollidated": "Reach",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SD REACH S 13",
-          "styleconsollidated": "Reach",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SD REACH S 20",
-          "styleconsollidated": "Reach",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SD REACH S 60",
-          "styleconsollidated": "Reach",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SPECTRA COMP 13",
-          "styleconsollidated": "Spectra Comp",
-          "Type Revised": "Occupational",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SPECTRA COMP 20",
-          "styleconsollidated": "Spectra Comp",
-          "Type Revised": "Occupational",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SPECTRA COMP 40",
-          "styleconsollidated": "Spectra Comp",
-          "Type Revised": "Occupational",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SPECTRA COMP 60",
-          "styleconsollidated": "Spectra Comp",
-          "Type Revised": "Occupational",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SPECTRA CUSTOM",
-          "styleconsollidated": "Spectra Custom",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SPECTRA ELITE",
-          "styleconsollidated": "Spectra Elite",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DSSILK",
-          "styleconsollidated": "Diamond Series",
-          "Type Revised": "Progressive",
-          "lensbrand": "Artisan",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "CADRE",
-          "styleconsollidated": "Cadre",
-          "Type Revised": "Progressive",
-          "lensbrand": "Cadre",
-          "sourceSheet": "Export"
-        },
-        {
           "lenstyle": "7 X 28 - PHOTO E",
           "styleconsollidated": "7x28",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ASPH LENTIC-RD",
-          "styleconsollidated": "Asph Lent",
-          "Type Revised": "SV",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ASPHERIC-ST",
-          "styleconsollidated": "Aspheric ST28",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ASPHERIC-SV",
-          "styleconsollidated": "Aspheric SV",
-          "Type Revised": "SV",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "BLENDED",
-          "styleconsollidated": "Blended Bifocal",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "BLENDED 28",
-          "styleconsollidated": "Blended Bifocal",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "BLENDED SEG 22 D",
-          "styleconsollidated": "Blended Bifocal",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "BLENDED SEG 28 D",
-          "styleconsollidated": "Blended Bifocal",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DVI BLEND22",
-          "styleconsollidated": "Blended Bifocal",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DIGITAL BIFOCAL",
-          "styleconsollidated": "Digital Bifocal",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DOUBLE ST28",
-          "styleconsollidated": "Double D ST28",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "EXEC",
-          "styleconsollidated": "Executive Bifocal",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "EXEC DEC",
-          "styleconsollidated": "Executive Bifocal",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "EXEC TRI",
-          "styleconsollidated": "Executive Trifocal",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "FREEDOM ID - PHO",
-          "styleconsollidated": "Freedom ID",
-          "Type Revised": "Progressive",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "PLANO",
-          "styleconsollidated": "No Name",
-          "Type Revised": "SV",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "RD22",
-          "styleconsollidated": "Round Seg",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "RD24",
-          "styleconsollidated": "Round Seg",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "RD28",
-          "styleconsollidated": "Round Seg",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SPECTRA ST28",
-          "styleconsollidated": "Spectra ST28",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ST28",
-          "styleconsollidated": "ST28",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "FLAT TOP 35 - TR",
-          "styleconsollidated": "ST35",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ST35",
-          "styleconsollidated": "ST35",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ST45",
-          "styleconsollidated": "ST45",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SV",
-          "styleconsollidated": "SV",
-          "Type Revised": "SV",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SV IQ",
-          "styleconsollidated": "SV IQ",
-          "Type Revised": "SV",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SYNC III 13",
-          "styleconsollidated": "SYNC 3",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SYNC III *",
-          "styleconsollidated": "SYNC 6",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SYNC III 5",
-          "styleconsollidated": "SYNC 6",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SYNC III 9",
-          "styleconsollidated": "SYNC 8",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "TACT 40 BKS",
-          "styleconsollidated": "TACT",
-          "Type Revised": "Occupational",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "TACT 60 BKS",
-          "styleconsollidated": "TACT",
-          "Type Revised": "Occupational",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "STT10X35",
-          "styleconsollidated": "Trifocal 10x35",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "STT7X28",
-          "styleconsollidated": "Trifocal 7x28",
-          "Type Revised": "Multifocal",
-          "lensbrand": "Commodity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "STT8X35",
-          "styleconsollidated": "Trifocal 8x35",
           "Type Revised": "Multifocal",
           "lensbrand": "Commodity",
           "sourceSheet": "Export"
@@ -971,6 +61,13 @@
           "sourceSheet": "Export"
         },
         {
+          "lenstyle": "ADAGE",
+          "styleconsollidated": "Adage",
+          "Type Revised": "Progressive",
+          "lensbrand": "Younger",
+          "sourceSheet": "Export"
+        },
+        {
           "lenstyle": "ADAPTAR DS",
           "styleconsollidated": "Adapter",
           "Type Revised": "Progressive",
@@ -978,92 +75,15 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "EYEZEN START",
-          "styleconsollidated": "Eyezen Start",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Essilor",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "EYEZEN START 1.7",
-          "styleconsollidated": "Eyezen Start",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Essilor",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "EYEZEN+ *",
-          "styleconsollidated": "Eyezen+",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Essilor",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "EYEZEN+ 0",
-          "styleconsollidated": "Eyezen+",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Essilor",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "EYEZEN+ 1 - BLUE",
-          "styleconsollidated": "Eyezen+",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Essilor",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "EYEZEN+ 3 - BLUE",
-          "styleconsollidated": "Eyezen+",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Essilor",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "EYEZEN+ 4",
-          "styleconsollidated": "Eyezen+",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Essilor",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "EYEZEN+ 4 - TRAN",
-          "styleconsollidated": "Eyezen+",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Essilor",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ESSILOR IDEAL AD",
-          "styleconsollidated": "Ideal",
-          "Type Revised": "Progressive",
-          "lensbrand": "Essilor",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "NATURAL DIGITAL",
-          "styleconsollidated": "Natural",
-          "Type Revised": "Progressive",
-          "lensbrand": "Essilor",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "OVATION DS",
-          "styleconsollidated": "Ovagtion DS",
-          "Type Revised": "Progressive",
-          "lensbrand": "Essilor",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "OVATION",
-          "styleconsollidated": "Ovation",
-          "Type Revised": "Progressive",
-          "lensbrand": "Essilor",
-          "sourceSheet": "Export"
-        },
-        {
           "lenstyle": "AMP MINI BKS",
           "styleconsollidated": "Amplitude BKS",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AMPLITUDE",
+          "styleconsollidated": "Ampliutde",
           "Type Revised": "Progressive",
           "lensbrand": "Hoya",
           "sourceSheet": "Export"
@@ -1083,8 +103,15 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "AMPLITUDE",
-          "styleconsollidated": "Ampliutde",
+          "lenstyle": "Any Single Visio",
+          "styleconsollidated": "SV",
+          "Type Revised": "SV",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ARRAY *",
+          "styleconsollidated": "Array",
           "Type Revised": "Progressive",
           "lensbrand": "Hoya",
           "sourceSheet": "Export"
@@ -1118,57 +145,8 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ARRAY VL",
-          "styleconsollidated": "Array",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ARRAY W 11",
-          "styleconsollidated": "Array",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ARRAY W 15",
-          "styleconsollidated": "Array",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ARRAY *",
-          "styleconsollidated": "Array",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ARRAY W *",
-          "styleconsollidated": "Array",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ARRAY W 17",
-          "styleconsollidated": "Array",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ARRAY W VL",
-          "styleconsollidated": "Array",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "HOYA ARRAY VARIA",
-          "styleconsollidated": "Array",
+          "lenstyle": "ARRAY 2 *",
+          "styleconsollidated": "Array 2",
           "Type Revised": "Progressive",
           "lensbrand": "Hoya",
           "sourceSheet": "Export"
@@ -1182,20 +160,6 @@
         },
         {
           "lenstyle": "ARRAY 2 11 - CLE",
-          "styleconsollidated": "Array 2",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ARRAY 2 *",
-          "styleconsollidated": "Array 2",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ARRAY 2 W *",
           "styleconsollidated": "Array 2",
           "Type Revised": "Progressive",
           "lensbrand": "Hoya",
@@ -1237,6 +201,20 @@
           "sourceSheet": "Export"
         },
         {
+          "lenstyle": "ARRAY 2 W *",
+          "styleconsollidated": "Array 2",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ARRAY 2 W 13",
+          "styleconsollidated": "Array",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
           "lenstyle": "ARRAY 2 W 15",
           "styleconsollidated": "Array 2",
           "Type Revised": "Progressive",
@@ -1258,435 +236,470 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "HOYA GP WIDE",
-          "styleconsollidated": "GP Wide",
+          "lenstyle": "ARRAY VL",
+          "styleconsollidated": "Array",
           "Type Revised": "Progressive",
           "lensbrand": "Hoya",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "HOYALUX GPW",
-          "styleconsollidated": "GP Wide",
+          "lenstyle": "ARRAY W *",
+          "styleconsollidated": "Array",
           "Type Revised": "Progressive",
           "lensbrand": "Hoya",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "HOYALUX ID LIFES",
-          "styleconsollidated": "ID LifeStyle",
+          "lenstyle": "ARRAY W 11",
+          "styleconsollidated": "Array",
           "Type Revised": "Progressive",
           "lensbrand": "Hoya",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ID LIFESTYLE",
-          "styleconsollidated": "ID LifeStyle",
+          "lenstyle": "ARRAY W 13",
+          "styleconsollidated": "Array",
           "Type Revised": "Progressive",
           "lensbrand": "Hoya",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ID LIFESTYLECD",
-          "styleconsollidated": "ID LifeStyle",
+          "lenstyle": "ARRAY W 15",
+          "styleconsollidated": "Array",
           "Type Revised": "Progressive",
           "lensbrand": "Hoya",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ID LIFESTYLE 2 H",
-          "styleconsollidated": "iD LifeStyle 2",
+          "lenstyle": "ARRAY W 17",
+          "styleconsollidated": "Array",
           "Type Revised": "Progressive",
           "lensbrand": "Hoya",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "IDLS2 CLARITY",
-          "styleconsollidated": "iD LifeStyle 2",
+          "lenstyle": "ARRAY W VL",
+          "styleconsollidated": "Array",
           "Type Revised": "Progressive",
           "lensbrand": "Hoya",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "IDLS2 HARMONY",
-          "styleconsollidated": "iD LifeStyle 2",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDLS2CD CLARITY",
-          "styleconsollidated": "iD LifeStyle 2",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDLS2CD HARMONY",
-          "styleconsollidated": "iD LifeStyle 2",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDLS3 INDOOR",
-          "styleconsollidated": "iD LifeStyle 3",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDLS3 INDOOR I",
-          "styleconsollidated": "iD LifeStyle 3",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDLS3 OUTDOOR",
-          "styleconsollidated": "iD LifeStyle 3",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDLS3 OUTDOOR I",
-          "styleconsollidated": "iD LifeStyle 3",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDLS3 URBAN",
-          "styleconsollidated": "iD LifeStyle 3",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDLS3 URBAN I",
-          "styleconsollidated": "iD LifeStyle 3",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDLS3U",
-          "styleconsollidated": "iD LifeStyle 3",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "LS3 SUN INDOOR I",
-          "styleconsollidated": "iD LifeStyle 3",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "LS3 SUN OUTDOR I",
-          "styleconsollidated": "iD LifeStyle 3",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "LS3 SUN URBAN I",
-          "styleconsollidated": "iD LifeStyle 3",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDLS4 INDOOR",
-          "styleconsollidated": "iD LifeStyle 4",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDLS4 OUTDOOR",
-          "styleconsollidated": "iD LifeStyle 4",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDLS4 URBAN",
-          "styleconsollidated": "iD LifeStyle 4",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "LS4 SUN INDOOR",
-          "styleconsollidated": "iD LifeStyle 4",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "LS4 SUN OUTDOOR",
-          "styleconsollidated": "iD LifeStyle 4",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "LS4 SUN URBAN",
-          "styleconsollidated": "iD LifeStyle 4",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ID MYSTYLE",
-          "styleconsollidated": "iD MyStyle",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDMS2",
-          "styleconsollidated": "iD MyStyle 2",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDMS2 DETAIL",
-          "styleconsollidated": "iD MyStyle 2",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDMS2 MODERN",
-          "styleconsollidated": "iD MyStyle 2",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDMS2 STABLE",
-          "styleconsollidated": "iD MyStyle 2",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDMS3 DETAIL",
-          "styleconsollidated": "iD MyStyle 3",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDMS3 MODERN",
-          "styleconsollidated": "iD MyStyle 3",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ID SCREEN 18",
-          "styleconsollidated": "iD Screen/Space/Zoom",
-          "Type Revised": "Occupational",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ID SCREEN 19",
-          "styleconsollidated": "iD Screen/Space/Zoom",
-          "Type Revised": "Occupational",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ID SCREEN 20",
-          "styleconsollidated": "iD Screen/Space/Zoom",
-          "Type Revised": "Occupational",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ID SCREEN 22",
-          "styleconsollidated": "iD Screen/Space/Zoom",
-          "Type Revised": "Occupational",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ID SCREEN 24",
-          "styleconsollidated": "iD Screen/Space/Zoom",
-          "Type Revised": "Occupational",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ID SPACE 18",
-          "styleconsollidated": "iD Screen/Space/Zoom",
-          "Type Revised": "Occupational",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ID SPACE 23",
-          "styleconsollidated": "iD Screen/Space/Zoom",
-          "Type Revised": "Occupational",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ID SPACE 24",
-          "styleconsollidated": "iD Screen/Space/Zoom",
-          "Type Revised": "Occupational",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ID ZOOM - CLEAR",
-          "styleconsollidated": "iD Screen/Space/Zoom",
-          "Type Revised": "Occupational",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ID SCREEN",
-          "styleconsollidated": "iD Screen/Space/Zoom",
-          "Type Revised": "Occupational",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ID SCREEN - CLEA",
-          "styleconsollidated": "iD Screen/Space/Zoom",
-          "Type Revised": "Occupational",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ID SPACE",
-          "styleconsollidated": "iD Screen/Space/Zoom",
-          "Type Revised": "Occupational",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ID SPACE - CLEAR",
-          "styleconsollidated": "iD Screen/Space/Zoom",
-          "Type Revised": "Occupational",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ID ZOOM",
-          "styleconsollidated": "iD Screen/Space/Zoom",
-          "Type Revised": "Occupational",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDWS3 SCREEN",
-          "styleconsollidated": "iD WorkSpace 3",
-          "Type Revised": "Occupational",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDWS3 SPACE",
-          "styleconsollidated": "iD WorkSpace 3",
-          "Type Revised": "Occupational",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDWS3 ZOOM",
-          "styleconsollidated": "iD WorkSpace 3",
-          "Type Revised": "Occupational",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ID INSTYLE",
-          "styleconsollidated": "Instyle",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "HOYA MYSV - CLEA",
-          "styleconsollidated": "MySV",
+          "lenstyle": "ASPH LENTIC-RD",
+          "styleconsollidated": "Asph Lent",
           "Type Revised": "SV",
-          "lensbrand": "Hoya",
+          "lensbrand": "Commodity",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "MYSV",
-          "styleconsollidated": "MySV",
+          "lenstyle": "ASPHERIC-ST",
+          "styleconsollidated": "Aspheric ST28",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ASPHERIC-SV",
+          "styleconsollidated": "Aspheric SV",
           "Type Revised": "SV",
-          "lensbrand": "Hoya",
+          "lensbrand": "Commodity",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "SUMMIT CD",
-          "styleconsollidated": "Summit",
+          "lenstyle": "ATT III FASHN 15",
+          "styleconsollidated": "Attitude 3",
           "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
+          "lensbrand": "Shamir",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "SUMMIT ECP",
-          "styleconsollidated": "Summit",
+          "lenstyle": "ATT III FASHN 18",
+          "styleconsollidated": "Attitude 3",
           "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
+          "lensbrand": "Shamir",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "SUMMIT CD BKS",
-          "styleconsollidated": "Summit BKS",
+          "lenstyle": "ATT III SPORT 18",
+          "styleconsollidated": "Attitude 3",
           "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
+          "lensbrand": "Shamir",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "SUMMIT ECP BKS",
-          "styleconsollidated": "Summit BKS",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SUMMIT CD IQ",
-          "styleconsollidated": "Summit iQ",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SUMMIT ECP IQ",
-          "styleconsollidated": "Summit iQ",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SYNC III 20",
-          "styleconsollidated": "SYNC 5",
+          "lenstyle": "ATT III SV",
+          "styleconsollidated": "Attitude 3 SV",
           "Type Revised": "SV",
-          "lensbrand": "Hoya",
+          "lensbrand": "Shamir",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "HOYALUX TACT",
-          "styleconsollidated": "TACT",
+          "lenstyle": "AUTO II *",
+          "styleconsollidated": "Autograph 2",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO II 11",
+          "styleconsollidated": "Autograph 2",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO II 13",
+          "styleconsollidated": "Autograph 2",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO II 15",
+          "styleconsollidated": "Autograph 2",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO II 18",
+          "styleconsollidated": "Autograph 2",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO II ATT *",
+          "styleconsollidated": "Autograph 2 Attitude",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO II ATT 15",
+          "styleconsollidated": "Autograph 2",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO II ATT 18",
+          "styleconsollidated": "Autograph 2",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO II OFF",
+          "styleconsollidated": "Autograph 2 Office",
           "Type Revised": "Occupational",
-          "lensbrand": "Hoya",
+          "lensbrand": "Shamir",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "CAMBER STEADY",
-          "styleconsollidated": "Camber Steady Plus",
+          "lenstyle": "AUTO II SV ATT",
+          "styleconsollidated": "Autograph 2 SV",
+          "Type Revised": "SV",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO II SV AW",
+          "styleconsollidated": "Autograph 2 SV",
+          "Type Revised": "SV",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO II+ *",
+          "styleconsollidated": "Autograph 2 Plus",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO II+ 11",
+          "styleconsollidated": "Autograph 2 Plus",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO II+ 13",
+          "styleconsollidated": "Autograph 2 Plus",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO II+ 15",
+          "styleconsollidated": "Autograph 2 Plus",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO II+ 18",
+          "styleconsollidated": "Autograph 2 Plus",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO III *",
+          "styleconsollidated": "Autograph 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO III 11",
+          "styleconsollidated": "Autograph 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO III 13",
+          "styleconsollidated": "Autograph 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO III 15",
+          "styleconsollidated": "Autograph 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO III 18",
+          "styleconsollidated": "Autograph 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO III SV",
+          "styleconsollidated": "Autograph 3",
+          "Type Revised": "SV",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO INTL",
+          "styleconsollidated": "Autograph Intelligence",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO INTL 11",
+          "styleconsollidated": "Autograph Intelligence",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO INTL 13",
+          "styleconsollidated": "Autograph Intelligence",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO INTL 15",
+          "styleconsollidated": "Autograph Intelligence",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO INTL 18",
+          "styleconsollidated": "Autograph Intelligence",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTO2FIXED13P",
+          "styleconsollidated": "Autograph 2",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTOGRAPH II",
+          "styleconsollidated": "Autograph 2",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTOGRAPH II+",
+          "styleconsollidated": "Autograph 2 Plus",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTOGRAPH III",
+          "styleconsollidated": "Autograph 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTOGRAPH3-VARSP",
+          "styleconsollidated": "Autograph 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "AUTOINT-VAR",
+          "styleconsollidated": "Autograph Intelligence",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "Bi-AS *",
+          "styleconsollidated": "Bi-AS",
+          "Type Revised": "SV",
+          "lensbrand": "Tokai",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "BI-AS C",
+          "styleconsollidated": "Bi-AS",
+          "Type Revised": "SV",
+          "lensbrand": "Tokai",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "BI-AS S",
+          "styleconsollidated": "Bi-AS",
+          "Type Revised": "SV",
+          "lensbrand": "Tokai",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "BLENDED",
+          "styleconsollidated": "Blended Bifocal",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "BLENDED 28",
+          "styleconsollidated": "Blended Bifocal",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "BLENDED SEG 22 D",
+          "styleconsollidated": "Blended Bifocal",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "BLENDED SEG 28 D",
+          "styleconsollidated": "Blended Bifocal",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "BS *ALANCE",
+          "styleconsollidated": "Bronze Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "BS BALANCE",
+          "styleconsollidated": "Bronze Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "BS BALANCE 16",
+          "styleconsollidated": "Bronze Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "BS BALANCE 18",
+          "styleconsollidated": "Bronze Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "BS EVERYDAY",
+          "styleconsollidated": "Bronze Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "BS*",
+          "styleconsollidated": "Bronze Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "CADRE",
+          "styleconsollidated": "Cadre",
+          "Type Revised": "Progressive",
+          "lensbrand": "Cadre",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "CAMBER PURE",
+          "styleconsollidated": "Camber Pure",
+          "Type Revised": "Progressive",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "CAMBER PURE 14",
+          "styleconsollidated": "Camber Pure",
+          "Type Revised": "Progressive",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "CAMBER PURE 15",
+          "styleconsollidated": "Camber Pure",
+          "Type Revised": "Progressive",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "CAMBER PURE 16",
+          "styleconsollidated": "Camber Pure",
+          "Type Revised": "Progressive",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "CAMBER PURE 17",
+          "styleconsollidated": "Camber Pure",
+          "Type Revised": "Progressive",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "CAMBER PURE 18",
+          "styleconsollidated": "Camber Pure",
           "Type Revised": "Progressive",
           "lensbrand": "IOT",
           "sourceSheet": "Export"
@@ -1860,9 +873,471 @@
           "sourceSheet": "Export"
         },
         {
+          "lenstyle": "CAMBER STEADY",
+          "styleconsollidated": "Camber Steady Plus",
+          "Type Revised": "Progressive",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
           "lenstyle": "CAMBERS+",
           "styleconsollidated": "Camber Steady Plus",
           "Type Revised": "Progressive",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "CD B FREE",
+          "styleconsollidated": "CD Bifocal",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "CD DIGITAL RD*",
+          "styleconsollidated": "CD Bifocal",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "CD DIGITAL RD22",
+          "styleconsollidated": "CD Bifocal",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "CD DIGITAL RD28",
+          "styleconsollidated": "CD Bifocal",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "CFB",
+          "styleconsollidated": "CFB",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "CFB 14",
+          "styleconsollidated": "CFB",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "CFB 16",
+          "styleconsollidated": "CFB",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "CFB 18",
+          "styleconsollidated": "CFB",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "CFB 20",
+          "styleconsollidated": "CFB",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "CFBPROG",
+          "styleconsollidated": "CFB",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "COMFORT DRX",
+          "styleconsollidated": "Comfort DRx",
+          "Type Revised": "Progressive",
+          "lensbrand": "Varilux",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "COMFORT MAX",
+          "styleconsollidated": "Comfort Max",
+          "Type Revised": "Progressive",
+          "lensbrand": "Varilux",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "COMFORT MAX FIT",
+          "styleconsollidated": "Comfort Max",
+          "Type Revised": "Progressive",
+          "lensbrand": "Varilux",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "COMFORT S DRX",
+          "styleconsollidated": "Comfort DRx",
+          "Type Revised": "Progressive",
+          "lensbrand": "Varilux",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "COMFORT W2+",
+          "styleconsollidated": "Comfort W2+",
+          "Type Revised": "Progressive",
+          "lensbrand": "Varilux",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "COMFORT W2+ FIT",
+          "styleconsollidated": "Comfort W2+",
+          "Type Revised": "Progressive",
+          "lensbrand": "Varilux",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DIGITAL BIFOCAL",
+          "styleconsollidated": "Digital Bifocal",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DOUBLE ST28",
+          "styleconsollidated": "Double D ST28",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DRIVER INTL *",
+          "styleconsollidated": "Driver Intelligence PAL Day",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DRIVER INTL DAY",
+          "styleconsollidated": "Driver Intelligence PAL Day",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DRIVER INTL MOON",
+          "styleconsollidated": "Driver Intelligence PAL Night",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DRIVER INTL NGHT",
+          "styleconsollidated": "Driver Intelligence PAL Night",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DRIVER INTL NIGH",
+          "styleconsollidated": "Driver Intelligence PAL Night",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DRIVER INTL SUN",
+          "styleconsollidated": "Driver Intelligence PAL Day",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DRIVER SV DAY",
+          "styleconsollidated": "Driver Intelligence SV Day",
+          "Type Revised": "SV",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DRIVER SV MOON",
+          "styleconsollidated": "Driver Intelligence SV Night",
+          "Type Revised": "SV",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DRIVER SV NGHT",
+          "styleconsollidated": "Driver Intelligence SV Night",
+          "Type Revised": "SV",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DRIVER SV NIGHT",
+          "styleconsollidated": "Driver Intelligence SV Night",
+          "Type Revised": "SV",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DRIVER SV SUN",
+          "styleconsollidated": "Driver Intelligence SV Day",
+          "Type Revised": "SV",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS MOBILE",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS MOBILE 14",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS MOBILE 15",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS MOBILE 16",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS MOBILE 17",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS MOBILE 18",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS SCRIPT",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS SCRIPT 14",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS SCRIPT 15",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS SCRIPT 16",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS SCRIPT 17",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS SILK",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS SILK 14",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS SILK 18",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS STABLE",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS STABLE 14",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS STABLE 15",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS STABLE 16",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS STABLE 17",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS STABLE 18",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS STABLE 19",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS STABLE 20",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS VISTA",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS VISTA 14",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS VISTA 16",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS VISTA 17",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DS VISTA 18",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DSPC",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DSSILK",
+          "styleconsollidated": "Diamond Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "DVI BLEND22",
+          "styleconsollidated": "Blended Bifocal",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ELEMENT",
+          "styleconsollidated": "Element",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ELEMENT SHORT",
+          "styleconsollidated": "Element",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ENDLESS",
+          "styleconsollidated": "Endless SV",
+          "Type Revised": "SV",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ENDLESS BIFCL *",
+          "styleconsollidated": "Endless Bifocal",
+          "Type Revised": "Multifocal",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ENDLESS BIFCL RD",
+          "styleconsollidated": "Endless Bifocal",
+          "Type Revised": "Multifocal",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ENDLESS BIFCL WD",
+          "styleconsollidated": "Endless Bifocal",
+          "Type Revised": "Multifocal",
           "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
@@ -1888,100 +1363,9 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ENDLESS SV DRIVE",
-          "styleconsollidated": "Endless Drive SV",
+          "lenstyle": "ENDLESS DRIVE SV",
+          "styleconsollidated": "Endless SV Drive",
           "Type Revised": "SV",
-          "lensbrand": "IOT",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ENDLSS OFF 13",
-          "styleconsollidated": "Endless Office",
-          "Type Revised": "Occupational",
-          "lensbrand": "IOT",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ENDLSS OFF 13 14",
-          "styleconsollidated": "Endless Office",
-          "Type Revised": "Occupational",
-          "lensbrand": "IOT",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ENDLSS OFF *",
-          "styleconsollidated": "Endless Office",
-          "Type Revised": "Occupational",
-          "lensbrand": "IOT",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ENDLSS OFF 13 18",
-          "styleconsollidated": "Endless Office",
-          "Type Revised": "Occupational",
-          "lensbrand": "IOT",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ENDLSS OFF 20",
-          "styleconsollidated": "Endless Office",
-          "Type Revised": "Occupational",
-          "lensbrand": "IOT",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ENDLSS OFF 20 14",
-          "styleconsollidated": "Endless Office",
-          "Type Revised": "Occupational",
-          "lensbrand": "IOT",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ENDLSS OFF 20 18",
-          "styleconsollidated": "Endless Office",
-          "Type Revised": "Occupational",
-          "lensbrand": "IOT",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ENDLSS OFF 40",
-          "styleconsollidated": "Endless Office",
-          "Type Revised": "Occupational",
-          "lensbrand": "IOT",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ENDLSS OFF 40 14",
-          "styleconsollidated": "Endless Office",
-          "Type Revised": "Occupational",
-          "lensbrand": "IOT",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ENDLSS OFF 40 18",
-          "styleconsollidated": "Endless Office",
-          "Type Revised": "Occupational",
-          "lensbrand": "IOT",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ENDLSS OFF 60",
-          "styleconsollidated": "Endless Office",
-          "Type Revised": "Occupational",
-          "lensbrand": "IOT",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ENDLSS OFF 60 14",
-          "styleconsollidated": "Endless Office",
-          "Type Revised": "Occupational",
-          "lensbrand": "IOT",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ENDLSS OFF 60 18",
-          "styleconsollidated": "Endless Office",
-          "Type Revised": "Occupational",
           "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
@@ -2000,7 +1384,49 @@
           "sourceSheet": "Export"
         },
         {
+          "lenstyle": "ENDLESS PLUS *",
+          "styleconsollidated": "Endless Plus",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ENDLESS PLUS 050",
+          "styleconsollidated": "Endless Plus",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ENDLESS PLUS 075",
+          "styleconsollidated": "Endless Plus",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ENDLESS PLUS 100",
+          "styleconsollidated": "Endless Plus",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ENDLESS PLUS 125",
+          "styleconsollidated": "Endlesss Plus",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
           "lenstyle": "ENDLESS SPORT",
+          "styleconsollidated": "Endless Sport",
+          "Type Revised": "Progressive",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ENDLESS SPORT 16",
           "styleconsollidated": "Endless Sport",
           "Type Revised": "Progressive",
           "lensbrand": "IOT",
@@ -2105,6 +1531,13 @@
           "sourceSheet": "Export"
         },
         {
+          "lenstyle": "ENDLESS STDY I17",
+          "styleconsollidated": "Endless Steady",
+          "Type Revised": "Progressive",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
           "lenstyle": "ENDLESS STDY I18",
           "styleconsollidated": "Endless Steady",
           "Type Revised": "Progressive",
@@ -2133,44 +1566,114 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ESSENTL STDY I16",
+          "lenstyle": "ENDLESS STDY N16",
           "styleconsollidated": "Essential Steady",
           "Type Revised": "Progressive",
           "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ENDLESS",
-          "styleconsollidated": "Endless SV",
+          "lenstyle": "ENDLESS STDY N18",
+          "styleconsollidated": "Essential Steady",
+          "Type Revised": "Progressive",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ENDLESS SV DRIVE",
+          "styleconsollidated": "Endless Drive SV",
           "Type Revised": "SV",
           "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ENDLESS PLUS 050",
-          "styleconsollidated": "Endless Plus",
-          "Type Revised": "Anti-Fatigue",
+          "lenstyle": "ENDLSS OFF *",
+          "styleconsollidated": "Endless Office",
+          "Type Revised": "Occupational",
           "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ENDLESS PLUS *",
-          "styleconsollidated": "Endless Plus",
-          "Type Revised": "Anti-Fatigue",
+          "lenstyle": "ENDLSS OFF 13",
+          "styleconsollidated": "Endless Office",
+          "Type Revised": "Occupational",
           "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ENDLESS PLUS 075",
-          "styleconsollidated": "Endless Plus",
-          "Type Revised": "Anti-Fatigue",
+          "lenstyle": "ENDLSS OFF 13 14",
+          "styleconsollidated": "Endless Office",
+          "Type Revised": "Occupational",
           "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ENDLESS PLUS 100",
-          "styleconsollidated": "Endless Plus",
-          "Type Revised": "Anti-Fatigue",
+          "lenstyle": "ENDLSS OFF 13 18",
+          "styleconsollidated": "Endless Office",
+          "Type Revised": "Occupational",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ENDLSS OFF 20",
+          "styleconsollidated": "Endless Office",
+          "Type Revised": "Occupational",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ENDLSS OFF 20 14",
+          "styleconsollidated": "Endless Office",
+          "Type Revised": "Occupational",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ENDLSS OFF 20 18",
+          "styleconsollidated": "Endless Office",
+          "Type Revised": "Occupational",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ENDLSS OFF 40",
+          "styleconsollidated": "Endless Office",
+          "Type Revised": "Occupational",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ENDLSS OFF 40 14",
+          "styleconsollidated": "Endless Office",
+          "Type Revised": "Occupational",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ENDLSS OFF 40 18",
+          "styleconsollidated": "Endless Office",
+          "Type Revised": "Occupational",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ENDLSS OFF 60",
+          "styleconsollidated": "Endless Office",
+          "Type Revised": "Occupational",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ENDLSS OFF 60 14",
+          "styleconsollidated": "Endless Office",
+          "Type Revised": "Occupational",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ENDLSS OFF 60 18",
+          "styleconsollidated": "Endless Office",
+          "Type Revised": "Occupational",
           "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
@@ -2224,6 +1727,13 @@
           "sourceSheet": "Export"
         },
         {
+          "lenstyle": "ESSENTL STDY I16",
+          "styleconsollidated": "Essential Steady",
+          "Type Revised": "Progressive",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
           "lenstyle": "ESSENTL STDY I18",
           "styleconsollidated": "Essential Steady",
           "Type Revised": "Progressive",
@@ -2238,38 +1748,787 @@
           "sourceSheet": "Export"
         },
         {
+          "lenstyle": "ESSENTL STDY N18",
+          "styleconsollidated": "Essential Steady",
+          "Type Revised": "Progressive",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ESSILOR COMPUTER",
+          "styleconsollidated": "Computer",
+          "Type Revised": "Occupational",
+          "lensbrand": "Essilor",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ESSILOR IDEAL AD",
+          "styleconsollidated": "Ideal",
+          "Type Revised": "Progressive",
+          "lensbrand": "Essilor",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ETHOS",
+          "styleconsollidated": "Ethos",
+          "Type Revised": "Progressive",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ETHOS PLUS *",
+          "styleconsollidated": "Ethos Plus",
+          "Type Revised": "Progressive",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ETHOS PLUS 14",
+          "styleconsollidated": "Ethos Plus",
+          "Type Revised": "Progressive",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ETHOS PLUS 14 -",
+          "styleconsollidated": "Ethos Plus",
+          "Type Revised": "Progressive",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ETHOS PLUS 18",
+          "styleconsollidated": "Ethos Plus",
+          "Type Revised": "Progressive",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ETHOS PLUS 18 -",
+          "styleconsollidated": "Ethos Plus",
+          "Type Revised": "Progressive",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ETHOS PLUS B *",
+          "styleconsollidated": "Ethos Plus",
+          "Type Revised": "Progressive",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ETHOS PLUS B 18",
+          "styleconsollidated": "Ethos Plus",
+          "Type Revised": "Progressive",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "EVERYDAY",
+          "styleconsollidated": "Everyday",
+          "Type Revised": "Progressive",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
           "lenstyle": "EVERYDAY B",
           "styleconsollidated": "Everyday",
-          "Type Revised": "Multifocal",
+          "Type Revised": "Progressive",
           "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
         {
           "lenstyle": "EVERYDAY B 1.74",
           "styleconsollidated": "Everyday",
-          "Type Revised": "Multifocal",
+          "Type Revised": "Progressive",
           "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
         {
           "lenstyle": "EVERYDAY B 14",
           "styleconsollidated": "Everyday",
-          "Type Revised": "Multifocal",
+          "Type Revised": "Progressive",
           "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
         {
           "lenstyle": "EVERYDAY B 16",
           "styleconsollidated": "Everyday",
-          "Type Revised": "Multifocal",
+          "Type Revised": "Progressive",
           "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
         {
           "lenstyle": "EVERYDAY B 18",
           "styleconsollidated": "Everyday",
-          "Type Revised": "Multifocal",
+          "Type Revised": "Progressive",
           "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "EXEC",
+          "styleconsollidated": "Executive Bifocal",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "EXEC DEC",
+          "styleconsollidated": "Executive Bifocal",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "EXEC TRI",
+          "styleconsollidated": "Executive Trifocal",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "EYEZEN *",
+          "styleconsollidated": "Eyezen+",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Essilor",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "EYEZEN KIDS",
+          "styleconsollidated": "Eyezen Start",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Essilor",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "EYEZEN START",
+          "styleconsollidated": "Eyezen Start",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Essilor",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "EYEZEN START 1.7",
+          "styleconsollidated": "Eyezen Start",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Essilor",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "EYEZEN+ *",
+          "styleconsollidated": "Eyezen+",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Essilor",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "EYEZEN+ 0",
+          "styleconsollidated": "Eyezen+",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Essilor",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "EYEZEN+ 0 1.74 W",
+          "styleconsollidated": "Eyezen+",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Essilor",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "EYEZEN+ 1",
+          "styleconsollidated": "Eyezen+",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Essilor",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "EYEZEN+ 1 - BLUE",
+          "styleconsollidated": "Eyezen+",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Essilor",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "EYEZEN+ 2",
+          "styleconsollidated": "Eyezen+",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Essilor",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "EYEZEN+ 2 - BLUE",
+          "styleconsollidated": "Eyezen+",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Essilor",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "EYEZEN+ 3",
+          "styleconsollidated": "Eyezen+",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Essilor",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "EYEZEN+ 3 - BLUE",
+          "styleconsollidated": "Eyezen+",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Essilor",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "EYEZEN+ 3 1.67 -",
+          "styleconsollidated": "Eyezen+",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Essilor",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "EYEZEN+ 4",
+          "styleconsollidated": "Eyezen+",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Essilor",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "EYEZEN+ 4 - BLUE",
+          "styleconsollidated": "Eyezen+",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Essilor",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "EYEZEN+ 4 - CLEA",
+          "styleconsollidated": "Eyezen+",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Essilor",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "EYEZEN+ 4 - TRAN",
+          "styleconsollidated": "Eyezen+",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Essilor",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "EYEZEN+ 4 1.67 -",
+          "styleconsollidated": "Eyezen+",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Essilor",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "FLAT TOP 35 - TR",
+          "styleconsollidated": "ST35",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "FREEDOM ID - PHO",
+          "styleconsollidated": "Freedom ID",
+          "Type Revised": "Progressive",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "GENESIS HD",
+          "styleconsollidated": "Genesis HD",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "GS BALANCE",
+          "styleconsollidated": "Gold Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "GS BALANCE 14",
+          "styleconsollidated": "Gold Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "GS BALANCE 16",
+          "styleconsollidated": "Gold Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "GS BALANCE 18",
+          "styleconsollidated": "Gold Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "GS BALANCE 20",
+          "styleconsollidated": "Gold Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "GS MAGNIFY",
+          "styleconsollidated": "Gold Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "GS MAGNIFY 14",
+          "styleconsollidated": "Gold Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "GS MAGNIFY 16",
+          "styleconsollidated": "Gold Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "GS RANGE",
+          "styleconsollidated": "Gold Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "GS RANGE 16",
+          "styleconsollidated": "Gold Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "GS RANGE 18",
+          "styleconsollidated": "Gold Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "GS*",
+          "styleconsollidated": "Gold Series",
+          "Type Revised": "Progressive",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "HOYA ARRAY VARIA",
+          "styleconsollidated": "Array",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "HOYA GP WIDE",
+          "styleconsollidated": "GP Wide",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "HOYA MYSV - CLEA",
+          "styleconsollidated": "MySV",
+          "Type Revised": "SV",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "HOYALUX GPW",
+          "styleconsollidated": "GP Wide",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "HOYALUX ID LIFES",
+          "styleconsollidated": "ID LifeStyle",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "HOYALUX TACT",
+          "styleconsollidated": "TACT",
+          "Type Revised": "Occupational",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ID INSTYLE",
+          "styleconsollidated": "Instyle",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ID LIFESTYLE",
+          "styleconsollidated": "ID LifeStyle",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ID LIFESTYLE 2 H",
+          "styleconsollidated": "iD LifeStyle 2",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ID LIFESTYLECD",
+          "styleconsollidated": "ID LifeStyle",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ID MYSTYLE",
+          "styleconsollidated": "iD MyStyle",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ID SCREEN",
+          "styleconsollidated": "iD Screen/Space/Zoom",
+          "Type Revised": "Occupational",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ID SCREEN - CLEA",
+          "styleconsollidated": "iD Screen/Space/Zoom",
+          "Type Revised": "Occupational",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ID SCREEN 18",
+          "styleconsollidated": "iD Screen/Space/Zoom",
+          "Type Revised": "Occupational",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ID SCREEN 19",
+          "styleconsollidated": "iD Screen/Space/Zoom",
+          "Type Revised": "Occupational",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ID SCREEN 20",
+          "styleconsollidated": "iD Screen/Space/Zoom",
+          "Type Revised": "Occupational",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ID SCREEN 22",
+          "styleconsollidated": "iD Screen/Space/Zoom",
+          "Type Revised": "Occupational",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ID SCREEN 24",
+          "styleconsollidated": "iD Screen/Space/Zoom",
+          "Type Revised": "Occupational",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ID SPACE",
+          "styleconsollidated": "iD Screen/Space/Zoom",
+          "Type Revised": "Occupational",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ID SPACE - CLEAR",
+          "styleconsollidated": "iD Screen/Space/Zoom",
+          "Type Revised": "Occupational",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ID SPACE 18",
+          "styleconsollidated": "iD Screen/Space/Zoom",
+          "Type Revised": "Occupational",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ID SPACE 23",
+          "styleconsollidated": "iD Screen/Space/Zoom",
+          "Type Revised": "Occupational",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ID SPACE 24",
+          "styleconsollidated": "iD Screen/Space/Zoom",
+          "Type Revised": "Occupational",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ID ZOOM",
+          "styleconsollidated": "iD Screen/Space/Zoom",
+          "Type Revised": "Occupational",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ID ZOOM - CLEAR",
+          "styleconsollidated": "iD Screen/Space/Zoom",
+          "Type Revised": "Occupational",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDLS PUCK",
+          "styleconsollidated": "ID LifeStyle",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDLS2 CLARITY",
+          "styleconsollidated": "iD LifeStyle 2",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDLS2 HARMONY",
+          "styleconsollidated": "iD LifeStyle 2",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDLS2CD CLARITY",
+          "styleconsollidated": "iD LifeStyle 2",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDLS2CD HARMONY",
+          "styleconsollidated": "iD LifeStyle 2",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDLS3 *",
+          "styleconsollidated": "iD LifeStyle 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDLS3 * I",
+          "styleconsollidated": "iD LifeStyle 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDLS3 *R",
+          "styleconsollidated": "iD LifeStyle 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDLS3 *R I",
+          "styleconsollidated": "iD LifeStyle 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDLS3 INDOOR",
+          "styleconsollidated": "iD LifeStyle 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDLS3 INDOOR I",
+          "styleconsollidated": "iD LifeStyle 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDLS3 OUTDOOR",
+          "styleconsollidated": "iD LifeStyle 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDLS3 OUTDOOR I",
+          "styleconsollidated": "iD LifeStyle 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDLS3 URBAN",
+          "styleconsollidated": "iD LifeStyle 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDLS3 URBAN I",
+          "styleconsollidated": "iD LifeStyle 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDLS3U",
+          "styleconsollidated": "iD LifeStyle 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDLS4 *",
+          "styleconsollidated": "iD LifeStyle 4",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDLS4 INDOOR",
+          "styleconsollidated": "iD LifeStyle 4",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDLS4 OUTDOOR",
+          "styleconsollidated": "iD LifeStyle 4",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDLS4 URBAN",
+          "styleconsollidated": "iD LifeStyle 4",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDMS2",
+          "styleconsollidated": "iD MyStyle 2",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDMS2 ADVENTURE",
+          "styleconsollidated": "iD MyStyle 2",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDMS2 DETAIL",
+          "styleconsollidated": "iD MyStyle 2",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDMS2 MODERN",
+          "styleconsollidated": "iD MyStyle 2",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDMS2 STABLE",
+          "styleconsollidated": "iD MyStyle 2",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDMS3",
+          "styleconsollidated": "iD MyStyle 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDMS3 ADVENTURE",
+          "styleconsollidated": "iD MyStyle 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDMS3 DETAIL",
+          "styleconsollidated": "iD MyStyle 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDMS3 MODERN",
+          "styleconsollidated": "iD MyStyle 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDWS3 SCREEN",
+          "styleconsollidated": "iD WorkSpace 3",
+          "Type Revised": "Occupational",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDWS3 SPACE",
+          "styleconsollidated": "iD WorkSpace 3",
+          "Type Revised": "Occupational",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IDWS3 ZOOM",
+          "styleconsollidated": "iD WorkSpace 3",
+          "Type Revised": "Occupational",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "IMAGE",
+          "styleconsollidated": "Image",
+          "Type Revised": "Progressive",
+          "lensbrand": "Younger",
           "sourceSheet": "Export"
         },
         {
@@ -2280,52 +2539,31 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ULTIMATE B",
-          "styleconsollidated": "Ultimate B",
-          "Type Revised": "Multifocal",
-          "lensbrand": "IOT",
+          "lenstyle": "INMOTION SV",
+          "styleconsollidated": "InMotion SV",
+          "Type Revised": "SV",
+          "lensbrand": "Artisan",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ULTIMATE B 15",
-          "styleconsollidated": "Ultimate B",
-          "Type Revised": "Multifocal",
-          "lensbrand": "IOT",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ULTIMATE B 16",
-          "styleconsollidated": "Ultimate B",
-          "Type Revised": "Multifocal",
-          "lensbrand": "IOT",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ULTIMATE B 17",
-          "styleconsollidated": "Ultimate B",
-          "Type Revised": "Multifocal",
-          "lensbrand": "IOT",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ULTIMATE B 18",
-          "styleconsollidated": "Ultimate B",
-          "Type Revised": "Multifocal",
-          "lensbrand": "IOT",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "ULTIMATE B VARIA",
-          "styleconsollidated": "Ultimate B",
-          "Type Revised": "Multifocal",
-          "lensbrand": "IOT",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "UNIVERSAL B 18",
-          "styleconsollidated": "Unviersal B",
+          "lenstyle": "INTOUCH *",
+          "styleconsollidated": "InTouch",
           "Type Revised": "Progressive",
-          "lensbrand": "IOT",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "INTOUCH 15",
+          "styleconsollidated": "InTouch",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "INTOUCH 18",
+          "styleconsollidated": "InTouch",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
           "sourceSheet": "Export"
         },
         {
@@ -2336,14 +2574,112 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "NLI COMPUTER",
-          "styleconsollidated": "Neurolens Computer",
+          "lenstyle": "Largo WS *",
+          "styleconsollidated": "Largo WS",
+          "Type Revised": "Occupational",
+          "lensbrand": "Tokai",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "LS3 SUN * I",
+          "styleconsollidated": "iD LifeStyle 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "LS3 SUN INDOOR I",
+          "styleconsollidated": "iD LifeStyle 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "LS3 SUN OUTDOR I",
+          "styleconsollidated": "iD LifeStyle 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "LS3 SUN URBAN I",
+          "styleconsollidated": "iD LifeStyle 3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "LS4 SUN *",
+          "styleconsollidated": "iD LifeStyle 4",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "LS4 SUN INDOOR",
+          "styleconsollidated": "iD LifeStyle 4",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "LS4 SUN OUTDOOR",
+          "styleconsollidated": "iD LifeStyle 4",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "LS4 SUN URBAN",
+          "styleconsollidated": "iD LifeStyle 4",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "MYSV",
+          "styleconsollidated": "MySV",
+          "Type Revised": "SV",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "NATURAL DIGITAL",
+          "styleconsollidated": "Natural",
+          "Type Revised": "Progressive",
+          "lensbrand": "Essilor",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "NEUROLENS OFFICE",
+          "styleconsollidated": "Neurolens Office",
           "Type Revised": "Occupational",
           "lensbrand": "Newton",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "NLIO COMPUTER",
+          "lenstyle": "NEUROLENS PAL",
+          "styleconsollidated": "Neurolens PAL",
+          "Type Revised": "Progressive",
+          "lensbrand": "Newton",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "NEUROLENS SV",
+          "styleconsollidated": "Neurolens SV",
+          "Type Revised": "SV",
+          "lensbrand": "Newton",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "NEW COMFORT",
+          "styleconsollidated": "New Comfort",
+          "Type Revised": "Progressive",
+          "lensbrand": "Varilux",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "NLI COMPUTER",
           "styleconsollidated": "Neurolens Computer",
           "Type Revised": "Occupational",
           "lensbrand": "Newton",
@@ -2357,49 +2693,14 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "NLIO MEETING",
-          "styleconsollidated": "Neurolens Meeting",
-          "Type Revised": "Occupational",
-          "lensbrand": "Newton",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "NLIOMEETING",
-          "styleconsollidated": "Neurolens Meeting",
-          "Type Revised": "Occupational",
-          "lensbrand": "Newton",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "NEUROLENS OFFICE",
-          "styleconsollidated": "Neurolens Office",
-          "Type Revised": "Occupational",
-          "lensbrand": "Newton",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SEQUEL MEETING",
-          "styleconsollidated": "Sequel Meeting",
-          "Type Revised": "Occupational",
-          "lensbrand": "Newton",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SEQUEL COMPUTER",
-          "styleconsollidated": "Sequel Computer",
-          "Type Revised": "Occupational",
-          "lensbrand": "Newton",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "NEUROLENS PAL",
+          "lenstyle": "NLI PAL",
           "styleconsollidated": "Neurolens PAL",
           "Type Revised": "Progressive",
           "lensbrand": "Newton",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "NLI PAL",
+          "lenstyle": "NLI PAL 14",
           "styleconsollidated": "Neurolens PAL",
           "Type Revised": "Progressive",
           "lensbrand": "Newton",
@@ -2420,13 +2721,6 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "NEUROLENS SV",
-          "styleconsollidated": "Neurolens SV",
-          "Type Revised": "SV",
-          "lensbrand": "Newton",
-          "sourceSheet": "Export"
-        },
-        {
           "lenstyle": "NLI SV",
           "styleconsollidated": "Neurolens SV",
           "Type Revised": "SV",
@@ -2434,51 +2728,23 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "SEQUEL 38",
-          "styleconsollidated": "Sequel Anti-Fatigue",
-          "Type Revised": "SV",
+          "lenstyle": "NLIO COMPUTER",
+          "styleconsollidated": "Neurolens Computer",
+          "Type Revised": "Occupational",
           "lensbrand": "Newton",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "SEQUEL 67",
-          "styleconsollidated": "Sequel Anti-Fatigue",
-          "Type Revised": "SV",
+          "lenstyle": "NLIO MEETING",
+          "styleconsollidated": "Neurolens Meeting",
+          "Type Revised": "Occupational",
           "lensbrand": "Newton",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "SEQUEL PAL",
-          "styleconsollidated": "Sequel PAL",
-          "Type Revised": "Progressive",
-          "lensbrand": "Newton",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SEQUEL PAL 16",
-          "styleconsollidated": "Sequel PAL",
-          "Type Revised": "Progressive",
-          "lensbrand": "Newton",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SEQUEL PAL 18",
-          "styleconsollidated": "Sequel PAL",
-          "Type Revised": "Progressive",
-          "lensbrand": "Newton",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SEQUEL *",
-          "styleconsollidated": "Sequel SV",
-          "Type Revised": "SV",
-          "lensbrand": "Newton",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SEQUEL 0",
-          "styleconsollidated": "Sequel SV",
-          "Type Revised": "SV",
+          "lenstyle": "NLIOMEETING",
+          "styleconsollidated": "Neurolens Meeting",
+          "Type Revised": "Occupational",
           "lensbrand": "Newton",
           "sourceSheet": "Export"
         },
@@ -2490,479 +2756,227 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ATT III FASHN 15",
-          "styleconsollidated": "Attitude 3",
+          "lenstyle": "OVATION",
+          "styleconsollidated": "Ovation",
           "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lensbrand": "Essilor",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ATT III FASHN 18",
-          "styleconsollidated": "Attitude 3",
+          "lenstyle": "OVATION DS",
+          "styleconsollidated": "Ovagtion DS",
           "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lensbrand": "Essilor",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ATT III SPORT 18",
-          "styleconsollidated": "Attitude 3",
+          "lenstyle": "PHYSIO EXTN CE",
+          "styleconsollidated": "Physio Extn Classic",
           "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lensbrand": "Varilux",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ATT III SV",
-          "styleconsollidated": "Attitude 3 SV",
+          "lenstyle": "PHYSIO W3+",
+          "styleconsollidated": "Physio W3+",
+          "Type Revised": "Progressive",
+          "lensbrand": "Varilux",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "PHYSIO W3+ 2",
+          "styleconsollidated": "Physio W3+",
+          "Type Revised": "Progressive",
+          "lensbrand": "Varilux",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "PHYSIO W3+ EC",
+          "styleconsollidated": "Physio W3+",
+          "Type Revised": "Progressive",
+          "lensbrand": "Varilux",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "PHYSIO W3+ FIT",
+          "styleconsollidated": "Physio W3+ Fit",
+          "Type Revised": "Progressive",
+          "lensbrand": "Varilux",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "PLANO",
+          "styleconsollidated": "SV",
           "Type Revised": "SV",
-          "lensbrand": "Shamir",
+          "lensbrand": "Commodity",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "SHAMIR AUTOGRAPH",
-          "styleconsollidated": "Autograph",
+          "lenstyle": "PS EXTRA SO*T",
+          "styleconsollidated": "Platinum Series",
           "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lensbrand": "Artisan",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "AUTO II 11",
-          "styleconsollidated": "Autograph 2",
+          "lenstyle": "PS EXTRA SOFT",
+          "styleconsollidated": "Platinum Series",
           "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lensbrand": "Artisan",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "AUTO II 13",
-          "styleconsollidated": "Autograph 2",
+          "lenstyle": "PS EXTRA SOFT 16",
+          "styleconsollidated": "Platinum Series",
           "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lensbrand": "Artisan",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "AUTO II 15",
-          "styleconsollidated": "Autograph 2",
+          "lenstyle": "PS MOBILE",
+          "styleconsollidated": "Platinum Series",
           "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lensbrand": "Artisan",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "AUTO II 18",
-          "styleconsollidated": "Autograph 2",
+          "lenstyle": "PS MOBILE 14",
+          "styleconsollidated": "Platinum Series",
           "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lensbrand": "Artisan",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "AUTO II ATT *",
-          "styleconsollidated": "Autograph 2 Attitude",
+          "lenstyle": "PS MOBILE 15",
+          "styleconsollidated": "Platinum Series",
           "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lensbrand": "Artisan",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "AUTO II ATT 15",
-          "styleconsollidated": "Autograph 2",
+          "lenstyle": "PS MOBILE 16",
+          "styleconsollidated": "Platinum Series",
           "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lensbrand": "Artisan",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "AUTO II ATT 18",
-          "styleconsollidated": "Autograph 2",
+          "lenstyle": "PS MOBILE 17",
+          "styleconsollidated": "Platinum Series",
           "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lensbrand": "Artisan",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "AUTO2FIXED13P",
-          "styleconsollidated": "Autograph 2",
+          "lenstyle": "PS MOBILE 18",
+          "styleconsollidated": "Platinum Series",
           "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lensbrand": "Artisan",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "AUTOGRAPH II",
-          "styleconsollidated": "Autograph 2",
+          "lenstyle": "PS PLATEAU",
+          "styleconsollidated": "Platinum Series",
           "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lensbrand": "Artisan",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "AUTO II OFF",
-          "styleconsollidated": "Autograph 2 Office",
-          "Type Revised": "Occupational",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "AUTO II+ 11",
-          "styleconsollidated": "Autograph 2 Plus",
+          "lenstyle": "PS PLATEAU 16",
+          "styleconsollidated": "Platinum Series",
           "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lensbrand": "Artisan",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "AUTO II+ *",
-          "styleconsollidated": "Autograph 2 Plus",
+          "lenstyle": "PS PLATEAU 18",
+          "styleconsollidated": "Platinum Series",
           "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lensbrand": "Artisan",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "AUTO II *",
-          "styleconsollidated": "Autograph 2",
+          "lenstyle": "PS STEADY",
+          "styleconsollidated": "Platinum Series",
           "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lensbrand": "Artisan",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "AUTO II+ 13",
-          "styleconsollidated": "Autograph 2 Plus",
+          "lenstyle": "PS STEADY 14",
+          "styleconsollidated": "Platinum Series",
           "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lensbrand": "Artisan",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "AUTO II+ 15",
-          "styleconsollidated": "Autograph 2 Plus",
+          "lenstyle": "PS STEADY 15",
+          "styleconsollidated": "Platinum Series",
           "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lensbrand": "Artisan",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "AUTO II+ 18",
-          "styleconsollidated": "Autograph 2 Plus",
+          "lenstyle": "PS STEADY 16",
+          "styleconsollidated": "Platinum Series",
           "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lensbrand": "Artisan",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "AUTOGRAPH II+",
-          "styleconsollidated": "Autograph 2 Plus",
+          "lenstyle": "PS STEADY 17",
+          "styleconsollidated": "Platinum Series",
           "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lensbrand": "Artisan",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "AUTO II SV ATT",
-          "styleconsollidated": "Autograph 2 SV",
-          "Type Revised": "SV",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "AUTO II SV AW",
-          "styleconsollidated": "Autograph 2 SV",
-          "Type Revised": "SV",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "AUTO III 11",
-          "styleconsollidated": "Autograph 3",
+          "lenstyle": "PS STEADY 18",
+          "styleconsollidated": "Platinum Series",
           "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lensbrand": "Artisan",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "AUTO III 13",
-          "styleconsollidated": "Autograph 3",
+          "lenstyle": "PS ULTRA SHORT",
+          "styleconsollidated": "Platinum Series",
           "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lensbrand": "Artisan",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "AUTO III *",
-          "styleconsollidated": "Autograph 3",
+          "lenstyle": "PS*",
+          "styleconsollidated": "Platinum Series",
           "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lensbrand": "Artisan",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "AUTO III 15",
-          "styleconsollidated": "Autograph 3",
+          "lenstyle": "PSULTRSHT",
+          "styleconsollidated": "Platinum Series",
           "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lensbrand": "Artisan",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "AUTO III 18",
-          "styleconsollidated": "Autograph 3",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "AUTO III SV",
-          "styleconsollidated": "Autograph 3",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "AUTOGRAPH III",
-          "styleconsollidated": "Autograph 3",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "AUTOGRAPH3-VARSP",
-          "styleconsollidated": "Autograph 3",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "AUTO INTL",
-          "styleconsollidated": "Autograph Intelligence",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "AUTO INTL 11",
-          "styleconsollidated": "Autograph Intelligence",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "AUTO INTL 13",
-          "styleconsollidated": "Autograph Intelligence",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "AUTO INTL 15",
-          "styleconsollidated": "Autograph Intelligence",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "AUTO INTL 18",
-          "styleconsollidated": "Autograph Intelligence",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "AUTOINT-VAR",
-          "styleconsollidated": "Autograph Intelligence",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SHAMIR DRIVER IN",
-          "styleconsollidated": "Driver Intelligence PAL",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DRIVER INTL MOON",
-          "styleconsollidated": "Driver Intelligence Moon PAL",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DRIVER SV MOON",
-          "styleconsollidated": "Driver Intelligence Moon SV",
-          "Type Revised": "SV",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DRIVER INTL SUN",
-          "styleconsollidated": "Driver Intelligence Sun PAL",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "DRIVER SV SUN",
-          "styleconsollidated": "Driver Intelligence Sun SV",
-          "Type Revised": "SV",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SHAMIR DUO",
-          "styleconsollidated": "Duo",
+          "lenstyle": "RD22",
+          "styleconsollidated": "Round Seg",
           "Type Revised": "Multifocal",
-          "lensbrand": "Shamir",
+          "lensbrand": "Commodity",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ELEMENT",
-          "styleconsollidated": "Element",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
+          "lenstyle": "RD24",
+          "styleconsollidated": "Round Seg",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Commodity",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ELEMENT SHORT",
-          "styleconsollidated": "Element",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SHAMIR FIRST PAL",
-          "styleconsollidated": "First PAL",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "GENESIS HD",
-          "styleconsollidated": "Genesis HD",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SHAMIR GOLF",
-          "styleconsollidated": "Golf",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SHAMIR GOLF SV",
-          "styleconsollidated": "Golf SV",
-          "Type Revised": "SV",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "INTOUCH 15",
-          "styleconsollidated": "InTouch",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "INTOUCH *",
-          "styleconsollidated": "InTouch",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "INTOUCH 18",
-          "styleconsollidated": "InTouch",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SHAMIR RELAX",
-          "styleconsollidated": "Relax",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SHAMIR RELAX 50",
-          "styleconsollidated": "Relax",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SHAMIR RELAX 80",
-          "styleconsollidated": "Relax",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SHAMIRSV",
-          "styleconsollidated": "Shamir SV",
-          "Type Revised": "SV",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SPECTRUM *",
-          "styleconsollidated": "Spectrum",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SPECTRUM 14",
-          "styleconsollidated": "Spectrum",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SPECTRUM 16",
-          "styleconsollidated": "Spectrum",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SPECTRUM+ *",
-          "styleconsollidated": "Spectrum Plus",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SPECTRUM 18",
-          "styleconsollidated": "Spectrum",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SPECTRUM+ 14",
-          "styleconsollidated": "Spectrum Plus",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SPECTRUM+ 16",
-          "styleconsollidated": "Spectrum Plus",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SPECTRUM+ 18",
-          "styleconsollidated": "Spectrum Plus",
-          "Type Revised": "Progressive",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SPECTRUM SV",
-          "styleconsollidated": "Spectrum SV",
-          "Type Revised": "SV",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SHAMIR COMPUTER",
-          "styleconsollidated": "Workspace/Comptuer",
-          "Type Revised": "Occupational",
-          "lensbrand": "Shamir",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SHAMIR WORKSPACE",
-          "styleconsollidated": "Workspace/Comptuer",
-          "Type Revised": "Occupational",
-          "lensbrand": "Shamir",
+          "lenstyle": "RD28",
+          "styleconsollidated": "Round Seg",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Commodity",
           "sourceSheet": "Export"
         },
         {
@@ -3001,35 +3015,602 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "TOKAI AS SV *",
-          "styleconsollidated": "AS SV",
-          "Type Revised": "SV",
-          "lensbrand": "Tokai",
+          "lenstyle": "SD CONCEPT *",
+          "styleconsollidated": "Concept",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Artisan",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "Bi-AS *",
+          "lenstyle": "SD CONCEPT 100",
+          "styleconsollidated": "Concept",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SD CONCEPT 125",
+          "styleconsollidated": "Concept",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SD CONCEPT 50",
+          "styleconsollidated": "Concept",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SD CONCEPT 75",
+          "styleconsollidated": "Concept",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SD DIGITAL SV",
+          "styleconsollidated": "Digital SV",
+          "Type Revised": "Enhanced SV",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SD RADIUS",
+          "styleconsollidated": "Radius",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SD RADIUS 16",
+          "styleconsollidated": "Radius",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SD RADIUS 18",
+          "styleconsollidated": "Radius",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SD REACH *",
+          "styleconsollidated": "Reach",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SD REACH 13",
+          "styleconsollidated": "Reach",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SD REACH 20",
+          "styleconsollidated": "Reach",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SD REACH 40",
+          "styleconsollidated": "Reach",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SD REACH 60",
+          "styleconsollidated": "Reach",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SD REACH S 13",
+          "styleconsollidated": "Reach",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SD REACH S 20",
+          "styleconsollidated": "Reach",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SD REACH S 40",
+          "styleconsollidated": "Reach",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SD REACH S 60",
+          "styleconsollidated": "Reach",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Artisan",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SEQUEL *",
+          "styleconsollidated": "Sequel SV",
+          "Type Revised": "SV",
+          "lensbrand": "Newton",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SEQUEL 0",
+          "styleconsollidated": "Sequel SV",
+          "Type Revised": "SV",
+          "lensbrand": "Newton",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SEQUEL 38",
+          "styleconsollidated": "Sequel Anti-Fatigue",
+          "Type Revised": "SV",
+          "lensbrand": "Newton",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SEQUEL 67",
+          "styleconsollidated": "Sequel Anti-Fatigue",
+          "Type Revised": "SV",
+          "lensbrand": "Newton",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SEQUEL COMPUTER",
+          "styleconsollidated": "Sequel Meeting/Computer",
+          "Type Revised": "Occupational",
+          "lensbrand": "Newton",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SEQUEL MEETING",
+          "styleconsollidated": "Sequel Meeting/Computer",
+          "Type Revised": "Occupational",
+          "lensbrand": "Newton",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SEQUEL PAL",
+          "styleconsollidated": "Sequel PAL",
+          "Type Revised": "Progressive",
+          "lensbrand": "Newton",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SEQUEL PAL 14",
+          "styleconsollidated": "Sequel PAL",
+          "Type Revised": "Progressive",
+          "lensbrand": "Newton",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SEQUEL PAL 16",
+          "styleconsollidated": "Sequel PAL",
+          "Type Revised": "Progressive",
+          "lensbrand": "Newton",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SEQUEL PAL 18",
+          "styleconsollidated": "Sequel PAL",
+          "Type Revised": "Progressive",
+          "lensbrand": "Newton",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SEQUEL PAL 20",
+          "styleconsollidated": "Sequel PAL",
+          "Type Revised": "Progressive",
+          "lensbrand": "Newton",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SHAMIR AUTOGRAPH",
+          "styleconsollidated": "Autograph",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SHAMIR COMPUTER",
+          "styleconsollidated": "Workspace/Comptuer",
+          "Type Revised": "Occupational",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SHAMIR DRIVER IN",
+          "styleconsollidated": "Driver Intelligence PAL",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SHAMIR DUO",
+          "styleconsollidated": "Duo",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SHAMIR FIRST PAL",
+          "styleconsollidated": "First PAL",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SHAMIR GOLF",
+          "styleconsollidated": "Golf",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SHAMIR GOLF SV",
+          "styleconsollidated": "Golf SV",
+          "Type Revised": "SV",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SHAMIR RELAX",
+          "styleconsollidated": "Relax",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SHAMIR RELAX 50",
+          "styleconsollidated": "Relax",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SHAMIR RELAX 80",
+          "styleconsollidated": "Relax",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SHAMIR WORKSPACE",
+          "styleconsollidated": "Workspace/Comptuer",
+          "Type Revised": "Occupational",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SHAMIRSV",
+          "styleconsollidated": "Shamir SV",
+          "Type Revised": "SV",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SPECTRA COMP 13",
+          "styleconsollidated": "Spectra Comp",
+          "Type Revised": "Occupational",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SPECTRA COMP 20",
+          "styleconsollidated": "Spectra Comp",
+          "Type Revised": "Occupational",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SPECTRA COMP 40",
+          "styleconsollidated": "Spectra Comp",
+          "Type Revised": "Occupational",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SPECTRA COMP 60",
+          "styleconsollidated": "Spectra Comp",
+          "Type Revised": "Occupational",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SPECTRA CUSTOM",
+          "styleconsollidated": "Spectra Custom",
+          "Type Revised": "Progressive",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SPECTRA ELITE",
+          "styleconsollidated": "Spectra Elite",
+          "Type Revised": "Progressive",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SPECTRA ST28",
+          "styleconsollidated": "Spectra ST28",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SPECTRA SV",
+          "styleconsollidated": "Spectra SV",
+          "Type Revised": "SV",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SPECTRUM *",
+          "styleconsollidated": "Spectrum",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SPECTRUM 14",
+          "styleconsollidated": "Spectrum",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SPECTRUM 16",
+          "styleconsollidated": "Spectrum",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SPECTRUM 18",
+          "styleconsollidated": "Spectrum",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SPECTRUM SV",
+          "styleconsollidated": "Spectrum SV",
+          "Type Revised": "SV",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SPECTRUM+ *",
+          "styleconsollidated": "Spectrum Plus",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SPECTRUM+ 14",
+          "styleconsollidated": "Spectrum Plus",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SPECTRUM+ 16",
+          "styleconsollidated": "Spectrum Plus",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SPECTRUM+ 18",
+          "styleconsollidated": "Spectrum Plus",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ST28",
+          "styleconsollidated": "ST28",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ST35",
+          "styleconsollidated": "ST35",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ST45",
+          "styleconsollidated": "ST45",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "STT10X35",
+          "styleconsollidated": "Trifocal 10x35",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "STT7X28",
+          "styleconsollidated": "Trifocal 7x28",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "STT8X35",
+          "styleconsollidated": "Trifocal 8x35",
+          "Type Revised": "Multifocal",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SUMMIT CD",
+          "styleconsollidated": "Summit",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SUMMIT CD BKS",
+          "styleconsollidated": "Summit BKS",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SUMMIT CD IQ",
+          "styleconsollidated": "Summit iQ",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SUMMIT ECP",
+          "styleconsollidated": "Summit",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SUMMIT ECP BKS",
+          "styleconsollidated": "Summit BKS",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SUMMIT ECP IQ",
+          "styleconsollidated": "Summit iQ",
+          "Type Revised": "Progressive",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SUN INTL",
+          "styleconsollidated": "Driver Intelligence PAL Day",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SUN INTL 18",
+          "styleconsollidated": "Driver Intelligence PAL Day",
+          "Type Revised": "Progressive",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SUN INTL SV",
+          "styleconsollidated": "Driver Intelligence SV Day",
+          "Type Revised": "SV",
+          "lensbrand": "Shamir",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SV",
+          "styleconsollidated": "SV",
+          "Type Revised": "SV",
+          "lensbrand": "Commodity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SV IQ",
+          "styleconsollidated": "SV IQ",
+          "Type Revised": "SV",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SYNC III *",
+          "styleconsollidated": "SYNC 3",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SYNC III 13",
+          "styleconsollidated": "SYNC 3",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SYNC III 20",
+          "styleconsollidated": "SYNC 3",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SYNC III 5",
+          "styleconsollidated": "SYNC 3",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "SYNC III 9",
+          "styleconsollidated": "SYNC 3",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "TACT *",
+          "styleconsollidated": "TACT",
+          "Type Revised": "Occupational",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "TACT 40 BKS",
+          "styleconsollidated": "TACT",
+          "Type Revised": "Occupational",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "TACT 60 BKS",
+          "styleconsollidated": "TACT",
+          "Type Revised": "Occupational",
+          "lensbrand": "Hoya",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "TOKAI AS SV",
           "styleconsollidated": "Bi-AS",
           "Type Revised": "SV",
           "lensbrand": "Tokai",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "BI-AS C",
-          "styleconsollidated": "Bi-AS C",
-          "Type Revised": "SV",
-          "lensbrand": "Tokai",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "BI-AS S",
-          "styleconsollidated": "Bi-AS S",
-          "Type Revised": "SV",
-          "lensbrand": "Tokai",
-          "sourceSheet": "Export"
-        },
-        {
           "lenstyle": "TOKAI EASYONE *",
+          "styleconsollidated": "Easyone",
+          "Type Revised": "Progressive",
+          "lensbrand": "Tokai",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "TOKAI EASYONE 12",
           "styleconsollidated": "Easyone",
           "Type Revised": "Progressive",
           "lensbrand": "Tokai",
@@ -3043,7 +3624,14 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "TS 5X HM WD",
+          "lenstyle": "TS 5X DL 12",
+          "styleconsollidated": "TokaiSelect 5X",
+          "Type Revised": "Progressive",
+          "lensbrand": "Tokai",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "TS 5X DL 13",
           "styleconsollidated": "TokaiSelect 5X",
           "Type Revised": "Progressive",
           "lensbrand": "Tokai",
@@ -3057,22 +3645,15 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "TS 5X TW",
+          "lenstyle": "TS 5X HM WD",
           "styleconsollidated": "TokaiSelect 5X",
           "Type Revised": "Progressive",
           "lensbrand": "Tokai",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "TS 9X HM WD",
-          "styleconsollidated": "TokaiSelect 9X",
-          "Type Revised": "Progressive",
-          "lensbrand": "Tokai",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "TS 9X TW",
-          "styleconsollidated": "TokaiSelect 9X",
+          "lenstyle": "TS 5X TW",
+          "styleconsollidated": "TokaiSelect 5X",
           "Type Revised": "Progressive",
           "lensbrand": "Tokai",
           "sourceSheet": "Export"
@@ -3169,52 +3750,87 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ETHOS",
-          "styleconsollidated": "Ethos",
+          "lenstyle": "TS 9X HM WD",
+          "styleconsollidated": "TokaiSelect 9X",
           "Type Revised": "Progressive",
+          "lensbrand": "Tokai",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "TS 9X TW",
+          "styleconsollidated": "TokaiSelect 9X",
+          "Type Revised": "Progressive",
+          "lensbrand": "Tokai",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "UINITYVIAPRO5",
+          "styleconsollidated": "Via Pro",
+          "Type Revised": "Occupational",
           "lensbrand": "Unity",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ETHOS PLUS 14",
-          "styleconsollidated": "Ethos Plus",
-          "Type Revised": "Progressive",
-          "lensbrand": "Unity",
+          "lenstyle": "ULTIMATE B",
+          "styleconsollidated": "Ultimate B",
+          "Type Revised": "Multifocal",
+          "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ETHOS PLUS *",
-          "styleconsollidated": "Ethos Plus",
-          "Type Revised": "Progressive",
-          "lensbrand": "Unity",
+          "lenstyle": "ULTIMATE B 15",
+          "styleconsollidated": "Ultimate B",
+          "Type Revised": "Multifocal",
+          "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ETHOS PLUS 14 -",
-          "styleconsollidated": "Ethos Plus",
-          "Type Revised": "Progressive",
-          "lensbrand": "Unity",
+          "lenstyle": "ULTIMATE B 16",
+          "styleconsollidated": "Ultimate B",
+          "Type Revised": "Multifocal",
+          "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ETHOS PLUS 18",
-          "styleconsollidated": "Ethos Plus",
-          "Type Revised": "Progressive",
-          "lensbrand": "Unity",
+          "lenstyle": "ULTIMATE B 17",
+          "styleconsollidated": "Ultimate B",
+          "Type Revised": "Multifocal",
+          "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ETHOS PLUS 18 -",
-          "styleconsollidated": "Ethos Plus",
-          "Type Revised": "Progressive",
-          "lensbrand": "Unity",
+          "lenstyle": "ULTIMATE B 18",
+          "styleconsollidated": "Ultimate B",
+          "Type Revised": "Multifocal",
+          "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ETHOS PLUS B 18",
-          "styleconsollidated": "Ethos Plus",
-          "Type Revised": "Progressive",
-          "lensbrand": "Unity",
+          "lenstyle": "ULTIMATE B VARIA",
+          "styleconsollidated": "Ultimate B",
+          "Type Revised": "Multifocal",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ULTIMATE D *",
+          "styleconsollidated": "Ultimate B",
+          "Type Revised": "Multifocal",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ULTIMATE F *",
+          "styleconsollidated": "Ultimate B",
+          "Type Revised": "Multifocal",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "ULTIMATE N *",
+          "styleconsollidated": "Ultimate B",
+          "Type Revised": "Multifocal",
+          "lensbrand": "IOT",
           "sourceSheet": "Export"
         },
         {
@@ -3246,13 +3862,6 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "UNITY RELIEVE 50",
-          "styleconsollidated": "Relieve",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Unity",
-          "sourceSheet": "Export"
-        },
-        {
           "lenstyle": "Unity Relieve *",
           "styleconsollidated": "Relieve",
           "Type Revised": "Anti-Fatigue",
@@ -3260,14 +3869,14 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "UNITY RELIEVE 70",
+          "lenstyle": "UNITY RELIEVE 50",
           "styleconsollidated": "Relieve",
           "Type Revised": "Anti-Fatigue",
           "lensbrand": "Unity",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "UNITYREL70",
+          "lenstyle": "UNITY RELIEVE 70",
           "styleconsollidated": "Relieve",
           "Type Revised": "Anti-Fatigue",
           "lensbrand": "Unity",
@@ -3302,62 +3911,6 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "UNITY3",
-          "styleconsollidated": "V3",
-          "Type Revised": "Progressive",
-          "lensbrand": "Unity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "UNITY3 14",
-          "styleconsollidated": "V3",
-          "Type Revised": "Progressive",
-          "lensbrand": "Unity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "UNITY3 ELITE",
-          "styleconsollidated": "V3 Elite",
-          "Type Revised": "Progressive",
-          "lensbrand": "Unity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "UNITY3 ELITE 16",
-          "styleconsollidated": "V3 Elite",
-          "Type Revised": "Progressive",
-          "lensbrand": "Unity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "UNITY3 ELITE 18",
-          "styleconsollidated": "V3 Elite",
-          "Type Revised": "Progressive",
-          "lensbrand": "Unity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "UNITY3 PLUS",
-          "styleconsollidated": "V3 Plus",
-          "Type Revised": "Progressive",
-          "lensbrand": "Unity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "UNITY3 WRAP",
-          "styleconsollidated": "V3 Wrap",
-          "Type Revised": "Progressive",
-          "lensbrand": "Unity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "UNITY3 MOBILE",
-          "styleconsollidated": "V3 Mobile",
-          "Type Revised": "Progressive",
-          "lensbrand": "Unity",
-          "sourceSheet": "Export"
-        },
-        {
           "lenstyle": "UNITY VIA",
           "styleconsollidated": "Via",
           "Type Revised": "Progressive",
@@ -3379,22 +3932,15 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "UNITY VIA MBL",
-          "styleconsollidated": "Via",
+          "lenstyle": "UNITY VIA ELITE",
+          "styleconsollidated": "Via Elite",
           "Type Revised": "Progressive",
           "lensbrand": "Unity",
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "UNITY VIA WRP",
-          "styleconsollidated": "Via",
-          "Type Revised": "Progressive",
-          "lensbrand": "Unity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "UNITYVIAWRAPII",
-          "styleconsollidated": "Via",
+          "lenstyle": "UNITY VIA ELT VR",
+          "styleconsollidated": "Via Elite VR",
           "Type Revised": "Progressive",
           "lensbrand": "Unity",
           "sourceSheet": "Export"
@@ -3407,22 +3953,120 @@
           "sourceSheet": "Export"
         },
         {
+          "lenstyle": "UNITY VIA MBL",
+          "styleconsollidated": "Via",
+          "Type Revised": "Progressive",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "UNITY VIA PLS",
+          "styleconsollidated": "Via PLS",
+          "Type Revised": "Progressive",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "UNITY VIA PLS 12",
+          "styleconsollidated": "Via PLS",
+          "Type Revised": "Progressive",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "UNITY VIA PLS 15",
+          "styleconsollidated": "Via PLS",
+          "Type Revised": "Progressive",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "UNITY VIA WRP",
+          "styleconsollidated": "Via",
+          "Type Revised": "Progressive",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "UNITY3",
+          "styleconsollidated": "V3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "UNITY3 14",
+          "styleconsollidated": "V3",
+          "Type Revised": "Progressive",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "UNITY3 ELITE",
+          "styleconsollidated": "V3 Elite",
+          "Type Revised": "Progressive",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "UNITY3 ELITE 12",
+          "styleconsollidated": "V3 Elite",
+          "Type Revised": "Progressive",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "UNITY3 ELITE 14",
+          "styleconsollidated": "V3 Elite",
+          "Type Revised": "Progressive",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "UNITY3 ELITE 16",
+          "styleconsollidated": "V3 Elite",
+          "Type Revised": "Progressive",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "UNITY3 ELITE 18",
+          "styleconsollidated": "V3 Elite",
+          "Type Revised": "Progressive",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "UNITY3 MOBILE",
+          "styleconsollidated": "V3 Mobile",
+          "Type Revised": "Progressive",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "UNITY3 PLUS",
+          "styleconsollidated": "V3 Plus",
+          "Type Revised": "Progressive",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "UNITY3 WRAP",
+          "styleconsollidated": "V3 Wrap",
+          "Type Revised": "Progressive",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "UNITYREL70",
+          "styleconsollidated": "Relieve",
+          "Type Revised": "Anti-Fatigue",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
           "lenstyle": "UNITYVIA2",
           "styleconsollidated": "Via 2",
-          "Type Revised": "Progressive",
-          "lensbrand": "Unity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "UNITYVIAII",
-          "styleconsollidated": "Via 2",
-          "Type Revised": "Progressive",
-          "lensbrand": "Unity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "UNITY VIA ELITE",
-          "styleconsollidated": "Via Elite",
           "Type Revised": "Progressive",
           "lensbrand": "Unity",
           "sourceSheet": "Export"
@@ -3463,15 +4107,15 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "UNITY VIA ELT VR",
-          "styleconsollidated": "Via Elite VR",
+          "lenstyle": "UNITYVIAII",
+          "styleconsollidated": "Via 2",
           "Type Revised": "Progressive",
           "lensbrand": "Unity",
           "sourceSheet": "Export"
         },
         {
           "lenstyle": "UNITYVIAMOBII",
-          "styleconsollidated": "Via Mobile",
+          "styleconsollidated": "Via Mobile 2",
           "Type Revised": "Progressive",
           "lensbrand": "Unity",
           "sourceSheet": "Export"
@@ -3491,27 +4135,6 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "UNITY VIA PLS",
-          "styleconsollidated": "Via PLS",
-          "Type Revised": "Progressive",
-          "lensbrand": "Unity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "UNITY VIA PLS 12",
-          "styleconsollidated": "Via PLS",
-          "Type Revised": "Progressive",
-          "lensbrand": "Unity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "UNITY VIA PLS 15",
-          "styleconsollidated": "Via PLS",
-          "Type Revised": "Progressive",
-          "lensbrand": "Unity",
-          "sourceSheet": "Export"
-        },
-        {
           "lenstyle": "UNITYVIAPLU2",
           "styleconsollidated": "Via Plus",
           "Type Revised": "Progressive",
@@ -3522,13 +4145,6 @@
           "lenstyle": "UNITYVIAPLUSII",
           "styleconsollidated": "Via Plus 2",
           "Type Revised": "Progressive",
-          "lensbrand": "Unity",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "UINITYVIAPRO5",
-          "styleconsollidated": "Via Pro",
-          "Type Revised": "Occupational",
           "lensbrand": "Unity",
           "sourceSheet": "Export"
         },
@@ -3554,6 +4170,20 @@
           "sourceSheet": "Export"
         },
         {
+          "lenstyle": "UNITYVIAWRAPII",
+          "styleconsollidated": "Via Wrap 2",
+          "Type Revised": "Progressive",
+          "lensbrand": "Unity",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "UNIVERSAL B 18",
+          "styleconsollidated": "Unviersal B",
+          "Type Revised": "Progressive",
+          "lensbrand": "IOT",
+          "sourceSheet": "Export"
+        },
+        {
           "lenstyle": "VARILUX COMFORT",
           "styleconsollidated": "Comfort",
           "Type Revised": "Progressive",
@@ -3561,120 +4191,8 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "VX COMFORT 2 SHT",
-          "styleconsollidated": "Comfort 2",
-          "Type Revised": "Progressive",
-          "lensbrand": "Varilux",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "COMFORT DRX",
-          "styleconsollidated": "Comfort DRx",
-          "Type Revised": "Progressive",
-          "lensbrand": "Varilux",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "COMFORT S DRX",
-          "styleconsollidated": "Comfort DRx",
-          "Type Revised": "Progressive",
-          "lensbrand": "Varilux",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "COMFORT MAX",
-          "styleconsollidated": "Comfort Max",
-          "Type Revised": "Progressive",
-          "lensbrand": "Varilux",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "COMFORT MAX FIT",
-          "styleconsollidated": "Comfort Max",
-          "Type Revised": "Progressive",
-          "lensbrand": "Varilux",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "COMFORT W2+",
-          "styleconsollidated": "Comfort W2+",
-          "Type Revised": "Progressive",
-          "lensbrand": "Varilux",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "COMFORT W2+ FIT",
-          "styleconsollidated": "Comfort W2+",
-          "Type Revised": "Progressive",
-          "lensbrand": "Varilux",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "EYEZEN+ 0 1.74 W",
-          "styleconsollidated": "Eyezen+",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Essilor",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "EYEZEN+ 1",
-          "styleconsollidated": "Eyezen+",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Essilor",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "EYEZEN+ 2",
-          "styleconsollidated": "Eyezen+",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Essilor",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "EYEZEN+ 2 - BLUE",
-          "styleconsollidated": "Eyezen+",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Essilor",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "EYEZEN+ 3",
-          "styleconsollidated": "Eyezen+",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Essilor",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "EYEZEN+ 3 1.67 -",
-          "styleconsollidated": "Eyezen+",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Essilor",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "EYEZEN+ 4 - BLUE",
-          "styleconsollidated": "Eyezen+",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Essilor",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "EYEZEN+ 4 - CLEA",
-          "styleconsollidated": "Eyezen+",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Essilor",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "EYEZEN+ 4 1.67 -",
-          "styleconsollidated": "Eyezen+",
-          "Type Revised": "Anti-Fatigue",
-          "lensbrand": "Essilor",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "NEW COMFORT",
-          "styleconsollidated": "New Comfort",
+          "lenstyle": "VARILUX PHYSIO D",
+          "styleconsollidated": "Physio DRx",
           "Type Revised": "Progressive",
           "lensbrand": "Varilux",
           "sourceSheet": "Export"
@@ -3694,6 +4212,48 @@
           "sourceSheet": "Export"
         },
         {
+          "lenstyle": "VARILUX S FIT DE",
+          "styleconsollidated": "S Fit",
+          "Type Revised": "Progressive",
+          "lensbrand": "Varilux",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "VARILUX X DESIGN",
+          "styleconsollidated": "X Design",
+          "Type Revised": "Progressive",
+          "lensbrand": "Varilux",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "VARILUX X FIT TE",
+          "styleconsollidated": "X Fit",
+          "Type Revised": "Progressive",
+          "lensbrand": "Varilux",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "VARILUX XR DESIG",
+          "styleconsollidated": "XR Design",
+          "Type Revised": "Progressive",
+          "lensbrand": "Varilux",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "VX COMFORT",
+          "styleconsollidated": "Comfort",
+          "Type Revised": "Progressive",
+          "lensbrand": "Varilux",
+          "sourceSheet": "Export"
+        },
+        {
+          "lenstyle": "VX COMFORT 2 SHT",
+          "styleconsollidated": "Comfort 2",
+          "Type Revised": "Progressive",
+          "lensbrand": "Varilux",
+          "sourceSheet": "Export"
+        },
+        {
           "lenstyle": "VX PHYSIO",
           "styleconsollidated": "Physio",
           "Type Revised": "Progressive",
@@ -3701,21 +4261,7 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "VARILUX PHYSIO D",
-          "styleconsollidated": "Physio DRx",
-          "Type Revised": "Progressive",
-          "lensbrand": "Varilux",
-          "sourceSheet": "Export"
-        },
-        {
           "lenstyle": "VX PHYSIO DRX",
-          "styleconsollidated": "Physio DRx",
-          "Type Revised": "Progressive",
-          "lensbrand": "Varilux",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "VX PHYSIO S DRX",
           "styleconsollidated": "Physio DRx",
           "Type Revised": "Progressive",
           "lensbrand": "Varilux",
@@ -3729,15 +4275,8 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "PHYSIO W3+ 2",
-          "styleconsollidated": "Physio W3+",
-          "Type Revised": "Progressive",
-          "lensbrand": "Varilux",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "PHYSIO W3+",
-          "styleconsollidated": "Physio W3+",
+          "lenstyle": "VX PHYSIO S DRX",
+          "styleconsollidated": "Physio DRx",
           "Type Revised": "Progressive",
           "lensbrand": "Varilux",
           "sourceSheet": "Export"
@@ -3750,29 +4289,8 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "PHYSIO W3+ FIT",
-          "styleconsollidated": "Physio W3+ Fit",
-          "Type Revised": "Progressive",
-          "lensbrand": "Varilux",
-          "sourceSheet": "Export"
-        },
-        {
           "lenstyle": "VX S DESIGN",
           "styleconsollidated": "S Design",
-          "Type Revised": "Progressive",
-          "lensbrand": "Varilux",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "VARILUX S FIT DE",
-          "styleconsollidated": "S Fit",
-          "Type Revised": "Progressive",
-          "lensbrand": "Varilux",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "VARILUX X DESIGN",
-          "styleconsollidated": "X Design",
           "Type Revised": "Progressive",
           "lensbrand": "Varilux",
           "sourceSheet": "Export"
@@ -3799,13 +4317,6 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "VARILUX X FIT TE",
-          "styleconsollidated": "X Fit",
-          "Type Revised": "Progressive",
-          "lensbrand": "Varilux",
-          "sourceSheet": "Export"
-        },
-        {
           "lenstyle": "VX X FIT",
           "styleconsollidated": "X Fit",
           "Type Revised": "Progressive",
@@ -3815,13 +4326,6 @@
         {
           "lenstyle": "VX X FIT TE",
           "styleconsollidated": "X Fit",
-          "Type Revised": "Progressive",
-          "lensbrand": "Varilux",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "VARILUX XR DESIG",
-          "styleconsollidated": "XR Design",
           "Type Revised": "Progressive",
           "lensbrand": "Varilux",
           "sourceSheet": "Export"
@@ -3848,17 +4352,10 @@
           "sourceSheet": "Export"
         },
         {
-          "lenstyle": "ADAGE",
-          "styleconsollidated": "Adage",
+          "lenstyle": "VX XR TRACK TE",
+          "styleconsollidated": "XR Track",
           "Type Revised": "Progressive",
-          "lensbrand": "Younger",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IMAGE",
-          "styleconsollidated": "Image",
-          "Type Revised": "Progressive",
-          "lensbrand": "Younger",
+          "lensbrand": "Varilux",
           "sourceSheet": "Export"
         },
         {
@@ -3867,95 +4364,11 @@
           "Type Revised": "Progressive",
           "lensbrand": "Zeiss",
           "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "SPECTRA SV",
-          "styleconsollidated": "Spectra SV",
-          "Type Revised": "SV",
-          "lensbrand": "Generic",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDLS3 *",
-          "styleconsollidated": "iD LifeStyle 3",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "LS3 SUN * I",
-          "styleconsollidated": "iD LifeStyle 3",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDLS3 * I",
-          "styleconsollidated": "iD LifeStyle 3",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDLS3 *R",
-          "styleconsollidated": "iD LifeStyle 3",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDLS3 *R I",
-          "styleconsollidated": "iD LifeStyle 3",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDLS4 *",
-          "styleconsollidated": "iD LifeStyle 4",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "LS4 SUN*",
-          "styleconsollidated": "iD LifeStyle 4",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "Largo WS *",
-          "styleconsollidated": "Largo WS",
-          "Type Revised": "Occupational",
-          "lensbrand": "Tokai",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "CAMBER PURE",
-          "styleconsollidated": "Camber Pure",
-          "Type Revised": "Progressive",
-          "lensbrand": "IOT",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "EVERYDAY",
-          "styleconsollidated": "Everyday",
-          "Type Revised": "Multifocal",
-          "lensbrand": "IOT",
-          "sourceSheet": "Export"
-        },
-        {
-          "lenstyle": "IDMS3",
-          "styleconsollidated": "iD MyStyle 3",
-          "Type Revised": "Progressive",
-          "lensbrand": "Hoya",
-          "sourceSheet": "Export"
         }
       ]
     },
     "materials": {
-      "filePath": "/Users/jimday/Documents/GitHub/artisan-site/private-source/portal/lookup_docs/Lookup_Mat.xlsx",
+      "filePath": "/Users/jimday/Documents/Codex/2026-08-26/ther/work/artisan-pricing-release/private-source/portal/lookup_docs/Lookup_Mat.xlsx",
       "workbookLabel": "private-source/portal/lookup_docs/Lookup_Mat.xlsx",
       "sheets": [
         {
@@ -4364,7 +4777,7 @@
       ]
     },
     "ar": {
-      "filePath": "/Users/jimday/Documents/GitHub/artisan-site/private-source/portal/lookup_docs/Lookup_AR.xlsx",
+      "filePath": "/Users/jimday/Documents/Codex/2026-08-26/ther/work/artisan-pricing-release/private-source/portal/lookup_docs/Lookup_AR.xlsx",
       "workbookLabel": "private-source/portal/lookup_docs/Lookup_AR.xlsx",
       "sheets": [
         {

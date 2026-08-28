@@ -1013,10 +1013,17 @@ async function buildPriceListPdf({
           color: RULE,
           thickness: 0.6,
         });
-        const hasStatus = row.outsourced || row.phasingOut;
         const designLabel = row.designStyle;
+        const statusLabels = [
+          ...(row.outsourced ? ([{ label: "Outsourced", color: MUTED, icon: "stopwatch" as const }] as const) : []),
+          ...(row.phasingOut ? ([{ label: "Phasing out", color: GOLD, icon: "hand" as const }] as const) : []),
+        ];
+        const statusWidths = statusLabels.map(({ label }) => regular.widthOfTextAtSize(label, 4.8) + 12);
+        const statusReserve = statusWidths.reduce((sum, width) => sum + width + 4, 0);
+        const designWidth = Math.max(44, (isAdgaList ? 152 : 194) - statusReserve);
+        const fittedDesignLabel = fitText(regular, designLabel, designWidth, 7.2);
         const values: Array<[string, number, number, PDFFont, typeof TEXT, number?]> = [
-          [designLabel, designTextX, isAdgaList ? 152 : 194, hasStatus ? bold : regular, TEXT, hasStatus ? 6.6 : 7.2],
+          [fittedDesignLabel, designTextX, designWidth, regular, TEXT, 7.2],
           ...(isAdgaList
             ? ([[row.priceGuideCode ?? "A6", guideColumnX, 34, bold, NAVY, 7.2]] as Array<[string, number, number, PDFFont, typeof TEXT, number?]>)
             : []),
@@ -1025,31 +1032,16 @@ async function buildPriceListPdf({
           const size = requestedSize ?? 7.2;
           page.drawText(fitText(font, value, width, size), {
             x,
-            y: y - (hasStatus && x === designTextX ? 9 : 13),
+            y: y - 13,
             size,
             font,
             color,
           });
         });
-        let statusX = designTextX;
-        const drawStatusBadge = (
-          label: string,
-          width: number,
-          color: typeof GOLD,
-          icon: "stopwatch" | "hand"
-        ) => {
-          const badgeY = y - 23;
-          page.drawRectangle({
-            x: statusX,
-            y: badgeY,
-            width,
-            height: 9,
-            color: SOFT_FILL,
-            borderColor: color,
-            borderWidth: 0.65,
-          });
+        let statusX = designTextX + regular.widthOfTextAtSize(fittedDesignLabel, 7.2) + 5;
+        const drawStatusMarker = (label: string, width: number, color: typeof GOLD, icon: "stopwatch" | "hand") => {
           const iconX = statusX + 7;
-          const iconY = badgeY + 4.2;
+          const iconY = y - 10.2;
           if (icon === "stopwatch") {
             page.drawEllipse({
               x: iconX,
@@ -1115,15 +1107,16 @@ async function buildPriceListPdf({
           }
           page.drawText(label, {
             x: statusX + 14,
-            y: badgeY + 2.1,
+            y: y - 12.2,
             size: 4.8,
             font: regular,
             color,
           });
           statusX += width + 4;
         };
-        if (row.outsourced) drawStatusBadge("Outsourced", 48, MUTED, "stopwatch");
-        if (row.phasingOut) drawStatusBadge("Phasing out", 47, GOLD, "hand");
+        statusLabels.forEach(({ label, color, icon }, index) =>
+          drawStatusMarker(label, statusWidths[index], color, icon)
+        );
         const priceValues = [
           [money(row.clear, mode), row.clearBasis, clearColumnX, 52],
           [money(row.photochromic, mode), row.photochromicBasis, photoColumnX, 52],

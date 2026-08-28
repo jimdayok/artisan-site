@@ -741,18 +741,24 @@ function sortDesignRows(
   });
 }
 
-function inlineMarker(label: string, recommended: boolean, outsourced: boolean) {
+function inlineMarker(label: string, recommended: boolean, outsourced: boolean, phasingOut = false) {
   return (
-    <span className="inline-flex items-center gap-1">
+    <span className="inline-flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
       <span>{label}</span>
       {recommended ? <span className="text-[#7a5a18]">★</span> : null}
       {outsourced ? (
         <span
           title="Produced by a specialty partner; additional turnaround time applies"
-          className="inline-flex items-center gap-1 rounded-full border border-[#b67a52] bg-[#fff7ef] px-2 py-0.5 text-[10px] font-normal tracking-wide text-[#7b4b2a]"
+          className="inline-flex items-center gap-1 text-[10px] font-normal text-[#7b4b2a]"
         >
           <Timer aria-hidden="true" className="h-3 w-3 shrink-0 stroke-[1.7]" />
           Outsourced
+        </span>
+      ) : null}
+      {phasingOut ? (
+        <span className="inline-flex items-center gap-1 text-[10px] font-normal text-[#7a5a18]">
+          <Hand aria-hidden="true" className="h-3 w-3 shrink-0 -rotate-12 stroke-[1.7]" />
+          Phasing out
         </span>
       ) : null}
     </span>
@@ -1448,6 +1454,9 @@ export default function InteractivePriceListDashboard({
                         <tbody>
                           {nested.rows.map((row, index) => {
                             const expanded = expandedId === row.id;
+                            const phasingOut = row.rows.some((entry) =>
+                              entry.serviceNotes.some((note) => /phasing out/i.test(note))
+                            );
                             return (
                               <Fragment key={row.id}>
                                 <tr className={index % 2 === 0 ? "bg-white/82" : "bg-[#fffaf2]/82"}>
@@ -1458,19 +1467,12 @@ export default function InteractivePriceListDashboard({
                                     {row.brand}
                                   </td>
                                   <td className="border-b border-r border-[#eadfce] px-3 py-2 font-semibold text-[#122033]">
-                                    {inlineMarker(normalizeDisplayName(row.designStyle), row.recommended, row.outsourced)}
-                                    {row.outsourced ? (
-                                      <span className="mt-1 flex items-center gap-1 text-[10px] font-normal text-[#8a4f28]">
-                                        <Timer aria-hidden="true" className="h-3 w-3 shrink-0 stroke-[1.7]" />
-                                        Outsourced - additional turnaround time
-                                      </span>
-                                    ) : null}
-                                    {row.rows.some((entry) => entry.serviceNotes.some((note) => /phasing out/i.test(note))) ? (
-                                      <span className="mt-1 flex items-center gap-1 text-[10px] font-normal text-[#7a5a18]">
-                                        <Hand aria-hidden="true" className="h-3 w-3 shrink-0 -rotate-12 stroke-[1.7]" />
-                                        Phasing out
-                                      </span>
-                                    ) : null}
+                                    {inlineMarker(
+                                      normalizeDisplayName(row.designStyle),
+                                      row.recommended,
+                                      row.outsourced,
+                                      phasingOut
+                                    )}
                                   </td>
                                   {isAdgaList ? (
                                     <td className="border-b border-r border-[#eadfce] px-3 py-2 text-center font-black text-[#7a5a18]">

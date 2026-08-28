@@ -257,7 +257,7 @@ function ArLogoCards({ program }: { program: ProgramPageData }) {
         <SectionHeading
           eyebrow="Free Artisan AR Options"
           title="Choose the AR treatment that fits the patient."
-          body="During the promotional period, eligible non-Neurolens orders can include Artisan AR at no AR cost. Use the treatment pages below to help your team match the coating to the patient conversation."
+          body="During the promotional period, every qualifying progressive order may include any Artisan AR treatment at no AR cost. Use the treatment pages below to match the coating to the patient conversation."
         />
         <Link
           href="/artisan-ar"
@@ -303,7 +303,7 @@ function ArLogoCards({ program }: { program: ProgramPageData }) {
       </div>
       <div className="mt-6 rounded-[8px] border border-[#d8c6a8] bg-white p-5 shadow-[0_18px_50px_rgba(49,39,26,0.06)]">
         <p className="text-sm leading-7 text-[#62584d]">
-          Each Artisan AR option includes a 2 year warranty. Eligible promotion orders may use any Artisan AR treatment, including Nytopia, Armour, Azure, and Emerald, subject to program requirements.
+          Every Artisan AR option includes a 2-year warranty. Qualifying progressive orders may use Nytopia, Armour, Azure, Emerald, or any other Artisan AR treatment. Non-Artisan AR treatments are not included.
         </p>
       </div>
     </div>
@@ -321,7 +321,7 @@ export default function ProgramLandingPage({ program }: { program: ProgramPageDa
     {
       question: "Can this be combined with other programs?",
       answer:
-        "Only one Artisan promotional program may be used at a time unless approved in writing.",
+        "No. A practice may enroll in only one Artisan promotional program at a time.",
     },
     {
       question: "How long does the program last?",
@@ -332,6 +332,7 @@ export default function ProgramLandingPage({ program }: { program: ProgramPageDa
       answer:
         "Use the enrollment form on this page. The program code is included automatically in the Typeform link.",
     },
+    ...(program.additionalFaqs ?? []),
   ];
 
   return (
@@ -354,6 +355,11 @@ export default function ProgramLandingPage({ program }: { program: ProgramPageDa
             <p className="mt-6 max-w-3xl text-lg leading-8 text-white/78 md:text-xl">
               {program.subheadline}
             </p>
+            {program.capacityNote ? (
+              <div className="mt-7 max-w-3xl rounded-[18px] border border-[#d4c09a]/55 bg-[#d4c09a]/12 px-5 py-4 text-sm font-semibold leading-6 text-[#fff7e8] shadow-[0_16px_40px_rgba(0,0,0,0.18)] backdrop-blur-md">
+                {program.capacityNote}
+              </div>
+            ) : null}
             <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <CtaLink href={href}>{program.primaryCta}</CtaLink>
               {program.secondaryCta ? (

@@ -41,6 +41,11 @@ export type ProgramPageData = {
   detailsTitle: string;
   details: string[];
   restrictions: string[];
+  capacityNote?: string;
+  additionalFaqs?: {
+    question: string;
+    answer: string;
+  }[];
   extraSection?: {
     eyebrow: string;
     title: string;
@@ -286,12 +291,12 @@ export const programs: ProgramPageData[] = [
     slug: "neurolens-free-ar",
     route: "/programs/neurolens-arNL26",
     eyebrow: "Neurolens Customer Promotion",
-    headline: "Try Artisan AR on Non-Neurolens Orders at No Cost",
+    headline: "Unlimited Free Artisan AR for 90 Days",
     subheadline:
-      "For invited Neurolens customers, Artisan is offering free AR on eligible non-Neurolens orders for 60 days.",
+      "Use the offer as much as you want for 90 days: pair any progressive lens with any Artisan AR treatment and the AR is free.",
     primaryCta: "Enroll in Neurolens Free AR",
-    programCode: "ARNL26",
-    offerValue: "Free AR for 60 Days",
+    programCode: "SSAR26",
+    offerValue: "90 Days Free AR",
     logo: {
       src: "/logos/Neurolens_RGB_Primary-Brandmark_Color.png",
       alt: "Neurolens",
@@ -299,21 +304,21 @@ export const programs: ProgramPageData[] = [
     heroImage: "/images/neurolens-free-ar-hero.jpg",
     opportunityTitle: "Expand your Artisan AR experience beyond Neurolens.",
     opportunityBody:
-      "Invited Neurolens customers can try Artisan AR treatments on eligible non-Neurolens orders with no AR cost during the promotional period.",
+      "Invited Neurolens customers can use any Artisan AR treatment on qualifying progressive lens orders at no AR cost for 90 days, with no limit on qualifying orders.",
     keyPoints: [
-      "Free Artisan AR on eligible non-Neurolens orders for 60 days",
-      "Any Artisan AR",
-      "Any eligible non-Neurolens product",
-      "No AR cost during the promotional period",
+      "Unlimited qualifying orders for 90 days",
+      "Any progressive lens paired with any Artisan AR treatment",
+      "Any Artisan AR qualifies",
+      "Single vision and lined multifocal orders are excluded",
     ],
-    offerTitle: "Free Artisan AR on eligible orders.",
+    offerTitle: "Use it as much as you want for 90 days.",
     offerBody:
-      "Free Artisan AR on eligible non-Neurolens orders for 60 days.",
+      "Choose any progressive lens and pair it with any Artisan AR treatment. The AR charge is waived on every qualifying order during your 90-day promotional period.",
     offerBullets: [
-      "Program code ARNL26",
-      "Free Artisan AR on eligible non-Neurolens orders for 60 days",
-      "Any Artisan AR",
-      "Any eligible non-Neurolens product",
+      "Program code SSAR26",
+      "Unlimited qualifying progressive orders for 90 days",
+      "Any Artisan AR treatment qualifies",
+      "Single vision and lined multifocal orders are excluded",
     ],
     arLogos: [
       {
@@ -348,16 +353,33 @@ export const programs: ProgramPageData[] = [
     detailsTitle: "Requirements",
     details: [
       "Must be a Neurolens customer",
-      "Must order products with Artisan AR treatments",
+      "Each qualifying order must include a progressive lens and an Artisan AR treatment",
+      "Any Artisan AR treatment qualifies",
       "Must be assigned to standard price list",
-      "No additional rebates or promotional programs may be combined",
+      "Program pricing is based on your Artisan pricing; check current pricing in the portal",
     ],
     restrictions: [
-      "Applies only to eligible non-Neurolens orders.",
-      "No AR cost applies only during the promotional period.",
-      "Only one Artisan promotional program may be used at a time unless approved in writing.",
+      "Only progressive lens orders are included; single vision and lined multifocal orders are excluded.",
+      "The order must use an Artisan AR treatment. Non-Artisan AR treatments do not qualify.",
+      "The AR charge is waived only during the 90-day promotional period.",
+      "A practice may enroll in only one Artisan promotional program at a time.",
     ],
-    faqDuration: "The promotion lasts 60 days for eligible invited Neurolens customers.",
+    capacityNote: "Only 10 new practices will be accepted this month. Enroll before all available spots are filled.",
+    additionalFaqs: [
+      {
+        question: "How is my program pricing determined?",
+        answer: "Your program pricing is based on your Artisan pricing. Sign in to the Artisan portal to review your current pricing.",
+      },
+      {
+        question: "Where can I monitor program usage and time remaining?",
+        answer: "Your Artisan portal shows program usage and the days or months remaining in your promotional period.",
+      },
+      {
+        question: "Which lens and AR combinations qualify?",
+        answer: "Any progressive lens paired with any Artisan AR treatment qualifies. Single vision and lined multifocal orders are excluded, and non-Artisan AR treatments cannot be used with this promotion.",
+      },
+    ],
+    faqDuration: "The promotion lasts 90 days from activation and may be used without an order limit on qualifying progressive lens orders.",
   },
 ];
 

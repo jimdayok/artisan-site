@@ -5,7 +5,6 @@ import {
   Building2,
   CircleDollarSign,
   ClipboardCopy,
-  Download,
   FileText,
   Package,
   Search,
@@ -18,6 +17,7 @@ import {
 import { AdminCopyButton } from "@/app/portal/admin/AdminCopyButton";
 import AdminRepReview from "@/app/portal/AdminRepReview";
 import { AdminShell, adminButtonClass } from "@/app/portal/admin/AdminShell";
+import PdfDownloadButton from "@/src/components/private-price/PdfDownloadButton";
 import {
   getDashboardV1AdminRows,
   getDashboardV1Manifest,
@@ -371,13 +371,13 @@ function SalesRepResourceCenter({
                     Open Online
                   </Link>
                   {downloadHref ? (
-                    <a
+                    <PdfDownloadButton
                       href={downloadHref}
+                      fallbackFilename={`artisan-${priceList.code.toLowerCase()}-price-list.pdf`}
                       className="inline-flex min-h-9 items-center gap-2 rounded-full bg-[#172a28] px-3 text-xs font-semibold text-white transition hover:bg-[#27433f]"
                     >
-                      <Download className="h-3.5 w-3.5" />
                       Download PDF
-                    </a>
+                    </PdfDownloadButton>
                   ) : (
                     <span className="inline-flex min-h-9 items-center rounded-full border border-dashed border-[#d8c49b] px-3 text-xs font-semibold text-[#8b7650]">
                       PDF unavailable

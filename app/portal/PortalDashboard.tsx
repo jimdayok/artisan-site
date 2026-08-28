@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { forbidden } from "next/navigation";
+import PdfDownloadButton from "@/src/components/private-price/PdfDownloadButton";
 import {
   Activity,
   BadgeCheck,
@@ -641,12 +642,13 @@ function PriceListCard({
           </Link>
         ) : null}
         {canDownload ? (
-          <a
+          <PdfDownloadButton
             href={downloadHref}
-            className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#d8c49b] bg-[#fffaf1] px-5 py-2 text-sm font-semibold text-[#172a28] transition hover:bg-white"
+            fallbackFilename={`artisan-${priceList.code.toLowerCase()}-price-list.pdf`}
+            className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-[#d8c49b] bg-[#fffaf1] px-5 py-2 text-sm font-semibold text-[#172a28] transition hover:bg-white"
           >
             Download PDF
-          </a>
+          </PdfDownloadButton>
         ) : null}
       </div>
     </div>

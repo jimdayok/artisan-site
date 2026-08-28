@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { headers } from "next/headers";
-import { FileDown, FileText, ShieldCheck } from "lucide-react";
+import { FileText, ShieldCheck } from "lucide-react";
 import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
 import { getDashboardV1AdminRows } from "@/lib/portal/adminDashboardV1";
 import {
@@ -11,6 +11,7 @@ import {
 import { visiblePriceLists } from "@/lib/portal/priceLists";
 import { AdminAccessRequired } from "@/app/portal/admin/AdminShell";
 import ValueSystemRequirements from "@/app/portal/price-list/ValueSystemRequirements";
+import PdfDownloadButton from "@/src/components/private-price/PdfDownloadButton";
 
 export const dynamic = "force-dynamic";
 
@@ -65,7 +66,7 @@ export default async function EmployeePriceListsPage() {
                 {!priceList.generated && !priceList.r2Key ? <p className="mt-3 rounded-md border border-[#d8a15e] bg-[#fff7e8] p-3 text-xs leading-5 text-[#805519]">This assigned list does not have a generated or stored document yet.</p> : null}
                 <div className="mt-5 flex flex-wrap gap-2">
                   <Link href={onlineHref} className="inline-flex min-h-10 items-center gap-2 rounded-full bg-[#172a28] px-4 text-xs font-semibold text-white"><FileText className="h-4 w-4" /> Open online</Link>
-                  {downloadHref ? <Link href={downloadHref} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#c9af79] bg-white px-4 text-xs font-semibold text-[#172a28]"><FileDown className="h-4 w-4" /> Download PDF</Link> : null}
+                  {downloadHref ? <PdfDownloadButton href={downloadHref} fallbackFilename={`artisan-${priceList.code.toLowerCase()}-price-list.pdf`} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#c9af79] bg-white px-4 text-xs font-semibold text-[#172a28]">Download PDF</PdfDownloadButton> : null}
                 </div>
               </article>
             );

@@ -1,7 +1,5 @@
-"use client";
-
-import { FileDown } from "lucide-react";
 import type { EdgeMode, LensGroup, PriceBrand, PriceView } from "../../data/privatePriceList";
+import PdfDownloadButton from "./PdfDownloadButton";
 
 export type ExportFilters = {
   query: string;
@@ -32,34 +30,28 @@ export default function PDFExportButton({
   children?: React.ReactNode;
   disabled?: boolean;
 }) {
-  const exportPdf = () => {
-    if (disabled) return;
-    const params = new URLSearchParams({
-      mode,
-      scope,
-      query: filters.query,
-      brand: filters.brand,
-      lensGroup: filters.lensGroup,
-      materialId: filters.materialId,
-      edgeMode: filters.edgeMode,
-      priceView: filters.priceView,
-      excludeOutsourced: String(filters.excludeOutsourced),
-      packageOnly: String(filters.packageOnly),
-      coatingId: filters.coatingId,
-    });
-    if (selectedIds.length) params.set("selected", selectedIds.join(","));
-    window.open(`/portal/price-list/export?${params.toString()}`, "_blank", "noopener,noreferrer");
-  };
+  const params = new URLSearchParams({
+    mode,
+    scope,
+    query: filters.query,
+    brand: filters.brand,
+    lensGroup: filters.lensGroup,
+    materialId: filters.materialId,
+    edgeMode: filters.edgeMode,
+    priceView: filters.priceView,
+    excludeOutsourced: String(filters.excludeOutsourced),
+    packageOnly: String(filters.packageOnly),
+    coatingId: filters.coatingId,
+  });
+  if (selectedIds.length) params.set("selected", selectedIds.join(","));
 
   return (
-    <button
-      type="button"
-      onClick={exportPdf}
+    <PdfDownloadButton
+      href={`/portal/price-list/export?${params.toString()}`}
       disabled={disabled}
       className="inline-flex min-h-9 items-center justify-center gap-1.5 rounded-full border border-[#d7c5a8] bg-white px-3 text-xs font-bold text-[#122033] transition hover:bg-[#eadcc6] disabled:cursor-not-allowed disabled:opacity-45"
     >
-      <FileDown className="h-3.5 w-3.5" aria-hidden="true" />
       {children ?? `Export ${mode} PDF`}
-    </button>
+    </PdfDownloadButton>
   );
 }

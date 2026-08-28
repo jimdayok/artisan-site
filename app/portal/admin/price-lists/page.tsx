@@ -4,6 +4,7 @@ import { AdminAccessRequired, AdminShell, adminButtonClass } from "../AdminShell
 import { getPortalAdminEmailFromHeaders } from "@/lib/portal/admin";
 import { visiblePriceLists } from "@/lib/portal/priceLists";
 import styleMappingGaps from "@/lib/portal/generated/priceListStyleMappingGaps.json";
+import PdfDownloadButton from "@/src/components/private-price/PdfDownloadButton";
 
 export const dynamic = "force-dynamic";
 
@@ -182,16 +183,17 @@ export default async function AdminPriceListsPage() {
                         Open Online
                       </Link>
                       {row.generated || row.r2Key ? (
-                        <Link
+                        <PdfDownloadButton
                           href={
                             row.generated
                               ? `/portal/price-list/export?code=${encodeURIComponent(row.code)}&priceMode=edged`
                               : `/api/portal/download?code=${encodeURIComponent(row.code)}`
                           }
-                          className="inline-flex min-h-8 items-center rounded-full border border-[#d7c5a8] px-3 text-xs font-semibold text-[#122033] hover:bg-[#f8f1e6]"
+                          fallbackFilename={`artisan-${row.code.toLowerCase()}-price-list.pdf`}
+                          className="inline-flex min-h-8 items-center gap-1.5 rounded-full border border-[#d7c5a8] px-3 text-xs font-semibold text-[#122033] hover:bg-[#f8f1e6]"
                         >
                           Download PDF
-                        </Link>
+                        </PdfDownloadButton>
                       ) : null}
                     </div>
                   </td>

@@ -1,10 +1,11 @@
 import { headers } from "next/headers";
-import { FileDown, ShieldCheck } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import { getAuthorizedPriceListFromHeaders } from "@/lib/portal/priceListAccess";
 import { normalizeAssignedPriceListCodes } from "@/lib/portal/assignedPriceLists";
 import { OnlinePriceListShell } from "./OnlinePriceListShell";
 import PriceListAccessMessage from "./PriceListAccessMessage";
 import ValueSystemRequirements from "./ValueSystemRequirements";
+import PdfDownloadButton from "@/src/components/private-price/PdfDownloadButton";
 
 export default async function ValueSystemPriceListPage({
   previewAccountNumber,
@@ -52,12 +53,13 @@ export default async function ValueSystemPriceListPage({
                 finishing charges, shipping charges, and the same required ordering directions shown above.
               </p>
             </div>
-            <a
+            <PdfDownloadButton
               href={downloadHref}
+              fallbackFilename="artisan-vd-price-list.pdf"
               className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-[#122033] px-5 py-2 text-sm font-semibold text-white transition hover:bg-[#25364a] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#122033]"
             >
-              <FileDown className="h-4 w-4" aria-hidden="true" /> Download VD PDF
-            </a>
+              Download VD PDF
+            </PdfDownloadButton>
           </div>
         </section>
       </div>

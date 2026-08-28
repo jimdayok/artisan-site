@@ -7,6 +7,7 @@ import PricingHeader from "../../../src/components/private-price/PricingHeader";
 import type { PortalPriceList } from "@/lib/portal/priceLists";
 import PortalPriceListScrollReset from "./PortalPriceListScrollReset";
 import { priceListDisplayName } from "@/lib/pricing/priceListCodes";
+import PdfDownloadButton from "@/src/components/private-price/PdfDownloadButton";
 
 export async function OnlinePriceListShell({
   priceList,
@@ -211,12 +212,13 @@ export function PendingOnlinePriceList({ priceList }: { priceList: PortalPriceLi
             pricing is shown until validated source data is ready.
           </p>
           {priceList.r2Key ? (
-            <a
+            <PdfDownloadButton
               href={`/api/portal/download?code=${encodeURIComponent(priceList.code)}`}
-              className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-[#122033] px-5 py-2 text-sm font-semibold text-white transition hover:bg-[#25364a]"
+              fallbackFilename={`artisan-${priceList.code.toLowerCase()}-price-list.pdf`}
+              className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#122033] px-5 py-2 text-sm font-semibold text-white transition hover:bg-[#25364a]"
             >
               Download {priceList.code} PDF
-            </a>
+            </PdfDownloadButton>
           ) : null}
           <Link
             href="/portal"

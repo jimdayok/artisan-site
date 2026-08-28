@@ -100,6 +100,29 @@ test("TOKAI summaries select and label Hi Index 1.60", () => {
   assert.equal(selected.basisShortLabel, "Hi Index 1.60");
 });
 
+test("Eyezen clear summaries identify the blue-filter polycarbonate basis", () => {
+  const selected = selectSummaryPrice(
+    [
+      row("Plastic", "Clear", 87, 79, {
+        brand: "Essilor",
+        designStyle: "Eyezen+",
+        materialRaw: "B50",
+      }),
+      row("Polycarbonate", "Clear", 95, 87, {
+        brand: "Essilor",
+        designStyle: "Eyezen+",
+        materialRaw: "BLY",
+      }),
+    ],
+    "Clear",
+    "edged"
+  );
+
+  assert.equal(selected.row?.materialRaw, "BLY");
+  assert.equal(selected.basisLabel, "Blue Filter Polycarbonate");
+  assert.equal(selected.basisShortLabel, "Blue Filter Polycarbonate");
+});
+
 test("Executive Bifocal H56 is presented as its plastic-only price", () => {
   const selected = selectSummaryPrice(
     [

@@ -693,7 +693,7 @@ async function buildPriceListPdf({
     const summaryLines = wrapText(
       regular,
       polycarbonateBasis
-        ? `The material basis is printed below every + price. Most prices use polycarbonate${packagePricing ? " package" : ""} pricing. Tokai prices use Hi Index 1.60; Tokai products are outsourced and 1.76 Hi Index is also available. Photo shows S-material products; Trans/Xtra shows Transitions and Xtra Active products.`
+        ? "This price list uses polycarbonate as the base material unless otherwise noted. Only Tokai products are available in 1.70 and 1.76 index. Photo shows S-material products; Trans/Xtra shows Transitions and Xtra Active products."
         : "Customer-ready pricing organized by design family, coatings, add-ons, and policy notes.",
       introTextWidth,
       8
@@ -1132,10 +1132,11 @@ async function buildPriceListPdf({
             color: NAVY,
           });
           if (value !== "-" && basis) {
-            page.drawText(fitText(bold, basis, width, 4.8), {
+            const basisSize = basis === "Blue Filter Polycarbonate" ? 4.2 : 4.8;
+            page.drawText(fitText(bold, basis, width, basisSize), {
               x,
               y: y - 19,
-              size: 4.8,
+              size: basisSize,
               font: bold,
               color: MUTED,
             });

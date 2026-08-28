@@ -77,8 +77,11 @@ test("customer pricing applies durable design, availability, and status rules", 
       row("Digital SV", { brand: "SD", designType: "Digital SV" }),
       row("Gold Series", { brand: "Artisan", designType: "Digital SV" }),
       row("TACT", { brand: "TACT", designType: "SV" }),
-      row("Eyezen Start", { brand: "Varilux", materialRaw: "B60", material: "Hi-Index 1.60" }),
+      row("Eyezen Start", { brand: "Varilux", materialRaw: "BLY", material: "Polycarbonate" }),
       row("Eyezen Start", { brand: "Varilux", materialRaw: "PLY" }),
+      row("Eyezen Start", { brand: "Varilux", materialRaw: "TPY", materialColor: "Photochromic", colorRaw: ["TGY"] }),
+      row("Eyezen Start", { brand: "Varilux", materialRaw: "PRY", materialColor: "Polarized", colorRaw: ["G15"] }),
+      row("Eyezen Start", { brand: "Varilux", materialRaw: "SPY", materialColor: "Photochromic", colorRaw: ["SYG"] }),
       row("Eyezen Kids", { brand: "Varilux" }),
       row("SD*", { brand: "Artisan", designType: "Enhanced SV" }),
       row("SUN INTL SV", { brand: "SUN" }),
@@ -96,7 +99,11 @@ test("customer pricing applies durable design, availability, and status rules", 
   assert.equal(digital?.designType, "Enhanced SV");
   assert.equal(result.rows.find((entry) => entry.designStyle === "Gold Series")?.designType, "Progressive");
   assert.equal(result.rows.find((entry) => entry.designStyle === "Tact")?.brand, "Hoya");
-  assert.equal(result.rows.filter((entry) => entry.designStyle === "Eyezen Start").length, 1);
+  const eyezen = result.rows.filter((entry) => entry.designStyle === "Eyezen Start");
+  assert.equal(eyezen.length, 3);
+  assert.equal(eyezen.every((entry) => entry.brand === "Essilor"), true);
+  assert.equal(eyezen.every((entry) => entry.designType === "Enhanced SV"), true);
+  assert.deepEqual(eyezen.map((entry) => entry.materialRaw), ["BLY", "TPY", "PRY"]);
   assert.equal(result.rows.some((entry) => /^(?:Eyezen Kids|SD\*|SUN INTL|XR Track)/i.test(entry.designStyle)), false);
   assert.equal(result.rows.find((entry) => entry.designStyle === "X Design")?.outsourced, false);
   assert.equal(result.rows.find((entry) => entry.designStyle === "X Design 4D")?.outsourced, true);

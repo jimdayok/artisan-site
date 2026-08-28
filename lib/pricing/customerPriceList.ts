@@ -47,9 +47,9 @@ function requiresAdditionalTurnaround(row: PriceListPricingRow) {
 
 const PHASING_OUT_NOTE = "Phasing out; contact your lab for current availability.";
 const TOKAI_AVAILABILITY_NOTE =
-  "Pricing shown uses Hi Index 1.60; Hi Index 1.76 is also available.";
+  "Pricing shown uses Hi Index 1.60; Hi Index 1.70 and 1.76 are also available.";
 const EYEZEN_AVAILABILITY_NOTE =
-  "Available only in blue-filtering substrates.";
+  "Clear pricing uses a blue-filtering substrate; Transitions and polarized options are also available.";
 
 function addUniqueNote(notes: string[], note: string) {
   return notes.includes(note) ? notes : [...notes, note];
@@ -87,6 +87,10 @@ function normalizeBrandAndDesign(row: PriceListPricingRow) {
   }
   if (/^VX$/i.test(brand) || /^VX\b/i.test(identity)) brand = "Varilux";
   if (/^SYNC 6$/i.test(designStyle)) designStyle = "Sync 3";
+  if (/^Eyezen(?: Start|\+)$/i.test(designStyle)) {
+    brand = "Essilor";
+    designType = "Enhanced SV";
+  }
 
   return { brand, designStyle, designType };
 }
@@ -121,8 +125,13 @@ function normalizeCustomerFacingRow(row: PriceListPricingRow) {
   };
 }
 
-function isBlueFilteringMaterial(row: PriceListPricingRow) {
-  return row.materialRaw.trim().toUpperCase().startsWith("B");
+function isAvailableEyezenMaterial(row: PriceListPricingRow) {
+  const materialCode = row.materialRaw.trim().toUpperCase();
+  return (
+    materialCode.startsWith("B") ||
+    materialCode.startsWith("T") ||
+    row.materialColor === "Polarized"
+  );
 }
 
 function isUnavailablePhotoDesignRow(row: PriceListPricingRow) {
@@ -219,7 +228,7 @@ export function customerFacingPriceList(
     .filter(
       (row) =>
         !/^Eyezen(?: Start|\+)$/i.test(row.designStyle) ||
-        isBlueFilteringMaterial(row)
+        isAvailableEyezenMaterial(row)
     )
     .filter((row) => !isUnavailablePhotoDesignRow(row));
   const arCoatings = priceList.arCoatings

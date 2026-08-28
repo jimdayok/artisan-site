@@ -106,6 +106,17 @@ function isTokaiProduct(rows: PriceListPricingRow[]) {
   });
 }
 
+function isEyezenProduct(rows: PriceListPricingRow[]) {
+  return rows.some((row) => /^Eyezen(?: Start|\+)$/i.test(row.designStyle.trim()));
+}
+
+function isBlueFilterPolycarbonateRow(row: PriceListPricingRow) {
+  return (
+    row.materialRaw.trim().toUpperCase() === "BLY" &&
+    isPolycarbonatePricingRow(row)
+  );
+}
+
 function isOneSixtyRow(row: PriceListPricingRow) {
   return /\b1\.60\b/.test(row.material);
 }
@@ -142,6 +153,22 @@ export function selectSummaryPrice(
       basisLabel: "Hi Index 1.60",
       basisShortLabel: "Hi Index 1.60",
     };
+  }
+
+  if (isEyezenProduct(rows) && materialGroup === "Clear") {
+    const blueFilterPolycarbonate = lowestPositiveRow(
+      rows,
+      materialGroup,
+      mode,
+      isBlueFilterPolycarbonateRow
+    );
+    if (blueFilterPolycarbonate) {
+      return {
+        row: blueFilterPolycarbonate,
+        basisLabel: "Blue Filter Polycarbonate",
+        basisShortLabel: "Blue Filter Polycarbonate",
+      };
+    }
   }
 
   const polycarbonate = lowestPolycarbonateRow(rows, materialGroup, mode);

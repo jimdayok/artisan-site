@@ -492,7 +492,6 @@ const brandLogoMap: Record<string, string> = {
   tokai: "/tokai-logo.png",
   unity: "/unity-logo.png",
   varilux: "/varilux-logo.png",
-  eyezen: "/varilux-logo.png",
   younger: "/younger-optics-logo.png",
   sequel: "/logos/newton.svg",
   newton: "/logos/newton.svg",
@@ -1210,7 +1209,7 @@ export default function InteractivePriceListDashboard({
             ) : null}
             <p className="mt-3 max-w-3xl text-sm leading-6 text-[#4d5664]">
               {polycarbonateBasis
-                ? `Every price marked + shows its material basis directly below it. Most prices use polycarbonate${isPackageList ? " package" : ""} pricing. Tokai products are outsourced; pricing shown uses Hi Index 1.60 and 1.76 Hi Index is also available. Photo uses S-material products, while Trans/Xtra shows Transitions and Xtra Active. Designs without polycarbonate use an available material price and are labeled; plastic-only designs say Plastic only.`
+                ? "This price list uses polycarbonate as the base material unless otherwise noted. Only Tokai products are available in 1.70 and 1.76 index. Photo uses S-material products, while Trans/Xtra shows Transitions and Xtra Active."
                 : "Start with design, then compare clear, S-material photochromic, Transitions/Xtra Active, and polarized options."}
             </p>
             <div className="mt-3 flex flex-wrap items-center gap-2">

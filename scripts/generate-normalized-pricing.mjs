@@ -60,7 +60,7 @@ const taxonomyBrandMap = new Map([
   ["VARILUX", "Varilux"],
   ["SHAMIR", "Shamir"],
   ["NEWTON", "Sequel by Newton"],
-  ["ESSILOR", "Varilux"],
+  ["ESSILOR", "Essilor"],
   ["COMMODITY", "Standard Designs"],
   ["YOUNGER", "Standard Designs"],
 ]);

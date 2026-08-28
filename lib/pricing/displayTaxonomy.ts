@@ -23,6 +23,7 @@ const brandOrder = [
   "Tokai",
   "Shamir",
   "Hoya",
+  "Essilor",
   "Varilux",
 ];
 
@@ -49,7 +50,6 @@ export function priceDisplayCategory(
 ): PriceDisplayCategory {
   const type = normalized(row.designType);
   const style = normalized(row.designStyle);
-  const brand = normalized(row.brand);
 
   if (type.includes("PROGRESSIVE")) return "Progressive Designs";
   if (type.includes("OCCUPATIONAL")) return "Occupational Designs";

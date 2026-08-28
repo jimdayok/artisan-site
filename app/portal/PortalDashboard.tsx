@@ -68,6 +68,11 @@ import {
 } from "@/lib/portal/workbookAccountData";
 import { normalizeAccountNumber } from "@/lib/portal/normalizeAccounts";
 import {
+  calculateArMix,
+  calculateVspMix,
+  resolveJobsPerDay,
+} from "@/lib/portal/practiceIntelligenceMetrics";
+import {
   getPortalPeerBenchmarks,
   getPortalDashboardV1ByAccount,
   type PortalPeerBenchmarks,
@@ -1271,6 +1276,8 @@ type PracticeIntelligenceModel = {
   vspMix: MixPoint[];
   programMix: MixPoint[];
   brandUsage: MonthlyUsagePoint[];
+  arCoatingMix: MonthlyUsagePoint[];
+  arCoatingDataAvailable: boolean;
   materialUsage: MonthlyUsagePoint[];
   highIndexDataPending: boolean;
   specialtyUsage: MonthlyUsagePoint[];
@@ -1485,36 +1492,37 @@ function buildPracticeIntelligenceModel({
   const ppmJobs = asNumber(jobs?.ppm ?? account?.ppmJobs);
   const mix = dashboard?.vsp_private_pay_mix;
   const vspJobs = asNumber(mix?.vsp_jobs?.pm ?? account?.pmVspJobs);
-  const vspShare = pctValue(account?.pmVspSow ?? (pmJobs ? vspJobs / pmJobs : 0));
-  const privatePayShare = Math.max(0, 100 - vspShare);
+  const vspMix = calculateVspMix(pmJobs, vspJobs);
+  const vspShare = vspMix.vspShare;
+  const privatePayShare = vspMix.nonVspShare;
   const reportAnchor =
     dashboard?.data_refresh_date || account?.lastShippedDateGlobal || "";
   const businessDays = businessDayProgress(reportAnchor);
   const currentMonthDataAvailable = cmJobs > 0 || cmSales > 0;
-  const currentJpd =
-    account && Number.isFinite(Number(account.cmJpd)) && Number(account.cmJpd) > 0
-      ? Number(account.cmJpd)
-      : cmJobs > 0
-        ? cmJobs / Math.max(1, businessDays.elapsed)
-        : null;
+  const currentJpd = resolveJobsPerDay({
+    dashboardJobsPerDay: dashboard?.performance_rates?.jobs_per_day?.cm,
+    workbookJobsPerDay: account?.cmJpd,
+    jobs: cmJobs,
+    elapsedBusinessDays: businessDays.elapsed,
+  });
   const projectedMonthJobs =
     currentJpd === null ? null : currentJpd * businessDays.total;
   const projectedMonthSales =
     cmSales > 0 && businessDays.elapsed > 0
       ? (cmSales / businessDays.elapsed) * businessDays.total
       : null;
-  const previousJpd =
-    account && Number.isFinite(Number(account.pmJpd)) && Number(account.pmJpd) > 0
-      ? Number(account.pmJpd)
-      : pmJobs > 0
-        ? pmJobs / 22
-        : null;
-  const priorJpd =
-    account && Number.isFinite(Number(account.ppmJpd)) && Number(account.ppmJpd) > 0
-      ? Number(account.ppmJpd)
-      : ppmJobs > 0
-        ? ppmJobs / 22
-        : null;
+  const previousJpd = resolveJobsPerDay({
+    dashboardJobsPerDay: dashboard?.performance_rates?.jobs_per_day?.pm,
+    workbookJobsPerDay: account?.pmJpd,
+    jobs: pmJobs,
+    elapsedBusinessDays: 22,
+  });
+  const priorJpd = resolveJobsPerDay({
+    dashboardJobsPerDay: dashboard?.performance_rates?.jobs_per_day?.ppm,
+    workbookJobsPerDay: account?.ppmJpd,
+    jobs: ppmJobs,
+    elapsedBusinessDays: 22,
+  });
   const programFlags = dashboard?.program_usage?.flags;
   const quality = dashboard?.quality_metrics;
   const supplemental = dashboard?.supplemental_intelligence;
@@ -1614,7 +1622,7 @@ function buildPracticeIntelligenceModel({
     opportunities.push({
       title: vspShare < 25 ? "VSP availability reminder" : "VSP education opportunity",
       priority: vspShare < 25 ? "green" : "yellow",
-      current: `${Math.round(vspShare)}% VSP mix`,
+      current: `${vspShare.toFixed(1)}% VSP mix`,
       why:
         vspShare < 25
           ? "VSP is available through our labs when the practice wants to route eligible VSP work through Artisan."
@@ -1649,6 +1657,27 @@ function buildPracticeIntelligenceModel({
     monthlyPoint("Neurolens", supplemental?.brand_usage?.neurolens_jobs),
     monthlyPoint("Sequel", supplemental?.brand_usage?.sequel_jobs),
     monthlyPoint("IOT Artisan", supplemental?.brand_usage?.iot_artisan_jobs),
+    monthlyPoint("Unity", supplemental?.brand_usage?.unity_jobs),
+  ];
+  const arSource = supplemental?.ar_coating_mix;
+  const arMix = calculateArMix(
+    arSource?.preferred_ar_jobs,
+    arSource?.non_preferred_ar_jobs
+  );
+  const arCoatingDataAvailable = Boolean(arSource?.available);
+  const arCoatingMix = [
+    {
+      label: "In-House AR",
+      prior: arMix.ppm.inHouseShare,
+      previous: arMix.pm.inHouseShare,
+      current: arMix.cm.inHouseShare,
+    },
+    {
+      label: "Outsourced AR",
+      prior: arMix.ppm.outsourcedShare,
+      previous: arMix.pm.outsourcedShare,
+      current: arMix.cm.outsourcedShare,
+    },
   ];
   const materialUsage = [
     monthlySharePoint("Plastic", supplemental?.material_usage?.plastic_jobs, { ppm: ppmJobs, pm: pmJobs, cm: cmJobs }),
@@ -1770,11 +1799,13 @@ function buildPracticeIntelligenceModel({
     trends,
     orderRateTrends,
     vspMix: [
-      { label: "VSP Orders", value: Math.round(vspShare), color: "#2f5f9c" },
-      { label: "Private Pay Orders", value: Math.round(privatePayShare), color: "#1f8a70" },
+      { label: `VSP Orders (${formatCount(vspMix.vspJobs)})`, value: vspShare, color: "#2f5f9c" },
+      { label: `Non-VSP Orders (${formatCount(vspMix.nonVspJobs)})`, value: privatePayShare, color: "#1f8a70" },
     ],
     programMix,
     brandUsage,
+    arCoatingMix,
+    arCoatingDataAvailable,
     materialUsage,
     highIndexDataPending,
     specialtyUsage,
@@ -1970,8 +2001,8 @@ function PracticeIntelligenceHero({
           <IntelligenceMetric
             icon={Target}
             label="VSP / Private Pay"
-            value={`${Math.round(intelligence.vspShare)}%`}
-            detail={`${Math.round(intelligence.privatePayShare)}% private pay · Average practice at lab ${intelligence.peerBenchmarks.averageVspPct}% VSP`}
+            value={`${intelligence.vspShare.toFixed(1)}%`}
+            detail={`${intelligence.privatePayShare.toFixed(1)}% private pay · Average practice at lab ${intelligence.peerBenchmarks.averageVspPct}% VSP`}
           />
           <IntelligenceMetric
             icon={Layers}
@@ -2345,6 +2376,8 @@ function DataAvailabilityCard({
 
 function ProductBrandIntelligenceSection({
   brandUsage,
+  arCoatingMix,
+  arCoatingDataAvailable,
   materialUsage,
   highIndexDataPending,
   specialtyUsage,
@@ -2353,6 +2386,8 @@ function ProductBrandIntelligenceSection({
   peerBenchmarks,
 }: {
   brandUsage: MonthlyUsagePoint[];
+  arCoatingMix: MonthlyUsagePoint[];
+  arCoatingDataAvailable: boolean;
   materialUsage: MonthlyUsagePoint[];
   highIndexDataPending: boolean;
   specialtyUsage: MonthlyUsagePoint[];
@@ -2369,11 +2404,26 @@ function ProductBrandIntelligenceSection({
       <p className="mt-3 max-w-3xl text-sm leading-6 text-[#6d746f]">
         Product reporting uses orders, pairs, and usage counts only. Purchases remain at the account level.
       </p>
-      <div className="mt-6 grid gap-5 xl:grid-cols-3">
+      <div className="mt-6 grid gap-5 xl:grid-cols-2">
         {hasUsageData(brandUsage) ? (
           <MonthlyUsageCharts eyebrow="Brand Usage" title="Brand Orders by Month" data={brandUsage} monthLabels={reportMonths} horizontal />
         ) : (
           <DataAvailabilityCard title="Brand Usage" label="Data Unavailable" detail="Brand count fields are unavailable for this account." />
+        )}
+        {arCoatingDataAvailable ? (
+          <MonthlyUsageCharts
+            eyebrow="AR Production Mix"
+            title="In-House vs Outsourced AR Orders"
+            data={arCoatingMix}
+            valueType="percent"
+            monthLabels={reportMonths}
+          />
+        ) : (
+          <DataAvailabilityCard
+            title="In-House vs Outsourced AR Orders"
+            label="Source Update Required"
+            detail="This report appears when the portal export includes preferred AR jobs (in-house) and non-preferred AR jobs (outsourced), filtered by Date[Date] for each reporting month."
+          />
         )}
         {hasUsageData(materialUsage) ? (
           <div>
@@ -2685,6 +2735,8 @@ function PracticeIntelligenceCenter({
       </div>
       <ProductBrandIntelligenceSection
         brandUsage={intelligence.brandUsage}
+        arCoatingMix={intelligence.arCoatingMix}
+        arCoatingDataAvailable={intelligence.arCoatingDataAvailable}
         materialUsage={intelligence.materialUsage}
         highIndexDataPending={intelligence.highIndexDataPending}
         specialtyUsage={intelligence.specialtyUsage}

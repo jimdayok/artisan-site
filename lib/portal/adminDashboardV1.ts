@@ -328,6 +328,7 @@ export function getDashboardV1AdminRows() {
         neurolens_jobs: monthlyNumber(supplemental?.brand_usage?.neurolens_jobs),
         sequel_jobs: monthlyNumber(supplemental?.brand_usage?.sequel_jobs),
         iot_artisan_jobs: monthlyNumber(supplemental?.brand_usage?.iot_artisan_jobs),
+        unity_jobs: monthlyNumber(supplemental?.brand_usage?.unity_jobs),
       },
       materialUsage: {
         plastic_jobs: monthlyNumber(supplemental?.material_usage?.plastic_jobs),

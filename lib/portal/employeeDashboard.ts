@@ -161,6 +161,7 @@ const PRODUCT_DEFINITIONS: ProductDefinition[] = [
   { key: "neurolens", label: "Neurolens", category: "Brand", getValue: (row) => row.brandUsage.neurolens_jobs, sourceFields: ["CM Neurolens Orders", "PM Neurolens Orders", "PPM Neurolens Orders"] },
   { key: "sequel", label: "Sequel", category: "Brand", getValue: (row) => row.brandUsage.sequel_jobs, sourceFields: ["CM Sequel Orders", "PM Sequel Orders", "PPM Sequel Orders"] },
   { key: "iot-artisan", label: "IOT Artisan", category: "Brand", getValue: (row) => row.brandUsage.iot_artisan_jobs, sourceFields: ["CM IOT Artisan Orders", "PM IOT Artisan Orders", "PPM IOT Artisan Orders"] },
+  { key: "unity", label: "Unity", category: "Brand", getValue: (row) => row.brandUsage.unity_jobs, sourceFields: ["CM Unity Orders", "PM Unity Orders", "PPM Unity Orders"] },
   { key: "plastic", label: "Plastic", category: "Material", getValue: (row) => row.materialUsage.plastic_jobs, sourceFields: ["CM Plastic Orders", "PM Plastic Orders", "PPM Plastic Orders"] },
   { key: "trivex", label: "Trivex", category: "Material", getValue: (row) => row.materialUsage.trivex_jobs, sourceFields: ["CM Trivex Orders", "PM Trivex Orders", "PPM Trivex Orders"] },
   { key: "hi-index-160", label: "High Index 1.60", category: "Material", getValue: (row) => row.materialUsage.hi_index_160_jobs, sourceFields: ["CM Hi Index 1.60 Orders", "PM Hi Index 1.60 Orders", "PPM Hi Index 1.60 Orders"] },

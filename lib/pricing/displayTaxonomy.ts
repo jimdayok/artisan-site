@@ -1,7 +1,7 @@
 import type { PriceListPricingRow } from "./types";
 
 export const priceDisplayCategories = [
-  "SV",
+  "Standard SV",
   "Enhanced SV",
   "Multifocals",
   "Occupational Designs",
@@ -54,6 +54,7 @@ export function priceDisplayCategory(
   if (type.includes("PROGRESSIVE")) return "Progressive Designs";
   if (type.includes("OCCUPATIONAL")) return "Occupational Designs";
   if (type.includes("MULTIFOCAL")) return "Multifocals";
+  if (/^(?:SV|ASPHERIC SV|SV ASPHERIC)$/.test(style)) return "Standard SV";
   if (
     type.includes("ANTI-FATIGUE") ||
     type.includes("ENHANCED") ||
@@ -69,10 +70,10 @@ export function priceDisplayCategory(
     type.includes("SINGLE VISION") ||
     style.includes(" SV")
   ) {
-    return "SV";
+    return "Enhanced SV";
   }
 
-  return "SV";
+  return "Enhanced SV";
 }
 
 export function comparePriceDisplayCategory(

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { customerFacingPriceList } from "../lib/pricing/customerPriceList.ts";
+import { priceDisplayCategory } from "../lib/pricing/displayTaxonomy.ts";
 import type {
   GeneratedPriceListData,
   PriceListPricingRow,
@@ -111,4 +112,29 @@ test("customer pricing removes retired AR and labels TechShield as VSP", () => {
   const result = customerFacingPriceList(priceList([row("SV")]));
   assert.deepEqual(result.arCoatings.map((entry) => entry.code), ["AEM", "TSE"]);
   assert.equal(result.arCoatings[1].brandFamily, "TechShield by VSP AR Coatings");
+});
+
+test("standard SV contains only SV and aspheric SV designs", () => {
+  assert.equal(priceDisplayCategory(row("SV")), "Standard SV");
+  assert.equal(priceDisplayCategory(row("Aspheric SV")), "Standard SV");
+  assert.equal(priceDisplayCategory(row("SV Aspheric")), "Standard SV");
+  assert.equal(priceDisplayCategory(row("InMotion SV")), "Enhanced SV");
+  assert.equal(priceDisplayCategory(row("SD Digital")), "Enhanced SV");
+});
+
+test("customer pricing removes unavailable S-material Photo rows from named designs", () => {
+  const result = customerFacingPriceList(
+    priceList([
+      row("Camber Pure", { designType: "Progressive", materialRaw: "SPY", materialColor: "Photochromic" }),
+      row("Camber Pure", { designType: "Progressive", materialRaw: "TPY", materialColor: "Photochromic" }),
+      row("Camber Steady Plus", { designType: "Progressive", materialRaw: "S60", materialColor: "Photochromic" }),
+      row("Diamond Series", { designType: "Progressive", materialRaw: "S50", materialColor: "Photochromic" }),
+      row("Diamond Series", { designType: "Progressive", materialRaw: "PLY", materialColor: "Clear" }),
+    ])
+  );
+
+  assert.deepEqual(
+    result.rows.map((entry) => `${entry.designStyle}:${entry.materialRaw}`),
+    ["Camber Pure:TPY", "Diamond Series:PLY"]
+  );
 });

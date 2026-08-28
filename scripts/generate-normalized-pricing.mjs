@@ -717,21 +717,56 @@ function mergeArCoating(byCode, coating) {
       name: coating.name,
       brandFamily: coating.brandFamily,
       price: Number(coating.price),
+      sourceSchedule: coating.sourceSchedule,
       recommended: false,
       outsourced: false,
     });
   }
 }
 
+function dominantCoatingSchedule(rows) {
+  const counts = new Map();
+  for (const row of rows) {
+    const sourceSchedule = String(
+      row?.coatingScheduleRef || row?.coatingOptions?.[0]?.sourceSchedule || ""
+    )
+      .trim()
+      .toUpperCase();
+    if (!sourceSchedule) continue;
+    counts.set(sourceSchedule, (counts.get(sourceSchedule) ?? 0) + 1);
+  }
+  return [...counts.entries()].sort(
+    ([aSchedule, aCount], [bSchedule, bCount]) =>
+      bCount - aCount || aSchedule.localeCompare(bSchedule)
+  )[0]?.[0];
+}
+
 function normalizeArCoatings(rows, supplementalSchedules = [], arLookupMap = null) {
   const byCode = new Map();
-  for (const row of rows) {
+  const selectedSchedule = dominantCoatingSchedule(rows);
+  const scheduleRows = selectedSchedule
+    ? rows.filter((row) => {
+        const sourceSchedule = String(
+          row?.coatingScheduleRef || row?.coatingOptions?.[0]?.sourceSchedule || ""
+        )
+          .trim()
+          .toUpperCase();
+        return sourceSchedule === selectedSchedule;
+      })
+    : rows;
+  for (const row of scheduleRows) {
     for (const coating of row.coatingOptions ?? []) {
       mergeArCoating(byCode, coating);
     }
   }
 
-  for (const schedule of supplementalSchedules ?? []) {
+  const selectedSupplementalSchedules = selectedSchedule
+    ? (supplementalSchedules ?? []).filter(
+        (schedule) =>
+          String(schedule?.name ?? "").trim().toUpperCase() === selectedSchedule
+      )
+    : supplementalSchedules ?? [];
+  for (const schedule of selectedSupplementalSchedules) {
     for (const coating of schedule?.entries ?? []) {
       const rawCode = String(coating?.Code ?? "").trim().toUpperCase();
       if (!rawCode) continue;
@@ -741,6 +776,7 @@ function normalizeArCoatings(rows, supplementalSchedules = [], arLookupMap = nul
         name: match?.name || rawCode,
         brandFamily: match?.brandFamily || "Unmapped AR",
         price: Number(coating?.Price ?? 0),
+        sourceSchedule: selectedSchedule || String(schedule?.name ?? "").trim(),
         unresolved: !match,
       });
     }

@@ -135,7 +135,7 @@ function arTurnaroundNote(family: string) {
 function coatingDisplayName(coating: PriceListArCoating) {
   const code = String(coating.code ?? "").trim().toUpperCase();
   const name = normalizeDisplayName(coating.name);
-  return code ? `${code} · ${name}` : name;
+  return code ? `${name} (${code})` : name;
 }
 
 function isCoppertoneRow(row: PriceListPricingRow) {
@@ -684,12 +684,42 @@ function sortDesignRows(
 ) {
   return [...rows].sort((a, b) => {
     if (!sort) {
+      const compareStartingPrice = () => {
+        if (a.displayCategory === "Standard SV") {
+          const rank = (style: string) => {
+            const normalized = style.trim().toUpperCase();
+            if (normalized === "SV") return 0;
+            if (/^(?:ASPHERIC SV|SV ASPHERIC)$/.test(normalized)) return 1;
+            return 2;
+          };
+          const rankDifference = rank(a.designStyle) - rank(b.designStyle);
+          if (rankDifference) return rankDifference;
+        }
+        const startingPrice = (row: DesignRow) => {
+          const clearPrice = priceFor(row.clearFrom, mode);
+          if (Number.isFinite(clearPrice) && clearPrice > 0) return clearPrice;
+          const alternatives = [row.photoFrom, row.transitionsFrom, row.polarizedFrom]
+            .map((option) => priceFor(option, mode))
+            .filter((price) => Number.isFinite(price) && price > 0);
+          return alternatives.length ? Math.min(...alternatives) : undefined;
+        };
+        const aPrice = startingPrice(a);
+        const bPrice = startingPrice(b);
+        if (aPrice === undefined && bPrice === undefined) return 0;
+        if (aPrice === undefined) return 1;
+        if (bPrice === undefined) return -1;
+        const ascending = ["Standard SV", "Multifocals"].includes(
+          a.displayCategory
+        );
+        return ascending ? aPrice - bPrice : bPrice - aPrice;
+      };
       return (
         comparePriceDisplayCategory(a.displayCategory, b.displayCategory) ||
         (a.progressiveTier && b.progressiveTier
           ? compareProgressiveTier(a.progressiveTier, b.progressiveTier)
           : 0) ||
         compareBrandDisplayOrder(a.brand, b.brand) ||
+        compareStartingPrice() ||
         compareDesignStyleByBusinessOrder(a, b)
       );
     }
@@ -715,7 +745,14 @@ function inlineMarker(label: string, recommended: boolean, outsourced: boolean) 
     <span className="inline-flex items-center gap-1">
       <span>{label}</span>
       {recommended ? <span className="text-[#7a5a18]">★</span> : null}
-      {outsourced ? <span title="Outsourced product" className="rounded-full border border-[#b67a52] bg-[#fff2e8] px-1.5 py-0.5 text-[10px] font-black text-[#8a4f28]">↗</span> : null}
+      {outsourced ? (
+        <span
+          title="Produced by a specialty partner; additional turnaround time applies"
+          className="rounded-full border border-[#b67a52] bg-[#fff7ef] px-2 py-0.5 text-[10px] font-bold tracking-wide text-[#7b4b2a]"
+        >
+          ↗ Outsourced
+        </span>
+      ) : null}
     </span>
   );
 }

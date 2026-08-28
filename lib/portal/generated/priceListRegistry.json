@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-28T17:15:32.575Z",
+  "generatedAt": "2026-08-28T19:11:02.405Z",
   "detectedCodes": [
     "94",
     "A5",
@@ -234,7 +234,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:13:52.033Z"
+      "generatedAt": "2026-08-28T19:09:19.133Z"
     },
     {
       "code": "A5",
@@ -249,7 +249,7 @@
       "assignedAccountCount": 4,
       "visibleCustomerCount": 2,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:13:56.869Z"
+      "generatedAt": "2026-08-28T19:09:23.052Z"
     },
     {
       "code": "A6",
@@ -264,7 +264,7 @@
       "assignedAccountCount": 28,
       "visibleCustomerCount": 20,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:02.661Z"
+      "generatedAt": "2026-08-28T19:09:28.250Z"
     },
     {
       "code": "AR",
@@ -279,7 +279,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:03.891Z"
+      "generatedAt": "2026-08-28T19:09:29.340Z"
     },
     {
       "code": "B3",
@@ -294,7 +294,7 @@
       "assignedAccountCount": 3,
       "visibleCustomerCount": 3,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:04.138Z"
+      "generatedAt": "2026-08-28T19:09:29.577Z"
     },
     {
       "code": "B5",
@@ -309,7 +309,7 @@
       "assignedAccountCount": 62,
       "visibleCustomerCount": 50,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:04.409Z"
+      "generatedAt": "2026-08-28T19:09:29.819Z"
     },
     {
       "code": "BO",
@@ -324,7 +324,7 @@
       "assignedAccountCount": 1,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:04.493Z"
+      "generatedAt": "2026-08-28T19:09:29.886Z"
     },
     {
       "code": "C3",
@@ -339,7 +339,7 @@
       "assignedAccountCount": 3,
       "visibleCustomerCount": 3,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:04.500Z"
+      "generatedAt": "2026-08-28T19:09:29.892Z"
     },
     {
       "code": "CB",
@@ -354,7 +354,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:04.996Z"
+      "generatedAt": "2026-08-28T19:09:30.284Z"
     },
     {
       "code": "CC",
@@ -369,7 +369,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:08.409Z"
+      "generatedAt": "2026-08-28T19:09:33.264Z"
     },
     {
       "code": "CD",
@@ -384,7 +384,7 @@
       "assignedAccountCount": 1,
       "visibleCustomerCount": 1,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:08.475Z"
+      "generatedAt": "2026-08-28T19:09:33.314Z"
     },
     {
       "code": "E4",
@@ -399,7 +399,7 @@
       "assignedAccountCount": 1,
       "visibleCustomerCount": 1,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:08.530Z"
+      "generatedAt": "2026-08-28T19:09:33.355Z"
     },
     {
       "code": "E5",
@@ -414,7 +414,7 @@
       "assignedAccountCount": 3,
       "visibleCustomerCount": 3,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:08.999Z"
+      "generatedAt": "2026-08-28T19:09:33.737Z"
     },
     {
       "code": "E6",
@@ -429,7 +429,7 @@
       "assignedAccountCount": 2,
       "visibleCustomerCount": 1,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:09.482Z"
+      "generatedAt": "2026-08-28T19:09:34.142Z"
     },
     {
       "code": "E7",
@@ -444,7 +444,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:09.643Z"
+      "generatedAt": "2026-08-28T19:09:34.272Z"
     },
     {
       "code": "E8",
@@ -459,7 +459,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:09.658Z"
+      "generatedAt": "2026-08-28T19:09:34.287Z"
     },
     {
       "code": "G5",
@@ -474,7 +474,7 @@
       "assignedAccountCount": 41,
       "visibleCustomerCount": 40,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:14.644Z"
+      "generatedAt": "2026-08-28T19:09:38.578Z"
     },
     {
       "code": "G6",
@@ -489,7 +489,7 @@
       "assignedAccountCount": 205,
       "visibleCustomerCount": 182,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:20.821Z"
+      "generatedAt": "2026-08-28T19:09:43.442Z"
     },
     {
       "code": "H3",
@@ -519,7 +519,7 @@
       "assignedAccountCount": 2,
       "visibleCustomerCount": 2,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:21.650Z"
+      "generatedAt": "2026-08-28T19:09:44.199Z"
     },
     {
       "code": "J2",
@@ -534,7 +534,7 @@
       "assignedAccountCount": 2,
       "visibleCustomerCount": 2,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:22.850Z"
+      "generatedAt": "2026-08-28T19:09:45.287Z"
     },
     {
       "code": "L2",
@@ -549,7 +549,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:23.079Z"
+      "generatedAt": "2026-08-28T19:09:45.527Z"
     },
     {
       "code": "LT",
@@ -564,7 +564,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:23.103Z"
+      "generatedAt": "2026-08-28T19:09:45.550Z"
     },
     {
       "code": "M2",
@@ -579,7 +579,7 @@
       "assignedAccountCount": 1,
       "visibleCustomerCount": 1,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:23.107Z"
+      "generatedAt": "2026-08-28T19:09:45.554Z"
     },
     {
       "code": "M3",
@@ -594,7 +594,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:23.267Z"
+      "generatedAt": "2026-08-28T19:09:45.736Z"
     },
     {
       "code": "M5",
@@ -609,7 +609,7 @@
       "assignedAccountCount": 18,
       "visibleCustomerCount": 16,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:23.369Z"
+      "generatedAt": "2026-08-28T19:09:45.832Z"
     },
     {
       "code": "NB",
@@ -624,7 +624,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:27.192Z"
+      "generatedAt": "2026-08-28T19:09:50.081Z"
     },
     {
       "code": "NK",
@@ -639,7 +639,7 @@
       "assignedAccountCount": 1,
       "visibleCustomerCount": 1,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:27.768Z"
+      "generatedAt": "2026-08-28T19:09:50.429Z"
     },
     {
       "code": "NL",
@@ -654,7 +654,7 @@
       "assignedAccountCount": 206,
       "visibleCustomerCount": 190,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:27.867Z"
+      "generatedAt": "2026-08-28T19:09:50.508Z"
     },
     {
       "code": "NO",
@@ -669,7 +669,7 @@
       "assignedAccountCount": 3,
       "visibleCustomerCount": 3,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:31.430Z"
+      "generatedAt": "2026-08-28T19:09:53.948Z"
     },
     {
       "code": "OF",
@@ -684,7 +684,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:32.317Z"
+      "generatedAt": "2026-08-28T19:09:54.748Z"
     },
     {
       "code": "P4",
@@ -714,7 +714,7 @@
       "assignedAccountCount": 4,
       "visibleCustomerCount": 3,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:37.194Z"
+      "generatedAt": "2026-08-28T19:09:59.370Z"
     },
     {
       "code": "P6",
@@ -729,7 +729,7 @@
       "assignedAccountCount": 29,
       "visibleCustomerCount": 25,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:42.856Z"
+      "generatedAt": "2026-08-28T19:10:05.693Z"
     },
     {
       "code": "S5",
@@ -744,7 +744,7 @@
       "assignedAccountCount": 14,
       "visibleCustomerCount": 11,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:43.765Z"
+      "generatedAt": "2026-08-28T19:10:06.511Z"
     },
     {
       "code": "T5",
@@ -759,7 +759,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:48.793Z"
+      "generatedAt": "2026-08-28T19:10:11.368Z"
     },
     {
       "code": "T6",
@@ -774,7 +774,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:55.225Z"
+      "generatedAt": "2026-08-28T19:10:19.429Z"
     },
     {
       "code": "TB",
@@ -789,7 +789,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:56.670Z"
+      "generatedAt": "2026-08-28T19:10:20.790Z"
     },
     {
       "code": "TK",
@@ -804,7 +804,7 @@
       "assignedAccountCount": 1,
       "visibleCustomerCount": 1,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:56.674Z"
+      "generatedAt": "2026-08-28T19:10:20.797Z"
     },
     {
       "code": "TT",
@@ -819,7 +819,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:56.697Z"
+      "generatedAt": "2026-08-28T19:10:20.821Z"
     },
     {
       "code": "TX",
@@ -834,7 +834,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:56.985Z"
+      "generatedAt": "2026-08-28T19:10:21.115Z"
     },
     {
       "code": "TZ",
@@ -849,7 +849,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:57.176Z"
+      "generatedAt": "2026-08-28T19:10:21.323Z"
     },
     {
       "code": "V6",
@@ -864,7 +864,7 @@
       "assignedAccountCount": 7,
       "visibleCustomerCount": 7,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:57.285Z"
+      "generatedAt": "2026-08-28T19:10:21.438Z"
     },
     {
       "code": "V7",
@@ -894,7 +894,7 @@
       "assignedAccountCount": 19,
       "visibleCustomerCount": 18,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:57.328Z"
+      "generatedAt": "2026-08-28T19:10:21.481Z"
     },
     {
       "code": "VO",
@@ -909,7 +909,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:57.543Z"
+      "generatedAt": "2026-08-28T19:10:21.705Z"
     },
     {
       "code": "VS",
@@ -924,7 +924,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:57.658Z"
+      "generatedAt": "2026-08-28T19:10:21.852Z"
     },
     {
       "code": "VV",
@@ -939,7 +939,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:57.782Z"
+      "generatedAt": "2026-08-28T19:10:21.990Z"
     },
     {
       "code": "VX",
@@ -954,7 +954,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:57.956Z"
+      "generatedAt": "2026-08-28T19:10:22.151Z"
     },
     {
       "code": "X3",
@@ -969,7 +969,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:57.977Z"
+      "generatedAt": "2026-08-28T19:10:22.166Z"
     },
     {
       "code": "X4",
@@ -984,7 +984,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:58.021Z"
+      "generatedAt": "2026-08-28T19:10:22.217Z"
     },
     {
       "code": "X6",
@@ -999,7 +999,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:58.131Z"
+      "generatedAt": "2026-08-28T19:10:22.326Z"
     },
     {
       "code": "XC",
@@ -1014,7 +1014,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:15:01.479Z"
+      "generatedAt": "2026-08-28T19:10:26.039Z"
     },
     {
       "code": "XD",
@@ -1029,7 +1029,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:15:02.190Z"
+      "generatedAt": "2026-08-28T19:10:26.850Z"
     },
     {
       "code": "XE",
@@ -1044,7 +1044,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:15:02.600Z"
+      "generatedAt": "2026-08-28T19:10:27.323Z"
     },
     {
       "code": "XH",
@@ -1059,7 +1059,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:15:02.951Z"
+      "generatedAt": "2026-08-28T19:10:27.675Z"
     },
     {
       "code": "XJ",
@@ -1074,7 +1074,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:15:03.574Z"
+      "generatedAt": "2026-08-28T19:10:28.265Z"
     },
     {
       "code": "XL",
@@ -1089,7 +1089,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:15:08.280Z"
+      "generatedAt": "2026-08-28T19:10:33.352Z"
     },
     {
       "code": "XO",
@@ -1104,7 +1104,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:15:13.265Z"
+      "generatedAt": "2026-08-28T19:10:38.533Z"
     },
     {
       "code": "XQ",
@@ -1119,7 +1119,7 @@
       "assignedAccountCount": 6,
       "visibleCustomerCount": 5,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:15:14.283Z"
+      "generatedAt": "2026-08-28T19:10:39.551Z"
     },
     {
       "code": "XT",
@@ -1134,7 +1134,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:15:17.790Z"
+      "generatedAt": "2026-08-28T19:10:43.482Z"
     },
     {
       "code": "XV",
@@ -1149,7 +1149,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:15:18.721Z"
+      "generatedAt": "2026-08-28T19:10:44.555Z"
     },
     {
       "code": "XX",
@@ -1164,7 +1164,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:15:23.242Z"
+      "generatedAt": "2026-08-28T19:10:50.669Z"
     },
     {
       "code": "XZ",
@@ -1179,7 +1179,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:15:24.513Z"
+      "generatedAt": "2026-08-28T19:10:53.151Z"
     },
     {
       "code": "Y5",
@@ -1194,7 +1194,7 @@
       "assignedAccountCount": 32,
       "visibleCustomerCount": 30,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:15:24.546Z"
+      "generatedAt": "2026-08-28T19:10:53.210Z"
     },
     {
       "code": "Z",
@@ -1209,7 +1209,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:15:24.566Z"
+      "generatedAt": "2026-08-28T19:10:53.234Z"
     },
     {
       "code": "Z1",
@@ -1224,7 +1224,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:15:24.649Z"
+      "generatedAt": "2026-08-28T19:10:53.381Z"
     }
   ],
   "visibleDetectedCodes": [
@@ -1320,7 +1320,7 @@
       "assignedAccountCount": 28,
       "visibleCustomerCount": 20,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:02.661Z"
+      "generatedAt": "2026-08-28T19:09:28.250Z"
     },
     {
       "code": "B5",
@@ -1335,7 +1335,7 @@
       "assignedAccountCount": 62,
       "visibleCustomerCount": 50,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:04.409Z"
+      "generatedAt": "2026-08-28T19:09:29.819Z"
     },
     {
       "code": "C3",
@@ -1350,7 +1350,7 @@
       "assignedAccountCount": 3,
       "visibleCustomerCount": 3,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:04.500Z"
+      "generatedAt": "2026-08-28T19:09:29.892Z"
     },
     {
       "code": "CB",
@@ -1365,7 +1365,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:04.996Z"
+      "generatedAt": "2026-08-28T19:09:30.284Z"
     },
     {
       "code": "CD",
@@ -1380,7 +1380,7 @@
       "assignedAccountCount": 1,
       "visibleCustomerCount": 1,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:08.475Z"
+      "generatedAt": "2026-08-28T19:09:33.314Z"
     },
     {
       "code": "E4",
@@ -1395,7 +1395,7 @@
       "assignedAccountCount": 1,
       "visibleCustomerCount": 1,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:08.530Z"
+      "generatedAt": "2026-08-28T19:09:33.355Z"
     },
     {
       "code": "E5",
@@ -1410,7 +1410,7 @@
       "assignedAccountCount": 3,
       "visibleCustomerCount": 3,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:08.999Z"
+      "generatedAt": "2026-08-28T19:09:33.737Z"
     },
     {
       "code": "E6",
@@ -1425,7 +1425,7 @@
       "assignedAccountCount": 2,
       "visibleCustomerCount": 1,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:09.482Z"
+      "generatedAt": "2026-08-28T19:09:34.142Z"
     },
     {
       "code": "E7",
@@ -1440,7 +1440,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:09.643Z"
+      "generatedAt": "2026-08-28T19:09:34.272Z"
     },
     {
       "code": "E8",
@@ -1455,7 +1455,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:09.658Z"
+      "generatedAt": "2026-08-28T19:09:34.287Z"
     },
     {
       "code": "G6",
@@ -1470,7 +1470,7 @@
       "assignedAccountCount": 205,
       "visibleCustomerCount": 182,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:20.821Z"
+      "generatedAt": "2026-08-28T19:09:43.442Z"
     },
     {
       "code": "J1",
@@ -1485,7 +1485,7 @@
       "assignedAccountCount": 2,
       "visibleCustomerCount": 2,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:21.650Z"
+      "generatedAt": "2026-08-28T19:09:44.199Z"
     },
     {
       "code": "J2",
@@ -1500,7 +1500,7 @@
       "assignedAccountCount": 2,
       "visibleCustomerCount": 2,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:22.850Z"
+      "generatedAt": "2026-08-28T19:09:45.287Z"
     },
     {
       "code": "M2",
@@ -1515,7 +1515,7 @@
       "assignedAccountCount": 1,
       "visibleCustomerCount": 1,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:23.107Z"
+      "generatedAt": "2026-08-28T19:09:45.554Z"
     },
     {
       "code": "M3",
@@ -1530,7 +1530,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:23.267Z"
+      "generatedAt": "2026-08-28T19:09:45.736Z"
     },
     {
       "code": "M5",
@@ -1545,7 +1545,7 @@
       "assignedAccountCount": 18,
       "visibleCustomerCount": 16,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:23.369Z"
+      "generatedAt": "2026-08-28T19:09:45.832Z"
     },
     {
       "code": "NB",
@@ -1560,7 +1560,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:27.192Z"
+      "generatedAt": "2026-08-28T19:09:50.081Z"
     },
     {
       "code": "NK",
@@ -1575,7 +1575,7 @@
       "assignedAccountCount": 1,
       "visibleCustomerCount": 1,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:27.768Z"
+      "generatedAt": "2026-08-28T19:09:50.429Z"
     },
     {
       "code": "NL",
@@ -1590,7 +1590,7 @@
       "assignedAccountCount": 206,
       "visibleCustomerCount": 190,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:27.867Z"
+      "generatedAt": "2026-08-28T19:09:50.508Z"
     },
     {
       "code": "P6",
@@ -1605,7 +1605,7 @@
       "assignedAccountCount": 29,
       "visibleCustomerCount": 25,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:42.856Z"
+      "generatedAt": "2026-08-28T19:10:05.693Z"
     },
     {
       "code": "S5",
@@ -1620,7 +1620,7 @@
       "assignedAccountCount": 14,
       "visibleCustomerCount": 11,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:43.765Z"
+      "generatedAt": "2026-08-28T19:10:06.511Z"
     },
     {
       "code": "TK",
@@ -1635,7 +1635,7 @@
       "assignedAccountCount": 1,
       "visibleCustomerCount": 1,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:56.674Z"
+      "generatedAt": "2026-08-28T19:10:20.797Z"
     },
     {
       "code": "VD",
@@ -1650,7 +1650,7 @@
       "assignedAccountCount": 19,
       "visibleCustomerCount": 18,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:57.328Z"
+      "generatedAt": "2026-08-28T19:10:21.481Z"
     },
     {
       "code": "VX",
@@ -1665,7 +1665,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:14:57.956Z"
+      "generatedAt": "2026-08-28T19:10:22.151Z"
     },
     {
       "code": "XC",
@@ -1680,7 +1680,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:15:01.479Z"
+      "generatedAt": "2026-08-28T19:10:26.039Z"
     },
     {
       "code": "XH",
@@ -1695,7 +1695,7 @@
       "assignedAccountCount": 0,
       "visibleCustomerCount": 0,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:15:02.951Z"
+      "generatedAt": "2026-08-28T19:10:27.675Z"
     },
     {
       "code": "Y5",
@@ -1710,7 +1710,7 @@
       "assignedAccountCount": 32,
       "visibleCustomerCount": 30,
       "source": "price.xml",
-      "generatedAt": "2026-08-28T17:15:24.546Z"
+      "generatedAt": "2026-08-28T19:10:53.210Z"
     }
   ]
 }

@@ -125,6 +125,14 @@ function isBlueFilteringMaterial(row: PriceListPricingRow) {
   return row.materialRaw.trim().toUpperCase().startsWith("B");
 }
 
+function isUnavailablePhotoDesignRow(row: PriceListPricingRow) {
+  return (
+    /^(?:Camber Pure|Camber Steady Plus|Diamond Series)$/i.test(
+      row.designStyle.trim()
+    ) && /^S/i.test(row.materialRaw.trim())
+  );
+}
+
 function normalizeCustomerFacingAr(coating: PriceListArCoating) {
   const family = /tech\s*shield|unity/i.test(`${coating.brandFamily} ${coating.name}`)
     ? "TechShield by VSP AR Coatings"
@@ -188,7 +196,7 @@ function withPhotoProductUpcharges(
     const upcharge = Number((row.edgedPrice - baseline.edgedPrice).toFixed(2));
     if (!Number.isFinite(upcharge) || upcharge < 0) return [];
     return [{
-      name: `${product.name} (${product.material} ${product.color})`,
+      name: product.name,
       price: `$${upcharge.toFixed(2)}`,
       notes: `Compared with SV PLY CLR at $${baseline.edgedPrice.toFixed(2)}.`,
     }];
@@ -212,7 +220,8 @@ export function customerFacingPriceList(
       (row) =>
         !/^Eyezen(?: Start|\+)$/i.test(row.designStyle) ||
         isBlueFilteringMaterial(row)
-    );
+    )
+    .filter((row) => !isUnavailablePhotoDesignRow(row));
   const arCoatings = priceList.arCoatings
     .filter((coating) => !isRemovedCustomerFacingAr(coating))
     .map(normalizeCustomerFacingAr)

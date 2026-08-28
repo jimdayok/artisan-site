@@ -317,18 +317,44 @@ function lowestRow(
 type DesignSummary = ReturnType<typeof summarizeDesigns>[number];
 
 function summaryPriceForSort(summary: DesignSummary, mode: PriceMode) {
-  return Math.max(
-    0,
-    ...[
-      summary.clear,
-      summary.photochromic,
-      summary.transitions,
-      summary.polarized,
-    ]
-      .filter((row): row is PriceListPricingRow => Boolean(row))
-      .map((row) => rowPrice(row, mode))
-      .filter(Number.isFinite)
-  );
+  const clearPrice = summary.clear ? rowPrice(summary.clear, mode) : undefined;
+  if (clearPrice !== undefined && Number.isFinite(clearPrice) && clearPrice > 0) {
+    return clearPrice;
+  }
+  const alternatives = [
+    summary.photochromic,
+    summary.transitions,
+    summary.polarized,
+  ]
+    .filter((row): row is PriceListPricingRow => Boolean(row))
+    .map((row) => rowPrice(row, mode))
+    .filter((price) => Number.isFinite(price) && price > 0);
+  return alternatives.length ? Math.min(...alternatives) : Number.POSITIVE_INFINITY;
+}
+
+function compareSummaryPriceForCategory(
+  a: DesignSummary,
+  b: DesignSummary,
+  category: PriceDisplayCategory,
+  mode: PriceMode
+) {
+  if (category === "Standard SV") {
+    const rank = (style: string) => {
+      const normalized = style.trim().toUpperCase();
+      if (normalized === "SV") return 0;
+      if (/^(?:ASPHERIC SV|SV ASPHERIC)$/.test(normalized)) return 1;
+      return 2;
+    };
+    const rankDifference = rank(a.designStyle) - rank(b.designStyle);
+    if (rankDifference) return rankDifference;
+  }
+  const aPrice = summaryPriceForSort(a, mode);
+  const bPrice = summaryPriceForSort(b, mode);
+  if (!Number.isFinite(aPrice) && !Number.isFinite(bPrice)) return 0;
+  if (!Number.isFinite(aPrice)) return 1;
+  if (!Number.isFinite(bPrice)) return -1;
+  const ascending = ["Standard SV", "Multifocals"].includes(category);
+  return ascending ? aPrice - bPrice : bPrice - aPrice;
 }
 
 function fitText(font: PDFFont, value: string, maxWidth: number, size: number) {
@@ -438,6 +464,11 @@ async function buildPriceListPdf({
     document,
     requestOrigin,
     "chemistrie-logo.png"
+  );
+  const artisanRings = await embedImageFromPublic(
+    document,
+    requestOrigin,
+    "rings-transparent.png"
   );
   const qrImages = await Promise.all(
     [PORTAL_URL, PROVIDER_RESOURCES_URL].map(async (url) => {
@@ -622,6 +653,19 @@ async function buildPriceListPdf({
       borderColor: RULE,
       borderWidth: 0.6,
     });
+    if (/^Artisan$/i.test(brand)) {
+      const ringsBounds = artisanRings.scaleToFit(
+        brandColumnWidth - 14,
+        Math.max(12, height - 6)
+      );
+      page.drawImage(artisanRings, {
+        x: MARGIN + (brandColumnWidth - ringsBounds.width) / 2,
+        y: topY - height + (height - ringsBounds.height) / 2,
+        width: ringsBounds.width,
+        height: ringsBounds.height,
+        opacity: 0.13,
+      });
+    }
     const textX = MARGIN + 8;
     const textWidth = brandColumnWidth - 16;
     const textY = topY - height / 2 - 3;
@@ -969,13 +1013,10 @@ async function buildPriceListPdf({
           color: RULE,
           thickness: 0.6,
         });
-        const statusLabel = [
-          row.outsourced ? "* outsourced" : "",
-          row.phasingOut ? "! phasing out" : "",
-        ].filter(Boolean).join("; ");
-        const designLabel = `${row.designStyle}${statusLabel ? ` [${statusLabel}]` : ""}`;
+        const hasStatus = row.outsourced || row.phasingOut;
+        const designLabel = row.designStyle;
         const values: Array<[string, number, number, PDFFont, typeof TEXT, number?]> = [
-          [designLabel, designTextX, isAdgaList ? 152 : 194, row.outsourced || row.phasingOut ? bold : regular, row.outsourced ? MUTED : TEXT, row.outsourced || row.phasingOut ? 6.2 : 7.2],
+          [designLabel, designTextX, isAdgaList ? 152 : 194, hasStatus ? bold : regular, TEXT, hasStatus ? 6.6 : 7.2],
           ...(isAdgaList
             ? ([[row.priceGuideCode ?? "A6", guideColumnX, 34, bold, NAVY, 7.2]] as Array<[string, number, number, PDFFont, typeof TEXT, number?]>)
             : []),
@@ -984,12 +1025,70 @@ async function buildPriceListPdf({
           const size = requestedSize ?? 7.2;
           page.drawText(fitText(font, value, width, size), {
             x,
-            y: y - 13,
+            y: y - (hasStatus && x === designTextX ? 9 : 13),
             size,
             font,
             color,
           });
         });
+        let statusX = designTextX;
+        const drawStatusBadge = (
+          label: string,
+          width: number,
+          color: typeof GOLD,
+          withExternalIcon = false
+        ) => {
+          const badgeY = y - 23;
+          page.drawRectangle({
+            x: statusX,
+            y: badgeY,
+            width,
+            height: 9,
+            color: SOFT_FILL,
+            borderColor: color,
+            borderWidth: 0.65,
+          });
+          if (withExternalIcon) {
+            const iconX = statusX + 4;
+            const iconY = badgeY + 2.2;
+            page.drawRectangle({
+              x: iconX,
+              y: iconY,
+              width: 4,
+              height: 4,
+              borderColor: color,
+              borderWidth: 0.55,
+            });
+            page.drawLine({
+              start: { x: iconX + 2, y: iconY + 2 },
+              end: { x: iconX + 6.5, y: iconY + 6.5 },
+              color,
+              thickness: 0.7,
+            });
+            page.drawLine({
+              start: { x: iconX + 3.5, y: iconY + 6.5 },
+              end: { x: iconX + 6.5, y: iconY + 6.5 },
+              color,
+              thickness: 0.7,
+            });
+            page.drawLine({
+              start: { x: iconX + 6.5, y: iconY + 3.5 },
+              end: { x: iconX + 6.5, y: iconY + 6.5 },
+              color,
+              thickness: 0.7,
+            });
+          }
+          page.drawText(label, {
+            x: statusX + (withExternalIcon ? 14 : 5),
+            y: badgeY + 2.1,
+            size: 4.8,
+            font: bold,
+            color,
+          });
+          statusX += width + 4;
+        };
+        if (row.outsourced) drawStatusBadge("Outsourced", 48, MUTED, true);
+        if (row.phasingOut) drawStatusBadge("Phasing out", 42, GOLD);
         const priceValues = [
           [money(row.clear, mode), row.clearBasis, clearColumnX, 52],
           [money(row.photochromic, mode), row.photochromicBasis, photoColumnX, 52],
@@ -1092,6 +1191,14 @@ async function buildPriceListPdf({
       y -= rowHeight;
     }
   };
+
+  const compactItemGridHeight = (itemCount: number) => {
+    const columns = itemCount > 8 ? 2 : 1;
+    return Math.ceil(itemCount / columns) * 19;
+  };
+
+  const boxedItemGroupHeight = (itemCount: number, hasNote: boolean) =>
+    (hasNote ? 42 : 30) + itemCount * 17 + 8;
 
   const drawBoxedItemGroups = (
     groups: Array<{
@@ -1222,7 +1329,7 @@ async function buildPriceListPdf({
       else name = `Artisan ${name}`;
     }
     const code = cleanText(coating.code ?? "").toUpperCase();
-    return code ? `${code} - ${name}` : name;
+    return code ? `${name} (${code})` : name;
   };
 
   const coatingGroupLogo = (brand: string) => {
@@ -1242,7 +1349,7 @@ async function buildPriceListPdf({
 
     const gap = 8;
     const width = (CONTENT_WIDTH - gap) / 2;
-    const height = 72;
+    const height = 82;
     const rowsNeeded = Math.ceil(cards.length / 2);
     ensureSpace(rowsNeeded * (height + gap) + 28);
     page.drawText("Artisan favorites - produced on-site", {
@@ -1253,7 +1360,7 @@ async function buildPriceListPdf({
       color: NAVY,
     });
     page.drawText("Faster turnaround and consistent Artisan quality.", {
-      x: MARGIN + 177,
+      x: MARGIN + 200,
       y: y - 9,
       size: 7.2,
       font: regular,
@@ -1274,16 +1381,16 @@ async function buildPriceListPdf({
         borderColor: RULE,
         borderWidth: 0.8,
       });
-      const imageBounds = card.image.scaleToFit(58, 20);
+      const imageBounds = card.image.scaleToFit(180, 50);
       page.drawImage(card.image, {
-        x: x + 10,
-        y: top - 27,
+        x: x + 5,
+        y: top - 51,
         width: imageBounds.width,
         height: imageBounds.height,
       });
-      page.drawText(`${card.code} - ${card.name}`, {
+      page.drawText(`${card.name} (${card.code})`, {
         x: x + 10,
-        y: top - 43,
+        y: top - 52,
         size: 7.8,
         font: bold,
         color: NAVY,
@@ -1297,7 +1404,7 @@ async function buildPriceListPdf({
       });
       page.drawText(fitText(regular, card.description, width - 20, 6.5), {
         x: x + 10,
-        y: top - 57,
+        y: top - 68,
         size: 6.5,
         font: regular,
         color: MUTED,
@@ -1504,11 +1611,7 @@ async function buildPriceListPdf({
       )) {
         const orderedBrandRows = [...brandRows].sort(
           (a, b) =>
-            compareProgressiveTier(
-              a.progressiveTier ?? "Good",
-              b.progressiveTier ?? "Good"
-            ) ||
-            summaryPriceForSort(b, mode) - summaryPriceForSort(a, mode) ||
+            compareSummaryPriceForCategory(a, b, category, mode) ||
             compareDesignStyle(a.designStyle, b.designStyle)
         );
         drawBrandRows({
@@ -1557,7 +1660,12 @@ async function buildPriceListPdf({
       for (const [brand, brandRows] of [...brandGroups.entries()].sort(
         ([a], [b]) => comparePriceDisplayBrand(a, b)
       )) {
-        drawBrandRows({ sectionLabel, tier, brand, rows: brandRows });
+        const orderedBrandRows = [...brandRows].sort(
+          (a, b) =>
+            compareSummaryPriceForCategory(a, b, category, mode) ||
+            compareDesignStyle(a.designStyle, b.designStyle)
+        );
+        drawBrandRows({ sectionLabel, tier, brand, rows: orderedBrandRows });
       }
     }
     y -= 8;
@@ -1601,7 +1709,7 @@ async function buildPriceListPdf({
     drawPreferredArtisanArCards(coatings);
     drawBoxedItemGroups(
       [...coatingGroups.entries()].map(([brand, entries]) => ({
-        title: brand,
+        title: brand === "Artisan" ? "Artisan, cont." : brand,
         note: coatingTurnaroundNote(brand),
         logoBrand: coatingGroupLogo(brand),
         items: entries
@@ -1626,7 +1734,7 @@ async function buildPriceListPdf({
   for (const [sectionIndex, section] of normalizedAddOnSections.entries()) {
     if (!section.items.length) continue;
     if (sectionIndex > 0) y -= 8;
-    ensureSpace(62);
+    ensureSpace(36 + compactItemGridHeight(section.items.length) + 8);
     sectionTitle(section.title);
     drawCompactItemGrid(
       section.items.map((item) => ({
@@ -1637,9 +1745,13 @@ async function buildPriceListPdf({
     );
   }
 
+  const chemistrieGroupHeight = boxedItemGroupHeight(
+    chemistrieClipItems.length,
+    true
+  );
+  ensureSpace(36 + 30 + chemistrieGroupHeight);
   y -= 8;
   sectionTitle(CHEMISTRIE_CLIPS_SECTION_TITLE);
-  ensureSpace(30);
   const chemistrieBounds = chemistrieLogo.scaleToFit(120, 26);
   page.drawImage(chemistrieLogo, {
     x: MARGIN + 10,

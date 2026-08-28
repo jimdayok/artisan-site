@@ -137,11 +137,14 @@ function CtaLink({
 function ProgramLogo({ program }: { program: ProgramPageData }) {
   if (!program.logo) return null;
   const isUnity = program.slug === "unity-rebate";
+  const isNeurolens = program.slug === "neurolens-free-ar";
 
   return (
     <div
-      className={`mb-7 flex w-fit items-center rounded-2xl border border-white/12 bg-[#fbf8f3] shadow-[0_18px_45px_rgba(0,0,0,0.18)] ${
-        isUnity ? "px-4 py-3" : "px-5 py-3"
+      className={`mb-7 flex w-fit items-center border border-white/12 bg-[#fbf8f3] shadow-[0_18px_45px_rgba(0,0,0,0.18)] ${
+        isNeurolens ? "rounded-xl px-4 py-3 sm:px-5" : "rounded-2xl"
+      } ${
+        isUnity ? "px-4 py-3" : isNeurolens ? "" : "px-5 py-3"
       }`}
     >
       <Image
@@ -151,10 +154,93 @@ function ProgramLogo({ program }: { program: ProgramPageData }) {
         height={220}
         preload
         className={`w-auto object-contain ${
-          isUnity ? "max-h-[150px] max-w-[380px] scale-[1.25]" : "max-h-[100px] max-w-[300px] scale-[1.15]"
+          isUnity
+            ? "max-h-[150px] max-w-[380px] scale-[1.25]"
+            : isNeurolens
+              ? "h-auto max-h-[60px] w-[280px] max-w-[72vw]"
+              : "max-h-[100px] max-w-[300px] scale-[1.15]"
         }`}
       />
     </div>
+  );
+}
+
+function NeurolensHero({ program, href }: { program: ProgramPageData; href: string }) {
+  return (
+    <section
+      data-theme="dark"
+      className="relative isolate overflow-hidden bg-[#111918] px-6 pb-20 pt-28 md:px-10 md:pb-24 md:pt-36"
+    >
+      <div className="pointer-events-none absolute inset-0 -z-20 bg-[radial-gradient(circle_at_12%_18%,rgba(53,168,211,0.16),transparent_30%),radial-gradient(circle_at_82%_72%,rgba(212,192,154,0.16),transparent_34%),linear-gradient(135deg,#101716_0%,#172321_48%,#0e1515_100%)]" />
+      <div className="pointer-events-none absolute -right-44 -top-36 -z-10 h-[560px] w-[560px] rounded-full border border-[#d4c09a]/10" />
+      <div className="pointer-events-none absolute -right-16 top-10 -z-10 h-[380px] w-[380px] rounded-full border border-white/[0.055]" />
+      <div className="pointer-events-none absolute -bottom-56 left-[28%] -z-10 h-[480px] w-[480px] rounded-full border border-[#38a8d3]/10" />
+
+      <div className="relative z-10 mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1.12fr_0.88fr] lg:items-center lg:gap-16">
+        <div>
+          <ProgramLogo program={program} />
+          <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[#d4c09a] sm:text-sm">
+            {program.eyebrow}
+          </p>
+          <h1 className="mt-5 max-w-3xl text-[3.15rem] font-semibold leading-[0.98] tracking-[-0.045em] text-white sm:text-6xl lg:text-[5.15rem]">
+            Unlimited Free Artisan AR
+            <span className="mt-2 block text-[#d9c49d]">for 90 Days</span>
+          </h1>
+          <p className="mt-7 max-w-2xl text-lg leading-8 text-white/72 md:text-xl">
+            Pair any progressive lens with any Artisan AR treatment. Use the offer as often as you want throughout your 90-day program.
+          </p>
+
+          {program.capacityNote ? (
+            <div className="mt-7 flex max-w-2xl items-start gap-3 border-l-2 border-[#d4c09a] pl-4 text-sm font-semibold leading-6 text-[#f5ead7]">
+              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#38a8d3]" />
+              <span>{program.capacityNote}</span>
+            </div>
+          ) : null}
+
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <CtaLink href={href}>{program.primaryCta}</CtaLink>
+            <Link
+              href="#details"
+              className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/18 bg-white/[0.055] px-7 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-[#d4c09a]/65 hover:bg-white/10"
+            >
+              View Program Details
+            </Link>
+          </div>
+        </div>
+
+        <aside className="relative overflow-hidden rounded-[28px] border border-[#d4c09a]/30 bg-[#f7f2e9] p-6 text-[#17201f] shadow-[0_34px_100px_rgba(0,0,0,0.35)] sm:p-8">
+          <div className="absolute right-0 top-0 h-32 w-32 rounded-bl-full bg-[#38a8d3]/10" />
+          <p className="relative text-xs font-bold uppercase tracking-[0.28em] text-[#7b6848]">
+            The offer at a glance
+          </p>
+          <div className="relative mt-5 flex items-end gap-4 border-b border-[#d8cbb8] pb-6">
+            <span className="text-8xl font-semibold leading-[0.82] tracking-[-0.07em] text-[#142724] sm:text-9xl">90</span>
+            <div className="pb-1">
+              <p className="text-2xl font-semibold uppercase tracking-[-0.02em]">Days</p>
+              <p className="mt-1 text-xs font-bold uppercase tracking-[0.2em] text-[#857352]">Free Artisan AR</p>
+            </div>
+          </div>
+
+          <div className="relative mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+            {[
+              ["Unlimited use", "No cap on qualifying orders"],
+              ["Any progressive", "Choose the design you prefer"],
+              ["Any Artisan AR", "Every Artisan treatment qualifies"],
+              ["Program code", program.programCode],
+            ].map(([title, body]) => (
+              <div key={title} className="rounded-xl border border-[#ded2c0] bg-white/75 p-4">
+                <p className="text-sm font-bold text-[#142724]">{title}</p>
+                <p className="mt-1 text-xs leading-5 text-[#6f6559]">{body}</p>
+              </div>
+            ))}
+          </div>
+
+          <p className="relative mt-5 text-xs leading-5 text-[#6f6559]">
+            Progressive lenses only. Single vision, lined multifocal, and non-Artisan AR orders are excluded.
+          </p>
+        </aside>
+      </div>
+    </section>
   );
 }
 
@@ -312,6 +398,7 @@ function ArLogoCards({ program }: { program: ProgramPageData }) {
 
 export default function ProgramLandingPage({ program }: { program: ProgramPageData }) {
   const href = programHref(program.programCode);
+  const isNeurolens = program.slug === "neurolens-free-ar";
   const faqs = [
     {
       question: "Who is eligible?",
@@ -339,65 +426,69 @@ export default function ProgramLandingPage({ program }: { program: ProgramPageDa
     <main className="min-h-screen bg-[#171311] text-white">
       <Header onContactClick={() => openExternal(href)} signUpHref={href} />
 
-      <BackgroundSection
-        image={program.heroImage ?? "/graphics/rings2.jpg"}
-        className="px-6 pb-16 pt-32 md:px-10 md:pb-24 md:pt-40"
-      >
-        <div className="relative z-10 mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
-          <div>
-            <ProgramLogo program={program} />
-            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#d4c09a]">
-              {program.eyebrow}
-            </p>
-            <h1 className="mt-5 max-w-5xl text-5xl font-semibold tracking-tight md:text-7xl">
-              {program.headline}
-            </h1>
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-white/78 md:text-xl">
-              {program.subheadline}
-            </p>
-            {program.capacityNote ? (
-              <div className="mt-7 max-w-3xl rounded-[18px] border border-[#d4c09a]/55 bg-[#d4c09a]/12 px-5 py-4 text-sm font-semibold leading-6 text-[#fff7e8] shadow-[0_16px_40px_rgba(0,0,0,0.18)] backdrop-blur-md">
-                {program.capacityNote}
+      {isNeurolens ? (
+        <NeurolensHero program={program} href={href} />
+      ) : (
+        <BackgroundSection
+          image={program.heroImage ?? "/graphics/rings2.jpg"}
+          className="px-6 pb-16 pt-32 md:px-10 md:pb-24 md:pt-40"
+        >
+          <div className="relative z-10 mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
+            <div>
+              <ProgramLogo program={program} />
+              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#d4c09a]">
+                {program.eyebrow}
+              </p>
+              <h1 className="mt-5 max-w-5xl text-5xl font-semibold tracking-tight md:text-7xl">
+                {program.headline}
+              </h1>
+              <p className="mt-6 max-w-3xl text-lg leading-8 text-white/78 md:text-xl">
+                {program.subheadline}
+              </p>
+              {program.capacityNote ? (
+                <div className="mt-7 max-w-3xl rounded-[18px] border border-[#d4c09a]/55 bg-[#d4c09a]/12 px-5 py-4 text-sm font-semibold leading-6 text-[#fff7e8] shadow-[0_16px_40px_rgba(0,0,0,0.18)] backdrop-blur-md">
+                  {program.capacityNote}
+                </div>
+              ) : null}
+              <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <CtaLink href={href}>{program.primaryCta}</CtaLink>
+                {program.secondaryCta ? (
+                  <CtaLink href={href} variant="secondary">
+                    {program.secondaryCta}
+                  </CtaLink>
+                ) : (
+                  <Link
+                    href="#details"
+                    className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/18 bg-white/8 px-7 py-3 text-sm font-semibold text-white backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[#d4c09a]/65 hover:bg-white/14"
+                  >
+                    View Program Details
+                  </Link>
+                )}
               </div>
-            ) : null}
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <CtaLink href={href}>{program.primaryCta}</CtaLink>
-              {program.secondaryCta ? (
-                <CtaLink href={href} variant="secondary">
-                  {program.secondaryCta}
-                </CtaLink>
-              ) : (
-                <Link
-                  href="#details"
-                  className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/18 bg-white/8 px-7 py-3 text-sm font-semibold text-white backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[#d4c09a]/65 hover:bg-white/14"
-                >
-                  View Program Details
-                </Link>
-              )}
             </div>
-          </div>
 
-          <div className="rounded-[30px] border border-white/12 bg-white/[0.075] p-6 shadow-[0_30px_90px_rgba(0,0,0,0.32)] backdrop-blur-md md:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#d4c09a]">
-              Offer
-            </p>
-            <div className="mt-5 text-5xl font-semibold tracking-tight text-white md:text-6xl">
-              {program.offerValue}
+            <div className="rounded-[30px] border border-white/12 bg-white/[0.075] p-6 shadow-[0_30px_90px_rgba(0,0,0,0.32)] backdrop-blur-md md:p-8">
+              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#d4c09a]">
+                Offer
+              </p>
+              <div className="mt-5 text-5xl font-semibold tracking-tight text-white md:text-6xl">
+                {program.offerValue}
+              </div>
+              <p className="mt-5 text-base leading-7 text-white/74">
+                {program.offerBody}
+              </p>
+              <ul className="mt-6 space-y-3 text-sm leading-6 text-white/80">
+                {program.keyPoints.map((point) => (
+                  <li key={point} className="flex gap-3">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#d4c09a]" />
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <p className="mt-5 text-base leading-7 text-white/74">
-              {program.offerBody}
-            </p>
-            <ul className="mt-6 space-y-3 text-sm leading-6 text-white/80">
-              {program.keyPoints.map((point) => (
-                <li key={point} className="flex gap-3">
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#d4c09a]" />
-                  <span>{point}</span>
-                </li>
-              ))}
-            </ul>
           </div>
-        </div>
-      </BackgroundSection>
+        </BackgroundSection>
+      )}
 
       <BackgroundSection
         theme="light"

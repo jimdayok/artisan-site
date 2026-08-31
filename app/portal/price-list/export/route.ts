@@ -11,7 +11,11 @@ import { getAuthorizedRuntimePriceListFromHeaders } from "@/lib/portal/priceList
 import { canonicalPriceListCode } from "@/lib/portal/priceLists";
 import { checkRateLimit } from "@/lib/portal/rateLimit";
 import { customerFacingPriceList } from "@/lib/pricing/customerPriceList";
-import { buildAdgaPreferredPriceList } from "@/lib/pricing/adgaPriceList";
+import {
+  ADGA_NEOCHROMES_DEDUCTION,
+  ADGA_PHOTO_PRICING_NOTE,
+  buildAdgaPreferredPriceList,
+} from "@/lib/pricing/adgaPriceList";
 import {
   ADGA_SOURCE_PRICE_LIST_CODES,
   isAdgaPriceListCode,
@@ -143,7 +147,7 @@ function compareDesignStyle(a: string, b: string) {
 }
 
 function titleCasePriceListName(value: string) {
-  const acronyms = new Set(["AR", "CD", "IOT", "PMP", "SV", "VSP"]);
+  const acronyms = new Set(["ADG&A", "AR", "CD", "IOT", "PMP", "SV", "VSP"]);
   return cleanText(value)
     .toLowerCase()
     .split(" ")
@@ -231,6 +235,7 @@ function priceText(value: number | string) {
 
 function summarizeDesigns(priceList: GeneratedPriceListData, mode: PriceMode) {
   const polycarbonateBasis = usesPolycarbonatePriceBasis(priceList.code);
+  const isAdgaList = isAdgaPriceListCode(priceList.code);
   const groups = new Map<string, PriceListPricingRow[]>();
   for (const row of priceList.rows) {
     if (row.material.trim().toUpperCase() === "PFT") continue;
@@ -252,12 +257,16 @@ function summarizeDesigns(priceList: GeneratedPriceListData, mode: PriceMode) {
       const clear = polycarbonateBasis
         ? selectSummaryPrice(rows, "Clear", mode)
         : { row: lowestRow(rows, "Clear", mode) };
-      const photochromic = polycarbonateBasis
-        ? selectSummaryPrice(rows, "Photochromic", mode)
-        : { row: lowestRow(rows, "Photochromic", mode) };
-      const transitions = polycarbonateBasis
-        ? selectSummaryPrice(rows, "Transitions", mode)
-        : { row: lowestRow(rows, "Transitions", mode) };
+      const photochromic = isAdgaList
+        ? { row: lowestAdgaTransitionsRow(rows, mode) }
+        : polycarbonateBasis
+          ? selectSummaryPrice(rows, "Photochromic", mode)
+          : { row: lowestRow(rows, "Photochromic", mode) };
+      const transitions = isAdgaList
+        ? { row: lowestAdgaNeochromesRow(rows, mode) }
+        : polycarbonateBasis
+          ? selectSummaryPrice(rows, "Transitions", mode)
+          : { row: lowestRow(rows, "Transitions", mode) };
       const polarized = polycarbonateBasis
         ? selectSummaryPrice(rows, "Polarized", mode)
         : { row: lowestRow(rows, "Polarized", mode) };
@@ -310,6 +319,28 @@ function lowestRow(
           row,
           materialColor as "Clear" | "Photochromic" | "Transitions" | "Polarized"
         ) && rowPrice(row, mode) > 0
+    )
+    .sort((a, b) => rowPrice(a, mode) - rowPrice(b, mode))[0];
+}
+
+function lowestAdgaTransitionsRow(rows: PriceListPricingRow[], mode: PriceMode) {
+  return rows
+    .filter(
+      (row) =>
+        /^Transitions$/i.test(row.colorBrand) &&
+        row.colorRaw.some((code) => /^(?:TGY|TBN)$/i.test(code)) &&
+        rowPrice(row, mode) > 0
+    )
+    .sort((a, b) => rowPrice(a, mode) - rowPrice(b, mode))[0];
+}
+
+function lowestAdgaNeochromesRow(rows: PriceListPricingRow[], mode: PriceMode) {
+  return rows
+    .filter(
+      (row) =>
+        /^Neochromes$/i.test(row.colorBrand) &&
+        row.colorRaw.some((code) => /^(?:NCG|NCB)$/i.test(code)) &&
+        rowPrice(row, mode) > 0
     )
     .sort((a, b) => rowPrice(a, mode) - rowPrice(b, mode))[0];
 }
@@ -608,8 +639,8 @@ async function buildPriceListPdf({
       ["Design", showBrand ? designTextX : MARGIN + 6],
       ...(isAdgaList ? ([["Guide", guideColumnX]] as const) : []),
       [packagePricing ? "Package" : "Clear", clearColumnX],
-      ["Photo", photoColumnX],
-      ["Trans/Xtra", transitionsColumnX],
+      [isAdgaList ? "Transitions" : "Photo", photoColumnX],
+      [isAdgaList ? "Neo Deduct" : "Trans/Xtra", transitionsColumnX],
       ["Polar", polarColumnX],
     ] as const;
     for (const [label, x] of headers) {
@@ -692,7 +723,9 @@ async function buildPriceListPdf({
     const introTextWidth = badgeX - (MARGIN + 18) - 24;
     const summaryLines = wrapText(
       regular,
-      polycarbonateBasis
+      isAdgaList
+        ? ADGA_PHOTO_PRICING_NOTE
+        : polycarbonateBasis
         ? "This price list uses polycarbonate as the base material unless otherwise noted. Only Tokai products are available in 1.70 and 1.76 index. Photo shows S-material products; Trans/Xtra shows Transitions and Xtra Active products."
         : "Customer-ready pricing organized by design family, coatings, add-ons, and policy notes.",
       introTextWidth,
@@ -1117,10 +1150,21 @@ async function buildPriceListPdf({
         statusLabels.forEach(({ label, color, icon }, index) =>
           drawStatusMarker(label, statusWidths[index], color, icon)
         );
+        const neochromesDeduction =
+          isAdgaList && row.photochromic && row.transitions
+            ? `-$${ADGA_NEOCHROMES_DEDUCTION.toFixed(2)}`
+            : "-";
         const priceValues = [
           [money(row.clear, mode), row.clearBasis, clearColumnX, 52],
           [money(row.photochromic, mode), row.photochromicBasis, photoColumnX, 52],
-          [money(row.transitions, mode), row.transitionsBasis, transitionsColumnX, 58],
+          [
+            isAdgaList ? neochromesDeduction : money(row.transitions, mode),
+            isAdgaList && neochromesDeduction !== "-"
+              ? "From Transitions"
+              : row.transitionsBasis,
+            transitionsColumnX,
+            58,
+          ],
           [money(row.polarized, mode), row.polarizedBasis, polarColumnX, 50],
         ] as const;
         priceValues.forEach(([value, basis, x, width]) => {
@@ -1834,7 +1878,12 @@ async function buildPriceListPdf({
       font: regular,
       color: MUTED,
     });
-    currentPage.drawText(fitText(regular, polycarbonateBasis ? PRICE_BASIS_NOTE : STANDARD_PRICE_NOTE, CONTENT_WIDTH, 6.6), {
+    const footerNote = isAdgaList
+      ? "Transitions is +$50.00 after the automatic $4.99 invoice deduction; Neochromes deducts $6.43; AEM is a $50.00 invoice-level fee."
+      : polycarbonateBasis
+        ? PRICE_BASIS_NOTE
+        : STANDARD_PRICE_NOTE;
+    currentPage.drawText(fitText(regular, footerNote, CONTENT_WIDTH, 6.6), {
       x: MARGIN,
       y: 16,
       size: 6.6,

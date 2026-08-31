@@ -32,6 +32,10 @@ import {
   CHEMISTRIE_CLIPS_SECTION_TITLE,
   chemistrieClipItems,
 } from "@/lib/pricing/chemistrieClips";
+import {
+  ADGA_NEOCHROMES_DEDUCTION,
+  ADGA_PHOTO_PRICING_NOTE,
+} from "@/lib/pricing/adgaPriceList";
 
 type PriceMode = "edged" | "uncut";
 type ViewBy = "designType" | "brand" | "priceGuide";
@@ -186,6 +190,24 @@ function SummaryPriceCell({
           {basis}
         </span>
       ) : null}
+    </>
+  );
+}
+
+function AdgaNeochromesDeductionCell({
+  transitions,
+  neochromes,
+}: {
+  transitions: PriceListPricingRow | undefined;
+  neochromes: PriceListPricingRow | undefined;
+}) {
+  if (!transitions || !neochromes) return <span className="block">—</span>;
+  return (
+    <>
+      <span className="block">-{currency(ADGA_NEOCHROMES_DEDUCTION)}</span>
+      <span className="mt-0.5 block text-[9px] font-bold uppercase leading-3 tracking-[0.06em] text-[#7b6240]">
+        From Transitions
+      </span>
     </>
   );
 }
@@ -573,6 +595,26 @@ function minRow(rows: PriceListPricingRow[], group: MaterialGroup, mode: PriceMo
     .sort((a, b) => priceFor(a, mode) - priceFor(b, mode))[0];
 }
 
+function lowestAdgaTransitionsRow(rows: PriceListPricingRow[], mode: PriceMode) {
+  return rows
+    .filter(
+      (row) =>
+        /^Transitions$/i.test(row.colorBrand) &&
+        row.colorRaw.some((code) => /^(?:TGY|TBN)$/i.test(code))
+    )
+    .sort((a, b) => priceFor(a, mode) - priceFor(b, mode))[0];
+}
+
+function lowestAdgaNeochromesRow(rows: PriceListPricingRow[], mode: PriceMode) {
+  return rows
+    .filter(
+      (row) =>
+        /^Neochromes$/i.test(row.colorBrand) &&
+        row.colorRaw.some((code) => /^(?:NCG|NCB)$/i.test(code))
+    )
+    .sort((a, b) => priceFor(a, mode) - priceFor(b, mode))[0];
+}
+
 function findComparableRow(
   selectedRow: PriceListPricingRow,
   comparisonRows: PriceListPricingRow[]
@@ -620,7 +662,11 @@ function uniqueValues<T>(rows: T[], getter: (row: T) => string) {
   return [...new Set(rows.map(getter).filter(Boolean))].sort(compareText);
 }
 
-function groupDesignRows(rows: PriceListPricingRow[], mode: PriceMode) {
+function groupDesignRows(
+  rows: PriceListPricingRow[],
+  mode: PriceMode,
+  isAdgaList = false
+) {
   const polycarbonateBasis = usesPolycarbonatePriceBasis(rows[0]?.code ?? "");
   const groups = new Map<string, DesignRow>();
 
@@ -653,12 +699,16 @@ function groupDesignRows(rows: PriceListPricingRow[], mode: PriceMode) {
     const clear = polycarbonateBasis
       ? selectSummaryPrice(group.rows, "Clear", mode)
       : { row: minRow(group.rows, "Clear", mode) };
-    const photochromic = polycarbonateBasis
-      ? selectSummaryPrice(group.rows, "Photochromic", mode)
-      : { row: minRow(group.rows, "Photochromic", mode) };
-    const transitions = polycarbonateBasis
-      ? selectSummaryPrice(group.rows, "Transitions", mode)
-      : { row: minRow(group.rows, "Transitions", mode) };
+    const photochromic = isAdgaList
+      ? { row: lowestAdgaTransitionsRow(group.rows, mode) }
+      : polycarbonateBasis
+        ? selectSummaryPrice(group.rows, "Photochromic", mode)
+        : { row: minRow(group.rows, "Photochromic", mode) };
+    const transitions = isAdgaList
+      ? { row: lowestAdgaNeochromesRow(group.rows, mode) }
+      : polycarbonateBasis
+        ? selectSummaryPrice(group.rows, "Transitions", mode)
+        : { row: minRow(group.rows, "Transitions", mode) };
     const polarized = polycarbonateBasis
       ? selectSummaryPrice(group.rows, "Polarized", mode)
       : { row: minRow(group.rows, "Polarized", mode) };
@@ -947,7 +997,7 @@ export default function InteractivePriceListDashboard({
 
   const designRows = useMemo(() => {
     const grouped = sortDesignRows(
-      groupDesignRows(baseFilteredRows, priceMode),
+      groupDesignRows(baseFilteredRows, priceMode, isAdgaList),
       sort,
       priceMode
     );
@@ -971,6 +1021,7 @@ export default function InteractivePriceListDashboard({
     colorBrand,
     hasPhotochromic,
     hasPolarized,
+    isAdgaList,
   ]);
 
   const options = useMemo(() => {
@@ -1133,13 +1184,19 @@ export default function InteractivePriceListDashboard({
     },
     {
       key: "photochromic",
-      label: isPackageList
+      label: isAdgaList
+        ? "Transitions"
+        : isPackageList
           ? "Photo Upgrade"
           : "Photochromic",
     },
     {
       key: "transitions",
-      label: isPackageList ? "Trans/Xtra Upgrade" : "Trans/Xtra",
+      label: isAdgaList
+        ? "Neochromes Deduct"
+        : isPackageList
+          ? "Trans/Xtra Upgrade"
+          : "Trans/Xtra",
     },
     {
       key: "polarized",
@@ -1208,7 +1265,9 @@ export default function InteractivePriceListDashboard({
               </div>
             ) : null}
             <p className="mt-3 max-w-3xl text-sm leading-6 text-[#4d5664]">
-              {polycarbonateBasis
+              {isAdgaList
+                ? ADGA_PHOTO_PRICING_NOTE
+                : polycarbonateBasis
                 ? "This price list uses polycarbonate as the base material unless otherwise noted. Only Tokai products are available in 1.70 and 1.76 index. Photo uses S-material products, while Trans/Xtra shows Transitions and Xtra Active."
                 : "Start with design, then compare clear, S-material photochromic, Transitions/Xtra Active, and polarized options."}
             </p>
@@ -1366,9 +1425,9 @@ export default function InteractivePriceListDashboard({
         </div>
 
         <div className="grid gap-3 p-4 md:p-5">
-          <div className="max-h-[66vh] overflow-y-auto pr-1">
+          <div className="min-w-0 max-h-[66vh] overflow-y-auto pr-1">
             {groupedSections.map((section) => (
-            <section key={section.section} className="rounded-[2px] border border-[#e7dccb] bg-white/70">
+            <section key={section.section} className="min-w-0 rounded-[2px] border border-[#e7dccb] bg-white/70">
               <header className="border-b border-[#eadfce] bg-[#f8f1e6] px-4 py-3">
                 {viewBy === "brand" ? (
                   <BrandGroupHeader label={section.section} />
@@ -1376,7 +1435,7 @@ export default function InteractivePriceListDashboard({
                   <h3 className="text-base font-semibold text-[#122033]">{section.section}</h3>
                 )}
               </header>
-              <div className="grid gap-2 p-3 md:p-3">
+              <div className="min-w-0 grid gap-2 p-3 md:p-3">
                 {section.nestedGroups.map((nested, nestedIndex) => (
                   <Fragment key={`${section.section}-${nested.tier ?? "none"}-${nested.label}`}>
                     {nested.tier &&
@@ -1385,7 +1444,7 @@ export default function InteractivePriceListDashboard({
                         {nested.tier}
                       </div>
                     ) : null}
-                  <div className="rounded-[2px] border border-[#eadfce] bg-white/82">
+                  <div className="min-w-0 rounded-[2px] border border-[#eadfce] bg-white/82">
                     <div className="border-b border-[#f0e6d8] px-3 py-2">
                       {viewBy !== "brand" ? (
                         <BrandGroupHeader label={nested.label} />
@@ -1395,7 +1454,7 @@ export default function InteractivePriceListDashboard({
                         </h4>
                       )}
                     </div>
-                    <div className="mobile-scroll-row overflow-x-auto md:overflow-visible">
+                    <div className="mobile-scroll-row w-full overflow-x-auto md:overflow-visible">
                       <table className="w-full min-w-[760px] table-fixed border-separate border-spacing-0 text-left text-sm md:min-w-0">
                         <colgroup>
                           {isAdgaList ? (
@@ -1485,7 +1544,14 @@ export default function InteractivePriceListDashboard({
                                     <SummaryPriceCell row={row.photoFrom} basis={row.photoBasis} mode={priceMode} />
                                   </td>
                                   <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
-                                    <SummaryPriceCell row={row.transitionsFrom} basis={row.transitionsBasis} mode={priceMode} />
+                                    {isAdgaList ? (
+                                      <AdgaNeochromesDeductionCell
+                                        transitions={row.photoFrom}
+                                        neochromes={row.transitionsFrom}
+                                      />
+                                    ) : (
+                                      <SummaryPriceCell row={row.transitionsFrom} basis={row.transitionsBasis} mode={priceMode} />
+                                    )}
                                   </td>
                                   <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
                                     <SummaryPriceCell row={row.polarizedFrom} basis={row.polarizedBasis} mode={priceMode} />
@@ -1570,6 +1636,7 @@ function ExpandedDesignBuilder({
   };
 
   const isPackageList = isPackagePriceListCode(String(listCode ?? ""));
+  const isAdgaList = isAdgaPriceListCode(String(listCode ?? ""));
   const includesFrame = ["M5", "Y5"].includes(listCode);
   const [blueLightEnabled, setBlueLightEnabled] = useState(false);
   const materialOptions = useMemo(() => {
@@ -1674,7 +1741,9 @@ function ExpandedDesignBuilder({
       : null;
   const lowestPhoto = photoFamilies[0]?.family ?? "";
   const lowestPhotoNote =
-    lowestPhoto.includes("Transitions")
+    isAdgaList
+      ? ADGA_PHOTO_PRICING_NOTE
+      : lowestPhoto.includes("Transitions")
       ? "For this design, Transitions is the lowest available photochromic option."
       : "Photochromic pricing shown in this table reflects the lowest available photochromic option, typically Neochromes unless another product is the only available or lowest available option.";
 
@@ -1780,8 +1849,17 @@ function ExpandedDesignBuilder({
             className="h-10 rounded-full border border-[#d7c5a8] bg-white px-3 text-sm font-semibold text-[#122033] outline-none focus:border-[#8a7654] focus:ring-2 focus:ring-[#d4c09a]/45"
           >
             <option value="Clear">Clear</option>
-            <option value="Photochromic">Photochromic</option>
-            <option value="Transitions">Transitions / Xtra Active</option>
+            {isAdgaList ? (
+              <>
+                <option value="Transitions">Transitions (Photochromic)</option>
+                <option value="Photochromic">Neochromes (-$6.43)</option>
+              </>
+            ) : (
+              <>
+                <option value="Photochromic">Photochromic</option>
+                <option value="Transitions">Transitions / Xtra Active</option>
+              </>
+            )}
             <option value="Polarized">Polarized</option>
           </select>
         </label>
@@ -1868,15 +1946,28 @@ function ExpandedDesignBuilder({
                 </p>
               </div>
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8a7654]">Photochromic</p>
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8a7654]">
+                  {isAdgaList ? "Transitions" : "Photochromic"}
+                </p>
                 <p className="font-bold text-[#122033]">
-                  {startingPriceLabel(materialOption.photochromic, builderMode)}
+                  {startingPriceLabel(
+                    isAdgaList ? materialOption.transitions : materialOption.photochromic,
+                    builderMode
+                  )}
                 </p>
               </div>
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8a7654]">Trans/Xtra</p>
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8a7654]">
+                  {isAdgaList ? "Neochromes" : "Trans/Xtra"}
+                </p>
                 <p className="font-bold text-[#122033]">
-                  {startingPriceLabel(materialOption.transitions, builderMode)}
+                  {isAdgaList ? (
+                    materialOption.photochromic
+                      ? `-${currency(ADGA_NEOCHROMES_DEDUCTION)}`
+                      : "—"
+                  ) : (
+                    startingPriceLabel(materialOption.transitions, builderMode)
+                  )}
                 </p>
               </div>
               <div>
@@ -1891,8 +1982,18 @@ function ExpandedDesignBuilder({
       </section>
 
       <section className="grid gap-4 xl:grid-cols-2">
-        <OptionFamilyPanel id="photo-options" title="Photochromic Options" families={photoFamilies} priceMode={builderMode} />
-        <OptionFamilyPanel id="transitions-options" title="Transitions / Xtra Active Options" families={transitionsFamilies} priceMode={builderMode} />
+        <OptionFamilyPanel
+          id="photo-options"
+          title={isAdgaList ? "Neochromes Option (-$6.43 from Transitions)" : "Photochromic Options"}
+          families={photoFamilies}
+          priceMode={builderMode}
+        />
+        <OptionFamilyPanel
+          id="transitions-options"
+          title={isAdgaList ? "Transitions - Standard Photochromic Option" : "Transitions / Xtra Active Options"}
+          families={transitionsFamilies}
+          priceMode={builderMode}
+        />
         <OptionFamilyPanel id="polar-options" title="Polarized Options" families={polarizedFamilies} priceMode={builderMode} />
       </section>
 

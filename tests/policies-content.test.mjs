@@ -30,14 +30,14 @@ test("public and portal policies include the complete Chemistrie Clip policy", (
   assert.match(portalPoliciesSource, /Retrofit magnets are charged at \$40/);
 });
 
-test("both website PDF paths contain the same four-page detailed guide", () => {
+test("both website PDF paths contain the same three-page guide", () => {
   const hash = (buffer) => createHash("sha256").update(buffer).digest("hex");
   assert.equal(hash(primaryPdf), hash(downloadPdf));
 
   const metadata = execFileSync("pdfinfo", ["public/files/artisan-policies-guide.pdf"], {
     encoding: "utf8",
   });
-  assert.match(metadata, /^Pages:\s+4$/m);
+  assert.match(metadata, /^Pages:\s+3$/m);
   assert.match(metadata, /^Title:\s+Artisan Policies Guide$/m);
 
   const text = execFileSync(
@@ -54,4 +54,7 @@ test("both website PDF paths contain the same four-page detailed guide", () => {
   assert.match(text, /Frame policy/i);
   assert.match(text, /Shipping and cancellations/i);
   assert.match(text, /Manufacturer credits/i);
+  assert.match(text, /VSP Unity, TechShield, and SunSync/i);
+  assert.match(text, /special redo and remake policies/i);
+  assert.match(text, /ask customer service which policy applies/i);
 });

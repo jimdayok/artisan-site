@@ -265,7 +265,7 @@ const policySections: PolicySection[] = [
       "Diamond Defence (DDE): 2 years, up to 2 warranty remakes.",
     ],
     doesNotQualify: [
-      "Chem Clips do not include a scratch warranty.",
+      "Chemistrie Clip products do not include scratch warranty or remake coverage.",
       "Coverage outside the stated time and usage limits may need review before credit is confirmed.",
     ],
     nextSteps: [
@@ -452,26 +452,42 @@ const policySections: PolicySection[] = [
   },
   {
     id: "chem-clips-retrofit",
-    navLabel: "Specialty",
+    navLabel: "Chemistrie",
     icon: "star",
-    title: "Chem Clips and Retrofit Magnets",
-    summary: "Chem Clips and retrofit magnet work has specific scratch warranty and charge rules.",
+    title: "Chemistrie Clip Policies",
+    summary: "Chemistrie Clip is a customized product with a limited 30-day defect policy and no cancellation or return option.",
     whatThisMeans:
-      "Clip and retrofit work can involve specialty handling, so expectations should be confirmed before the order is submitted.",
+      "Each Chemistrie Clip is customized for the patient's frame. Confirm the order and set expectations before production because the finished product cannot be cancelled or returned.",
     qualifies: [
+      "Confirmed manufacturer or laboratory defects reported within 30 days of the order's ship date.",
       "Retrofit magnets are charged at $40 when applicable.",
-      "Chem Clips can be processed under the applicable Chemistrie workflow.",
+      "Chemistrie Clip orders are processed under the applicable customized-product workflow.",
     ],
     doesNotQualify: [
-      "Chem Clips do not include a scratch warranty.",
-      "There are no multiple-pair discounts available with Chem Clips.",
+      "There are no warranties or remake policies for scratches, breakage, or loss.",
+      "Cancellations and returns are not accepted because Chemistrie Clip is a customized product.",
+      "There are no multiple-pair discounts available with Chemistrie Clip.",
     ],
     nextSteps: [
-      "Confirm whether retrofit magnets are needed before quoting.",
-      "Set expectations that Chem Clips do not carry scratch warranty coverage.",
-      "Contact customer service for questions about Chem Clips or retrofit requirements.",
+      "Verify the frame, clip specifications, and whether retrofit magnets are needed before submitting the order.",
+      "Report a suspected manufacturer or laboratory defect within 30 days of the ship date and include the original order details and clear photos or documentation.",
+      "Contact customer service before ordering if the customized-product terms or retrofit requirements are unclear.",
     ],
-    keywords: ["chemistrie", "chem clips", "retrofit magnets", "scratch warranty", "$40"],
+    keywords: [
+      "chemistrie",
+      "chemistrie clip",
+      "chem clips",
+      "retrofit magnets",
+      "manufacturer defect",
+      "laboratory defect",
+      "scratch",
+      "breakage",
+      "loss",
+      "cancellation",
+      "return",
+      "$40",
+      "30 days",
+    ],
   },
 ];
 
@@ -483,6 +499,7 @@ const quickNav = [
   { label: "VSP & Unity", href: "#vsp-unity", icon: "/icons/site/file-check.svg" },
   { label: "Frames", href: "#frame-policies", icon: "/icons/site/file-check.svg" },
   { label: "Shipping", href: "#shipping", icon: "/icons/site/truck.svg" },
+  { label: "Chemistrie", href: "#chem-clips-retrofit", icon: "/icons/site/sun.svg" },
   { label: "Specialty", href: "#specialty-outsourced", icon: "/icons/site/alert-circle.svg" },
   { label: "Examples", href: "#real-world-examples", icon: "/icons/site/handshake.svg" },
 ];

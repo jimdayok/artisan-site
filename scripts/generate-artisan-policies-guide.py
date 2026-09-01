@@ -133,6 +133,52 @@ def card(c, x, y, w, h, eyebrow, title, fill=WHITE, stroke=LINE, dark=False):
     return top - 10
 
 
+def paragraph_height(text, width, sty):
+    paragraph = Paragraph(text, sty)
+    _, height = paragraph.wrap(width, 1000)
+    return height
+
+
+def balanced_card(c, x, y, w, h, eyebrow, title, items, fill=WHITE, stroke=LINE, dark=False):
+    """Draw a card with the complete text block vertically centered."""
+    title_style = STYLES["card_title_white" if dark else "card_title"]
+    eyebrow_style = STYLES["card_subtitle_white" if dark else "card_subtitle"]
+    body_color = colors.HexColor("#E6E1DA") if dark else MUTED
+    item_style = style("balanced_item", 7.5, 9.4, body_color)
+    content_width = w - 36
+    item_width = content_width - 11
+    item_gap = 4
+
+    total_height = (
+        paragraph_height(eyebrow.upper(), content_width, eyebrow_style)
+        + 5
+        + paragraph_height(title, content_width, title_style)
+        + 10
+        + sum(paragraph_height(item, item_width, item_style) for item in items)
+        + item_gap * max(0, len(items) - 1)
+    )
+
+    rounded_rect(c, x, y, w, h, fill, stroke, 16)
+    top = y + h - ((h - total_height) / 2)
+    top = para(c, eyebrow.upper(), x + 18, top, content_width, eyebrow_style)
+    top -= 5
+    top = para(c, title, x + 18, top, content_width, title_style)
+    top -= 10
+    for index, item in enumerate(items):
+        top = bullet(
+            c,
+            item,
+            x + 18,
+            top,
+            content_width,
+            small=True,
+            color=GOLD if dark else GOLD_DARK,
+            text_color=body_color,
+        )
+        if index < len(items) - 1:
+            top -= item_gap
+
+
 def header(c, page_num, eyebrow, title, subtitle):
     c.setFillColor(CREAM)
     c.rect(0, 0, PAGE_W, PAGE_H, fill=1, stroke=0)
@@ -248,7 +294,7 @@ def draw_warranties(c):
         "Use the original invoice, ship date, product details, and reason to identify the correct policy path.",
     )
 
-    top = card(c, 36, 51, 354, 425, "01 | AR and scratch", "Coverage terms by treatment", fill=WHITE)
+    top = card(c, 36, 51, 354, 425, "AR and scratch", "Coverage terms by treatment", fill=WHITE)
     top = para(c, "Covered Artisan AR and scratch warranty claims do not require lenses to be returned before the warranty is used. Vendor-specific programs may carry separate requirements.", 54, top, 318, STYLES["body"])
     top -= 9
     rows = [
@@ -276,7 +322,7 @@ def draw_warranties(c):
         para(c, value, 274, row_y, 86, STYLES["table_value"])
         row_y -= 23
 
-    top = card(c, 408, 325, 348, 151, "02 | Doctor redo and non-adapt", "One eligible patient-driven change within the first year")
+    top = card(c, 408, 325, 348, 151, "Doctor redo and non-adapt", "One eligible patient-driven change within the first year")
     doctor_items = [
         "Eligible changes may include design, power, PD, prism, frame, segment height, or another patient non-adapt element. Submit updated details and the reason.",
         "For an upgrade to a higher-priced product, the original invoice is credited and the new order is invoiced when shipped.",
@@ -285,23 +331,38 @@ def draw_warranties(c):
         top = bullet(c, item, 426, top, 312, small=True)
         top -= 6
 
-    top = card(c, 408, 190, 348, 121, "03 | Lab error remake process", "No-charge processing for a valid lab error reported on time", fill=PAPER)
     lab_items = [
-        "A valid lab error request must be received within 30 days of the date the order shipped. Include a clear reason and the original order details.",
-        "If the request is not a valid lab error, the customer's one-time remake is used. Return lenses when requested for inspection.",
+        "Report valid lab errors within 30 days of shipment. Include the original order details and a clear reason.",
+        "If the request is not a valid lab error, the customer's one-time remake is used. Return lenses when requested.",
     ]
-    for item in lab_items:
-        top = bullet(c, item, 426, top, 312, small=True)
-        top -= 6
-    top = card(c, 408, 51, 348, 134, "04 | VSP special policies", "VSP Unity, TechShield, and SunSync", fill=NAVY, stroke=NAVY, dark=True)
+    balanced_card(
+        c,
+        408,
+        184,
+        348,
+        128,
+        "Lab error remake process",
+        "No-charge processing for valid lab errors reported on time",
+        lab_items,
+        fill=PAPER,
+    )
     vsp_items = [
         "These products may use special redo and remake policies instead of standard Artisan coverage.",
-        "Before submitting, ask customer service which policy applies and whether you need a new VSP authorization, returned lenses, photos, or other documents.",
-        "Provide the original order number, ship date, product or treatment, patient initials, and reason.",
+        "Ask customer service which policy applies and what authorization, returns, photos, order details, or other documentation is required.",
     ]
-    for item in vsp_items:
-        top = bullet(c, item, 426, top, 312, small=True, color=GOLD, text_color=colors.HexColor("#E6E1DA"))
-        top -= 4
+    balanced_card(
+        c,
+        408,
+        51,
+        348,
+        123,
+        "VSP special policies",
+        "VSP Unity, TechShield, and SunSync",
+        vsp_items,
+        fill=NAVY,
+        stroke=NAVY,
+        dark=True,
+    )
     footer(c, 2)
 
 
@@ -314,7 +375,7 @@ def draw_operations(c):
         "Confirm frame responsibility, shipping, specialty requirements, and documentation before submitting.",
     )
 
-    top = card(c, 36, 298, 350, 178, "05 | Frame policy", "Manifest, suitability, and patient-owned frames")
+    top = card(c, 36, 298, 350, 178, "Frame policy", "Manifest, suitability, and patient-owned frames")
     frame_items = [
         "A frame replacement request must include the frame manifest available on the Practice Resources page.",
         "PAL may decline a frame that is prone to damage or unsuitable for the prescription and lens order.",
@@ -325,7 +386,7 @@ def draw_operations(c):
         top = bullet(c, item, 54, top, 314, small=True)
         top -= 5
 
-    top = card(c, 404, 298, 352, 178, "06 | Multiple-pair program", "Eligible additional pairs ordered within 30 days", fill=PAPER)
+    top = card(c, 404, 298, 352, 178, "Multiple-pair program", "Eligible additional pairs ordered within 30 days", fill=PAPER)
     pair_items = [
         "Additional pairs purchased within 30 days of the original pair may receive 50% off the lesser-priced invoice.",
         "Each eligible pair must include AR treatment or polarization.",
@@ -338,31 +399,26 @@ def draw_operations(c):
 
     widths = [224, 224, 224]
     xs = [36, 284, 532]
-    tops = [
-        card(c, xs[0], 142, widths[0], 142, "07 | Shipping and cancellations", "Rates and production-stage billing"),
-        card(c, xs[1], 142, widths[1], 142, "08 | Specialty work", "Separate pricing, timing, and partner terms", fill=PAPER),
-        card(c, xs[2], 142, widths[2], 142, "09 | Manufacturer credits", "Partner requirements"),
-    ]
-
     shipping = [
         "Next Day Air: $4 per job. 2 Day Shipping: $16 per box. Inbound shipping is complimentary.",
-        "The lab selects the outbound method based on job flow, volume, and delivery needs.",
-        "Orders cancelled after production starts are charged as an uncut; unstarted orders are not charged.",
+        "The lab selects the outbound method. Started cancellations are charged as an uncut; unstarted orders are not charged.",
     ]
     specialty = [
         "Specialty, outsourced, out-of-range, or vendor-directed orders may use separate policies.",
-        "Customer service will confirm applicable cost and estimated lead time before work proceeds.",
-        "Ask which authorization, return, and documentation requirements apply.",
+        "Ask customer service to confirm cost, lead time, authorization, return, and documentation requirements.",
     ]
     credits = [
         "Manufacturer or outside-lab credits must meet that partner's requirements.",
         "A vendor may require returned lenses even when standard Artisan AR handling does not.",
         "Credits require all requested returns and documentation.",
     ]
-    for column, items in enumerate((shipping, specialty, credits)):
-        for item in items:
-            tops[column] = bullet(c, item, xs[column] + 18, tops[column], widths[column] - 36, small=True)
-            tops[column] -= 4
+    lower_cards = [
+        ("Shipping and cancellations", "Rates and production-stage billing", shipping, WHITE),
+        ("Specialty work", "Separate pricing, timing, and partner terms", specialty, PAPER),
+        ("Manufacturer credits", "Partner requirements", credits, WHITE),
+    ]
+    for column, (eyebrow, title, items, fill) in enumerate(lower_cards):
+        balanced_card(c, xs[column], 138, widths[column], 150, eyebrow, title, items, fill=fill)
 
     rounded_rect(c, 36, 51, 458, 77, ALERT_BG, colors.HexColor("#E6BDB5"), 14)
     c.setFillColor(ALERT)

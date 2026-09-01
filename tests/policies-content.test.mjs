@@ -56,5 +56,6 @@ test("both website PDF paths contain the same three-page guide", () => {
   assert.match(text, /Manufacturer credits/i);
   assert.match(text, /VSP Unity, TechShield, and SunSync/i);
   assert.match(text, /special redo and remake policies/i);
-  assert.match(text, /ask customer service which policy applies/i);
+  assert.match(text, /Ask customer service which policy applies/i);
+  assert.doesNotMatch(text, /\b0[1-9]\s*\|/);
 });

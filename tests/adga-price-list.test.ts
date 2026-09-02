@@ -1,12 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
-  ADGA_NEOCHROMES_DEDUCTION,
+  ADGA_J1_STANDARD_AR_PRICE,
   ADGA_TRANSITIONS_UPCHARGE,
-  buildAdgaPreferredPriceList,
+  buildOfficialAdgaPriceList,
 } from "../lib/pricing/adgaPriceList.ts";
 import type {
   GeneratedPriceListData,
+  PriceListArCoating,
   PriceListPricingRow,
 } from "../lib/pricing/types.ts";
 
@@ -18,9 +19,9 @@ function row(
 ): PriceListPricingRow {
   return {
     code,
-    id: `${code}-${designStyle}`,
+    id: `${code}-${designStyle}-${edgedPrice}`,
     brand: "Standard Designs",
-    designType: "Progressive",
+    designType: "SV",
     designStyle,
     rawProductNames: [],
     sourceCodes: [],
@@ -31,8 +32,8 @@ function row(
     availableColors: ["Clear"],
     colorBrand: "Clear",
     edgedPrice,
-    uncutDeduct: 8,
-    uncutPrice: edgedPrice - 8,
+    uncutDeduct: 6,
+    uncutPrice: edgedPrice - 6,
     recommended: false,
     outsourced: false,
     serviceNotes: [],
@@ -41,20 +42,39 @@ function row(
   };
 }
 
-function priceList(code: string, rows: PriceListPricingRow[]): GeneratedPriceListData {
+function coating(code: string, name: string, brandFamily: string, price: number): PriceListArCoating {
+  return {
+    code,
+    name,
+    brandFamily,
+    price,
+    sourceSchedule: "test",
+    notes: "",
+    recommended: false,
+    outsourced: false,
+  };
+}
+
+function priceList(
+  code: string,
+  rows: PriceListPricingRow[],
+  arCoatings: PriceListArCoating[] = []
+): GeneratedPriceListData {
   return {
     code,
     rows,
-    arCoatings: [],
+    arCoatings,
     materialAddOns: [],
-    addOnSections: [],
+    addOnSections: [
+      { title: "Photochromic and Transitions Upcharges", items: [] },
+    ],
     report: {
       sourceFiles: [`${code}.xml`],
       rowCount: rows.length,
       rawSourceRowsProcessed: rows.length,
       rowsExcludedMissingLookup: 0,
       displayRowCount: rows.length,
-      generatedAt: "2026-08-28T00:00:00.000Z",
+      generatedAt: "2026-09-02T00:00:00.000Z",
       rawColumns: [],
       mappedColumns: [],
       ignoredColumns: [],
@@ -69,100 +89,92 @@ function priceList(code: string, rows: PriceListPricingRow[]): GeneratedPriceLis
   };
 }
 
-test("ADG&A combines J1, then J2, then A6 fallback without duplicate designs", () => {
-  const combined = buildAdgaPreferredPriceList({
-    j1: priceList("J1", [
-      row("J1", "SV", 45, { brand: "Standard Designs", designType: "SV" }),
-      row("J1", "SV", 99.99, {
-        brand: "Standard Designs",
-        designType: "SV",
+test("J1 adds the official Standard AR rows and leaves Aspheric SV unavailable", () => {
+  const source = priceList(
+    "J1",
+    [
+      row("J1", "SV", 15),
+      row("J1", "SV", 45, {
         materialRaw: "TPY",
         materialColor: "Photochromic",
         colorRaw: ["TGY", "TBN"],
         colorBrand: "Transitions",
       }),
-    ]),
-    j2: priceList("J2", [
-      row("J2", "SV", 81.9, { brand: "Standard Designs", designType: "SV" }),
-      row("J2", "Autograph Intelligence", 267.99, { brand: "Shamir" }),
-      row("J2", "iD MyStyle 2", 228.4, { brand: "Hoya" }),
-      row("J2", "Gold Series", 128, { brand: "Artisan", designType: "Digital SV" }),
-      row("J2", "Platinum Series", 148, { brand: "Artisan", designType: "Digital SV" }),
-      row("J2", "InMotion SV", 121.88, { brand: "Artisan", designType: "SV" }),
-      row("J2", "Photo Test", 100, {
-        brand: "Artisan",
-        materialRaw: "PLY",
-        materialColor: "Clear",
-        colorRaw: ["CLR"],
-        colorBrand: "Clear",
-      }),
-      row("J2", "Photo Test", 154.99, {
-        brand: "Artisan",
+    ],
+    [coating("AST", "Standard", "Artisan Coatings", 22.91)]
+  );
+
+  const result = buildOfficialAdgaPriceList({ source, guide: "J1" });
+  const enhancedRows = result.rows.filter((entry) => entry.designStyle === "SV with Standard AR");
+  const enhancedClear = enhancedRows.find((entry) => entry.materialRaw === "PLY");
+  const enhancedTransitions = enhancedRows.find((entry) => entry.colorBrand === "Transitions");
+  const unavailable = result.rows.find(
+    (entry) => entry.designStyle === "Aspheric SV with Standard AR"
+  );
+
+  assert.equal(enhancedClear?.edgedPrice, 40);
+  assert.equal(enhancedTransitions?.edgedPrice, 90);
+  assert.equal(unavailable?.edgedPrice, 0);
+  assert.equal(unavailable?.material, "Unavailable");
+  assert.match(unavailable?.serviceNotes.join(" ") ?? "", /no J1 Aspheric SV base price/i);
+  assert.equal(result.arCoatings.find((entry) => entry.code === "AST")?.price, ADGA_J1_STANDARD_AR_PRICE);
+  assert.equal(result.code, "J1");
+  assert.deepEqual(result.sourceCodesMerged, ["J1"]);
+});
+
+test("official J1 and J2 show only Transitions at a $50 upcharge", () => {
+  for (const guide of ["J1", "J2"] as const) {
+    const source = priceList(guide, [
+      row(guide, "SV", guide === "J1" ? 15 : 28.13),
+      row(guide, "SV", 99, {
         materialRaw: "TPY",
         materialColor: "Photochromic",
         colorRaw: ["TGY", "TBN", "X2G"],
         colorBrand: "Transitions",
       }),
-      row("J2", "Photo Test", 143.57, {
-        brand: "Artisan",
+      row(guide, "SV", 75, {
         materialRaw: "SPY",
         materialColor: "Photochromic",
-        colorRaw: ["NCG", "NCB", "SYG"],
-        colorBrand: "Other Photo",
+        colorRaw: ["NCG"],
+        colorBrand: "Neochromes",
       }),
-    ]),
-    a6: priceList("A6", [
-      row("A6", "Autograph Intelligence", 356, { brand: "Shamir" }),
-      row("A6", "Genesis HD", 201, { brand: "Shamir" }),
-      row("A6", "iD MyStyle 3", 315, { brand: "Hoya" }),
-    ]),
-  });
+    ]);
+    const result = buildOfficialAdgaPriceList({ source, guide });
+    const clear = result.rows.find((entry) => entry.designStyle === "SV" && entry.materialRaw === "PLY");
+    const transitions = result.rows.find(
+      (entry) => entry.designStyle === "SV" && entry.colorBrand === "Transitions"
+    );
+    assert.equal(transitions?.edgedPrice, (clear?.edgedPrice ?? 0) + ADGA_TRANSITIONS_UPCHARGE);
+    assert.equal(result.rows.some((entry) => /Neochromes/i.test(entry.colorBrand)), false);
+    assert.equal(result.addOnSections.some((section) => /Photochromic/i.test(section.title)), false);
+    assert.equal(result.addOnSections.find((section) => section.title === "Transitions")?.items[0]?.price, "$50.00 upcharge");
+  }
+});
 
-  const byStyle = new Map(combined.rows.map((entry) => [entry.designStyle, entry]));
-  const j1SvRows = combined.rows.filter(
-    (entry) => entry.designStyle === "SV" && entry.priceGuideCode === "J1"
+test("J2 uses AEM at $50 and excludes Standard, Shamir, Hoya, and Crizal AR coatings", () => {
+  const source = priceList(
+    "J2",
+    [
+      row("J2", "Autograph Intelligence", 267.99, { brand: "Shamir", designType: "Progressive" }),
+      row("J2", "iD MyStyle 2", 228.4, { brand: "Hoya", designType: "Progressive" }),
+    ],
+    [
+      coating("AEM", "Artisan Emerald", "Artisan Coatings", 53.13),
+      coating("AST", "Artisan Standard", "Artisan Coatings", 22.91),
+      coating("EXP", "Super HiVision EX3+", "Hoya", 60),
+      coating("SHM", "Glacier", "Shamir", 70),
+      coating("CRI", "Sapphire", "Crizal", 80),
+      coating("AAR", "Artisan Armour", "Artisan Coatings", 65),
+    ]
   );
-  const j1SvClear = j1SvRows.find((entry) => entry.materialRaw === "PLY");
-  const j1SvTransitions = j1SvRows.find((entry) => entry.colorBrand === "Transitions");
-  const j1SvNeochromes = j1SvRows.find((entry) => entry.colorBrand === "Neochromes");
-  assert.equal(j1SvClear?.edgedPrice, 45);
-  assert.equal(j1SvTransitions?.edgedPrice, 45 + ADGA_TRANSITIONS_UPCHARGE);
+
+  const result = buildOfficialAdgaPriceList({ source, guide: "J2" });
+  assert.equal(result.arCoatings.find((entry) => entry.code === "AEM")?.price, 50);
   assert.equal(
-    j1SvNeochromes?.edgedPrice,
-    (j1SvTransitions?.edgedPrice ?? 0) - ADGA_NEOCHROMES_DEDUCTION
+    result.arCoatings.some((entry) => /\b(?:AST|Shamir|Hoya|Crizal)\b/i.test(`${entry.code} ${entry.brandFamily} ${entry.name}`)),
+    false
   );
-  assert.equal(byStyle.get("Autograph Intelligence")?.priceGuideCode, "J2");
-  assert.equal(byStyle.get("Autograph Intelligence")?.edgedPrice, 267.99);
-  assert.equal(byStyle.get("iD MyStyle 2")?.priceGuideCode, "J2");
-  assert.equal(byStyle.get("Genesis HD")?.priceGuideCode, "A6");
-  assert.equal(byStyle.get("iD MyStyle 3")?.priceGuideCode, "A6");
-  assert.equal(byStyle.get("Gold Series")?.designType, "Progressive");
-  assert.equal(byStyle.get("Platinum Series")?.designType, "Progressive");
-  assert.equal(byStyle.get("InMotion SV")?.designType, "Progressive");
-  assert.deepEqual(
-    [...new Set(combined.rows.map((entry) => entry.priceGuideCode))],
-    ["J1", "J2", "A6"]
-  );
-
-  const photoRows = combined.rows.filter((entry) => entry.designStyle === "Photo Test");
-  const clear = photoRows.find((entry) => entry.materialRaw === "PLY");
-  const transitions = photoRows.find((entry) => entry.colorBrand === "Transitions");
-  const neochromes = photoRows.find((entry) => entry.colorBrand === "Neochromes");
-  assert.equal(transitions?.edgedPrice, (clear?.edgedPrice ?? 0) + ADGA_TRANSITIONS_UPCHARGE);
-  assert.equal(
-    neochromes?.edgedPrice,
-    (transitions?.edgedPrice ?? 0) - ADGA_NEOCHROMES_DEDUCTION
-  );
-  assert.deepEqual(transitions?.colorRaw, ["TGY", "TBN"]);
-  assert.deepEqual(neochromes?.colorRaw, ["NCG", "NCB"]);
-  assert.equal(transitions?.code, "J2");
-
-  const emerald = combined.arCoatings.find((coating) => coating.code === "AEM");
-  assert.equal(emerald?.price, 50);
-  assert.match(emerald?.notes ?? "", /invoice level/i);
-  const photoSection = combined.addOnSections.find(
-    (section) => section.title === "ADG&A Photochromic Pricing"
-  );
-  assert.equal(photoSection?.items[0]?.price, "$50.00 upcharge");
-  assert.equal(photoSection?.items[1]?.price, "-$6.43");
+  assert.equal(result.arCoatings.some((entry) => entry.code === "AAR"), true);
+  assert.equal(result.rows.some((entry) => entry.brand === "Shamir"), true);
+  assert.equal(result.rows.some((entry) => entry.brand === "Hoya"), true);
 });

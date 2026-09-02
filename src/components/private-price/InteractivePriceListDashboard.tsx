@@ -32,10 +32,7 @@ import {
   CHEMISTRIE_CLIPS_SECTION_TITLE,
   chemistrieClipItems,
 } from "@/lib/pricing/chemistrieClips";
-import {
-  ADGA_NEOCHROMES_DEDUCTION,
-  ADGA_PHOTO_PRICING_NOTE,
-} from "@/lib/pricing/adgaPriceList";
+import { ADGA_PHOTO_PRICING_NOTE } from "@/lib/pricing/adgaPriceList";
 
 type PriceMode = "edged" | "uncut";
 type ViewBy = "designType" | "brand" | "priceGuide";
@@ -194,24 +191,6 @@ function SummaryPriceCell({
   );
 }
 
-function AdgaNeochromesDeductionCell({
-  transitions,
-  neochromes,
-}: {
-  transitions: PriceListPricingRow | undefined;
-  neochromes: PriceListPricingRow | undefined;
-}) {
-  if (!transitions || !neochromes) return <span className="block">—</span>;
-  return (
-    <>
-      <span className="block">-{currency(ADGA_NEOCHROMES_DEDUCTION)}</span>
-      <span className="mt-0.5 block text-[9px] font-bold uppercase leading-3 tracking-[0.06em] text-[#7b6240]">
-        From Transitions
-      </span>
-    </>
-  );
-}
-
 function addOnPriceToNumber(value: number | string) {
   if (typeof value === "number") return Number.isFinite(value) ? value : 0;
   const normalized = String(value || "").trim().toLowerCase();
@@ -224,6 +203,7 @@ const titleByCode: Record<string, string> = {
   P6: "Artisan Equity Partner Pricing",
   G6: "Artisan General Pricing",
   A6: "Artisan PMP Partner Pricing",
+  J1: "ADG&A J1 Pricing",
   J2: "ADG&A Preferred Pricing",
   B5: "Artisan Lens System Pricing",
   S5: "Shamir Lens System Pricing",
@@ -605,16 +585,6 @@ function lowestAdgaTransitionsRow(rows: PriceListPricingRow[], mode: PriceMode) 
     .sort((a, b) => priceFor(a, mode) - priceFor(b, mode))[0];
 }
 
-function lowestAdgaNeochromesRow(rows: PriceListPricingRow[], mode: PriceMode) {
-  return rows
-    .filter(
-      (row) =>
-        /^Neochromes$/i.test(row.colorBrand) &&
-        row.colorRaw.some((code) => /^(?:NCG|NCB)$/i.test(code))
-    )
-    .sort((a, b) => priceFor(a, mode) - priceFor(b, mode))[0];
-}
-
 function findComparableRow(
   selectedRow: PriceListPricingRow,
   comparisonRows: PriceListPricingRow[]
@@ -665,7 +635,7 @@ function uniqueValues<T>(rows: T[], getter: (row: T) => string) {
 function groupDesignRows(
   rows: PriceListPricingRow[],
   mode: PriceMode,
-  isAdgaList = false
+  adgaList = false
 ) {
   const polycarbonateBasis = usesPolycarbonatePriceBasis(rows[0]?.code ?? "");
   const groups = new Map<string, DesignRow>();
@@ -696,16 +666,19 @@ function groupDesignRows(
   }
 
   return [...groups.values()].map((group) => {
+    const unavailable = group.rows.find((row) =>
+      row.serviceNotes.some((note) => /unavailable/i.test(note))
+    );
     const clear = polycarbonateBasis
       ? selectSummaryPrice(group.rows, "Clear", mode)
       : { row: minRow(group.rows, "Clear", mode) };
-    const photochromic = isAdgaList
+    const photochromic = adgaList
       ? { row: lowestAdgaTransitionsRow(group.rows, mode) }
       : polycarbonateBasis
         ? selectSummaryPrice(group.rows, "Photochromic", mode)
         : { row: minRow(group.rows, "Photochromic", mode) };
-    const transitions = isAdgaList
-      ? { row: lowestAdgaNeochromesRow(group.rows, mode) }
+    const transitions = adgaList
+      ? { row: undefined }
       : polycarbonateBasis
         ? selectSummaryPrice(group.rows, "Transitions", mode)
         : { row: minRow(group.rows, "Transitions", mode) };
@@ -715,11 +688,11 @@ function groupDesignRows(
 
     return {
       ...group,
-      clearFrom: clear.row,
+      clearFrom: clear.row ?? unavailable,
       photoFrom: photochromic.row,
       transitionsFrom: transitions.row,
       polarizedFrom: polarized.row,
-      clearBasis: clear.basisLabel,
+      clearBasis: clear.basisLabel ?? (unavailable ? "Unavailable" : undefined),
       photoBasis: photochromic.basisLabel,
       transitionsBasis: transitions.basisLabel,
       polarizedBasis: polarized.basisLabel,
@@ -960,7 +933,7 @@ export default function InteractivePriceListDashboard({
   const isPackageList = isPackagePriceListCode(listCode);
   const programTitle = resolveProgramTitle(listCode || "PRICING");
   const programMeta = resolveProgramMeta(listCode || "PRICING");
-  const [viewBy, setViewBy] = useState<ViewBy>(isAdgaList ? "priceGuide" : "designType");
+  const [viewBy, setViewBy] = useState<ViewBy>("designType");
   const [designType, setDesignType] = useState("All");
   const [brand, setBrand] = useState("All");
   const [designStyle, setDesignStyle] = useState("All");
@@ -995,6 +968,7 @@ export default function InteractivePriceListDashboard({
     [customerRows, designType, brand, designStyle, queryText]
   );
 
+  /* eslint-disable react-hooks/preserve-manual-memoization -- these derived table arrays are intentionally memoized for the large pricing dataset */
   const designRows = useMemo(() => {
     const grouped = sortDesignRows(
       groupDesignRows(baseFilteredRows, priceMode, isAdgaList),
@@ -1156,6 +1130,7 @@ export default function InteractivePriceListDashboard({
           }),
       }));
   }, [designRows, viewBy]);
+  /* eslint-enable react-hooks/preserve-manual-memoization */
 
   const toggleExpanded = (id: string) => {
     setExpandedId((current) => (current === id ? null : id));
@@ -1173,9 +1148,6 @@ export default function InteractivePriceListDashboard({
     { key: "designType", label: "Design Type" },
     { key: "brand", label: "Brand" },
     { key: "designStyle", label: "Design Style" },
-    ...(isAdgaList
-      ? ([{ key: "priceGuideCode", label: "Price Guide" }] as const)
-      : []),
     {
       key: "clear",
       label: isPackageList
@@ -1190,14 +1162,12 @@ export default function InteractivePriceListDashboard({
           ? "Photo Upgrade"
           : "Photochromic",
     },
-    {
-      key: "transitions",
-      label: isAdgaList
-        ? "Neochromes Deduct"
-        : isPackageList
-          ? "Trans/Xtra Upgrade"
-          : "Trans/Xtra",
-    },
+    ...(!isAdgaList
+      ? ([{
+          key: "transitions",
+          label: isPackageList ? "Trans/Xtra Upgrade" : "Trans/Xtra",
+        }] as const)
+      : []),
     {
       key: "polarized",
       label: isPackageList
@@ -1379,7 +1349,6 @@ export default function InteractivePriceListDashboard({
             >
               <option value="designType">Design Type</option>
               <option value="brand">Brand</option>
-              {isAdgaList ? <option value="priceGuide">Price Guide</option> : null}
             </select>
           </label>
         </div>
@@ -1532,27 +1501,17 @@ export default function InteractivePriceListDashboard({
                                       phasingOut
                                     )}
                                   </td>
-                                  {isAdgaList ? (
-                                    <td className="border-b border-r border-[#eadfce] px-3 py-2 text-center font-black text-[#7a5a18]">
-                                      {row.priceGuideCode}
-                                    </td>
-                                  ) : null}
                                   <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
                                     <SummaryPriceCell row={row.clearFrom} basis={row.clearBasis} mode={priceMode} />
                                   </td>
                                   <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
                                     <SummaryPriceCell row={row.photoFrom} basis={row.photoBasis} mode={priceMode} />
                                   </td>
-                                  <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
-                                    {isAdgaList ? (
-                                      <AdgaNeochromesDeductionCell
-                                        transitions={row.photoFrom}
-                                        neochromes={row.transitionsFrom}
-                                      />
-                                    ) : (
+                                  {!isAdgaList ? (
+                                    <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
                                       <SummaryPriceCell row={row.transitionsFrom} basis={row.transitionsBasis} mode={priceMode} />
-                                    )}
-                                  </td>
+                                    </td>
+                                  ) : null}
                                   <td className="border-b border-r border-[#eadfce] px-3 py-2 font-bold text-[#122033]">
                                     <SummaryPriceCell row={row.polarizedFrom} basis={row.polarizedBasis} mode={priceMode} />
                                   </td>
@@ -1568,7 +1527,7 @@ export default function InteractivePriceListDashboard({
                                 </tr>
                                 {expanded ? (
                                   <tr className="bg-[#f9f2e8]">
-                                    <td colSpan={isAdgaList ? 9 : 8} className="border-b border-[#eadfce] px-3 py-3">
+                                    <td colSpan={isAdgaList ? 7 : 8} className="border-b border-[#eadfce] px-3 py-3">
                                       <ExpandedDesignBuilder
                                         designRow={row}
                                         priceMode={priceMode}
@@ -1850,10 +1809,7 @@ function ExpandedDesignBuilder({
           >
             <option value="Clear">Clear</option>
             {isAdgaList ? (
-              <>
-                <option value="Transitions">Transitions (Photochromic)</option>
-                <option value="Photochromic">Neochromes (-$6.43)</option>
-              </>
+              <option value="Transitions">Transitions</option>
             ) : (
               <>
                 <option value="Photochromic">Photochromic</option>
@@ -1932,7 +1888,7 @@ function ExpandedDesignBuilder({
           {materialOptions.map((materialOption) => (
             <div
               key={materialOption.material}
-              className={`grid gap-2 rounded-[2px] border p-3 md:grid-cols-5 md:items-start ${
+              className={`grid gap-2 rounded-[2px] border p-3 ${isAdgaList ? "md:grid-cols-4" : "md:grid-cols-5"} md:items-start ${
                 selectedMaterial === materialOption.material
                   ? "border-[#c9b186] bg-[#fff8ee]"
                   : "border-[#eadfce] bg-white"
@@ -1956,20 +1912,14 @@ function ExpandedDesignBuilder({
                   )}
                 </p>
               </div>
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8a7654]">
-                  {isAdgaList ? "Neochromes" : "Trans/Xtra"}
-                </p>
-                <p className="font-bold text-[#122033]">
-                  {isAdgaList ? (
-                    materialOption.photochromic
-                      ? `-${currency(ADGA_NEOCHROMES_DEDUCTION)}`
-                      : "—"
-                  ) : (
-                    startingPriceLabel(materialOption.transitions, builderMode)
-                  )}
-                </p>
-              </div>
+              {!isAdgaList ? (
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8a7654]">Trans/Xtra</p>
+                  <p className="font-bold text-[#122033]">
+                    {startingPriceLabel(materialOption.transitions, builderMode)}
+                  </p>
+                </div>
+              ) : null}
               <div>
                 <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#8a7654]">Polarized</p>
                 <p className="font-bold text-[#122033]">
@@ -1982,12 +1932,14 @@ function ExpandedDesignBuilder({
       </section>
 
       <section className="grid gap-4 xl:grid-cols-2">
-        <OptionFamilyPanel
-          id="photo-options"
-          title={isAdgaList ? "Neochromes Option (-$6.43 from Transitions)" : "Photochromic Options"}
-          families={photoFamilies}
-          priceMode={builderMode}
-        />
+        {!isAdgaList ? (
+          <OptionFamilyPanel
+            id="photo-options"
+            title="Photochromic Options"
+            families={photoFamilies}
+            priceMode={builderMode}
+          />
+        ) : null}
         <OptionFamilyPanel
           id="transitions-options"
           title={isAdgaList ? "Transitions - Standard Photochromic Option" : "Transitions / Xtra Active Options"}

@@ -12,9 +12,8 @@ import { canonicalPriceListCode } from "@/lib/portal/priceLists";
 import { checkRateLimit } from "@/lib/portal/rateLimit";
 import { customerFacingPriceList } from "@/lib/pricing/customerPriceList";
 import {
-  ADGA_NEOCHROMES_DEDUCTION,
   ADGA_PHOTO_PRICING_NOTE,
-  buildAdgaPreferredPriceList,
+  buildOfficialAdgaPriceList,
 } from "@/lib/pricing/adgaPriceList";
 import {
   ADGA_SOURCE_PRICE_LIST_CODES,
@@ -254,6 +253,9 @@ function summarizeDesigns(priceList: GeneratedPriceListData, mode: PriceMode) {
 
   return [...groups.values()]
     .map((rows) => {
+      const unavailable = rows.find((row) =>
+        row.serviceNotes.some((note) => /unavailable/i.test(note))
+      );
       const clear = polycarbonateBasis
         ? selectSummaryPrice(rows, "Clear", mode)
         : { row: lowestRow(rows, "Clear", mode) };
@@ -263,7 +265,7 @@ function summarizeDesigns(priceList: GeneratedPriceListData, mode: PriceMode) {
           ? selectSummaryPrice(rows, "Photochromic", mode)
           : { row: lowestRow(rows, "Photochromic", mode) };
       const transitions = isAdgaList
-        ? { row: lowestAdgaNeochromesRow(rows, mode) }
+        ? { row: undefined }
         : polycarbonateBasis
           ? selectSummaryPrice(rows, "Transitions", mode)
           : { row: lowestRow(rows, "Transitions", mode) };
@@ -285,8 +287,8 @@ function summarizeDesigns(priceList: GeneratedPriceListData, mode: PriceMode) {
         phasingOut: rows.some((row) =>
           row.serviceNotes.some((note) => /phasing out/i.test(note))
         ),
-        clear: clear.row,
-        clearBasis: clear.basisShortLabel,
+        clear: clear.row ?? unavailable,
+        clearBasis: clear.basisShortLabel ?? (unavailable ? "Unavailable" : undefined),
         photochromic: photochromic.row,
         photochromicBasis: photochromic.basisShortLabel,
         transitions: transitions.row,
@@ -329,17 +331,6 @@ function lowestAdgaTransitionsRow(rows: PriceListPricingRow[], mode: PriceMode) 
       (row) =>
         /^Transitions$/i.test(row.colorBrand) &&
         row.colorRaw.some((code) => /^(?:TGY|TBN)$/i.test(code)) &&
-        rowPrice(row, mode) > 0
-    )
-    .sort((a, b) => rowPrice(a, mode) - rowPrice(b, mode))[0];
-}
-
-function lowestAdgaNeochromesRow(rows: PriceListPricingRow[], mode: PriceMode) {
-  return rows
-    .filter(
-      (row) =>
-        /^Neochromes$/i.test(row.colorBrand) &&
-        row.colorRaw.some((code) => /^(?:NCG|NCB)$/i.test(code)) &&
         rowPrice(row, mode) > 0
     )
     .sort((a, b) => rowPrice(a, mode) - rowPrice(b, mode))[0];
@@ -436,14 +427,13 @@ async function buildPriceListPdf({
   const regular = await document.embedFont(StandardFonts.Helvetica);
   const bold = await document.embedFont(StandardFonts.HelveticaBold);
   const isAdgaList = isAdgaPriceListCode(priceList.code);
-  const brandColumnWidth = isAdgaList ? 90 : BRAND_COLUMN_WIDTH_WITH_TRANSITIONS;
+  const brandColumnWidth = BRAND_COLUMN_WIDTH_WITH_TRANSITIONS;
   const designColumnX = MARGIN + brandColumnWidth;
   const designTextX = designColumnX + 8;
-  const guideColumnX = MARGIN + 250;
-  const clearColumnX = isAdgaList ? MARGIN + 298 : CLEAR_COLUMN_X;
-  const photoColumnX = isAdgaList ? MARGIN + 354 : PHOTO_COLUMN_X;
-  const transitionsColumnX = isAdgaList ? MARGIN + 410 : TRANSITIONS_COLUMN_X;
-  const polarColumnX = isAdgaList ? MARGIN + 476 : POLAR_COLUMN_X;
+  const clearColumnX = isAdgaList ? MARGIN + 340 : CLEAR_COLUMN_X;
+  const photoColumnX = isAdgaList ? MARGIN + 410 : PHOTO_COLUMN_X;
+  const transitionsColumnX = TRANSITIONS_COLUMN_X;
+  const polarColumnX = isAdgaList ? MARGIN + 486 : POLAR_COLUMN_X;
   const logoResponse = await fetch(new URL("/aln-white-logo.png", requestOrigin), {
     cache: "force-cache",
   });
@@ -637,10 +627,9 @@ async function buildPriceListPdf({
     const headers = [
       ...(showBrand ? ([["Brand", MARGIN + 6]] as const) : []),
       ["Design", showBrand ? designTextX : MARGIN + 6],
-      ...(isAdgaList ? ([["Guide", guideColumnX]] as const) : []),
       [packagePricing ? "Package" : "Clear", clearColumnX],
       [isAdgaList ? "Transitions" : "Photo", photoColumnX],
-      [isAdgaList ? "Neo Deduct" : "Trans/Xtra", transitionsColumnX],
+      ...(!isAdgaList ? ([["Trans/Xtra", transitionsColumnX]] as const) : []),
       ["Polar", polarColumnX],
     ] as const;
     for (const [label, x] of headers) {
@@ -724,7 +713,7 @@ async function buildPriceListPdf({
     const summaryLines = wrapText(
       regular,
       isAdgaList
-        ? ADGA_PHOTO_PRICING_NOTE
+        ? `${ADGA_PHOTO_PRICING_NOTE}${priceList.code === "J2" ? " Artisan Emerald (AEM) is $50.00." : ""}`
         : polycarbonateBasis
         ? "This price list uses polycarbonate as the base material unless otherwise noted. Only Tokai products are available in 1.70 and 1.76 index. Photo shows S-material products; Trans/Xtra shows Transitions and Xtra Active products."
         : "Customer-ready pricing organized by design family, coatings, add-ons, and policy notes.",
@@ -1053,13 +1042,10 @@ async function buildPriceListPdf({
         ];
         const statusWidths = statusLabels.map(({ label }) => regular.widthOfTextAtSize(label, 4.8) + 12);
         const statusReserve = statusWidths.reduce((sum, width) => sum + width + 4, 0);
-        const designWidth = Math.max(44, (isAdgaList ? 152 : 194) - statusReserve);
+        const designWidth = Math.max(44, (isAdgaList ? 226 : 194) - statusReserve);
         const fittedDesignLabel = fitText(regular, designLabel, designWidth, 7.2);
         const values: Array<[string, number, number, PDFFont, typeof TEXT, number?]> = [
           [fittedDesignLabel, designTextX, designWidth, regular, TEXT, 7.2],
-          ...(isAdgaList
-            ? ([[row.priceGuideCode ?? "A6", guideColumnX, 34, bold, NAVY, 7.2]] as Array<[string, number, number, PDFFont, typeof TEXT, number?]>)
-            : []),
         ];
         values.forEach(([value, x, width, font, color, requestedSize]) => {
           const size = requestedSize ?? 7.2;
@@ -1150,21 +1136,12 @@ async function buildPriceListPdf({
         statusLabels.forEach(({ label, color, icon }, index) =>
           drawStatusMarker(label, statusWidths[index], color, icon)
         );
-        const neochromesDeduction =
-          isAdgaList && row.photochromic && row.transitions
-            ? `-$${ADGA_NEOCHROMES_DEDUCTION.toFixed(2)}`
-            : "-";
         const priceValues = [
           [money(row.clear, mode), row.clearBasis, clearColumnX, 52],
           [money(row.photochromic, mode), row.photochromicBasis, photoColumnX, 52],
-          [
-            isAdgaList ? neochromesDeduction : money(row.transitions, mode),
-            isAdgaList && neochromesDeduction !== "-"
-              ? "From Transitions"
-              : row.transitionsBasis,
-            transitionsColumnX,
-            58,
-          ],
+          ...(!isAdgaList
+            ? ([[money(row.transitions, mode), row.transitionsBasis, transitionsColumnX, 58]] as const)
+            : []),
           [money(row.polarized, mode), row.polarizedBasis, polarColumnX, 50],
         ] as const;
         priceValues.forEach(([value, basis, x, width]) => {
@@ -1175,7 +1152,7 @@ async function buildPriceListPdf({
             font: bold,
             color: NAVY,
           });
-          if (value !== "-" && basis) {
+          if (basis) {
             const basisSize = basis === "Blue Filter Polycarbonate" ? 4.2 : 4.8;
             page.drawText(fitText(bold, basis, width, basisSize), {
               x,
@@ -1536,9 +1513,11 @@ async function buildPriceListPdf({
       {
         title: "AR and scratch warranties",
         bullets: [
-          "Artisan Standard: 1 year, 1 time.",
+          ...(priceList.code === "J2" ? [] : ["Artisan Standard: 1 year, 1 time."]),
           "Artisan premium AR treatments including Artisan Armour, Artisan Emerald, Artisan Azure, Artisan Nytopia, and Diamond Sun: 2 years, 2 times.",
-          "TechShield, Tokai, Crizal, Shamir, and Hoya AR technologies: 2 years, 2 times.",
+          ...(isAdgaList
+            ? ["TechShield and Tokai AR technologies: 2 years, 2 times."]
+            : ["TechShield, Tokai, Crizal, Shamir, and Hoya AR technologies: 2 years, 2 times."]),
           "Factory scratch coat: 1 year, 1 time. Diamond Defence: 2 years, 2 times.",
           "Covered AR and scratch claims do not require lenses to be returned before the warranty is used.",
         ],
@@ -1547,6 +1526,9 @@ async function buildPriceListPdf({
         title: "Doctor redos and non-adapts",
         bullets: [
           "Changes to design, power, PD, prism, frame, segment height, or other patient non-adaptable elements may be accommodated 1 time at no charge within the first year.",
+          ...(isAdgaList
+            ? ["Additional doctor redos are provided at 50% of the standard price."]
+            : []),
           "If a remake upgrades to a higher-priced product, the original invoice is credited and the remake is invoiced at the new product price when shipped.",
           "Submit remake details with the original order, patient initials, remake reason, and updated measurements or frame details when requested.",
         ],
@@ -1579,8 +1561,12 @@ async function buildPriceListPdf({
       {
         title: "Shipping, cancellations, and specialty work",
         bullets: [
-          "Next Day Air: $4.00 per job. 2-Day Shipping: $16.00 per box. Ground Delivery: $8.00 per box. Mail to Patient: $8.00.",
-          "Inbound shipping is complimentary.",
+          ...(isAdgaList
+            ? ["There are no shipping charges."]
+            : [
+                "Next Day Air: $4.00 per job. 2-Day Shipping: $16.00 per box. Ground Delivery: $8.00 per box. Mail to Patient: $8.00.",
+                "Inbound shipping is complimentary.",
+              ]),
           "Orders cancelled after production begins are billed as an uncut. Orders cancelled before production begins are not billed.",
           "Specialty, outsourced, manufacturer, VSP, Unity, and vendor-directed jobs may follow separate pricing, lead times, return rules, or warranty requirements.",
         ],
@@ -1636,7 +1622,7 @@ async function buildPriceListPdf({
   }
 
   const orderedSections = isAdgaList
-    ? ADGA_SOURCE_PRICE_LIST_CODES.flatMap((guide) => {
+    ? ([priceList.code] as const).flatMap((guide) => {
         const guideCategories = new Map<PriceDisplayCategory, typeof summaries>();
         for (const summary of summaries.filter((row) => row.priceGuideCode === guide)) {
           guideCategories.set(summary.displayCategory, [
@@ -1649,7 +1635,7 @@ async function buildPriceListPdf({
           .map(([category, rows]) => ({
             category,
             categoryRows: rows,
-            sectionLabel: `${guide} Price Guide - ${category}`,
+            sectionLabel: category,
           }));
       })
     : [...categoryGroups.entries()]
@@ -1879,7 +1865,7 @@ async function buildPriceListPdf({
       color: MUTED,
     });
     const footerNote = isAdgaList
-      ? "Transitions is +$50.00 after the automatic $4.99 invoice deduction; Neochromes deducts $6.43; AEM is a $50.00 invoice-level fee."
+      ? `Transitions is a $50.00 upcharge.${priceList.code === "J2" ? " Artisan Emerald (AEM) is $50.00." : ""}`
       : polycarbonateBasis
         ? PRICE_BASIS_NOTE
         : STANDARD_PRICE_NOTE;
@@ -1949,18 +1935,9 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const generatedPriceLists = isAdgaPriceListCode(code)
-    ? await Promise.all(
-        ADGA_SOURCE_PRICE_LIST_CODES.map((sourceCode) =>
-          loadRuntimePackagedPriceListByCode(sourceCode, request.nextUrl.origin)
-        )
-      )
-    : [
-        await loadRuntimePackagedPriceListByCode(
-          code,
-          request.nextUrl.origin
-        ),
-      ];
+  const generatedPriceLists = [
+    await loadRuntimePackagedPriceListByCode(code, request.nextUrl.origin),
+  ];
   if (generatedPriceLists.some((priceList) => !priceList)) {
     return new NextResponse("Pricing data is not available for this list.", {
       status: 404,
@@ -1969,10 +1946,9 @@ export async function GET(request: NextRequest) {
   }
 
   const priceList = isAdgaPriceListCode(code)
-    ? buildAdgaPreferredPriceList({
-        j1: generatedPriceLists[0]!,
-        j2: generatedPriceLists[1]!,
-        a6: generatedPriceLists[2]!,
+    ? buildOfficialAdgaPriceList({
+        source: generatedPriceLists[0]!,
+        guide: code as "J1" | "J2",
       })
     : customerFacingPriceList(generatedPriceLists[0]!);
   const customerName =

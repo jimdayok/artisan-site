@@ -1,8 +1,6 @@
 import registryJson from "@/lib/portal/generated/priceListRegistry.json";
 import {
-  ADGA_PREFERRED_PRICE_LIST_CODE,
   filterVisiblePriceListCodes,
-  isAdgaPriceListCode,
   isVisiblePriceListCode,
   normalizePriceListCode,
   priceListDisplayName,
@@ -64,19 +62,23 @@ const pdfByCode: Record<
     fileName: "alnpricing_2026_VD.pdf",
     r2Key: "price-sheets/alnpricing_2026_VD.pdf",
   },
+  J1: {
+    fileName: "artisan-j1-official-price-list.pdf",
+    r2Key: "price-sheets/artisan-j1-official-price-list.pdf",
+  },
+  J2: {
+    fileName: "artisan-j2-official-price-list.pdf",
+    r2Key: "price-sheets/artisan-j2-official-price-list.pdf",
+  },
 };
 
 export function canonicalPriceListCode(code: string) {
-  const normalized = normalizePriceListCode(code);
-  return isAdgaPriceListCode(normalized)
-    ? ADGA_PREFERRED_PRICE_LIST_CODE
-    : normalized;
+  return normalizePriceListCode(code);
 }
 
 export const priceLists: PortalPriceList[] = (
   registryJson.entries as RegistryEntry[]
 )
-  .filter((entry) => entry.code !== "J1")
   .map((entry) => {
     const pdf = pdfByCode[entry.code];
     return {

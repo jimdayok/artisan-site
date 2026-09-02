@@ -7,12 +7,12 @@ import type {
 
 export const ADGA_GUIDE_ORDER = ["J1", "J2", "A6"] as const;
 export type AdgaGuideCode = (typeof ADGA_GUIDE_ORDER)[number];
-export const ADGA_TRANSITIONS_INVOICE_DEDUCTION = 4.99;
+export type OfficialAdgaGuideCode = Extract<AdgaGuideCode, "J1" | "J2">;
 export const ADGA_TRANSITIONS_UPCHARGE = 50;
-export const ADGA_NEOCHROMES_DEDUCTION = 6.43;
+export const ADGA_J1_STANDARD_AR_PRICE = 25;
 
 export const ADGA_PHOTO_PRICING_NOTE =
-  "Transitions is the standard photochromic option at a $50.00 upcharge. Displayed Transitions prices include the automatic $4.99 invoice deduction. Neochromes is available at a $6.43 deduction from the displayed Transitions price.";
+  "Transitions is the only photochromic option shown and is a $50.00 upcharge from the displayed clear price.";
 
 function normalizeKey(value: string) {
   return String(value ?? "")
@@ -37,13 +37,6 @@ function isStandardTransitionsRow(row: PriceListPricingRow) {
     /^TPY$/i.test(row.materialRaw) &&
     /TRANSITIONS/i.test(row.colorBrand) &&
     row.colorRaw.some((code) => /^(?:TGY|TBN)$/i.test(code))
-  );
-}
-
-function isNeochromesRow(row: PriceListPricingRow) {
-  return (
-    /^SPY$/i.test(row.materialRaw) &&
-    row.colorRaw.some((code) => /^(?:NCG|NCB)$/i.test(code))
   );
 }
 
@@ -73,7 +66,10 @@ function polyClearBaseline(rows: PriceListPricingRow[]) {
     .sort((a, b) => a.edgedPrice - b.edgedPrice)[0];
 }
 
-function normalizeAdgaPhotoPricing(rows: PriceListPricingRow[]) {
+function normalizeAdgaTransitionsPricing(
+  rows: PriceListPricingRow[],
+  guide: OfficialAdgaGuideCode
+) {
   const groups = new Map<string, PriceListPricingRow[]>();
   for (const row of rows) {
     const key = `${row.priceGuideCode ?? ""}|${normalizeKey(row.brand)}|${normalizeKey(row.designStyle)}`;
@@ -82,19 +78,18 @@ function normalizeAdgaPhotoPricing(rows: PriceListPricingRow[]) {
 
   return [...groups.values()].flatMap((designRows) => {
     const clear = polyClearBaseline(designRows);
-    if (!clear) return designRows;
-
     const transitionsSource = designRows.find(isStandardTransitionsRow);
-    const neochromesSource = designRows.find(isNeochromesRow) ?? transitionsSource;
     const retainedRows = designRows.filter(
       (row) => !isPhotoOptionRow(row) || isPolarizedPhotoRow(row)
     );
-    const options: PriceListPricingRow[] = [];
+    if (!clear || !transitionsSource) return retainedRows;
 
-    if (transitionsSource) {
-      options.push({
+    return [
+      ...retainedRows,
+      {
         ...transitionsSource,
-        code: "J2",
+        code: guide,
+        priceGuideCode: guide,
         id: `${transitionsSource.id}-adga-transitions`,
         materialColor: "Photochromic",
         colorBrand: "Transitions",
@@ -104,74 +99,181 @@ function normalizeAdgaPhotoPricing(rows: PriceListPricingRow[]) {
         uncutPrice: Number((clear.uncutPrice + ADGA_TRANSITIONS_UPCHARGE).toFixed(2)),
         serviceNotes: addNote(
           transitionsSource.serviceNotes,
-          `Includes the automatic $${ADGA_TRANSITIONS_INVOICE_DEDUCTION.toFixed(2)} invoice deduction; net upcharge is $${ADGA_TRANSITIONS_UPCHARGE.toFixed(2)}.`
+          `Transitions is a $${ADGA_TRANSITIONS_UPCHARGE.toFixed(2)} upcharge from clear.`
         ),
-      });
-    }
-
-    if (neochromesSource) {
-      const neochromesUpcharge =
-        ADGA_TRANSITIONS_UPCHARGE - ADGA_NEOCHROMES_DEDUCTION;
-      options.push({
-        ...neochromesSource,
-        code: "J2",
-        id: `${neochromesSource.id}-adga-neochromes`,
-        materialRaw: "SPY",
-        materialColor: "Photochromic",
-        colorBrand: "Neochromes",
-        colorRaw: ["NCG", "NCB"],
-        availableColors: ["Brown", "Gray"],
-        edgedPrice: Number((clear.edgedPrice + neochromesUpcharge).toFixed(2)),
-        uncutPrice: Number((clear.uncutPrice + neochromesUpcharge).toFixed(2)),
-        serviceNotes: addNote(
-          neochromesSource.serviceNotes,
-          `Deduct $${ADGA_NEOCHROMES_DEDUCTION.toFixed(2)} from the displayed Transitions price.`
-        ),
-      });
-    }
-
-    return [...retainedRows, ...options];
+      },
+    ];
   });
 }
 
-function withAdgaEmeraldFee(coatings: PriceListArCoating[]) {
-  const emerald: PriceListArCoating = {
-    code: "AEM",
-    name: "Artisan Emerald",
-    brandFamily: "Artisan Coatings",
-    price: 50,
-    sourceSchedule: "ADG&A invoice-level fee",
-    notes: "Special ADG&A fee applied at the invoice level.",
-    recommended: true,
-    outsourced: false,
-  };
-  return [
-    ...coatings.filter(
-      (coating) =>
-        String(coating.code ?? "").toUpperCase() !== "AEM" &&
-        !/^Artisan Emerald$/i.test(coating.name)
-    ),
-    emerald,
-  ];
-}
-
-function rowsForGuide(
-  priceList: GeneratedPriceListData,
-  guide: AdgaGuideCode,
-  selectedDesigns: Set<string>
-) {
-  const customerList = customerFacingPriceList(priceList);
-  const availableDesigns = new Set(
-    customerList.rows.map(designKey).filter((key) => !selectedDesigns.has(key))
+function withEmeraldPrice(coatings: PriceListArCoating[]) {
+  return coatings.map((coating) =>
+    String(coating.code ?? "").toUpperCase() === "AEM" ||
+    /^Artisan Emerald$/i.test(coating.name)
+      ? {
+          ...coating,
+          code: "AEM",
+          name: "Artisan Emerald",
+          price: 50,
+          sourceSchedule: "Official ADG&A pricing",
+          notes: "Official ADG&A price.",
+          unresolved: false,
+        }
+      : coating
   );
-  for (const key of availableDesigns) selectedDesigns.add(key);
-
-  return customerList.rows
-    .filter((row) => availableDesigns.has(designKey(row)))
-    .map(normalizeAdgaDesign)
-    .map((row) => ({ ...row, code: "J2", priceGuideCode: guide }));
 }
 
+function officialArCoatings(
+  coatings: PriceListArCoating[],
+  guide: OfficialAdgaGuideCode
+) {
+  if (guide === "J1") {
+    const withoutStandard = coatings.filter(
+      (coating) => String(coating.code ?? "").toUpperCase() !== "AST"
+    );
+    return [
+      ...withoutStandard,
+      {
+        code: "AST",
+        name: "Artisan Standard",
+        brandFamily: "Artisan Coatings",
+        price: ADGA_J1_STANDARD_AR_PRICE,
+        sourceSchedule: "Official J1 pricing",
+        notes: "Official J1 Standard AR price.",
+        recommended: false,
+        outsourced: false,
+        unresolved: false,
+      },
+    ];
+  }
+
+  return withEmeraldPrice(
+    coatings.filter((coating) => {
+      const identity = `${coating.code ?? ""} ${coating.name} ${coating.brandFamily}`;
+      return !/^AST\b/i.test(identity) && !/\b(?:Shamir|Hoya|Crizal)\b/i.test(identity);
+    })
+  );
+}
+
+function standardArRows(rows: PriceListPricingRow[]) {
+  const svRows = rows.filter((row) => /^SV$/i.test(row.designStyle));
+  const clear = polyClearBaseline(svRows);
+  if (!clear) return [];
+  const transitions = svRows.find(isStandardTransitionsRow);
+  const enhancedClear: PriceListPricingRow = {
+    ...clear,
+    id: `${clear.id}-standard-ar`,
+    designStyle: "SV with Standard AR",
+    edgedPrice: Number((clear.edgedPrice + ADGA_J1_STANDARD_AR_PRICE).toFixed(2)),
+    uncutPrice: Number((clear.uncutPrice + ADGA_J1_STANDARD_AR_PRICE).toFixed(2)),
+    serviceNotes: addNote(clear.serviceNotes, "Includes Artisan Standard AR (AST)."),
+  };
+  const enhancedRows = [enhancedClear];
+  if (transitions) {
+    enhancedRows.push({
+      ...transitions,
+      id: `${transitions.id}-standard-ar`,
+      designStyle: "SV with Standard AR",
+      edgedPrice: Number((enhancedClear.edgedPrice + ADGA_TRANSITIONS_UPCHARGE).toFixed(2)),
+      uncutPrice: Number((enhancedClear.uncutPrice + ADGA_TRANSITIONS_UPCHARGE).toFixed(2)),
+      serviceNotes: addNote(transitions.serviceNotes, "Includes Artisan Standard AR (AST)."),
+    });
+  }
+  return enhancedRows;
+}
+
+function unavailableAsphericStandardArRow(
+  template: PriceListPricingRow
+): PriceListPricingRow {
+  return {
+    ...template,
+    id: "J1-aspheric-sv-standard-ar-unavailable",
+    code: "J1",
+    priceGuideCode: "J1",
+    brand: "Standard Designs",
+    designType: "SV",
+    designStyle: "Aspheric SV with Standard AR",
+    materialRaw: "N/A",
+    material: "Unavailable",
+    materialColor: "Clear",
+    colorRaw: [],
+    availableColors: [],
+    colorBrand: "Unavailable",
+    edgedPrice: 0,
+    uncutPrice: 0,
+    uncutDeduct: 0,
+    serviceNotes: ["Unavailable - no J1 Aspheric SV base price is defined."],
+    rawProductNames: ["Aspheric SV with Standard AR"],
+    sourceCodes: [],
+  };
+}
+
+export function buildOfficialAdgaPriceList({
+  source,
+  guide,
+}: {
+  source: GeneratedPriceListData;
+  guide: OfficialAdgaGuideCode;
+}): GeneratedPriceListData {
+  const customerList = customerFacingPriceList(source);
+  let rows: PriceListPricingRow[] = customerList.rows
+    .map(normalizeAdgaDesign)
+    .map((row) => ({ ...row, code: guide, priceGuideCode: guide }));
+
+  if (guide === "J1") {
+    const template = rows.find((row) => /^SV$/i.test(row.designStyle));
+    rows = [
+      ...rows,
+      ...standardArRows(rows),
+      ...(template ? [unavailableAsphericStandardArRow(template)] : []),
+    ];
+  }
+  rows = normalizeAdgaTransitionsPricing(rows, guide);
+
+  return {
+    ...customerList,
+    code: guide,
+    canonicalCode: guide,
+    sourceCodesMerged: [guide],
+    rows,
+    arCoatings: officialArCoatings(customerList.arCoatings, guide),
+    addOnSections: [
+      ...customerList.addOnSections.filter(
+        (section) => !/(?:Photochromic|Transitions)/i.test(section.title)
+      ),
+      {
+        title: "Transitions",
+        items: [
+          {
+            name: "Transitions",
+            price: `$${ADGA_TRANSITIONS_UPCHARGE.toFixed(2)} upcharge`,
+            notes: "Added to the displayed clear price when Transitions is available.",
+          },
+        ],
+      },
+    ],
+    report: {
+      ...customerList.report,
+      rowCount: rows.length,
+      displayRowCount: rows.length,
+      assumptions: [
+        ...customerList.report.assumptions,
+        `${guide} is produced as a separate official ADG&A price guide.`,
+        ADGA_PHOTO_PRICING_NOTE,
+        ...(guide === "J1"
+          ? [
+              "J1 Standard AR is $25.00.",
+              "J1 Aspheric SV with Standard AR is displayed as unavailable because no J1 Aspheric SV base price is defined.",
+            ]
+          : [
+              "J2 excludes Standard AR and the Shamir, Hoya, and Crizal AR coating families.",
+            ]),
+      ],
+    },
+  };
+}
+
+// Retained for compatibility with the earlier combined review artifact.
 export function buildAdgaPreferredPriceList({
   j1,
   j2,
@@ -182,57 +284,30 @@ export function buildAdgaPreferredPriceList({
   a6: GeneratedPriceListData;
 }): GeneratedPriceListData {
   const selectedDesigns = new Set<string>();
-  const j2CustomerList = customerFacingPriceList(j2);
-  const rows = normalizeAdgaPhotoPricing([
-    ...rowsForGuide(j1, "J1", selectedDesigns),
-    ...rowsForGuide(j2, "J2", selectedDesigns),
-    ...rowsForGuide(a6, "A6", selectedDesigns),
-  ]);
-
+  const combinedRows: PriceListPricingRow[] = [];
+  for (const [guide, source] of [
+    ["J1", j1],
+    ["J2", j2],
+    ["A6", a6],
+  ] as const) {
+    const byDesign = new Map<string, PriceListPricingRow[]>();
+    for (const row of customerFacingPriceList(source).rows.map(normalizeAdgaDesign)) {
+      const key = designKey(row);
+      byDesign.set(key, [...(byDesign.get(key) ?? []), row]);
+    }
+    for (const [key, designRows] of byDesign) {
+      if (selectedDesigns.has(key)) continue;
+      selectedDesigns.add(key);
+      combinedRows.push(
+        ...designRows.map((row) => ({ ...row, code: "J2", priceGuideCode: guide }))
+      );
+    }
+  }
+  const base = buildOfficialAdgaPriceList({ source: j2, guide: "J2" });
   return {
-    ...j2CustomerList,
-    code: "J2",
-    canonicalCode: "J2",
+    ...base,
+    rows: combinedRows,
     sourceCodesMerged: [...ADGA_GUIDE_ORDER],
-    rows,
-    arCoatings: withAdgaEmeraldFee(j2CustomerList.arCoatings),
-    addOnSections: [
-      ...j2CustomerList.addOnSections.filter(
-        (section) => !/^Photochromic and Transitions Upcharges$/i.test(section.title)
-      ),
-      {
-        title: "ADG&A Photochromic Pricing",
-        items: [
-          {
-            name: "Transitions",
-            price: `$${ADGA_TRANSITIONS_UPCHARGE.toFixed(2)} upcharge`,
-            notes: `Standard photochromic option; the displayed price includes the automatic $${ADGA_TRANSITIONS_INVOICE_DEDUCTION.toFixed(2)} invoice deduction.`,
-          },
-          {
-            name: "Neochromes",
-            price: `-$${ADGA_NEOCHROMES_DEDUCTION.toFixed(2)}`,
-            notes: "Deduct from the displayed Transitions price.",
-          },
-        ],
-      },
-    ],
-    report: {
-      ...j2CustomerList.report,
-      sourceFiles: [
-        ...new Set([
-          ...j1.report.sourceFiles,
-          ...j2.report.sourceFiles,
-          ...a6.report.sourceFiles,
-        ]),
-      ],
-      rowCount: rows.length,
-      displayRowCount: rows.length,
-      assumptions: [
-        ...j2CustomerList.report.assumptions,
-        "ADG&A combines J1 first, J2 second, and A6 only for designs absent from both J1 and J2.",
-        ADGA_PHOTO_PRICING_NOTE,
-        "Artisan Emerald (AEM) is shown as a $50.00 ADG&A invoice-level fee even when it is absent from the source price sheet.",
-      ],
-    },
+    report: { ...base.report, rowCount: combinedRows.length, displayRowCount: combinedRows.length },
   };
 }

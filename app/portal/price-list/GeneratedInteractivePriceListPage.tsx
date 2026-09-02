@@ -5,13 +5,12 @@ import { canonicalPriceListCode } from "@/lib/portal/priceLists";
 import { isPortalAdminEmail } from "@/lib/portal/admin";
 import { loadRuntimePackagedPriceListByCode } from "@/lib/pricing/loadRuntimePackagedPriceList";
 import {
-  ADGA_SOURCE_PRICE_LIST_CODES,
   isAdgaPriceListCode,
   isVisiblePriceListCode,
   priceListDisplayName,
 } from "@/lib/pricing/priceListCodes";
 import { customerFacingPriceList } from "@/lib/pricing/customerPriceList";
-import { buildAdgaPreferredPriceList } from "@/lib/pricing/adgaPriceList";
+import { buildOfficialAdgaPriceList } from "@/lib/pricing/adgaPriceList";
 import { getPortalDashboardV1ByAccount } from "@/lib/portal/dashboardV1";
 import { headers } from "next/headers";
 import { forbidden } from "next/navigation";
@@ -83,18 +82,9 @@ export default async function GeneratedInteractivePriceListPage({
     );
   }
 
-  const generatedPriceLists = isAdgaPriceListCode(normalizedCode)
-    ? await Promise.all(
-        ADGA_SOURCE_PRICE_LIST_CODES.map((sourceCode) =>
-          loadRuntimePackagedPriceListByCode(sourceCode, requestOrigin)
-        )
-      )
-    : [
-        await loadRuntimePackagedPriceListByCode(
-          normalizedCode,
-          requestOrigin
-        ),
-      ];
+  const generatedPriceLists = [
+    await loadRuntimePackagedPriceListByCode(normalizedCode, requestOrigin),
+  ];
   if (generatedPriceLists.some((priceList) => !priceList)) {
     const message = isPortalAdminEmail(access.authenticatedEmail)
       ? `${normalizedCode} is assigned or registered, but no generated pricing rows are available. Check the price-list validation report.`
@@ -104,10 +94,9 @@ export default async function GeneratedInteractivePriceListPage({
     );
   }
   const customerPriceList = isAdgaPriceListCode(normalizedCode)
-    ? buildAdgaPreferredPriceList({
-        j1: generatedPriceLists[0]!,
-        j2: generatedPriceLists[1]!,
-        a6: generatedPriceLists[2]!,
+    ? buildOfficialAdgaPriceList({
+        source: generatedPriceLists[0]!,
+        guide: normalizedCode as "J1" | "J2",
       })
     : customerFacingPriceList(generatedPriceLists[0]!);
   const comparisonPriceList =

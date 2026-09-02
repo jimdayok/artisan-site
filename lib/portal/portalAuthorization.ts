@@ -1,44 +1,22 @@
 import "server-only";
 
-import { normalizeAssignedPriceListCodes } from "@/lib/portal/assignedPriceLists";
-import type {
-  PortalCustomer,
-  PortalSection,
-} from "@/lib/portal/customers";
-import { getPortalCustomerTypeInfo } from "@/lib/portal/customerTypes";
-import { portalDashboardV1AccessIndex } from "@/lib/portal/dashboardV1AccessIndex";
+import type { PortalCustomer } from "@/lib/portal/customers";
 import { getDashboardV1AdminRows } from "@/lib/portal/adminDashboardV1";
+import {
+  getEffectivePortalAccessAccount,
+  getEffectivePortalAccessAccounts,
+  getEffectivePortalAccessAccountsForEmail,
+  portalCustomerFromEffectiveAccount,
+} from "@/lib/portal/portalAccessOverrides";
 import {
   canAccessPortalAdmin,
   filterRowsForPortalRole,
   getPortalStaffRole,
 } from "@/lib/portal/portalRoles";
 import {
-  assertAccountAccess,
-  getAllowedAccountsForEmail,
   getPortalUserByEmail,
-  PortalAccountAccessError,
   type PortalUserAccount,
 } from "@/lib/portal/userDataAccess";
-
-type AccountIndexRow = {
-  account_id?: string;
-  all_account_numbers?: string;
-  business_name?: string;
-  customer_type?: string;
-  price_lists?: string[];
-};
-
-const ALL_PORTAL_SECTIONS: PortalSection[] = [
-  "pricing",
-  "packages",
-  "calculator",
-  "catalog",
-  "policies",
-  "exports",
-  "performance",
-  "onboarding",
-];
 
 const DEBUG_PORTAL_AUTH = ["1", "true", "yes", "on"].includes(
   String(process.env.DEBUG_PORTAL_AUTH ?? "").toLowerCase()
@@ -48,59 +26,18 @@ function logPortalAuth(details: Record<string, unknown>) {
   if (DEBUG_PORTAL_AUTH) console.log("[PORTAL AUTH]", details);
 }
 
-function getAccountIndex() {
-  return portalDashboardV1AccessIndex.accountsIndex as AccountIndexRow[];
-}
-
-function customerFromAccount(
-  account: PortalUserAccount,
-  email: string
-): PortalCustomer {
-  const metadata = getAccountIndex().find(
-    (entry) =>
-      String(entry.account_id ?? "").trim().toUpperCase() === account.acctId
-  );
-  const customerType = getPortalCustomerTypeInfo(metadata?.customer_type ?? "");
-  const priceLists = normalizeAssignedPriceListCodes(metadata?.price_lists ?? []);
-
-  return {
-    accountNumber: account.acctId,
-    practiceName:
-      metadata?.business_name?.trim() ||
-      account.organizationName ||
-      account.acctId,
-    emails: [email],
-    priceLists,
-    allowedPriceLists: priceLists,
-    portalSections: ALL_PORTAL_SECTIONS,
-    customerTypeCode: customerType?.code ?? "",
-    customerTypeLabel: customerType?.label ?? "",
-  };
-}
-
-function adminAccountsFromIndex() {
-  return getAccountIndex()
-    .map((entry): PortalUserAccount | undefined => {
-      const acctId = String(entry.account_id ?? "").trim().toUpperCase();
-      if (!acctId) return undefined;
-
-      const accountNumbers = [
-        ...new Set(
-          String(entry.all_account_numbers ?? "")
-            .split(",")
-            .map((value) => value.trim().replace(/\.0$/, ""))
-            .filter(Boolean)
-        ),
-      ];
-
-      return {
-        acctId,
-        accountNumbers,
-        organizationAccountNumber: accountNumbers[0] ?? "",
-        organizationName: String(entry.business_name ?? "").trim(),
-      };
+async function adminAccountsFromEffectiveAccess() {
+  return (await getEffectivePortalAccessAccounts()).map(
+    (account): PortalUserAccount => ({
+      acctId: account.accountNumber,
+      accountNumbers: account.aliases.filter(
+        (alias) => alias !== account.accountNumber
+      ),
+      organizationAccountNumber:
+        account.aliases.find((alias) => alias !== account.accountNumber) ?? "",
+      organizationName: account.practiceName,
     })
-    .filter((account): account is PortalUserAccount => Boolean(account));
+  );
 }
 
 export async function getAuthorizedPortalCustomers(email: string) {
@@ -117,16 +54,19 @@ export async function getAuthorizedPortalCustomers(email: string) {
   const hasStaffPortalAccess = canAccessPortalAdmin(portalRole);
 
   if (hasStaffPortalAccess) {
+    const effectiveAccounts = await getEffectivePortalAccessAccounts();
     const accounts =
       portalRole.kind === "admin"
-        ? adminAccountsFromIndex()
+        ? effectiveAccounts
         : filterRowsForPortalRole(portalRole, getDashboardV1AdminRows())
             .map((row) =>
-              adminAccountsFromIndex().find(
-                (account) => account.acctId === row.acctId.trim().toUpperCase()
+              effectiveAccounts.find(
+                (account) => account.accountNumber === row.acctId.trim().toUpperCase()
               )
             )
-            .filter((account): account is PortalUserAccount => Boolean(account));
+            .filter((account): account is (typeof effectiveAccounts)[number] =>
+              Boolean(account)
+            );
     if (accounts.length === 0) {
       if (portalRole.kind === "sales-rep") {
         logPortalAuth({
@@ -138,15 +78,6 @@ export async function getAuthorizedPortalCustomers(email: string) {
         });
         return [];
       }
-      const workbookAccounts = await getAllowedAccountsForEmail(email);
-      logPortalAuth({
-        email,
-        userFound: true,
-        role: portalRole.kind,
-        accountCount: workbookAccounts.length,
-        authorizationDecision: "staff-workbook-fallback",
-      });
-      return workbookAccounts.map((account) => customerFromAccount(account, email));
     }
     logPortalAuth({
       email,
@@ -155,10 +86,12 @@ export async function getAuthorizedPortalCustomers(email: string) {
       accountCount: accounts.length,
       authorizationDecision: "staff-dashboard-access",
     });
-    return accounts.map((account) => customerFromAccount(account, email));
+    return accounts.map((account) =>
+      portalCustomerFromEffectiveAccount(account) as PortalCustomer
+    );
   }
-  const user = await getPortalUserByEmail(email);
-  if (!user) {
+  const accounts = await getEffectivePortalAccessAccountsForEmail(email);
+  if (accounts.length === 0) {
     logPortalAuth({
       email,
       userFound: false,
@@ -172,10 +105,12 @@ export async function getAuthorizedPortalCustomers(email: string) {
     email,
     userFound: true,
     role: "customer",
-    accountCount: user.accounts.length,
+    accountCount: accounts.length,
     authorizationDecision: "customer-authorized",
   });
-  return user.accounts.map((account) => customerFromAccount(account, user.email));
+  return accounts.map((account) =>
+    portalCustomerFromEffectiveAccount(account) as PortalCustomer
+  );
 }
 
 export async function getAuthorizedPortalCustomer(
@@ -186,27 +121,19 @@ export async function getAuthorizedPortalCustomer(
   if (!accountId) return customers[0];
 
   const portalRole = getPortalStaffRole(email);
-  if (canAccessPortalAdmin(portalRole)) {
-    const normalizedAccount = accountId.trim().toUpperCase().replace(/\.0$/, "");
-    return customers.find(
-      (customer) =>
-        customer.accountNumber === normalizedAccount ||
-        adminAccountsFromIndex().some(
-          (account) =>
-            account.acctId === customer.accountNumber &&
-            account.accountNumbers.includes(normalizedAccount)
-        )
-    );
+  const requestedAccount = await getEffectivePortalAccessAccount(accountId);
+  if (!requestedAccount) return undefined;
+  if (
+    portalRole.kind !== "admin" &&
+    !customers.some(
+      (customer) => customer.accountNumber === requestedAccount.accountNumber
+    )
+  ) {
+    return undefined;
   }
-
-  let account: PortalUserAccount;
-  try {
-    account = await assertAccountAccess(email, accountId);
-  } catch (error) {
-    if (error instanceof PortalAccountAccessError) return undefined;
-    throw error;
-  }
-  return customers.find((customer) => customer.accountNumber === account.acctId);
+  return customers.find(
+    (customer) => customer.accountNumber === requestedAccount.accountNumber
+  );
 }
 
 export async function getPortalAuthorization(email: string) {
@@ -215,7 +142,7 @@ export async function getPortalAuthorization(email: string) {
     return {
       role: "admin" as const,
       email,
-      accounts: await getAllowedAccountsForEmail(email),
+      accounts: await adminAccountsFromEffectiveAccess(),
     };
   }
   if (portalRole.kind === "sales-rep") {
@@ -232,7 +159,18 @@ export async function getPortalAuthorization(email: string) {
     };
   }
 
-  const user = await getPortalUserByEmail(email);
-  if (!user) return { role: "unauthorized" as const, email, accounts: [] };
-  return { role: "customer" as const, email, user, accounts: user.accounts };
+  const customers = await getAuthorizedPortalCustomers(email);
+  if (customers.length === 0) {
+    return { role: "unauthorized" as const, email, accounts: [] };
+  }
+  const user = await getPortalUserByEmail(email).catch(() => undefined);
+  const accounts = customers.map(
+    (customer): PortalUserAccount => ({
+      acctId: customer.accountNumber,
+      accountNumbers: [],
+      organizationAccountNumber: "",
+      organizationName: customer.practiceName,
+    })
+  );
+  return { role: "customer" as const, email, user, accounts };
 }

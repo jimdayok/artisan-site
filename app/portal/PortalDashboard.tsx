@@ -855,10 +855,9 @@ function isPortalOnboardingVisible({
   workbookProfile?: PortalWorkbookProfile;
   dashboardState?: PortalDashboardV1State;
 }) {
-  if (customer && !customerHasPortalSection(customer, "onboarding")) return false;
+  if (customer) return customerHasPortalSection(customer, "onboarding");
 
   return isEligibleOnboardingAccount([
-    customer?.accountNumber,
     workbookProfile?.account?.accountNumber,
     workbookProfile?.person.accountNumber,
     dashboardState?.status === "ok" ? dashboardState.account?.account_id : "",
@@ -1417,9 +1416,13 @@ function relativeMonthLabel(offset: number, anchorDate?: string) {
   );
 }
 
-function targetProgramTokens(dashboard?: PortalDashboardV1Account) {
+function targetProgramTokens(
+  dashboard?: PortalDashboardV1Account,
+  assignedPrograms: string[] = []
+) {
   const values = [
     ...(dashboard?.authorized_users ?? []).map((user) => user.targeted_programs),
+    ...assignedPrograms,
   ];
   return [...new Set(
     values
@@ -1431,25 +1434,59 @@ function targetProgramTokens(dashboard?: PortalDashboardV1Account) {
 
 function buildTargetInvitations(programs: string[]): PracticeIntelligenceModel["targetInvitations"] {
   return programs.flatMap((program) => {
-    if (program.includes("ARUTY26")) {
-      return [{
-        program: "ARUTY26",
+    const definitions: Record<
+      string,
+      {
+        title: string;
+        benefits: string[];
+        href: string;
+      }
+    > = {
+      LABPARTNER: {
+        title: "Your New Lab Partner program is ready.",
+        benefits: ["Account setup", "Launch support", "Partner resources"],
+        href: "/programs/lab-partner-aln26",
+      },
+      ARSWITCH26: {
+        title: "You've been invited to the Simple Switch program.",
+        benefits: ["AR transition support", "Program pricing", "Team guidance"],
+        href: "/programs/simple-switch-ar26",
+      },
+      ARUTY26: {
         title: "You've been invited to the Unity Rewards Program.",
-        detail: "Program: ARUTY26",
         benefits: ["Unity rewards", "Growth incentives", "Program support"],
-        href: "https://form.typeform.com/to/WCU5ReWQ",
-      }];
-    }
-    if (program.includes("ARSQL26")) {
-      return [{
-        program: "ARSQL26",
+        href: "/programs/unity-arUTY26",
+      },
+      ARSQL26: {
         title: "You've been invited to the Sequel Rewards Program.",
-        detail: "Program: ARSQL26",
         benefits: ["Sequel rewards", "Qualified Sequel PAL incentives", "Program support"],
-        href: "https://form.typeform.com/to/WCU5ReWQ",
-      }];
-    }
-    return [];
+        href: "/programs/sequel-arSQL26",
+      },
+      ARPMP26: {
+        title: "You've been invited to the PMP Rewards Program.",
+        benefits: ["PMP rewards", "Growth incentives", "Program support"],
+        href: "https://form.typeform.com/to/WCU5ReWQ#program_code=ARPMP26",
+      },
+      SSAR26: {
+        title: "You've been invited to the Neurolens program.",
+        benefits: ["Neurolens support", "Program pricing", "Launch guidance"],
+        href: "/programs/neurolens-arNL26",
+      },
+      AQU2630: {
+        title: "You've been invited to the Acquios program.",
+        benefits: ["Acquios access", "Program support", "Implementation guidance"],
+        href: "/acquios",
+      },
+    };
+    const definition = definitions[program];
+    if (!definition) return [];
+    return [{
+      program,
+      title: definition.title,
+      detail: `Program: ${program}`,
+      benefits: definition.benefits,
+      href: definition.href,
+    }];
   });
 }
 
@@ -1477,10 +1514,12 @@ function buildPracticeIntelligenceModel({
   account,
   dashboard,
   hasModernPackageWarning,
+  assignedPrograms = [],
 }: {
   account?: PortalWorkbookAccount;
   dashboard?: PortalDashboardV1Account;
   hasModernPackageWarning: boolean;
+  assignedPrograms?: string[];
 }): PracticeIntelligenceModel {
   const jobs = dashboard?.purchase_summary?.jobs;
   const sales = dashboard?.purchase_summary?.sales;
@@ -1845,7 +1884,9 @@ function buildPracticeIntelligenceModel({
     opportunities,
     programs,
     rewards,
-    targetInvitations: buildTargetInvitations(targetProgramTokens(dashboard)),
+    targetInvitations: buildTargetInvitations(
+      targetProgramTokens(dashboard, assignedPrograms)
+    ),
   };
 }
 
@@ -2669,6 +2710,7 @@ function PracticeIntelligenceCenter({
   availablePriceLists,
   availablePortalSections,
   isLocalhostDevelopment,
+  assignedPrograms,
 }: {
   practiceName: string;
   accountNumber: string;
@@ -2680,11 +2722,13 @@ function PracticeIntelligenceCenter({
   availablePriceLists: Array<PortalPriceList & { configured: boolean }>;
   availablePortalSections: PortalSectionCard[];
   isLocalhostDevelopment?: boolean;
+  assignedPrograms?: string[];
 }) {
   const intelligence = buildPracticeIntelligenceModel({
     account,
     dashboard: dashboardAccount,
     hasModernPackageWarning: Boolean(account && hasModernPackageSavingsWarning(account)),
+    assignedPrograms,
   });
   const locations = [
     ...new Map(
@@ -2800,9 +2844,9 @@ export function PortalDashboardContent({
 
   const dashboardAssignedPriceLists = dashboardState?.account?.used_price_lists ?? [];
   const effectivePriceListCodes =
-    dashboardAssignedPriceLists.length > 0
-      ? normalizeAssignedPriceListCodes(dashboardAssignedPriceLists)
-      : normalizeAssignedPriceListCodes(customer?.priceLists ?? []);
+    customer
+      ? normalizeAssignedPriceListCodes(customer.priceLists)
+      : normalizeAssignedPriceListCodes(dashboardAssignedPriceLists);
   const availablePriceLists = effectivePriceListCodes.filter(isVisiblePriceListCode).map((rawCode) => {
     const normalizedCode = rawCode.trim().toUpperCase();
     const configured = getPriceListByCode(normalizedCode);
@@ -2979,6 +3023,7 @@ export function PortalDashboardContent({
           availablePriceLists={availablePriceLists}
           availablePortalSections={availablePortalSections}
           isLocalhostDevelopment={isLocalhostDevelopment}
+          assignedPrograms={customer?.programs}
         />
 
         <AccountProfileSection

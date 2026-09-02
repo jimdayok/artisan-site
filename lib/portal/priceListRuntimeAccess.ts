@@ -1,8 +1,11 @@
 import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
 import { getDashboardV1AdminRows } from "@/lib/portal/adminDashboardV1";
 import { normalizeAssignedPriceListCodes } from "@/lib/portal/assignedPriceLists";
-import { getPortalCustomerTypeInfo } from "@/lib/portal/customerTypes";
-import { portalDashboardV1AccessIndex } from "@/lib/portal/dashboardV1AccessIndex";
+import {
+  getEffectivePortalAccessAccount,
+  getEffectivePortalAccessAccountsForEmail,
+  portalCustomerFromEffectiveAccount,
+} from "@/lib/portal/portalAccessOverrides";
 import {
   canAccessAdminAccount,
   filterRowsForPortalRole,
@@ -32,6 +35,7 @@ type RuntimePortalCustomer = {
   priceLists: string[];
   allowedPriceLists: string[];
   portalSections: PortalSection[];
+  programs: string[];
   customerTypeCode?: string;
   customerTypeLabel?: string;
 };
@@ -53,19 +57,6 @@ type DeniedPriceListAccess = {
 export type RuntimePriceListAccessResult =
   | AuthorizedPriceListAccess
   | DeniedPriceListAccess;
-
-type AccountIndexRow = {
-  account_id?: string;
-  all_account_numbers?: string;
-  business_name?: string;
-  customer_type?: string;
-  price_lists?: string[];
-};
-
-type UserAccessRow = {
-  email?: string;
-  account_ids?: string[];
-};
 
 const ALL_PORTAL_SECTIONS: PortalSection[] = [
   "pricing",
@@ -90,68 +81,15 @@ function normalizeAccountNumber(value: unknown) {
     .replace(/^0+(?=\d)/, "");
 }
 
-function accessAccounts() {
-  return portalDashboardV1AccessIndex.accountsIndex as AccountIndexRow[];
-}
-
-function accessUsers() {
-  return portalDashboardV1AccessIndex.usersToAccounts as UserAccessRow[];
-}
-
-function customerFromAccount(
-  account: AccountIndexRow,
-  email: string
-): RuntimePortalCustomer | undefined {
-  const accountId = String(account.account_id ?? "").trim().toUpperCase();
-  if (!accountId) return undefined;
-
-  const customerType = getPortalCustomerTypeInfo(account.customer_type ?? "");
-  const priceLists = normalizeAssignedPriceListCodes(account.price_lists ?? []);
-
-  return {
-    accountNumber: accountId,
-    practiceName: account.business_name?.trim() || accountId,
-    emails: [email],
-    priceLists,
-    allowedPriceLists: priceLists,
-    portalSections: ALL_PORTAL_SECTIONS,
-    customerTypeCode: customerType?.code ?? "",
-    customerTypeLabel: customerType?.label ?? "",
-  };
-}
-
-function findAccountByIdentifier(accountNumber: string) {
-  const normalized = normalizeAccountNumber(accountNumber);
-  if (!normalized) return undefined;
-
-  return accessAccounts().find((account) => {
-    const accountId = normalizeAccountNumber(account.account_id ?? "");
-    if (accountId === normalized) return true;
-
-    return String(account.all_account_numbers ?? "")
-      .split(",")
-      .map((value) => normalizeAccountNumber(value))
-      .some((value) => value === normalized);
-  });
-}
-
-function customersForEmail(email: string) {
+async function customersForEmail(email: string) {
   const normalizedEmail = normalizeEmail(email);
   if (!normalizedEmail) return [];
-
-  const accountRows = accessUsers()
-    .filter((row) => normalizeEmail(row.email) === normalizedEmail)
-    .flatMap((row) => row.account_ids ?? [])
-    .map((accountId) => findAccountByIdentifier(String(accountId ?? "")))
-    .filter((account): account is AccountIndexRow => Boolean(account));
-
-  const customers = new Map<string, RuntimePortalCustomer>();
-  for (const account of accountRows) {
-    const customer = customerFromAccount(account, normalizedEmail);
-    if (customer) customers.set(customer.accountNumber, customer);
-  }
-
-  return [...customers.values()];
+  return (await getEffectivePortalAccessAccountsForEmail(normalizedEmail)).map(
+    (account) =>
+      portalCustomerFromEffectiveAccount(
+        account
+      ) as RuntimePortalCustomer
+  );
 }
 
 function staffAccessiblePriceListCodes(
@@ -185,7 +123,7 @@ export async function getAuthorizedRuntimePriceListFromHeaders(
   if (priceList && staffPriceListCodes.includes(priceList.code)) {
     const previewAccountNumber = options?.previewAccountNumber?.trim();
     const previewAccount = previewAccountNumber
-      ? findAccountByIdentifier(previewAccountNumber)
+      ? await getEffectivePortalAccessAccount(previewAccountNumber)
       : undefined;
 
     if (previewAccount) {
@@ -205,10 +143,9 @@ export async function getAuthorizedRuntimePriceListFromHeaders(
         return { status: "forbidden", authenticatedEmail, priceList };
       }
 
-      const previewCustomer = customerFromAccount(previewAccount, authenticatedEmail);
-      if (!previewCustomer) {
-        return { status: "forbidden", authenticatedEmail, priceList };
-      }
+      const previewCustomer = portalCustomerFromEffectiveAccount(
+        previewAccount
+      ) as RuntimePortalCustomer;
       if (!previewCustomer.priceLists.includes(priceList.code)) {
         return {
           status: "forbidden",
@@ -236,12 +173,13 @@ export async function getAuthorizedRuntimePriceListFromHeaders(
         priceLists: staffPriceListCodes,
         allowedPriceLists: staffPriceListCodes,
         portalSections: ALL_PORTAL_SECTIONS,
+        programs: [],
       },
       priceList,
     };
   }
 
-  const customers = customersForEmail(authenticatedEmail);
+  const customers = await customersForEmail(authenticatedEmail);
   const customer = customers.find((entry) =>
     priceList ? entry.priceLists.includes(canonicalPriceListCode(priceList.code)) : true
   );

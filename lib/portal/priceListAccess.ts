@@ -3,7 +3,6 @@ import { forbidden } from "next/navigation";
 import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
 import {
   customerHasPortalSection,
-  getCustomerByAccountNumber,
   type PortalCustomer,
   type PortalSection,
 } from "@/lib/portal/customers";
@@ -11,6 +10,10 @@ import {
   getAuthorizedPortalCustomer,
   getAuthorizedPortalCustomers,
 } from "@/lib/portal/portalAuthorization";
+import {
+  getEffectivePortalAccessAccount,
+  portalCustomerFromEffectiveAccount,
+} from "@/lib/portal/portalAccessOverrides";
 import {
   canAccessPortalAdmin,
   getPortalStaffRole,
@@ -59,8 +62,13 @@ export async function getAuthorizedPriceListFromHeaders(
 
   if (priceList && hasStaffPortalAccess) {
     const previewAccountNumber = options?.previewAccountNumber?.trim();
-    const previewCustomer = previewAccountNumber
-      ? getCustomerByAccountNumber(previewAccountNumber)
+    const previewAccount = previewAccountNumber
+      ? await getEffectivePortalAccessAccount(previewAccountNumber)
+      : undefined;
+    const previewCustomer = previewAccount
+      ? (portalCustomerFromEffectiveAccount(
+          previewAccount
+        ) as PortalCustomer)
       : undefined;
     if (previewCustomer) {
       const previewPriceLists = normalizeAssignedPriceListCodes(
@@ -110,6 +118,7 @@ export async function getAuthorizedPriceListFromHeaders(
           "performance",
           "onboarding",
         ],
+        programs: [],
       },
       priceList,
     };
@@ -179,6 +188,7 @@ export async function getAuthorizedPortalSectionForPage(section: PortalSection) 
           "performance",
           "onboarding",
         ],
+        programs: [],
       },
     };
   }

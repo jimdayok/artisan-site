@@ -1,6 +1,9 @@
 import { headers } from "next/headers";
 import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
-import { getPreviewCustomerByAccountNumber } from "@/lib/portal/adminData";
+import {
+  getEffectivePortalAccessAccount,
+  portalCustomerFromEffectiveAccount,
+} from "@/lib/portal/portalAccessOverrides";
 import { getPortalWorkbookProfileByAccountNumber } from "@/lib/portal/workbookAccountData";
 import { getPortalDashboardV1ByAccount } from "@/lib/portal/dashboardV1";
 import { resolveDashboardV1AcctId } from "@/lib/portal/adminDashboardV1";
@@ -76,12 +79,20 @@ export default async function PortalAdminPreviewPage({
   const adminRow = getDashboardV1AdminRows().find(
     (row) => row.acctId.toUpperCase() === effectiveAccountId.toUpperCase()
   );
-  if (adminRow && !canAccessAdminAccount(role, adminRow)) {
+  if (
+    (adminRow && !canAccessAdminAccount(role, adminRow)) ||
+    (role.kind === "sales-rep" && !adminRow)
+  ) {
     return <PreviewNotAuthorized />;
   }
 
   const workbookProfile = getPortalWorkbookProfileByAccountNumber(legacyAccountNumber);
-  const customer = getPreviewCustomerByAccountNumber(legacyAccountNumber);
+  const effectiveAccount = await getEffectivePortalAccessAccount(
+    effectiveAccountId
+  );
+  const customer = effectiveAccount
+    ? portalCustomerFromEffectiveAccount(effectiveAccount)
+    : undefined;
   const dashboardState = getPortalDashboardV1ByAccount(
     effectiveAccountId,
     query.location

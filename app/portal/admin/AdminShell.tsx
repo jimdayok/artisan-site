@@ -66,7 +66,7 @@ export function AdminShell({
                 All Price Lists
               </Link>
               <Link href="/portal/admin/users" className={adminButtonClass}>
-                User Invites
+                User & Account Access
               </Link>
               <Link href="/portal/admin/access-log" className={adminButtonClass}>
                 Access Log

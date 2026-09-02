@@ -42,7 +42,7 @@ export default function AdminUtilityNav({
         ]
       : [
           { href: "/portal/admin/price-lists", label: "Price Lists" },
-          { href: "/portal/admin/users", label: "User Invites" },
+          { href: "/portal/admin/users", label: "User & Account Access" },
           { href: "/portal/admin/access-log", label: "Access Log" },
           { href: "/portal/admin/rewards", label: "Rewards" },
           { href: "/portal", label: "Customer Portal" },

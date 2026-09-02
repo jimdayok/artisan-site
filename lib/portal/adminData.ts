@@ -183,6 +183,7 @@ export function getPreviewCustomerByAccountNumber(accountNumber: string) {
     priceLists: assignedPriceLists(records),
     allowedPriceLists: assignedPriceLists(records),
     portalSections: assignedSections(records),
+    programs: uniqueList(records.flatMap((record) => record.programs ?? [])),
     customerTypeCode: customerType?.code ?? primaryRecord.customerTypeCode,
     customerTypeLabel: customerType?.label ?? primaryRecord.customerTypeLabel,
   } satisfies PortalCustomer;

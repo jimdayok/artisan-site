@@ -23,6 +23,7 @@ export type PortalCustomerAccess = {
   practiceName: string;
   allowedPriceLists: PriceListCode[];
   portalSections: PortalSection[];
+  programs?: string[];
   customerTypeCode?: PortalCustomerTypeCode | "";
   customerTypeLabel?: string;
   detectedCustomerTypeCodes?: string[];
@@ -35,6 +36,7 @@ export type PortalCustomer = {
   priceLists: PriceListCode[];
   allowedPriceLists: PriceListCode[];
   portalSections: PortalSection[];
+  programs: string[];
   customerTypeCode?: PortalCustomerTypeCode | "";
   customerTypeLabel?: string;
   detectedCustomerTypeCodes?: string[];
@@ -115,6 +117,7 @@ function getDashboardV1AccessRecords() {
           toPriceListCodesFromList(account.price_lists ?? [])
         ),
         portalSections: allPortalSections,
+        programs: [],
         customerTypeCode: accountTypeCode,
         customerTypeLabel: accountTypeInfo?.label || accountTypeRaw || "",
       });
@@ -143,6 +146,7 @@ export const customers: PortalCustomer[] = customerPortalAccess.map((entry) => (
   priceLists: uniqueAssignedPriceLists(entry.allowedPriceLists),
   allowedPriceLists: uniqueAssignedPriceLists(entry.allowedPriceLists),
   portalSections: entry.portalSections,
+  programs: entry.programs ?? [],
   customerTypeCode: entry.customerTypeCode,
   customerTypeLabel: entry.customerTypeLabel,
   detectedCustomerTypeCodes: entry.detectedCustomerTypeCodes,
@@ -164,6 +168,7 @@ function toPortalCustomer(entries: PortalCustomerAccess[]): PortalCustomer | und
       uniqueList(entries.flatMap((entry) => entry.allowedPriceLists))
     ),
     portalSections: uniqueList(entries.flatMap((entry) => entry.portalSections)),
+    programs: uniqueList(entries.flatMap((entry) => entry.programs ?? [])),
     customerTypeCode: primaryEntry.customerTypeCode,
     customerTypeLabel: primaryEntry.customerTypeLabel,
     detectedCustomerTypeCodes: uniqueList(

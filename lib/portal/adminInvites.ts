@@ -1,6 +1,6 @@
 import "server-only";
 
-import { getCustomersByEmail } from "@/lib/portal/customers";
+import { getEffectivePortalAccessAccountsForEmail } from "@/lib/portal/portalAccessOverrides";
 import { getPortalUserByEmail, normalizeEmail } from "@/lib/portal/userDataAccess";
 
 export type PortalInviteRecipientSummary = {
@@ -57,25 +57,21 @@ export async function getPortalInviteRecipientSummary(
 ): Promise<PortalInviteRecipientSummary> {
   const email = normalizeEmail(rawEmail);
   const workbookUser = email ? await getPortalUserByEmail(email) : undefined;
-  const portalCustomers = email ? getCustomersByEmail(email) : [];
+  const portalCustomers = email
+    ? await getEffectivePortalAccessAccountsForEmail(email)
+    : [];
 
   return {
     email,
     personName: workbookUser?.personName || "",
     organizations: [
       ...new Set(
-        [
-          workbookUser?.organizationName || "",
-          ...portalCustomers.map((customer) => customer.practiceName),
-        ].filter(Boolean)
+        portalCustomers.map((customer) => customer.practiceName).filter(Boolean)
       ),
     ],
     accountNumbers: [
       ...new Set(
-        [
-          ...(workbookUser?.accounts.map((account) => account.acctId) ?? []),
-          ...portalCustomers.map((customer) => customer.accountNumber),
-        ].filter(Boolean)
+        portalCustomers.map((customer) => customer.accountNumber).filter(Boolean)
       ),
     ],
     practiceNames: [...new Set(portalCustomers.map((customer) => customer.practiceName).filter(Boolean))],
@@ -84,16 +80,29 @@ export async function getPortalInviteRecipientSummary(
   };
 }
 
+function escapeHtml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 function buildInviteEmail({
   recipient,
   sentBy,
   portalLoginUrl,
   supportEmail,
+  kind,
+  practiceName,
 }: {
   recipient: PortalInviteRecipientSummary;
   sentBy: string;
   portalLoginUrl: string;
   supportEmail: string;
+  kind: "portal" | "onboarding";
+  practiceName?: string;
 }) {
   const greetingName = recipient.personName || recipient.email;
   const accountLine =
@@ -105,10 +114,17 @@ function buildInviteEmail({
       ? `Practice(s) on file: ${recipient.organizations.join(", ")}`
       : "Practice assignment will be confirmed by the Artisan team if needed.";
 
+  const isOnboarding = kind === "onboarding";
+  const intro = isOnboarding
+    ? `Customer onboarding is now available${practiceName ? ` for ${practiceName}` : ""} in the Artisan Lab Network portal.`
+    : "You have been invited to the Artisan Lab Network customer portal.";
+  const destination = isOnboarding
+    ? "After signing in, choose Onboarding Center to begin."
+    : "Inside the portal you can access pricing, provider resources, account details, onboarding, and support tools based on your account permissions.";
   const text = [
     `Hello ${greetingName},`,
     "",
-    "You have been invited to the Artisan Lab Network customer portal.",
+    intro,
     "",
     `Portal login: ${portalLoginUrl}`,
     "",
@@ -116,7 +132,7 @@ function buildInviteEmail({
     accountLine,
     practiceLine,
     "",
-    "Inside the portal you can access pricing, provider resources, account details, onboarding, and support tools based on your account permissions.",
+    destination,
     "",
     `If you have trouble signing in or do not see the expected account access, contact ${supportEmail}.`,
     "",
@@ -126,19 +142,21 @@ function buildInviteEmail({
 
   const html = `
     <div style="font-family: Arial, sans-serif; color: #172a28; line-height: 1.6;">
-      <p>Hello ${greetingName},</p>
-      <p>You have been invited to the Artisan Lab Network customer portal.</p>
-      <p><strong>Portal login:</strong> <a href="${portalLoginUrl}">${portalLoginUrl}</a></p>
+      <p>Hello ${escapeHtml(greetingName)},</p>
+      <p>${escapeHtml(intro)}</p>
+      <p><strong>Portal login:</strong> <a href="${escapeHtml(portalLoginUrl)}">${escapeHtml(portalLoginUrl)}</a></p>
       <p>Please sign in with this exact email address.</p>
-      <p><strong>${accountLine}</strong><br />${practiceLine}</p>
-      <p>Inside the portal you can access pricing, provider resources, account details, onboarding, and support tools based on your account permissions.</p>
-      <p>If you have trouble signing in or do not see the expected account access, contact <a href="mailto:${supportEmail}">${supportEmail}</a>.</p>
-      <p style="margin-top: 24px;">Invitation sent by: ${sentBy}<br />Artisan Lab Network</p>
+      <p><strong>${escapeHtml(accountLine)}</strong><br />${escapeHtml(practiceLine)}</p>
+      <p>${escapeHtml(destination)}</p>
+      <p>If you have trouble signing in or do not see the expected account access, contact <a href="mailto:${escapeHtml(supportEmail)}">${escapeHtml(supportEmail)}</a>.</p>
+      <p style="margin-top: 24px;">Invitation sent by: ${escapeHtml(sentBy)}<br />Artisan Lab Network</p>
     </div>
   `;
 
   return {
-    subject: "You're invited to the Artisan Lab Network customer portal",
+    subject: isOnboarding
+      ? "Your Artisan customer onboarding center is ready"
+      : "You're invited to the Artisan Lab Network customer portal",
     text,
     html,
   };
@@ -147,9 +165,13 @@ function buildInviteEmail({
 export async function sendPortalInviteEmail({
   recipientEmail,
   sentBy,
+  kind = "portal",
+  practiceName,
 }: {
   recipientEmail: string;
   sentBy: string;
+  kind?: "portal" | "onboarding";
+  practiceName?: string;
 }) {
   const config = getPortalInviteConfig();
   if (!config.enabled) {
@@ -162,6 +184,8 @@ export async function sendPortalInviteEmail({
     sentBy,
     portalLoginUrl: config.portalLoginUrl,
     supportEmail: config.supportEmail,
+    kind,
+    practiceName,
   });
 
   const response = await fetch("https://api.resend.com/emails", {

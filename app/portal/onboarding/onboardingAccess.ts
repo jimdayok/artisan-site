@@ -6,11 +6,10 @@ import { isPortalAdminEmail } from "@/lib/portal/admin";
 import { getAuthorizedPortalCustomers } from "@/lib/portal/portalAuthorization";
 import { getPortalUserByEmail } from "@/lib/portal/userDataAccess";
 import { getPortalDashboardV1ByAccount, type PortalDashboardV1Account } from "@/lib/portal/dashboardV1";
-import { portalDashboardV1Bundle } from "@/lib/portal/dashboardV1Bundle";
 import {
-  isEligibleOnboardingAccount,
   normalizeOnboardingAccount,
 } from "@/lib/portal/onboardingEligibility";
+import type { PortalCustomer } from "@/lib/portal/customers";
 import { labs, type LabKey } from "./onboardingData";
 
 export type OnboardingAccount = {
@@ -44,10 +43,6 @@ export type OnboardingAccess =
 
 function clean(value: unknown) {
   return String(value ?? "").trim();
-}
-
-function isEligibleAccount(account: { accountNumber: string; aliases?: string[] }) {
-  return isEligibleOnboardingAccount([account.accountNumber, ...(account.aliases ?? [])]);
 }
 
 function labKeyFromName(value: unknown): LabKey {
@@ -88,11 +83,16 @@ function accountFromDashboard(accountNumber: string, fallbackName = ""): Onboard
   };
 }
 
-function adminAccounts() {
-  return portalDashboardV1Bundle.accountsIndex
-    .map((row) => accountFromDashboard(clean(row.account_id), clean(row.business_name)))
-    .filter(isEligibleAccount)
-    .sort((a, b) => a.practiceName.localeCompare(b.practiceName) || a.accountNumber.localeCompare(b.accountNumber));
+function accountFromCustomer(customer: PortalCustomer): OnboardingAccount {
+  const account = accountFromDashboard(
+    customer.accountNumber,
+    customer.practiceName
+  );
+  return {
+    ...account,
+    practiceName: customer.practiceName || account.practiceName,
+    priceLists: customer.priceLists,
+  };
 }
 
 function nameFromDashboardAuthorizedUsers(email: string, accountNumber: string) {
@@ -134,14 +134,26 @@ export async function getOnboardingAccess(
   const isAdmin = isPortalAdminEmail(email);
   const user = isAdmin ? undefined : await getPortalUserByEmail(email);
   const portalCustomers = await getAuthorizedPortalCustomers(email);
-  const accounts = portalCustomers.map((customer) =>
-    accountFromDashboard(customer.accountNumber, customer.practiceName)
-  );
+  const accounts = portalCustomers.map(accountFromCustomer);
   const eligibleAccounts = prioritizeRequestedAccount(
-    accounts.filter(isEligibleAccount),
+    accounts.filter((account) =>
+      portalCustomers.some(
+        (customer) =>
+          customer.accountNumber === account.accountNumber &&
+          customer.portalSections.includes("onboarding")
+      )
+    ),
     requestedAccountNumber
   );
-  const allAdminAccounts = isAdmin ? adminAccounts() : [];
+  const allAdminAccounts = isAdmin
+    ? accounts.filter((account) =>
+        portalCustomers.some(
+          (customer) =>
+            customer.accountNumber === account.accountNumber &&
+            customer.portalSections.includes("onboarding")
+        )
+      )
+    : [];
   const userName =
     user?.personName ||
     eligibleAccounts.map((account) => nameFromDashboardAuthorizedUsers(email, account.accountNumber)).find(Boolean) ||

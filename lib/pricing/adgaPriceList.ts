@@ -12,7 +12,7 @@ export const ADGA_TRANSITIONS_UPCHARGE = 50;
 export const ADGA_J1_STANDARD_AR_PRICE = 25;
 
 export const ADGA_PHOTO_PRICING_NOTE =
-  "Transitions is the only photochromic option shown and is a $50.00 upcharge from the displayed clear price.";
+  "Transitions includes Transitions Gen S and Xtra Active. Special pricing is available for qualifying SV orders; reference J1 pricing for details. Products not listed may be added at current PMP Partner Pricing. Ask your account manager for more information.";
 
 function normalizeKey(value: string) {
   return String(value ?? "")

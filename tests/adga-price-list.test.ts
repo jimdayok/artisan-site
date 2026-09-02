@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  ADGA_PHOTO_PRICING_NOTE,
   ADGA_J1_STANDARD_AR_PRICE,
   ADGA_TRANSITIONS_UPCHARGE,
   buildOfficialAdgaPriceList,
@@ -120,6 +121,15 @@ test("J1 adds the official Standard AR rows and leaves Aspheric SV unavailable",
   assert.equal(result.arCoatings.find((entry) => entry.code === "AST")?.price, ADGA_J1_STANDARD_AR_PRICE);
   assert.equal(result.code, "J1");
   assert.deepEqual(result.sourceCodesMerged, ["J1"]);
+});
+
+test("official ADG&A notice carries the approved program wording without an AEM reference", () => {
+  assert.match(ADGA_PHOTO_PRICING_NOTE, /Transitions includes Transitions Gen S and Xtra Active/);
+  assert.match(ADGA_PHOTO_PRICING_NOTE, /qualifying SV orders/);
+  assert.match(ADGA_PHOTO_PRICING_NOTE, /reference J1 pricing/);
+  assert.match(ADGA_PHOTO_PRICING_NOTE, /current PMP Partner Pricing/);
+  assert.match(ADGA_PHOTO_PRICING_NOTE, /Ask your account manager/);
+  assert.doesNotMatch(ADGA_PHOTO_PRICING_NOTE, /AEM|Artisan Emerald/);
 });
 
 test("official J1 and J2 show only Transitions at a $50 upcharge", () => {

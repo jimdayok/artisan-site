@@ -713,7 +713,7 @@ async function buildPriceListPdf({
     const summaryLines = wrapText(
       regular,
       isAdgaList
-        ? `${ADGA_PHOTO_PRICING_NOTE}${priceList.code === "J2" ? " Artisan Emerald (AEM) is $50.00." : ""}`
+        ? ADGA_PHOTO_PRICING_NOTE
         : polycarbonateBasis
         ? "This price list uses polycarbonate as the base material unless otherwise noted. Only Tokai products are available in 1.70 and 1.76 index. Photo shows S-material products; Trans/Xtra shows Transitions and Xtra Active products."
         : "Customer-ready pricing organized by design family, coatings, add-ons, and policy notes.",

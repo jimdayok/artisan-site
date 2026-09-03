@@ -66,17 +66,33 @@ export default function AdminUtilityNav({
               : link.href === "/portal"
                 ? isCustomerMode
                 : pathname.startsWith(link.href);
+          const className = artisanControlClass({
+            tone: active ? "accent" : "inverse",
+            size: "sm",
+            className: "focus-visible:ring-white focus-visible:ring-offset-[#172a28]",
+          });
+
+          // Logout changes authentication state, so it must remain a native
+          // browser navigation. Next.js prefetches Link destinations in
+          // production, which would otherwise clear the session on render.
+          if (link.href === "/portal/logout") {
+            return (
+              <a
+                key={`${link.href}-${link.label}`}
+                href={link.href}
+                className={className}
+              >
+                {link.label}
+              </a>
+            );
+          }
 
           return (
             <Link
               key={`${link.href}-${link.label}`}
               href={link.href}
               aria-current={active ? "page" : undefined}
-              className={artisanControlClass({
-                tone: active ? "accent" : "inverse",
-                size: "sm",
-                className: "focus-visible:ring-white focus-visible:ring-offset-[#172a28]",
-              })}
+              className={className}
             >
               {link.label}
             </Link>

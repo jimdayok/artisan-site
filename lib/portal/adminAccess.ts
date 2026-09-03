@@ -2,6 +2,9 @@ export function normalizePortalEmail(email: unknown) {
   return String(email ?? "").trim().toLowerCase();
 }
 
+export const TRUSTED_NETWORK_ADMIN_EMAIL =
+  "lab-vpn-admin@trusted.artisan.invalid";
+
 export type BuiltInPortalSalesRep = {
   label: string;
   repCode: string;
@@ -20,6 +23,7 @@ export const BUILT_IN_PORTAL_SALES_REPS = new Map<
 ]);
 
 export const BUILT_IN_PORTAL_ADMIN_EMAILS = new Set([
+  TRUSTED_NETWORK_ADMIN_EMAIL,
   "brandon.butler@artisanlabnetwork.com",
   "chasity@peakartisanlabs.com",
   "cbrant@pacificartisanlabs.com",

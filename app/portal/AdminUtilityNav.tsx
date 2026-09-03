@@ -48,6 +48,7 @@ export default function AdminUtilityNav({
           { href: "/portal", label: "Customer Portal" },
         ]),
     { href: "/portal/employee-resources", label: "Employee Resources" },
+    { href: "/portal/logout", label: "Sign Out" },
   ];
 
   return (

@@ -1,6 +1,19 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { verifyCloudflareAccessJwt } from "@/lib/portal/accessJwt";
-import { isPortalStaffEmailAddress } from "@/lib/portal/adminAccess";
+import {
+  isPortalStaffEmailAddress,
+  TRUSTED_NETWORK_ADMIN_EMAIL,
+} from "@/lib/portal/adminAccess";
+import {
+  getTrustedNetworkClientIp,
+  isTrustedNetworkRequest,
+  TRUSTED_NETWORK_AUTH_METHOD,
+  TRUSTED_NETWORK_AUTH_METHOD_HEADER,
+  TRUSTED_NETWORK_LOGIN_PATH,
+  TRUSTED_NETWORK_SESSION_COOKIE,
+  TRUSTED_NETWORK_SESSION_PATH,
+  verifyTrustedNetworkSession,
+} from "@/lib/portal/trustedNetworkAccess";
 import { isHiddenPriceListCode } from "@/lib/pricing/priceListCodes";
 
 const LOCALHOST_NAMES = new Set(["localhost", "127.0.0.1", "::1"]);
@@ -91,6 +104,22 @@ function deny(request: NextRequest, status: number, message: string) {
   return NextResponse.next({ request: { headers: requestHeaders } });
 }
 
+function withSecurityHeaders(response: NextResponse) {
+  for (const [key, value] of securityHeaders) response.headers.set(key, value);
+  return response;
+}
+
+function trustedNetworkPasswordRedirect(request: NextRequest) {
+  const loginUrl = new URL(TRUSTED_NETWORK_LOGIN_PATH, request.url);
+  loginUrl.searchParams.set(
+    "returnTo",
+    `${request.nextUrl.pathname}${request.nextUrl.search}`
+  );
+  const response = NextResponse.redirect(loginUrl);
+  response.headers.set("Cache-Control", "private, no-store");
+  return withSecurityHeaders(response);
+}
+
 function hiddenPriceListResponse() {
   const response = new NextResponse("Price sheet not found.", { status: 404 });
   for (const [key, value] of securityHeaders) response.headers.set(key, value);
@@ -138,6 +167,7 @@ export async function proxy(request: NextRequest) {
 
   const requestHeaders = new Headers(request.headers);
   requestHeaders.delete("x-portal-auth-email");
+  requestHeaders.delete(TRUSTED_NETWORK_AUTH_METHOD_HEADER);
   requestHeaders.set("x-portal-request-path", `${pathname}${request.nextUrl.search}`);
   requestHeaders.set("x-portal-request-method", request.method);
 
@@ -158,9 +188,61 @@ export async function proxy(request: NextRequest) {
 
   const emailHeader = request.headers.get(ACCESS_EMAIL_HEADER)?.trim().toLowerCase() ?? "";
   const verifiedEmail = await verifiedPortalEmail(request);
+  const hasVerifiedCloudflareIdentity = Boolean(
+    verifiedEmail && emailHeader && verifiedEmail === emailHeader
+  );
 
-  if (!verifiedEmail || !emailHeader || verifiedEmail !== emailHeader) {
-    return deny(request, 401, "Unable to verify secure login.");
+  if (!hasVerifiedCloudflareIdentity) {
+    const onTrustedNetwork = isTrustedNetworkRequest(request.headers);
+    if (!onTrustedNetwork) {
+      if (
+        pathname === TRUSTED_NETWORK_LOGIN_PATH ||
+        pathname === TRUSTED_NETWORK_SESSION_PATH
+      ) {
+        return withSecurityHeaders(
+          new NextResponse("Not found", { status: 404 })
+        );
+      }
+      return deny(request, 401, "Unable to verify secure login.");
+    }
+
+    if (pathname === TRUSTED_NETWORK_SESSION_PATH) {
+      const passwordResponse = NextResponse.next({
+        request: { headers: requestHeaders },
+      });
+      passwordResponse.headers.set("Cache-Control", "private, no-store");
+      return withSecurityHeaders(passwordResponse);
+    }
+
+    const trustedSession =
+      request.cookies.get(TRUSTED_NETWORK_SESSION_COOKIE)?.value ?? "";
+    const clientIp = getTrustedNetworkClientIp(request.headers);
+    if (!verifyTrustedNetworkSession(trustedSession, clientIp)) {
+      if (pathname === TRUSTED_NETWORK_LOGIN_PATH) {
+        const passwordResponse = NextResponse.next({
+          request: { headers: requestHeaders },
+        });
+        passwordResponse.headers.set("Cache-Control", "private, no-store");
+        return withSecurityHeaders(passwordResponse);
+      }
+      if (pathname.startsWith("/api/")) {
+        return withSecurityHeaders(
+          new NextResponse("Master password required.", { status: 401 })
+        );
+      }
+      return trustedNetworkPasswordRedirect(request);
+    }
+
+    requestHeaders.set("x-portal-auth-email", TRUSTED_NETWORK_ADMIN_EMAIL);
+    requestHeaders.set(
+      TRUSTED_NETWORK_AUTH_METHOD_HEADER,
+      TRUSTED_NETWORK_AUTH_METHOD
+    );
+    const trustedResponse = NextResponse.next({
+      request: { headers: requestHeaders },
+    });
+    trustedResponse.headers.set("Cache-Control", "private, no-store");
+    return withSecurityHeaders(trustedResponse);
   }
 
   requestHeaders.set("x-portal-auth-email", verifiedEmail);

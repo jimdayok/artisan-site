@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { artisanControlClass } from "@/app/components/controlStyles";
+import { trustedNetworkIdentityLabel } from "@/lib/portal/trustedNetworkAccess";
 
 export const adminButtonClass =
   artisanControlClass({ tone: "secondary" });
@@ -51,7 +52,7 @@ export function AdminShell({
               {title}
             </h1>
             <p className="mt-4 text-sm text-[#706759]">
-              Signed in as {adminEmail}
+              Signed in as {trustedNetworkIdentityLabel(adminEmail)}
             </p>
           </div>
           {showHeroNav ? (

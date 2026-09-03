@@ -15,10 +15,14 @@ export const TRUSTED_NETWORK_LOGIN_PATH = "/portal/network-access";
 export const TRUSTED_NETWORK_SESSION_PATH =
   "/api/portal/network-access/session";
 export const TRUSTED_NETWORK_SESSION_TTL_SECONDS = 60 * 60 * 8;
+export const TRUSTED_NETWORK_EDGE_TIME_HEADER = "x-artisan-edge-time";
+export const TRUSTED_NETWORK_EDGE_PROOF_HEADER = "x-artisan-edge-proof";
 
 const PASSWORD_HASH_PREFIX = "scrypt-v1";
 const PASSWORD_KEY_LENGTH = 32;
 const MINIMUM_SESSION_SECRET_LENGTH = 32;
+const MINIMUM_EDGE_SECRET_LENGTH = 32;
+const EDGE_PROOF_MAX_AGE_SECONDS = 120;
 
 type SessionPayload = {
   version: 1;
@@ -65,6 +69,59 @@ export function getTrustedNetworkClientIp(headers: Headers) {
   return normalizeTrustedNetworkIp(headers.get("cf-connecting-ip"));
 }
 
+function trustedNetworkEdgeSecret() {
+  return process.env.PORTAL_TRUSTED_NETWORK_EDGE_SECRET?.trim() ?? "";
+}
+
+function edgeProofSignature(clientIp: string, timestamp: string, secret: string) {
+  return createHmac("sha256", secret)
+    .update(`${clientIp}\n${timestamp}`)
+    .digest();
+}
+
+export function createTrustedNetworkEdgeProof(
+  clientIp: string,
+  timestamp: number,
+  secret: string
+) {
+  const normalizedIp = normalizeTrustedNetworkIp(clientIp);
+  if (!normalizedIp || secret.length < MINIMUM_EDGE_SECRET_LENGTH) return "";
+
+  return edgeProofSignature(normalizedIp, String(timestamp), secret).toString(
+    "base64url"
+  );
+}
+
+export function verifyTrustedNetworkEdgeProof(
+  headers: Headers,
+  now = Date.now(),
+  secret = trustedNetworkEdgeSecret()
+) {
+  if (secret.length < MINIMUM_EDGE_SECRET_LENGTH) return false;
+
+  const clientIp = getTrustedNetworkClientIp(headers);
+  const timestampValue = headers.get(TRUSTED_NETWORK_EDGE_TIME_HEADER)?.trim() ?? "";
+  const proofValue = headers.get(TRUSTED_NETWORK_EDGE_PROOF_HEADER)?.trim() ?? "";
+  if (!clientIp || !/^\d{10}$/.test(timestampValue) || !proofValue) return false;
+
+  const timestamp = Number(timestampValue);
+  const nowSeconds = Math.floor(now / 1000);
+  if (
+    !Number.isSafeInteger(timestamp) ||
+    Math.abs(nowSeconds - timestamp) > EDGE_PROOF_MAX_AGE_SECONDS
+  ) {
+    return false;
+  }
+
+  try {
+    const receivedProof = Buffer.from(proofValue, "base64url");
+    const expectedProof = edgeProofSignature(clientIp, timestampValue, secret);
+    return safeEqual(receivedProof, expectedProof);
+  } catch {
+    return false;
+  }
+}
+
 export function isTrustedNetworkRequest(
   headers: Headers,
   configuredValue = process.env.PORTAL_TRUSTED_NETWORK_IPS ?? "",
@@ -74,7 +131,13 @@ export function isTrustedNetworkRequest(
   // an approved portal hostname. This prevents caller-supplied IP headers on a
   // direct *.vercel.app request from becoming an authentication signal.
   if (nodeEnv === "production") {
-    if (!headers.get("cf-ray") || !isPortalHostRequest(headers)) return false;
+    if (
+      !headers.get("cf-ray") ||
+      !isPortalHostRequest(headers) ||
+      !verifyTrustedNetworkEdgeProof(headers)
+    ) {
+      return false;
+    }
   }
 
   const clientIp = getTrustedNetworkClientIp(headers);
@@ -193,6 +256,12 @@ export function trustedNetworkConfigurationIssues() {
   }
   if (trustedNetworkSessionSecret().length < MINIMUM_SESSION_SECRET_LENGTH) {
     issues.push("session secret");
+  }
+  if (
+    process.env.NODE_ENV === "production" &&
+    trustedNetworkEdgeSecret().length < MINIMUM_EDGE_SECRET_LENGTH
+  ) {
+    issues.push("Cloudflare edge proof secret");
   }
   return issues;
 }

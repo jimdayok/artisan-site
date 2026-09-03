@@ -30,7 +30,7 @@
     "typecheck": "NODE_OPTIONS='--max-old-space-size=12288' tsc --noEmit",
     "test:pricing": "node --test tests/pricing-dvi-generation.test.mjs && node --experimental-strip-types --test tests/polycarbonate-price-basis.test.ts",
     "test:optical": "node --experimental-default-type=module --test tests/optical-calculations.test.ts tests/optical-geometry.test.ts",
-    "test:portal": "node --experimental-strip-types --test tests/account-scope.test.ts tests/admin-rep-review.test.ts tests/employee-resources.test.ts tests/net-sales-history-packaging.test.ts tests/portal-access-overrides.test.ts tests/portal-role-policy.test.ts tests/portal-user-workbook.test.ts tests/practice-intelligence-metrics.test.ts tests/trusted-network-access.test.ts tests/value-system-price-list.test.ts",
+    "test:portal": "node --test tests/portal-edge-proof-worker.test.mjs && node --experimental-strip-types --test tests/account-scope.test.ts tests/admin-rep-review.test.ts tests/employee-resources.test.ts tests/net-sales-history-packaging.test.ts tests/portal-access-overrides.test.ts tests/portal-role-policy.test.ts tests/portal-user-workbook.test.ts tests/practice-intelligence-metrics.test.ts tests/trusted-network-access.test.ts tests/value-system-price-list.test.ts",
     "test:analytics": "node --experimental-strip-types --test tests/analytics.test.ts tests/typeform-webhook.test.ts tests/pipedrive-attribution.test.ts && node --test tests/consent-manager.test.mjs"
   },
   "dependencies": {

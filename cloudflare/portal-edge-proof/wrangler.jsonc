@@ -1,0 +1,33 @@
+{
+  "$schema": "../../../node_modules/wrangler/config-schema.json",
+  "name": "artisan-portal-edge-proof",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-02",
+  "workers_dev": false,
+  "routes": [
+    {
+      "pattern": "artisanslabs.com/portal*",
+      "zone_name": "artisanslabs.com"
+    },
+    {
+      "pattern": "www.artisanslabs.com/portal*",
+      "zone_name": "artisanslabs.com"
+    },
+    {
+      "pattern": "artisanslabs.com/api/portal/*",
+      "zone_name": "artisanslabs.com"
+    },
+    {
+      "pattern": "www.artisanslabs.com/api/portal/*",
+      "zone_name": "artisanslabs.com"
+    },
+    {
+      "pattern": "artisanslabs.com/private/price-list*",
+      "zone_name": "artisanslabs.com"
+    },
+    {
+      "pattern": "www.artisanslabs.com/private/price-list*",
+      "zone_name": "artisanslabs.com"
+    }
+  ]
+}

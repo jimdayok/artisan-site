@@ -9,6 +9,7 @@ const passwordHash = [
   derivedKey.toString("base64url"),
 ].join("$");
 const sessionSecret = randomBytes(48).toString("base64url");
+const edgeSecret = randomBytes(48).toString("base64url");
 
 console.log(
   "Generated Artisan trusted-network admin credentials. Store the master password in the approved password manager; it cannot be recovered from the hash.\n"
@@ -16,3 +17,4 @@ console.log(
 console.log(`Master password: ${masterPassword}`);
 console.log(`PORTAL_TRUSTED_NETWORK_PASSWORD_HASH=${passwordHash}`);
 console.log(`PORTAL_TRUSTED_NETWORK_SESSION_SECRET=${sessionSecret}`);
+console.log(`PORTAL_TRUSTED_NETWORK_EDGE_SECRET=${edgeSecret}`);

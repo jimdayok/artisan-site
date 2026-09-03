@@ -7,7 +7,7 @@ signed, IP-bound session that expires after eight hours.
 
 ## Required application configuration
 
-Set all three production environment variables in Vercel:
+Set all four production environment variables in Vercel:
 
 - `PORTAL_TRUSTED_NETWORK_IPS`: comma-separated public egress IP addresses.
   Pacific Artisan Lab and the observed Artisan VPN exit currently use
@@ -17,6 +17,9 @@ Set all three production environment variables in Vercel:
   source control.
 - `PORTAL_TRUSTED_NETWORK_SESSION_SECRET`: a separate random secret of at least
   32 characters.
+- `PORTAL_TRUSTED_NETWORK_EDGE_SECRET`: a separate random secret shared only
+  by the Cloudflare edge Worker and Vercel. The Worker signs the client IP and
+  current time so a caller-supplied IP header cannot unlock this path.
 
 Generate a new master password, password hash, and session secret with:
 
@@ -25,7 +28,8 @@ node scripts/generate-portal-trusted-network-secrets.mjs
 ```
 
 Store the printed master password in the approved password manager. Add only
-the hash and session secret to Vercel.
+the hash, session secret, and edge secret to Vercel. Add the same edge secret
+to the Cloudflare Worker as `PORTAL_EDGE_SECRET`.
 
 ## Required Cloudflare Access policy
 
@@ -36,6 +40,10 @@ existing portal Access application, add a narrowly scoped **Bypass** policy:
 - Action: `Bypass`
 - Include: an IP list containing each approved lab/VPN public egress address
 - Do not use `Everyone`, an email wildcard, an ASN, or a broad residential CIDR
+
+Deploy `cloudflare/portal-edge-proof` on the same portal and portal API routes
+before enabling the Bypass policy. The application rejects trusted-network
+access unless this Worker supplies a valid, time-limited signature.
 
 Cloudflare evaluates Bypass before normal Allow policies. Bypass traffic does
 not receive a Cloudflare identity and is not written to the Cloudflare Access
@@ -61,8 +69,8 @@ high-entropy master password instead of choosing a short shared password.
 7. Confirm **Sign Out** clears the session and returns to the password screen.
 8. From a non-approved network, confirm Cloudflare still requires the normal
    email sign-in and the master-password screen is unreachable.
-9. Confirm the direct Vercel deployment hostname cannot use a caller-supplied
-   `cf-connecting-ip` header to reach the password path.
+9. Confirm the direct Vercel deployment hostname cannot use caller-supplied
+   Cloudflare IP or proof headers to reach the password path.
 
 If an approved public IP changes, update both the Cloudflare IP list and the
 Vercel environment variable before removing the old address.

@@ -16,6 +16,22 @@ function normalizeHostname(host: string) {
   return firstHost.split(":")[0] ?? "";
 }
 
+function normalizeConfiguredHostname(host: string) {
+  const candidate = host.trim();
+  if (!candidate) return "";
+
+  try {
+    const url = new URL(
+      /^[a-z][a-z\d+.-]*:\/\//i.test(candidate)
+        ? candidate
+        : `https://${candidate}`
+    );
+    return normalizeHostname(url.host);
+  } catch {
+    return normalizeHostname(candidate);
+  }
+}
+
 function getForwardedHost(headers: Headers) {
   const forwarded = headers.get("forwarded") ?? "";
   const hostMatch = forwarded.match(/(?:^|;|,\s*)host=([^;,]+)/i);
@@ -149,16 +165,20 @@ export function hasCloudflareAccessJwtCookie(headers: Headers) {
 }
 
 function getPortalExpectedHostnames() {
-  const configuredPortalHost = process.env.PORTAL_HOSTNAME?.trim().toLowerCase();
-  const configuredSiteHost = process.env.NEXT_PUBLIC_SITE_DOMAIN?.trim().toLowerCase();
-  const fallbackSiteHost = "artisanlabnetwork.com";
+  const configuredPortalHost = normalizeConfiguredHostname(
+    process.env.PORTAL_HOSTNAME ?? ""
+  );
+  const configuredSiteHost = normalizeConfiguredHostname(
+    process.env.NEXT_PUBLIC_SITE_DOMAIN ?? ""
+  );
+  const productionSiteHosts = ["artisanlabnetwork.com", "artisanslabs.com"];
 
   return new Set(
     [
       configuredPortalHost,
       configuredSiteHost,
-      fallbackSiteHost,
-      `www.${fallbackSiteHost}`,
+      ...productionSiteHosts,
+      ...productionSiteHosts.map((hostname) => `www.${hostname}`),
     ].filter(Boolean) as string[]
   );
 }

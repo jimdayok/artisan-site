@@ -78,6 +78,46 @@ test("matches only configured, edge-verified Cloudflare client IPs", () => {
   }
 });
 
+test("accepts both live Artisan domains and URL-formatted domain configuration", () => {
+  const timestamp = Math.floor(Date.now() / 1000);
+  const edgeSecret = "e".repeat(48);
+  const previousEdgeSecret = process.env.PORTAL_TRUSTED_NETWORK_EDGE_SECRET;
+  const previousSiteDomain = process.env.NEXT_PUBLIC_SITE_DOMAIN;
+  process.env.PORTAL_TRUSTED_NETWORK_EDGE_SECRET = edgeSecret;
+  process.env.NEXT_PUBLIC_SITE_DOMAIN = "https://www.artisanslabs.com";
+
+  try {
+    for (const host of ["artisanslabs.com", "www.artisanslabs.com"]) {
+      const headers = new Headers({
+        host,
+        "cf-connecting-ip": "96.76.102.241",
+        "cf-ray": "test-DFW",
+        [TRUSTED_NETWORK_EDGE_TIME_HEADER]: String(timestamp),
+        [TRUSTED_NETWORK_EDGE_PROOF_HEADER]: createTrustedNetworkEdgeProof(
+          "96.76.102.241",
+          timestamp,
+          edgeSecret
+        ),
+      });
+      assert.equal(
+        isTrustedNetworkRequest(headers, "96.76.102.241", "production"),
+        true
+      );
+    }
+  } finally {
+    if (previousEdgeSecret === undefined) {
+      delete process.env.PORTAL_TRUSTED_NETWORK_EDGE_SECRET;
+    } else {
+      process.env.PORTAL_TRUSTED_NETWORK_EDGE_SECRET = previousEdgeSecret;
+    }
+    if (previousSiteDomain === undefined) {
+      delete process.env.NEXT_PUBLIC_SITE_DOMAIN;
+    } else {
+      process.env.NEXT_PUBLIC_SITE_DOMAIN = previousSiteDomain;
+    }
+  }
+});
+
 test("edge proofs are time-limited and bound to the Cloudflare client IP", () => {
   const now = Date.UTC(2026, 8, 2, 12, 0, 0);
   const timestamp = Math.floor(now / 1000);

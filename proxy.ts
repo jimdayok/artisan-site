@@ -6,12 +6,12 @@ import {
 } from "@/lib/portal/adminAccess";
 import {
   getTrustedNetworkClientIp,
-  isTrustedNetworkRequest,
   TRUSTED_NETWORK_AUTH_METHOD,
   TRUSTED_NETWORK_AUTH_METHOD_HEADER,
   TRUSTED_NETWORK_LOGIN_PATH,
   TRUSTED_NETWORK_SESSION_COOKIE,
   TRUSTED_NETWORK_SESSION_PATH,
+  trustedNetworkRequestFailureReason,
   verifyTrustedNetworkSession,
 } from "@/lib/portal/trustedNetworkAccess";
 import { isHiddenPriceListCode } from "@/lib/pricing/priceListCodes";
@@ -193,8 +193,19 @@ export async function proxy(request: NextRequest) {
   );
 
   if (!hasVerifiedCloudflareIdentity) {
-    const onTrustedNetwork = isTrustedNetworkRequest(request.headers);
+    const trustedNetworkFailure = trustedNetworkRequestFailureReason(
+      request.headers
+    );
+    const onTrustedNetwork = !trustedNetworkFailure;
     if (!onTrustedNetwork) {
+      const clientIp = getTrustedNetworkClientIp(request.headers);
+      if (clientIp) {
+        console.warn("[PORTAL AUTH] Trusted-network verification failed", {
+          path: pathname,
+          clientIp,
+          reason: trustedNetworkFailure,
+        });
+      }
       if (
         pathname === TRUSTED_NETWORK_LOGIN_PATH ||
         pathname === TRUSTED_NETWORK_SESSION_PATH

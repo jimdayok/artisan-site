@@ -127,23 +127,29 @@ export function isTrustedNetworkRequest(
   configuredValue = process.env.PORTAL_TRUSTED_NETWORK_IPS ?? "",
   nodeEnv = process.env.NODE_ENV
 ) {
+  return !trustedNetworkRequestFailureReason(headers, configuredValue, nodeEnv);
+}
+
+export function trustedNetworkRequestFailureReason(
+  headers: Headers,
+  configuredValue = process.env.PORTAL_TRUSTED_NETWORK_IPS ?? "",
+  nodeEnv = process.env.NODE_ENV
+) {
   // Production traffic must have traversed Cloudflare and must be addressed to
   // an approved portal hostname. This prevents caller-supplied IP headers on a
   // direct *.vercel.app request from becoming an authentication signal.
   if (nodeEnv === "production") {
-    if (
-      !headers.get("cf-ray") ||
-      !isPortalHostRequest(headers) ||
-      !verifyTrustedNetworkEdgeProof(headers)
-    ) {
-      return false;
-    }
+    if (!headers.get("cf-ray")) return "missing-cloudflare-ray";
+    if (!isPortalHostRequest(headers)) return "unapproved-portal-host";
+    if (!verifyTrustedNetworkEdgeProof(headers)) return "invalid-edge-proof";
   }
 
   const clientIp = getTrustedNetworkClientIp(headers);
-  return Boolean(
-    clientIp && configuredTrustedNetworkIps(configuredValue).has(clientIp)
-  );
+  if (!clientIp) return "missing-client-ip";
+  if (!configuredTrustedNetworkIps(configuredValue).has(clientIp)) {
+    return "client-ip-not-allowlisted";
+  }
+  return "";
 }
 
 export function hashTrustedNetworkPassword(

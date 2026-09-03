@@ -35,6 +35,12 @@ Required:
 - `NEXT_PUBLIC_PORTAL_LOGIN_URL`
 - `CLOUDFLARE_ACCESS_TEAM_DOMAIN` or `CF_ACCESS_TEAM_DOMAIN`
 - `CLOUDFLARE_ACCESS_AUD` or `CF_ACCESS_AUD`
+- `CLOUDFLARE_ACCESS_API_TOKEN` with Cloudflare `Access: Apps and Policies Write` permission for the production account
+- `CLOUDFLARE_ACCOUNT_ID`
+- `CLOUDFLARE_ACCESS_POLICY_ID`
+
+Optional:
+- `CLOUDFLARE_ACCESS_POLICY_NAME` (defaults to `Allow Artisan Lab Network users` and is checked before any policy update)
 
 Conditional (if PDF downloads remain active):
 - R2 bucket and credential variables used by portal download routes
@@ -42,6 +48,7 @@ Conditional (if PDF downloads remain active):
 Checklist:
 - [ ] All required variables exist in Vercel Production scope
 - [ ] Values match production domain and Cloudflare Access app config
+- [ ] Portal account add/remove actions update the exact reusable Cloudflare allow policy
 - [ ] Portal login URL points to canonical production portal route
 - [ ] Optional R2 variables present if PDF download flow is still enabled
 

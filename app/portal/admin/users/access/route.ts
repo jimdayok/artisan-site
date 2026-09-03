@@ -2,9 +2,11 @@ import { randomBytes } from "node:crypto";
 import { NextResponse } from "next/server";
 import { getPortalAdminEmailFromHeaders } from "@/lib/portal/admin";
 import { sendPortalInviteEmail } from "@/lib/portal/adminInvites";
+import { setCloudflareAccessEmail } from "@/lib/portal/cloudflareAccessPolicy";
 import {
   appendPortalAccessAdminEvent,
   getEffectivePortalAccessAccount,
+  getEffectivePortalAccessAccountsForEmail,
 } from "@/lib/portal/portalAccessOverrides";
 import {
   normalizePortalAccessAccountNumber,
@@ -98,6 +100,29 @@ async function sendInvites({
   }
 }
 
+async function saveAccessWithCloudflare({
+  event,
+  email,
+  cloudflareOperation,
+}: {
+  event: Parameters<typeof appendPortalAccessAdminEvent>[0];
+  email: string;
+  cloudflareOperation: "add" | "remove";
+}) {
+  const cloudflare = await setCloudflareAccessEmail(email, cloudflareOperation);
+  try {
+    return await appendPortalAccessAdminEvent(event);
+  } catch (error) {
+    if (cloudflare.changed) {
+      await setCloudflareAccessEmail(
+        email,
+        cloudflareOperation === "add" ? "remove" : "add"
+      ).catch(() => undefined);
+    }
+    throw error;
+  }
+}
+
 export async function POST(request: Request) {
   const actorEmail = getPortalAdminEmailFromHeaders(request.headers);
   if (!actorEmail) {
@@ -129,8 +154,8 @@ export async function POST(request: Request) {
       const programs = selectedPrograms(formData);
       const onboarding = formData.get("onboarding") === "on";
 
-      await appendPortalAccessAdminEvent({
-        type: "account-created",
+      const event = {
+        type: "account-created" as const,
         actorEmail,
         accountNumber,
         practiceName,
@@ -138,7 +163,16 @@ export async function POST(request: Request) {
         priceLists,
         programs,
         onboarding,
-      });
+      };
+      if (email) {
+        await saveAccessWithCloudflare({
+          event,
+          email,
+          cloudflareOperation: "add",
+        });
+      } else {
+        await appendPortalAccessAdminEvent(event);
+      }
 
       if (email && formData.get("sendInvite") === "on") {
         await sendInvites({
@@ -166,11 +200,15 @@ export async function POST(request: Request) {
     if (operation === "add-email") {
       const email = normalizePortalAccessEmail(formData.get("email"));
       if (!email) throw new Error("Enter a valid email address.");
-      await appendPortalAccessAdminEvent({
-        type: "email-added",
-        actorEmail,
-        accountNumber: account.accountNumber,
+      await saveAccessWithCloudflare({
+        event: {
+          type: "email-added",
+          actorEmail,
+          accountNumber: account.accountNumber,
+          email,
+        },
         email,
+        cloudflareOperation: "add",
       });
       if (formData.get("sendInvite") === "on") {
         await sendInvites({
@@ -193,12 +231,31 @@ export async function POST(request: Request) {
       if (!email || !account.emails.includes(email)) {
         throw new Error("That email is not assigned to this account.");
       }
-      await appendPortalAccessAdminEvent({
-        type: "email-removed",
-        actorEmail,
-        accountNumber: account.accountNumber,
-        email,
-      });
+      const otherAssignments = (
+        await getEffectivePortalAccessAccountsForEmail(email)
+      ).filter(
+        (assignedAccount) =>
+          assignedAccount.accountNumber !== account.accountNumber
+      );
+      if (otherAssignments.length > 0) {
+        await appendPortalAccessAdminEvent({
+          type: "email-removed",
+          actorEmail,
+          accountNumber: account.accountNumber,
+          email,
+        });
+      } else {
+        await saveAccessWithCloudflare({
+          event: {
+            type: "email-removed",
+            actorEmail,
+            accountNumber: account.accountNumber,
+            email,
+          },
+          email,
+          cloudflareOperation: "remove",
+        });
+      }
       return redirectToUsers(
         request,
         "saved",

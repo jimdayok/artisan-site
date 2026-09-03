@@ -5,6 +5,7 @@ import {
   getPortalInviteConfig,
   getPortalInviteRecipientSummary,
 } from "@/lib/portal/adminInvites";
+import { getCloudflareAccessPolicyConfig } from "@/lib/portal/cloudflareAccessPolicy";
 import {
   getEffectivePortalAccessAccount,
   getEffectivePortalAccessAccounts,
@@ -91,6 +92,7 @@ export default async function PortalAdminUsersPage({
 
   const query = (await searchParams) ?? {};
   const inviteConfig = getPortalInviteConfig();
+  const cloudflareConfig = getCloudflareAccessPolicyConfig();
   const storageConfig = getPortalAccessOverrideConfig();
   const accounts = await getEffectivePortalAccessAccounts();
   const selectedAccount = query.account
@@ -100,12 +102,13 @@ export default async function PortalAdminUsersPage({
     ? await getPortalInviteRecipientSummary(query.email)
     : undefined;
   const changesDisabled = !storageConfig.configured;
+  const accessChangesDisabled = changesDisabled || !cloudflareConfig.enabled;
 
   return (
     <AdminShell title="Portal Access" adminEmail={adminEmail} showHeroNav>
       <StatusMessage query={query} />
 
-      <section className="mt-8 grid gap-4 lg:grid-cols-2">
+      <section className="mt-8 grid gap-4 lg:grid-cols-3">
         <div className="border border-[#d8c49b] bg-[#fffaf1]/84 p-5">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8b7650]">
             Account storage
@@ -114,6 +117,16 @@ export default async function PortalAdminUsersPage({
             {storageConfig.configured
               ? "Ready. Portal changes are saved privately and remain in place across report refreshes."
               : `Not configured. Missing ${storageConfig.missing.join(", ")}.`}
+          </p>
+        </div>
+        <div className="border border-[#d8c49b] bg-[#fffaf1]/84 p-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8b7650]">
+            Login-code access
+          </p>
+          <p className="mt-2 text-sm leading-6">
+            {cloudflareConfig.enabled
+              ? "Ready. Customer email changes are synchronized with Cloudflare before invitations are sent."
+              : `Not configured. Missing ${cloudflareConfig.missing.join(", ")}.`}
           </p>
         </div>
         <div className="border border-[#d8c49b] bg-[#fffaf1]/84 p-5">
@@ -196,7 +209,7 @@ export default async function PortalAdminUsersPage({
                         <input type="hidden" name="operation" value="remove-email" />
                         <input type="hidden" name="accountNumber" value={selectedAccount.accountNumber} />
                         <input type="hidden" name="email" value={email} />
-                        <FormButton disabled={changesDisabled} danger>
+                        <FormButton disabled={accessChangesDisabled} danger>
                           Remove access
                         </FormButton>
                       </form>
@@ -216,7 +229,7 @@ export default async function PortalAdminUsersPage({
                   <input className="mt-1 h-4 w-4" type="checkbox" name="sendInvite" disabled={!inviteConfig.enabled} />
                   Send the login invitation now
                 </label>
-                <FormButton disabled={changesDisabled}>Add email address</FormButton>
+                <FormButton disabled={accessChangesDisabled}>Add email address</FormButton>
               </form>
             </article>
 
@@ -318,7 +331,7 @@ export default async function PortalAdminUsersPage({
             <input className={inputClass} name="priceLists" placeholder="Price list codes, for example G6" list="price-list-codes" />
             <label className="flex gap-3 text-sm"><input className="mt-0.5 h-4 w-4" type="checkbox" name="onboarding" />Show Customer Onboarding Center</label>
             <label className="flex gap-3 text-sm"><input className="mt-0.5 h-4 w-4" type="checkbox" name="sendInvite" disabled={!inviteConfig.enabled} />Send a login email to the customer</label>
-            <FormButton disabled={changesDisabled}>Create customer account</FormButton>
+            <FormButton disabled={accessChangesDisabled}>Create customer account</FormButton>
           </form>
         </article>
 
@@ -328,7 +341,7 @@ export default async function PortalAdminUsersPage({
           <p className="mt-3 text-sm leading-6 text-[#706759]">Use this for an email that is already assigned to an account.</p>
           <form action="/portal/admin/users/invite" method="POST" className="mt-5 grid gap-3">
             <input className={inputClass} type="email" name="email" required defaultValue={query.email ?? ""} placeholder="name@practice.com" />
-            <FormButton disabled={!inviteConfig.enabled}>Send invite</FormButton>
+            <FormButton disabled={!inviteConfig.enabled || !cloudflareConfig.enabled}>Send invite</FormButton>
           </form>
           {recipientSummary ? (
             <div className="mt-5 border border-[#d8c49b] bg-white p-4 text-sm leading-6">

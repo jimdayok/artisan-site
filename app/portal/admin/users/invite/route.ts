@@ -2,7 +2,12 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { getPortalAdminEmailFromHeaders } from "@/lib/portal/admin";
 import { normalizeEmail } from "@/lib/portal/userDataAccess";
-import { getPortalInviteConfig, sendPortalInviteEmail } from "@/lib/portal/adminInvites";
+import {
+  getPortalInviteConfig,
+  getPortalInviteRecipientSummary,
+  sendPortalInviteEmail,
+} from "@/lib/portal/adminInvites";
+import { setCloudflareAccessEmail } from "@/lib/portal/cloudflareAccessPolicy";
 
 export const dynamic = "force-dynamic";
 
@@ -39,6 +44,16 @@ export async function POST(request: Request) {
   }
 
   try {
+    const recipient = await getPortalInviteRecipientSummary(recipientEmail);
+    if (!recipient.hasPortalAssignments) {
+      return redirectToUsers(
+        request,
+        "error",
+        recipientEmail,
+        "Assign this email to a customer account before sending an invitation."
+      );
+    }
+    await setCloudflareAccessEmail(recipientEmail, "add");
     await sendPortalInviteEmail({
       recipientEmail,
       sentBy: adminEmail,

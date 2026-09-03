@@ -10,6 +10,10 @@ import {
 } from "../lib/pricing/lookupData.mjs";
 import { writeBufferAtomic, writeJsonAtomic } from "../lib/pricing/atomicJson.mjs";
 import { PricingProgress } from "../lib/pricing/progress.mjs";
+import {
+  isDviAuthoritativePriceList,
+  nonDviLensAddOnSections,
+} from "../lib/pricing/sourceAuthority.mjs";
 
 const gzipAsync = promisify(gzip);
 const progress = new PricingProgress({ prefix: "pricing:normalize" });
@@ -92,7 +96,9 @@ const materialDeltaTargets = [
   { codes: ["H53"], material: "Trivex" },
   { codes: ["H60"], material: "Hi-Index 1.60" },
   { codes: ["H67"], material: "Hi-Index 1.67" },
+  { codes: ["H70"], material: "Hi-Index 1.70" },
   { codes: ["H74"], material: "Hi-Index 1.74" },
+  { codes: ["H76"], material: "Hi-Index 1.76" },
 ];
 
 const polycarbonateBaselineMaterialCodes = ["PLY", "TPY", "SPY", "PRY", "BLY"];
@@ -171,6 +177,41 @@ async function readGzipJson(filePath) {
 
 async function loadSourcePayloadForCode(code) {
   const standardPath = getStandardSourcePath(code);
+  const dviPath = getDviSourcePath(code);
+
+  if (isDviAuthoritativePriceList(code)) {
+    if (!existsSync(dviPath)) {
+      throw new Error(
+        `[pricing:normalize] authoritative DVI source is missing for ${code}: ${dviPath}`
+      );
+    }
+
+    try {
+      const dviPayload = await readJson(dviPath);
+      let preservedAddOnSections = [];
+      if (existsSync(standardPath)) {
+        const standardPayload = await readJson(standardPath);
+        preservedAddOnSections = nonDviLensAddOnSections(
+          standardPayload.addOnSections
+        );
+      }
+      return {
+        kind: "dvi",
+        payload: dviPayload,
+        preservedAddOnSections,
+      };
+    } catch (error) {
+      console.warn(
+        `[pricing:normalize] unable to read authoritative ${path.basename(
+          dviPath
+        )} for ${code}: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      );
+      throw error;
+    }
+  }
+
   if (existsSync(standardPath)) {
     try {
       return {
@@ -188,7 +229,6 @@ async function loadSourcePayloadForCode(code) {
     }
   }
 
-  const dviPath = getDviSourcePath(code);
   if (existsSync(dviPath)) {
     try {
       return {
@@ -268,6 +308,60 @@ async function readLookupMaterialMap(lookupData) {
 
 function normalizeTextValue(value) {
   return String(value ?? "").trim();
+}
+
+function mergeUniqueValues(current = [], next = []) {
+  return [...new Set([...current, ...next])].sort(compareText);
+}
+
+function dedupeDviRows(rows) {
+  const byKey = new Map();
+  for (const row of rows) {
+    const key = [
+      normalizeKey(row.brand),
+      normalizeKey(row.designType),
+      normalizeKey(row.designStyle),
+      normalizeKey(row.materialRaw),
+      normalizeKey(row.material),
+      normalizeKey(row.materialColor),
+      normalizeKey(row.colorBrand),
+      row.edgedPrice,
+      row.uncutDeduct,
+      row.uncutPrice,
+    ].join("|");
+    const existing = byKey.get(key);
+    if (!existing) {
+      byKey.set(key, row);
+      continue;
+    }
+
+    existing.rawProductNames = mergeUniqueValues(
+      existing.rawProductNames,
+      row.rawProductNames
+    );
+    existing.sourceCodes = mergeUniqueValues(existing.sourceCodes, row.sourceCodes);
+    existing.colorRaw = mergeUniqueValues(existing.colorRaw, row.colorRaw);
+    existing.availableColors = mergeUniqueValues(
+      existing.availableColors,
+      row.availableColors
+    );
+    existing.duplicateSourceRows += row.duplicateSourceRows;
+
+    const coatings = new Map(
+      (existing.coatingOptions ?? []).map((coating) => [
+        `${coating.code}|${coating.price}|${coating.sourceSchedule}`,
+        coating,
+      ])
+    );
+    for (const coating of row.coatingOptions ?? []) {
+      coatings.set(
+        `${coating.code}|${coating.price}|${coating.sourceSchedule}`,
+        coating
+      );
+    }
+    existing.coatingOptions = [...coatings.values()];
+  }
+  return [...byKey.values()];
 }
 
 function normalizeBrandAndStyle(row, lookupMap) {
@@ -768,18 +862,27 @@ function dviRowsToGeneratedPayload(
     });
   }
 
+  const dedupedRows = dedupeDviRows(rows).map((row, index) => ({
+    ...row,
+    id: `${code}-${index}`,
+  }));
+
   return {
     code,
-    rows,
-    arCoatings: normalizeArCoatings(rows, scheduleCatalog.coating ?? [], arLookupMap),
+    rows: dedupedRows,
+    arCoatings: normalizeArCoatings(
+      dedupedRows,
+      scheduleCatalog.coating ?? [],
+      arLookupMap
+    ),
     addOnSections: [],
     scheduleCatalog,
     report: {
       sourceFiles: [`dvi-${code.toLowerCase()}-pricing.json`],
-      rowCount: rows.length,
-      rawSourceRowsProcessed: rows.length,
+      rowCount: dedupedRows.length,
+      rawSourceRowsProcessed: dviRows.length,
       rowsExcludedMissingLookup: 0,
-      displayRowCount: rows.length,
+      displayRowCount: dedupedRows.length,
       generatedAt: new Date().toISOString(),
       rawColumns: [],
       mappedColumns: [],
@@ -856,11 +959,21 @@ async function readTargetCodes() {
     }
   }
 
+  const requestedCodeArgument = process.argv.find((argument) =>
+    argument.startsWith("--codes=")
+  );
+  const requestedCodes = new Set(
+    String(requestedCodeArgument?.slice("--codes=".length) ?? "")
+      .split(",")
+      .map(canonicalCode)
+      .filter(Boolean)
+  );
   const filteredCodes = [...targetCodes]
     .filter(
       (code) =>
         existsSync(getStandardSourcePath(code)) || existsSync(getDviSourcePath(code))
     )
+    .filter((code) => requestedCodes.size === 0 || requestedCodes.has(code))
     .sort();
 
   return {
@@ -913,6 +1026,10 @@ async function main() {
         arLookupMap,
         materialLookupMap,
         source.payload.scheduleCatalog ?? {}
+      );
+      payload.addOnSections = source.preservedAddOnSections ?? [];
+      payload.report.assumptions.push(
+        `${code} design and option rows are sourced only from the matching DVI Style PList.`
       );
     } else {
       payload = {

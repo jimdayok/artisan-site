@@ -216,7 +216,8 @@ export default function Header({
         { label: "Optical Engineering Center", href: "/optical-engineering" },
         { label: "Freedom of Choice", href: "/advocacy" },
         { label: "Doctor Owned Labs", href: "/artisan-model" },
-        { label: "Customer Portal", href: CUSTOMER_PORTAL_URL, dividerBefore: true },
+        { label: "New Partner Setup", href: "/new-lab-partner", dividerBefore: true },
+        { label: "Customer Portal", href: CUSTOMER_PORTAL_URL },
       ],
     }),
     []
@@ -271,6 +272,15 @@ export default function Header({
     setMobileOpen((v) => !v);
   };
 
+  const handleContactClick = () => {
+    if (onContactClick) {
+      onContactClick();
+      return;
+    }
+
+    window.location.href = "mailto:info@artisanlabnetwork.com";
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-[1000]">
       <div className={`pointer-events-none absolute inset-0 -z-10 ${headerBg} backdrop-blur-xl`} />
@@ -305,7 +315,7 @@ export default function Header({
             </Capsule>
             <DropdownMenu {...labs} theme={theme} active={dropdownIsActive(labs)} onAnyClick={() => setMobileOpen(false)} />
             <DropdownMenu {...resources} theme={theme} active={dropdownIsActive(resources)} onAnyClick={() => setMobileOpen(false)} />
-            <Capsule theme={theme} onClick={onContactClick}>
+            <Capsule theme={theme} onClick={handleContactClick}>
               Contact
             </Capsule>
             <SiteButton href={signUpHref} variant="primary" size="sm" icon={Handshake} className="ml-1" external>
@@ -378,7 +388,7 @@ export default function Header({
                   className="inline-flex min-h-11 items-center gap-2 rounded-full border border-transparent px-4 text-left text-sm font-semibold transition hover:border-current/15 hover:bg-current/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4c09a]"
                   onClick={() => {
                     setMobileOpen(false);
-                    onContactClick?.();
+                    handleContactClick();
                   }}
                 >
                   <Mail className="h-4 w-4" aria-hidden="true" />

@@ -10,7 +10,7 @@ import {
 } from "@c15t/react";
 import { Analytics } from "@vercel/analytics/next";
 import { track } from "@vercel/analytics";
-import { createContext, useContext, useEffect, useMemo } from "react";
+import { createContext, useContext, useEffect, useMemo, useSyncExternalStore } from "react";
 import AnalyticsProvider from "./analytics/AnalyticsProvider";
 
 type CookieConsentContextValue = {
@@ -36,6 +36,9 @@ function PrivacyShieldIcon() {
 
 let measurementConsentGranted = false;
 let openPreferencesDialog: () => void = () => undefined;
+const subscribeToHydration = () => () => undefined;
+const getHydratedSnapshot = () => true;
+const getServerHydratedSnapshot = () => false;
 
 export function openCookiePreferences() {
   openPreferencesDialog();
@@ -74,26 +77,33 @@ function ConsentStateBridge({ children }: { children: React.ReactNode }) {
   const { openDialog } = useConsentDialogTrigger({ showWhen: "always" });
   const functional = has("functionality");
   const analytics = has("measurement");
+  const hydrated = useSyncExternalStore(
+    subscribeToHydration,
+    getHydratedSnapshot,
+    getServerHydratedSnapshot,
+  );
+  const functionalEnabled = hydrated && functional;
+  const analyticsEnabled = hydrated && analytics;
 
   useEffect(() => {
-    measurementConsentGranted = analytics;
+    measurementConsentGranted = analyticsEnabled;
     openPreferencesDialog = openDialog;
     return () => {
       measurementConsentGranted = false;
       openPreferencesDialog = () => undefined;
     };
-  }, [analytics, openDialog]);
+  }, [analyticsEnabled, openDialog]);
 
   const value = useMemo(
-    () => ({ functional, analytics, openPreferences: openCookiePreferences }),
-    [analytics, functional]
+    () => ({ functional: functionalEnabled, analytics: analyticsEnabled, openPreferences: openCookiePreferences }),
+    [analyticsEnabled, functionalEnabled]
   );
 
   return (
     <CookieConsentContext.Provider value={value}>
       {children}
-      <AnalyticsProvider measurementConsent={analytics} />
-      {analytics ? <Analytics /> : null}
+      <AnalyticsProvider measurementConsent={analyticsEnabled} />
+      {analyticsEnabled ? <Analytics /> : null}
     </CookieConsentContext.Provider>
   );
 }
@@ -108,7 +118,7 @@ export default function CookieConsentProvider({ children }: { children: React.Re
         legalLinks: {
           privacyPolicy: { href: "/privacy-policy", target: "_self" },
           cookiePolicy: { href: "/cookie-policy", target: "_self" },
-          termsOfService: { href: "/terms-of-use", target: "_self" },
+          termsOfService: { href: "/terms-and-conditions", target: "_self" },
         },
         i18n: {
           locale: "en",

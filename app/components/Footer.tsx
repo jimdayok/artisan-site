@@ -28,7 +28,7 @@ export default function Footer({
   ];
 
   return (
-    <footer id="site-footer" className="relative z-20 bg-[#171311] text-[#f7f1e8]">
+    <footer id="site-footer" data-theme="dark" className="relative z-20 bg-[#171311] text-[#f7f1e8]">
       <div className="border-y border-white/10 bg-[linear-gradient(180deg,#241d18_0%,#1d1814_100%)]">
         <div className="mx-auto flex max-w-7xl flex-col gap-5 px-6 py-6 md:flex-row md:items-center md:justify-between md:px-10">
           <div>
@@ -117,6 +117,7 @@ export default function Footer({
           </h3>
           <ul className="mt-5 space-y-3.5 text-sm text-white/72">
             <li><Link href="/provider-resources" className="transition hover:text-white">Provider Resources</Link></li>
+            <li><Link href="/new-lab-partner" className="transition hover:text-white">New Partner Setup</Link></li>
             <li><Link href="/portal" className="transition hover:text-white">Customer Portal</Link></li>
             <li><Link href="/patient-resources" className="transition hover:text-white">Patient Resources</Link></li>
             <li><Link href="/lab-policies" className="transition hover:text-white">Lab Policies</Link></li>

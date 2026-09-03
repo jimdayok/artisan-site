@@ -174,8 +174,8 @@ const orderingOptions = [
   {
     title: "DVI RxWizard",
     description:
-      "Use RxWizard for online prescription ordering when your team wants a direct, structured order path into the lab.",
-    bestFor: "Best for practices already working from DVI workflows or building a repeatable online ordering process.",
+      "Submit prescription orders directly to the lab through a structured online workflow.",
+    bestFor: "Recommended for practices that already use DVI or want a repeatable online ordering process.",
     href: "https://www.dvirx.com/",
     cta: "Open DVI",
     icon: MonitorCheck,
@@ -183,8 +183,8 @@ const orderingOptions = [
   {
     title: "SpecCheck",
     description:
-      "Use SpecCheck for lab workflow, billing, account payment, and order support tools connected to your Artisan relationship.",
-    bestFor: "Best when you need ordering support plus account workflow visibility in one place.",
+      "Access lab workflow, billing, account payment, and order support tools connected to your Artisan account.",
+    bestFor: "Recommended for ordering support and account workflow visibility in one place.",
     href: "https://www.speccheckrx.com/",
     cta: "Open SpecCheck",
     icon: ClipboardCheck,
@@ -192,8 +192,8 @@ const orderingOptions = [
   {
     title: "VisionWeb",
     description:
-      "Use VisionWeb when your practice submits through VisionWeb and needs the correct Artisan lab connection approved.",
-    bestFor: "Best for teams that already use VisionWeb as their insurance or order-entry workflow.",
+      "Submit orders through VisionWeb after your connection to the correct Artisan lab has been approved.",
+    bestFor: "Recommended for practices that use VisionWeb for insurance or order entry.",
     href: "https://www.visionweb.com/",
     cta: "Open VisionWeb",
     icon: Boxes,
@@ -202,16 +202,16 @@ const orderingOptions = [
 
 const vspSetupSteps = [
   {
-    title: "Tell customer service first",
-    body: "Practices should inform customer service they want to use Artisan Lab Network for VSP so the lab can set their account up.",
+    title: "Contact customer service",
+    body: "Let your Artisan customer service team know that you plan to use Artisan Lab Network for VSP so they can prepare your account.",
   },
   {
-    title: "Add the lab in VSP",
-    body: "After setup, add the lab inside VSP. In all instances, add Pacific Artisan Labs, even if you are using Pike Artisan Labs.",
+    title: "Select Pacific Artisan Labs in VSP",
+    body: "After your account is ready, select Pacific Artisan Labs in VSP—even if your orders are fulfilled by Pike Artisan Labs.",
   },
   {
-    title: "Orders still route correctly",
-    body: "VSP lists the Artisan labs under Pacific Artisan Labs. Orders will still route to the correct Artisan lab just like private pay orders.",
+    title: "Submit your orders",
+    body: "VSP displays the network under Pacific Artisan Labs, while orders continue routing to your assigned Artisan lab.",
   },
 ];
 
@@ -265,7 +265,7 @@ const brandLibraries: BrandLibrary[] = [
     label: "Tokai",
     headline: "Tokai materials, designs, tints, and Reset education",
     description:
-      "A fast Tokai shelf for Select, Bi-AS, Reset, Largo, tint references, and product training.",
+      "Browse Tokai Select, Bi-AS, Reset, Largo, tint references, and product training.",
     accent: "#b45309",
     logo: "/tokai-logo.png",
     resources: [
@@ -450,7 +450,7 @@ const troubleshootingResources: Resource[] = [
   resource("artisan", "Artisan", "Troubleshooting", "Guide", "Coating Concerns", "Support for crazing, peeling, scratches, cleaning problems, and coating expectations.", "/provider-resources/troubleshooting/coating-concerns", ["coating", "AR"]),
   resource("artisan", "Artisan", "Troubleshooting", "Guide", "Frame Compatibility", "Check frame choice, groove depth, wrap, drill mounts, safety frames, and lens limits.", "/provider-resources/troubleshooting/frame-compatibility", ["frame", "safety"]),
   resource("artisan", "Artisan", "Troubleshooting", "Guide", "Corridor Issues", "Diagnose narrow corridors, swim, blur zones, and near or intermediate access complaints.", "/provider-resources/troubleshooting/corridor-issues", ["corridor", "progressive"]),
-  resource("artisan", "Artisan", "Troubleshooting", "Guide", "High Rx Review", "A growing guide for high-power lens selection, thickness expectations, and frame choice.", "/optical-engineering", ["high Rx", "thickness"]),
+  resource("artisan", "Artisan", "Troubleshooting", "Guide", "High Rx Review", "Guidance for high-power lens selection, thickness expectations, and frame choice.", "/optical-engineering", ["high Rx", "thickness"]),
   resource("artisan", "Artisan", "Troubleshooting", "Guide", "Prism Questions", "Use engineering tools and lab support when prism, compensation, or measurement questions get complex.", "/optical-engineering", ["prism", "calculator"]),
   resource("artisan", "Artisan", "Troubleshooting", "Guide", "Occupational Lenses", "Guide patients toward office, near, and task-specific lenses with fewer adaptation surprises.", "#iot", ["office", "occupational"]),
   resource("artisan", "Artisan", "Troubleshooting", "Guide", "Digital Measurements", "Review PD, OC, seg height, wrap, panto, and vertex before ordering complex designs.", "/provider-resources/troubleshooting/measurement-errors", ["measurements", "digital"]),
@@ -488,20 +488,6 @@ const otiHighlights = [
   "Live tutoring and interactive job aids",
 ];
 
-const marketingResources = [
-  ["Social graphics", "Patient-facing product and practice-growth social content."],
-  ["Counter cards", "Compact in-office messages for premium lens conversations."],
-  ["Patient brochures", "Education handouts that make better recommendations easier."],
-  ["Waiting room videos", "Digital content for passive patient education."],
-  ["Window graphics", "Practice visibility and seasonal campaign support."],
-  ["Digital signage", "Office screens, product loops, and promotion support."],
-  ["Recall campaigns", "Patient recall messaging tied to product and service goals."],
-  ["Email templates", "Campaign language for education, reactivation, and promotions."],
-  ["Office promotions", "Multiple-pair and specialty product campaign planning."],
-  ["Dispensing mats", "Point-of-purchase counter materials that support product conversations."],
-  ["Point-of-purchase displays", "In-office displays for featured products and patient education."],
-];
-
 const labContacts = [
   {
     name: "Pacific Artisan Labs",
@@ -536,7 +522,6 @@ const filterOptions = [
   "AR",
   "Photochromic",
   "Safety",
-  "Marketing",
   "Troubleshooting",
   "Popular",
   "Newest",
@@ -683,7 +668,7 @@ function ResourceLink({ resource, dense = false }: { resource: Resource; dense?:
       ) : null}
       {resource.previewImage ? (
         <p className="resource-preview-hint mt-3 rounded bg-[#f7f8f5] px-3 py-2 text-xs font-semibold text-[#0f766e]">
-          Hover or focus to preview the display image. On touch devices, the image is shown above.
+          Preview available on hover or keyboard focus.
         </p>
       ) : null}
       <div className="mt-4 flex items-center justify-between gap-3 text-sm font-semibold text-[#111827]">
@@ -769,6 +754,18 @@ export default function ProviderResourcesPage({
   const mobileSectionNavRef = useRef<HTMLDivElement>(null);
   const lastSearchSignature = useRef("");
   const deferredQuery = useDeferredValue(query);
+
+  useEffect(() => {
+    const openLinkedBrand = () => {
+      const linkedBrand = window.location.hash.slice(1);
+      const matchingBrand = brandLibraries.find((brand) => brand.id === linkedBrand);
+      if (matchingBrand) setActiveBrand(matchingBrand.id);
+    };
+
+    openLinkedBrand();
+    window.addEventListener("hashchange", openLinkedBrand);
+    return () => window.removeEventListener("hashchange", openLinkedBrand);
+  }, []);
 
   useEffect(() => {
     mobileSectionNavRef.current
@@ -954,7 +951,7 @@ export default function ProviderResourcesPage({
 
           </div>
 
-          <div id="customer-portal" className="self-end border-l border-white/18 bg-[#0b1513]/72 p-6 backdrop-blur md:p-7">
+          <div id="customer-portal" className="scroll-mt-[132px] self-end border-l border-white/18 bg-[#0b1513]/72 p-6 backdrop-blur md:p-7">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#9ee6d8]">Customer Portal</p>
             <h2 className="mt-3 text-3xl font-semibold">The fastest path for existing customers.</h2>
             <p className="mt-4 text-sm leading-7 text-white/72">
@@ -988,7 +985,7 @@ export default function ProviderResourcesPage({
 
       <nav
         aria-label="Provider resources sections"
-        className={`fixed right-4 top-1/2 z-40 hidden -translate-y-1/2 rounded-[2rem] border border-[#d7ded9]/80 bg-white/68 p-4 shadow-[0_18px_55px_rgba(17,24,39,0.14)] backdrop-blur-2xl transition-all duration-500 xl:block ${
+        className={`fixed right-4 top-1/2 z-40 hidden -translate-y-1/2 rounded-[2rem] border border-[#d7ded9]/80 bg-white/68 p-4 shadow-[0_18px_55px_rgba(17,24,39,0.14)] backdrop-blur-2xl transition-all duration-500 min-[1720px]:block ${
           showSectionNav && !sectionNavDismissed ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-8 opacity-0"
         }`}
         >
@@ -1026,7 +1023,7 @@ export default function ProviderResourcesPage({
 
       <nav
         aria-label="Provider resources mobile sections"
-        className="sticky top-[72px] z-30 border-y border-[#d7ded9] bg-white/94 px-4 py-2 backdrop-blur xl:hidden"
+        className="sticky top-[72px] z-30 border-y border-[#d7ded9] bg-white/94 px-4 py-2 backdrop-blur min-[1720px]:hidden"
       >
         <div ref={mobileSectionNavRef} className="mobile-scroll-row mx-auto flex max-w-7xl items-center gap-3 overflow-x-auto [scrollbar-color:#0f766e_#e5e7eb] [scrollbar-width:thin]">
           <span className="shrink-0 text-xs font-semibold uppercase tracking-[0.16em] text-[#0f766e]">Jump to</span>
@@ -1045,17 +1042,17 @@ export default function ProviderResourcesPage({
         </div>
       </nav>
 
-      <section id="how-to-order" className="relative border-b border-[#d7ded9] bg-white px-5 py-14 md:px-8 md:py-16">
+      <section id="how-to-order" className="relative scroll-mt-[132px] border-b border-[#d7ded9] bg-white px-5 py-14 md:px-8 md:py-16">
         <span id="speccheck" className="absolute -top-28" aria-hidden="true" />
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <SectionHeading
               kicker="Ordering"
               title="How do you want to order?"
-              body="Start here when the job is ready. These are the three order-entry paths an optician is most likely looking for."
+              body="Choose the order-entry option that matches your practice workflow."
             />
             <p className="max-w-sm border-l-4 border-[#0f766e] pl-4 text-sm leading-6 text-[#4b5563]">
-              Maintained for Artisan partners and updated as ordering workflows change.
+              Ordering links and workflow information for Artisan partners.
             </p>
           </div>
           <div className="mt-8 grid gap-4 md:grid-cols-3">
@@ -1088,13 +1085,13 @@ export default function ProviderResourcesPage({
         </div>
       </section>
 
-      <section id="popular-resources" className="relative bg-[#eef4f1] px-5 py-14 md:px-8 md:py-16">
+      <section id="popular-resources" className="relative scroll-mt-[132px] bg-[#eef4f1] px-5 py-14 md:px-8 md:py-16">
         <span id="championing-mvc-vision-rights" className="absolute -top-28" aria-hidden="true" />
         <div className="mx-auto max-w-7xl">
           <SectionHeading
             kicker="Popular Resources"
             title="Fast answers for the questions that come up every week."
-            body="Most downloaded, recently added, staff favorites, and the links that keep practices moving."
+            body="Frequently used, recently added, and staff-selected resources."
           />
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {fastAnswerResources.map((item) => (
@@ -1104,7 +1101,7 @@ export default function ProviderResourcesPage({
         </div>
       </section>
 
-      <section id="resource-library" className="relative border-y border-[#d7ded9] bg-[#f7f8f5] px-5 py-14 md:px-8 md:py-16">
+      <section id="resource-library" className="relative scroll-mt-[132px] border-y border-[#d7ded9] bg-[#f7f8f5] px-5 py-14 md:px-8 md:py-16">
         <span id="product-education" className="absolute -top-28" aria-hidden="true" />
         <span id="downloads" className="absolute -top-28" aria-hidden="true" />
         <span id="brochures" className="absolute -top-28" aria-hidden="true" />
@@ -1114,7 +1111,7 @@ export default function ProviderResourcesPage({
             <SectionHeading
               kicker="Resource Library"
               title="Find the brand first. Then find the exact PDF, video, or guide."
-              body="A Microsoft Learn-style library for opticians: search everything, filter by task, or use the brand navigation."
+              body="Search by product or task, filter by resource type, or browse by brand."
             />
             <div className="grid gap-3 md:min-w-[420px]">
               <label className="flex h-12 items-center gap-3 rounded-lg border border-[#cbd5cf] bg-white px-3 shadow-sm">
@@ -1264,12 +1261,12 @@ export default function ProviderResourcesPage({
         </div>
       </section>
 
-      <section id="unity-vsp" className="bg-white px-5 py-14 md:px-8 md:py-16">
+      <section id="unity-vsp" className="scroll-mt-[132px] bg-white px-5 py-14 md:px-8 md:py-16">
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.78fr_1.22fr]">
           <SectionHeading
             kicker="VSP Setup"
-            title="Simple VSP routing, kept out in the open."
-            body="This is the setup guidance customers ask for most: tell customer service first, add the lab correctly, and orders will route to the right Artisan lab."
+            title="Connect your VSP account to Artisan."
+            body="Follow these steps to prepare your account and ensure orders reach the correct Artisan lab."
           />
           <div className="grid gap-3">
             {vspSetupSteps.map((step, index) => (
@@ -1285,9 +1282,9 @@ export default function ProviderResourcesPage({
               <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#0f766e]">PECAA Max Unity Rewards</p>
-                  <h3 className="mt-2 text-xl font-semibold">Keep the PECAA Max flyer close to VSP setup.</h3>
+                  <h3 className="mt-2 text-xl font-semibold">Explore PECAA Max Unity Rewards.</h3>
                   <p className="mt-2 max-w-2xl text-sm leading-6 text-[#374151]">
-                    The PECAA Max Unity Rewards flyer lives in the Unity / VSP brand library alongside plan-aligned products and VSP setup guidance.
+                    Review the program flyer and related Unity and VSP resources.
                   </p>
                 </div>
                 <div className="flex shrink-0 flex-wrap gap-2">
@@ -1310,12 +1307,12 @@ export default function ProviderResourcesPage({
         </div>
       </section>
 
-      <section id="troubleshooting-best-practices" className="bg-[#101a17] px-5 py-14 text-white md:px-8 md:py-16">
+      <section id="troubleshooting-best-practices" className="scroll-mt-[132px] bg-[#101a17] px-5 py-14 text-white md:px-8 md:py-16">
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-8 lg:grid-cols-[0.75fr_1.25fr]">
             <SectionHeading
               kicker="Troubleshooting"
-              title="A growing knowledge base built from real optical support questions."
+              title="Practical guidance for common optical questions."
               body="Progressives, non-adapts, measurements, coatings, frame selection, safety, occupational lenses, high Rx, prism, digital measurements, and remakes."
               dark
             />
@@ -1339,7 +1336,7 @@ export default function ProviderResourcesPage({
         </div>
       </section>
 
-      <section id="practice-toolbox" className="relative border-y border-[#d7ded9] bg-[#eef4f1] px-5 py-14 md:px-8 md:py-16">
+      <section id="practice-toolbox" className="relative scroll-mt-[132px] border-y border-[#d7ded9] bg-[#eef4f1] px-5 py-14 md:px-8 md:py-16">
         <span id="specialty-systems" className="absolute -top-28" aria-hidden="true" />
         <span id="modern-frame-system" className="absolute -top-28" aria-hidden="true" />
         <span id="modern-package-system" className="absolute -top-28" aria-hidden="true" />
@@ -1347,7 +1344,7 @@ export default function ProviderResourcesPage({
           <SectionHeading
             kicker="Practice Tools"
             title="Training, systems, engineering, pricing, and growth support."
-            body="The tools section now focuses on workflows that replace common sales-rep questions without burying the product library."
+            body="Access training, practice systems, engineering tools, pricing, policies, and growth resources."
           />
 
           <div className="mt-8 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
@@ -1365,7 +1362,7 @@ export default function ProviderResourcesPage({
                   alt="Optical Training Institute"
                   width={144}
                   height={56}
-                  className="h-14 w-36 object-contain"
+                  className="h-14 w-auto object-contain"
                 />
               </div>
               <div className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
@@ -1413,45 +1410,12 @@ export default function ProviderResourcesPage({
         </div>
       </section>
 
-      <section id="marketing-practice-growth" className="bg-white px-5 py-14 md:px-8 md:py-16">
-        <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <SectionHeading
-              kicker="Marketing Resources"
-              title="Support better patient conversations at every touchpoint."
-              body="Marketing support will include digital campaigns, patient education, dispensing mats, and point-of-purchase displays."
-            />
-            <span
-              className="inline-flex h-11 cursor-default items-center justify-center gap-2 rounded bg-[#111827] px-4 text-sm font-semibold text-white opacity-70"
-            >
-              Marketing support <ArrowRight className="h-4 w-4" />
-            </span>
-          </div>
-          <div className="relative mt-8 overflow-hidden rounded-xl">
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" aria-hidden="true">
-              {marketingResources.map(([title, body]) => (
-                <article key={title} className="rounded-lg border border-[#d7ded9] bg-[#f7f8f5] p-4">
-                  <Sparkles className="h-5 w-5 text-[#0f766e]" />
-                  <h3 className="mt-4 text-lg font-semibold">{title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-[#4b5563]">{body}</p>
-                </article>
-              ))}
-            </div>
-            <div className="absolute inset-0 grid place-items-center bg-white/72 backdrop-blur-[3px]">
-              <span className="rounded-full border border-[#0f766e]/25 bg-white px-8 py-4 text-sm font-bold uppercase tracking-[0.28em] text-[#0f766e] shadow-[0_18px_50px_rgba(15,118,110,0.16)]">
-                Coming Soon
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <section id="videos" className="border-y border-[#d7ded9] bg-[#f7f8f5] px-5 py-14 md:px-8 md:py-16">
         <div className="mx-auto max-w-7xl">
           <SectionHeading
             kicker="Newest Training"
-            title="Training videos opticians can reach without digging."
-            body="The most useful videos are also indexed in search and brand pages."
+            title="Training videos for everyday optical workflows."
+            body="Browse recent product and dispensing training from Artisan and its partners."
           />
           <div className="mt-8 grid gap-4 md:grid-cols-3">
             {allResources
@@ -1464,7 +1428,7 @@ export default function ProviderResourcesPage({
         </div>
       </section>
 
-      <section id="lab-customer-service" className="bg-[#111827] px-5 py-14 text-white md:px-8 md:py-16">
+      <section id="lab-customer-service" className="scroll-mt-[132px] bg-[#111827] px-5 py-14 text-white md:px-8 md:py-16">
         <div className="mx-auto max-w-7xl">
           <SectionHeading
             kicker="Support"

@@ -56,9 +56,20 @@ export default function TrainingHubReturnButton() {
     if (typeof window === "undefined") return;
 
     if (pathname === TRAINING_HUB_PATH) {
-      window.sessionStorage.setItem(RETURN_URL_KEY, currentRelativeUrl());
-      window.sessionStorage.removeItem(DISMISSED_KEY);
-      notifyStoreChanged();
+      const rememberLocation = () => {
+        window.sessionStorage.setItem(RETURN_URL_KEY, currentRelativeUrl());
+        window.sessionStorage.removeItem(DISMISSED_KEY);
+        notifyStoreChanged();
+      };
+
+      rememberLocation();
+      window.addEventListener("hashchange", rememberLocation);
+      window.addEventListener("popstate", rememberLocation);
+
+      return () => {
+        window.removeEventListener("hashchange", rememberLocation);
+        window.removeEventListener("popstate", rememberLocation);
+      };
     }
   }, [pathname]);
 

@@ -99,7 +99,20 @@ const policySections: PolicySection[] = [
     body: [
       "Additional pairs purchased within 30 days of the original pair are eligible for a 50% discount on the lesser priced invoice. There are no limits to the number of additional lens pairs eligible for the multiple pair discount program.",
       "Each pair must include one of the following: AR Treatment or Polarization.",
-      "Neurolens, Chem Clips, and some specialty work may follow separate rules or be excluded.",
+      "Neurolens, Chemistrie Clip, and some specialty work may follow separate rules or be excluded.",
+    ],
+  },
+  {
+    id: "chemistrie-clip-policies",
+    title: "Chemistrie Clip Policies",
+    icon: PackageCheck,
+    summary: "Customized-product terms and the limited defect policy for Chemistrie Clip orders.",
+    body: [
+      "Confirmed manufacturer or laboratory defects must be reported within 30 days of the order's ship date.",
+      "There are no warranties or remake policies for scratches, breakage, or loss.",
+      "Cancellations and returns are not accepted because Chemistrie Clip is a customized product.",
+      "There are no multiple-pair discounts available with Chemistrie Clip. Retrofit magnets are charged at $40 when applicable.",
+      "Before ordering, verify the frame, clip specifications, and retrofit requirements. Contact customer service if the customized-product terms are unclear.",
     ],
   },
   {

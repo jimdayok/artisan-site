@@ -120,7 +120,7 @@ test("GTM is consent-gated once and GA4 is not loaded directly", async () => {
   ]);
   assert.equal((provider.match(/<GoogleTagManager/g) ?? []).length, 1);
   assert.match(provider, /measurementConsent/);
-  assert.match(consent, /measurementConsent=\{analytics\}/);
+  assert.match(consent, /measurementConsent=\{analyticsEnabled\}/);
   assert.doesNotMatch(layout, /GoogleAnalytics|googletagmanager|gtag\(/);
 });
 

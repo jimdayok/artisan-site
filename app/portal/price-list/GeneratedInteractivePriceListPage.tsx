@@ -11,6 +11,7 @@ import { headers } from "next/headers";
 import { forbidden } from "next/navigation";
 import { OnlinePriceListShell } from "./OnlinePriceListShell";
 import PriceListAccessMessage from "./PriceListAccessMessage";
+import ValueSystemRequirements from "./ValueSystemRequirements";
 
 function requestOriginFromHeaders(headerList: Headers) {
   const host =
@@ -114,12 +115,15 @@ export default async function GeneratedInteractivePriceListPage({
       title={priceListDisplayName(normalizedCode)}
       description="Interactive private pricing guide for assigned portal accounts."
     >
-      <InteractivePriceListDashboard
-        priceList={customerPriceList}
-        comparisonPriceList={comparisonPriceList}
-        previewAccountNumber={previewAccountNumber}
-        showAccountDrillDownNotice={accountNumberCount > 1}
-      />
+      <div className="grid gap-6">
+        {normalizedCode === "VD" ? <ValueSystemRequirements /> : null}
+        <InteractivePriceListDashboard
+          priceList={customerPriceList}
+          comparisonPriceList={comparisonPriceList}
+          previewAccountNumber={previewAccountNumber}
+          showAccountDrillDownNotice={accountNumberCount > 1}
+        />
+      </div>
     </OnlinePriceListShell>
   );
 }

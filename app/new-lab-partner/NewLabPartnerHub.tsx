@@ -10,12 +10,14 @@ import {
   ChevronDown,
   Circle,
   Copy,
+  CreditCard,
   Download,
   ExternalLink,
   Mail,
   Minus,
   Printer,
   RotateCcw,
+  ReceiptText,
   Search,
   Slash,
 } from "lucide-react";
@@ -46,6 +48,11 @@ import {
   comparisonColumns,
   productComparisonRows,
 } from "./comparisonData";
+import {
+  computeSetupCompletion,
+  escapeHtml,
+  filenameSlug,
+} from "./newLabPartnerUtils";
 
 const STATUS_KEY = "artisan-new-lab-partner-section-status-v2";
 const LAB_KEY = "artisan-new-lab-partner-lab-v2";
@@ -134,8 +141,8 @@ function StatusControls({
   };
 
   return (
-    <div className="w-full max-w-xl rounded-[8px] border border-[#d8c6a8] bg-[#fbf8f3]/90 p-2 shadow-[0_12px_34px_rgba(49,39,26,0.08)] xl:w-[280px]">
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+    <div className="w-full max-w-xl rounded-[8px] border border-[#d8c6a8] bg-[#fbf8f3]/90 p-2 shadow-[0_12px_34px_rgba(49,39,26,0.08)] xl:w-[360px]">
+      <div className="grid grid-cols-3 gap-2">
       {statuses.map((option) => (
         <button
           key={option}
@@ -144,7 +151,7 @@ function StatusControls({
           title={status === option ? "Click again to undo" : statusHelp[option]}
           onClick={() => setStatus(sectionId, status === option ? "not-started" : option)}
           className={cx(
-            "group inline-flex min-h-12 min-w-0 items-center justify-center gap-1.5 rounded-[6px] border px-2 text-xs font-bold leading-tight transition sm:text-[11px] xl:text-xs",
+            "group inline-flex min-h-11 min-w-0 items-center justify-center gap-1.5 rounded-[6px] border px-2 text-[11px] font-bold leading-tight transition xl:text-xs",
             status === option && option === "complete" && "border-[#86b889] bg-[#e6f3e1] text-[#24562d] shadow-sm",
             status === option && option === "skipped" && "border-[#d3cec7] bg-[#ebe7e1] text-[#625b53] shadow-sm",
             status === option && option === "not-applicable" && "border-[#d3cec7] bg-[#ebe7e1] text-[#625b53] shadow-sm line-through decoration-[#8c8a86]",
@@ -152,12 +159,7 @@ function StatusControls({
           )}
         >
           <StatusIcon status={option} />
-          <span className="min-w-0 whitespace-normal text-center">{statusLabels[option]}</span>
-          {status === option ? (
-            <span className="hidden rounded-full bg-white/70 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-[#716b63] no-underline opacity-0 transition group-hover:opacity-100 2xl:inline">
-              Undo
-            </span>
-          ) : null}
+          <span className="min-w-0 whitespace-nowrap text-center">{statusLabels[option]}</span>
         </button>
       ))}
       </div>
@@ -181,10 +183,10 @@ function ProgressNav({ statuses, activeSection, setActiveSection }: { statuses: 
                 href={`#${section.id}`}
                 onClick={() => setActiveSection(section.id)}
                 className={cx(
-                  "flex items-center gap-2 rounded-[8px] px-3 py-2 text-sm font-semibold transition hover:bg-[#f5f1eb]",
-                  active && "bg-[#1f1a17] text-white hover:bg-[#1f1a17]",
-                  !active && muted && "text-[#aaa39a]",
-                  !active && !muted && "text-[#1f1a17]",
+                  "flex items-center gap-2 rounded-[8px] px-3 py-2 text-sm font-semibold transition",
+                  active && "bg-[#1f1a17] text-white hover:bg-[#2b241f]",
+                  !active && muted && "text-[#aaa39a] hover:bg-[#f5f1eb]",
+                  !active && !muted && "text-[#1f1a17] hover:bg-[#f5f1eb]",
                   status === "not-applicable" && "line-through decoration-[#aaa39a]",
                 )}
               >
@@ -199,7 +201,17 @@ function ProgressNav({ statuses, activeSection, setActiveSection }: { statuses: 
   );
 }
 
-function MobileProgress({ statuses, activeSection, setActiveSection }: { statuses: Record<string, SetupStatus>; activeSection: string; setActiveSection: (id: string) => void }) {
+function MobileProgress({
+  statuses,
+  activeSection,
+  setActiveSection,
+  openSection,
+}: {
+  statuses: Record<string, SetupStatus>;
+  activeSection: string;
+  setActiveSection: (id: string) => void;
+  openSection: (id: string) => void;
+}) {
   return (
     <div className="grid gap-2 sm:grid-cols-2 lg:hidden">
       {sections.map((section) => {
@@ -208,7 +220,10 @@ function MobileProgress({ statuses, activeSection, setActiveSection }: { statuse
           <a
             key={section.id}
             href={`#${section.id}`}
-            onClick={() => setActiveSection(section.id)}
+            onClick={() => {
+              setActiveSection(section.id);
+              openSection(section.id);
+            }}
             className={cx(
               "flex items-center gap-2 rounded-[8px] border px-3 py-2 text-sm font-semibold",
               activeSection === section.id ? "border-[#1f1a17] bg-[#1f1a17] text-white" : "border-[#d8c6a8] bg-white text-[#1f1a17]",
@@ -225,14 +240,14 @@ function MobileProgress({ statuses, activeSection, setActiveSection }: { statuse
 
 function WelcomeCard() {
   return (
-    <section className="relative z-10 -mt-12 px-6 md:px-10">
+    <section data-theme="light" className="relative z-10 -mt-12 px-6 md:px-10">
       <div className="mx-auto max-w-7xl rounded-[8px] border border-[#d8c6a8]/70 bg-[#fbf8f3] p-5 shadow-[0_28px_80px_rgba(49,39,26,0.16)] md:p-8">
         <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#8a7654]">Welcome to Artisan Lab Network</p>
         <div className="mt-4 grid gap-6 lg:grid-cols-[1fr_0.72fr] lg:items-end">
           <div>
             <h2 className="text-3xl font-semibold tracking-tight text-[#1f1a17] md:text-4xl">Get operational first. Learn only what applies.</h2>
             <p className="mt-4 max-w-3xl text-sm leading-7 text-[#625b53] md:text-base">
-              This hub helps your practice move work to Artisan Lab Network. Use it to confirm your lab contact information, understand how to order, access pricing, find policies, choose product resources, and train only on the products your team plans to use.
+              This hub helps your practice move work to Artisan Lab Network. Use it to confirm your lab contact information, understand how to order, pay statements, access pricing, find policies, choose product resources, and train only on the products your team plans to use.
               Most practices complete setup in under 20 minutes.
             </p>
           </div>
@@ -245,15 +260,15 @@ function WelcomeCard() {
   );
 }
 
-function LabSection({ selectedLab, setSelectedLab }: { selectedLab: LabId; setSelectedLab: (id: LabId) => void }) {
-  const activeLab = labs.find((lab) => lab.id === selectedLab) ?? labs[0];
+function LabSection({ selectedLab, setSelectedLab }: { selectedLab: LabId | ""; setSelectedLab: (id: LabId) => void }) {
+  const activeLab = labs.find((lab) => lab.id === selectedLab);
 
   return (
     <div className="mt-6">
       <div className="rounded-[8px] border border-[#d8c6a8] bg-[#fbf8f3] p-4">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8a7654]">Automatic Lab Detection</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8a7654]">Choose Your Artisan Lab</p>
         <p className="mt-2 text-sm leading-6 text-[#625b53]">
-          If account data identifies the lab, this section should already be selected. If not, choose the Artisan lab your practice will send work to.
+          Select the lab named in your Artisan account confirmation. If you are unsure, contact customer service before sending orders or frames.
         </p>
         <div className="mt-4 grid gap-3 md:grid-cols-3">
           {labs.map((lab) => (
@@ -272,37 +287,47 @@ function LabSection({ selectedLab, setSelectedLab }: { selectedLab: LabId; setSe
         </div>
       </div>
 
-      <div className="mt-5 overflow-hidden rounded-[8px] border border-[#d8c6a8]/70 bg-white">
-        <div className="grid lg:grid-cols-[0.95fr_1.05fr]">
-          <div className="relative h-72 lg:h-full">
-            <Image src={activeLab.image} alt={`${activeLab.name} lab`} fill sizes="(min-width: 1024px) 44vw, 100vw" className="object-cover" />
-          </div>
-          <div className="min-w-0 p-5 md:p-7">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8a7654]">Lab Profile</p>
-            <h3 className="mt-2 text-3xl font-semibold tracking-tight text-[#1f1a17]">{activeLab.name}</h3>
-            <dl className="mt-6 grid gap-3 sm:grid-cols-2">
-              {[
-                ["Phone", activeLab.phone, activeLab.phoneHref],
-                ["Email", activeLab.email, `mailto:${activeLab.email}`],
-                ["Hours", activeLab.hours],
-                ["Mailing / Shipping Address", activeLab.address],
-                ["Your ALN Representative", activeLab.representative],
-              ].map(([label, value, href]) => (
-                <div key={label} className="min-w-0 rounded-[8px] bg-[#fbf8f3] p-4">
-                  <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8a7654] sm:text-xs">{label}</dt>
-                  <dd className="mt-2 break-words text-sm font-semibold leading-6 text-[#1f1a17]">
-                    {href ? <a href={href} className="hover:underline">{value}</a> : value}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-            <div className="mt-5 flex flex-wrap gap-2">
-              <ResourceButton link={{ label: "Meet the Artisans", href: activeLab.href }} />
-              <ResourceButton link={{ label: "Contact customer service", href: `mailto:${activeLab.email}?subject=New%20Lab%20Partner%20Setup` }} />
+      {activeLab ? (
+        <div className="mt-5 overflow-hidden rounded-[8px] border border-[#d8c6a8]/70 bg-white">
+          <div className="grid lg:grid-cols-[0.95fr_1.05fr]">
+            <div className="relative h-72 overflow-hidden bg-[#171311] lg:h-full lg:min-h-[440px]">
+              <Image src={activeLab.image} alt="" fill sizes="(min-width: 1024px) 44vw, 100vw" className="scale-110 object-cover opacity-35 blur-md" aria-hidden="true" />
+              <Image src={activeLab.image} alt={`${activeLab.name} lab`} fill sizes="(min-width: 1024px) 44vw, 100vw" className="object-contain p-3" />
+            </div>
+            <div className="min-w-0 p-5 md:p-7">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8a7654]">Lab Profile</p>
+              <h3 className="mt-2 text-3xl font-semibold tracking-tight text-[#1f1a17]">{activeLab.name}</h3>
+              <dl className="mt-6 grid gap-3 sm:grid-cols-2">
+                {[
+                  ["Phone", activeLab.phone, activeLab.phoneHref],
+                  ["Email", activeLab.email, `mailto:${activeLab.email}`],
+                  ["Hours", activeLab.hours],
+                  [activeLab.id === "pacific" ? "Mailing / Shipping Address" : "Shipping Address", activeLab.address],
+                ].map(([label, value, href]) => (
+                  <div key={label} className="min-w-0 rounded-[8px] bg-[#fbf8f3] p-4">
+                    <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8a7654] sm:text-xs">{label}</dt>
+                    <dd className="mt-2 break-words text-sm font-semibold leading-6 text-[#1f1a17]">
+                      {href ? <a href={href} className="hover:underline">{value}</a> : value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+              <p className="mt-5 rounded-[8px] border border-[#d8c6a8] bg-[#fbf8f3] p-4 text-sm leading-6 text-[#625b53]">
+                Account representatives are assigned by territory. Customer service can confirm the right contact for your practice.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                <ResourceButton link={{ label: "Meet the Artisans", href: activeLab.href }} />
+                <ResourceButton link={{ label: "Contact customer service", href: `mailto:${activeLab.email}?subject=New%20Lab%20Partner%20Setup` }} />
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="mt-5 rounded-[8px] border border-dashed border-[#c9b28b] bg-white p-6 text-center">
+          <p className="font-semibold text-[#1f1a17]">Select your lab to view verified contact and shipping guidance.</p>
+          <p className="mt-2 text-sm leading-6 text-[#625b53]">No lab is selected by default, so your work is never routed based on a guess.</p>
+        </div>
+      )}
     </div>
   );
 }
@@ -310,14 +335,24 @@ function LabSection({ selectedLab, setSelectedLab }: { selectedLab: LabId; setSe
 function PortalSection() {
   return (
     <div className="mt-6 space-y-6">
-      <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
         {portalLoginSteps.map((step, index) => (
           <article key={step.title} className="overflow-hidden rounded-[8px] border border-[#d8c6a8] bg-[#fbf8f3]">
             <PortalMockup step={index + 1} title={step.title} />
             <div className="p-4">
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#8a7654]">Step {index + 1}</p>
-              <h3 className="mt-2 text-base font-semibold leading-5 text-[#1f1a17]">{step.title}</h3>
-              <p className="mt-2 text-sm leading-6 text-[#625b53]">{step.detail}</p>
+              <div className="flex items-start gap-3">
+                <span
+                  className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#1f1a17] text-sm font-bold text-white shadow-sm"
+                  aria-hidden="true"
+                >
+                  {index + 1}
+                </span>
+                <div className="min-w-0">
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#8a7654]">Step {index + 1}</p>
+                  <h3 className="mt-2 text-base font-semibold leading-5 text-[#1f1a17]">{step.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-[#625b53]">{step.detail}</p>
+                </div>
+              </div>
             </div>
           </article>
         ))}
@@ -345,6 +380,138 @@ function PortalSection() {
   );
 }
 
+function BillingSection() {
+  const paymentSteps = [
+    {
+      title: "Open Lab Pay",
+      body: "Sign in to the SpecCheck dashboard and select the Lab Pay icon in the left navigation. The overview shows the statement balance, outstanding balance, due date, payment history, and statement history.",
+    },
+    {
+      title: "Add a payment method",
+      body: "Choose Add New Payment Method and securely save a credit card or connect a bank account for ACH. You can manage saved methods and choose the primary method from the Lab Pay page.",
+    },
+    {
+      title: "Make the payment",
+      body: "Select Make Payment, choose the payment method, review the amount to charge, and confirm Make Payment. If no method is saved, SpecCheck will prompt you to add one first.",
+    },
+    {
+      title: "Choose whether to use autopay",
+      body: "To pay automatically, turn on Autopay, select the payment method, and choose the monthly start date. SpecCheck charges the full statement balance on the selected day each month.",
+    },
+  ];
+
+  return (
+    <div className="mt-6 space-y-5">
+      <div className="grid overflow-hidden rounded-[8px] border border-[#302822] bg-[#171311] text-white lg:grid-cols-[1fr_auto] lg:items-center">
+        <div className="p-6 md:p-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#d4c09a]">SpecCheck Lab Pay</p>
+          <h3 className="mt-3 text-3xl font-semibold tracking-tight">Review and pay your Artisan statement online.</h3>
+          <p className="mt-4 max-w-3xl text-sm leading-7 text-white/72 md:text-base">
+            Artisan uses SpecCheck Lab Pay for online statement payments. Use the same billing area to make a one-time payment, set up autopay, manage a card or ACH account, and find statements and receipts.
+          </p>
+        </div>
+        <div className="flex flex-col gap-3 border-t border-white/12 p-6 lg:min-w-64 lg:border-l lg:border-t-0">
+          <ResourceButton link={{ label: "Open SpecCheck Dashboard", href: "https://dashboard.speccheckrx.com/", external: true }} />
+          <ResourceButton link={{ label: "Open Official Lab Pay Guide", href: "https://support.speccheckrx.com/en/articles/8427111-setting-up-speccheck-lab-pay", external: true }} />
+        </div>
+      </div>
+
+      <figure className="overflow-hidden rounded-[8px] border border-[#d8c6a8] bg-white">
+        <div className="border-b border-[#eadfcd] p-5 md:p-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8a7654]">Lab Pay Overview</p>
+          <h3 className="mt-2 text-2xl font-semibold tracking-tight text-[#1f1a17]">Your balance, due date, payment controls, and history are together.</h3>
+        </div>
+        <div className="bg-[#f6f3fb] p-3 md:p-5">
+          <Image
+            src="/images/onboarding/billing/speccheck-lab-pay-overview.png"
+            alt="SpecCheck Lab Pay overview showing statement balance, due date, Make Payment, Autopay, payment history, and statement history"
+            width={2340}
+            height={1184}
+            sizes="(min-width: 1024px) 70vw, 100vw"
+            className="h-auto w-full rounded-[6px] border border-[#e2dbea] bg-white"
+          />
+        </div>
+        <figcaption className="border-t border-[#eadfcd] px-5 py-3 text-xs leading-5 text-[#756d65]">
+          Example SpecCheck screen. Your statement balance, due date, history, and available controls will reflect your account.
+        </figcaption>
+      </figure>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        {paymentSteps.map((step, index) => (
+          <article key={step.title} className="rounded-[8px] border border-[#d8c6a8] bg-[#fbf8f3] p-5">
+            <div className="flex items-start gap-4">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#1f1a17] text-sm font-bold text-white" aria-hidden="true">
+                {index + 1}
+              </span>
+              <div>
+                <h3 className="text-lg font-semibold text-[#1f1a17]">{step.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-[#625b53]">{step.body}</p>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <figure className="overflow-hidden rounded-[8px] border border-[#d8c6a8] bg-white">
+          <div className="bg-[#f6f3fb] p-3">
+            <Image
+              src="/images/onboarding/billing/speccheck-make-payment.png"
+              alt="SpecCheck Make Payment window with payment method, amount, and Make Payment controls"
+              width={1046}
+              height={546}
+              sizes="(min-width: 1024px) 35vw, 100vw"
+              className="h-auto w-full rounded-[6px] border border-[#e2dbea]"
+            />
+          </div>
+          <figcaption className="p-5">
+            <div className="flex items-center gap-3">
+              <CreditCard className="h-5 w-5 text-[#8a7654]" aria-hidden="true" />
+              <h3 className="font-semibold text-[#1f1a17]">One-time payments</h3>
+            </div>
+            <p className="mt-2 text-sm leading-6 text-[#625b53]">Confirm the saved method and payment amount before submitting.</p>
+          </figcaption>
+        </figure>
+        <figure className="overflow-hidden rounded-[8px] border border-[#d8c6a8] bg-white">
+          <div className="bg-[#f6f3fb] p-3">
+            <Image
+              src="/images/onboarding/billing/speccheck-autopay.png"
+              alt="SpecCheck Autopay Setting window with payment method and monthly start date"
+              width={1046}
+              height={650}
+              sizes="(min-width: 1024px) 35vw, 100vw"
+              className="h-auto w-full rounded-[6px] border border-[#e2dbea]"
+            />
+          </div>
+          <figcaption className="p-5">
+            <div className="flex items-center gap-3">
+              <CreditCard className="h-5 w-5 text-[#8a7654]" aria-hidden="true" />
+              <h3 className="font-semibold text-[#1f1a17]">Optional autopay</h3>
+            </div>
+            <p className="mt-2 text-sm leading-6 text-[#625b53]">Choose the payment method and the day SpecCheck should charge the full statement balance.</p>
+          </figcaption>
+        </figure>
+      </div>
+
+      <div className="rounded-[8px] border border-[#d8c6a8] bg-white p-5 md:p-6">
+        <div className="flex items-start gap-4">
+          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-[8px] bg-[#fbf8f3] text-[#8a7654]">
+            <ReceiptText className="h-5 w-5" aria-hidden="true" />
+          </div>
+          <div>
+            <h3 className="text-xl font-semibold tracking-tight text-[#1f1a17]">Statements, receipts, and order invoices</h3>
+            <ul className="mt-3 space-y-2 text-sm leading-6 text-[#625b53]">
+              <li className="flex gap-2"><Check className="mt-1 h-4 w-4 shrink-0 text-[#8a7654]" aria-hidden="true" /><span>Select a statement month or payment in Lab Pay to open the statement or receipt, then download or print it.</span></li>
+              <li className="flex gap-2"><Check className="mt-1 h-4 w-4 shrink-0 text-[#8a7654]" aria-hidden="true" /><span>For an individual order invoice, open the order, select the three-dot menu, and choose Order Invoice.</span></li>
+              <li className="flex gap-2"><Check className="mt-1 h-4 w-4 shrink-0 text-[#8a7654]" aria-hidden="true" /><span>SpecCheck Pro is required to access invoices for jobs that were not submitted through SpecCheck.</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PortalMockup({ step, title }: { step: number; title: string }) {
   return (
     <div className="h-36 bg-[#171311] p-4 text-white">
@@ -352,7 +519,7 @@ function PortalMockup({ step, title }: { step: number; title: string }) {
         <span className="font-serif text-base italic text-[#d4c09a]">Artisan</span>
         <div className="flex min-w-0 gap-1">
           {["Labs", "Resources", "Portal"].map((item) => (
-            <span key={item} className={cx("rounded-full px-1.5 py-1 text-[9px] font-bold leading-none", step === 2 && item === "Portal" ? "bg-[#d4c09a] text-[#171311]" : "bg-white/10")}>
+            <span key={item} className={cx("rounded-full px-1.5 py-1 text-[9px] font-bold leading-none", step === 2 && item === "Resources" ? "bg-[#d4c09a] text-[#171311]" : "bg-white/10")}>
               {item}
             </span>
           ))}
@@ -507,30 +674,35 @@ function ProductComparisonGuide({
   setPracticeName: (value: string) => void;
 }) {
   const [showGuide, setShowGuide] = useState(false);
-  const selectedColumns = comparisonColumns.filter((column) => lenses.includes(column.lensId));
-  const knownColumns = selectedColumns.filter((column) => column.workbookName);
-  const missingColumns = selectedColumns.filter((column) => !column.workbookName);
+  const [actionFeedback, setActionFeedback] = useState("");
+  const supportedColumns = comparisonColumns.filter(
+    (column) => lenses.includes(column.lensId) && column.workbookName,
+  );
+  const unsupportedSelections = lensOptions.filter(
+    (option) => lenses.includes(option.id) && !comparisonColumns.find((column) => column.lensId === option.id)?.workbookName,
+  );
   const printableName = practiceName.trim() || "Your Practice";
   const generatedDate = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" }).format(new Date());
 
   const guideHtml = () => {
-    const productHeaders = knownColumns.map((column) => `<th>${column.label}</th>`).join("");
+    const safeName = escapeHtml(printableName);
+    const productHeaders = supportedColumns.map((column) => `<th>${escapeHtml(column.label)}</th>`).join("");
     const productRows = productComparisonRows
-      .map((row) => `<tr><th>${row.category}</th>${knownColumns.map((column) => `<td>${row.values[column.lensId] || "Not mapped in the current comparison workbook"}</td>`).join("")}</tr>`)
+      .map((row) => `<tr><th>${escapeHtml(row.category)}</th>${supportedColumns.map((column) => `<td>${escapeHtml(row.values[column.lensId] || "—")}</td>`).join("")}</tr>`)
       .join("");
-    const missing = missingColumns.length
-      ? `<section class="data-notice"><h2>Comparison data not mapped</h2><p>${missingColumns.map((column) => column.label).join(", ")} ${missingColumns.length === 1 ? "is" : "are"} selected, but not mapped in the current Comparisons.xlsx workbook.</p></section>`
+    const lensSection = supportedColumns.length
+      ? `<section><h2>Lens Design Crosswalk</h2><table><thead><tr><th>Category</th>${productHeaders}</tr></thead><tbody>${productRows}</tbody></table><p class="note">A dash indicates that no published comparison is available for that category.</p></section>`
       : "";
-    const arHeaders = arComparisonColumns.map((label) => `<th>${label}</th>`).join("");
+    const arHeaders = arComparisonColumns.map((label) => `<th>${escapeHtml(label)}</th>`).join("");
     const arRows = arComparisonRows
-      .map((row) => `<tr><th>${row.need}<span>Category ${row.category}</span></th>${arComparisonColumns.map((label) => `<td>${row.values[label] || "—"}</td>`).join("")}</tr>`)
+      .map((row) => `<tr><th>${escapeHtml(row.need)}<span>Category ${escapeHtml(row.category)}</span></th>${arComparisonColumns.map((label) => `<td>${escapeHtml(row.values[label] || "—")}</td>`).join("")}</tr>`)
       .join("");
 
-    return `<!doctype html><html><head><meta charset="utf-8"><title>${printableName} Product Comparison Guide</title><style>
+    return `<!doctype html><html><head><meta charset="utf-8"><title>${safeName} Product Comparison Guide</title><style>
       body{font-family:Arial,sans-serif;margin:0;background:#f7f1e8;color:#1f1a17}
       main{max-width:1100px;margin:0 auto;padding:34px}
       header{background:#171311;color:#fff;padding:28px;border-radius:10px}
-      .logo{max-width:160px;height:auto;margin-bottom:22px}
+      .brand{font-family:Georgia,serif;font-size:24px;font-style:italic;color:#f7f1e8;margin-bottom:22px}
       .eyebrow{color:#d4c09a;font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:700}
       h1{margin:10px 0 0;font-size:34px;line-height:1.05}
       .meta{margin-top:12px;color:rgba(255,255,255,.72)}
@@ -542,12 +714,12 @@ function ProductComparisonGuide({
       tbody th{background:#fbf8f3;width:24%}
       td{background:#fff}
       span{display:block;color:#8a7654;font-size:11px;margin-top:4px}
-      .data-notice{background:#fbf8f3}
-      @media print{body{background:#fff} main{padding:0} section,header{break-inside:avoid}}
+      .note{color:#625b53;font-size:11px;margin:12px 0 0}
+      @page{size:landscape;margin:12mm}
+      @media print{body{background:#fff} main{padding:0} section,header{break-inside:avoid}table{font-size:11px}th,td{padding:9px}}
     </style></head><body><main>
-      <header><img class="logo" src="/aln-white-logo.png" alt="Artisan Lab Network"><div class="eyebrow">Product Comparison Guide</div><h1>${printableName}</h1><p class="meta">Generated ${generatedDate}. Built from Comparisons.xlsx and filtered to selected launch brands.</p></header>
-      <section><h2>Lens Design Crosswalk</h2><table><thead><tr><th>Category</th>${productHeaders}</tr></thead><tbody>${productRows}</tbody></table></section>
-      ${missing}
+      <header><div class="brand">Artisan Lab Network</div><div class="eyebrow">Product Comparison Guide</div><h1>${safeName}</h1><p class="meta">Generated ${escapeHtml(generatedDate)} for staff training and product conversations.</p></header>
+      ${lensSection}
       <section><h2>Anti-Reflective Coatings Crosswalk</h2><table><thead><tr><th>Need</th>${arHeaders}</tr></thead><tbody>${arRows}</tbody></table></section>
     </main></body></html>`;
   };
@@ -588,25 +760,33 @@ function ProductComparisonGuide({
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = `${printableName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "artisan"}-product-comparison-guide.html`;
+    anchor.download = `${filenameSlug(printableName)}-product-comparison-guide.html`;
     anchor.click();
     URL.revokeObjectURL(url);
+    setActionFeedback("Printable guide downloaded.");
   };
 
   const copyShare = async () => {
     const summary = [
       `${printableName} Product Comparison Guide`,
-      `Selected brands: ${selectedColumns.map((column) => column.label).join(", ") || "None selected"}`,
+      `Comparison brands: ${supportedColumns.map((column) => column.label).join(", ") || "AR coatings only"}`,
       "Open the New Partner Setup Hub and use Generate My Product Comparison Guide in Product and Lens Training.",
       `${window.location.origin}/new-lab-partner#lens`,
     ].join("\n");
 
-    if (navigator.share) {
-      await navigator.share({ title: `${printableName} Product Comparison Guide`, text: summary });
-      return;
-    }
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: `${printableName} Product Comparison Guide`, text: summary });
+        setActionFeedback("Guide shared.");
+        return;
+      }
 
-    await navigator.clipboard.writeText(summary);
+      await navigator.clipboard.writeText(summary);
+      setActionFeedback("Guide link and summary copied.");
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return;
+      setActionFeedback("Sharing is unavailable. Use Print / Save as PDF instead.");
+    }
   };
 
   return (
@@ -616,11 +796,11 @@ function ProductComparisonGuide({
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#d4c09a]">Branded Setup Tool</p>
           <h3 className="mt-2 text-2xl font-semibold tracking-tight">Product Comparison Guide</h3>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-white/72">
-            Generate a customer-ready crosswalk from Comparisons.xlsx. The guide only includes the brands selected above and clearly marks any workbook data that is not mapped.
+            Build a polished staff crosswalk for the supported brands selected above. Hoya, Tokai, Sequel, and Neurolens training remains available, but those brands are not included in the lens-design crosswalk.
           </p>
         </div>
         <label className="grid w-full min-w-0 gap-2 text-sm font-semibold text-white lg:w-72">
-          Customer name
+          Practice name
           <input
             value={practiceName}
             onChange={(event) => setPracticeName(event.target.value)}
@@ -629,24 +809,25 @@ function ProductComparisonGuide({
           />
         </label>
       </div>
-      <div className="mt-5 flex flex-wrap gap-2">
-        <button type="button" onClick={() => setShowGuide(true)} className="inline-flex min-h-11 max-w-full items-center justify-center gap-2 rounded-full bg-[#d4c09a] px-5 text-center text-sm font-bold leading-5 text-[#171311] transition hover:bg-[#e2cca2]">
+      <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+        <button type="button" onClick={() => { setShowGuide(true); setActionFeedback("Guide generated below."); }} className="inline-flex min-h-11 w-full max-w-full items-center justify-center gap-2 rounded-full bg-[#d4c09a] px-5 text-center text-sm font-bold leading-5 text-[#171311] transition hover:bg-[#e2cca2] sm:w-auto">
           <Check className="h-4 w-4" />
           Generate My Product Comparison Guide
         </button>
-        <button type="button" onClick={downloadGuide} className="inline-flex min-h-11 max-w-full items-center justify-center gap-2 rounded-full border border-white/18 bg-white/10 px-5 text-center text-sm font-bold leading-5 text-white transition hover:bg-white/16">
+        <button type="button" onClick={downloadGuide} disabled={!showGuide} className="inline-flex min-h-11 w-full max-w-full items-center justify-center gap-2 rounded-full border border-white/18 bg-white/10 px-5 text-center text-sm font-bold leading-5 text-white transition hover:bg-white/16 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto">
           <Download className="h-4 w-4" />
-          Download Product Comparison Guide
+          Download Printable Guide
         </button>
-        <button type="button" onClick={openPrintGuide} className="inline-flex min-h-11 max-w-full items-center justify-center gap-2 rounded-full border border-white/18 bg-white/10 px-5 text-center text-sm font-bold leading-5 text-white transition hover:bg-white/16">
+        <button type="button" onClick={openPrintGuide} disabled={!showGuide} className="inline-flex min-h-11 w-full max-w-full items-center justify-center gap-2 rounded-full border border-white/18 bg-white/10 px-5 text-center text-sm font-bold leading-5 text-white transition hover:bg-white/16 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto">
           <Printer className="h-4 w-4" />
-          Export to PDF
+          Print / Save as PDF
         </button>
-        <button type="button" onClick={copyShare} className="inline-flex min-h-11 max-w-full items-center justify-center gap-2 rounded-full border border-white/18 bg-white/10 px-5 text-center text-sm font-bold leading-5 text-white transition hover:bg-white/16">
+        <button type="button" onClick={copyShare} disabled={!showGuide} className="inline-flex min-h-11 w-full max-w-full items-center justify-center gap-2 rounded-full border border-white/18 bg-white/10 px-5 text-center text-sm font-bold leading-5 text-white transition hover:bg-white/16 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto">
           <Copy className="h-4 w-4" />
           Copy/share with team
         </button>
       </div>
+      <p className="mt-3 min-h-5 text-sm text-white/72" role="status" aria-live="polite">{actionFeedback}</p>
       {showGuide ? (
         <div className="mt-6 overflow-hidden rounded-[8px] bg-[#fbf8f3] text-[#1f1a17]">
           <div className="flex flex-col gap-4 bg-[#241d18] p-5 text-white md:flex-row md:items-center md:justify-between">
@@ -658,13 +839,29 @@ function ProductComparisonGuide({
             <Image src="/aln-white-logo.png" alt="Artisan Lab Network" width={150} height={54} className="h-auto w-32 object-contain" />
           </div>
           <div className="p-5">
-            {knownColumns.length ? (
-              <div className="mobile-scroll-row overflow-x-auto">
+            {supportedColumns.length ? (
+              <>
+                <div className="grid gap-3 md:hidden">
+                  {productComparisonRows.map((row) => (
+                    <article key={row.category} className="rounded-[8px] border border-[#d8c6a8] bg-white p-4">
+                      <h5 className="font-bold leading-5">{row.category}</h5>
+                      <dl className="mt-3 grid gap-2">
+                        {supportedColumns.map((column) => (
+                          <div key={column.lensId} className="flex items-start justify-between gap-4 border-t border-[#eadfcd] pt-2">
+                            <dt className="text-xs font-bold uppercase tracking-[0.12em] text-[#8a7654]">{column.label}</dt>
+                            <dd className="text-right text-sm font-semibold">{row.values[column.lensId] || "—"}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                    </article>
+                  ))}
+                </div>
+                <div className="hidden overflow-x-auto md:block">
                 <table className="w-full min-w-[680px] border-collapse text-sm leading-5">
                   <thead>
                     <tr>
                       <th className="border border-[#d8c6a8] bg-[#1f1a17] p-3 text-left text-white">Category</th>
-                      {knownColumns.map((column) => (
+                      {supportedColumns.map((column) => (
                         <th key={column.lensId} className="border border-[#d8c6a8] bg-[#1f1a17] p-3 text-left text-white">{column.label}</th>
                       ))}
                     </tr>
@@ -673,24 +870,42 @@ function ProductComparisonGuide({
                     {productComparisonRows.map((row) => (
                       <tr key={row.category}>
                         <th className="border border-[#d8c6a8] bg-white p-3 text-left font-bold leading-5">{row.category}</th>
-                        {knownColumns.map((column) => (
-                          <td key={column.lensId} className="border border-[#d8c6a8] bg-white p-3 leading-5">{row.values[column.lensId] || "Not mapped in the current comparison workbook"}</td>
+                        {supportedColumns.map((column) => (
+                          <td key={column.lensId} className="border border-[#d8c6a8] bg-white p-3 leading-5">{row.values[column.lensId] || "—"}</td>
                         ))}
                       </tr>
                     ))}
                   </tbody>
                 </table>
-              </div>
+                </div>
+                <p className="mt-3 text-xs leading-5 text-[#625b53]">A dash indicates that no published comparison is available for that category.</p>
+              </>
             ) : null}
-            {missingColumns.length ? (
+            {unsupportedSelections.length ? (
               <div className="mt-4 rounded-[8px] border border-[#d8c6a8] bg-white p-4">
-                <p className="font-semibold">Comparison data not mapped</p>
+                <p className="font-semibold">Additional selected training</p>
                 <p className="mt-2 text-sm leading-6 text-[#625b53]">
-                  {missingColumns.map((column) => column.label).join(", ")} {missingColumns.length === 1 ? "is" : "are"} selected but not mapped in the current Comparisons.xlsx workbook.
+                  {unsupportedSelections.map((option) => option.label).join(", ")} resources remain included in the training modules below. The lens-design crosswalk currently covers Artisan, IOT, Unity, Varilux, and Shamir.
                 </p>
               </div>
             ) : null}
-            <div className="mobile-scroll-row mt-6 overflow-x-auto">
+            <div className="mt-6 grid gap-3 md:hidden">
+              {arComparisonRows.map((row) => (
+                <article key={row.need} className="rounded-[8px] border border-[#d8c6a8] bg-white p-4">
+                  <h5 className="font-bold">{row.need}</h5>
+                  <p className="mt-1 text-xs font-bold uppercase tracking-[0.14em] text-[#8a7654]">Category {row.category}</p>
+                  <dl className="mt-3 grid gap-2">
+                    {arComparisonColumns.map((column) => (
+                      <div key={column} className="flex items-start justify-between gap-4 border-t border-[#eadfcd] pt-2">
+                        <dt className="text-xs font-bold uppercase tracking-[0.12em] text-[#8a7654]">{column}</dt>
+                        <dd className="text-right text-sm font-semibold">{row.values[column] || "—"}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </article>
+              ))}
+            </div>
+            <div className="mt-6 hidden overflow-x-auto md:block">
               <table className="w-full min-w-[760px] border-collapse text-sm leading-5">
                 <thead>
                   <tr>
@@ -775,8 +990,8 @@ function LensSelection({
                   aria-label={option.label}
                 />
                 {logoByLens.get(option.id) ? (
-                  <span className="relative mr-2 inline-block h-5 w-12 align-middle">
-                    <Image src={logoByLens.get(option.id) ?? ""} alt="" fill sizes="48px" className={cx("object-contain", checked && "brightness-0 invert")} />
+                  <span className="relative mr-2 inline-block h-6 w-14 align-middle">
+                    <Image src={logoByLens.get(option.id) ?? ""} alt="" fill sizes="56px" className={cx("object-contain", checked && "brightness-0 invert")} />
                   </span>
                 ) : null}
                 {option.label}
@@ -882,6 +1097,20 @@ function ProviderResourcesSection() {
     "Safety Resources": "Use safety resources for frame books, kit requests, and occupational eyewear setup.",
     "Tokai Resources": "Use Tokai resources when the practice will recommend Tokai materials, Reset, Largo, tint, or specialty designs.",
   };
+  const destinations: Record<string, string> = {
+    "Training Videos": "/provider-resources#videos",
+    Downloads: "/provider-resources#downloads",
+    "Lens Layout Charts": "/provider-resources#layout-charts",
+    Brochures: "/provider-resources#brochures",
+    "Championing MVC Vision Rights": "/provider-resources#championing-mvc-vision-rights",
+    "Recorded Training": "/provider-resources#videos",
+    Videos: "/provider-resources#videos",
+    Policies: "/lab-policies",
+    "Marketing Materials": "/provider-resources#downloads",
+    "Comparison Guides": "/provider-resources#product-education",
+    "Safety Resources": "/provider-resources#safety",
+    "Tokai Resources": "/provider-resources#tokai",
+  };
 
   return (
     <div className="mt-6 space-y-4">
@@ -902,10 +1131,18 @@ function ProviderResourcesSection() {
             <h3 className="text-xl font-semibold tracking-tight text-[#1f1a17]">{group.title}</h3>
             <div className="mt-4 grid gap-2">
               {group.items.map((item) => (
-                <div key={item} className="rounded-[8px] bg-white p-4">
-                  <p className="text-sm font-semibold text-[#1f1a17]">{item}</p>
+                <Link
+                  key={item}
+                  href={destinations[item] ?? "/provider-resources"}
+                  className="group rounded-[8px] border border-transparent bg-white p-4 transition hover:-translate-y-0.5 hover:border-[#b99355] hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8a7654] focus-visible:ring-offset-2"
+                >
+                  <span className="flex items-center justify-between gap-3 text-sm font-semibold text-[#1f1a17]">
+                    {item}
+                    <ArrowRight className="h-4 w-4 shrink-0 text-[#8a7654] transition group-hover:translate-x-0.5" aria-hidden="true" />
+                  </span>
                   <p className="mt-2 text-sm leading-6 text-[#625b53]">{descriptions[item] ?? "Use this as a working reference during launch and staff training."}</p>
-                </div>
+                  <span className="mt-3 inline-flex text-xs font-bold uppercase tracking-[0.14em] text-[#8a7654]">Open resource</span>
+                </Link>
               ))}
             </div>
           </article>
@@ -948,7 +1185,7 @@ function SafetySection() {
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <ResourceButton link={{ label: "Open Safety Price List", href: "/portal/price-list/y5" }} />
-          <ResourceButton link={{ label: "Download Frame Manifest PDF", href: "#shipping" }} />
+          <ResourceButton link={{ label: "Request Frame Manifest PDF", href: `mailto:${supportContacts.general.email}?subject=Frame%20Manifest%20PDF%20Request` }} />
           <ResourceButton link={{ label: "Request Shipping Labels", href: `mailto:${supportContacts.general.email}?subject=Request%20Shipping%20Labels` }} />
         </div>
       </div>
@@ -986,7 +1223,7 @@ function SafetySection() {
         </div>
       </div>
       <div className="rounded-[8px] border border-[#d8c6a8] bg-[#fbf8f3] p-5">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8a7654]">Vendors and Working References</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8a7654]">Safety Frame Resources</p>
         <p className="mt-2 text-sm leading-6 text-[#625b53]">
           Provider Resources lists ArmouRx, DVX / Wiley X, Wiley X, ArtCraft, and SafeVision references. Use these as the active frame catalogs for safety and occupational eyewear conversations.
         </p>
@@ -1122,16 +1359,22 @@ function ShippingSection() {
           const visual = shippingVisuals[index % shippingVisuals.length];
           const Icon = visual.icon;
           return (
-            <article key={step.title} className="rounded-[8px] border border-[#d8c6a8] bg-[#fbf8f3] p-5">
-              <div className="flex items-start gap-4">
-                <div className="grid h-12 w-12 shrink-0 place-items-center rounded-[8px] bg-white text-[#8a7654] shadow-sm">
+            <article key={step.title} className="overflow-hidden rounded-[8px] border border-[#d8c6a8] bg-[#fbf8f3]">
+              <div className="relative h-36 bg-[#171311]">
+                <Image src={visual.image} alt={visual.title} fill sizes="(min-width: 768px) 40vw, 100vw" className="object-cover opacity-75" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#171311]/75 to-transparent" />
+                <div className="absolute bottom-3 left-3 grid h-11 w-11 place-items-center rounded-[8px] bg-white text-[#8a7654] shadow-sm">
                   <Icon className="h-5 w-5" aria-hidden="true" />
                 </div>
+              </div>
+              <div className="p-5">
+              <div className="flex items-start gap-4">
                 <div>
                   <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#8a7654]">Shipping Step {index + 1}</p>
                   <h3 className="mt-2 text-lg font-semibold text-[#1f1a17]">{step.title}</h3>
                   <p className="mt-2 text-sm leading-6 text-[#625b53]">{step.body}</p>
                 </div>
+              </div>
               </div>
             </article>
           );
@@ -1143,7 +1386,7 @@ function ShippingSection() {
           Use the frame manifest when sending frames to the lab so the lab can match frames, patients, accounts, and orders correctly. Request labels before the first shipment so frames route to the correct lab. Neurolens-only shipments use box-based shipping, while mixed orders follow the usual shipping options.
         </p>
         <div className="mt-5 flex flex-wrap gap-2">
-          <ResourceButton link={{ label: "Download Frame Manifest PDF", href: "#shipping" }} />
+          <ResourceButton link={{ label: "Request Frame Manifest PDF", href: `mailto:${supportContacts.general.email}?subject=Frame%20Manifest%20PDF%20Request` }} />
           <ResourceButton link={{ label: "Request Shipping Labels from Customer Service", href: `mailto:${supportContacts.general.email}?subject=Request%20Shipping%20Labels` }} />
           <ResourceButton link={{ label: "Contact Customer Service", href: `mailto:${supportContacts.general.email}?subject=Shipping%20Question` }} />
         </div>
@@ -1166,7 +1409,7 @@ function SectionBody({
   setPmsAnswer,
 }: {
   id: string;
-  selectedLab: LabId;
+  selectedLab: LabId | "";
   setSelectedLab: (id: LabId) => void;
   lenses: LensId[];
   toggleLens: (id: LensId) => void;
@@ -1179,6 +1422,7 @@ function SectionBody({
 }) {
   if (id === "lab") return <LabSection selectedLab={selectedLab} setSelectedLab={setSelectedLab} />;
   if (id === "portal") return <PortalSection />;
+  if (id === "billing") return <BillingSection />;
   if (id === "pricing-safety") return <SafetySection />;
   if (id === "ordering") return <OrderingSection lenses={lenses} selectedMethods={selectedMethods} toggleMethod={toggleMethod} pmsAnswer={pmsAnswer} setPmsAnswer={setPmsAnswer} />;
   if (id === "lens") return <LensSelection lenses={lenses} toggleLens={toggleLens} practiceName={practiceName} setPracticeName={setPracticeName} />;
@@ -1202,11 +1446,14 @@ function SetupSection({
   toggleMethod,
   pmsAnswer,
   setPmsAnswer,
+  expanded,
+  isDesktop,
+  toggleExpanded,
 }: {
   section: (typeof sections)[number];
   status: SetupStatus;
   setStatus: (sectionId: string, status: SetupStatus) => void;
-  selectedLab: LabId;
+  selectedLab: LabId | "";
   setSelectedLab: (id: LabId) => void;
   lenses: LensId[];
   toggleLens: (id: LensId) => void;
@@ -1216,6 +1463,9 @@ function SetupSection({
   toggleMethod: (name: string) => void;
   pmsAnswer: PracticeManagementAnswer;
   setPmsAnswer: (value: PracticeManagementAnswer) => void;
+  expanded: boolean;
+  isDesktop: boolean;
+  toggleExpanded: () => void;
 }) {
   const Icon = section.icon;
 
@@ -1243,26 +1493,39 @@ function SetupSection({
         <StatusControls sectionId={section.id} status={status} setStatus={setStatus} />
       </div>
 
-      <SectionBody
-        id={section.id}
-        selectedLab={selectedLab}
-        setSelectedLab={setSelectedLab}
-        lenses={lenses}
-        toggleLens={toggleLens}
-        practiceName={practiceName}
-        setPracticeName={setPracticeName}
-        selectedMethods={selectedMethods}
-        toggleMethod={toggleMethod}
-        pmsAnswer={pmsAnswer}
-        setPmsAnswer={setPmsAnswer}
-      />
+      <button
+        type="button"
+        onClick={toggleExpanded}
+        aria-expanded={expanded}
+        className="mt-6 flex w-full items-center justify-between gap-3 rounded-[8px] border border-[#d8c6a8] bg-[#fbf8f3] px-4 py-3 text-left text-sm font-bold text-[#1f1a17] lg:hidden"
+      >
+        <span>{expanded ? "Hide section details" : "Open section details"}</span>
+        <ChevronDown className={cx("h-5 w-5 text-[#8a7654] transition", expanded && "rotate-180")} aria-hidden="true" />
+      </button>
+      {isDesktop || expanded ? (
+        <div>
+          <SectionBody
+            id={section.id}
+            selectedLab={selectedLab}
+            setSelectedLab={setSelectedLab}
+            lenses={lenses}
+            toggleLens={toggleLens}
+            practiceName={practiceName}
+            setPracticeName={setPracticeName}
+            selectedMethods={selectedMethods}
+            toggleMethod={toggleMethod}
+            pmsAnswer={pmsAnswer}
+            setPmsAnswer={setPmsAnswer}
+          />
+        </div>
+      ) : null}
     </section>
   );
 }
 
 export default function NewLabPartnerHub() {
   const [statuses, setStatuses] = useState<Record<string, SetupStatus>>({});
-  const [selectedLab, setSelectedLab] = useState<LabId>("peak");
+  const [selectedLab, setSelectedLab] = useState<LabId | "">("");
   const [lenses, setLenses] = useState<LensId[]>(["artisan"]);
   const [selectedMethods, setSelectedMethods] = useState<string[]>(["DVI"]);
   const [pmsAnswer, setPmsAnswer] = useState<PracticeManagementAnswer>("");
@@ -1270,6 +1533,9 @@ export default function NewLabPartnerHub() {
   const [activeSection, setActiveSection] = useState(sections[0]?.id ?? "lab");
   const [searchQuery, setSearchQuery] = useState("");
   const [hasHydrated, setHasHydrated] = useState(false);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(true);
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(() => new Set(["lab"]));
 
   useEffect(() => {
     let cancelled = false;
@@ -1278,7 +1544,7 @@ export default function NewLabPartnerHub() {
       const storedLenses = safeRead<LensId[]>(LENS_KEY, ["artisan"]);
       const storedMethods = safeRead<string[]>(ORDERING_KEY, ["DVI"]);
       setStatuses(safeRead<Record<string, SetupStatus>>(STATUS_KEY, {}));
-      setSelectedLab(safeRead<LabId>(LAB_KEY, "peak"));
+      setSelectedLab(safeRead<LabId | "">(LAB_KEY, ""));
       setLenses(storedLenses);
       setSelectedMethods(storedLenses.includes("unity") && !storedMethods.includes("Eyefinity") ? [...storedMethods, "Eyefinity"] : storedMethods);
       setPmsAnswer(safeRead<PracticeManagementAnswer>(PMS_KEY, ""));
@@ -1341,6 +1607,26 @@ export default function NewLabPartnerHub() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 1024px)");
+    const update = () => setIsDesktop(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    const openLinkedSection = () => {
+      const id = window.location.hash.slice(1);
+      if (!id) return;
+      setExpandedSections((current) => new Set(current).add(id));
+    };
+
+    openLinkedSection();
+    window.addEventListener("hashchange", openLinkedSection);
+    return () => window.removeEventListener("hashchange", openLinkedSection);
+  }, []);
+
   const setStatus = (sectionId: string, status: SetupStatus) => {
     setStatuses((current) => {
       if (status !== "not-started") return { ...current, [sectionId]: status };
@@ -1364,8 +1650,7 @@ export default function NewLabPartnerHub() {
   };
 
   const completion = useMemo(() => {
-    const complete = sections.filter((section) => statuses[section.id] === "complete").length;
-    return Math.round((complete / sections.length) * 100);
+    return computeSetupCompletion(statuses, sections.map((section) => section.id));
   }, [statuses]);
 
   const hubSearchResults = useMemo(() => {
@@ -1404,7 +1689,7 @@ export default function NewLabPartnerHub() {
 
   const resetAll = () => {
     setStatuses({});
-    setSelectedLab("peak");
+    setSelectedLab("");
     setLenses(["artisan"]);
     setSelectedMethods(["DVI"]);
     setPmsAnswer("");
@@ -1412,6 +1697,7 @@ export default function NewLabPartnerHub() {
     if (typeof window !== "undefined") {
       [STATUS_KEY, LAB_KEY, LENS_KEY, PMS_KEY, ORDERING_KEY, PRACTICE_NAME_KEY].forEach((key) => window.localStorage.removeItem(key));
     }
+    setShowResetConfirm(false);
   };
 
   return (
@@ -1424,7 +1710,7 @@ export default function NewLabPartnerHub() {
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#d4c09a]">New Lab Partner Setup</p>
             <h1 className="mt-5 max-w-4xl text-5xl font-semibold leading-[1.02] tracking-tight md:text-7xl">Get Your Practice Operational</h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-white/76 md:text-2xl md:leading-10">
-              Connect with your lab, learn how to order, find pricing, access product resources, and move work to Artisan Lab Network with confidence.
+              Connect with your lab, learn how to order, pay your bill, find pricing, access product resources, and move work to Artisan Lab Network with confidence.
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
               <a href="#lab" className="inline-flex min-h-12 items-center gap-2 rounded-full bg-[#d4c09a] px-7 py-3 text-sm font-semibold text-[#171311] shadow-[0_18px_50px_rgba(0,0,0,0.28)] transition hover:-translate-y-0.5 hover:bg-[#e2cca2]">
@@ -1484,22 +1770,38 @@ export default function NewLabPartnerHub() {
 
       <WelcomeCard />
 
-      <section className="px-6 py-12 md:px-10 md:py-16">
+      <section data-theme="light" className="px-6 py-12 md:px-10 md:py-16">
         <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)]">
           <ProgressNav statuses={statuses} activeSection={activeSection} setActiveSection={setActiveSection} />
           <div className="min-w-0 space-y-5">
-            <MobileProgress statuses={statuses} activeSection={activeSection} setActiveSection={setActiveSection} />
+            <MobileProgress
+              statuses={statuses}
+              activeSection={activeSection}
+              setActiveSection={setActiveSection}
+              openSection={(id) => setExpandedSections((current) => new Set(current).add(id))}
+            />
             <div className="rounded-[8px] border border-[#d8c6a8]/70 bg-[#fbf8f3] p-5">
               <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div className="min-w-0">
                   <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8a7654]">Activation Checklist</p>
                   <h2 className="mt-2 text-3xl font-semibold leading-tight tracking-tight text-[#1f1a17]">Complete only what applies.</h2>
                 </div>
-                <button type="button" onClick={resetAll} className="inline-flex min-h-11 w-fit items-center gap-2 rounded-full bg-[#1f1a17] px-4 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-[#d4c09a] hover:text-[#171311]">
+                <button type="button" onClick={() => setShowResetConfirm(true)} className="inline-flex min-h-11 w-fit items-center gap-2 rounded-full bg-[#1f1a17] px-4 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-[#d4c09a] hover:text-[#171311]">
                   <RotateCcw className="h-4 w-4" aria-hidden="true" />
                   Reset Progress
                 </button>
               </div>
+              <p className="mt-3 text-sm leading-6 text-[#625b53]">Your selections and progress are saved only in this browser on this device.</p>
+              {showResetConfirm ? (
+                <div className="mt-4 rounded-[8px] border border-[#c9b28b] bg-white p-4" role="alertdialog" aria-labelledby="reset-progress-title">
+                  <p id="reset-progress-title" className="font-bold text-[#1f1a17]">Reset all setup progress?</p>
+                  <p className="mt-2 text-sm leading-6 text-[#625b53]">This clears section statuses, lab and product selections, ordering choices, and the practice name saved on this device.</p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <button type="button" onClick={resetAll} className="inline-flex min-h-10 items-center rounded-full bg-[#8b2e24] px-4 text-sm font-bold text-white transition hover:bg-[#6f211a]">Reset everything</button>
+                    <button type="button" onClick={() => setShowResetConfirm(false)} className="inline-flex min-h-10 items-center rounded-full border border-[#d8c6a8] bg-white px-4 text-sm font-bold text-[#1f1a17] transition hover:bg-[#fbf8f3]">Cancel</button>
+                  </div>
+                </div>
+              ) : null}
               <div className="mt-5 flex flex-wrap gap-2">
                 {resourceLinks.map((link) => (
                   <ResourceButton key={link.label} link={link} />
@@ -1523,6 +1825,14 @@ export default function NewLabPartnerHub() {
                 toggleMethod={toggleMethod}
                 pmsAnswer={pmsAnswer}
                 setPmsAnswer={setPmsAnswer}
+                expanded={expandedSections.has(section.id)}
+                isDesktop={isDesktop}
+                toggleExpanded={() => setExpandedSections((current) => {
+                  const next = new Set(current);
+                  if (next.has(section.id)) next.delete(section.id);
+                  else next.add(section.id);
+                  return next;
+                })}
               />
             ))}
           </div>

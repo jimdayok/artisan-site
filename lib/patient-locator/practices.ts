@@ -120,7 +120,7 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "tokai": false,
+    "tokai": true,
     "artisanPartner": true
   },
   {
@@ -562,7 +562,7 @@ export const approvedPatientPractices: ApprovedPractice[] = [
     "insurances": [],
     "numberOfLocations": 1,
     "placeId": "",
-    "tokai": false,
+    "tokai": true,
     "artisanPartner": false
   },
   {

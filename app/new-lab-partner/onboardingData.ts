@@ -4,6 +4,7 @@ import {
   Boxes,
   Building2,
   ClipboardCheck,
+  CreditCard,
   FileText,
   Glasses,
   Laptop,
@@ -33,7 +34,6 @@ export type Lab = {
   email: string;
   hours: string;
   address: string;
-  representative: string;
   image: string;
   href: string;
 };
@@ -77,8 +77,8 @@ export type LensTrainingTrack = {
 
 export const supportContacts = {
   onboarding: {
-    name: "Jim Day",
-    email: "jim.day@artisanlabnetwork.com",
+    name: "Artisan Sales Team",
+    email: "sales@artisanlabnetwork.com",
     phone: "269-350-4571",
     phoneHref: "tel:2693504571",
   },
@@ -99,7 +99,6 @@ export const labs: Lab[] = [
     email: "customerservice@peakartisanlabs.com",
     hours: "8:00 AM - 4:30 PM Mountain",
     address: "Denver, Colorado - confirm shipping address with customer service before sending frames.",
-    representative: "Josh Opiol",
     image: "/images/labs/peak/284f314-0271-d8c3-565c-353313efff5_Pacific_Artisan_Labs_PEAK_Kajabi_Cover.jpg",
     href: "/peak-artisan-labs",
   },
@@ -111,7 +110,6 @@ export const labs: Lab[] = [
     email: "customerservice@pikeartisanlabs.com",
     hours: "8:00 AM - 4:30 PM Eastern",
     address: "Indianapolis, Indiana - confirm shipping address with customer service before sending frames.",
-    representative: "Heather Branderhorst",
     image: "/images/labs/pike/fc1b02-878-0ef7-0715-5dd4b8f727e3_PIKE_Cover_2880x1200.jpg",
     href: "/pike-artisan-labs",
   },
@@ -123,7 +121,6 @@ export const labs: Lab[] = [
     email: "customerservice@pacificartisanlabs.com",
     hours: "8:00 AM - 4:30 PM Pacific",
     address: "12302 NE Marx St., Portland, OR 97230",
-    representative: "Nicole Curtis",
     image: "/pdx/website-images/658caac-5fdb-5577-3c18-b67c85ce861c_Pacific_Artisan_Labs_PAL_Kajabi_Cover.jpg",
     href: "/pacific-artisan-labs",
   },
@@ -143,6 +140,13 @@ export const sections: HubSection[] = [
     title: "Using the Customer Portal",
     summary: "Use the portal to access account-specific pricing, performance, policies, programs, and order resources.",
     icon: Laptop,
+  },
+  {
+    id: "billing",
+    eyebrow: "Billing",
+    title: "Paying Your Lab Bill",
+    summary: "Use SpecCheck Lab Pay to review your statement balance, make a secure payment, manage payment methods, and retrieve billing records.",
+    icon: CreditCard,
   },
   {
     id: "pricing-safety",
@@ -194,8 +198,8 @@ export const portalLoginSteps = [
     detail: "Start at the public Artisan site. The portal is reached from the main navigation, so new team members do not need to remember a separate URL.",
   },
   {
-    title: "Click Labs, then Customer Portal",
-    detail: "Use the Labs menu and choose Customer Portal. This takes the user to the protected portal login flow.",
+    title: "Open Resources, then Customer Portal",
+    detail: "Use the Resources menu and choose Customer Portal. This takes the user to the protected portal login flow.",
   },
   {
     title: "Enter your registered email",
@@ -363,7 +367,7 @@ export const lensTrainingTracks: LensTrainingTrack[] = [
       { type: "Guide", label: "Gold Series Guide", href: "/files/artisan-gold-series-guide.pdf", description: "Product leaflet for Gold Series positioning and recommendations." },
       { type: "Guide", label: "Platinum Series Guide", href: "/files/artisan-platinum-series-guide.pdf", description: "Product leaflet for Platinum Series premium design support." },
       { type: "Guide", label: "Artisan Design Series", href: "/files/artisan-design-series.pdf", description: "Overview guide for Artisan design families and recommendation support." },
-      { type: "Brochure", label: "SD Reach Patient Brochure", href: "/files/Office Reader II SD Reach Patient Brochure-Artisan-draft1.pdf", description: "Patient-facing office reader brochure for SD Reach conversations." },
+      { type: "Brochure", label: "SD Reach Patient Brochure", href: "/files/sd-reach-patient-brochure.pdf", description: "Patient-facing office reader brochure for SD Reach conversations." },
       { type: "Layout Chart", label: "Artisan Design Layout Charts", href: "/files/ArtisanDesigns/diamond_series.pdf", description: "Direct Artisan design layout chart reference. Additional charts are listed below and in Provider Resources." },
       { type: "Layout Chart", label: "SD Reach Layout Chart", href: "/files/ArtisanDesigns/sd_reach.pdf", description: "Layout chart for SD Reach workspace orders." },
       { type: "Comparison", label: "New Artisan Series Compared", href: "/files/New Artisan Series Compared.pdf", description: "Artisan product comparison guide for staff recommendations." },
@@ -515,7 +519,7 @@ export const requiredTrainingResources: TrainingResource[] = [
   { type: "Treatment", label: "Artisan AR Portfolio", href: "/artisan-ar", description: "Review Artisan AR treatments so staff can recommend a complete lens system." },
   { type: "Treatment", label: "TechShield AR Coatings Guide", href: "/files/TechShield_AR_Coatings_Sales_Sheet_2023.pdf", description: "Required for Unity and useful for teams comparing AR treatment paths." },
   { type: "Comparison", label: "AR Comparison Guide", href: "#comparison-guide", description: "Use the generated Product Comparison Guide for Artisan, TechShield, Crizal, and Glacier AR crosswalks." },
-  { type: "Layout Chart", label: "Layout Charts", href: "/provider-resources#artisan-designs", description: "Use fitting and centration charts before first orders to avoid measurement-driven remakes." },
+  { type: "Layout Chart", label: "Layout Charts", href: "/provider-resources#artisan", description: "Use fitting and centration charts before first orders to avoid measurement-driven remakes." },
   { type: "Comparison", label: "Comparison Guides", href: "/files/iot-comparison-guide.pdf", description: "Use comparison guides to help staff match product families to patient needs." },
 ];
 
@@ -527,19 +531,20 @@ export const safetyTrainingResources: TrainingResource[] = [
   { type: "Frame Book", label: "SafeVision Frame Book", href: "/files/safevision-frame-book.pdf", description: "SafeVision frame catalog for occupational eyewear and safety program support." },
   { type: "Price List", label: "Safety Price List", href: "/portal/price-list/y5", description: "Open Artisan Safety Systems Y5 pricing. Safety pricing is tiered on the price list, and supply should be marked when the order uses supplied-inventory pricing." },
   { type: "Action", label: "Order Your Free Safety Kit", href: "https://form.typeform.com/to/rDUQssNn", external: true, description: "Request demonstration frames and safety program materials for your practice." },
-  { type: "Action", label: "Request Current Program Pricing", href: "https://form.typeform.com/to/quuPCSff", external: true, description: "Request current program details and account-specific pricing support." },
-  { type: "Action", label: "Request Frame Manifest PDF", href: `mailto:${supportContacts.onboarding.email}?subject=Frame%20Manifest%20PDF%20Request`, description: "Request the current manifest before sending frames so the lab can match frames, patients, accounts, and orders correctly." },
+  { type: "Action", label: "Request Current Program Pricing", href: `mailto:${supportContacts.general.email}?subject=Safety%20Systems%20Program%20Pricing%20Request`, description: "Ask customer service for current program details and account-specific pricing support." },
+  { type: "Action", label: "Request Frame Manifest PDF", href: `mailto:${supportContacts.general.email}?subject=Frame%20Manifest%20PDF%20Request`, description: "Request the current manifest before sending frames so the lab can match frames, patients, accounts, and orders correctly." },
 ];
 
 export const shippingVisuals = [
-  { title: "Box Graphics", image: "/images/factory-machines-boxes-2024-1.jpg", icon: Boxes },
-  { title: "Shipping Labels", image: "/images/white-cloth-bags-2024-1.jpg", icon: FileText },
-  { title: "Lab Imagery", image: "/images/team-at-lab-2025-1.jpg", icon: PackageOpen },
-  { title: "Frame Photos", image: "/images/framesystems.png", icon: PackageCheck },
+  { title: "A shipping box being packed with protective material", image: "/images/onboarding/packing-shipping-box.jpg", icon: Boxes },
+  { title: "A shipping label being applied to a parcel", image: "/images/onboarding/applying-shipping-label.jpg", icon: FileText },
+  { title: "Eyeglasses protected inside a hard case", image: "/images/onboarding/eyeglasses-protective-case.jpg", icon: PackageOpen },
+  { title: "A fragile package marked for careful handling", image: "/images/onboarding/fragile-package-handling.jpg", icon: PackageCheck },
 ];
 
 export const resourceLinks: ResourceLink[] = [
   { label: "Customer Portal", href: "/portal" },
+  { label: "Pay Your Bill", href: "https://dashboard.speccheckrx.com/", external: true },
   { label: "Price Quote Builder", href: "/portal/price-list/calculator" },
   { label: "Provider Resources", href: "/provider-resources" },
   { label: "Patient Resources", href: "/patient-resources" },

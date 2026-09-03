@@ -13,7 +13,6 @@ const publicRoutes = [
   "/cookie-policy",
   "/lab-policies",
   "/meet-the-artisans",
-  "/new-lab-partner",
   "/newsletter",
   "/newsletters",
   "/newsletters/practice-matters",

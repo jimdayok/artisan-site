@@ -84,7 +84,7 @@ Final URLs below assume the new site launches on `https://www.artisanlabnetwork.
 | `/` | artisan lab network; independent optical lab network | optical laboratory partner; lab for independent eye care practices | Brand + commercial | Keep broad; link to switching, labs, ownership, resources, and account opening |
 | `/about` | about Artisan Lab Network | independent lab network story; doctor-owned lab values | Trust | Entity/history proof; avoid competing with the homepage head term |
 | `/switch-to-artisan` | switch optical labs | independent optical lab vs corporate lab; how to choose an optical lab | Comparison / decision | First SEO asset; primary lead path |
-| `/new-lab-partner` | optical lab onboarding | new optical lab partner; optical lab account setup | Transactional support | Keep out of broad category competition; support users after intent |
+| Authenticated `/portal/onboarding` | No public keyword target | Assigned-practice setup and training | Private customer support | Exclude from public navigation and the sitemap; require portal login and explicit per-practice onboarding access |
 | External new-account flow | open optical lab account | new optical lab application; start an Artisan account | Transactional | Track `open_account`; do not call a click a completed account |
 | `/artisan-model` | doctor-owned optical lab | optical lab ownership opportunity; partner with an optical lab; equity interest optical lab | Partner / investor | Unique ownership story and `partner_inquiry` conversion |
 | `/pacific-artisan-labs` | Pacific Artisan Labs | optical lab Portland Oregon; independent optical lab Pacific Northwest | Local commercial | 301 `/pacificartisanlabs`; location-page asset package |

@@ -9,7 +9,6 @@ import {
 import { randomUUID } from "node:crypto";
 import { portalDashboardV1Bundle } from "@/lib/portal/dashboardV1Bundle";
 import { getPortalCustomerTypeInfo } from "@/lib/portal/customerTypes";
-import { isEligibleOnboardingAccount } from "@/lib/portal/onboardingEligibility";
 import { normalizeAssignedPriceListCodes } from "@/lib/portal/assignedPriceLists";
 import {
   applyPortalAccessOverrides,
@@ -226,7 +225,9 @@ function basePortalAccessAccounts(): PortalAccessBaseAccount[] {
         emails: [...new Set(emailsByAccount.get(accountNumber) ?? [])],
         priceLists: normalizeAssignedPriceListCodes(row.price_lists ?? []),
         programs,
-        onboarding: isEligibleOnboardingAccount(aliases),
+        // Onboarding is deliberately opt-in. It is enabled only by an
+        // administrator's stored onboarding assignment.
+        onboarding: false,
         customerTypeCode: customerType?.code ?? "",
         customerTypeLabel: customerType?.label ?? "",
         hasReports: Boolean(dashboard),

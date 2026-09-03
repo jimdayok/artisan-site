@@ -77,6 +77,39 @@ test("later events win and adding an email reverses a prior removal", () => {
   assert.deepEqual(effective.emails, ["owner@example.com"]);
 });
 
+test("onboarding is opt-in and can be revoked", () => {
+  const withoutAssignment = applyPortalAccessOverrides(baseAccounts, [])[0];
+  assert.equal(withoutAssignment.onboarding, false);
+
+  const withAssignment = applyPortalAccessOverrides(baseAccounts, [
+    event({
+      type: "onboarding-set",
+      accountNumber: "GROUP-IND",
+      onboarding: true,
+      id: "enable-onboarding",
+    }),
+  ])[0];
+  assert.equal(withAssignment.onboarding, true);
+
+  const revoked = applyPortalAccessOverrides(baseAccounts, [
+    event({
+      type: "onboarding-set",
+      accountNumber: "GROUP-IND",
+      onboarding: true,
+      id: "enable-onboarding",
+      timestamp: "2026-09-02T12:00:00.000Z",
+    }),
+    event({
+      type: "onboarding-set",
+      accountNumber: "GROUP-IND",
+      onboarding: false,
+      id: "revoke-onboarding",
+      timestamp: "2026-09-02T12:01:00.000Z",
+    }),
+  ])[0];
+  assert.equal(revoked.onboarding, false);
+});
+
 test("account and program inputs are normalized for stable matching", () => {
   assert.equal(normalizePortalAccessAccountNumber(" 20001.0 "), "20001");
   assert.equal(normalizePortalAccessAccountNumber("New Practice / IND"), "NEW-PRACTICE-IND");

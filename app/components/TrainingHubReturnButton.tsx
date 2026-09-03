@@ -6,7 +6,7 @@ import { ArrowLeft, X } from "lucide-react";
 import { useEffect, useSyncExternalStore } from "react";
 import { artisanControlClass } from "./controlStyles";
 
-const TRAINING_HUB_PATH = "/new-lab-partner";
+const TRAINING_HUB_PATH = "/portal/onboarding";
 const RETURN_URL_KEY = "artisan-training-hub-return-url";
 const DISMISSED_KEY = "artisan-training-hub-return-dismissed";
 const STORE_EVENT = "artisan-training-hub-return-change";

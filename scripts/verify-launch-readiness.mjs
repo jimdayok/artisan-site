@@ -9,12 +9,12 @@ const PUBLIC_ROUTES = [
   "/provider-resources",
   "/lab-policies",
   "/newsletters",
-  "/new-lab-partner",
 ];
 
 const REDIRECT_ROUTES = [
-  { source: "/contact", destination: "/new-lab-partner" },
-  { source: "/contactus", destination: "/new-lab-partner" },
+  { source: "/new-lab-partner", destination: "/portal/onboarding" },
+  { source: "/contact", destination: "/#contact-section" },
+  { source: "/contactus", destination: "/#contact-section" },
   { source: "/practice-resources", destination: "/provider-resources" },
   { source: "/pressreleases", destination: "/about#press-releases" },
   { source: "/shipping", destination: "/lab-policies#shipping" },
@@ -43,15 +43,17 @@ const METADATA_ROUTES = [
   "/artisan-model",
   "/provider-resources",
   "/lab-policies",
-  "/new-lab-partner",
   "/privacy-policy",
   "/terms-and-conditions",
 ];
+
+const NON_PUBLIC_SITEMAP_ROUTES = ["/new-lab-partner"];
 
 const PRODUCTION_ORIGIN = "https://www.artisanslabs.com";
 
 const PROTECTED_ROUTES = [
   "/portal",
+  "/portal/onboarding",
   "/portal/price-list/g6",
   "/api/portal/download?code=G6",
   "/private/price-list/g6",
@@ -431,17 +433,26 @@ async function checkRobotsAndSitemap(baseUrl, options) {
         const path = route === "/" ? "/" : route;
         return !xml.includes(`<loc>`) || !xml.includes(path);
       }).filter((route) => route !== "/");
+      const exposedNonPublicRoutes = NON_PUBLIC_SITEMAP_ROUTES.filter((route) =>
+        xml.includes(`<loc>${PRODUCTION_ORIGIN}${route}</loc>`)
+      );
+      const sitemapPass =
+        sitemapRes.response.status === 200 &&
+        missingPublicRoutes.length === 0 &&
+        exposedNonPublicRoutes.length === 0;
 
       checks.push({
         area: "sitemap",
         path: "/sitemap.xml",
-        pass: sitemapRes.response.status === 200 && missingPublicRoutes.length === 0,
+        pass: sitemapPass,
         blocking: true,
         status: sitemapRes.response.status,
         note:
-          missingPublicRoutes.length === 0
-            ? "OK"
-            : `Missing expected route references: ${missingPublicRoutes.join(", ")}`,
+          missingPublicRoutes.length > 0
+            ? `Missing expected route references: ${missingPublicRoutes.join(", ")}`
+            : exposedNonPublicRoutes.length > 0
+              ? `Non-public routes exposed: ${exposedNonPublicRoutes.join(", ")}`
+              : "OK",
       });
     }
   }

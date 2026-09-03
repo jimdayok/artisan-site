@@ -29,8 +29,8 @@ node scripts/verify-launch-readiness.mjs --base-url https://artisanslabs.com --a
    - `/provider-resources`
    - `/lab-policies`
    - `/newsletters`
-   - `/new-lab-partner`
 2. Redirect status and destination:
+   - `/new-lab-partner` to the protected `/portal/onboarding` route
    - `/contact`
    - `/contactus`
    - `/practice-resources`
@@ -42,10 +42,11 @@ node scripts/verify-launch-readiness.mjs --base-url https://artisanslabs.com --a
    - `/pacificartisanlabs`
    - `/pikeartisanlabs`
    - `/practicematters`
-3. `sitemap.xml` availability and expected route references.
+3. `sitemap.xml` availability, expected public route references, and exclusion of `/new-lab-partner`.
 4. `robots.txt` disallow behavior for `/portal`, `/private`, and `/api`.
 5. Protected route behavior and headers:
    - `/portal`
+   - `/portal/onboarding`
    - `/portal/price-list/g6`
    - `/api/portal/download?code=G6`
    - `/private/price-list/g6`

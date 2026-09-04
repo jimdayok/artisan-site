@@ -325,6 +325,10 @@ function SalesRepResourceCenter({
           </p>
         </div>
         <div className="flex flex-wrap gap-3">
+          <Link href="/portal/admin/program-studio" className={adminButtonClass}>
+            <FileText className="h-4 w-4" />
+            Program Studio
+          </Link>
           <Link href="/portal/employee-resources" className={adminButtonClass}>
             <ShieldCheck className="h-4 w-4" />
             Employee Resources

@@ -66,6 +66,9 @@ export function AdminShell({
               <Link href="/portal/admin/price-lists" className={adminButtonClass}>
                 All Price Lists
               </Link>
+              <Link href="/portal/admin/program-studio" className={adminButtonClass}>
+                Program Studio
+              </Link>
               <Link href="/portal/admin/users" className={adminButtonClass}>
                 User & Account Access
               </Link>

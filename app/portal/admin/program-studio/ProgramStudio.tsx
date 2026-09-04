@@ -2,34 +2,64 @@
 
 import Link from "next/link";
 import {
+  ArrowRightLeft,
   Check,
   ChevronDown,
+  ClipboardCopy,
   Download,
   FileText,
+  Mail,
   Plus,
   Printer,
   RotateCcw,
   Save,
   ShieldCheck,
+  Sparkles,
   Trash2,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import {
   GOVERNMENT_PROGRAM_EXCLUSION,
   PROGRAM_CATALOG,
+  PROPOSAL_TEMPLATES,
+  STORY_MODULES,
+  calculateServiceImprovement,
   createProgramProposalDraft,
+  proposalEmailBody,
+  proposalEmailSubject,
   proposalPriceListTitle,
   proposalReadiness,
+  type ProductCrosswalkRow,
   type ProgramCode,
   type ProgramProposalDraft,
   type ProgramStudioCustomer,
   type ProgramStudioPriceListOption,
+  type ProposalTemplateCode,
   type SpecialPricingKind,
+  type StoryModuleCode,
 } from "@/lib/portal/programProposal";
 import ProposalDocument from "./ProposalDocument";
 
 const DRAFT_STORAGE_KEY = "artisan-program-studio-draft-v1";
 const LABS = ["Pacific Artisan Labs", "Peak Artisan Labs", "Pike Artisan Labs"];
+const PRODUCT_STARTERS = [
+  { category: "Premium progressive", artisanProduct: "DS Stable", vspProduct: "Unity V3 Elite" },
+  { category: "Advanced progressive", artisanProduct: "PS Steady", vspProduct: "Unity V3 Plus" },
+  { category: "Everyday progressive", artisanProduct: "GS Balance", vspProduct: "Unity V3" },
+  { category: "Standard progressive", artisanProduct: "CFB", vspProduct: "Unity Ethos" },
+  { category: "Anti-fatigue", artisanProduct: "SD Concept", vspProduct: "Unity Relieve" },
+  { category: "Office / workspace", artisanProduct: "SD Reach", vspProduct: "Unity Via Office Pro" },
+  { category: "Premium AR treatment", artisanProduct: "Nytopia", vspProduct: "TechShield Elite" },
+] as const;
+const PRODUCT_SUGGESTIONS = [
+  "DS Stable", "PS Steady", "GS Balance", "CFB", "SD Concept", "SD Reach",
+  "Unity V3 Elite", "Unity V3 Plus", "Unity V3", "Unity Ethos", "Unity Relieve",
+  "Unity Via Office Pro", "Varilux XR Design", "Varilux X Design", "Varilux Comfort Max",
+  "Varilux Comfort DRx", "Eyezen", "Varilux Immersia", "Shamir Intelligence",
+  "Shamir Autograph III", "Shamir InTouch", "Shamir Genesis HD", "Shamir Relax",
+  "Shamir Workspace", "Nytopia", "Azure", "Armour", "Emerald", "TechShield Elite",
+  "TechShield Plus", "TechShield", "Crizal Sapphire", "Crizal Prevencia", "Crizal Rock",
+].sort();
 
 type StudioPanel = "setup" | "proposal";
 
@@ -76,7 +106,14 @@ export default function ProgramStudio({
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
   const [downloading, setDownloading] = useState(false);
+  const [copied, setCopied] = useState<"subject" | "email" | "">("");
   const readiness = useMemo(() => proposalReadiness(draft), [draft]);
+  const serviceImprovement = useMemo(
+    () => calculateServiceImprovement(draft.currentTurnDays, draft.artisanTurnDays),
+    [draft.artisanTurnDays, draft.currentTurnDays]
+  );
+  const emailSubject = useMemo(() => proposalEmailSubject(draft), [draft]);
+  const emailBody = useMemo(() => proposalEmailBody(draft), [draft]);
 
   useEffect(() => {
     const saved = window.localStorage.getItem(DRAFT_STORAGE_KEY);
@@ -96,6 +133,10 @@ export default function ProgramStudio({
               availableCodes.has(code)
             ),
           })),
+          selectedStoryModules: (parsed.selectedStoryModules || freshDraft.selectedStoryModules).filter(
+            (code) => STORY_MODULES.some((module) => module.code === code)
+          ),
+          productCrosswalk: (parsed.productCrosswalk || []).slice(0, 18),
           preparedBy: currentUser.name,
           preparedByEmail: currentUser.email,
         });
@@ -131,6 +172,61 @@ export default function ProgramStudio({
         ? draft.selectedPriceLists.filter((value) => value !== code)
         : [...draft.selectedPriceLists, code]
     );
+  }
+
+  function toggleStoryModule(code: StoryModuleCode) {
+    update(
+      "selectedStoryModules",
+      draft.selectedStoryModules.includes(code)
+        ? draft.selectedStoryModules.filter((value) => value !== code)
+        : [...draft.selectedStoryModules, code]
+    );
+  }
+
+  function applyTemplate(code: ProposalTemplateCode) {
+    const template = PROPOSAL_TEMPLATES.find((entry) => entry.code === code);
+    if (!template) return;
+    setDraft((current) => ({
+      ...current,
+      templateCode: code,
+      executiveSummary: template.executiveSummary,
+      customerPriorities: template.customerPriorities,
+      transitionNotes: template.transitionNotes,
+      nextStep: template.nextStep,
+      selectedStoryModules: [...template.storyModules],
+    }));
+    setStatus(`${template.name} narrative applied. Customer and commercial terms were preserved.`);
+    setError("");
+  }
+
+  function addProductCrosswalk(starter?: (typeof PRODUCT_STARTERS)[number]) {
+    const row: ProductCrosswalkRow = {
+      id: window.crypto.randomUUID(),
+      category: starter?.category || "",
+      currentProduct: "",
+      artisanProduct: starter?.artisanProduct || "",
+      vspProduct: starter?.vspProduct || "",
+      rationale: "",
+    };
+    update("productCrosswalk", [...draft.productCrosswalk, row]);
+  }
+
+  function updateProductCrosswalk(id: string, changes: Partial<ProductCrosswalkRow>) {
+    update(
+      "productCrosswalk",
+      draft.productCrosswalk.map((row) => row.id === id ? { ...row, ...changes } : row)
+    );
+  }
+
+  async function copyEmailPart(part: "subject" | "email", content: string) {
+    try {
+      await navigator.clipboard.writeText(content);
+      setCopied(part);
+      setStatus(part === "subject" ? "Email subject copied." : "Email message copied. Review it before sending.");
+      window.setTimeout(() => setCopied(""), 2_000);
+    } catch {
+      setError("The browser could not copy that text. Select it manually instead.");
+    }
   }
 
   function selectCustomer(id: string) {
@@ -331,6 +427,10 @@ export default function ProgramStudio({
               <input value={draft.customerName} onChange={(event) => update("customerName", event.target.value)} />
             </label>
             <label>
+              <span>Primary contact (optional)</span>
+              <input value={draft.customerContactName} onChange={(event) => update("customerContactName", event.target.value)} placeholder="First name or full name" />
+            </label>
+            <label>
               <span>Location</span>
               <input value={draft.locationName} onChange={(event) => update("locationName", event.target.value)} placeholder="City, state or location name" />
             </label>
@@ -384,6 +484,110 @@ export default function ProgramStudio({
               <span>Valid through</span>
               <input type="date" value={draft.validThrough} onChange={(event) => update("validThrough", event.target.value)} />
             </label>
+          </fieldset>
+
+          <fieldset className="aps-fieldset aps-choice-fieldset">
+            <legend>Proposal story &amp; template</legend>
+            <div className="aps-template-bar">
+              <label>
+                <span>Starting narrative</span>
+                <div className="aps-select-wrap">
+                  <select value={draft.templateCode} onChange={(event) => update("templateCode", event.target.value as ProposalTemplateCode)}>
+                    {PROPOSAL_TEMPLATES.map((template) => <option key={template.code} value={template.code}>{template.name}</option>)}
+                  </select>
+                  <ChevronDown />
+                </div>
+              </label>
+              <button type="button" className="aps-button aps-button-secondary" onClick={() => applyTemplate(draft.templateCode)}>
+                <Sparkles /> Apply template
+              </button>
+            </div>
+            <p className="aps-field-help">{PROPOSAL_TEMPLATES.find((template) => template.code === draft.templateCode)?.description} Applying a template updates the narrative only; customer, pricing, and program choices stay intact.</p>
+            <label className="aps-block-label">
+              <span>Executive summary</span>
+              <textarea className="aps-tall" value={draft.executiveSummary} onChange={(event) => update("executiveSummary", event.target.value)} />
+            </label>
+            <label className="aps-block-label">
+              <span>Customer priorities / current-state findings</span>
+              <textarea value={draft.customerPriorities} onChange={(event) => update("customerPriorities", event.target.value)} placeholder="What needs to change, and why now?" />
+            </label>
+            <span className="aps-input-label">Customer-facing story modules</span>
+            <div className="aps-story-choices">
+              {STORY_MODULES.map((module) => {
+                const selected = draft.selectedStoryModules.includes(module.code);
+                return (
+                  <button type="button" key={module.code} className={selected ? "is-selected" : ""} aria-pressed={selected} onClick={() => toggleStoryModule(module.code)}>
+                    <span>{selected ? <Check /> : <Plus />}</span>
+                    <div><strong>{module.title}</strong><small>{module.body}</small></div>
+                  </button>
+                );
+              })}
+            </div>
+          </fieldset>
+
+          <fieldset className="aps-fieldset aps-choice-fieldset aps-crosswalk-builder">
+            <legend>Product &amp; VSP crosswalk</legend>
+            <div className="aps-section-action">
+              <p className="aps-field-help">Map what the practice uses today to the Artisan recommendation and the separate VSP product path. Product availability, plan rules, and authorization still require confirmation before ordering.</p>
+              <button type="button" className="aps-button aps-button-secondary" onClick={() => addProductCrosswalk()}>
+                <Plus /> Add custom row
+              </button>
+            </div>
+            <div className="aps-starter-chips" aria-label="Product crosswalk starter rows">
+              {PRODUCT_STARTERS.map((starter) => (
+                <button type="button" key={starter.category} onClick={() => addProductCrosswalk(starter)}>
+                  <Plus /> {starter.category}
+                </button>
+              ))}
+            </div>
+            <datalist id="aps-product-suggestions">
+              {PRODUCT_SUGGESTIONS.map((product) => <option value={product} key={product} />)}
+            </datalist>
+            {draft.productCrosswalk.length ? (
+              <div className="aps-crosswalk-list">
+                {draft.productCrosswalk.map((row, index) => (
+                  <article key={row.id}>
+                    <header><span>{String(index + 1).padStart(2, "0")}</span><strong>{row.category || "Custom product mapping"}</strong></header>
+                    <label><span>Category / patient need</span><input value={row.category} onChange={(event) => updateProductCrosswalk(row.id, { category: event.target.value })} placeholder="Everyday progressive" /></label>
+                    <label><span>Current product</span><input list="aps-product-suggestions" value={row.currentProduct} onChange={(event) => updateProductCrosswalk(row.id, { currentProduct: event.target.value })} placeholder="What they use today" /></label>
+                    <label><span>Artisan recommendation</span><input list="aps-product-suggestions" value={row.artisanProduct} onChange={(event) => updateProductCrosswalk(row.id, { artisanProduct: event.target.value })} placeholder="Private-pay / primary path" /></label>
+                    <label><span>VSP product</span><input list="aps-product-suggestions" value={row.vspProduct} onChange={(event) => updateProductCrosswalk(row.id, { vspProduct: event.target.value })} placeholder="Plan-aligned path" /></label>
+                    <label className="aps-wide"><span>Why this mapping fits</span><textarea value={row.rationale} onChange={(event) => updateProductCrosswalk(row.id, { rationale: event.target.value })} placeholder="Patient need, staff positioning, design similarity, or implementation note." /></label>
+                    <button type="button" className="aps-remove" onClick={() => update("productCrosswalk", draft.productCrosswalk.filter((entry) => entry.id !== row.id))}><Trash2 /> Remove mapping</button>
+                  </article>
+                ))}
+              </div>
+            ) : <p className="aps-empty-state"><ArrowRightLeft /> Add a starter or custom row to build the side-by-side product recommendation.</p>}
+          </fieldset>
+
+          <fieldset className="aps-fieldset aps-proof-builder">
+            <legend>Business case &amp; proof points</legend>
+            <label className="aps-toggle aps-wide">
+              <input type="checkbox" checked={draft.includeCostSavings} onChange={(event) => update("includeCostSavings", event.target.checked)} />
+              <i aria-hidden="true" />
+              <span><strong>Include price-analysis savings</strong><small>Only use a percentage supported by a reviewed like-for-like analysis.</small></span>
+            </label>
+            {draft.includeCostSavings ? <>
+              <label><span>Identified cost savings</span><div className="aps-number-suffix"><input type="number" min="0" max="100" step="0.1" value={draft.costSavingsPercent} onChange={(event) => update("costSavingsPercent", Number(event.target.value))} /><i>%</i></div></label>
+              <label className="aps-wide"><span>Analysis basis / qualification</span><textarea value={draft.costSavingsNotes} onChange={(event) => update("costSavingsNotes", event.target.value)} /></label>
+            </> : null}
+            <label className="aps-toggle aps-wide">
+              <input type="checkbox" checked={draft.includeServiceImprovement} onChange={(event) => update("includeServiceImprovement", event.target.checked)} />
+              <i aria-hidden="true" />
+              <span><strong>Include turnaround improvement</strong><small>Calculates both relative improvement and reduction in business days.</small></span>
+            </label>
+            {draft.includeServiceImprovement ? <>
+              <label><span>Current lab turn time</span><div className="aps-number-suffix"><input type="number" min="0" max="60" step="0.1" value={draft.currentTurnDays} onChange={(event) => update("currentTurnDays", Number(event.target.value))} /><i>days</i></div></label>
+              <label><span>Artisan average turn time</span><div className="aps-number-suffix"><input type="number" min="0" max="60" step="0.1" value={draft.artisanTurnDays} onChange={(event) => update("artisanTurnDays", Number(event.target.value))} /><i>days</i></div></label>
+              {serviceImprovement ? <div className="aps-calculated-proof aps-wide"><strong>{serviceImprovement.relativeImprovementPercent}% relative improvement</strong><span>{serviceImprovement.turnaroundReductionPercent}% fewer turnaround days · {serviceImprovement.daysSaved} business days saved on the stated comparison</span></div> : <p className="aps-warning aps-wide">Enter a current turn time greater than the Artisan average to calculate an improvement.</p>}
+              <label className="aps-wide"><span>Comparison basis / qualification</span><textarea value={draft.serviceAnalysisNotes} onChange={(event) => update("serviceAnalysisNotes", event.target.value)} /></label>
+            </> : null}
+          </fieldset>
+
+          <fieldset className="aps-fieldset">
+            <legend>Transition &amp; next step</legend>
+            <label className="aps-wide"><span>Managed-care / freedom-of-choice transition plan</span><textarea className="aps-tall" value={draft.transitionNotes} onChange={(event) => update("transitionNotes", event.target.value)} /></label>
+            <label className="aps-wide"><span>Recommended next step</span><textarea value={draft.nextStep} onChange={(event) => update("nextStep", event.target.value)} /></label>
           </fieldset>
 
           <fieldset className="aps-fieldset aps-choice-fieldset">
@@ -553,6 +757,23 @@ export default function ProgramStudio({
           <fieldset className="aps-fieldset">
             <legend>Additional terms</legend>
             <label className="aps-wide"><span>Proposal terms and qualifications</span><textarea className="aps-tall" value={draft.additionalTerms} onChange={(event) => update("additionalTerms", event.target.value)} /></label>
+          </fieldset>
+
+          <fieldset className="aps-fieldset aps-choice-fieldset aps-email-builder">
+            <legend>Email handoff</legend>
+            <div className="aps-email-method">
+              <Mail />
+              <div><strong>One decision-ready attachment</strong><p>Use the generated subject, lead with the customer&apos;s priority, attach the finished PDF, state one recommended next step, and schedule a review. The Studio prepares the message but never sends it.</p></div>
+            </div>
+            <label className="aps-block-label"><span>Personal opening note (optional)</span><textarea value={draft.emailPersonalNote} onChange={(event) => update("emailPersonalNote", event.target.value)} placeholder="Reference the meeting, concern, or opportunity that prompted the proposal." /></label>
+            <div className="aps-copy-field">
+              <label><span>Email subject</span><input readOnly value={emailSubject} /></label>
+              <button type="button" className="aps-button aps-button-secondary" onClick={() => copyEmailPart("subject", emailSubject)}><ClipboardCopy /> {copied === "subject" ? "Copied" : "Copy subject"}</button>
+            </div>
+            <div className="aps-email-preview">
+              <div><span>Email message</span><button type="button" onClick={() => copyEmailPart("email", emailBody)}><ClipboardCopy /> {copied === "email" ? "Copied" : "Copy message"}</button></div>
+              <pre>{emailBody}</pre>
+            </div>
           </fieldset>
 
           {!readiness.ready ? (

@@ -3,8 +3,13 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import {
   GOVERNMENT_PROGRAM_EXCLUSION,
+  PROPOSAL_TEMPLATES,
+  STORY_MODULES,
+  calculateServiceImprovement,
   createProgramProposalDraft,
   formatSpecialPricingRule,
+  proposalEmailBody,
+  proposalEmailSubject,
   proposalPriceListTitle,
   proposalReadiness,
 } from "../lib/portal/programProposal.ts";
@@ -23,6 +28,44 @@ test("Program Studio defaults proposal pricing to the supplied P6 baseline", () 
   assert.deepEqual(draft.selectedPriceLists, ["P6"]);
   assert.equal(draft.validThrough, "2026-10-04");
   assert.equal(draft.secondPairDays, 30);
+  assert.equal(draft.templateCode, "full-transition");
+  assert.deepEqual(draft.selectedStoryModules, STORY_MODULES.map((module) => module.code));
+});
+
+test("service proof point reports both relative improvement and fewer turnaround days", () => {
+  assert.deepEqual(calculateServiceImprovement(5.5, 2.5), {
+    relativeImprovementPercent: 120,
+    turnaroundReductionPercent: 55,
+    daysSaved: 3,
+  });
+  assert.equal(calculateServiceImprovement(2.5, 5.5), null);
+});
+
+test("proposal templates and email handoff produce customer-specific copy", () => {
+  const draft = createProgramProposalDraft({
+    today: "2026-09-04",
+    preparedBy: "Jim Day",
+    preparedByEmail: "jim.day@artisanlabnetwork.com",
+    defaultPriceListCode: "P6",
+  });
+  draft.customerName = "Carlin Vision";
+  draft.customerContactName = "Andrea";
+  draft.nextStep = PROPOSAL_TEMPLATES[0].nextStep;
+  draft.productCrosswalk = [{
+    id: "one",
+    category: "Everyday progressive",
+    currentProduct: "Current PAL",
+    artisanProduct: "GS Balance",
+    vspProduct: "Unity V3",
+    rationale: "Simple staff recommendation.",
+  }];
+  assert.equal(
+    proposalEmailSubject(draft),
+    "Artisan lab partnership proposal for Carlin Vision"
+  );
+  assert.match(proposalEmailBody(draft), /^Hi Andrea,/);
+  assert.match(proposalEmailBody(draft), /product crosswalk/);
+  assert.match(proposalEmailBody(draft), /Recommended next step/);
 });
 test("A6 proposal title changes only with Acquios membership", () => {
   assert.equal(
@@ -91,7 +134,13 @@ test("customer preview and PDF repeat required terms and price-list attachments"
   assert.match(builder, /Price-list attachments/);
   assert.match(builder, /Special line-item pricing/);
   assert.match(builder, /multiple remakes/i);
+  assert.match(builder, /Product &amp; VSP crosswalk/);
+  assert.match(builder, /Email handoff/);
+  assert.match(preview, /Freedom of choice/);
+  assert.match(preview, /VSP eligibility/);
   assert.match(pdf, /buildPriceListPdf/);
+  assert.match(pdf, /PRODUCT CROSSWALK/);
+  assert.match(pdf, /fontkit/);
   assert.match(pdf, /SPECIAL PRICING THAT MODIFIES THIS LIST/);
   assert.match(pdf, /document\.copyPages/);
   assert.match(pdf, /canAccessPortalAdmin/);

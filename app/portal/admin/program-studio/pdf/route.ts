@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import fontkit from "@pdf-lib/fontkit";
 import { NextRequest, NextResponse } from "next/server";
 import {
   PDFDocument,
@@ -18,13 +19,19 @@ import {
   GOVERNMENT_PROGRAM_EXCLUSION,
   PROGRAM_CATALOG,
   PROGRAM_STUDIO_PRICE_LIST_CODES,
+  PROPOSAL_TEMPLATES,
+  STORY_MODULES,
+  calculateServiceImprovement,
   formatSpecialPricingRule,
   proposalPriceListTitle,
   proposalReadiness,
   type ProgramCode,
   type ProgramProposalDraft,
+  type ProductCrosswalkRow,
+  type ProposalTemplateCode,
   type SpecialPricingKind,
   type SpecialPricingRule,
+  type StoryModuleCode,
 } from "@/lib/portal/programProposal";
 import { getProgramStudioPriceLists } from "@/lib/portal/programStudioAccess";
 import { getPriceListByCode } from "@/lib/portal/priceLists";
@@ -63,6 +70,8 @@ function number(value: unknown, min = 0, max = 1_000_000) {
 function sanitizeDraft(input: unknown): ProgramProposalDraft {
   const source = (input && typeof input === "object" ? input : {}) as Partial<ProgramProposalDraft>;
   const validPrograms = new Set(PROGRAM_CATALOG.map((program) => program.code));
+  const validTemplates = new Set(PROPOSAL_TEMPLATES.map((template) => template.code));
+  const validStoryModules = new Set(STORY_MODULES.map((module) => module.code));
   const validPriceCodes = new Set<string>(PROGRAM_STUDIO_PRICE_LIST_CODES);
   const validKinds = new Set<SpecialPricingKind>([
     "fixed-price",
@@ -110,10 +119,34 @@ function sanitizeDraft(input: unknown): ProgramProposalDraft {
       clean(source.programNotes?.[code], 500),
     ])
   );
+  const productCrosswalk: ProductCrosswalkRow[] = (
+    Array.isArray(source.productCrosswalk) ? source.productCrosswalk : []
+  )
+    .slice(0, 18)
+    .map((raw, index) => ({
+      id: clean(raw?.id, 80) || "crosswalk-" + (index + 1),
+      category: clean(raw?.category, 120),
+      currentProduct: clean(raw?.currentProduct, 160),
+      artisanProduct: clean(raw?.artisanProduct, 160),
+      vspProduct: clean(raw?.vspProduct, 160),
+      rationale: clean(raw?.rationale, 500),
+    }));
+  const selectedStoryModules = [
+    ...new Set(
+      (Array.isArray(source.selectedStoryModules) ? source.selectedStoryModules : [])
+        .filter((code): code is StoryModuleCode =>
+          validStoryModules.has(code as StoryModuleCode)
+        )
+    ),
+  ];
 
   return {
+    templateCode: validTemplates.has(source.templateCode as ProposalTemplateCode)
+      ? (source.templateCode as ProposalTemplateCode)
+      : "full-transition",
     proposalTitle: clean(source.proposalTitle, 140),
     customerName: clean(source.customerName, 140),
+    customerContactName: clean(source.customerContactName, 140),
     locationName: clean(source.locationName, 160),
     accountNumber: clean(source.accountNumber, 80),
     customerAddress: clean(source.customerAddress, 300),
@@ -125,6 +158,20 @@ function sanitizeDraft(input: unknown): ProgramProposalDraft {
     isAcquiosMember: Boolean(source.isAcquiosMember),
     selectedPrograms,
     programNotes,
+    executiveSummary: clean(source.executiveSummary, 1_500),
+    customerPriorities: clean(source.customerPriorities, 1_500),
+    selectedStoryModules,
+    productCrosswalk,
+    includeCostSavings: Boolean(source.includeCostSavings),
+    costSavingsPercent: number(source.costSavingsPercent, 0, 100),
+    costSavingsNotes: clean(source.costSavingsNotes, 700),
+    includeServiceImprovement: Boolean(source.includeServiceImprovement),
+    currentTurnDays: number(source.currentTurnDays, 0, 60),
+    artisanTurnDays: number(source.artisanTurnDays, 0, 60),
+    serviceAnalysisNotes: clean(source.serviceAnalysisNotes, 700),
+    transitionNotes: clean(source.transitionNotes, 1_500),
+    nextStep: clean(source.nextStep, 700),
+    emailPersonalNote: clean(source.emailPersonalNote, 700),
     selectedPriceLists,
     specialPricing,
     multipleRemakes: Boolean(source.multipleRemakes),
@@ -233,11 +280,17 @@ async function addProposalPages(
   draft: ProgramProposalDraft,
   priceListLabels: Map<string, string>
 ) {
-  const regular = await document.embedFont(StandardFonts.Helvetica);
+  document.registerFontkit(fontkit);
+  const [regularBytes, displayBytes] = await Promise.all([
+    readFile(path.join(process.cwd(), "public", "fonts", "NunitoSans-Variable.ttf")),
+    readFile(path.join(process.cwd(), "public", "fonts", "Lora-Regular.ttf")),
+  ]);
+  const regular = await document.embedFont(regularBytes, { subset: true });
   const bold = await document.embedFont(StandardFonts.HelveticaBold);
+  const display = await document.embedFont(displayBytes, { subset: true });
   const logoBytes = await readFile(path.join(process.cwd(), "public", "aln-white-logo.png"));
   const logo = await document.embedPng(logoBytes);
-
+  const proposalStartIndex = document.getPageCount();
   const cover = document.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
   cover.drawRectangle({ x: 0, y: 0, width: PAGE_WIDTH, height: PAGE_HEIGHT, color: INK });
   cover.drawRectangle({ x: 0, y: 0, width: PAGE_WIDTH, height: 205, color: FOREST });
@@ -264,35 +317,157 @@ async function addProposalPages(
   });
   cover.drawText("Independent labs. Shared strength. Better partnership.", { x: MARGIN, y: 42, size: 8, font: regular, color: rgb(.73,.78,.75) });
 
+  let sectionNumber = 1;
+  const nextSectionNumber = () => String(sectionNumber++).padStart(2, "0");
+
+  const executive = document.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
+  executive.drawRectangle({ x: 0, y: 0, width: PAGE_WIDTH, height: PAGE_HEIGHT, color: PAPER });
+  contentHeader(executive, regular, bold, "Executive brief", nextSectionNumber());
+  executive.drawText("A RECOMMENDATION BUILT AROUND", { x: MARGIN, y: 678, size: 8, font: bold, color: GOLD });
+  drawLines({ page: executive, font: display, text: "the way your practice works.", x: MARGIN, y: 637, size: 27, maxWidth: 505, color: INK, lineHeight: 31, maxLines: 2 });
+  drawLines({ page: executive, font: regular, text: draft.executiveSummary, x: MARGIN, y: 565, size: 10.2, maxWidth: 505, color: MUTED, lineHeight: 15, maxLines: 6 });
+  executive.drawRectangle({ x: MARGIN, y: 398, width: PAGE_WIDTH - MARGIN * 2, height: 108, color: rgb(.96,.93,.88), borderColor: RULE, borderWidth: .8 });
+  executive.drawRectangle({ x: MARGIN, y: 398, width: 4, height: 108, color: GOLD });
+  executive.drawText("WHAT WE HEARD", { x: MARGIN + 18, y: 479, size: 7, font: bold, color: GOLD });
+  drawLines({ page: executive, font: regular, text: draft.customerPriorities || "Customer priorities will be documented here.", x: MARGIN + 18, y: 453, size: 9.2, maxWidth: 478, color: INK, lineHeight: 14, maxLines: 5 });
+  const serviceImprovement = calculateServiceImprovement(draft.currentTurnDays, draft.artisanTurnDays);
+  const proofCards = [
+    draft.includeCostSavings
+      ? {
+          metric: String(draft.costSavingsPercent || 0) + "%",
+          label: "IDENTIFIED COST SAVINGS",
+          note: draft.costSavingsNotes,
+        }
+      : null,
+    draft.includeServiceImprovement && serviceImprovement
+      ? {
+          metric: String(serviceImprovement.relativeImprovementPercent) + "%",
+          label: "RELATIVE SERVICE IMPROVEMENT",
+          note: String(draft.currentTurnDays) + " days today vs. " + String(draft.artisanTurnDays) + " stated Artisan average; " + String(serviceImprovement.turnaroundReductionPercent) + "% fewer turnaround days.",
+        }
+      : null,
+  ].filter((card): card is { metric: string; label: string; note: string } => Boolean(card));
+  proofCards.forEach((card, index) => {
+    const width = proofCards.length === 1 ? 520 : 254;
+    const x = MARGIN + index * 266;
+    executive.drawRectangle({ x, y: 214, width, height: 150, color: FOREST });
+    executive.drawText(card.metric, { x: x + 16, y: 313, size: 30, font: display, color: GOLD_SOFT });
+    executive.drawText(card.label, { x: x + 16, y: 285, size: 6.5, font: bold, color: rgb(1,1,1) });
+    drawLines({ page: executive, font: regular, text: card.note, x: x + 16, y: 258, size: 7.2, maxWidth: width - 32, color: rgb(.82,.86,.84), lineHeight: 10, maxLines: 6 });
+  });
+  drawLines({ page: executive, font: regular, text: "Any quantified outcome is based on the inputs and comparison basis stated in this proposal and should be validated against like-for-like eligible work.", x: MARGIN, y: proofCards.length ? 184 : 330, size: 6.8, maxWidth: 505, color: MUTED, lineHeight: 10, maxLines: 3 });
+  contentFooter(executive, regular, draft.customerName);
+
   const partnership = document.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
   partnership.drawRectangle({ x: 0, y: 0, width: PAGE_WIDTH, height: PAGE_HEIGHT, color: PAPER });
-  contentHeader(partnership, regular, bold, "The Artisan difference", "01");
-  partnership.drawText("A LAB RELATIONSHIP DESIGNED", { x: MARGIN, y: 678, size: 8, font: bold, color: GOLD });
-  partnership.drawText("around your practice.", { x: MARGIN, y: 630, size: 29, font: bold, color: INK });
-  drawLines({ page: partnership, font: regular, text: "Artisan Lab Network brings together independent optical labs, experienced people, and practical programs to help your team serve patients with more confidence. This proposal is built for your location - not pulled from a one-size-fits-all package.", x: MARGIN, y: 590, size: 10.3, maxWidth: 505, color: MUTED, lineHeight: 16 });
-  const benefits = [
-    ["People who know your account", "Direct access to a responsive lab team that understands your preferences, history, and priorities."],
-    ["Technical depth", "Practical support for lens selection, troubleshooting, specialty work, and daily patient conversations."],
-    ["Independent choice", "A broad product portfolio and flexible program structure built to support independent eyecare."],
-    ["Clear commercial terms", "Programs, pricing, commitments, and approved exceptions documented together for easier implementation."],
-  ];
+  contentHeader(partnership, regular, bold, "Why Artisan", nextSectionNumber());
+  partnership.drawText("INDEPENDENT EYE CARE DESERVES", { x: MARGIN, y: 678, size: 8, font: bold, color: GOLD });
+  drawLines({ page: partnership, font: display, text: "a better lab model.", x: MARGIN, y: 637, size: 27, maxWidth: 505, color: INK, lineHeight: 31, maxLines: 2 });
+  drawLines({ page: partnership, font: regular, text: "Artisan Lab Network connects independent optical labs, experienced people, and practical operating support so practices can protect choice, improve execution, and build a stronger long-term position.", x: MARGIN, y: 580, size: 10.1, maxWidth: 505, color: MUTED, lineHeight: 15, maxLines: 4 });
+  const benefits = STORY_MODULES.filter((module) => draft.selectedStoryModules.includes(module.code)).slice(0, 6).map((module) => [module.shortTitle, module.body]);
   benefits.forEach(([title, body], index) => {
     const col = index % 2;
     const row = Math.floor(index / 2);
     const x = MARGIN + col * 262;
-    const boxY = 420 - row * 142;
-    partnership.drawRectangle({ x, y: boxY, width: 248, height: 122, color: rgb(1,1,1), borderColor: RULE, borderWidth: .8 });
-    partnership.drawRectangle({ x: x + 15, y: boxY + 96, width: 30, height: 2.2, color: GOLD });
-    partnership.drawText(title, { x: x + 15, y: boxY + 73, size: 10, font: bold, color: INK });
-    drawLines({ page: partnership, font: regular, text: body, x: x + 15, y: boxY + 52, size: 7.8, maxWidth: 216, color: MUTED, lineHeight: 11 });
+    const boxY = 414 - row * 119;
+    partnership.drawRectangle({ x, y: boxY, width: 248, height: 103, color: rgb(1,1,1), borderColor: RULE, borderWidth: .8 });
+    partnership.drawRectangle({ x: x + 15, y: boxY + 80, width: 30, height: 2.2, color: GOLD });
+    drawLines({ page: partnership, font: bold, text: title, x: x + 15, y: boxY + 61, size: 9.2, maxWidth: 216, color: INK, lineHeight: 11, maxLines: 2 });
+    drawLines({ page: partnership, font: regular, text: body, x: x + 15, y: boxY + 36, size: 6.7, maxWidth: 216, color: MUTED, lineHeight: 8.5, maxLines: 4 });
   });
+  partnership.drawRectangle({ x: MARGIN, y: 108, width: 510, height: 52, color: INK });
+  partnership.drawText("BUILT FROM REAL LAB EXPERIENCE", { x: MARGIN + 15, y: 137, size: 6.6, font: bold, color: GOLD_SOFT });
+  drawLines({ page: partnership, font: regular, text: "Modern production, experienced optical judgment, and direct human support - connected across Pacific, Peak, and Pike Artisan Labs.", x: MARGIN + 190, y: 139, size: 6.8, maxWidth: 300, color: rgb(.8,.84,.82), lineHeight: 9, maxLines: 3 });
   contentFooter(partnership, regular, draft.customerName);
+
+  if (draft.productCrosswalk.length) {
+    const crosswalkSectionNumber = nextSectionNumber();
+    const crosswalkChunks = Array.from(
+      { length: Math.ceil(draft.productCrosswalk.length / 7) },
+      (_, index) => draft.productCrosswalk.slice(index * 7, index * 7 + 7)
+    );
+    crosswalkChunks.forEach((rows, chunkIndex) => {
+      const crosswalk = document.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
+      crosswalk.drawRectangle({ x: 0, y: 0, width: PAGE_WIDTH, height: PAGE_HEIGHT, color: PAPER });
+      contentHeader(crosswalk, regular, bold, chunkIndex ? "Product strategy - continued" : "Product strategy", crosswalkSectionNumber);
+      crosswalk.drawText(chunkIndex ? "PRODUCT CROSSWALK - CONTINUED" : "A PRODUCT PATH THE TEAM CAN USE", { x: MARGIN, y: 678, size: 8, font: bold, color: GOLD });
+      drawLines({ page: crosswalk, font: display, text: chunkIndex ? "Recommendations, continued." : "with confidence.", x: MARGIN, y: 637, size: 27, maxWidth: 505, color: INK, lineHeight: 31, maxLines: 2 });
+      if (!chunkIndex) {
+        drawLines({ page: crosswalk, font: regular, text: "The crosswalk separates the primary Artisan recommendation from the VSP path, giving staff a practical reference for patient conversations and ordering.", x: MARGIN, y: 586, size: 9.2, maxWidth: 505, color: MUTED, lineHeight: 14, maxLines: 3 });
+      }
+      const tableTop = chunkIndex ? 580 : 522;
+      const columns = [
+        { label: "PATIENT NEED", width: 122 },
+        { label: "CURRENT", width: 108 },
+        { label: "ARTISAN", width: 146 },
+        { label: "VSP PATH", width: 144 },
+      ];
+      let columnX = MARGIN;
+      columns.forEach((column) => {
+        crosswalk.drawRectangle({ x: columnX, y: tableTop, width: column.width, height: 30, color: INK, borderColor: RULE, borderWidth: .5 });
+        crosswalk.drawText(column.label, { x: columnX + 8, y: tableTop + 11, size: 6, font: bold, color: GOLD_SOFT });
+        columnX += column.width;
+      });
+      rows.forEach((row, rowIndex) => {
+        const y = tableTop - 63 - rowIndex * 63;
+        const values = [
+          { text: row.category || "Custom mapping", note: row.rationale, width: 122, color: rgb(1,1,1) },
+          { text: row.currentProduct || "To confirm", note: "", width: 108, color: rgb(1,1,1) },
+          { text: row.artisanProduct || "To confirm", note: "", width: 146, color: rgb(.93,.97,.95) },
+          { text: row.vspProduct || "Not specified", note: "", width: 144, color: rgb(1,1,1) },
+        ];
+        let x = MARGIN;
+        values.forEach((value, valueIndex) => {
+          crosswalk.drawRectangle({ x, y, width: value.width, height: 63, color: value.color, borderColor: RULE, borderWidth: .5 });
+          drawLines({ page: crosswalk, font: valueIndex === 2 ? bold : regular, text: value.text, x: x + 8, y: y + 43, size: 7, maxWidth: value.width - 16, color: valueIndex === 2 ? FOREST : INK, lineHeight: 9, maxLines: 3 });
+          if (value.note) drawLines({ page: crosswalk, font: regular, text: value.note, x: x + 8, y: y + 17, size: 5.3, maxWidth: value.width - 16, color: MUTED, lineHeight: 6.5, maxLines: 2 });
+          x += value.width;
+        });
+      });
+      drawLines({ page: crosswalk, font: regular, text: "Final product availability, VSP eligibility, network requirements, authorization, materials, and ordering codes must be confirmed before live orders.", x: MARGIN, y: 56, size: 6.5, maxWidth: 505, color: MUTED, lineHeight: 9, maxLines: 3 });
+      contentFooter(crosswalk, regular, draft.customerName);
+    });
+  }
+
+  if (draft.selectedStoryModules.includes("freedom-of-choice")) {
+    const transition = document.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
+    transition.drawRectangle({ x: 0, y: 0, width: PAGE_WIDTH, height: PAGE_HEIGHT, color: PAPER });
+    contentHeader(transition, regular, bold, "Freedom of choice", nextSectionNumber());
+    transition.drawText("MOVE ELIGIBLE WORK WITH INTENTION", { x: MARGIN, y: 678, size: 8, font: bold, color: GOLD });
+    drawLines({ page: transition, font: display, text: "not disruption.", x: MARGIN, y: 637, size: 27, maxWidth: 505, color: INK, lineHeight: 31, maxLines: 2 });
+    transition.drawRectangle({ x: MARGIN, y: 492, width: 520, height: 104, color: FOREST });
+    drawLines({ page: transition, font: display, text: "Managed-care rules should be separated from the broader lab strategy.", x: MARGIN + 17, y: 565, size: 13.2, maxWidth: 486, color: rgb(1,1,1), lineHeight: 17, maxLines: 3 });
+    drawLines({ page: transition, font: regular, text: "Artisan helps identify where plan direction applies, where choice remains, and how to transition eligible business without creating confusion for staff or patients.", x: MARGIN + 17, y: 518, size: 7.2, maxWidth: 486, color: rgb(.82,.86,.84), lineHeight: 10, maxLines: 3 });
+    const phases = [
+      ["01", "MAP", "Review products, payer mix, ordering paths, pricing, and service pain points."],
+      ["02", "VALIDATE", "Confirm eligibility, VSP routing, account setup, availability, and readiness."],
+      ["03", "LAUNCH", "Move an agreed first wave with training and first-order review."],
+      ["04", "MEASURE", "Track turnaround, service, remakes, savings, and staff confidence."],
+    ];
+    phases.forEach(([numberLabel, title, body], index) => {
+      const x = MARGIN + index * 132;
+      transition.drawRectangle({ x, y: 335, width: 122, height: 126, color: rgb(.96,.93,.88), borderColor: RULE, borderWidth: .6 });
+      transition.drawRectangle({ x, y: 458, width: 122, height: 3, color: GOLD });
+      transition.drawText(numberLabel, { x: x + 12, y: 433, size: 6.5, font: bold, color: GOLD });
+      transition.drawText(title, { x: x + 12, y: 410, size: 9, font: bold, color: INK });
+      drawLines({ page: transition, font: regular, text: body, x: x + 12, y: 389, size: 6.4, maxWidth: 98, color: MUTED, lineHeight: 8.2, maxLines: 6 });
+    });
+    transition.drawText("CUSTOMER-SPECIFIC TRANSITION PLAN", { x: MARGIN, y: 300, size: 7, font: bold, color: GOLD });
+    drawLines({ page: transition, font: regular, text: draft.transitionNotes, x: MARGIN, y: 276, size: 8.5, maxWidth: 505, color: INK, lineHeight: 12.5, maxLines: 7 });
+    const vspProducts = draft.productCrosswalk.filter((row) => row.vspProduct);
+    if (vspProducts.length) {
+      transition.drawText("PLANNED VSP PRODUCTS", { x: MARGIN, y: 172, size: 7, font: bold, color: GOLD });
+      drawLines({ page: transition, font: bold, text: vspProducts.map((row) => (row.category || "Product") + ": " + row.vspProduct).join("  |  "), x: MARGIN, y: 150, size: 7.2, maxWidth: 505, color: FOREST, lineHeight: 10, maxLines: 4 });
+    }
+    drawLines({ page: transition, font: regular, text: "This plan does not override managed-care contracts, plan rules, lab assignments, authorizations, or reimbursement requirements.", x: MARGIN, y: 70, size: 6.6, maxWidth: 505, color: MUTED, lineHeight: 9, maxLines: 3 });
+    contentFooter(transition, regular, draft.customerName);
+  }
 
   const programs = document.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
   programs.drawRectangle({ x: 0, y: 0, width: PAGE_WIDTH, height: PAGE_HEIGHT, color: PAPER });
-  contentHeader(programs, regular, bold, "Your program", "02");
+  contentHeader(programs, regular, bold, "Your program", nextSectionNumber());
   programs.drawText("A FOCUSED PACKAGE", { x: MARGIN, y: 678, size: 8, font: bold, color: GOLD });
-  programs.drawText("Built for this partnership.", { x: MARGIN, y: 634, size: 27, font: bold, color: INK });
+  programs.drawText("Built for this partnership.", { x: MARGIN, y: 634, size: 27, font: display, color: INK });
   let programY = 584;
   for (const [index, program] of PROGRAM_CATALOG.filter((entry) => draft.selectedPrograms.includes(entry.code)).entries()) {
     programs.drawLine({ start: { x: MARGIN, y: programY + 13 }, end: { x: PAGE_WIDTH - MARGIN, y: programY + 13 }, thickness: .7, color: RULE });
@@ -308,13 +483,16 @@ async function addProposalPages(
       programY = summaryEnd - 28;
     }
   }
+  programs.drawRectangle({ x: MARGIN, y: 72, width: 520, height: 62, color: INK });
+  programs.drawText("IMPLEMENTATION SUPPORT INCLUDED", { x: MARGIN + 14, y: 111, size: 6.5, font: bold, color: GOLD_SOFT });
+  drawLines({ page: programs, font: regular, text: "Account setup | product validation | ordering guidance | staff education | first-order review | performance follow-up", x: MARGIN + 14, y: 91, size: 7.2, maxWidth: 490, color: rgb(.82,.86,.84), lineHeight: 10, maxLines: 2 });
   contentFooter(programs, regular, draft.customerName);
 
   const terms = document.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
   terms.drawRectangle({ x: 0, y: 0, width: PAGE_WIDTH, height: PAGE_HEIGHT, color: PAPER });
-  contentHeader(terms, regular, bold, "Commercial framework", "03");
+  contentHeader(terms, regular, bold, "Commercial framework", nextSectionNumber());
   terms.drawText("PRICING, COMMITMENT & SERVICE", { x: MARGIN, y: 678, size: 8, font: bold, color: GOLD });
-  terms.drawText("Everything in one place.", { x: MARGIN, y: 634, size: 27, font: bold, color: INK });
+  terms.drawText("Clear terms. Fewer surprises.", { x: MARGIN, y: 634, size: 27, font: display, color: INK });
   const cards = [
     ["COMMITMENT", commitmentText(draft), "Qualifying private-pay volume only."],
     ["SECOND-PAIR WINDOW", `${draft.secondPairDays} days`, "Eligible second-pair orders must be placed within this window."],
@@ -373,6 +551,26 @@ async function addProposalPages(
     .join(" ");
   drawLines({ page: terms, font: regular, text: proposalTerms, x: MARGIN, y: termsY - 18, size: 7.1, maxWidth: PAGE_WIDTH - MARGIN * 2, color: MUTED, lineHeight: 10, maxLines: 12 });
   contentFooter(terms, regular, draft.customerName);
+
+  const close = document.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
+  close.drawRectangle({ x: 0, y: 0, width: PAGE_WIDTH, height: PAGE_HEIGHT, color: INK });
+  close.drawRectangle({ x: 0, y: 0, width: PAGE_WIDTH, height: 148, color: FOREST });
+  close.drawCircle({ x: 552, y: 212, size: 188, borderColor: GOLD, borderWidth: .7, opacity: .18 });
+  close.drawCircle({ x: 552, y: 212, size: 135, borderColor: GOLD, borderWidth: .7, opacity: .13 });
+  close.drawImage(logo, { x: MARGIN, y: 690, width: 132, height: 62 });
+  close.drawText("RECOMMENDED NEXT STEP", { x: MARGIN, y: 577, size: 7.5, font: bold, color: GOLD_SOFT });
+  drawLines({ page: close, font: display, text: draft.nextStep || "Confirm the recommendation and schedule the implementation meeting.", x: MARGIN, y: 530, size: 25, maxWidth: 475, color: rgb(1,1,1), lineHeight: 31, maxLines: 6 });
+  close.drawLine({ start: { x: MARGIN, y: 252 }, end: { x: PAGE_WIDTH - MARGIN, y: 252 }, thickness: .7, color: GOLD });
+  close.drawText("PREPARED BY", { x: MARGIN, y: 224, size: 6.3, font: bold, color: GOLD_SOFT });
+  close.drawText(draft.preparedBy || "Artisan Lab Network", { x: MARGIN, y: 198, size: 10, font: bold, color: rgb(1,1,1) });
+  close.drawText(draft.preparedByEmail, { x: MARGIN, y: 180, size: 8, font: regular, color: rgb(.75,.8,.77) });
+  close.drawText("Independent labs. Shared strength. Better partnership.", { x: MARGIN, y: 70, size: 8.5, font: regular, color: rgb(.75,.8,.77) });
+
+  const proposalPages = document.getPages().slice(proposalStartIndex);
+  proposalPages.slice(1, -1).forEach((page, index) => {
+    page.drawText("PAGE " + String(index + 2) + " OF " + String(proposalPages.length), { x: 282, y: 17, size: 6.2, font: regular, color: MUTED });
+  });
+  close.drawText("PAGE " + String(proposalPages.length) + " OF " + String(proposalPages.length), { x: PAGE_WIDTH - MARGIN - 64, y: 26, size: 6.2, font: regular, color: rgb(.64,.7,.67) });
 }
 
 async function addPriceListSupplement(

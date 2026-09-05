@@ -43,6 +43,7 @@ export const PROGRAM_CATALOG = [
 export type ProgramCode = (typeof PROGRAM_CATALOG)[number]["code"];
 export type CommitmentBasis = "lens-pairs" | "sales";
 export type CommitmentPeriod = "monthly" | "quarterly" | "annual";
+export type SavingsPeriod = "monthly" | "annual" | "one-time";
 export type ProposalTemplateCode =
   | "full-transition"
   | "product-conversion"
@@ -51,10 +52,12 @@ export type ProposalTemplateCode =
 export type StoryModuleCode =
   | "independent-alignment"
   | "product-choice"
+  | "quality-craftsmanship"
   | "people-accountability"
   | "network-strength"
   | "freedom-of-choice"
-  | "implementation-support";
+  | "implementation-support"
+  | "portal-visibility";
 export type SpecialPricingKind =
   | "fixed-price"
   | "dollar-deduction"
@@ -94,6 +97,13 @@ export const STORY_MODULES = [
       "A broad portfolio and agile vendor relationships give the practice room to match lens design, material, and treatment to the patient instead of forcing every conversation into one product path.",
   },
   {
+    code: "quality-craftsmanship",
+    title: "Quality and craftsmanship",
+    shortTitle: "Precision that protects trust",
+    body:
+      "Experienced optical teams combine modern lens technology with careful inspection, finishing, and problem-solving so the practice can recommend confidently and protect the patient relationship.",
+  },
+  {
     code: "people-accountability",
     title: "People and accountability",
     shortTitle: "People who own the answer",
@@ -120,6 +130,13 @@ export const STORY_MODULES = [
     shortTitle: "The transition is managed",
     body:
       "Product mapping, account configuration, ordering guidance, staff education, first-order review, and service follow-through are coordinated as one launch plan.",
+  },
+  {
+    code: "portal-visibility",
+    title: "Customer portal and visibility",
+    shortTitle: "The relationship in one place",
+    body:
+      "Account-specific pricing, lens systems, reports, performance review, policies, programs, education, and support resources give the practice a clearer view of its Artisan relationship.",
   },
 ] as const satisfies ReadonlyArray<{
   code: StoryModuleCode;
@@ -157,9 +174,11 @@ export const PROPOSAL_TEMPLATES = [
       "Approve the product crosswalk and select a date for staff product and ordering training.",
     storyModules: [
       "product-choice",
+      "quality-craftsmanship",
       "people-accountability",
       "implementation-support",
       "freedom-of-choice",
+      "portal-visibility",
     ] satisfies StoryModuleCode[],
   },
   {
@@ -179,6 +198,7 @@ export const PROPOSAL_TEMPLATES = [
       "network-strength",
       "implementation-support",
       "independent-alignment",
+      "portal-visibility",
     ] satisfies StoryModuleCode[],
   },
   {
@@ -197,6 +217,7 @@ export const PROPOSAL_TEMPLATES = [
       "people-accountability",
       "product-choice",
       "network-strength",
+      "portal-visibility",
     ] satisfies StoryModuleCode[],
   },
 ] as const;
@@ -223,12 +244,15 @@ export type ProgramProposalDraft = {
   productCrosswalk: ProductCrosswalkRow[];
   includeCostSavings: boolean;
   costSavingsPercent: number;
+  costSavingsAmount: number;
+  costSavingsPeriod: SavingsPeriod;
   costSavingsNotes: string;
   includeServiceImprovement: boolean;
   currentTurnDays: number;
   artisanTurnDays: number;
   serviceAnalysisNotes: string;
   transitionNotes: string;
+  onboardingNotes: string;
   nextStep: string;
   emailPersonalNote: string;
   selectedPriceLists: string[];
@@ -306,6 +330,18 @@ export function calculateServiceImprovement(
   };
 }
 
+export function formatSavingsAmount(amount: number, period: SavingsPeriod) {
+  if (!Number.isFinite(amount) || amount <= 0) return "";
+  const value = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(amount);
+  if (period === "monthly") return `${value} per month`;
+  if (period === "one-time") return `${value} one-time`;
+  return `${value} annually`;
+}
+
 export function proposalEmailSubject(draft: ProgramProposalDraft) {
   return `Artisan lab partnership proposal for ${draft.customerName || "your practice"}`;
 }
@@ -317,14 +353,23 @@ export function proposalEmailBody(draft: ProgramProposalDraft) {
   const vspRecommendationCount = draft.productCrosswalk.filter((row) =>
     row.vspProduct.trim()
   ).length;
+  const savingsAmount = formatSavingsAmount(
+    draft.costSavingsAmount,
+    draft.costSavingsPeriod
+  );
   const highlights = [
     draft.productCrosswalk.length
       ? `a ${draft.productCrosswalk.length}-line product crosswalk${
           vspRecommendationCount ? ", including VSP recommendations" : ""
         }`
       : "a tailored product and program recommendation",
-    draft.includeCostSavings && draft.costSavingsPercent > 0
-      ? `an identified cost-savings opportunity of ${draft.costSavingsPercent}% based on the reviewed analysis`
+    draft.includeCostSavings && (savingsAmount || draft.costSavingsPercent > 0)
+      ? `an identified savings opportunity of ${[
+          savingsAmount,
+          draft.costSavingsPercent > 0 ? `${draft.costSavingsPercent}%` : "",
+        ]
+          .filter(Boolean)
+          .join(" / ")} based on the reviewed analysis`
       : "clear pricing and program terms",
     draft.includeServiceImprovement && calculateServiceImprovement(draft.currentTurnDays, draft.artisanTurnDays)
       ? `a turnaround comparison using the current ${draft.currentTurnDays}-day experience and the stated ${draft.artisanTurnDays}-day Artisan average`
@@ -390,12 +435,16 @@ export function createProgramProposalDraft({
     productCrosswalk: [],
     includeCostSavings: false,
     costSavingsPercent: 0,
+    costSavingsAmount: 0,
+    costSavingsPeriod: "annual",
     costSavingsNotes: "Based on the products, materials, treatments, and volumes reviewed with the practice.",
     includeServiceImprovement: false,
     currentTurnDays: 0,
     artisanTurnDays: 0,
     serviceAnalysisNotes: "Turnaround comparison uses business days and like-for-like eligible work.",
     transitionNotes: template.transitionNotes,
+    onboardingNotes:
+      "Confirm lab contacts, account and pricing access, ordering connections, product training, VSP routing where applicable, shipping procedures, and first-order readiness. Review the initial orders together and establish an ongoing performance cadence.",
     nextStep: template.nextStep,
     emailPersonalNote: "",
     selectedPriceLists: defaultPriceListCode ? [defaultPriceListCode] : [],

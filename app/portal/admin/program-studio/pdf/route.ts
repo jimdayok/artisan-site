@@ -164,12 +164,19 @@ function sanitizeDraft(input: unknown): ProgramProposalDraft {
     productCrosswalk,
     includeCostSavings: Boolean(source.includeCostSavings),
     costSavingsPercent: number(source.costSavingsPercent, 0, 100),
+    costSavingsAmount: number(source.costSavingsAmount, 0, 10_000_000),
+    costSavingsPeriod: ["monthly", "annual", "one-time"].includes(
+      String(source.costSavingsPeriod)
+    )
+      ? (source.costSavingsPeriod as ProgramProposalDraft["costSavingsPeriod"])
+      : "annual",
     costSavingsNotes: clean(source.costSavingsNotes, 700),
     includeServiceImprovement: Boolean(source.includeServiceImprovement),
     currentTurnDays: number(source.currentTurnDays, 0, 60),
     artisanTurnDays: number(source.artisanTurnDays, 0, 60),
     serviceAnalysisNotes: clean(source.serviceAnalysisNotes, 700),
     transitionNotes: clean(source.transitionNotes, 1_500),
+    onboardingNotes: clean(source.onboardingNotes, 1_500),
     nextStep: clean(source.nextStep, 700),
     emailPersonalNote: clean(source.emailPersonalNote, 700),
     selectedPriceLists,
@@ -331,12 +338,26 @@ async function addProposalPages(
   executive.drawText("WHAT WE HEARD", { x: MARGIN + 18, y: 479, size: 7, font: bold, color: GOLD });
   drawLines({ page: executive, font: regular, text: draft.customerPriorities || "Customer priorities will be documented here.", x: MARGIN + 18, y: 453, size: 9.2, maxWidth: 478, color: INK, lineHeight: 14, maxLines: 5 });
   const serviceImprovement = calculateServiceImprovement(draft.currentTurnDays, draft.artisanTurnDays);
+  const savingsAmount = draft.costSavingsAmount > 0
+    ? new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0,
+      }).format(draft.costSavingsAmount)
+    : "";
+  const savingsPeriodLabel = draft.costSavingsPeriod === "monthly"
+    ? "MONTHLY"
+    : draft.costSavingsPeriod === "one-time"
+      ? "ONE-TIME"
+      : "ANNUAL";
   const proofCards = [
-    draft.includeCostSavings
+    draft.includeCostSavings && (savingsAmount || draft.costSavingsPercent > 0)
       ? {
-          metric: String(draft.costSavingsPercent || 0) + "%",
-          label: "IDENTIFIED COST SAVINGS",
-          note: draft.costSavingsNotes,
+          metric: savingsAmount || String(draft.costSavingsPercent) + "%",
+          label: savingsAmount
+            ? `ESTIMATED ${savingsPeriodLabel} SAVINGS`
+            : "IDENTIFIED COST SAVINGS",
+          note: `${savingsAmount && draft.costSavingsPercent > 0 ? String(draft.costSavingsPercent) + "% identified savings. " : ""}${draft.costSavingsNotes}`,
         }
       : null,
     draft.includeServiceImprovement && serviceImprovement
@@ -364,7 +385,10 @@ async function addProposalPages(
   partnership.drawText("INDEPENDENT EYE CARE DESERVES", { x: MARGIN, y: 678, size: 8, font: bold, color: GOLD });
   drawLines({ page: partnership, font: display, text: "a better lab model.", x: MARGIN, y: 637, size: 27, maxWidth: 505, color: INK, lineHeight: 31, maxLines: 2 });
   drawLines({ page: partnership, font: regular, text: "Artisan Lab Network connects independent optical labs, experienced people, and practical operating support so practices can protect choice, improve execution, and build a stronger long-term position.", x: MARGIN, y: 580, size: 10.1, maxWidth: 505, color: MUTED, lineHeight: 15, maxLines: 4 });
-  const benefits = STORY_MODULES.filter((module) => draft.selectedStoryModules.includes(module.code)).slice(0, 6).map((module) => [module.shortTitle, module.body]);
+  const benefits = STORY_MODULES.filter((module) =>
+    draft.selectedStoryModules.includes(module.code) &&
+    !["freedom-of-choice", "implementation-support"].includes(module.code)
+  ).slice(0, 6).map((module) => [module.shortTitle, module.body]);
   benefits.forEach(([title, body], index) => {
     const col = index % 2;
     const row = Math.floor(index / 2);
@@ -461,6 +485,39 @@ async function addProposalPages(
     }
     drawLines({ page: transition, font: regular, text: "This plan does not override managed-care contracts, plan rules, lab assignments, authorizations, or reimbursement requirements.", x: MARGIN, y: 70, size: 6.6, maxWidth: 505, color: MUTED, lineHeight: 9, maxLines: 3 });
     contentFooter(transition, regular, draft.customerName);
+  }
+
+  if (draft.selectedStoryModules.some((code) => code === "implementation-support" || code === "portal-visibility")) {
+    const onboarding = document.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
+    onboarding.drawRectangle({ x: 0, y: 0, width: PAGE_WIDTH, height: PAGE_HEIGHT, color: PAPER });
+    contentHeader(onboarding, regular, bold, "Onboarding & visibility", nextSectionNumber());
+    onboarding.drawText("A CONFIDENT START", { x: MARGIN, y: 678, size: 8, font: bold, color: GOLD });
+    drawLines({ page: onboarding, font: display, text: "From signed proposal to confident first orders.", x: MARGIN, y: 637, size: 26, maxWidth: 505, color: INK, lineHeight: 31, maxLines: 2 });
+    drawLines({ page: onboarding, font: regular, text: "A strong lab conversion is not a handoff. Artisan coordinates the people, product decisions, ordering connections, training, and follow-through that help the practice launch with confidence.", x: MARGIN, y: 570, size: 9.2, maxWidth: 505, color: MUTED, lineHeight: 14, maxLines: 4 });
+    const launchPhases = [
+      ["01", "ALIGN", "Confirm contacts, account details, pricing, products, responsibilities, and launch goals."],
+      ["02", "CONNECT", "Prepare ordering access, shipping, portal access, and VSP or Eyefinity routing where applicable."],
+      ["03", "TRAIN", "Educate the team on products, AR treatments, policies, resources, and escalation paths."],
+      ["04", "LAUNCH & REVIEW", "Support first orders, resolve questions, and establish a performance-review cadence."],
+    ];
+    launchPhases.forEach(([numberLabel, title, body], index) => {
+      const x = MARGIN + index * 132;
+      onboarding.drawRectangle({ x, y: 391, width: 122, height: 124, color: rgb(.96,.93,.88), borderColor: RULE, borderWidth: .6 });
+      onboarding.drawRectangle({ x, y: 512, width: 122, height: 3, color: GOLD });
+      onboarding.drawText(numberLabel, { x: x + 12, y: 488, size: 6.5, font: bold, color: GOLD });
+      drawLines({ page: onboarding, font: bold, text: title, x: x + 12, y: 465, size: 8.4, maxWidth: 98, color: INK, lineHeight: 10, maxLines: 2 });
+      drawLines({ page: onboarding, font: regular, text: body, x: x + 12, y: 435, size: 6.2, maxWidth: 98, color: MUTED, lineHeight: 8, maxLines: 7 });
+    });
+    if (draft.selectedStoryModules.includes("portal-visibility")) {
+      onboarding.drawRectangle({ x: MARGIN, y: 214, width: 520, height: 142, color: FOREST });
+      onboarding.drawText("THE ARTISAN CUSTOMER PORTAL", { x: MARGIN + 16, y: 330, size: 6.7, font: bold, color: GOLD_SOFT });
+      drawLines({ page: onboarding, font: display, text: "Your lab relationship, organized around the practice.", x: MARGIN + 16, y: 304, size: 14, maxWidth: 270, color: rgb(1,1,1), lineHeight: 17, maxLines: 3 });
+      drawLines({ page: onboarding, font: regular, text: "Assigned pricing & Lens Systems | daily production reports | performance trends & benchmarks | programs & policies | onboarding & education | account information & support", x: MARGIN + 306, y: 323, size: 6.8, maxWidth: 194, color: rgb(.83,.87,.85), lineHeight: 10, maxLines: 8 });
+    }
+    onboarding.drawText("CUSTOMER-SPECIFIC ONBOARDING PLAN", { x: MARGIN, y: 181, size: 7, font: bold, color: GOLD });
+    drawLines({ page: onboarding, font: regular, text: draft.onboardingNotes, x: MARGIN, y: 158, size: 7.6, maxWidth: 505, color: INK, lineHeight: 10.8, maxLines: 7 });
+    drawLines({ page: onboarding, font: regular, text: "Portal features and onboarding modules are activated according to account setup, pricing assignments, program eligibility, and authorized access.", x: MARGIN, y: 60, size: 6.5, maxWidth: 505, color: MUTED, lineHeight: 9, maxLines: 3 });
+    contentFooter(onboarding, regular, draft.customerName);
   }
 
   const programs = document.addPage([PAGE_WIDTH, PAGE_HEIGHT]);

@@ -4,6 +4,7 @@ import {
   PROGRAM_CATALOG,
   STORY_MODULES,
   calculateServiceImprovement,
+  formatSavingsAmount,
   formatSpecialPricingRule,
   proposalPriceListTitle,
   type ProgramProposalDraft,
@@ -53,13 +54,21 @@ export default function ProposalDocument({
     draft.selectedPriceLists.includes(priceList.code)
   );
   const selectedStories = STORY_MODULES.filter((module) =>
-    draft.selectedStoryModules.includes(module.code)
+    draft.selectedStoryModules.includes(module.code) &&
+    !["freedom-of-choice", "implementation-support"].includes(module.code)
   );
   const serviceImprovement = calculateServiceImprovement(
     draft.currentTurnDays,
     draft.artisanTurnDays
   );
   const vspProducts = draft.productCrosswalk.filter((row) => row.vspProduct.trim());
+  const savingsAmount = formatSavingsAmount(draft.costSavingsAmount, draft.costSavingsPeriod);
+  const hasCostSavings = draft.includeCostSavings && Boolean(
+    savingsAmount || draft.costSavingsPercent > 0
+  );
+  const includeLaunchExperience = draft.selectedStoryModules.some(
+    (code) => code === "implementation-support" || code === "portal-visibility"
+  );
 
   return (
     <article className="aps-proposal" aria-label="Customer proposal preview">
@@ -91,10 +100,14 @@ export default function ProposalDocument({
           <span>What we heard</span>
           <p>{draft.customerPriorities || "Customer priorities will be documented here."}</p>
         </div>
-        {(draft.includeCostSavings || (draft.includeServiceImprovement && serviceImprovement)) ? (
+        {(hasCostSavings || (draft.includeServiceImprovement && serviceImprovement)) ? (
           <div className="aps-proof-grid">
-            {draft.includeCostSavings ? (
-              <article><strong>{draft.costSavingsPercent || 0}%</strong><span>identified cost savings</span><p>{draft.costSavingsNotes}</p></article>
+            {hasCostSavings ? (
+              <article>
+                <strong>{savingsAmount || `${draft.costSavingsPercent}%`}</strong>
+                <span>{savingsAmount ? "estimated savings" : "identified cost savings"}</span>
+                <p>{savingsAmount && draft.costSavingsPercent > 0 ? `${draft.costSavingsPercent}% identified savings. ` : ""}{draft.costSavingsNotes}</p>
+              </article>
             ) : null}
             {draft.includeServiceImprovement && serviceImprovement ? (
               <article><strong>{serviceImprovement.relativeImprovementPercent}%</strong><span>relative service improvement</span><p>{draft.currentTurnDays} days today vs. {draft.artisanTurnDays} stated Artisan average; {serviceImprovement.turnaroundReductionPercent}% fewer turnaround days.</p></article>
@@ -156,6 +169,36 @@ export default function ProposalDocument({
           <div className="aps-transition-notes"><span>Customer-specific transition plan</span><p>{draft.transitionNotes}</p></div>
           {vspProducts.length ? <div className="aps-vsp-summary"><span>Planned VSP products</span><div>{vspProducts.map((row) => <b key={row.id}>{row.category || "Product"}: {row.vspProduct}</b>)}</div></div> : null}
           <p className="aps-method-note">This plan does not override managed-care contracts, plan rules, lab assignments, authorizations, or reimbursement requirements.</p>
+        </section>
+      ) : null}
+
+      {includeLaunchExperience ? (
+        <section className="aps-proposal-section aps-onboarding-page">
+          <SectionHeading kicker="Onboarding and visibility" title="From signed proposal to confident first orders." />
+          <p className="aps-lead">A strong lab conversion is not a handoff. Artisan coordinates the people, product decisions, ordering connections, training, and follow-through that help the practice launch with confidence.</p>
+          <div className="aps-launch-grid">
+            {[
+              ["01", "Align", "Confirm lab contacts, account details, pricing, products, responsibilities, and launch goals."],
+              ["02", "Connect", "Prepare ordering access, shipping workflows, portal access, and VSP or Eyefinity routing where applicable."],
+              ["03", "Train", "Educate the team on the selected lens ladder, AR treatments, policies, resources, and escalation paths."],
+              ["04", "Launch and review", "Support first orders, resolve questions quickly, and establish a performance-review cadence."],
+            ].map(([number, title, body]) => <article key={number}><span>{number}</span><h3>{title}</h3><p>{body}</p></article>)}
+          </div>
+          {draft.selectedStoryModules.includes("portal-visibility") ? (
+            <div className="aps-portal-story">
+              <div><p className="aps-kicker">The Artisan customer portal</p><h3>Your lab relationship, organized around the practice.</h3><p>Authorized users can reach the account-specific tools and information assigned to their relationship without searching across disconnected files and websites.</p></div>
+              <ul>
+                <li>Assigned pricing and Lens Systems</li>
+                <li>Daily production reports</li>
+                <li>Performance trends and benchmarks</li>
+                <li>Programs, policies, and education</li>
+                <li>Onboarding and first-order guidance</li>
+                <li>Account information and support paths</li>
+              </ul>
+            </div>
+          ) : null}
+          <div className="aps-transition-notes"><span>Customer-specific onboarding plan</span><p>{draft.onboardingNotes}</p></div>
+          <p className="aps-method-note">Portal features and onboarding modules are activated according to the customer&apos;s account, pricing assignments, program eligibility, and authorized access.</p>
         </section>
       ) : null}
 

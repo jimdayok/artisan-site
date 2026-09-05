@@ -7,6 +7,7 @@ import {
   STORY_MODULES,
   calculateServiceImprovement,
   createProgramProposalDraft,
+  formatSavingsAmount,
   formatSpecialPricingRule,
   proposalEmailBody,
   proposalEmailSubject,
@@ -30,6 +31,28 @@ test("Program Studio defaults proposal pricing to the supplied P6 baseline", () 
   assert.equal(draft.secondPairDays, 30);
   assert.equal(draft.templateCode, "full-transition");
   assert.deepEqual(draft.selectedStoryModules, STORY_MODULES.map((module) => module.code));
+  assert.ok(draft.selectedStoryModules.includes("freedom-of-choice"));
+  assert.ok(draft.selectedStoryModules.includes("implementation-support"));
+  assert.ok(draft.selectedStoryModules.includes("portal-visibility"));
+});
+
+test("manual savings can be expressed as an amount, percentage, or both", () => {
+  assert.equal(formatSavingsAmount(24000, "annual"), "$24,000 annually");
+  assert.equal(formatSavingsAmount(1800, "monthly"), "$1,800 per month");
+  assert.equal(formatSavingsAmount(7500, "one-time"), "$7,500 one-time");
+  assert.equal(formatSavingsAmount(0, "annual"), "");
+
+  const draft = createProgramProposalDraft({
+    today: "2026-09-04",
+    preparedBy: "Jim Day",
+    preparedByEmail: "jim.day@artisanlabnetwork.com",
+    defaultPriceListCode: "P6",
+  });
+  draft.customerName = "Carlin Vision";
+  draft.includeCostSavings = true;
+  draft.costSavingsAmount = 24000;
+  draft.costSavingsPercent = 14.6;
+  assert.match(proposalEmailBody(draft), /\$24,000 annually \/ 14\.6%/);
 });
 
 test("service proof point reports both relative improvement and fewer turnaround days", () => {
@@ -136,10 +159,17 @@ test("customer preview and PDF repeat required terms and price-list attachments"
   assert.match(builder, /multiple remakes/i);
   assert.match(builder, /Product &amp; VSP crosswalk/);
   assert.match(builder, /Email handoff/);
+  assert.match(builder, /Clear proposal/);
+  assert.match(builder, /Estimated savings amount/);
+  assert.match(builder, /Transition, onboarding &amp; portal/);
   assert.match(preview, /Freedom of choice/);
+  assert.match(preview, /The Artisan customer portal/);
+  assert.match(preview, /From signed proposal to confident first orders/);
   assert.match(preview, /VSP eligibility/);
   assert.match(pdf, /buildPriceListPdf/);
   assert.match(pdf, /PRODUCT CROSSWALK/);
+  assert.match(pdf, /ONBOARDING PLAN/);
+  assert.match(pdf, /THE ARTISAN CUSTOMER PORTAL/);
   assert.match(pdf, /fontkit/);
   assert.match(pdf, /SPECIAL PRICING THAT MODIFIES THIS LIST/);
   assert.match(pdf, /document\.copyPages/);

@@ -11,7 +11,6 @@ import {
   Mail,
   Plus,
   Printer,
-  RotateCcw,
   Save,
   ShieldCheck,
   Sparkles,
@@ -35,6 +34,7 @@ import {
   type ProgramStudioCustomer,
   type ProgramStudioPriceListOption,
   type ProposalTemplateCode,
+  type SavingsPeriod,
   type SpecialPricingKind,
   type StoryModuleCode,
 } from "@/lib/portal/programProposal";
@@ -291,6 +291,10 @@ export default function ProgramStudio({
   }
 
   function resetDraft() {
+    const confirmed = window.confirm(
+      "Clear this proposal and start over? The saved draft in this browser will also be removed."
+    );
+    if (!confirmed) return;
     setDraft(freshDraft);
     setSelectedCustomerId("");
     window.localStorage.removeItem(DRAFT_STORAGE_KEY);
@@ -353,8 +357,8 @@ export default function ProgramStudio({
           <Link href="/portal/admin" className="aps-button aps-button-quiet">
             Dashboard
           </Link>
-          <button type="button" className="aps-button aps-button-quiet" onClick={resetDraft}>
-            <RotateCcw /> New
+          <button type="button" className="aps-button aps-button-clear" onClick={resetDraft}>
+            <Trash2 /> Clear proposal
           </button>
           <button type="button" className="aps-button aps-button-secondary" onClick={saveDraft}>
             <Save /> Save draft
@@ -511,9 +515,13 @@ export default function ProgramStudio({
               <span>Customer priorities / current-state findings</span>
               <textarea value={draft.customerPriorities} onChange={(event) => update("customerPriorities", event.target.value)} placeholder="What needs to change, and why now?" />
             </label>
-            <span className="aps-input-label">Customer-facing story modules</span>
+            <span className="aps-input-label">Why Artisan proof points</span>
             <div className="aps-story-choices">
-              {STORY_MODULES.map((module) => {
+              {STORY_MODULES.filter((module) => ![
+                "freedom-of-choice",
+                "implementation-support",
+                "portal-visibility",
+              ].includes(module.code)).map((module) => {
                 const selected = draft.selectedStoryModules.includes(module.code);
                 return (
                   <button type="button" key={module.code} className={selected ? "is-selected" : ""} aria-pressed={selected} onClick={() => toggleStoryModule(module.code)}>
@@ -568,7 +576,10 @@ export default function ProgramStudio({
               <span><strong>Include price-analysis savings</strong><small>Only use a percentage supported by a reviewed like-for-like analysis.</small></span>
             </label>
             {draft.includeCostSavings ? <>
-              <label><span>Identified cost savings</span><div className="aps-number-suffix"><input type="number" min="0" max="100" step="0.1" value={draft.costSavingsPercent} onChange={(event) => update("costSavingsPercent", Number(event.target.value))} /><i>%</i></div></label>
+              <p className="aps-field-help aps-wide">Enter a percentage, a dollar amount, or both. Only entered values appear in the customer proposal.</p>
+              <label><span>Identified cost savings (optional)</span><div className="aps-number-suffix"><input type="number" min="0" max="100" step="0.1" value={draft.costSavingsPercent} onChange={(event) => update("costSavingsPercent", Number(event.target.value))} /><i>%</i></div></label>
+              <label><span>Estimated savings amount (optional)</span><div className="aps-money-input"><i>$</i><input type="number" min="0" max="10000000" step="100" value={draft.costSavingsAmount} onChange={(event) => update("costSavingsAmount", Number(event.target.value))} /></div></label>
+              <label><span>Savings period</span><div className="aps-select-wrap"><select value={draft.costSavingsPeriod} onChange={(event) => update("costSavingsPeriod", event.target.value as SavingsPeriod)}><option value="annual">Annual</option><option value="monthly">Monthly</option><option value="one-time">One-time</option></select><ChevronDown /></div></label>
               <label className="aps-wide"><span>Analysis basis / qualification</span><textarea value={draft.costSavingsNotes} onChange={(event) => update("costSavingsNotes", event.target.value)} /></label>
             </> : null}
             <label className="aps-toggle aps-wide">
@@ -584,9 +595,26 @@ export default function ProgramStudio({
             </> : null}
           </fieldset>
 
-          <fieldset className="aps-fieldset">
-            <legend>Transition &amp; next step</legend>
-            <label className="aps-wide"><span>Managed-care / freedom-of-choice transition plan</span><textarea className="aps-tall" value={draft.transitionNotes} onChange={(event) => update("transitionNotes", event.target.value)} /></label>
+          <fieldset className="aps-fieldset aps-choice-fieldset">
+            <legend>Transition, onboarding &amp; portal</legend>
+            <p className="aps-field-help aps-wide">Choose the conversion support that should appear in the customer proposal. Each selected option adds persuasive, customer-facing content.</p>
+            <div className="aps-story-choices aps-wide">
+              {STORY_MODULES.filter((module) => [
+                "freedom-of-choice",
+                "implementation-support",
+                "portal-visibility",
+              ].includes(module.code)).map((module) => {
+                const selected = draft.selectedStoryModules.includes(module.code);
+                return (
+                  <button type="button" key={module.code} className={selected ? "is-selected" : ""} aria-pressed={selected} onClick={() => toggleStoryModule(module.code)}>
+                    <span>{selected ? <Check /> : <Plus />}</span>
+                    <div><strong>{module.title}</strong><small>{module.body}</small></div>
+                  </button>
+                );
+              })}
+            </div>
+            {draft.selectedStoryModules.includes("freedom-of-choice") ? <label className="aps-wide"><span>Managed-care / freedom-of-choice transition plan</span><textarea className="aps-tall" value={draft.transitionNotes} onChange={(event) => update("transitionNotes", event.target.value)} /></label> : null}
+            {draft.selectedStoryModules.some((code) => code === "implementation-support" || code === "portal-visibility") ? <label className="aps-wide"><span>Customer-specific onboarding plan</span><textarea className="aps-tall" value={draft.onboardingNotes} onChange={(event) => update("onboardingNotes", event.target.value)} /></label> : null}
             <label className="aps-wide"><span>Recommended next step</span><textarea value={draft.nextStep} onChange={(event) => update("nextStep", event.target.value)} /></label>
           </fieldset>
 

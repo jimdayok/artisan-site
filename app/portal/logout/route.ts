@@ -3,6 +3,7 @@ import {
   isLocalhostDevelopmentRequest,
   LOCAL_PORTAL_TEST_EMAIL_COOKIE,
 } from "@/lib/portal/auth";
+import { portalAccessLogoutUrl } from "@/lib/portal/accessLogout";
 import { safePortalRedirect } from "@/lib/portal/safeRedirect";
 import {
   TRUSTED_NETWORK_LOGIN_PATH,
@@ -35,5 +36,5 @@ export function GET(request: NextRequest) {
     return response;
   }
 
-  return safePortalRedirect(request, "/cdn-cgi/access/logout?returnTo=/");
+  return safePortalRedirect(request, portalAccessLogoutUrl(request.url));
 }

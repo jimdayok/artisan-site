@@ -71,7 +71,7 @@ export async function OnlinePriceListShell({
   );
 }
 
-const PORTAL_ACCESS_LOGOUT_URL = "/cdn-cgi/access/logout?returnTo=/portal";
+const PORTAL_ACCESS_LOGOUT_URL = "/portal/logout";
 
 function CompactPortalHeader({ isAdmin }: { isAdmin: boolean }) {
   return (

@@ -69,6 +69,19 @@ const sourceManifest = [
     type: "xlsx",
   },
   {
+    label: "Artisan rewards enrollment workbook",
+    source: path.join(referenceFilesRoot, "Lookup_Artisan Rewards.xlsx"),
+    destination: path.join(
+      root,
+      "private-source",
+      "portal",
+      "lookup_docs",
+      "Lookup_Artisan Rewards.xlsx"
+    ),
+    required: true,
+    type: "xlsx",
+  },
+  {
     label: "Pricing colors lookup",
     sourceCandidates: [
       path.join(referenceFilesRoot, "colors.txt"),

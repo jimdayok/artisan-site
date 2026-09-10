@@ -8,6 +8,7 @@ export type PortalDashboardV1Manifest = {
   source_account_file: string;
   source_account_files?: string[];
   source_location_file?: string;
+  source_rewards_enrollment_file?: string;
   source_user_file: string;
   generated_at: string;
   row_count_input_accounts: number;
@@ -15,6 +16,8 @@ export type PortalDashboardV1Manifest = {
   row_count_output_accounts: number;
   row_count_input_locations?: number;
   row_count_output_locations?: number;
+  row_count_input_rewards_enrollment?: number;
+  row_count_active_rewards_enrollment?: number;
   row_count_input_users: number;
   row_count_users_with_account_id: number;
   unique_user_emails: number;
@@ -113,6 +116,7 @@ export type PortalDashboardV1Account = {
   data_refresh_date: string;
   tier_status: {
     previous_month_tier_rank_by_acct_id: string;
+    previous_month_tier_jobs_by_business_name?: number;
   };
   purchase_summary: {
     jobs: { ppm: number; pm: number; cm: number };

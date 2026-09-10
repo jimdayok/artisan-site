@@ -12,6 +12,9 @@ const defaultAccountInputCandidates = [
   path.join(portalExportDir, "portal_export.json"),
 ];
 const defaultLocationInputPath = path.join(portalExportDir, "portal_locations.json");
+const defaultRewardsEnrollmentInputCandidates = [
+  path.join(portalDir, "lookup_docs", "Lookup_Artisan Rewards.xlsx"),
+];
 const defaultUserInputCandidates = [
   path.join(portalDir, "user_data.xlsx"),
   path.join(portalDir, "User_Data.xlsx"),
@@ -76,6 +79,21 @@ const REQUIRED_USER_COLUMNS = [
   "Organization - Acct ID",
   "Organization - Numeric ID",
 ];
+
+const REQUIRED_REWARDS_ENROLLMENT_COLUMNS = [
+  "DVI Lab Code",
+  "Account Number",
+  "Acct ID",
+  "Business Name",
+  "Program Code",
+  "Active",
+];
+
+const REWARD_PROGRAM_KEYS = {
+  ARSQL26: "arsql26",
+  ARPMP26: "arpmp26",
+  ARUTY26: "aruty26",
+};
 
 const ACCOUNT_HEADER_ALIASES = {
   "Acct ID": ["Acct ID", "Last Account Number", "Organization - Account Number", "Account Number"],
@@ -215,6 +233,10 @@ const ACCOUNT_HEADER_ALIASES = {
   "Data Refresh Date": ["Data Refresh Date", "Last Shipped Date (Global)"],
 };
 
+const REWARDS_ENROLLMENT_HEADER_ALIASES = Object.fromEntries(
+  REQUIRED_REWARDS_ENROLLMENT_COLUMNS.map((column) => [column, [column]])
+);
+
 const POWER_BI_ACCOUNT_FIELDS = {
   "Acct ID": "Intel[Acct ID]",
   "Pipedrive ID": "Intel[Pipedrive ID]",
@@ -237,6 +259,9 @@ const POWER_BI_ACCOUNT_FIELDS = {
   "SpecCheck Usage": "[speccheck_usage]",
   "Tokai Usage": "[tokai_usage]",
   "Previous Month Tier Rank by Acct ID": "[previous_month_tier_rank]",
+  "PPM Tier Jobs": "[ppm_tier_jobs]",
+  "PM Tier Jobs": "[pm_tier_jobs]",
+  "CM Tier Jobs": "[cm_tier_jobs]",
   "PPM Jobs": "[ppm_jobs]",
   "PM Jobs": "[pm_jobs]",
   "CM Jobs": "[cm_jobs]",
@@ -390,8 +415,10 @@ function parseArgs() {
   const parsed = {
     accountInput: "",
     userInput: "",
+    rewardsEnrollmentInput: "",
     accountSheet: "Export",
     userSheet: "person list",
+    rewardsEnrollmentSheet: "Sheet1",
     supplementalInputs: [],
     allowDuplicateAcctId: false,
     ignoreEmptySummaryRows: false,
@@ -402,9 +429,11 @@ function parseArgs() {
     if (arg === "--input") parsed.accountInput = args[++i] ?? "";
     else if (arg === "--account-input") parsed.accountInput = args[++i] ?? "";
     else if (arg === "--user-input") parsed.userInput = args[++i] ?? "";
+    else if (arg === "--rewards-enrollment-input") parsed.rewardsEnrollmentInput = args[++i] ?? "";
     else if (arg === "--sheet") parsed.accountSheet = args[++i] ?? "Export";
     else if (arg === "--account-sheet") parsed.accountSheet = args[++i] ?? "Export";
     else if (arg === "--user-sheet") parsed.userSheet = args[++i] ?? "person list";
+    else if (arg === "--rewards-enrollment-sheet") parsed.rewardsEnrollmentSheet = args[++i] ?? "Sheet1";
     else if (arg === "--supplemental-input") parsed.supplementalInputs.push(args[++i] ?? "");
     else if (arg === "--allow-duplicate-acct-id") parsed.allowDuplicateAcctId = true;
     else if (arg === "--ignore-empty-summary-rows") parsed.ignoreEmptySummaryRows = true;
@@ -540,6 +569,111 @@ function readPowerBiJsonRows(inputFile, fieldMap) {
 
 function normalizeLocationAccountNumber(value) {
   return toText(value).toUpperCase().replace(/\.0$/, "").replace(/^0+(?=\d)/, "");
+}
+
+function splitAccountNumbers(value) {
+  return toText(value)
+    .split(/[;,]/)
+    .map(normalizeLocationAccountNumber)
+    .filter(Boolean);
+}
+
+function canonicalRewardsLab(value) {
+  const normalized = toText(value).toUpperCase();
+  if (normalized.startsWith("PACIFIC")) return "Pacific Artisan Labs";
+  if (normalized.startsWith("PEAK")) return "Peak Artisan Labs";
+  if (normalized.startsWith("PIKE")) return "Pike Artisan Labs";
+  return toText(value);
+}
+
+function buildRewardsEnrollmentIndex(rows) {
+  const missingColumns = REQUIRED_REWARDS_ENROLLMENT_COLUMNS.filter(
+    (column) => !rows.some((row) => Object.prototype.hasOwnProperty.call(row, column))
+  );
+  if (missingColumns.length > 0) {
+    throw new Error(
+      `Rewards enrollment workbook is missing required columns: ${missingColumns.join(", ")}`
+    );
+  }
+
+  const activeRows = rows.filter((row) => {
+    const programCode = toText(row["Program Code"]).toUpperCase();
+    return Boolean(REWARD_PROGRAM_KEYS[programCode]) && truthyUsage(row.Active);
+  });
+  if (activeRows.length === 0) {
+    throw new Error("Rewards enrollment workbook has no active ARSQL26, ARPMP26, or ARUTY26 rows.");
+  }
+
+  const byAcctId = new Set();
+  const byIdentity = new Set();
+  const labsByPhysicalIdentity = new Map();
+  for (const row of activeRows) {
+    const programCode = toText(row["Program Code"]).toUpperCase();
+    const accountNumber = normalizeLocationAccountNumber(row["Account Number"]);
+    const acctId = normalizeAcctId(row["Acct ID"]);
+    const lab = canonicalRewardsLab(row["DVI Lab Code"]);
+    if (acctId && accountNumber && lab) {
+      byIdentity.add(`${acctId}|${accountNumber}|${programCode}|${lab.toUpperCase()}`);
+      const physicalIdentity = `${acctId}|${accountNumber}`;
+      labsByPhysicalIdentity.set(physicalIdentity, new Set([
+        ...(labsByPhysicalIdentity.get(physicalIdentity) ?? []),
+        lab,
+      ]));
+    }
+    if (acctId) byAcctId.add(`${acctId}|${programCode}`);
+  }
+
+  return { activeRows, byAcctId, byIdentity, labsByPhysicalIdentity };
+}
+
+function workbookRewardEnrollment(
+  index,
+  acctId,
+  accountNumbers,
+  labName = "",
+  allowAcctIdMatch = true
+) {
+  const normalizedAcctId = normalizeAcctId(acctId);
+  const normalizedLab = canonicalRewardsLab(labName).toUpperCase();
+  return Object.fromEntries(
+    Object.entries(REWARD_PROGRAM_KEYS).map(([programCode, programKey]) => {
+      const physicalIdentityMatch = Boolean(normalizedLab) && accountNumbers.some((accountNumber) =>
+        index.byIdentity.has(
+          `${normalizedAcctId}|${normalizeLocationAccountNumber(accountNumber)}|${programCode}|${normalizedLab}`
+        )
+      );
+      const acctIdMatch =
+        allowAcctIdMatch && index.byAcctId.has(`${normalizedAcctId}|${programCode}`);
+      return [programKey, physicalIdentityMatch || acctIdMatch];
+    })
+  );
+}
+
+function workbookLabForLocation(index, acctId, accountNumber, currentLab) {
+  const labs = index.labsByPhysicalIdentity.get(
+    `${normalizeAcctId(acctId)}|${normalizeLocationAccountNumber(accountNumber)}`
+  );
+  if (labs?.size === 1) return [...labs][0];
+  return currentLab;
+}
+
+function applyWorkbookRewardEnrollment(account, enrollment) {
+  return {
+    ...account,
+    program_enrollment: enrollment,
+    supplemental_intelligence: {
+      ...(account.supplemental_intelligence ?? {}),
+      rewards: Object.fromEntries(
+        Object.values(REWARD_PROGRAM_KEYS).map((program) => [
+          program,
+          {
+            ...(account.supplemental_intelligence?.rewards?.[program] ?? {}),
+            enrolled: Boolean(enrollment[program]),
+          },
+        ])
+      ),
+    },
+  };
 }
 
 function asArray(value) {
@@ -1123,6 +1257,7 @@ function classifyAccount(row) {
     data_refresh_date: toIsoDate(row["Data Refresh Date"]),
     tier_status: {
       previous_month_tier_rank_by_acct_id: toText(row["Previous Month Tier Rank by Acct ID"]) || "Unranked",
+      previous_month_tier_jobs_by_business_name: toNumber(row["PM Tier Jobs"]),
     },
     purchase_summary: {
       jobs: { ppm: ppmJobs, pm: pmJobs, cm: cmJobs },
@@ -1482,6 +1617,11 @@ async function generateDashboard() {
   console.log(`[portal-dashboard-v1] staging outside cloud storage: ${activeTemporaryOutputRoot}`);
   const accountInputPath = resolveInputPath(args.accountInput, defaultAccountInputCandidates, "account");
   const userInputPath = resolveInputPath(args.userInput, defaultUserInputCandidates, "user");
+  const rewardsEnrollmentInputPath = resolveInputPath(
+    args.rewardsEnrollmentInput,
+    defaultRewardsEnrollmentInputCandidates,
+    "rewards enrollment"
+  );
   console.log(`[portal-dashboard-v1] reading accounts: ${path.relative(root, accountInputPath)}`);
   const userSourceManifestPath =
     path.basename(userInputPath).toLowerCase() === "user_data.xlsx"
@@ -1500,7 +1640,19 @@ async function generateDashboard() {
   const accountRows = accountSourceRows.map((entry) => entry.row);
   console.log(`[portal-dashboard-v1] reading users: ${path.relative(root, userInputPath)}`);
   const userRows = await readRows(userInputPath, args.userSheet, USER_HEADER_ALIASES);
-  console.log(`[portal-dashboard-v1] inputs loaded: ${accountRows.length} account rows, ${userRows.length} user rows`);
+  console.log(`[portal-dashboard-v1] reading rewards enrollment: ${path.relative(root, rewardsEnrollmentInputPath)}`);
+  const rewardsEnrollmentRows = await readRows(
+    rewardsEnrollmentInputPath,
+    args.rewardsEnrollmentSheet,
+    REWARDS_ENROLLMENT_HEADER_ALIASES
+  );
+  const rewardsEnrollmentIndex = buildRewardsEnrollmentIndex(rewardsEnrollmentRows);
+  dataDictionary.push(
+    discoveredFieldsForSource(rewardsEnrollmentInputPath, rewardsEnrollmentRows)
+  );
+  console.log(
+    `[portal-dashboard-v1] inputs loaded: ${accountRows.length} account rows, ${userRows.length} user rows, ${rewardsEnrollmentIndex.activeRows.length} active rewards enrollment rows`
+  );
 
   const accountValidation = validateAccountRows(accountRows, args.allowDuplicateAcctId, args.ignoreEmptySummaryRows);
   const validRowsByReference = new Set(accountValidation.cleanedRows);
@@ -1523,7 +1675,16 @@ async function generateDashboard() {
         )
       : mergeUnifiedAccountRows(validAccountSourceRows);
 
-  const classifiedAccounts = normalizedAccountRows.map(classifyAccount);
+  const classifiedAccounts = normalizedAccountRows.map((row) => {
+    const classified = classifyAccount(row);
+    const enrollment = workbookRewardEnrollment(
+      rewardsEnrollmentIndex,
+      classified.account_id,
+      splitAccountNumbers(classified.all_account_numbers),
+      classified.lab_name
+    );
+    return applyWorkbookRewardEnrollment(classified, enrollment);
+  });
   const accountIds = new Set(classifiedAccounts.map((account) => account.account_id));
   const locationRows = readPowerBiJsonRows(
     defaultLocationInputPath,
@@ -1531,41 +1692,55 @@ async function generateDashboard() {
   );
   console.log(`[portal-dashboard-v1] location rows loaded: ${locationRows.length}`);
   const locationsByKey = new Map();
+  const locationCompletenessByKey = new Map();
   for (const row of locationRows) {
     const groupAccountId = normalizeAcctId(row["Acct ID"]);
     const accountNumber = normalizeLocationAccountNumber(row["Account Number"]);
     if (!groupAccountId || !accountNumber || !accountIds.has(groupAccountId)) continue;
+    const classifiedLocationBase = classifyAccount(row);
+    const workbookLab = workbookLabForLocation(
+      rewardsEnrollmentIndex,
+      groupAccountId,
+      accountNumber,
+      classifiedLocationBase.lab_name
+    );
+    const classifiedLocation = applyWorkbookRewardEnrollment(
+      { ...classifiedLocationBase, lab_name: workbookLab },
+      workbookRewardEnrollment(
+        rewardsEnrollmentIndex,
+        groupAccountId,
+        [accountNumber],
+        workbookLab,
+        false
+      )
+    );
+    const labName = toText(classifiedLocation.lab_name);
+    // Sparse duplicate rows in the export omit the lab and do not represent a
+    // payable physical location. Keep only lab-qualified location identities.
+    if (!labName) continue;
+    const labKey = labName.toUpperCase();
     const location = {
-      ...classifyAccount(row),
+      ...classifiedLocation,
       group_account_id: groupAccountId,
       account_number: accountNumber,
       account_name: toText(row["Account Name"]) || toText(row["Last Business Name"]),
-      location_key: `${groupAccountId}|${accountNumber}`,
+      location_key: `${groupAccountId}|${accountNumber}|${labKey}`,
     };
     const existingLocation = locationsByKey.get(location.location_key);
-    const locationScore = [
-      location.account_name,
-      location.address,
-      location.phone,
-      location.lab_name,
-      location.division,
-    ].filter((value) => toText(value)).length;
-    const existingScore = existingLocation
-      ? [
-          existingLocation.account_name,
-          existingLocation.address,
-          existingLocation.phone,
-          existingLocation.lab_name,
-          existingLocation.division,
-        ].filter((value) => toText(value)).length
-      : -1;
+    const locationScore = completenessScore(row);
+    const existingScore = locationCompletenessByKey.get(location.location_key) ?? -1;
+    const refreshDate = location.data_refresh_date || "";
+    const existingRefreshDate = existingLocation?.data_refresh_date || "";
     if (
       !existingLocation ||
-      locationScore > existingScore ||
-      (locationScore === existingScore &&
+      refreshDate > existingRefreshDate ||
+      (refreshDate === existingRefreshDate && locationScore > existingScore) ||
+      (refreshDate === existingRefreshDate &&
+        locationScore === existingScore &&
         location.account_name.localeCompare(existingLocation.account_name) < 0)
     ) {
       locationsByKey.set(location.location_key, location);
+      locationCompletenessByKey.set(location.location_key, locationScore);
     }
   }
   const locationsByAccount = new Map();
@@ -1681,12 +1856,15 @@ async function generateDashboard() {
     source_account_file: path.relative(root, accountInputPath),
     source_account_files: accountSourcePaths.map((sourceFile) => path.relative(root, sourceFile)),
     source_location_file: path.relative(root, defaultLocationInputPath),
+    source_rewards_enrollment_file: path.relative(root, rewardsEnrollmentInputPath),
     source_user_file: userSourceManifestPath,
     generated_at: new Date().toISOString(),
     row_count_input_accounts: accountValidation.rowCount,
     row_count_effective_accounts: accountValidation.effectiveRowCount,
     row_count_output_accounts: accountsIndex.length,
     row_count_input_locations: locationRows.length,
+    row_count_input_rewards_enrollment: rewardsEnrollmentRows.length,
+    row_count_active_rewards_enrollment: rewardsEnrollmentIndex.activeRows.length,
     row_count_output_locations: [...locationsByAccount.values()].reduce(
       (total, locations) => total + locations.length,
       0
@@ -1710,6 +1888,7 @@ async function generateDashboard() {
       "Acct ID is the master key for all account intelligence records.",
       "Customer performance and account intelligence fields come from private-site/portal/portal_export.json.",
       "Location performance fields come from private-site/portal/portal_locations.json and are attached to their authorized group by Acct ID.",
+      "Reward-program eligibility comes only from active ARSQL26, ARPMP26, and ARUTY26 rows in private-source/portal/lookup_docs/Lookup_Artisan Rewards.xlsx.",
       "Duplicate Acct ID rows are merged using the latest and most complete Power BI record while additive account metrics are combined.",
       "Portal authorization and user-to-account access continue to come from private-source/portal/user_data.xlsx.",
       "Revenue fields are preserved only at account level: PPM Sales, PM Sales, and CM Sales.",
@@ -1718,6 +1897,7 @@ async function generateDashboard() {
     reused_existing_user_access: Boolean(userAccess.reusedExistingSnapshotUsers),
     required_account_columns: REQUIRED_ACCOUNT_COLUMNS,
     required_user_columns: REQUIRED_USER_COLUMNS,
+    required_rewards_enrollment_columns: REQUIRED_REWARDS_ENROLLMENT_COLUMNS,
     acct_id_pattern: ACCT_ID_PATTERN.source,
   };
   writeJson(path.join(stagedReleaseDir, "latest_snapshot_manifest.json"), manifest);
@@ -1767,10 +1947,12 @@ async function generateDashboard() {
 
   console.log(`[portal-dashboard-v1] source accounts: ${path.relative(root, accountInputPath)}`);
   console.log(`[portal-dashboard-v1] source users: ${path.relative(root, userInputPath)}`);
+  console.log(`[portal-dashboard-v1] source rewards enrollment: ${path.relative(root, rewardsEnrollmentInputPath)}`);
   console.log(`[portal-dashboard-v1] input account rows: ${accountValidation.rowCount}`);
   console.log(`[portal-dashboard-v1] skipped artifact rows: ${accountValidation.skippedSummaryRows}`);
   console.log(`[portal-dashboard-v1] valid account count: ${accountsIndex.length}`);
   console.log(`[portal-dashboard-v1] user rows: ${userAccess.userRowsCount}`);
+  console.log(`[portal-dashboard-v1] active rewards enrollment rows: ${rewardsEnrollmentIndex.activeRows.length}`);
   console.log(`[portal-dashboard-v1] unique user emails: ${userAccess.uniqueUserEmails}`);
   console.log(`[portal-dashboard-v1] users mapped to accounts: ${userAccess.usersToAccounts.length}`);
   console.log(`[portal-dashboard-v1] accounts without users: ${accountsWithoutUsers}`);

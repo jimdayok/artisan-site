@@ -91,6 +91,7 @@ export type DashboardV1AdminRow = {
   pmJobs: number;
   cmJobs: number;
   cmProjectedJobs: number;
+  pmTierJobs: number;
   ppmJpd: number | null;
   pmJpd: number | null;
   cmJpd: number | null;
@@ -309,6 +310,9 @@ export function getDashboardV1AdminRows() {
       pmJobs,
       cmJobs,
       cmProjectedJobs,
+      pmTierJobs: Number(
+        detail?.tier_status?.previous_month_tier_jobs_by_business_name ?? pmJobs
+      ),
       ppmJpd,
       pmJpd,
       cmJpd,
@@ -364,7 +368,7 @@ export function getDashboardV1AdminRows() {
           0
       ),
       locationCount:
-        new Set((detail?.locations ?? []).map((location) => location.account_number)).size || 1,
+        new Set((detail?.locations ?? []).map((location) => location.location_key)).size || 1,
       authorizedUserEmails:
         detail?.authorized_users_summary?.primary_emails?.filter(Boolean) ?? [],
       authorizedUserDetails:

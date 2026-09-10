@@ -13,6 +13,7 @@ Verified August 19, 2026 against the production repository, the authenticated po
 - Administrator identities and explicit rep identities are centralized in `lib/portal/adminAccess.ts`.
 - Rep-to-account authorization is centralized in `lib/portal/portalRoles.ts`. Missing rep mappings fail closed.
 - Portal performance data is synchronized from Power BI into `private-site/portal/portal_export.json` and bundled into `lib/portal/generated/dashboardV1Bundle.json`.
+- Reward-program eligibility is synchronized from `Lookup_Artisan Rewards.xlsx`. Only rows marked active for ARSQL26, ARPMP26, or ARUTY26 can appear on the admin rewards payout page; reward activity alone does not qualify an account for display.
 - Customer-user-to-account authorization remains sourced from `private-source/portal/user_data.xlsx`. Performance data does not grant customer access.
 - There is no application database or second semantic model in this repository. The production runtime reads generated JSON plus the existing workbook-backed access index.
 

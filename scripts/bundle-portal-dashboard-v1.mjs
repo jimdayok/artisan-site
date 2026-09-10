@@ -19,6 +19,8 @@ const outputPath = path.join(
 );
 const expectedAccountSource = "private-site/portal/portal_export.json";
 const expectedUserSource = "private-source/portal/user_data.xlsx";
+const expectedRewardsEnrollmentSource =
+  "private-source/portal/lookup_docs/Lookup_Artisan Rewards.xlsx";
 
 async function readJson(filePath) {
   return JSON.parse(await readFile(filePath, "utf8"));
@@ -47,6 +49,12 @@ if (manifest.source_account_file !== expectedAccountSource) {
 if (manifest.source_user_file.toLowerCase() !== expectedUserSource) {
   throw new Error(
     `Refusing to bundle unexpected user source: ${manifest.source_user_file}`
+  );
+}
+
+if (manifest.source_rewards_enrollment_file !== expectedRewardsEnrollmentSource) {
+  throw new Error(
+    `Refusing to bundle unexpected rewards enrollment source: ${manifest.source_rewards_enrollment_file}`
   );
 }
 

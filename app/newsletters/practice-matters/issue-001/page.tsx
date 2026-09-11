@@ -19,7 +19,7 @@ const articles: NewsletterNavArticle[] = [
     id: "artisan-spotlight",
     label: "Artisan Spotlight",
     title: "Jenn C.",
-    dek: "Meet the ABOC-certified, book-loving homebody behind dependable lab follow-through.",
+    dek: "Meet the ABOC-certified book lover we are proud to celebrate at Peak Artisan Lab.",
     icon: "/aln-icon.png",
     iconAlt: "Artisan Lab Network",
     image: "/newsletter-assets/jennc.jpg",
@@ -118,39 +118,42 @@ export default function PracticeMattersIssue001Page() {
               id="artisan-spotlight"
               number="01"
               label="Artisan Spotlight"
-              title="Artisan Spotlight: Jenn C."
+              title="Celebrating Jenn C. at Peak Artisan Lab"
               icon="/aln-icon.png"
               iconAlt="Artisan Lab Network"
               featureImage={{
                 src: "/newsletter-assets/jennc.jpg",
                 alt: "Jenn C. from Artisan Lab Network",
               }}
-              pullQuote="Great lab experiences are built by people who notice the small things before they become big things."
+              pullQuote="Jenn, thank you for the knowledge, care, and personality you bring to Peak Artisan Lab. We are proud to celebrate you."
               readNext={{ label: "New and Now", href: "#new-and-now" }}
             >
               <p>
-                A practice rarely remembers the software behind a lab order. It remembers the person who called before a problem became a surprise, found the missing detail, and stayed with the question until there was a useful answer.
+                Some people make a workplace better simply by the way they show up. Jenn C. is one of those people. We are genuinely grateful for everything she brings to Peak Artisan Lab and proud to celebrate her as part of Artisan Lab Network.
               </p>
-              <h3 className="font-[family-name:Georgia,serif] text-2xl text-[#142033]">Dependability has a human face</h3>
+              <h3 className="font-[family-name:Georgia,serif] text-2xl text-[#142033]">The kind of teammate you appreciate every day</h3>
               <p>
-                Jenn C. is ABOC certified and one of those people for Artisan Lab Network. Her optical knowledge supports the care she brings to the small moments that shape a practice&apos;s day: checking what does not look quite right, communicating clearly, and making sure a handoff does not become a dead end.
-              </p>
-              <p>
-                That kind of ownership matters because an order is never just an order. On the other side is a patient waiting to see clearly, an optician protecting a promise, and a practice whose reputation is built one experience at a time. A detail caught early can protect all three.
+                Jenn is ABOC certified, and the optical knowledge behind that certification is an important part of what she brings to Peak. Just as important is the way she puts that knowledge to work—with care, attention, and a genuine desire to help.
               </p>
               <p>
-                The strongest service relationships feel personal without depending on heroics. They are consistent. They make it easier to ask a question, easier to get an honest answer, and easier to know what happens next. Jenn helps create that kind of experience every day.
-              </p>
-              <h3 className="font-[family-name:Georgia,serif] text-2xl text-[#142033]">The person behind the follow-through</h3>
-              <p>
-                Away from the lab, Jenn is happiest at home with a book. Reading is, unmistakably, her jam—and she will be the first to tell you that other hobbies do not get much competition.
+                Credentials, though, tell only part of Jenn&apos;s story. She notices the details, communicates clearly, and stays with a question until there is an answer. That consistency makes a difference to her teammates at Peak, the practices we serve, and the patients relying on their eyewear.
               </p>
               <p>
-                When she does put the book down, she enjoys cooking, horror movies, and time with the people she loves most. She also has a soft spot for everything cozy about fall, with one important caveat: snacks and sweets have to meet her very particular standards.
+                Jenn helps turn technical knowledge into personal service. Her work reflects the promise behind Artisan Lab Network: experienced people who care about doing right by independent practices. We are thankful she is one of ours.
+              </p>
+              <h3 className="font-[family-name:Georgia,serif] text-2xl text-[#142033]">A book, a horror movie, and the right snack</h3>
+              <p>
+                Away from the lab, Jenn is a true homebody. Reading really is her jam—by far—and she is perfectly happy spending her free time at home with a good book.
+              </p>
+              <p>
+                When she does put the book down, Jenn enjoys cooking and spending time with the people she loves most. She is also a fan of horror movies and all the cozy things that come with fall. Add the right snack or sweet—something that passes her famously selective standards—and you have a pretty perfect Jenn kind of evening.
+              </p>
+              <p>
+                It is easy to appreciate someone for being good at her job. It is even better to celebrate the whole person. Jenn, we appreciate your expertise and steady care—and we appreciate the wonderfully book-loving, horror-movie-watching, fall-cozy person you are. We are proud to have you at Peak Artisan Lab and as part of Artisan Lab Network.
               </p>
               <div className="border-l-4 border-[#a46f52] bg-[#f2e7da] p-5">
-                <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#8a7654]">A useful service test</p>
-                <p className="mt-2 text-base leading-7 text-[#3f4856]">When something changes, does your team know who owns the next step? Good service replaces uncertainty with a name, a plan, and a follow-through point.</p>
+                <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#8a7654]">Why we appreciate Jenn</p>
+                <p className="mt-2 text-base leading-7 text-[#3f4856]">Her knowledge matters. Her follow-through matters. And the care she brings to the people around her matters just as much.</p>
               </div>
             </NewsletterSection>
 

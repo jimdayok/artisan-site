@@ -314,12 +314,14 @@ export async function buildPriceListPdf({
   customerName,
   mode,
   requestOrigin,
+  includeSharedClosingPages = true,
 }: {
   priceList: GeneratedPriceListData;
   portalPriceList: PortalPriceList;
   customerName: string;
   mode: PriceMode;
   requestOrigin: string;
+  includeSharedClosingPages?: boolean;
 }) {
   const document = await PDFDocument.create();
   const regular = await document.embedFont(StandardFonts.Helvetica);
@@ -1373,8 +1375,10 @@ export async function buildPriceListPdf({
     },
   ]);
 
-  drawPolicyPage();
-  drawLabShowcasePage();
+  if (includeSharedClosingPages) {
+    drawPolicyPage();
+    drawLabShowcasePage();
+  }
 
   pages.forEach((currentPage, index) => {
     currentPage.drawLine({

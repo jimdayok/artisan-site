@@ -1,10 +1,96 @@
 export const PROGRAM_STUDIO_PRICE_LIST_CODES = [
-  "P6",
   "A6",
-  "B5",
   "G6",
+  "P6",
+  "E4",
   "E5",
   "E6",
+  "E7",
+  "E8",
+  "VD",
+  "S5",
+  "B5",
+  "H5",
+  "TK",
+  "VX",
+] as const;
+
+export const PROGRAM_STUDIO_PRICE_LIST_SOURCE_CODES: Readonly<Record<string, string>> = {
+  H5: "XH",
+};
+
+export const PROGRAM_STUDIO_PACKAGE_PRICE_LIST_CODES = new Set([
+  "VD",
+  "S5",
+  "B5",
+  "H5",
+  "TK",
+  "VX",
+]);
+
+export const PROGRAM_TIER_GUIDE = [
+  { tier: "Tier 1", volume: "1 to 19 qualifying lens pairs per month" },
+  { tier: "Tier 2", volume: "20 to 59 qualifying lens pairs per month" },
+  { tier: "Tier 3", volume: "60 to 100 qualifying lens pairs per month" },
+  { tier: "Tier 4", volume: "More than 100 qualifying lens pairs per month" },
+] as const;
+
+export const PROGRAM_REBATE_SCHEDULES = {
+  sequel: {
+    code: "ARSQL26",
+    title: "Sequel PAL point schedule",
+    columns: ["Product", "Tier 1", "Tier 2", "Tier 3", "Tier 4"],
+    rows: [["Sequel PAL", "$5", "$10", "$17", "$20"]],
+    note: "Points are valued at $1 each and may be redeemed for statement credits, subject to program terms and eligibility requirements.",
+  },
+  pmp: {
+    code: "ARPMP26",
+    title: "PMP point schedule",
+    columns: ["Product type", "Product", "Tier 1", "Tier 2", "Tier 3", "Tier 4"],
+    rows: [
+      ["AR Treatment", "Artisan AR", "$2", "$2", "$4", "$4"],
+      ["AR Treatment", "TechShield AR", "$2", "$2", "$4", "$4"],
+      ["Lens Design", "Artisan Design", "$0", "$0", "$2", "$4"],
+      ["Lens Design", "IOT Design", "$0", "$0", "$4", "$4"],
+      ["Lens Design", "Sequel Design", "$0", "$4", "$6", "$6"],
+      ["Lens Design", "Unity Design", "$0", "$0", "$4", "$6"],
+    ],
+    note: "Points are valued at $1 each and may be redeemed for statement credits, subject to program terms and eligibility requirements.",
+  },
+  "unity-rewards": {
+    code: "ARUTY26",
+    title: "Unity Rewards point schedule",
+    columns: ["Product", "Base points", "TSP / TPU / TSS", "TSE / TSB / TEU", "SunSync bonus"],
+    rows: [
+      ["Unity V3 Elite", "$10", "$5", "$10", "$10"],
+      ["Unity V3 Mobile", "$10", "$5", "$10", "$10"],
+      ["Unity V3 Wrap", "$10", "$5", "$10", "$10"],
+      ["Unity V3 Plus", "$7", "$5", "$10", "$5"],
+      ["Unity V3", "$5", "$5", "$10", "$5"],
+      ["Unity SVX", "$0", "$3", "$6", "$5"],
+      ["Unity SVXtra", "$0", "$3", "$6", "$5"],
+      ["Unity SVXtreme", "$0", "$3", "$6", "$5"],
+      ["Unity Relieve", "$0", "$3", "$6", "$5"],
+      ["Unity Via OfficePro", "$0", "$3", "$6", "$5"],
+    ],
+    note: "Tier 1 earns no points. Tiers 2, 3, and 4 receive the full point schedule. Photochromic points require a qualifying AR treatment, SunSync color, and eligible material.",
+  },
+} as const;
+
+export const PACKAGE_PRICING_EXPLANATION =
+  "Package pricing is checked first. Artisan evaluates the complete order, including lens design, material, AR coating, and every required package component. When all qualifying components are present, the package price is used. If the order does not meet the complete package requirements, it defaults to the customer's base pricing.";
+
+export const ADDITIONAL_ARTISAN_PROGRAMS = [
+  {
+    name: "Artisan Frame Systems",
+    description:
+      "Package pricing that combines Modern Optical frames and lenses.",
+  },
+  {
+    name: "Artisan Safety Systems",
+    description:
+      "Package pricing for industrial safety lenses and frames from Wiley-X, ArmouRx, OnGuard, Hudson, ArtCraft, and SafeVision by Hoya.",
+  },
 ] as const;
 
 export const PROGRAM_CATALOG = [
@@ -43,6 +129,21 @@ export const PROGRAM_CATALOG = [
 export type ProgramCode = (typeof PROGRAM_CATALOG)[number]["code"];
 export type CommitmentBasis = "lens-pairs" | "sales";
 export type CommitmentPeriod = "monthly" | "quarterly" | "annual";
+export type SavingsPeriod = "monthly" | "annual" | "one-time";
+export type ProposalTemplateCode =
+  | "full-transition"
+  | "product-conversion"
+  | "value-service"
+  | "program-renewal";
+export type StoryModuleCode =
+  | "independent-alignment"
+  | "product-choice"
+  | "quality-craftsmanship"
+  | "people-accountability"
+  | "network-strength"
+  | "freedom-of-choice"
+  | "implementation-support"
+  | "portal-visibility";
 export type SpecialPricingKind =
   | "fixed-price"
   | "dollar-deduction"
@@ -57,10 +158,165 @@ export type SpecialPricingRule = {
   notes: string;
 };
 
+export type ProductCrosswalkRow = {
+  id: string;
+  category: string;
+  currentProduct: string;
+  artisanProduct: string;
+  vspProduct: string;
+  rationale: string;
+};
+
+export const STORY_MODULES = [
+  {
+    code: "independent-alignment",
+    title: "Independent alignment",
+    shortTitle: "Independent by design",
+    body:
+      "Artisan is built to support independent eye care with a lab relationship centered on the practice, its patients, and its long-term position - not a competing retail agenda.",
+  },
+  {
+    code: "product-choice",
+    title: "Broader product choice",
+    shortTitle: "Choice without the box",
+    body:
+      "A broad portfolio and agile vendor relationships give the practice room to match lens design, material, and treatment to the patient instead of forcing every conversation into one product path.",
+  },
+  {
+    code: "quality-craftsmanship",
+    title: "Quality and craftsmanship",
+    shortTitle: "Precision that protects trust",
+    body:
+      "Experienced optical teams combine modern lens technology with careful inspection, finishing, and problem-solving so the practice can recommend confidently and protect the patient relationship.",
+  },
+  {
+    code: "people-accountability",
+    title: "People and accountability",
+    shortTitle: "People who own the answer",
+    body:
+      "Experienced lab, service, and sales teams stay close to the work, communicate directly, and help resolve exceptions without making the practice chase an answer.",
+  },
+  {
+    code: "network-strength",
+    title: "Connected network strength",
+    shortTitle: "Local character. Network reach.",
+    body:
+      "Pacific, Peak, and Pike combine regional lab relationships with shared product access, operational knowledge, and the leverage of a connected independent network.",
+  },
+  {
+    code: "freedom-of-choice",
+    title: "Freedom-of-choice transition",
+    shortTitle: "A deliberate path to more control",
+    body:
+      "Artisan helps the practice review eligible work, separate managed-care requirements from independent purchasing decisions, and build a practical path toward greater lab choice where plan rules and authorizations permit.",
+  },
+  {
+    code: "implementation-support",
+    title: "Hands-on implementation",
+    shortTitle: "The transition is managed",
+    body:
+      "Product mapping, account configuration, ordering guidance, staff education, first-order review, and service follow-through are coordinated as one launch plan.",
+  },
+  {
+    code: "portal-visibility",
+    title: "Customer portal and visibility",
+    shortTitle: "The relationship in one place",
+    body:
+      "Account-specific pricing, lens systems, reports, performance review, policies, programs, education, and support resources give the practice a clearer view of its Artisan relationship.",
+  },
+] as const satisfies ReadonlyArray<{
+  code: StoryModuleCode;
+  title: string;
+  shortTitle: string;
+  body: string;
+}>;
+
+export const PROPOSAL_TEMPLATES = [
+  {
+    code: "full-transition",
+    name: "Full lab transition",
+    description: "The complete strategic story for moving a meaningful share of work.",
+    executiveSummary:
+      "This proposal lays out a practical path to a stronger lab relationship: clearer product direction, more control over eligible work, accountable service, and commercial terms built for the practice.",
+    customerPriorities:
+      "Improve turnaround consistency, simplify product decisions, strengthen staff confidence, and create a lab relationship with clearer ownership and follow-through.",
+    transitionNotes:
+      "Begin with product and ordering validation, move an agreed first wave of private-pay work, confirm VSP routing separately, review early results, and expand only after the practice is confident in the process.",
+    nextStep:
+      "Confirm the product crosswalk and commercial terms, schedule the implementation meeting, and agree on the first-order date.",
+    storyModules: STORY_MODULES
+      .filter((module) => module.code !== "freedom-of-choice")
+      .map((module) => module.code),
+  },
+  {
+    code: "product-conversion",
+    name: "Product conversion",
+    description: "A product-led recommendation with private-pay and VSP mapping.",
+    executiveSummary:
+      "This recommendation gives the team a clear product path for the patient conversations it handles every day, with separate recommendations for private-pay and VSP work.",
+    customerPriorities:
+      "Create an easy-to-teach lens ladder, protect premium options, reduce ordering uncertainty, and give staff a clear VSP product path.",
+    transitionNotes:
+      "Finalize the product crosswalk, validate availability and ordering codes, train the team by patient need, and review the first orders together.",
+    nextStep:
+      "Approve the product crosswalk and select a date for staff product and ordering training.",
+    storyModules: [
+      "product-choice",
+      "quality-craftsmanship",
+      "people-accountability",
+      "implementation-support",
+      "portal-visibility",
+    ] satisfies StoryModuleCode[],
+  },
+  {
+    code: "value-service",
+    name: "Value and service case",
+    description: "Leads with quantified economics, turnaround, and accountability.",
+    executiveSummary:
+      "This proposal combines a measurable value case with a service model designed to reduce friction for the practice and create a more predictable patient experience.",
+    customerPriorities:
+      "Improve service performance, protect practice economics, reduce staff follow-up, and establish clear escalation and accountability.",
+    transitionNotes:
+      "Validate the analysis inputs, establish a baseline, launch a controlled first phase, and review savings, turnaround, remakes, and service outcomes after the initial period.",
+    nextStep:
+      "Confirm the analysis assumptions and agree on the scorecard and launch period.",
+    storyModules: [
+      "people-accountability",
+      "network-strength",
+      "implementation-support",
+      "independent-alignment",
+      "portal-visibility",
+    ] satisfies StoryModuleCode[],
+  },
+  {
+    code: "program-renewal",
+    name: "Program renewal or expansion",
+    description: "A concise update for an existing Artisan relationship.",
+    executiveSummary:
+      "This proposal refreshes the practice's Artisan program, documents the selected benefits and pricing, and creates a clear plan for the next stage of the relationship.",
+    customerPriorities:
+      "Keep terms clear, align the team on current programs, identify new product opportunities, and confirm the service plan for the coming period.",
+    transitionNotes:
+      "Review current utilization, confirm updated products and pricing, train on any additions, and schedule the first performance review.",
+    nextStep:
+      "Confirm the updated program selections and schedule the account review.",
+    storyModules: [
+      "people-accountability",
+      "product-choice",
+      "network-strength",
+      "portal-visibility",
+    ] satisfies StoryModuleCode[],
+  },
+] as const;
+
 export type ProgramProposalDraft = {
+  templateCode: ProposalTemplateCode;
   proposalTitle: string;
   customerName: string;
+  customerContactName: string;
   locationName: string;
+  stateCode: string;
+  includeFreedomOfChoicePage: boolean;
   accountNumber: string;
   customerAddress: string;
   lab: string;
@@ -71,6 +327,23 @@ export type ProgramProposalDraft = {
   isAcquiosMember: boolean;
   selectedPrograms: ProgramCode[];
   programNotes: Partial<Record<ProgramCode, string>>;
+  executiveSummary: string;
+  customerPriorities: string;
+  selectedStoryModules: StoryModuleCode[];
+  productCrosswalk: ProductCrosswalkRow[];
+  includeCostSavings: boolean;
+  costSavingsPercent: number;
+  costSavingsAmount: number;
+  costSavingsPeriod: SavingsPeriod;
+  costSavingsNotes: string;
+  includeServiceImprovement: boolean;
+  currentTurnDays: number;
+  artisanTurnDays: number;
+  serviceAnalysisNotes: string;
+  transitionNotes: string;
+  onboardingNotes: string;
+  nextStep: string;
+  emailPersonalNote: string;
   selectedPriceLists: string[];
   specialPricing: SpecialPricingRule[];
   multipleRemakes: boolean;
@@ -88,6 +361,7 @@ export type ProgramStudioPriceListOption = {
   code: string;
   label: string;
   package: boolean;
+  sourceCode?: string;
 };
 
 export type ProgramStudioCustomer = {
@@ -95,6 +369,7 @@ export type ProgramStudioCustomer = {
   name: string;
   accountNumber: string;
   location: string;
+  state: string;
   address: string;
   lab: string;
   salesRep: string;
@@ -117,6 +392,7 @@ export function proposalPriceListTitle(
   if (normalized === "A6") {
     return isAcquiosMember ? "Acquios A6 Pricing" : "PMP A6";
   }
+  if (normalized === "H5") return "Artisan Hoya Lens System";
   return fallback;
 }
 export function formatSpecialPricingRule(rule: SpecialPricingRule) {
@@ -126,6 +402,90 @@ export function formatSpecialPricingRule(rule: SpecialPricingRule) {
     return `$${amount.toFixed(2)} deduction from attached pricing`;
   }
   return `${amount.toFixed(2).replace(/\.00$/, "")}% discount from attached pricing`;
+}
+
+export function calculateServiceImprovement(
+  currentTurnDays: number,
+  artisanTurnDays: number
+) {
+  if (currentTurnDays <= 0 || artisanTurnDays <= 0 || currentTurnDays <= artisanTurnDays) {
+    return null;
+  }
+  return {
+    relativeImprovementPercent: Math.round(
+      ((currentTurnDays - artisanTurnDays) / artisanTurnDays) * 100
+    ),
+    turnaroundReductionPercent: Math.round(
+      ((currentTurnDays - artisanTurnDays) / currentTurnDays) * 100
+    ),
+    daysSaved: Number((currentTurnDays - artisanTurnDays).toFixed(1)),
+  };
+}
+
+export function formatSavingsAmount(amount: number, period: SavingsPeriod) {
+  if (!Number.isFinite(amount) || amount <= 0) return "";
+  const value = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(amount);
+  if (period === "monthly") return `${value} per month`;
+  if (period === "one-time") return `${value} one-time`;
+  return `${value} annually`;
+}
+
+export function proposalEmailSubject(draft: ProgramProposalDraft) {
+  return `Artisan lab partnership proposal for ${draft.customerName || "your practice"}`;
+}
+
+export function proposalEmailBody(draft: ProgramProposalDraft) {
+  const greeting = draft.customerContactName.trim()
+    ? `Hi ${draft.customerContactName.trim()},`
+    : "Hello,";
+  const vspRecommendationCount = draft.productCrosswalk.filter((row) =>
+    row.vspProduct.trim()
+  ).length;
+  const savingsAmount = formatSavingsAmount(
+    draft.costSavingsAmount,
+    draft.costSavingsPeriod
+  );
+  const highlights = [
+    draft.productCrosswalk.length
+      ? `a ${draft.productCrosswalk.length}-line product crosswalk${
+          vspRecommendationCount ? ", including VSP recommendations" : ""
+        }`
+      : "a tailored product and program recommendation",
+    draft.includeCostSavings && (savingsAmount || draft.costSavingsPercent > 0)
+      ? `an identified savings opportunity of ${[
+          savingsAmount,
+          draft.costSavingsPercent > 0 ? `${draft.costSavingsPercent}%` : "",
+        ]
+          .filter(Boolean)
+          .join(" / ")} based on the reviewed analysis`
+      : "clear pricing and program terms",
+    draft.includeServiceImprovement && calculateServiceImprovement(draft.currentTurnDays, draft.artisanTurnDays)
+      ? `a turnaround comparison using the current ${draft.currentTurnDays}-day experience and the stated ${draft.artisanTurnDays}-day Artisan average`
+      : "an implementation path with accountable support",
+  ];
+
+  return [
+    greeting,
+    "",
+    draft.emailPersonalNote.trim() ||
+      `Thank you for the opportunity to build a lab program around ${draft.customerName || "your practice"}.`,
+    "",
+    `Attached is the proposal we discussed. It includes ${highlights[0]}, ${highlights[1]}, and ${highlights[2]}.`,
+    "",
+    `Recommended next step: ${draft.nextStep}`,
+    "",
+    "I would be glad to walk through the recommendation with your team and make any final adjustments before implementation.",
+    "",
+    "Best,",
+    draft.preparedBy || "Artisan Lab Network",
+    draft.preparedByEmail,
+  ]
+    .filter((line, index, lines) => line || (index > 0 && lines[index - 1]))
+    .join("\n");
 }
 
 export function createProgramProposalDraft({
@@ -144,10 +504,15 @@ export function createProgramProposalDraft({
     ? today
     : new Date(parsed.getTime() + 30 * 86_400_000).toISOString().slice(0, 10);
 
+  const template = PROPOSAL_TEMPLATES[0];
   return {
+    templateCode: template.code,
     proposalTitle: "Custom Lab Partnership Proposal",
     customerName: "",
+    customerContactName: "",
     locationName: "",
+    stateCode: "",
+    includeFreedomOfChoicePage: false,
     accountNumber: "",
     customerAddress: "",
     lab: "Pacific Artisan Labs",
@@ -158,6 +523,24 @@ export function createProgramProposalDraft({
     isAcquiosMember: false,
     selectedPrograms: [],
     programNotes: {},
+    executiveSummary: template.executiveSummary,
+    customerPriorities: template.customerPriorities,
+    selectedStoryModules: [...template.storyModules],
+    productCrosswalk: [],
+    includeCostSavings: false,
+    costSavingsPercent: 0,
+    costSavingsAmount: 0,
+    costSavingsPeriod: "annual",
+    costSavingsNotes: "Based on the products, materials, treatments, and volumes reviewed with the practice.",
+    includeServiceImprovement: false,
+    currentTurnDays: 0,
+    artisanTurnDays: 0,
+    serviceAnalysisNotes: "Turnaround comparison uses business days and like-for-like eligible work.",
+    transitionNotes: template.transitionNotes,
+    onboardingNotes:
+      "Confirm lab contacts, account and pricing access, ordering connections, product training, VSP routing where applicable, shipping procedures, and first-order readiness. Review the initial orders together and establish an ongoing performance cadence.",
+    nextStep: template.nextStep,
+    emailPersonalNote: "",
     selectedPriceLists: defaultPriceListCode ? [defaultPriceListCode] : [],
     specialPricing: [],
     multipleRemakes: false,
@@ -176,9 +559,11 @@ export function proposalReadiness(draft: ProgramProposalDraft) {
   const missing: string[] = [];
   if (!draft.customerName.trim()) missing.push("customer name");
   if (!draft.locationName.trim()) missing.push("customer location");
+  if (draft.includeFreedomOfChoicePage && !draft.stateCode.trim()) {
+    missing.push("customer state for freedom-of-choice page");
+  }
   if (!draft.lab.trim()) missing.push("servicing lab");
   if (!draft.preparedBy.trim()) missing.push("proposal owner");
-  if (!draft.selectedPrograms.length) missing.push("at least one program");
   if (!draft.selectedPriceLists.length) missing.push("at least one price list");
   if (!draft.regulatoryAcknowledged) {
     missing.push("government-program volume acknowledgement");

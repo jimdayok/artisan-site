@@ -41,10 +41,10 @@ const articles: NewsletterNavArticle[] = [
     id: "unity-v3",
     label: "Lens Strategy",
     title: "Unity V3",
-    dek: "A confident way to keep VSP orders focused on fit, function, and patient experience.",
+    dek: "Unity V3 keeps VSP orders focused on fit and function. Unity Via 2 ends September 16.",
     icon: "/unity-logo.png",
     iconAlt: "Unity",
-    image: "/newsletter-assets/vspv3elite.jpg",
+    image: "/newsletter-assets/unity-v3-elite-progressive.png",
     imageAlt: "Unity V3 Elite product visual",
     supportingLogo: "/logos/VSP_Vision_Logotype_RGB_Blk.png",
     supportingLogoAlt: "VSP Vision",
@@ -219,7 +219,7 @@ export default function PracticeMattersIssue001Page() {
                 },
               ]}
               featureImage={{
-                src: "/newsletter-assets/vspv3elite.jpg",
+                src: "/newsletter-assets/unity-v3-elite-progressive.png",
                 alt: "Unity V3 Elite product visual",
               }}
               productLink={{
@@ -234,6 +234,12 @@ export default function PracticeMattersIssue001Page() {
               <p>
                 Unity V3 gives practices a way to keep the VSP conversation focused on fit, function, and how the patient will use the eyewear. Confidence comes less from memorizing a portfolio and more from giving the team a repeatable path through the recommendation.
               </p>
+              <div className="border-l-4 border-[#a46f52] bg-[#f2e7da] p-5">
+                <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#8a7654]">Availability notice</p>
+                <p className="mt-2 text-base font-semibold leading-7 text-[#3f4856]">
+                  Unity Via 2 will no longer be available as of September 16. Practices still using Via 2 should plan their transition to Unity V3.
+                </p>
+              </div>
               <h3 className="font-[family-name:Georgia,serif] text-2xl text-[#142033]">A four-part recommendation</h3>
               <ol className="ml-5 list-decimal space-y-3 marker:font-semibold marker:text-[#a46f52]">
                 <li><strong>Clarify the day:</strong> near work, movement, screen time, driving, and previous adaptation.</li>

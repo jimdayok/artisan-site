@@ -19,7 +19,7 @@ const articles: NewsletterNavArticle[] = [
     id: "artisan-spotlight",
     label: "Artisan Spotlight",
     title: "Jenn C.",
-    dek: "Trust, follow through, and the small details behind a dependable lab experience.",
+    dek: "Meet the ABOC-certified, book-loving homebody behind dependable lab follow-through.",
     icon: "/aln-icon.png",
     iconAlt: "Artisan Lab Network",
     image: "/newsletter-assets/jennc.jpg",
@@ -133,13 +133,20 @@ export default function PracticeMattersIssue001Page() {
               </p>
               <h3 className="font-[family-name:Georgia,serif] text-2xl text-[#142033]">Dependability has a human face</h3>
               <p>
-                Jenn C. is one of those people for Artisan Lab Network. Her work lives in the small moments that shape a practice&apos;s day: checking what does not look quite right, communicating clearly, and making sure a handoff does not become a dead end.
+                Jenn C. is ABOC certified and one of those people for Artisan Lab Network. Her optical knowledge supports the care she brings to the small moments that shape a practice&apos;s day: checking what does not look quite right, communicating clearly, and making sure a handoff does not become a dead end.
               </p>
               <p>
                 That kind of ownership matters because an order is never just an order. On the other side is a patient waiting to see clearly, an optician protecting a promise, and a practice whose reputation is built one experience at a time. A detail caught early can protect all three.
               </p>
               <p>
                 The strongest service relationships feel personal without depending on heroics. They are consistent. They make it easier to ask a question, easier to get an honest answer, and easier to know what happens next. Jenn helps create that kind of experience every day.
+              </p>
+              <h3 className="font-[family-name:Georgia,serif] text-2xl text-[#142033]">The person behind the follow-through</h3>
+              <p>
+                Away from the lab, Jenn is happiest at home with a book. Reading is, unmistakably, her jam—and she will be the first to tell you that other hobbies do not get much competition.
+              </p>
+              <p>
+                When she does put the book down, she enjoys cooking, horror movies, and time with the people she loves most. She also has a soft spot for everything cozy about fall, with one important caveat: snacks and sweets have to meet her very particular standards.
               </p>
               <div className="border-l-4 border-[#a46f52] bg-[#f2e7da] p-5">
                 <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#8a7654]">A useful service test</p>

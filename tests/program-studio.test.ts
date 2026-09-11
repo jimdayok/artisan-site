@@ -209,7 +209,7 @@ test("customer preview uses the exact generated PDF and repeats required terms",
   assert.match(pdf, /buildPriceListPdf/);
   assert.match(pdf, /PRODUCT CROSSWALK/);
   assert.match(pdf, /ONBOARDING PLAN/);
-  assert.match(pdf, /THE ARTISAN CUSTOMER PORTAL/);
+  assert.match(pdf, /CUSTOMER PORTAL/);
   assert.match(pdf, /ARTISANLABNETWORK.COM/);
   assert.match(pdf, /program-studio.*portal-example\.png/);
   assert.match(pdf, /includeSharedClosingPages: index === draft\.selectedPriceLists\.length - 1/);

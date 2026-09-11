@@ -31,7 +31,7 @@ const contentSecurityPolicy = [
   "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn-cookieyes.com https://*.cookieyes.com",
   "font-src 'self' data: https:",
   "connect-src 'self' https: https://cdn-cookieyes.com https://*.cookieyes.com",
-  "frame-src 'self' https://cdn-cookieyes.com https://*.cookieyes.com",
+  "frame-src 'self' blob: https://cdn-cookieyes.com https://*.cookieyes.com",
   "worker-src 'self' blob:",
   "frame-ancestors 'none'",
   "base-uri 'self'",

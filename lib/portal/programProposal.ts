@@ -1,10 +1,96 @@
 export const PROGRAM_STUDIO_PRICE_LIST_CODES = [
-  "P6",
   "A6",
-  "B5",
   "G6",
+  "P6",
+  "E4",
   "E5",
   "E6",
+  "E7",
+  "E8",
+  "VD",
+  "S5",
+  "B5",
+  "H5",
+  "TK",
+  "VX",
+] as const;
+
+export const PROGRAM_STUDIO_PRICE_LIST_SOURCE_CODES: Readonly<Record<string, string>> = {
+  H5: "XH",
+};
+
+export const PROGRAM_STUDIO_PACKAGE_PRICE_LIST_CODES = new Set([
+  "VD",
+  "S5",
+  "B5",
+  "H5",
+  "TK",
+  "VX",
+]);
+
+export const PROGRAM_TIER_GUIDE = [
+  { tier: "Tier 1", volume: "1 to 19 qualifying lens pairs per month" },
+  { tier: "Tier 2", volume: "20 to 59 qualifying lens pairs per month" },
+  { tier: "Tier 3", volume: "60 to 100 qualifying lens pairs per month" },
+  { tier: "Tier 4", volume: "More than 100 qualifying lens pairs per month" },
+] as const;
+
+export const PROGRAM_REBATE_SCHEDULES = {
+  sequel: {
+    code: "ARSQL26",
+    title: "Sequel PAL point schedule",
+    columns: ["Product", "Tier 1", "Tier 2", "Tier 3", "Tier 4"],
+    rows: [["Sequel PAL", "$5", "$10", "$17", "$20"]],
+    note: "Points are valued at $1 each and may be redeemed for statement credits, subject to program terms and eligibility requirements.",
+  },
+  pmp: {
+    code: "ARPMP26",
+    title: "PMP point schedule",
+    columns: ["Product type", "Product", "Tier 1", "Tier 2", "Tier 3", "Tier 4"],
+    rows: [
+      ["AR Treatment", "Artisan AR", "$2", "$2", "$4", "$4"],
+      ["AR Treatment", "TechShield AR", "$2", "$2", "$4", "$4"],
+      ["Lens Design", "Artisan Design", "$0", "$0", "$2", "$4"],
+      ["Lens Design", "IOT Design", "$0", "$0", "$4", "$4"],
+      ["Lens Design", "Sequel Design", "$0", "$4", "$6", "$6"],
+      ["Lens Design", "Unity Design", "$0", "$0", "$4", "$6"],
+    ],
+    note: "Points are valued at $1 each and may be redeemed for statement credits, subject to program terms and eligibility requirements.",
+  },
+  "unity-rewards": {
+    code: "ARUTY26",
+    title: "Unity Rewards point schedule",
+    columns: ["Product", "Base points", "TSP / TPU / TSS", "TSE / TSB / TEU", "SunSync bonus"],
+    rows: [
+      ["Unity V3 Elite", "$10", "$5", "$10", "$10"],
+      ["Unity V3 Mobile", "$10", "$5", "$10", "$10"],
+      ["Unity V3 Wrap", "$10", "$5", "$10", "$10"],
+      ["Unity V3 Plus", "$7", "$5", "$10", "$5"],
+      ["Unity V3", "$5", "$5", "$10", "$5"],
+      ["Unity SVX", "$0", "$3", "$6", "$5"],
+      ["Unity SVXtra", "$0", "$3", "$6", "$5"],
+      ["Unity SVXtreme", "$0", "$3", "$6", "$5"],
+      ["Unity Relieve", "$0", "$3", "$6", "$5"],
+      ["Unity Via OfficePro", "$0", "$3", "$6", "$5"],
+    ],
+    note: "Tier 1 earns no points. Tiers 2, 3, and 4 receive the full point schedule. Photochromic points require a qualifying AR treatment, SunSync color, and eligible material.",
+  },
+} as const;
+
+export const PACKAGE_PRICING_EXPLANATION =
+  "Package pricing is checked first. Artisan evaluates the complete order, including lens design, material, AR coating, and every required package component. When all qualifying components are present, the package price is used. If the order does not meet the complete package requirements, it defaults to the customer's base pricing.";
+
+export const ADDITIONAL_ARTISAN_PROGRAMS = [
+  {
+    name: "Artisan Frame Systems",
+    description:
+      "Package pricing that combines Modern Optical frames and lenses.",
+  },
+  {
+    name: "Artisan Safety Systems",
+    description:
+      "Package pricing for industrial safety lenses and frames from Wiley-X, ArmouRx, OnGuard, Hudson, ArtCraft, and SafeVision by Hoya.",
+  },
 ] as const;
 
 export const PROGRAM_CATALOG = [
@@ -272,6 +358,7 @@ export type ProgramStudioPriceListOption = {
   code: string;
   label: string;
   package: boolean;
+  sourceCode?: string;
 };
 
 export type ProgramStudioCustomer = {
@@ -301,6 +388,7 @@ export function proposalPriceListTitle(
   if (normalized === "A6") {
     return isAcquiosMember ? "Acquios A6 Pricing" : "PMP A6";
   }
+  if (normalized === "H5") return "Artisan Hoya Lens System";
   return fallback;
 }
 export function formatSpecialPricingRule(rule: SpecialPricingRule) {
@@ -467,7 +555,6 @@ export function proposalReadiness(draft: ProgramProposalDraft) {
   if (!draft.locationName.trim()) missing.push("customer location");
   if (!draft.lab.trim()) missing.push("servicing lab");
   if (!draft.preparedBy.trim()) missing.push("proposal owner");
-  if (!draft.selectedPrograms.length) missing.push("at least one program");
   if (!draft.selectedPriceLists.length) missing.push("at least one price list");
   if (!draft.regulatoryAcknowledged) {
     missing.push("government-program volume acknowledgement");

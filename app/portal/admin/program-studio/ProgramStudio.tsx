@@ -10,13 +10,13 @@ import {
   FileText,
   Mail,
   Plus,
-  Printer,
+  RefreshCw,
   Save,
   ShieldCheck,
   Sparkles,
   Trash2,
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   GOVERNMENT_PROGRAM_EXCLUSION,
   PROGRAM_CATALOG,
@@ -38,8 +38,6 @@ import {
   type SpecialPricingKind,
   type StoryModuleCode,
 } from "@/lib/portal/programProposal";
-import ProposalDocument from "./ProposalDocument";
-
 const DRAFT_STORAGE_KEY = "artisan-program-studio-draft-v1";
 const LABS = ["Pacific Artisan Labs", "Peak Artisan Labs", "Pike Artisan Labs"];
 const PRODUCT_STARTERS = [
@@ -107,6 +105,17 @@ export default function ProgramStudio({
   const [error, setError] = useState("");
   const [downloading, setDownloading] = useState(false);
   const [copied, setCopied] = useState<"subject" | "email" | "">("");
+  const [previewReady, setPreviewReady] = useState(false);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewError, setPreviewError] = useState("");
+  const [previewVersion, setPreviewVersion] = useState(0);
+  const [previewPdf, setPreviewPdf] = useState<{
+    blob: Blob;
+    signature: string;
+    url: string;
+  } | null>(null);
+  const previewUrlRef = useRef<string | null>(null);
+  const previewSignature = useMemo(() => JSON.stringify(draft), [draft]);
   const readiness = useMemo(() => proposalReadiness(draft), [draft]);
   const serviceImprovement = useMemo(
     () => calculateServiceImprovement(draft.currentTurnDays, draft.artisanTurnDays),
@@ -117,7 +126,10 @@ export default function ProgramStudio({
 
   useEffect(() => {
     const saved = window.localStorage.getItem(DRAFT_STORAGE_KEY);
-    if (!saved) return;
+    if (!saved) {
+      queueMicrotask(() => setPreviewReady(true));
+      return;
+    }
     try {
       const parsed = JSON.parse(saved) as ProgramProposalDraft;
       queueMicrotask(() => {
@@ -141,11 +153,58 @@ export default function ProgramStudio({
           preparedByEmail: currentUser.email,
         });
         setStatus("Recovered the last draft saved in this browser.");
+        setPreviewReady(true);
       });
     } catch {
       window.localStorage.removeItem(DRAFT_STORAGE_KEY);
+      queueMicrotask(() => setPreviewReady(true));
     }
   }, [availableCodes, currentUser.email, currentUser.name, freshDraft]);
+
+  useEffect(() => {
+    if (!previewReady) return;
+    const controller = new AbortController();
+    const timeout = window.setTimeout(async () => {
+      setPreviewLoading(true);
+      setPreviewError("");
+      try {
+        const response = await fetch("/portal/admin/program-studio/pdf", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ draft, preview: true }),
+          signal: controller.signal,
+        });
+        if (!response.ok) {
+          const body = (await response.json().catch(() => null)) as
+            | { error?: string }
+            | null;
+          throw new Error(body?.error || "The exact PDF preview could not be created.");
+        }
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+        previewUrlRef.current = url;
+        setPreviewPdf({ blob, signature: previewSignature, url });
+      } catch (caught) {
+        if (controller.signal.aborted) return;
+        setPreviewError(
+          caught instanceof Error
+            ? caught.message
+            : "The exact PDF preview could not be created."
+        );
+      } finally {
+        if (!controller.signal.aborted) setPreviewLoading(false);
+      }
+    }, 900);
+    return () => {
+      window.clearTimeout(timeout);
+      controller.abort();
+    };
+  }, [draft, previewReady, previewSignature, previewVersion]);
+
+  useEffect(() => () => {
+    if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+  }, []);
 
   function update<K extends keyof ProgramProposalDraft>(
     field: K,
@@ -312,18 +371,21 @@ export default function ProgramStudio({
     setError("");
     setStatus("Building the proposal and attaching price lists…");
     try {
-      const response = await fetch("/portal/admin/program-studio/pdf", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ draft }),
-      });
-      if (!response.ok) {
-        const body = (await response.json().catch(() => null)) as
-          | { error?: string }
-          | null;
-        throw new Error(body?.error || "The proposal PDF could not be created.");
+      let blob = previewPdf?.signature === previewSignature ? previewPdf.blob : null;
+      if (!blob) {
+        const response = await fetch("/portal/admin/program-studio/pdf", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ draft }),
+        });
+        if (!response.ok) {
+          const body = (await response.json().catch(() => null)) as
+            | { error?: string }
+            | null;
+          throw new Error(body?.error || "The proposal PDF could not be created.");
+        }
+        blob = await response.blob();
       }
-      const blob = await response.blob();
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
@@ -620,7 +682,7 @@ export default function ProgramStudio({
 
           <fieldset className="aps-fieldset aps-choice-fieldset">
             <legend>Programs included</legend>
-            <p className="aps-field-help">Select every program the customer will receive. Add a customer-specific note only when it clarifies the offer.</p>
+            <p className="aps-field-help">Select every program the customer will receive. If none are selected, the program section is omitted from the customer PDF.</p>
             <div className="aps-program-choices">
               {PROGRAM_CATALOG.map((program) => {
                 const selected = draft.selectedPrograms.includes(program.code);
@@ -744,7 +806,7 @@ export default function ProgramStudio({
             <label className="aps-toggle aps-wide">
               <input type="checkbox" checked={draft.multipleRemakes} onChange={(event) => update("multipleRemakes", event.target.checked)} />
               <i aria-hidden="true" />
-              <span><strong>Approve multiple remakes</strong><small>Document an exception to the standard policy.</small></span>
+              <span><strong>Approve multiple remakes</strong><small>Document a customer-specific exception to the Full Warranty and Remake Policies.</small></span>
             </label>
             {draft.multipleRemakes ? (
               <label>
@@ -814,10 +876,15 @@ export default function ProgramStudio({
 
         <section className={`aps-preview${activePanel === "proposal" ? " is-mobile-active" : ""}`}>
           <div className="aps-preview-toolbar">
-            <div><p>Live customer view</p><span>Price-list PDFs are appended during download.</span></div>
-            <button type="button" className="aps-button aps-button-quiet" onClick={() => window.print()}><Printer /> Print preview</button>
+            <div><p>Exact PDF preview</p><span>{previewLoading ? "Updating the customer file…" : "This is the same file that downloads, including price-list attachments."}</span></div>
+            <div className="aps-preview-actions">
+              <button type="button" className="aps-button aps-button-quiet" onClick={() => setPreviewVersion((version) => version + 1)} disabled={previewLoading}><RefreshCw /> Refresh</button>
+              <button type="button" className="aps-button aps-button-quiet" onClick={() => previewPdf && window.open(previewPdf.url, "_blank", "noopener,noreferrer")} disabled={!previewPdf}><FileText /> Open PDF</button>
+            </div>
           </div>
-          <ProposalDocument draft={draft} priceLists={priceLists} />
+          {previewError ? <div className="aps-preview-message is-error"><strong>Preview unavailable</strong><span>{previewError}</span></div> : null}
+          {!previewPdf && !previewError ? <div className="aps-preview-message"><strong>Building the exact customer file</strong><span>The first preview can take a moment because all selected pricing pages are included.</span></div> : null}
+          {previewPdf ? <iframe className="aps-pdf-preview" src={`${previewPdf.url}#view=FitH`} title="Exact customer proposal PDF preview" /> : null}
         </section>
       </div>
     </main>

@@ -10,6 +10,8 @@ import {
 } from "@/lib/portal/portalRoles";
 import {
   PROGRAM_STUDIO_PRICE_LIST_CODES,
+  PROGRAM_STUDIO_PACKAGE_PRICE_LIST_CODES,
+  PROGRAM_STUDIO_PRICE_LIST_SOURCE_CODES,
   type ProgramStudioCustomer,
   type ProgramStudioPriceListOption,
 } from "@/lib/portal/programProposal";
@@ -23,14 +25,21 @@ export function getProgramStudioPriceLists(
 ): ProgramStudioPriceListOption[] {
   const assignedCodes = new Set(scopedRows(role).flatMap((row) => row.priceListCodes));
   return PROGRAM_STUDIO_PRICE_LIST_CODES.flatMap((code) => {
-    const priceList = getPriceListByCode(code);
+    const sourceCode = PROGRAM_STUDIO_PRICE_LIST_SOURCE_CODES[code] || code;
+    const priceList = getPriceListByCode(sourceCode);
     if (!priceList?.generated) return [];
-    if (role.kind === "sales-rep" && !assignedCodes.has(code)) return [];
+    if (
+      role.kind === "sales-rep" &&
+      !assignedCodes.has(code) &&
+      !assignedCodes.has(sourceCode)
+    ) return [];
     return [
       {
         code,
-        label: priceList.label,
-        package: priceList.package,
+        label: code === "H5" ? "Artisan Hoya Lens System" : priceList.label,
+        package:
+          priceList.package || PROGRAM_STUDIO_PACKAGE_PRICE_LIST_CODES.has(code),
+        sourceCode,
       },
     ];
   });
@@ -57,11 +66,13 @@ export function getProgramStudioCustomers(
       address: row.address,
       lab: row.lab,
       salesRep: row.salesRep,
-      priceListCodes: row.priceListCodes.filter((code) =>
-        PROGRAM_STUDIO_PRICE_LIST_CODES.includes(
-          code as (typeof PROGRAM_STUDIO_PRICE_LIST_CODES)[number]
-        )
-      ),
+      priceListCodes: row.priceListCodes
+        .map((code) => code === "XH" ? "H5" : code)
+        .filter((code) =>
+          PROGRAM_STUDIO_PRICE_LIST_CODES.includes(
+            code as (typeof PROGRAM_STUDIO_PRICE_LIST_CODES)[number]
+          )
+        ),
       isAcquiosMember: ["ACQU", "AQUI"].includes(
         row.customerType.trim().toUpperCase()
       ),

@@ -34,8 +34,12 @@ test("Program Studio defaults proposal pricing to the supplied P6 baseline", () 
   assert.equal(draft.validThrough, "2026-10-04");
   assert.equal(draft.secondPairDays, 30);
   assert.equal(draft.templateCode, "full-transition");
-  assert.deepEqual(draft.selectedStoryModules, STORY_MODULES.map((module) => module.code));
-  assert.ok(draft.selectedStoryModules.includes("freedom-of-choice"));
+  assert.deepEqual(
+    draft.selectedStoryModules,
+    STORY_MODULES.filter((module) => module.code !== "freedom-of-choice").map((module) => module.code)
+  );
+  assert.equal(draft.includeFreedomOfChoicePage, false);
+  assert.equal(draft.stateCode, "");
   assert.ok(draft.selectedStoryModules.includes("implementation-support"));
   assert.ok(draft.selectedStoryModules.includes("portal-visibility"));
 });
@@ -178,11 +182,16 @@ test("proposal export readiness requires the regulatory exclusion acknowledgemen
   assert.equal(proposalReadiness(draft).ready, true);
   draft.selectedPrograms = [];
   assert.equal(proposalReadiness(draft).ready, true);
+  draft.includeFreedomOfChoicePage = true;
+  assert.ok(proposalReadiness(draft).missing.includes("customer state for freedom-of-choice page"));
+  draft.stateCode = "TX";
+  assert.equal(proposalReadiness(draft).ready, true);
 });
 
 test("customer preview uses the exact generated PDF and repeats required terms", () => {
   const builder = read("app/portal/admin/program-studio/ProgramStudio.tsx");
   const pdf = read("app/portal/admin/program-studio/pdf/route.ts");
+  const priceListPdf = read("lib/portal/priceListPdf.ts");
   const proxy = read("proxy.ts");
   assert.match(builder, /Price-list attachments/);
   assert.match(builder, /Special line-item pricing/);
@@ -192,6 +201,7 @@ test("customer preview uses the exact generated PDF and repeats required terms",
   assert.match(builder, /Clear proposal/);
   assert.match(builder, /Estimated savings amount/);
   assert.match(builder, /Transition, onboarding &amp; portal/);
+  assert.match(builder, /Include lab freedom-of-choice page/);
   assert.match(builder, /preview: true/);
   assert.match(builder, /Exact customer proposal PDF preview/);
   assert.doesNotMatch(builder, /ProposalDocument/);
@@ -200,6 +210,10 @@ test("customer preview uses the exact generated PDF and repeats required terms",
   assert.match(pdf, /PRODUCT CROSSWALK/);
   assert.match(pdf, /ONBOARDING PLAN/);
   assert.match(pdf, /THE ARTISAN CUSTOMER PORTAL/);
+  assert.match(pdf, /ARTISANLABNETWORK.COM/);
+  assert.match(pdf, /program-studio.*portal-example\.png/);
+  assert.match(pdf, /includeSharedClosingPages: index === draft\.selectedPriceLists\.length - 1/);
+  assert.doesNotMatch(pdf, /RECOMMENDED NEXT STEP/);
   assert.match(pdf, /fontkit/);
   assert.match(pdf, /SPECIAL PRICING THAT MODIFIES THIS LIST/);
   assert.match(pdf, /Full Warranty and Remake Policies/);
@@ -209,6 +223,8 @@ test("customer preview uses the exact generated PDF and repeats required terms",
   assert.match(pdf, /A lab relationship designed around your practice/);
   assert.match(pdf, /document\.copyPages/);
   assert.match(pdf, /canAccessPortalAdmin/);
+  assert.match(priceListPdf, /includeSharedClosingPages = true/);
+  assert.match(priceListPdf, /if \(includeSharedClosingPages\)/);
   assert.match(GOVERNMENT_PROGRAM_EXCLUSION, /Federal- and state-reimbursed/);
 });
 

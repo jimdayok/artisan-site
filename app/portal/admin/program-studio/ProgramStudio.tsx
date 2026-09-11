@@ -17,6 +17,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { stateProtections } from "@/lib/advocacy/data";
 import {
   GOVERNMENT_PROGRAM_EXCLUSION,
   PROGRAM_CATALOG,
@@ -68,6 +69,17 @@ function safeFilename(value: string) {
       .replace(/[^a-z0-9]+/gi, "-")
       .replace(/^-+|-+$/g, "") || "customer"
   );
+}
+
+function inferStateCode(value: string) {
+  const normalized = value.toUpperCase();
+  const byCode = stateProtections.find((state) =>
+    new RegExp(`(?:^|[,\\s])${state.code}(?:$|[,\\s])`).test(normalized)
+  );
+  if (byCode) return byCode.code;
+  return stateProtections.find((state) =>
+    normalized.includes(state.name.toUpperCase())
+  )?.code || "";
 }
 
 export default function ProgramStudio({
@@ -123,6 +135,10 @@ export default function ProgramStudio({
   );
   const emailSubject = useMemo(() => proposalEmailSubject(draft), [draft]);
   const emailBody = useMemo(() => proposalEmailBody(draft), [draft]);
+  const selectedState = useMemo(
+    () => stateProtections.find((state) => state.code === draft.stateCode),
+    [draft.stateCode]
+  );
 
   useEffect(() => {
     const saved = window.localStorage.getItem(DRAFT_STORAGE_KEY);
@@ -146,7 +162,7 @@ export default function ProgramStudio({
             ),
           })),
           selectedStoryModules: (parsed.selectedStoryModules || freshDraft.selectedStoryModules).filter(
-            (code) => STORY_MODULES.some((module) => module.code === code)
+            (code) => code !== "freedom-of-choice" && STORY_MODULES.some((module) => module.code === code)
           ),
           productCrosswalk: (parsed.productCrosswalk || []).slice(0, 18),
           preparedBy: currentUser.name,
@@ -300,6 +316,7 @@ export default function ProgramStudio({
       ...current,
       customerName: customer.name,
       locationName: customer.location || customer.address,
+      stateCode: customer.state || inferStateCode(`${customer.location} ${customer.address}`) || current.stateCode,
       accountNumber: customer.accountNumber,
       customerAddress: customer.address,
       lab: customer.lab || current.lab,
@@ -501,6 +518,16 @@ export default function ProgramStudio({
               <input value={draft.locationName} onChange={(event) => update("locationName", event.target.value)} placeholder="City, state or location name" />
             </label>
             <label>
+              <span>State</span>
+              <div className="aps-select-wrap">
+                <select value={draft.stateCode} onChange={(event) => update("stateCode", event.target.value)}>
+                  <option value="">Select a state</option>
+                  {stateProtections.map((state) => <option key={state.code} value={state.code}>{state.name}</option>)}
+                </select>
+                <ChevronDown />
+              </div>
+            </label>
+            <label>
               <span>Account number (if available)</span>
               <input value={draft.accountNumber} onChange={(event) => update("accountNumber", event.target.value)} />
             </label>
@@ -524,6 +551,20 @@ export default function ProgramStudio({
               <span>
                 <strong>Acquios member</strong>
                 <small>A6 will be titled “Acquios A6 Pricing.” Otherwise it will be titled “PMP A6.”</small>
+              </span>
+            </label>
+            <label className="aps-toggle aps-wide">
+              <input type="checkbox" checked={draft.includeFreedomOfChoicePage} onChange={(event) => update("includeFreedomOfChoicePage", event.target.checked)} />
+              <i aria-hidden="true" />
+              <span>
+                <strong>Include lab freedom-of-choice page</strong>
+                <small>
+                  {!selectedState
+                    ? "Select the customer state above. The proposal will communicate Artisan's current tracked status only when this option is on."
+                    : selectedState.labChoiceProtection
+                      ? `${selectedState.name} has laboratory-choice protection in Artisan's current reference.`
+                      : `${selectedState.name} does not currently have laboratory-choice protection identified in Artisan's reference.`}
+                </small>
               </span>
             </label>
           </fieldset>
@@ -662,7 +703,6 @@ export default function ProgramStudio({
             <p className="aps-field-help aps-wide">Choose the conversion support that should appear in the customer proposal. Each selected option adds persuasive, customer-facing content.</p>
             <div className="aps-story-choices aps-wide">
               {STORY_MODULES.filter((module) => [
-                "freedom-of-choice",
                 "implementation-support",
                 "portal-visibility",
               ].includes(module.code)).map((module) => {
@@ -675,7 +715,7 @@ export default function ProgramStudio({
                 );
               })}
             </div>
-            {draft.selectedStoryModules.includes("freedom-of-choice") ? <label className="aps-wide"><span>Managed-care / freedom-of-choice transition plan</span><textarea className="aps-tall" value={draft.transitionNotes} onChange={(event) => update("transitionNotes", event.target.value)} /></label> : null}
+            {draft.includeFreedomOfChoicePage ? <label className="aps-wide"><span>Managed-care / freedom-of-choice transition plan</span><textarea className="aps-tall" value={draft.transitionNotes} onChange={(event) => update("transitionNotes", event.target.value)} /></label> : null}
             {draft.selectedStoryModules.some((code) => code === "implementation-support" || code === "portal-visibility") ? <label className="aps-wide"><span>Customer-specific onboarding plan</span><textarea className="aps-tall" value={draft.onboardingNotes} onChange={(event) => update("onboardingNotes", event.target.value)} /></label> : null}
             <label className="aps-wide"><span>Recommended next step</span><textarea value={draft.nextStep} onChange={(event) => update("nextStep", event.target.value)} /></label>
           </fieldset>

@@ -244,7 +244,9 @@ export const PROPOSAL_TEMPLATES = [
       "Begin with product and ordering validation, move an agreed first wave of private-pay work, confirm VSP routing separately, review early results, and expand only after the practice is confident in the process.",
     nextStep:
       "Confirm the product crosswalk and commercial terms, schedule the implementation meeting, and agree on the first-order date.",
-    storyModules: STORY_MODULES.map((module) => module.code),
+    storyModules: STORY_MODULES
+      .filter((module) => module.code !== "freedom-of-choice")
+      .map((module) => module.code),
   },
   {
     code: "product-conversion",
@@ -263,7 +265,6 @@ export const PROPOSAL_TEMPLATES = [
       "quality-craftsmanship",
       "people-accountability",
       "implementation-support",
-      "freedom-of-choice",
       "portal-visibility",
     ] satisfies StoryModuleCode[],
   },
@@ -314,6 +315,8 @@ export type ProgramProposalDraft = {
   customerName: string;
   customerContactName: string;
   locationName: string;
+  stateCode: string;
+  includeFreedomOfChoicePage: boolean;
   accountNumber: string;
   customerAddress: string;
   lab: string;
@@ -366,6 +369,7 @@ export type ProgramStudioCustomer = {
   name: string;
   accountNumber: string;
   location: string;
+  state: string;
   address: string;
   lab: string;
   salesRep: string;
@@ -507,6 +511,8 @@ export function createProgramProposalDraft({
     customerName: "",
     customerContactName: "",
     locationName: "",
+    stateCode: "",
+    includeFreedomOfChoicePage: false,
     accountNumber: "",
     customerAddress: "",
     lab: "Pacific Artisan Labs",
@@ -553,6 +559,9 @@ export function proposalReadiness(draft: ProgramProposalDraft) {
   const missing: string[] = [];
   if (!draft.customerName.trim()) missing.push("customer name");
   if (!draft.locationName.trim()) missing.push("customer location");
+  if (draft.includeFreedomOfChoicePage && !draft.stateCode.trim()) {
+    missing.push("customer state for freedom-of-choice page");
+  }
   if (!draft.lab.trim()) missing.push("servicing lab");
   if (!draft.preparedBy.trim()) missing.push("proposal owner");
   if (!draft.selectedPriceLists.length) missing.push("at least one price list");

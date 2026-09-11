@@ -63,6 +63,7 @@ export function getProgramStudioCustomers(
       name: row.businessName,
       accountNumber: primaryAccountNumber(row),
       location: row.state || row.territory || "",
+      state: row.state,
       address: row.address,
       lab: row.lab,
       salesRep: row.salesRep,

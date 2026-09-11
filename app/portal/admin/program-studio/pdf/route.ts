@@ -5,11 +5,18 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   PDFDocument,
   StandardFonts,
+  clip,
+  endPath,
+  popGraphicsState,
+  pushGraphicsState,
+  rectangle,
   rgb,
   type PDFFont,
+  type PDFImage,
   type PDFPage,
 } from "pdf-lib";
 import { buildPriceListPdf } from "@/lib/portal/priceListPdf";
+import { stateProtections } from "@/lib/advocacy/data";
 import { getPortalAuthenticatedEmailFromHeaders } from "@/lib/portal/auth";
 import {
   canAccessPortalAdmin,
@@ -78,6 +85,7 @@ function sanitizeDraft(input: unknown): ProgramProposalDraft {
   const validPrograms = new Set(PROGRAM_CATALOG.map((program) => program.code));
   const validTemplates = new Set(PROPOSAL_TEMPLATES.map((template) => template.code));
   const validStoryModules = new Set(STORY_MODULES.map((module) => module.code));
+  const validStateCodes = new Set(stateProtections.map((state) => state.code));
   const validPriceCodes = new Set<string>(PROGRAM_STUDIO_PRICE_LIST_CODES);
   const validKinds = new Set<SpecialPricingKind>([
     "fixed-price",
@@ -154,6 +162,10 @@ function sanitizeDraft(input: unknown): ProgramProposalDraft {
     customerName: clean(source.customerName, 140),
     customerContactName: clean(source.customerContactName, 140),
     locationName: clean(source.locationName, 160),
+    stateCode: validStateCodes.has(clean(source.stateCode, 2).toUpperCase())
+      ? clean(source.stateCode, 2).toUpperCase()
+      : "",
+    includeFreedomOfChoicePage: Boolean(source.includeFreedomOfChoicePage),
     accountNumber: clean(source.accountNumber, 80),
     customerAddress: clean(source.customerAddress, 300),
     lab: clean(source.lab, 120),
@@ -295,15 +307,65 @@ async function addProposalPages(
   priceListOptions: Map<string, ProgramStudioPriceListOption>
 ) {
   document.registerFontkit(fontkit);
-  const [regularBytes, displayBytes] = await Promise.all([
+  const [regularBytes, displayBytes, portalBytes, resourcesBytes, engineeringBytes] = await Promise.all([
     readFile(path.join(process.cwd(), "public", "fonts", "NunitoSans-Variable.ttf")),
     readFile(path.join(process.cwd(), "public", "fonts", "Lora-Regular.ttf")),
+    readFile(path.join(process.cwd(), "public", "images", "program-studio", "portal-example.png")),
+    readFile(path.join(process.cwd(), "public", "images", "program-studio", "provider-resources.png")),
+    readFile(path.join(process.cwd(), "public", "images", "program-studio", "optical-engineering.png")),
   ]);
   const regular = await document.embedFont(regularBytes, { subset: true });
   const bold = await document.embedFont(StandardFonts.HelveticaBold);
   const display = await document.embedFont(displayBytes, { subset: true });
   const logoBytes = await readFile(path.join(process.cwd(), "public", "aln-white-logo.png"));
   const logo = await document.embedPng(logoBytes);
+  const portalImage = await document.embedPng(portalBytes);
+  const resourcesImage = await document.embedPng(resourcesBytes);
+  const engineeringImage = await document.embedPng(engineeringBytes);
+  const drawContainedImage = (
+    page: PDFPage,
+    image: PDFImage,
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ) => {
+    const scale = Math.min(width / image.width, height / image.height);
+    const renderedWidth = image.width * scale;
+    const renderedHeight = image.height * scale;
+    page.drawRectangle({ x, y, width, height, color: rgb(1, 1, 1) });
+    page.drawImage(image, {
+      x: x + (width - renderedWidth) / 2,
+      y: y + (height - renderedHeight) / 2,
+      width: renderedWidth,
+      height: renderedHeight,
+    });
+  };
+  const drawTopCroppedImage = (
+    page: PDFPage,
+    image: PDFImage,
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ) => {
+    const scale = Math.max(width / image.width, height / image.height);
+    const renderedWidth = image.width * scale;
+    const renderedHeight = image.height * scale;
+    page.pushOperators(
+      pushGraphicsState(),
+      rectangle(x, y, width, height),
+      clip(),
+      endPath()
+    );
+    page.drawImage(image, {
+      x: x + (width - renderedWidth) / 2,
+      y: y + height - renderedHeight,
+      width: renderedWidth,
+      height: renderedHeight,
+    });
+    page.pushOperators(popGraphicsState());
+  };
   const proposalStartIndex = document.getPageCount();
   const cover = document.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
   cover.drawRectangle({ x: 0, y: 0, width: PAGE_WIDTH, height: PAGE_HEIGHT, color: INK });
@@ -462,15 +524,30 @@ async function addProposalPages(
     });
   }
 
-  if (draft.selectedStoryModules.includes("freedom-of-choice")) {
+  if (draft.includeFreedomOfChoicePage) {
+    const selectedState = stateProtections.find((state) => state.code === draft.stateCode);
     const transition = document.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
     transition.drawRectangle({ x: 0, y: 0, width: PAGE_WIDTH, height: PAGE_HEIGHT, color: PAPER });
     contentHeader(transition, regular, bold, "Freedom of choice", nextSectionNumber());
-    transition.drawText("MOVE ELIGIBLE WORK WITH INTENTION", { x: MARGIN, y: 678, size: 8, font: bold, color: GOLD });
-    drawLines({ page: transition, font: display, text: "not disruption.", x: MARGIN, y: 637, size: 27, maxWidth: 505, color: INK, lineHeight: 31, maxLines: 2 });
+    transition.drawText("LAB FREEDOM OF CHOICE", { x: MARGIN, y: 678, size: 8, font: bold, color: GOLD });
+    drawLines({ page: transition, font: display, text: "Know what applies in your state.", x: MARGIN, y: 637, size: 27, maxWidth: 505, color: INK, lineHeight: 31, maxLines: 2 });
     transition.drawRectangle({ x: MARGIN, y: 492, width: 520, height: 104, color: FOREST });
-    drawLines({ page: transition, font: display, text: "Managed-care rules should be separated from the broader lab strategy.", x: MARGIN + 17, y: 565, size: 13.2, maxWidth: 486, color: rgb(1,1,1), lineHeight: 17, maxLines: 3 });
-    drawLines({ page: transition, font: regular, text: "Artisan helps identify where plan direction applies, where choice remains, and how to transition eligible business without creating confusion for staff or patients.", x: MARGIN + 17, y: 518, size: 7.2, maxWidth: 486, color: rgb(.82,.86,.84), lineHeight: 10, maxLines: 3 });
+    transition.drawText(`${selectedState?.name || "State status"} ${draft.stateCode ? `(${draft.stateCode})` : ""}`, { x: MARGIN + 17, y: 568, size: 7.2, font: bold, color: GOLD_SOFT });
+    drawLines({
+      page: transition,
+      font: display,
+      text: selectedState?.labChoiceProtection
+        ? "Laboratory-choice protection is identified in Artisan's current reference."
+        : "No state laboratory-choice protection is currently identified in Artisan's reference.",
+      x: MARGIN + 17,
+      y: 546,
+      size: 12.5,
+      maxWidth: 486,
+      color: rgb(1,1,1),
+      lineHeight: 16,
+      maxLines: 3,
+    });
+    drawLines({ page: transition, font: regular, text: "This status is an informational starting point. Current law, payer and vision-plan contracts, authorizations, eligibility, and reimbursement requirements still control each order.", x: MARGIN + 17, y: 510, size: 6.8, maxWidth: 486, color: rgb(.82,.86,.84), lineHeight: 9, maxLines: 3 });
     const phases = [
       ["01", "MAP", "Review products, payer mix, ordering paths, pricing, and service pain points."],
       ["02", "VALIDATE", "Confirm eligibility, VSP routing, account setup, availability, and readiness."],
@@ -492,7 +569,7 @@ async function addProposalPages(
       transition.drawText("PLANNED VSP PRODUCTS", { x: MARGIN, y: 172, size: 7, font: bold, color: GOLD });
       drawLines({ page: transition, font: bold, text: vspProducts.map((row) => (row.category || "Product") + ": " + row.vspProduct).join("  |  "), x: MARGIN, y: 150, size: 7.2, maxWidth: 505, color: FOREST, lineHeight: 10, maxLines: 4 });
     }
-    drawLines({ page: transition, font: regular, text: "This plan does not override managed-care contracts, plan rules, lab assignments, authorizations, or reimbursement requirements.", x: MARGIN, y: 70, size: 6.6, maxWidth: 505, color: MUTED, lineHeight: 9, maxLines: 3 });
+    drawLines({ page: transition, font: regular, text: "Artisan's state reference is maintained for customer education and is not legal advice. Confirm current requirements for the practice, plan, and order before implementation.", x: MARGIN, y: 70, size: 6.6, maxWidth: 505, color: MUTED, lineHeight: 9, maxLines: 3 });
     contentFooter(transition, regular, draft.customerName);
   }
 
@@ -528,6 +605,34 @@ async function addProposalPages(
     drawLines({ page: onboarding, font: regular, text: "Portal features and onboarding modules are activated according to account setup, pricing assignments, program eligibility, and authorized access.", x: MARGIN, y: 60, size: 6.5, maxWidth: 505, color: MUTED, lineHeight: 9, maxLines: 3 });
     contentFooter(onboarding, regular, draft.customerName);
   }
+
+  const website = document.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
+  website.drawRectangle({ x: 0, y: 0, width: PAGE_WIDTH, height: PAGE_HEIGHT, color: PAPER });
+  contentHeader(website, regular, bold, "Digital experience", nextSectionNumber());
+  website.drawText("ARTISANLABNETWORK.COM", { x: MARGIN, y: 678, size: 8, font: bold, color: GOLD });
+  drawLines({ page: website, font: display, text: "Your lab relationship, online.", x: MARGIN, y: 637, size: 27, maxWidth: 505, color: INK, lineHeight: 31, maxLines: 2 });
+  drawLines({ page: website, font: regular, text: "Explore the new Artisan Lab Network website for customer tools, practical resources, and optical-engineering support built for independent practices.", x: MARGIN, y: 585, size: 9, maxWidth: 505, color: MUTED, lineHeight: 13, maxLines: 3 });
+
+  const websiteCards: Array<[PDFImage, string, string]> = [
+    [portalImage, "CUSTOMER PORTAL", "Assigned pricing, programs, policies, performance reporting, and support in one secure account experience."],
+    [resourcesImage, "PROVIDER RESOURCES", "Product guides, layout charts, training, troubleshooting, and the references your team uses every day."],
+    [engineeringImage, "OPTICAL ENGINEERING CENTER", "Calculation-first tools and practical optical references that turn complex questions into usable answers."],
+  ];
+  websiteCards.forEach(([image, title, body], index) => {
+    const y = 432 - index * 150;
+    website.drawRectangle({ x: MARGIN, y, width: 520, height: 128, color: rgb(1,1,1), borderColor: RULE, borderWidth: .8 });
+    if (index === 0) {
+      drawTopCroppedImage(website, image, MARGIN + 8, y + 8, 214, 112);
+    } else {
+      drawContainedImage(website, image, MARGIN + 8, y + 8, 214, 112);
+    }
+    website.drawRectangle({ x: MARGIN + 230, y: y + 18, width: 2.5, height: 92, color: GOLD });
+    website.drawText(title, { x: MARGIN + 246, y: y + 92, size: 7, font: bold, color: GOLD });
+    drawLines({ page: website, font: bold, text: body, x: MARGIN + 246, y: y + 68, size: 8.2, maxWidth: 255, color: INK, lineHeight: 11.5, maxLines: 6 });
+  });
+  website.drawText("VISIT ARTISANLABNETWORK.COM", { x: MARGIN, y: 100, size: 8, font: bold, color: FOREST });
+  drawLines({ page: website, font: regular, text: "Availability and portal access vary by account configuration and authorized user access.", x: MARGIN, y: 80, size: 6.6, maxWidth: 505, color: MUTED, lineHeight: 9, maxLines: 2 });
+  contentFooter(website, regular, draft.customerName);
 
   const selectedPrograms = PROGRAM_CATALOG.filter((entry) =>
     draft.selectedPrograms.includes(entry.code)
@@ -754,25 +859,10 @@ async function addProposalPages(
     contentFooter(pricing, regular, draft.customerName);
   }
 
-  const close = document.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
-  close.drawRectangle({ x: 0, y: 0, width: PAGE_WIDTH, height: PAGE_HEIGHT, color: INK });
-  close.drawRectangle({ x: 0, y: 0, width: PAGE_WIDTH, height: 148, color: FOREST });
-  close.drawCircle({ x: 552, y: 212, size: 188, borderColor: GOLD, borderWidth: .7, opacity: .18 });
-  close.drawCircle({ x: 552, y: 212, size: 135, borderColor: GOLD, borderWidth: .7, opacity: .13 });
-  close.drawImage(logo, { x: MARGIN, y: 690, width: 132, height: 62 });
-  close.drawText("RECOMMENDED NEXT STEP", { x: MARGIN, y: 577, size: 7.5, font: bold, color: GOLD_SOFT });
-  drawLines({ page: close, font: display, text: draft.nextStep || "Confirm the recommendation and schedule the implementation meeting.", x: MARGIN, y: 530, size: 25, maxWidth: 475, color: rgb(1,1,1), lineHeight: 31, maxLines: 6 });
-  close.drawLine({ start: { x: MARGIN, y: 252 }, end: { x: PAGE_WIDTH - MARGIN, y: 252 }, thickness: .7, color: GOLD });
-  close.drawText("PREPARED BY", { x: MARGIN, y: 224, size: 6.3, font: bold, color: GOLD_SOFT });
-  close.drawText(draft.preparedBy || "Artisan Lab Network", { x: MARGIN, y: 198, size: 10, font: bold, color: rgb(1,1,1) });
-  close.drawText(draft.preparedByEmail, { x: MARGIN, y: 180, size: 8, font: regular, color: rgb(.75,.8,.77) });
-  close.drawText("Independent labs. Shared strength. Better partnership.", { x: MARGIN, y: 70, size: 8.5, font: regular, color: rgb(.75,.8,.77) });
-
   const proposalPages = document.getPages().slice(proposalStartIndex);
-  proposalPages.slice(1, -1).forEach((page, index) => {
+  proposalPages.slice(1).forEach((page, index) => {
     page.drawText("PAGE " + String(index + 2) + " OF " + String(proposalPages.length), { x: 282, y: 17, size: 6.2, font: regular, color: MUTED });
   });
-  close.drawText("PAGE " + String(proposalPages.length) + " OF " + String(proposalPages.length), { x: PAGE_WIDTH - MARGIN - 64, y: 26, size: 6.2, font: regular, color: rgb(.64,.7,.67) });
 }
 
 async function addPriceListSupplement(
@@ -861,7 +951,7 @@ export async function POST(request: NextRequest) {
     const options = new Map(allowedPriceLists.map((entry) => [entry.code, entry]));
     await addProposalPages(document, draft, options);
 
-    for (const code of draft.selectedPriceLists) {
+    for (const [index, code] of draft.selectedPriceLists.entries()) {
       const option = options.get(code);
       const sourceCode = option?.sourceCode || code;
       const portalPriceList = getPriceListByCode(sourceCode);
@@ -889,6 +979,7 @@ export async function POST(request: NextRequest) {
         customerName: draft.customerName,
         mode: "edged",
         requestOrigin: request.nextUrl.origin,
+        includeSharedClosingPages: index === draft.selectedPriceLists.length - 1,
       });
       const attachment = await PDFDocument.load(priceListBytes);
       const pages = await document.copyPages(attachment, attachment.getPageIndices());

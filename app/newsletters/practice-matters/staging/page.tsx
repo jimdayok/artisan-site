@@ -38,14 +38,14 @@ export default async function NewsletterStagingPage() {
       </div>
       <section className="px-4 py-12 md:px-8 md:py-20">
         <div className="mx-auto max-w-5xl">
-          <p className="font-[family-name:var(--font-alfons-script)] text-4xl text-[#a46f52]">On the editor&apos;s desk</p>
+          <p className="text-[11px] font-extrabold uppercase tracking-[0.24em] text-[#765f45]">On the editor&apos;s desk</p>
           <h1 className="mt-3 max-w-3xl font-[family-name:Georgia,serif] text-4xl leading-tight text-[#122033] md:text-6xl">Practice Matters staging room</h1>
           <p className="mt-6 max-w-2xl text-lg leading-8 text-[#4d5664]">Review future issues here before any route is opened to the public archive or production newsletter navigation.</p>
 
           <div className="mt-12 space-y-5">
             {drafts.map((draft, index) => (
               <Link key={draft.issue} href={draft.href} className="group grid gap-5 rounded-[16px_3px_16px_3px] border border-[#d0bfa8] bg-[#fbf6ed] p-6 shadow-[0_14px_36px_rgba(73,55,37,0.07)] transition hover:-translate-y-0.5 hover:shadow-[0_20px_44px_rgba(73,55,37,0.12)] md:grid-cols-[80px_minmax(0,1fr)_auto] md:items-center md:p-8">
-                <span className="font-[family-name:var(--font-alfons-script)] text-5xl text-[#a46f52]">0{index + 2}</span>
+                <span className="text-4xl font-black tracking-[-0.04em] text-[#a46f52]">0{index + 2}</span>
                 <span>
                   <span className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-[#8a7654]">{draft.issue} · {draft.month}</span>
                   <span className="mt-2 block font-[family-name:Georgia,serif] text-2xl text-[#122033]">{draft.title}</span>

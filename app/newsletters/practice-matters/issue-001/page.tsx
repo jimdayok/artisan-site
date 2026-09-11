@@ -22,6 +22,8 @@ const articles: NewsletterNavArticle[] = [
     dek: "Trust, follow through, and the small details behind a dependable lab experience.",
     icon: "/aln-icon.png",
     iconAlt: "Artisan Lab Network",
+    image: "/newsletter-assets/jennc.jpg",
+    imageAlt: "Jenn C. from Artisan Lab Network",
     number: "01",
   },
   {
@@ -31,6 +33,8 @@ const articles: NewsletterNavArticle[] = [
     dek: "A new way to support patient conversations around comfort, function, and daily needs.",
     icon: "/newsletter-assets/Chemistrie-Calm-Logo-2.avif",
     iconAlt: "Chemistrie Calm",
+    image: "/newsletter-assets/chemistriecalm.avif",
+    imageAlt: "Chemistrie Calm product visual",
     number: "02",
   },
   {
@@ -40,6 +44,8 @@ const articles: NewsletterNavArticle[] = [
     dek: "A confident way to keep VSP orders focused on fit, function, and patient experience.",
     icon: "/unity-logo.png",
     iconAlt: "Unity",
+    image: "/newsletter-assets/vspv3elite.jpg",
+    imageAlt: "Unity V3 Elite product visual",
     supportingLogo: "/logos/VSP_Vision_Logotype_RGB_Blk.png",
     supportingLogoAlt: "VSP Vision",
     number: "03",
@@ -51,15 +57,19 @@ const articles: NewsletterNavArticle[] = [
     dek: "Why choice, flexibility, and control matter for independent practices and their patients.",
     icon: "/icons/site/handshake.svg",
     iconAlt: "",
+    image: "/newsletter-assets/independence-1.jpg",
+    imageAlt: "An independent optical team working together",
     number: "04",
   },
   {
     id: "tokai-update",
     label: "Tokai Update",
-    title: "Tokai",
-    dek: "Current Tokai high-index availability, supply-chain constraints, and supported material options.",
+    title: "Tokai 1.76 Returns September 16",
+    dek: "What will be available, what will not, and what to expect from lead times.",
     icon: "/tokai-logo.png",
     iconAlt: "Tokai",
+    image: "/newsletter-assets/tokai176.webp",
+    imageAlt: "Tokai 1.76 lens display",
     number: "05",
   },
 ];
@@ -72,24 +82,24 @@ export default function PracticeMattersIssue001Page() {
         title="Practice Matters"
         subheading="What's happening. What's changing. What matters to independent eye care."
         intro="Independent practices deserve more than a supplier. They deserve a partner built around choice, service, and the belief that independent eye care should remain independent."
-        publishedDate="July 2026"
+        publishedDate="September 2026"
         readTime="8 minute read"
       />
 
       <section className="w-full px-4 pb-14 md:px-8 md:pb-20">
-        <div className="mx-auto max-w-6xl overflow-hidden rounded-[14px_3px_14px_3px] border border-[#d0bfa8] bg-[#fbf6ed] shadow-[0_16px_42px_rgba(73,55,37,0.08)]">
-          <div className="grid gap-4 border-b border-[#d8c9b5] px-5 py-7 md:grid-cols-[0.7fr_1fr] md:items-end md:px-8 md:py-9">
+        <div className="mx-auto max-w-6xl rounded-[26px] border border-[#d0bfa8] bg-[#f8f2e9] p-5 shadow-[0_18px_48px_rgba(73,55,37,0.09)] sm:p-7 md:p-9">
+          <div className="grid gap-4 border-b-2 border-[#c7ad7b] pb-7 md:grid-cols-[0.7fr_1fr] md:items-end md:pb-8">
             <div>
-              <p className="font-[family-name:var(--font-alfons-script)] text-3xl text-[#a46f52]">Inside this issue</p>
-              <h2 className="mt-2 font-[family-name:Georgia,serif] text-3xl font-normal tracking-tight text-[#122033] sm:text-4xl">
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.24em] text-[#765f45]">Inside this issue</p>
+              <h2 className="font-newsletter-editorial mt-3 text-3xl font-semibold tracking-tight text-[#122033] sm:text-4xl">
                 Five stories worth your time.
               </h2>
             </div>
-            <p className="max-w-xl text-sm leading-7 text-[#4d5664] md:justify-self-end">
-              A fast issue map for the email reader who wants the full story, the context, and the next step.
+            <p className="max-w-xl text-base font-medium leading-7 text-[#414b59] md:justify-self-end">
+              Start with the update you need, then open the full story for context, practical takeaways, and your next step.
             </p>
           </div>
-          <div className="grid md:grid-cols-2 md:gap-x-8 md:px-4">
+          <div className="mt-7 grid gap-5 md:grid-cols-2">
             {articles.map((article) => (
               <NewsletterArticleCard key={article.id} article={article} />
             ))}
@@ -303,7 +313,7 @@ export default function PracticeMattersIssue001Page() {
               id="tokai-update"
               number="05"
               label="Product Availability Update"
-              title="Tokai High-Index Material Availability"
+              title="Tokai 1.76 Returns September 16"
               icon="/tokai-logo.png"
               iconAlt="Tokai"
               tone="warm"
@@ -316,35 +326,29 @@ export default function PracticeMattersIssue001Page() {
                 href: "/provider-resources#tokai",
               }}
             >
-              <p>
-                Tokai 1.76 is temporarily unavailable due to a global supply issue involving the raw materials used in the 1.76 lens monomer. Artisan Lab Network will share the next availability update as soon as it is confirmed.
-              </p>
-              <p>
-                During this time, Artisan Lab Network is not accepting Tokai 1.76 orders.
-              </p>
-              <p>
-                Tokai 1.70 has also been suspended and is no longer available. Tokai 1.74 has become challenging to source because of supply-chain issues, with resolution expected by September 2026.
-              </p>
-              <p>
-                Tokai brands are available in 1.60 high index and are now also available in 1.67 high index. Our team will continue to help practices identify the best available option for each prescription and frame.
-              </p>
-              <h3 className="font-[family-name:Georgia,serif] text-2xl text-[#142033]">How to handle the conversation</h3>
-              <p>
-                Lead with what is known, then move quickly to the plan. Tell the patient that the requested material is temporarily unavailable, explain that the team is reviewing the prescription and frame requirements, and present the strongest supported alternative rather than a list of compromises.
-              </p>
-              <div>
-                <p className="font-semibold text-[#142033]">
-                  Current supported options include:
-                </p>
-                <ul className="mt-4 grid gap-3 text-base leading-7">
-                  <li className="border-l-2 border-[#c4a05d] bg-white/62 px-4 py-3">Tokai brands in 1.67 high index</li>
-                  <li className="border-l-2 border-[#c4a05d] bg-white/62 px-4 py-3">Tokai brands in 1.60 high index</li>
-                  <li className="border-l-2 border-[#c4a05d] bg-white/62 px-4 py-3">Tokai photochromic options in 1.67 and 1.60</li>
-                </ul>
+              <div className="rounded-2xl border border-[#d2b776] bg-white/80 p-5 sm:p-6">
+                <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-[#765f45]">Availability date</p>
+                <p className="font-newsletter-editorial mt-2 text-3xl font-semibold leading-tight text-[#142033]">September 16, 2026</p>
               </div>
               <p>
-                If availability or supported alternatives change, we will notify our partners quickly and update the guidance provided to our customer service team.
+                Beginning September 16, Artisan Lab Network will again accept orders for the complete Tokai 1.76 offering. Every Tokai product normally available in 1.76 will be available in that material.
               </p>
+              <p>
+                Tokai 1.67 and 1.70 will not be available. Please plan new high-index recommendations around the returning 1.76 portfolio and contact our team when a prescription or frame needs additional review.
+              </p>
+              <h3 className="font-newsletter-editorial text-2xl font-semibold text-[#142033]">What to expect from turnaround</h3>
+              <p>
+                Initial lead times for Tokai 1.76 will be approximately 18 to 25 days. As production volume and material flow normalize over the next few months, turnaround is expected to improve toward Tokai&apos;s standard delivery window of 12 to 14 days.
+              </p>
+              <div>
+                <p className="font-semibold text-[#142033]">At a glance:</p>
+                <ul className="mt-4 grid gap-3 text-base leading-7">
+                  <li className="border-l-4 border-[#c4a05d] bg-white/72 px-4 py-3"><strong>Available September 16:</strong> the full Tokai 1.76 product offering</li>
+                  <li className="border-l-4 border-[#c4a05d] bg-white/72 px-4 py-3"><strong>Not available:</strong> Tokai 1.67 and Tokai 1.70</li>
+                  <li className="border-l-4 border-[#c4a05d] bg-white/72 px-4 py-3"><strong>Initial lead time:</strong> approximately 18 to 25 days</li>
+                  <li className="border-l-4 border-[#c4a05d] bg-white/72 px-4 py-3"><strong>Expected standard:</strong> approximately 12 to 14 days as availability stabilizes</li>
+                </ul>
+              </div>
               <div className="border-l-4 border-[#b89b68] bg-white/72 p-5">
                 <h3 className="text-xl font-semibold text-[#142033] md:text-2xl">
                   Need help with a high Rx patient?

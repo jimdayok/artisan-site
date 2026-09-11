@@ -48,7 +48,7 @@ export default function PracticeMattersDraftIssue({
         <div className="mx-auto max-w-6xl overflow-hidden rounded-[14px_3px_14px_3px] border border-[#d0bfa8] bg-[#fbf6ed] shadow-[0_16px_42px_rgba(73,55,37,0.08)]">
           <div className="grid gap-4 border-b border-[#d8c9b5] px-5 py-7 md:grid-cols-[0.7fr_1fr] md:items-end md:px-8 md:py-9">
             <div>
-              <p className="font-[family-name:var(--font-alfons-script)] text-3xl text-[#a46f52]">Inside this draft</p>
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.24em] text-[#765f45]">Inside this draft</p>
               <h2 className="mt-2 font-[family-name:Georgia,serif] text-3xl font-normal tracking-tight text-[#122033] sm:text-4xl">
                 Five stories for the next conversation.
               </h2>
@@ -88,7 +88,7 @@ export default function PracticeMattersDraftIssue({
             ))}
 
             <section className="rounded-[16px_3px_16px_3px] border border-[#d0bfa8] bg-[#dfcbb2] p-6 text-center shadow-[0_18px_50px_rgba(73,55,37,0.1)] md:p-11">
-              <p className="font-[family-name:var(--font-alfons-script)] text-3xl text-[#704d3b]">End of draft</p>
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.24em] text-[#704d3b]">End of draft</p>
               <h2 className="mx-auto mt-3 max-w-2xl font-[family-name:Georgia,serif] text-3xl text-[#122033] md:text-4xl">Ready for editorial review.</h2>
               <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-[#4d5664]">This issue remains hidden from the public archive and live navigation until its status is changed for launch.</p>
               <Link href="/newsletter" className="mt-6 inline-flex min-h-11 items-center justify-center rounded-md bg-[#122033] px-5 py-2 text-sm font-semibold text-white hover:bg-[#8f6048]">Return to newsletter home</Link>

@@ -29,18 +29,18 @@ export default function NewsletterShell({ children }: NewsletterShellProps) {
 
       <header className="relative z-30 border-b border-[#d8c9b5] bg-[#f9f6f0]/94 px-4 backdrop-blur-xl md:px-8">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-5 py-4 md:py-5">
-          <Link href="/newsletter" className="flex min-w-0 items-center gap-4" aria-label="Practice Matters newsletter home">
+          <Link href="/newsletter" className="flex min-w-0 items-center gap-4" aria-label="Artisan Lab Network Practice Matters newsletter home">
             <Image
-              src="/aln-icon.png"
-              alt=""
-              width={40}
-              height={40}
-              className="h-8 w-8 object-contain sm:h-9 sm:w-9"
+              src="/aln_logo_black.jpeg"
+              alt="Artisan Lab Network"
+              width={184}
+              height={104}
+              className="h-auto w-28 mix-blend-multiply sm:w-36"
               priority
             />
-            <span className="block min-w-0 border-l border-[#d8c9b5] pl-4">
-              <span className="block truncate font-[family-name:var(--font-alfons-display)] text-sm leading-none text-[#122033] sm:text-lg">Practice Matters</span>
-              <span className="mt-1 hidden text-[9px] font-semibold uppercase tracking-[0.18em] text-[#8a7654] sm:block">Independent eye care briefing</span>
+            <span className="hidden min-w-0 border-l border-[#d8c9b5] pl-4 sm:block">
+              <span className="font-newsletter-editorial block truncate text-lg font-semibold leading-none text-[#122033]">Practice Matters</span>
+              <span className="mt-1 block text-[9px] font-bold uppercase tracking-[0.18em] text-[#765f45]">Independent eye care briefing</span>
             </span>
           </Link>
           <nav className="flex shrink-0 items-center gap-4" aria-label="Publication navigation">
@@ -65,9 +65,7 @@ export default function NewsletterShell({ children }: NewsletterShellProps) {
       <footer className="relative z-10 border-t border-[#d8c9b5] bg-[#122033] px-4 py-12 text-white md:px-8">
         <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-[1fr_auto] md:items-center">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-white/15 bg-white">
-              <Image src="/aln-icon.png" alt="" width={30} height={30} className="h-7 w-7 object-contain" />
-            </div>
+            <Image src="/aln-logo.svg" alt="Artisan Lab Network" width={150} height={99} className="h-auto w-32 shrink-0" />
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#d9c394]">
                 Practice Matters

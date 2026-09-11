@@ -40,11 +40,11 @@ export default function NewsletterPage() {
           <div className="grid lg:grid-cols-[1.08fr_0.92fr]">
             <div className="relative bg-[#dfcbb2] px-6 py-12 sm:px-10 md:px-14 md:py-16">
               <div className="pointer-events-none absolute -right-40 -top-52 h-[520px] w-[520px] rounded-full border border-white/25" />
-              <p className="relative font-[family-name:var(--font-alfons-script)] text-3xl text-[#8f6048]">
+              <p className="relative text-[11px] font-extrabold uppercase tracking-[0.24em] text-[#765f45]">
                 From our desk to yours
               </p>
-              <p className="relative mt-5 text-[10px] font-semibold uppercase tracking-[0.23em] text-[#6f563d]">A publication by Artisan Lab Network</p>
-              <h1 className="relative mt-7 max-w-2xl font-[family-name:var(--font-alfons-display)] text-5xl font-normal leading-[0.94] tracking-[-0.03em] text-[#122033] sm:text-6xl md:text-7xl">
+              <Image src="/aln_logo_black.jpeg" alt="Artisan Lab Network" width={180} height={101} className="relative mt-5 h-auto w-40 mix-blend-multiply" />
+              <h1 className="font-newsletter-editorial relative mt-7 max-w-2xl text-5xl font-semibold leading-[1.02] tracking-[-0.03em] text-[#122033] sm:text-6xl md:text-7xl">
                 Practice Matters
               </h1>
               <p className="relative mt-7 max-w-xl border-l-2 border-[#a46f52] pl-5 font-[family-name:Georgia,serif] text-lg leading-8 text-[#374352] md:text-xl">
@@ -67,7 +67,7 @@ export default function NewsletterPage() {
                 />
               </div>
               <div className="mt-6 flex items-center justify-between gap-4 border-b border-[#d8c9b5] pb-4">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8a7654]">Current issue · July 2026</p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8a7654]">Current issue · September 2026</p>
                 <span className="font-[family-name:Georgia,serif] text-2xl text-[#b59862]">001</span>
               </div>
               <h2 className="mt-5 font-[family-name:Georgia,serif] text-3xl font-normal leading-tight">People, products, and the power of choice.</h2>
@@ -105,7 +105,7 @@ export default function NewsletterPage() {
           <div className="mt-7 border-b border-[#cdbb9e]">
             {upcomingIssues.map((issue, index) => (
               <article key={issue.label} className="grid gap-4 border-t border-[#cdbb9e] px-1 py-7 md:grid-cols-[90px_minmax(0,0.75fr)_minmax(0,1fr)] md:items-start md:gap-8 md:py-9">
-                <p className="font-[family-name:var(--font-alfons-script)] text-4xl text-[#a46f52]">0{index + 2}</p>
+                <p className="text-3xl font-black tracking-[-0.04em] text-[#a46f52]">0{index + 2}</p>
                 <div>
                   <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8a7654]">{issue.label} · In development</p>
                   <h3 className="mt-2 text-xl font-semibold leading-7 text-[#122033]">{issue.title}</h3>

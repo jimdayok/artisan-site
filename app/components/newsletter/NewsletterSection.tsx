@@ -82,7 +82,7 @@ export default function NewsletterSection({
       <div className="relative z-10 grid min-w-0 lg:grid-cols-[150px_minmax(0,1fr)]">
         <aside className={`border-b p-5 sm:p-7 lg:border-b-0 lg:border-r lg:p-8 ${dark ? "border-white/12" : "border-[#ded2c0] bg-[#f3e9dc]/65"}`}>
           {number ? (
-            <p className={`font-[family-name:var(--font-alfons-script)] text-5xl leading-none ${dark ? "text-[#d9c394]" : "text-[#a46f52]"}`}>{number}</p>
+            <p className={`text-4xl font-black leading-none tracking-[-0.04em] ${dark ? "text-[#d9c394]" : "text-[#a46f52]"}`}>{number}</p>
           ) : null}
           <div className={`mt-5 flex h-14 w-14 items-center justify-center rounded-md border ${
             dark ? "border-white/12 bg-white/8" : "border-[#dfd2bf] bg-[#f8f3eb]"
@@ -104,7 +104,7 @@ export default function NewsletterSection({
         </aside>
 
         <div className="min-w-0 p-5 sm:p-8 md:p-10 lg:p-12">
-          <h2 className={`max-w-4xl font-[family-name:Georgia,serif] text-3xl font-normal leading-[1.08] tracking-[-0.025em] sm:text-4xl md:text-[2.8rem] ${dark ? "text-white" : "text-[#122033]"}`}>
+          <h2 className={`font-newsletter-editorial max-w-4xl text-3xl font-semibold leading-[1.12] tracking-[-0.025em] sm:text-4xl md:text-[2.8rem] ${dark ? "text-white" : "text-[#122033]"}`}>
             {title}
           </h2>
 

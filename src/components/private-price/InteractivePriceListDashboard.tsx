@@ -10,6 +10,7 @@ import type {
   PriceListArCoating,
   PriceListPricingRow,
 } from "@/lib/pricing/types";
+import { B5_PACKAGE_NOTE_LINES } from "@/lib/pricing/packageNotes.mjs";
 import {
   comparePriceDisplayBrand,
   comparePriceDisplayCategory,
@@ -230,12 +231,7 @@ const metaByCode: Record<string, ProgramMeta> = {
   },
   B5: {
     multiplePairEligible: true,
-    packageNotes: [
-      "ARTISAN LENS SYSTEMS: lens and coating package pricing.",
-      "Orders include the selected lens design and included coating shown in the package notes.",
-      "Additional coating upgrade options are available at source-listed pricing.",
-      "Products not listed are not available.",
-    ],
+    packageNotes: [...B5_PACKAGE_NOTE_LINES],
     ruleNotes: [],
     titleLogoSrc: "/iot-logo.png",
     packageMark: "lens",
@@ -1945,6 +1941,9 @@ function ArCoatingsSection({
   listCode: GeneratedPriceListData["code"];
 }) {
   const [showOtherCoatings, setShowOtherCoatings] = useState(false);
+  const packagePricing = isPackagePriceListCode(String(listCode ?? ""));
+  const coatingPriceLabel = (coating: PriceListArCoating) =>
+    packagePricing && coating.price === 0 ? "Included" : currency(coating.price);
   const mirrorCodes = useMemo(
     () =>
       new Set(
@@ -2107,7 +2106,7 @@ function ArCoatingsSection({
                     <h4 className="text-base font-bold text-[#122033]">
                       {inlineMarker(normalizeDisplayName(coating.name), coating.recommended, coating.outsourced)}
                     </h4>
-                    <p className="text-lg font-bold text-[#122033]">{currency(coating.price)}</p>
+                    <p className="text-lg font-bold text-[#122033]">{coatingPriceLabel(coating)}</p>
                   </div>
                 </article>
               ))}
@@ -2149,7 +2148,7 @@ function ArCoatingsSection({
                             <h4 className="text-base font-bold text-[#122033]">
                               {inlineMarker(normalizeDisplayName(coating.name), coating.recommended, coating.outsourced)}
                             </h4>
-                            <p className="text-lg font-bold text-[#122033]">{currency(coating.price)}</p>
+                            <p className="text-lg font-bold text-[#122033]">{coatingPriceLabel(coating)}</p>
                           </div>
                         </article>
                       ))}
@@ -2176,7 +2175,7 @@ function ArCoatingsSection({
                     <h4 className="text-base font-bold text-[#122033]">
                       {normalizeDisplayName(item.name)}
                     </h4>
-                    <p className="text-lg font-bold text-[#122033]">{currency(item.price)}</p>
+                    <p className="text-lg font-bold text-[#122033]">{coatingPriceLabel(item)}</p>
                   </div>
                 </article>
               ))}
@@ -2199,7 +2198,7 @@ function ArCoatingsSection({
                     <h4 className="text-base font-bold text-[#122033]">
                       {normalizeDisplayName(item.name)}
                     </h4>
-                    <p className="text-lg font-bold text-[#122033]">{currency(item.price)}</p>
+                    <p className="text-lg font-bold text-[#122033]">{coatingPriceLabel(item)}</p>
                   </div>
                 </article>
               ))}
@@ -2254,14 +2253,18 @@ function AddOnSections({ sections }: { sections: PriceListAddOnSection[] }) {
                 {section.title}
               </h3>
               <div className={isPackageNotes ? "mt-4 grid gap-3 md:grid-cols-2" : "mt-3 grid gap-2"}>
-                {section.items.map((item) => {
+                {section.items.map((item, itemIndex) => {
                   const priceText = typeof item.price === "number" ? currency(item.price) : item.price;
 
                   if (isPackageNotes) {
                     return (
                       <div
                         key={`${section.title}-${item.name}`}
-                        className="rounded-[2px] border border-[#f1e6d8] bg-[#fbf8f3]/78 p-3"
+                        className={`rounded-[2px] border border-[#f1e6d8] bg-[#fbf8f3]/78 p-3 ${
+                          section.items.length % 2 === 1 && itemIndex === section.items.length - 1
+                            ? "md:col-span-2"
+                            : ""
+                        }`}
                       >
                         <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#8a7654]">
                           {item.name}

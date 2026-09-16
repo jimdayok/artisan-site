@@ -3,6 +3,10 @@ import path from "node:path";
 import { gunzipSync } from "node:zlib";
 import type { GeneratedPriceListData, PriceListAddOnSection, PriceListArCoating } from "@/lib/pricing/types";
 import { getPricingLookupData, stripSdPrefix } from "@/lib/pricing/lookupData.mjs";
+import {
+  coatingScheduleName,
+  selectReferencedCoatingSchedules,
+} from "@/lib/pricing/coatingSchedule.mjs";
 
 type DviRow = {
   priceListCode: string;
@@ -30,6 +34,10 @@ type DviPayload = {
   rows?: DviRow[];
   scheduleCatalog?: {
     coating?: Array<{
+      key?: string;
+      plist?: string;
+      name?: string;
+      attributes?: { PList?: string; Name?: string };
       entries?: Array<{ Code?: string; Price?: string | number }>;
     }>;
   };
@@ -343,6 +351,8 @@ function mergeArCoating(
 
 function deriveArCoatingsFromRows(
   rows: Array<{
+    code?: string;
+    coatingScheduleRef?: string;
     coatingOptions?: Array<{
       code: string;
       name: string;
@@ -362,7 +372,13 @@ function deriveArCoatingsFromRows(
     }
   }
 
-  for (const schedule of scheduleCatalog?.coating ?? []) {
+  const referencedSchedules = selectReferencedCoatingSchedules(
+    rows,
+    scheduleCatalog?.coating ?? [],
+    { priceListCode: rows[0]?.code }
+  );
+  for (const schedule of referencedSchedules) {
+    const sourceSchedule = coatingScheduleName(schedule) || "Unknown";
     for (const entry of schedule.entries ?? []) {
       const code = String(entry.Code ?? "").trim().toUpperCase();
       if (!code) continue;
@@ -372,7 +388,7 @@ function deriveArCoatingsFromRows(
         name: match?.name || code,
         brandFamily: match?.brand ? `${match.brand} AR Coatings` : "AR Coatings",
         price: toNumber(entry.Price),
-        sourceSchedule: "Supplemental",
+        sourceSchedule,
         unresolved: !match,
       });
     }

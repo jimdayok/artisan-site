@@ -18,6 +18,10 @@ import {
   normalizeArtisanDisplayStyle,
   resolveArtisanDesignTypeRule,
 } from "../lib/pricing/artisanProductTaxonomy.mjs";
+import {
+  coatingScheduleName,
+  selectReferencedCoatingSchedules,
+} from "../lib/pricing/coatingSchedule.mjs";
 
 const gzipAsync = promisify(gzip);
 const progress = new PricingProgress({ prefix: "pricing:normalize" });
@@ -618,6 +622,7 @@ function mergeArCoating(byCode, coating) {
       name: coating.name,
       brandFamily: coating.brandFamily,
       price: Number(coating.price),
+      sourceSchedule: String(coating.sourceSchedule || "").trim() || undefined,
       recommended: false,
       outsourced: false,
     });
@@ -632,7 +637,13 @@ function normalizeArCoatings(rows, supplementalSchedules = [], arLookupMap = nul
     }
   }
 
-  for (const schedule of supplementalSchedules ?? []) {
+  const referencedSchedules = selectReferencedCoatingSchedules(
+    rows,
+    supplementalSchedules,
+    { priceListCode: rows?.[0]?.code }
+  );
+  for (const schedule of referencedSchedules) {
+    const sourceSchedule = coatingScheduleName(schedule) || "Unknown";
     for (const coating of schedule?.entries ?? []) {
       const rawCode = String(coating?.Code ?? "").trim().toUpperCase();
       if (!rawCode) continue;
@@ -642,6 +653,7 @@ function normalizeArCoatings(rows, supplementalSchedules = [], arLookupMap = nul
         name: match?.name || rawCode,
         brandFamily: match?.brandFamily || "Unmapped AR",
         price: Number(coating?.Price ?? 0),
+        sourceSchedule,
         unresolved: !match,
       });
     }

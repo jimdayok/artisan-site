@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
+import { B5_PACKAGE_NOTE_ITEMS } from "../lib/pricing/packageNotes.mjs";
 import { writeJsonAtomic } from "../lib/pricing/atomicJson.mjs";
 import { parsePriceList } from "../lib/pricing/parsePriceList.mjs";
 import { getPricingLookupData, normalizeLookupKey } from "../lib/pricing/lookupData.mjs";
@@ -132,15 +133,7 @@ const fullServiceAddOns = [
 const b5PackageAddOns = [
   {
     title: "Package Notes",
-    items: [
-      {
-        name: "ARTISAN LENS SYSTEMS",
-        price:
-          "Lens and coating package pricing. Orders include the listed lens design and an included coating; additional coating upgrade options are available below.",
-      },
-      { name: "Included AR", price: "Artisan Emerald, Artisan Standard, Diamond Sun, Backside AR (included)" },
-      { name: "Products not listed", price: "Not available" },
-    ],
+    items: B5_PACKAGE_NOTE_ITEMS.map((item) => ({ ...item })),
   },
   ...fullServiceAddOns,
 ];

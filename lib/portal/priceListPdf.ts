@@ -927,6 +927,57 @@ export async function buildPriceListPdf({
     }
   };
 
+  const drawPackageNoteCards = (
+    items: Array<{ name: string; price: string }>
+  ) => {
+    const bodyWidth = CONTENT_WIDTH - 42;
+    const bodySize = 7.6;
+    const bodyLineHeight = 10;
+    const cardGap = 7;
+
+    for (const item of items) {
+      const bodyLines = wrapText(regular, item.price, bodyWidth, bodySize);
+      const cardHeight = 34 + bodyLines.length * bodyLineHeight;
+      ensureSpace(cardHeight + cardGap);
+      const cardTop = y + 2;
+
+      page.drawRectangle({
+        x: MARGIN,
+        y: cardTop - cardHeight,
+        width: CONTENT_WIDTH,
+        height: cardHeight,
+        color: rgb(1, 1, 1),
+        borderColor: RULE,
+        borderWidth: 0.7,
+      });
+      page.drawRectangle({
+        x: MARGIN,
+        y: cardTop - cardHeight,
+        width: 5,
+        height: cardHeight,
+        color: GOLD,
+      });
+      page.drawText(item.name.toUpperCase(), {
+        x: MARGIN + 14,
+        y: cardTop - 15,
+        size: 6.5,
+        font: bold,
+        color: MUTED,
+      });
+      bodyLines.forEach((line, index) => {
+        page.drawText(line, {
+          x: MARGIN + 14,
+          y: cardTop - 29 - index * bodyLineHeight,
+          size: bodySize,
+          font: regular,
+          color: NAVY,
+        });
+      });
+
+      y -= cardHeight + cardGap;
+    }
+  };
+
   const drawBoxedItemGroups = (
     groups: Array<{
       title: string;
@@ -1353,16 +1404,19 @@ export async function buildPriceListPdf({
     if (sectionIndex > 0) y -= 8;
     ensureSpace(62);
     sectionTitle(section.title);
-    drawCompactItemGrid(
-      section.items.map((item) => ({
-        name: item.name,
-        price: priceText(item.price),
-      })),
-      0
-    );
+    const sectionItems = section.items.map((item) => ({
+      name: item.name,
+      price: priceText(item.price),
+    }));
+    if (/package notes/i.test(section.title)) {
+      drawPackageNoteCards(sectionItems);
+    } else {
+      drawCompactItemGrid(sectionItems, 0);
+    }
   }
 
   y -= 8;
+  ensureSpace(86 + chemistrieClipItems.length * 17);
   sectionTitle(CHEMISTRIE_CLIPS_SECTION_TITLE);
   drawBoxedItemGroups([
     {

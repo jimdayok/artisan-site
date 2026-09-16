@@ -20,6 +20,10 @@ import {
   normalizeArtisanDisplayStyle,
   resolveArtisanDesignTypeRule,
 } from "../lib/pricing/artisanProductTaxonomy.mjs";
+import {
+  selectReferencedCoatingSchedules,
+} from "../lib/pricing/coatingSchedule.mjs";
+import { B5_PACKAGE_NOTE_ITEMS } from "../lib/pricing/packageNotes.mjs";
 
 const testConfig = {
   accountId: "test-account",
@@ -287,4 +291,53 @@ test("packaged A6, G6, and P6 data contains only the current Artisan labels", ()
       `${code} SD Digital is consolidated under Artisan`
     );
   }
+});
+
+test("coating catalogs are limited to schedules referenced by style rows", () => {
+  const schedules = [
+    { key: "B5::BPC", plist: "B5", name: "BPC", entries: [] },
+    { key: "B5::BPS", plist: "B5", name: "BPS", entries: [] },
+    { key: "G6::BPS", plist: "G6", name: "BPS", entries: [] },
+  ];
+  const selected = selectReferencedCoatingSchedules(
+    [{ code: "B5", designStyle: "Camber Pure", coatingScheduleRef: "BPS" }],
+    schedules,
+    { priceListCode: "B5" }
+  );
+
+  assert.deepEqual(selected.map((schedule) => schedule.key), ["B5::BPS"]);
+});
+
+test("packaged B5 uses its BPS style schedule and customer-ready package notes", () => {
+  const payload = JSON.parse(
+    gunzipSync(
+      readFileSync("lib/pricing/generated/normalized/B5.json.gz")
+    ).toString("utf8")
+  );
+  const expectedPrices = new Map([
+    ["AAR", 11],
+    ["AAZ", 22],
+    ["ADS", 0],
+    ["AEM", 0],
+    ["AST", 0],
+    ["BAR", 0],
+    ["NYT", 22],
+  ]);
+
+  assert.ok(payload.rows.length > 0, "B5 rows are present");
+  assert.ok(
+    payload.rows.every((row) => row.coatingScheduleRef === "BPS"),
+    "every B5 style row resolves the BPS coating schedule"
+  );
+  for (const [code, expectedPrice] of expectedPrices) {
+    const coating = payload.arCoatings.find((entry) => entry.code === code);
+    assert.ok(coating, `B5 coating ${code} is present`);
+    assert.equal(coating.price, expectedPrice, `B5 ${code} uses BPS pricing`);
+    assert.equal(coating.sourceSchedule, "BPS", `B5 ${code} identifies BPS`);
+  }
+
+  const packageNotes = payload.addOnSections.find(
+    (section) => section.title === "Package Notes"
+  );
+  assert.deepEqual(packageNotes?.items, B5_PACKAGE_NOTE_ITEMS);
 });

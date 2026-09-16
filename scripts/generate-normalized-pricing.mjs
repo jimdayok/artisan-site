@@ -14,6 +14,10 @@ import {
   isDviAuthoritativePriceList,
   nonDviLensAddOnSections,
 } from "../lib/pricing/sourceAuthority.mjs";
+import {
+  normalizeArtisanDisplayStyle,
+  resolveArtisanDesignTypeRule,
+} from "../lib/pricing/artisanProductTaxonomy.mjs";
 
 const gzipAsync = promisify(gzip);
 const progress = new PricingProgress({ prefix: "pricing:normalize" });
@@ -130,19 +134,6 @@ function classifyLensMat(lensMatRaw) {
   if (lensMat.startsWith("T")) return { category: "Photochromic", reason: "T-prefix (Transitions)" };
   if (polarizedLensMatCodes.has(lensMat)) return { category: "Polarized", reason: "Polarized LensMat" };
   return { category: null, reason: "No LensMat category rule matched" };
-}
-
-function normalizeArtisanDisplayStyle(styleRaw) {
-  const style = normalizeKey(styleRaw);
-  if (!style) return { displayName: String(styleRaw ?? "").trim(), matched: false, family: null };
-  if (/^DS[A-Z0-9]*/.test(style)) return { displayName: "Diamond Series", matched: true, family: "DS*" };
-  if (/^PS[A-Z0-9]*/.test(style)) return { displayName: "Platinum Series", matched: true, family: "PS*" };
-  if (/^GS[A-Z0-9]*/.test(style)) return { displayName: "Gold Series", matched: true, family: "GS*" };
-  if (style === "CFB") return { displayName: "CFB", matched: true, family: "CFB" };
-  if (style === "SD CONCEPT") return { displayName: "Concept", matched: true, family: "Concept" };
-  if (style === "SD REACH") return { displayName: "Reach", matched: true, family: "Reach" };
-  if (style === "SD RADIUS") return { displayName: "Radius", matched: true, family: "Radius" };
-  return { displayName: stripSdPrefix(String(styleRaw ?? "").trim()), matched: false, family: null };
 }
 
 function canonicalCode(code) {
@@ -539,7 +530,11 @@ function normalizeRows(rows, lookupMap, priceListCode) {
     const normalized = normalizeBrandAndStyle(row, lookupMap);
     const lensMatRaw = String(row.materialRaw || "").trim();
     const lensMatClassification = classifyLensMat(lensMatRaw);
-    const styleNormalization = normalizeArtisanDisplayStyle(normalized.designStyle);
+    const styleNormalization = normalizeArtisanDisplayStyle(
+      normalized.designStyle,
+      normalized.brand,
+      priceListCode
+    );
     const normalizedBrand = styleNormalization.matched ? "Artisan" : (mappedBrand || normalized.brand);
     const normalizedDesignStyle = styleNormalization.matched
       ? styleNormalization.displayName
@@ -550,7 +545,7 @@ function normalizeRows(rows, lookupMap, priceListCode) {
       lookupDesignType: normalized.designType,
       fallbackDesignType: String(row.designType || "").trim() || "Single Vision",
     });
-    const designTypeResolution = resolveESeriesDesignTypeRule(
+    const designTypeResolution = resolveArtisanDesignTypeRule(
       priceListCode,
       normalizedDesignStyle,
       lookupDesignTypeResolution.designType
@@ -728,37 +723,6 @@ function resolveLookupDesignType({ brand, styleName, lookupDesignType, fallbackD
   };
 }
 
-function resolveESeriesDesignTypeRule(listCode, styleName, fallbackDesignType) {
-  const code = String(listCode ?? "").trim().toUpperCase();
-  if (!/^E\d/.test(code)) {
-    return { designType: fallbackDesignType, sourceRule: "Default FIN mapping", changed: false };
-  }
-
-  const style = normalizeKey(styleName);
-  const rules = [
-    { test: (value) => value === "DIAMOND SERIES" || value.startsWith("DS "), result: "Progressive", rule: "Artisan DS* => Progressive" },
-    { test: (value) => value === "PLATINUM SERIES" || value.startsWith("PS "), result: "Progressive", rule: "Artisan PS* => Progressive" },
-    { test: (value) => value === "GOLD SERIES" || value.startsWith("GS "), result: "Progressive", rule: "Artisan GS* => Progressive" },
-    { test: (value) => value === "CFB", result: "Progressive", rule: "CFB => Progressive" },
-    { test: (value) => value === "SD CONCEPT", result: "Anti-Fatigue", rule: "SD Concept => Anti-Fatigue" },
-    { test: (value) => value === "SD REACH", result: "Anti-Fatigue", rule: "SD Reach => Anti-Fatigue" },
-    { test: (value) => value === "SD DIGITAL SV", result: "Enhanced Single Vision", rule: "SD Digital SV => Enhanced Single Vision" },
-    { test: (value) => value === "CD BIFOCAL", result: "Multifocal", rule: "CD Bifocal => Multifocal" },
-    { test: (value) => value === "STANDARD SV", result: "Single Vision", rule: "Standard SV => Single Vision" },
-    { test: (value) => value === "ASPHERIC SV", result: "Single Vision", rule: "Aspheric SV => Single Vision" },
-  ];
-
-  const matched = rules.find((entry) => entry.test(style));
-  if (!matched) {
-    return { designType: fallbackDesignType, sourceRule: "Default FIN mapping", changed: false };
-  }
-  return {
-    designType: matched.result,
-    sourceRule: matched.rule,
-    changed: matched.result !== fallbackDesignType,
-  };
-}
-
 function dviRowsToGeneratedPayload(
   code,
   dviRows,
@@ -825,7 +789,11 @@ function dviRowsToGeneratedPayload(
       lookupDesignType: styleLookup?.designType,
       fallbackDesignType: finDesignType,
     });
-    const designTypeResolution = resolveESeriesDesignTypeRule(code, normalizedStyle, lookupDesignTypeResolution.designType);
+    const designTypeResolution = resolveArtisanDesignTypeRule(
+      code,
+      normalizedStyle,
+      lookupDesignTypeResolution.designType
+    );
     if (designTypeResolution.changed) {
       designTypeCorrections.push({
         priceListCode: code,
@@ -1298,7 +1266,7 @@ async function main() {
 
   await writeJson(path.join(diagnosticsDir, "design-type-validation-report.json"), {
     generatedAt: new Date().toISOString(),
-    scope: "E-series",
+    scope: "E-series plus A6/G6/P6 Artisan taxonomy",
     report: designTypeValidationReport.sort(
       (a, b) =>
         compareText(a.priceListCode, b.priceListCode) ||

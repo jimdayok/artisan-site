@@ -99,8 +99,8 @@ export function progressiveTierFor(
   const style = normalized(row.designStyle);
 
   if (brand === "ARTISAN") {
-    if (style.includes("DIAMOND")) return "Best";
-    if (style.includes("PLATINUM")) return "Better";
+    if (style.includes("DIAMOND") || style.includes("DS STABLE")) return "Best";
+    if (style.includes("PLATINUM") || style.includes("PS STEADY")) return "Better";
     return "Good";
   }
   if (brand === "IOT") {

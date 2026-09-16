@@ -416,12 +416,18 @@ function compareMaterial(a: string, b: string) {
   return compareText(aDisplay, bDisplay);
 }
 
-const artisanDesignOrder = new Map(
-  ["Diamond Series", "Platinum Series", "Gold Series", "CFB", "SD Concept", "SD Reach"].map((value, index) => [
-    value.toUpperCase(),
-    index,
-  ])
-);
+const artisanDesignOrder = new Map([
+  ["DS STABLE", 0],
+  ["DIAMOND SERIES", 0],
+  ["PS STEADY", 1],
+  ["PLATINUM SERIES", 1],
+  ["GS BALANCE", 2],
+  ["GOLD SERIES", 2],
+  ["CFB", 3],
+  ["SD DIGITAL", 4],
+  ["SD CONCEPT", 5],
+  ["SD REACH", 6],
+]);
 const iotDesignOrder = new Map(
   ["Camber Pure", "Camber Plus", "Endless Plus", "Essential Plus", "Everyday B"].map(
     (value, index) => [value.toUpperCase(), index]

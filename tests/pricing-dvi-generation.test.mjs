@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
+import { gunzipSync } from "node:zlib";
 import {
   DVI_REQUIRED_FILES,
   generateDviPricingArtifacts,
@@ -14,6 +16,10 @@ import {
   isDviAuthoritativePriceList,
   nonDviLensAddOnSections,
 } from "../lib/pricing/sourceAuthority.mjs";
+import {
+  normalizeArtisanDisplayStyle,
+  resolveArtisanDesignTypeRule,
+} from "../lib/pricing/artisanProductTaxonomy.mjs";
 
 const testConfig = {
   accountId: "test-account",
@@ -190,4 +196,95 @@ test("legacy duplicated lens adjustments are not carried into DVI-authoritative 
     ]),
     [{ title: "Shipping", items: [{ name: "Ground", price: "$8" }] }]
   );
+});
+
+test("A6, G6, and P6 use the current Artisan product names", () => {
+  for (const code of ["A6", "G6", "P6"]) {
+    assert.equal(
+      normalizeArtisanDisplayStyle("DS15", "Artisan", code).displayName,
+      "DS Stable"
+    );
+    assert.equal(
+      normalizeArtisanDisplayStyle("PS17", "Artisan", code).displayName,
+      "PS Steady"
+    );
+    assert.equal(
+      normalizeArtisanDisplayStyle("GS19", "Artisan", code).displayName,
+      "GS Balance"
+    );
+    assert.equal(
+      normalizeArtisanDisplayStyle("Gold Series", "Artisan", code).displayName,
+      "GS Balance"
+    );
+    assert.equal(
+      normalizeArtisanDisplayStyle("SD*", "SD*", code).displayName,
+      "SD Digital"
+    );
+    assert.equal(
+      normalizeArtisanDisplayStyle("Digital SV", "Artisan", code).displayName,
+      "SD Digital"
+    );
+  }
+});
+
+test("A6, G6, and P6 classify all renamed Artisan series correctly", () => {
+  for (const code of ["A6", "G6", "P6"]) {
+    for (const style of ["DS Stable", "PS Steady", "GS Balance"]) {
+      assert.equal(
+        resolveArtisanDesignTypeRule(code, style, "Single Vision").designType,
+        "Progressive",
+        `${code} ${style}`
+      );
+    }
+    assert.equal(
+      resolveArtisanDesignTypeRule(code, "SD Digital", "Enhanced SV").designType,
+      "Single Vision",
+      `${code} SD Digital`
+    );
+  }
+});
+
+test("packaged A6, G6, and P6 data contains only the current Artisan labels", () => {
+  for (const code of ["A6", "G6", "P6"]) {
+    const payload = JSON.parse(
+      gunzipSync(
+        readFileSync(`lib/pricing/generated/normalized/${code}.json.gz`)
+      ).toString("utf8")
+    );
+    const legacyRows = payload.rows.filter(
+      (row) =>
+        row.brand === "SD*" ||
+        [
+          "Diamond Series",
+          "Platinum Series",
+          "Gold Series",
+          "Digital SV",
+          "SD*",
+        ].includes(row.designStyle)
+    );
+
+    assert.equal(legacyRows.length, 0, `${code} legacy Artisan labels`);
+
+    for (const style of ["DS Stable", "PS Steady", "GS Balance"]) {
+      const rows = payload.rows.filter((row) => row.designStyle === style);
+      assert.ok(rows.length > 0, `${code} ${style} is present`);
+      assert.ok(
+        rows.every(
+          (row) => row.brand === "Artisan" && row.designType === "Progressive"
+        ),
+        `${code} ${style} is Progressive`
+      );
+    }
+
+    const sdDigitalRows = payload.rows.filter(
+      (row) => row.designStyle === "SD Digital"
+    );
+    assert.ok(sdDigitalRows.length > 0, `${code} SD Digital is present`);
+    assert.ok(
+      sdDigitalRows.every(
+        (row) => row.brand === "Artisan" && row.designType === "Single Vision"
+      ),
+      `${code} SD Digital is consolidated under Artisan`
+    );
+  }
 });

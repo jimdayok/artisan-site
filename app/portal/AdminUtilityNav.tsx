@@ -42,6 +42,7 @@ export default function AdminUtilityNav({
           { href: "/portal/price-lists", label: "Price Lists" },
         ]
       : [
+          { href: "/portal/admin/ask", label: "Ask Artisan Data" },
           { href: "/portal/admin/program-studio", label: "Program Studio" },
           { href: "/portal/admin/price-lists", label: "Price Lists" },
           { href: "/portal/admin/users", label: "User & Account Access" },

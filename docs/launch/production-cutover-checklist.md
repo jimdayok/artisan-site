@@ -38,9 +38,11 @@ Required:
 - `CLOUDFLARE_ACCESS_API_TOKEN` with Cloudflare `Access: Apps and Policies Write` permission for the production account
 - `CLOUDFLARE_ACCOUNT_ID`
 - `CLOUDFLARE_ACCESS_POLICY_ID`
+- `OPENAI_API_KEY` for the admin-only Ask Artisan Data feature
 
 Optional:
 - `CLOUDFLARE_ACCESS_POLICY_NAME` (defaults to `Allow Artisan Lab Network users` and is checked before any policy update)
+- `ARTISAN_DATA_CHAT_MODEL` (defaults to `gpt-6-astra`)
 
 Conditional (if PDF downloads remain active):
 - R2 bucket and credential variables used by portal download routes
@@ -50,6 +52,7 @@ Checklist:
 - [ ] Values match production domain and Cloudflare Access app config
 - [ ] Portal account add/remove actions update the exact reusable Cloudflare allow policy
 - [ ] Portal login URL points to canonical production portal route
+- [ ] Ask Artisan Data can answer a known customer question without exposing contact details
 - [ ] Optional R2 variables present if PDF download flow is still enabled
 
 ## 3) Cloudflare + DNS + M365 Checklist

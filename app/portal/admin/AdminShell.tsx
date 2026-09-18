@@ -63,6 +63,9 @@ export function AdminShell({
               <Link href="/portal/admin" className={adminButtonClass}>
                 Admin Dashboard
               </Link>
+              <Link href="/portal/admin/ask" className={adminButtonClass}>
+                Ask Artisan Data
+              </Link>
               <Link href="/portal/admin/price-lists" className={adminButtonClass}>
                 All Price Lists
               </Link>
